@@ -11,58 +11,9 @@ SnapCenter encryption: backup data encrypted at-rest on ONTAP volumes, in-transi
 
 *Applies to: SnapCenter 5.x*
 </div>
-```text
-┌─────────────────────────────────── NetApp SnapCenter — Encryption ────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │       SnapCenter encryption: data at rest and in transit encryption for all stored data       │   │
-│   │          At rest: AES-256 encryption using controller-managed or external key manager         │   │
-│   │          In transit: TLS 1.2+ for management; protocol encryption for data in flight          │   │
-│   │         Key management: external KMIP-compatible KMS or built-in key lifecycle manager        │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Enable encryption → configure KMS → verify → audit → rotate keys                                   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │            Server           │  │          Windows VM         │  │       Central control       │   │
-│   │           Plug-in           │  │          Host agent         │  │        App-consistent       │   │
-│   │            Policy           │  │       Schedule/retain       │  │         Backup rule         │   │
-│   │        Resource group       │  │       Grouped targets       │  │        Shared policy        │   │
-│   │           Recovery          │  │       Volume/LUN/file       │  │       Granular restore      │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Layer       │     Standard     │     Key source    │       KMS        │      Notes       │   │
-│   │     At rest      │     AES-256      │     Controller    │  Internal/KMIP   │    Always on     │   │
-│   │    In transit    │     TLS 1.2+     │      PKI cert     │   Internal CA    │   Mgmt + data    │   │
-│   │   Key rotation   │      Annual      │     KMS policy    │   External KMS   │    Automated     │   │
-│   │    Key escrow    │     Required     │     KMS vault     │   External KMS   │    DR access     │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: SnapCenter Server (Windows) · ONTAP clusters · plug-in hosts · application servers       │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    SnapCenter         = NetApp backup orchestration; coordinates app-consistent snapshots via plug-ins│
-│    Plug-in            = host-side agent; quiesces application before snapshot: SQL, Oracle, VMware    │
-│    Resource group     = set of resources sharing a backup policy and schedule in SnapCenter           │
-│    Policy             = SnapCenter object defining snapshot frequency, retention, and replication t...│
-│    App-consistent     = snapshot taken after DB quiesce; guarantees crash-consistent recovery         │
-│    Clone lifecycle    = SnapCenter clone: create from snapshot, provision to host, then delete        │
-│    FlexClone          = underlying ONTAP technology; SnapCenter clone maps to an ONTAP FlexClone      │
-│    Vault policy       = SnapCenter policy that also replicates snapshots to SnapVault destination     │
-│    Mirror policy      = SnapCenter policy that replicates snapshots via SnapMirror to DR cluster      │
-│    RBAC               = SnapCenter role-based access; Admin, Backup Operator, Restore Operator roles  │
-│    SMF                = SnapCenter MySQL database storing job history, policies, and resource configs │
-│    SnapCenter API     = REST API on port 8143; full feature coverage for automation workflows         │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+![SnapCenter — Encryption](../../../../assets/storage-netapp-snapcenter-security-encryption.svg)
+
+
 
 
 ---

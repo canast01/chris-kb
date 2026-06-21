@@ -11,32 +11,7 @@ EVS health check routine: cluster and host status via AWS CLI, vSAN and vCenter 
 *Applies to: Amazon EVS*
 </div>
 
-```text
-┌───────────────────────────────────── Amazon EVS — Health Checks ──────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   Check sequence: AWS cluster → vCenter hosts → vSAN health → NSX-T → HCX → capacity          │   │
-│   │   vSAN: all checks Green before any host maintenance; Orange = investigate before proceeding   │  │
-│   │   NSX-T: Manager + Controller + Edge nodes all must show green before changes                  │  │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  EVS environment = AWS resource representing a VCF cluster; identified by --environment-id            │
-│  Host state   = AWS-reported lifecycle: CREATED (healthy), PENDING (provisioning), FAILED             │
-│  vSAN health  = vSphere Cluster Health Service; runs checks on disk, network, and capacity            │
-│  NSX-T Manager = NSX control-plane VMs; 3-node cluster; all 3 must show Active status                 │
-│  HCX service mesh = Paired appliances enabling live migration: Interconnect + WAN Opt + NE            │
-│  vSAN resync  = Data rebuild triggered by host changes; BytesToSync must trend to 0                   │
-│  NSX Edge     = T0/T1 gateway VMs uplinked to VPC subnet; required for north-south traffic            │
-│  VCF domain   = SDDC Manager logical boundary; each domain has its own vCenter and cluster            │
-│  PowerCLI     = VMware PowerShell module; required for vSphere and vSAN automation in EVS             │
-│  BytesToSync  = vSAN metric showing pending resync data volume; must be 0 before next change          │
-│  EVS_ENV_ID   = Shell variable holding the AWS environment identifier (env-xxx format)                │
-│  HCX health API = REST endpoint at /hybridity/api/interconnect/links returns service mesh state       │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 ## Before you begin
 
@@ -104,6 +79,8 @@ pwsh -Command "
 ```
 
 ## Manual Checks
+
+![Manual Checks](../../../../assets/cloud-aws-evs-hc-manual-checks.svg)
 
 ```bash
 # Check for vSAN resync activity (should be 0 outside of maintenance)

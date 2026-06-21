@@ -12,60 +12,10 @@ Brocade FabricOS diagnostic commands: check hardware sensors and MAPS alerts wit
 
 *Applies to: Brocade FOS 9.x*
 </div>
+![FabricOS — Diagnostics](../../../../assets/san-brocade-fabric-os-troubleshooting-diagnostics.svg)
 
-```text
-┌─────────────────────────────────── Brocade Fabric OS — Diagnostics ───────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   Start here: switchstatusshow → errshow | head -50 → mapsdashboard --show                   │    │
-│   │   Port offline or flapping: portshow slot/port → sfpshow slot/port (Rx power, link errors)   │    │
-│   │   Fabric segmented: fabricshow → nsallshow (missing devices) → cfgshow (zone mismatch)       │    │
-│   │   Slow drain / credit zero: portbufshow → bottleneckmon --show → identify offending HBA      │    │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │           Log & Event Diagnostics            │  │         Port & Hardware Diagnostics         │   │
-│   │          errshow: fabric error log           │  │         portshow: port state + stats        │   │
-│   │         raslog: RAS event log detail         │  │        portstatsshow: counters delta        │   │
-│   │           errdump: dump to syslog            │  │        porttest: loopback diagnostic        │   │
-│   │        MAPS: mapsconfig + mapspolicy         │  │         sensorshow: temp + fan + PSU        │   │
-│   │         syslogdipadd: send to syslog         │  │        diagstatus: blade diagnostics        │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  errshow and raslog are the primary event sources; portshow for per-port analysis.                    │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │           Fabric-Level Diagnostics           │  │        Collection for TAC Escalation        │   │
-│   │             nsshow + fabricshow              │  │           supportshow: full bundle          │   │
-│   │        cfgshow: zone config snapshot         │  │         supportsave: save to USB/SCP        │   │
-│   │        islshow: ISL utilisation data         │  │         portdump: binary port trace         │   │
-│   │          switchstatusshow: overall           │  │           mgmtshow: management NIC          │   │
-│   │        licenseshow: FOS license check        │  │           pcap: port frame capture          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  Brocade FC switch or director chassis · SFP transceivers · FC cables · serial console                │
-│  USB drive or SCP server for supportsave · syslog server for SIEM integration                         │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│  errshow         = displays fabric error log; most recent errors first with severity                  │
-│  raslog          = RAS (Reliability/Availability/Serviceability) detailed event log                   │
-│  portshow        = per-port status: state, speed, SFP type, credits, error counters                   │
-│  portstatsshow   = per-port frame counter snapshot; run twice for delta comparison                    │
-│  porttest        = in-service loopback; port must be disabled first                                   │
-│  sensorshow      = hardware sensor readings: temperature, fan RPM, PSU voltage                        │
-│  diagstatus      = blade/chassis diagnostic test results and pass/fail status                         │
-│  supportshow     = full diagnostic bundle; run on both switches in HA pair                            │
-│  supportsave     = saves supportshow output to SCP/FTP/USB for offline analysis                       │
-│  MAPS            = Monitoring and Alerting Policy Suite; tracks thresholds over time                  │
-│  pcap            = port frame capture; captures FC frames for protocol analysis                       │
-│  syslogdipadd    = adds a syslog server IP; Fabric OS sends events to SIEM                            │
-│  BB credits      = buffer-to-buffer credits; starvation causes I/O stall (slow drain)                 │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ```mermaid
 graph TD

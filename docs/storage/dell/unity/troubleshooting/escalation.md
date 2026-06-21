@@ -12,6 +12,8 @@ How to escalate Dell Unity XT issues to Dell Technologies support: what data to 
 
 *Applies to: Unity XT 380F / 480F / 680F / 880F running OE 5.x*
 </div>
+![Unity XT — Escalation](../../../../assets/storage-dell-unity-troubleshooting-escalation.svg)
+
 
 ```text
 ┌──────────────────────────────── Dell Unity XT — Escalation ───────────────────────────────────────────┐

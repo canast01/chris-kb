@@ -13,54 +13,10 @@ Active Directory diagnostic commands: run dcdiag tests on domain controllers, ch
 
 *Applies to: Windows Server 2019 / 2022 AD DS*
 </div>
+![Active Directory — Diagnostics](../../../../assets/compute-windows-server-active-directory-troubleshooting-diag.svg)
 
-```text
-┌──────────────────────────────────── Active Directory — Diagnostics ───────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   Start here: dcdiag /test:all /v → repadmin /replsummary → Event ID 1311/1388/2042          │    │
-│   │   Replication lag: repadmin /showrepl → /syncall /AdeP to force sync                         │    │
-│   │   Auth failures: Event 4771 (Kerberos) / 4625 (NTLM) → klist purge on client                │     │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              DC Health (dcdiag)              │  │           Replication (repadmin)            │   │
-│   │   dcdiag /test:all /v /s:<dc-fqdn>          │  │   repadmin /replsummary (quick view)        │    │
-│   │   dcdiag /test:dns — DNS SRV check          │  │   repadmin /showrepl — per-partner detail   │    │
-│   │   dcdiag /test:replications — repl check    │  │   repadmin /failcache — stuck operations    │    │
-│   │   dcdiag /test:netlogons — netlogon SVC     │  │   repadmin /syncall /AdeP — force sync      │    │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Diagnose at domain layer first, then site/DC layer, then workstation layer                           │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │           Auth and Kerberos Checks           │  │            Support Data Collection          │   │
-│   │   nltest /sc_query:<domain> — secure chan    │  │   netlogon.log: nltest /dbflag:0x2080FFFF   │   │
-│   │   klist — cached Kerberos tickets            │  │   Event export: Directory Services + Sec    │   │
-│   │   Test-NetConnection DC 389/636/3268/88     │  │   dcdiag /test:all /v /f:dcdiag.log         │    │
-│   │   nslookup _ldap._tcp.dc._msdcs.<domain>   │  │   repadmin /replsummary > repadmin.txt      │     │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  Domain controllers (on-prem VMs or bare metal) · DNS servers (usually co-located with DCs)           │
-│  AD-joined servers and workstations · site links for inter-site replication · bridgehead DCs          │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│  dcdiag        = DC Diagnostic Tool; 30+ automated health tests; run on the DC under investigation    │
-│  repadmin      = Replication Admin Tool; shows per-partner sync state and lag time                    │
-│  KCC           = Knowledge Consistency Checker; auto-generates the replication topology               │
-│  FSMO          = Flexible Single Master Operations; 5 roles across DCs (PDC, RID, Infrastructure)     │
-│  Secure channel = authenticated RPC link between member and DC; owned by netlogon service             │
-│  USN           = Update Sequence Number; per-DC counter; replication halts if it rolls back           │
-│  Lingering obj = deleted object still on a DC that was offline past tombstone lifetime                │
-│  SRV record    = DNS service record; _ldap._tcp.dc._msdcs.<domain>; clients find DCs via these        │
-│  SYSVOL        = folder replicated by DFS-R; contains GPOs and logon scripts                          │
-│  Tombstone     = deleted AD object retained for 180 days so offline DCs can catch up                  │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ```mermaid
 graph TD

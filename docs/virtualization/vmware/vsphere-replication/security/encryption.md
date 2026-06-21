@@ -12,29 +12,11 @@ Encryption reference covering Data in Transit, Replication Data Encryption (Per-
 
 *Applies to: vSphere Replication 8.x*
 </div>
+![vSphere Replication — Encryption](../../../../assets/virtualization-vmware-vsphere-replication-security-encryptio.svg)
+
 
   VR Encryption Coverage
-```text
-┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
-│  Traffic Path                       Encryption                                                        │
-│  ┌───────────────────────────────────────────────────────┐                                            │
-│  │ Source ESXi → Target VRA (TCP 31031)  Optional AES-256│                                            │
-│  │ VRA ↔ VRA management (TCP 44046)      TLS 1.2+        │                                            │
-│  │ VRA → vCenter (TCP 443)               TLS 1.2+        │                                            │
-│  │ Browser → VRA VAMI (TCP 5480)         TLS 1.2+        │                                            │
-│  └───────────────────────────────────────────────────────┘                                            │
-│                                                                                                       │
-│  Enable per-VM replication encryption:                                                                │
-│  ┌───────────────────────────────────────────────────────┐                                            │
-│  │ vCenter → [VM] → Configure/Edit Replication           │                                            │
-│  │   Encryption: Enable Replication Traffic Encryption   │                                            │
-│  │   (~5–10% CPU overhead on source ESXi)                │                                            │
-│  └───────────────────────────────────────────────────────┘                                            │
-│                                                                                                       │
-│  Replica at-rest: vSAN/VM encryption on target datastore                                              │
-│  KMS must be reachable from target site for encrypted VMs                                             │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 ---
 

@@ -14,6 +14,8 @@ How to escalate VMware vSAN issues to Broadcom support: what data to collect, ho
 
 *Applies to: vSAN 7.x / 8.x*
 </div>
+![vSAN — Escalation](../../../../assets/virtualization-vmware-vsan-troubleshooting-escalation.svg)
+
 
 ```text
 ┌────────────────────────────────────────── vSAN — Escalation ──────────────────────────────────────────┐

@@ -12,50 +12,10 @@ How to escalate Active Directory issues to Microsoft support: what data to colle
 
 *Applies to: Windows Server 2019 / 2022 Active Directory Domain Services*
 </div>
+![Active Directory — Escalation](../../../../assets/compute-windows-server-active-directory-troubleshooting-esca.svg)
 
-```text
-┌──────────────────────────── Active Directory — Escalation ────────────────────────────────────────────┐
-│                                                                                                       │
-│  Escalate Active Directory issues to Microsoft support when authentication is down across the         │
-│  domain, replication has split-brain with USN rollback, FSMO roles are lost or seized,                │
-│  a DC is in a tombstone-reactivation state, or the domain cannot be joined or left.                   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Step 1 — Collect Data               │  │          Step 2 — Open the Case             │   │
-│   │  Run dcdiag /v on all affected DCs           │  │  Go to support.microsoft.com → sign in      │   │
-│   │  Run repadmin /showrepl * /csv               │  │  Product: Windows Server — Active Directory  │  │
-│   │  Export Security + System event logs (72h)   │  │  Severity: A (down) / B (degraded) / C/D   │    │
-│   │  Collect netlogon.log from affected DCs      │  │  Attach dcdiag + repadmin + event logs      │   │
-│   │  Write timeline: last auth OK → first fail   │  │  For Sev A: also call Microsoft CSS          │  │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  For Sev A (auth down / replication split-brain): open case AND call Microsoft CSS immediately.       │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                name                   │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Step 3 — Escalation Path            │  │         What NOT to Do                      │   │
-│   │  T1: triage + confirm dcdiag received        │  │  Do not seize FSMO roles without CSS        │   │
-│   │  T2: AD SE assigned; deep replication review │  │  Do not tombstone-reactivate DCs            │   │
-│   │  ADLDS/Schema: schema or DIT issues go to    │  │  Do not run metadata cleanup without CSS    │   │
-│   │  Sev A + CritSit for auth-down impacts       │  │  Do not restart all DCs simultaneously      │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  FSMO          = Flexible Single Master Operations; 5 AD roles; loss of PDC Emulator = auth impact    │
-│  USN rollback  = replication failure where a DC's USN counter is rolled back; causes split-brain      │
-│  Tombstone     = deleted AD object; 180-day default lifetime; reactivation causes replication storm   │
-│  dcdiag        = DC diagnostic tool; runs dozens of tests; mandatory for every AD support case        │
-│  repadmin      = replication admin tool; shows per-NC, per-DC replication status and errors           │
-│  netlogon.log  = DC Netlogon service log; shows auth failures, KDC errors, and DC discovery           │
-│  KDC           = Kerberos Distribution Center; runs on every DC; issues Kerberos tickets              │
-│  DIT           = Directory Information Tree; the NTDS.DIT file; core AD database on each DC           │
-│  CSS           = Customer Support Services; Microsoft support engineers                               │
-│  USN           = Update Sequence Number; tracks changes per DC; rollback = dangerous state            │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ---
 

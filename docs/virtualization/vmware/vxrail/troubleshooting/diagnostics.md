@@ -13,44 +13,10 @@ VxRail diagnostic commands: tail VxRail Manager mystic.log and lcm.log, grep ESX
 
 *Applies to: VxRail 7.x / 8.x*
 </div>
+![VxRail — Diagnostics](../../../../assets/virtualization-vmware-vxrail-troubleshooting-diagnostics.svg)
 
-```text
-┌──────────────────────────────────────── VxRail — Diagnostics ─────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │  Start here: choose log source based on symptom type                                         │    │
-│   │  VxRail Manager logs  → plugin issues, LCM failures, API errors                              │    │
-│   │  ESXi host logs       → vSAN I/O errors, storage path issues, hostd failures                 │    │
-│   │  iDRAC diagnostics    → hardware faults: disk, PSU, fan, NIC, memory                         │    │
-│   │  Dell support bundle  → full cluster snapshot for escalation to Dell GSS                     │    │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │         VxRail Manager Log Sources           │  │         ESXi and Hardware Sources           │   │
-│   │   mystic.log — plugin, API, node discovery   │  │   vmkernel.log — vSAN LSOM/DOM/NMP/APD      │   │
-│   │   lcm.log — upgrade phases and pre-checks    │  │   hostd.log — host management, vCenter      │   │
-│   │   access.log — REST API 4xx/5xx errors       │  │   iDRAC SEL — disk/PSU/fan/memory faults   │    │
-│   │   SSH: ssh mystic@<vxrail-manager-ip>        │  │   vm-support — full ESXi diagnostic bundle  │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  VxRail nodes (Dell PowerEdge hardware) · VxRail Manager VM · per-node iDRAC BMC interface            │
-│  vSAN storage on local NVMe/SSD · ESXi hypervisor · VxRail plugin registered in vCenter               │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│  Mystic service   = VxRail Manager daemon; mystic.log is the primary VxRail Manager log               │
-│  LSOM             = Local Log-Structured Object Manager; vSAN storage layer; errors in vmkernel       │
-│  DOM              = Distributed Object Manager; vSAN object distribution across nodes                 │
-│  hostd            = ESXi host management daemon; logs VM and management operations                    │
-│  iDRAC SEL        = System Event Log; chronological record of all hardware events on the node         │
-│  racadm           = Remote Access Controller CLI; runs against iDRAC for hardware commands            │
-│  vm-support       = ESXi built-in command; collects full diagnostic bundle including all logs         │
-│  Support bundle   = Dell/VxRail compressed archive; contains all logs for a support case              │
-│  APD              = All Paths Down; storage device unreachable (temporary)                            │
-│  PDL              = Permanent Device Loss; storage device permanently unreachable                     │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ```mermaid
 graph TD

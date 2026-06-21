@@ -12,59 +12,10 @@ Catalog of known Data Domain bugs, error codes, and workarounds covering DD Boos
 
 *Applies to: Data Domain OS 7.x*
 </div>
+![Dell Data Domain — Known Issues and Error Codes](../../../../assets/storage-dell-data-domain-troubleshooting-known-issues.svg)
 
-```text
-┌────────────────────────────────────────── Dell Data Domain ───────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │              Data Domain: purpose-built deduplication backup appliance and target             │   │
-│   │                      Protocols: DD Boost · NFS · CIFS · iSCSI · FC · NDMP                     │   │
-│   │                              Management: DDMC / DD System Manager                             │   │
-│   │                Sections: Architecture · Operations · Security · Troubleshooting               │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Architecture → Operations → Security → Troubleshooting → Escalation                                │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │           Function          │   │
-│   │          Data path          │  │       DD Boost client       │  │      Client-side dedup      │   │
-│   │          Appliance          │  │          DD engine          │  │         15-55x dedup        │   │
-│   │         Replication         │  │        DD Replicator        │  │         Async MTREE         │   │
-│   │          Management         │  │             DDMC            │  │       Central console       │   │
-│   │            Cloud            │  │        DD Cloud Tier        │  │        Object archive       │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
-│   │     DD Boost     │  Offload dedup   │    DD Boost lib   │  Cert/password   │   Client-side    │   │
-│   │      MTREE       │  Data container  │   NFS/CIFS/Boost  │       RBAC       │  Per backup job  │   │
-│   │  DD Replicator   │  DR replication  │   Encrypted TCP   │   Certificate    │      Async       │   │
-│   │       DDMC       │   Central mgmt   │       HTTPS       │    LDAP/local    │     Multi-DD     │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: Data Domain appliance (DD3300/6400/9800) · replication WAN · backup application servers  │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    DD Boost           = client-side dedup library; shifts dedup processing to backup client hosts     │
-│    MTREE              = logical data container on Data Domain; backup jobs target a specific MTREE    │
-│    DD Replicator      = async MTREE replication between DD systems; source and destination must matc  │
-│    DDMC               = Data Domain Management Center; centrally manages multiple DD appliances       │
-│    Cloud Tier         = inactive backup data tiered to S3/Azure Blob/GCS object storage automaticall  │
-│    Dedup ratio        = deduplicated size / original size; 20:1 typical for mixed backup workloads    │
-│    Active Tier        = high-performance SSD/HDD tier holding recent backup data on the appliance     │
-│    NDMP               = Network Data Management Protocol; NAS backup without requiring a host agent   │
-│    VTL                = Virtual Tape Library; DD emulates tape drives for legacy backup software com  │
-│    Retention Lock     = WORM protection on MTREE data; prevents deletion for a configured period      │
-│    FastCopy           = efficient space-saving internal copy of MTREE data with no physical data mov  │
-│    Encryption         = AES-256 at rest; FIPS 140-2 certified models available for compliance         │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 
 ## Before you begin

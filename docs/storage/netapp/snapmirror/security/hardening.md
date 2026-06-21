@@ -11,58 +11,9 @@ SnapMirror hardening: restricting intercluster LIF firewall policy to replicatio
 
 *Applies to: SnapMirror*
 </div>
-```text
-┌─────────────────────────────── NetApp SnapMirror — Security Hardening ────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      SnapMirror hardening: disable unused protocols, enforce encryption, restrict access      │   │
-│   │         Network: dedicated storage VLAN; restrict management access to jump hosts only        │   │
-│   │        Auth: disable default accounts; enforce password complexity and rotation policy        │   │
-│   │         Audit: forward syslog to SIEM; alert on privilege escalation and failed logins        │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Baseline config → disable unused → enforce MFA → enable logging → audit                            │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │            Async            │  │        Periodic sync        │  │         RPO: minutes        │   │
-│   │             Sync            │  │           Zero RPO          │  │          Sub-ms lag         │   │
-│   │            SM-BC            │  │        Active-active        │  │        Transparent FO       │   │
-│   │            Vault            │  │        Long retention       │  │         Backup copy         │   │
-│   │            Cloud            │  │         ONTAP → CVO         │  │       Cloud DR/backup       │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │       Area       │     Control      │      Standard     │      Verify      │    Frequency     │   │
-│   │     Accounts     │ Disable defaults │  No default creds │   Login audit    │      Deploy      │   │
-│   │    Protocols     │  Disable unused  │   TLS 1.2+ only   │    Port scan     │     Monthly      │   │
-│   │       MFA        │ Enforce all admi │   TOTP/hardware   │    Auth logs     │    Continuous    │   │
-│   │     Logging      │ SIEM forwarding  │  All admin events │   SIEM alerts    │      Daily       │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: Source ONTAP cluster · destination ONTAP cluster · intercluster LIFs · WAN link          │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    SnapMirror         = ONTAP replication; transfers only changed blocks after initial baseline sync  │
-│    Intercluster LIF   = dedicated logical interface for SnapMirror traffic between clusters           │
-│    SnapMirror policy  = defines schedule, retention, and transfer type (async/sync/vault)             │
-│    Baseline transfer  = first full snapshot transfer establishing the SnapMirror relationship         │
-│    Update             = incremental transfer; only sends new or changed blocks since last successfu...│
-│    Snapmirror break   = breaks the DR relationship; activates destination volume for read-write       │
-│    Resync             = re-establishes a broken SnapMirror relationship from the last common snapshot │
-│    SM-BC              = SnapMirror Business Continuity; synchronous zero-RPO active-active SAN volumes│
-│    Mediator           = ONTAP Mediator; quorum service for SM-BC running on Linux VM at third site    │
-│    SnapVault          = SnapMirror variant for backup retention; destination has independent schedule │
-│    MirrorAndVault     = policy combining SnapMirror DR and SnapVault backup retention copies          │
-│    Fanout             = single source volume replicating to multiple destination clusters simultane...│
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+![SnapMirror — Hardening](../../../../assets/storage-netapp-snapmirror-security-hardening.svg)
+
+
 
 
 ---

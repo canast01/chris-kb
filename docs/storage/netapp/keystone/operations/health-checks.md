@@ -11,58 +11,7 @@ NetApp Keystone health checks: subscription capacity consumption review via Keys
 
 *Applies to: Keystone STaaS*
 </div>
-```text
-┌─────────────────────────────────── NetApp Keystone — Health Checks ───────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │       Keystone health checks: routine verification of operational status and performance      │   │
-│   │         Checks include: controller status, drive health, replication lag, and capacity        │   │
-│   │         Frequency: daily quick checks; weekly detailed review; monthly capacity report        │   │
-│   │        Configure threshold-based alerts for proactive incident prevention and awareness       │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Check status → review alerts → verify replication → capacity → log                                 │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │           Hardware          │  │       AFF/FAS on-prem       │  │         NetApp-owned        │   │
-│   │        Service level        │  │       Extreme/Perf/Std      │  │         Latency SLA         │   │
-│   │          Collector          │  │         Telemetry VM        │  │        ONTAP polling        │   │
-│   │          Dashboard          │  │            BlueXP           │  │       Usage visibility      │   │
-│   │           Billing           │  │       Committed+burst       │  │       Monthly invoice       │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Check area    │  How to verify   │   Pass criteria   │    Frequency     │       Tool       │   │
-│   │   Controllers    │   show status    │    All healthy    │      Daily       │     CLI/GUI      │   │
-│   │      Drives      │   show drives    │  No failed/pred.  │      Daily       │     CLI/GUI      │   │
-│   │   Replication    │ show replication │  Lag < threshold  │      Daily       │     CLI/GUI      │   │
-│   │     Capacity     │  show capacity   │     < 80% used    │      Daily       │     CLI/GUI      │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: NetApp AFF/FAS arrays on-prem · Keystone Collector VM · BlueXP cloud portal              │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    Keystone           = NetApp STaaS; fixed-term subscription for ONTAP or StorageGRID capacity       │
-│    Service level      = tiered SLA: Extreme (NVMe), Performance (SSD), Standard (HDD)                 │
-│    Committed capacity = minimum contracted TiB; billed monthly even if below threshold                │
-│    Burst capacity     = usage above committed; available without pre-ordering; billed monthly         │
-│    Keystone Collector = on-prem VM that gathers usage metrics and sends to NetApp Keystone            │
-│    BlueXP             = NetApp SaaS control plane; Keystone dashboard, DRaaS, and cloud integrations  │
-│    AFF                = All Flash FAS; ONTAP-based NVMe/SSD array used for Extreme and Performance ...│
-│    FAS                = Fabric Attached Storage; ONTAP hybrid HDD/SSD for Standard service level      │
-│    StorageGRID        = NetApp S3 object storage; Object service level in Keystone subscriptions      │
-│    AutoSupport        = ONTAP telemetry relay; sends call-home data and log bundles to NetApp         │
-│    Service request    = NetApp SR; support ticket opened via mysupport.netapp.com portal              │
-│    SKU                = Keystone service SKU identifies the service level and raw or usable capacity  │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 ## Before you begin
 
@@ -86,6 +35,8 @@ NetApp Keystone health checks: subscription capacity consumption review via Keys
 
 ## Daily Checks
 
+![Daily Checks](../../../../assets/storage-netapp-keystone-hc-daily-checks.svg)
+
 | Check | Command | Notes |
 |---|---|---|
 | Verify Keystone Collector service is running | `systemctl status keystone-collector` | Service must show `active (running)` |
@@ -99,6 +50,8 @@ NetApp Keystone health checks: subscription capacity consumption review via Keys
 ---
 
 ## Health Check Criteria
+
+![Health Check Criteria](../../../../assets/storage-netapp-keystone-hc-health-check-criteria.svg)
 
 A healthy Keystone environment meets all of the following:
 
@@ -114,6 +67,8 @@ A healthy Keystone environment meets all of the following:
 ---
 
 ## Collector Health Commands
+
+![Collector Health Commands](../../../../assets/storage-netapp-keystone-hc-collector-health-commands.svg)
 
 Run these commands on the Keystone Collector VM (SSH access required):
 
@@ -144,6 +99,8 @@ sudo cat /etc/keystone-collector/config.conf | grep -i proxy
 ---
 
 ## ONTAP Health Commands
+
+![ONTAP Health Commands](../../../../assets/storage-netapp-keystone-hc-ontap-health-commands.svg)
 
 Run these commands on the ONTAP cluster backing the Keystone subscription:
 
@@ -177,6 +134,8 @@ qos statistics performance show
 
 ## Capacity and Burst Health
 
+![Capacity and Burst Health](../../../../assets/storage-netapp-keystone-hc-capacity-and-burst-health.svg)
+
 ```bash
 # Check current consumed vs. committed via the Keystone REST API
 # (replace with your actual subscription ID and token)
@@ -202,6 +161,8 @@ for tier in data.get('service_levels', data.get('tiers', [])):
 
 ## Burst Threshold Escalation
 
+![Burst Threshold Escalation](../../../../assets/storage-netapp-keystone-hc-burst-threshold-escalation.svg)
+
 | Consumed vs. Committed | Status | Action |
 |---|---|---|
 | < 80% of committed | Normal | No action |
@@ -213,6 +174,8 @@ for tier in data.get('service_levels', data.get('tiers', [])):
 ---
 
 ## Weekly Health Review
+
+![Weekly Health Review](../../../../assets/storage-netapp-keystone-hc-weekly-health-review.svg)
 
 Beyond the daily checks, perform these weekly:
 
@@ -235,6 +198,8 @@ volume show -fields vserver,volume,qos-policy-group -state online | grep " - "
 ---
 
 ## Health Check Output Reference
+
+![Health Check Output Reference](../../../../assets/storage-netapp-keystone-hc-health-check-output-reference.svg)
 
 | Field | Healthy Value | Investigate If |
 |---|---|---|

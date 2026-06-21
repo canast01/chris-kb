@@ -12,56 +12,10 @@ FlashArray diagnostic commands: run the first-response sequence (<code>purealert
 
 *Applies to: FlashArray Purity 6.x*
 </div>
+![FlashArray — Diagnostics](../../../../assets/storage-pure-flasharray-troubleshooting-diagnostics.svg)
 
-```text
-┌────────────────────────────────── Pure FlashArray — Diagnostics ──────────────────────────────────────┐
-│                                                                                                       │
-│   ┌────────────────────────────────────────────────────────────────────────────────────────────┐      │
-│   │  Start here: purealert list → identify failure domain → purearray list --controller       │       │
-│   │  Controller fault: purehw list --type ct → purehw list --type nvram: component detail     │       │
-│   │  Drive fault: puredrive list --progress → wait for rebuild; do not pull drives            │       │
-│   │  Path missing: pureport list --type fc → pureport list --initiator → check FC zone       │        │
-│   └────────────────────────────────────────────────────────────────────────────────────────────┘      │
-│                                                                                                       │
-│   ┌─────────────────────────────────────────┐  ┌──────────────────────────────────────────────┐       │
-│   │         Alert and Controller            │  │          Drive and Storage Pool              │       │
-│   │   purealert list: failure domains       │  │   puredrive list: state for all drives       │       │
-│   │   purearray list --controller: CT0/CT1  │  │   puredrive list --progress: rebuild %       │       │
-│   │   purehw list: all hardware components  │  │   purearray list --space: capacity and DR    │       │
-│   │   purehw list --type nvram: NVRAM state │  │   puresnap list --space: snapshot consumers  │       │
-│   │   purearray list: version + overall     │  │   purevol list --space: per-volume usage     │       │
-│   └─────────────────────────────────────────┘  └──────────────────────────────────────────────┘       │
-│                                                                                                       │
-│   ┌─────────────────────────────────────────┐  ┌──────────────────────────────────────────────┐       │
-│   │      Path and Host Connectivity         │  │       Performance and Replication            │       │
-│   │   pureport list --type fc: port state   │  │   purearray monitor: real-time latency       │       │
-│   │   pureport list --initiator: HBA WWNs   │  │   purevol monitor --latency: per-volume      │       │
-│   │   purehost list --connection: paths     │  │   purepod list: ActiveCluster pod state      │       │
-│   │   purenetwork list: iSCSI/repl IPs      │  │   purepod list --mediator: mediator health   │       │
-│   │   purehost list --wwn: registered WWNs  │  │   purepgroup list --replication: async DR    │       │
-│   └─────────────────────────────────────────┘  └──────────────────────────────────────────────┘       │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  FlashArray controller chassis (CT0/CT1) · NVMe/SAS drive bays · FC or Ethernet ports (CT0.FC0)       │
-│  FC switches or direct-connect cables · iSCSI network (VLAN) · Pure1 management portal                │
-│  Mediator server (ActiveCluster) · SCP server or purediag phone-home for bundle collection            │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│  purealert list      = all active Purity alerts; start here to identify the failure domain            │
-│  purearray list      = array version, status, space usage with --space flag                           │
-│  purearray monitor   = real-time IOPS, latency, bandwidth (1-second refresh)                          │
-│  purehw list         = hardware component inventory with health state per component                   │
-│  puredrive list      = per-drive state: healthy, recovering, failed, evicting, unhealthy              │
-│  pureport list       = FC and Ethernet port state; --initiator shows connected HBA WWNs               │
-│  purehost list       = registered hosts and initiators; --connection shows volume paths               │
-│  purepod list        = ActiveCluster pod state; --mediator checks mediator reachability               │
-│  purepgroup list     = protection group replication schedule and status                               │
-│  purediag            = collect diagnostic bundle; --send uses phone-home; --output saves locally      │
-│  pureaudit list      = admin audit trail: who changed what and when                                   │
-│  Pure1 Meta          = AI anomaly detection in Pure1 portal; supplements CLI diagnostics              │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ```mermaid
 graph TD

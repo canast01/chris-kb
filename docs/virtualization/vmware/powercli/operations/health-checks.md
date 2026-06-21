@@ -12,38 +12,7 @@ PowerCLI health check routines for vSphere platform health: host connection stat
 *Applies to: PowerCLI 13.x*
 </div>
 
-```text
-┌────────────────────────────── PowerCLI — Platform Health Check Routine ───────────────────────────────┐
-│                                                                                                       │
-│   Health check covers: hosts, VMs, snapshots, datastores, cluster HA state, and vSAN                  │
-│   Run daily minimum; always run before and after a change window                                      │
-│   Output CSV for trending; alert if thresholds exceeded (datastore >80%, snapshots >72h)              │
-│                                                                                                       │
-│   Host checks                                                                                         │
-│   Connection state: NotResponding or Disconnected = escalate immediately                              │
-│   Power state: unexpected powered-off hosts = investigate before attempting reconnect                 │
-│   NTP status: clock drift >5 s = SSO token failures and replication issues                            │
-│                                                                                                       │
-│   VM checks                                                                                           │
-│   Snapshot age: any snapshot >72 h = review and remove; >7 days = immediate removal required          │
-│   VMware Tools: outdated or not running = flag for update; affects vMotion and quiesced backups       │
-│   Power state anomalies: VMs in PoweredOff or Suspended state unexpectedly = investigate              │
-│                                                                                                       │
-│   Storage checks                                                                                      │
-│   Datastore capacity: >80% = alert; >90% = Storage vMotion VMs off the datastore immediately          │
-│   vSAN health service: any red health check item = investigate before next change window              │
-│   Datastore accessibility: inaccessible or APD state = escalate; may indicate storage fabric issue    │
-│                                                                                                       │
-│   Cluster checks                                                                                      │
-│   HA status: cluster HA disabled or insufficient failover capacity = check admission control          │
-│   Active alarms: red alarms on cluster or host objects = review and remediate or acknowledge          │
-│                                                                                                       │
-│   Key terms:                                                                                          │
-│   APD  = All Paths Down; storage device unreachable; VMs affected but not immediately terminated      │
-│   PDL  = Permanent Device Loss; device removed; HA terminates VMs on affected datastore               │
-│   %RDY = CPU Ready in ESXTOP; >10 ms per 20-second interval = CPU contention on the host              │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 ## Before you begin
 
@@ -151,6 +120,8 @@ if ($FAIL -gt 0) { exit 1 } elseif ($WARN -gt 0) { exit 2 } else { exit 0 }
 ```
 
 ## Individual Checks
+
+![Individual Checks](../../../../assets/virtualization-vmware-powercli-hc-individual-checks.svg)
 
 ```powershell
 # Host hardware health (via CIM)

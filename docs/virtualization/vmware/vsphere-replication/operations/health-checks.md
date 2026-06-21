@@ -14,19 +14,7 @@ Health Checks reference covering VRA and Site Pairing Status, Check All Replicat
 </div>
 
   Health Check Chain
-```text
-┌─────────────────────────────────── ┐    ┌──────────────────┐    ┌ ────────────────────────────────────┐
-│  VRA Status      │    │  VR Agents       │    │  Replication                                          │
-│  (both sites)    │───►│  on ESXi hosts   │───►│  Status per VM                                        │
-│  ┌────────────┐  │    │  ┌────────────┐  │    │  ┌────────────┐                                       │
-│  │ hms/vrms   │  │    │  │ hbrsvc     │  │    │  │ Green: OK  │                                       │
-│  │ running?   │  │    │  │ running on │  │    │  │ Amber: near│                                       │
-│  │ Site pair  │  │    │  │ source host│  │    │  │  RPO limit │                                       │
-│  │ Connected? │  │    │  └────────────┘  │    │  │ Red: RPO   │                                       │
-│  └────────────┘  │    └──────────────────┘    │  │  VIOLATION │                                       │
-└──────────────────┘                            │  └────────────┘  │
-                                                └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 ## Before you begin
 
@@ -60,6 +48,8 @@ Health Checks reference covering VRA and Site Pairing Status, Check All Replicat
 
 ## VRA and Site Pairing Status
 
+![VRA and Site Pairing Status](../../../../assets/virtualization-vmware-vsphere-replicatio-hc-vra-and-site-pairing-status.svg)
+
 ```text
 vCenter → Site Recovery → Sites
   Both sites should show: Connected
@@ -78,6 +68,8 @@ curl -sk https://vra-london.example.local/api/rest/vr/health | python3 -m json.t
 ---
 
 ## Check All Replications for RPO Violations
+
+![Check All Replications for RPO Violations](../../../../assets/virtualization-vmware-vsphere-replicatio-hc-check-all-replications-for-rpo-v.svg)
 
 ```text
 vCenter → Site Recovery → Replications
@@ -119,6 +111,8 @@ for r in reps.get('list', []):
 
 ## Verify VRA Disk Space
 
+![Verify VRA Disk Space](../../../../assets/virtualization-vmware-vsphere-replicatio-hc-verify-vra-disk-space.svg)
+
 ```bash
 ssh admin@vra-london.example.local
 df -h
@@ -136,6 +130,8 @@ vCenter (Target Site) → Datastore → check % used
 
 ## VRS Health (if deployed)
 
+![VRS Health (if deployed)](../../../../assets/virtualization-vmware-vsphere-replicatio-hc-vrs-health-if-deployed.svg)
+
 ```text
 vCenter → Site Recovery → vSphere Replication → Replication Servers
   Each VRS should show: Connected, Healthy
@@ -150,6 +146,8 @@ systemctl status hms
 ---
 
 ## Verify Replication Files on Target Datastore
+
+![Verify Replication Files on Target Datastore](../../../../assets/virtualization-vmware-vsphere-replicatio-hc-verify-replication-files-on-targ.svg)
 
 Replication data is stored as `.vrepl` and `.hbr` files:
 
@@ -167,6 +165,8 @@ ls /vmfs/volumes/<target-datastore>/<VM-folder>/
 
 ## Certificate Expiry
 
+![Certificate Expiry](../../../../assets/virtualization-vmware-vsphere-replicatio-hc-certificate-expiry.svg)
+
 ```bash
 # Check VRA management certificate
 echo | openssl s_client -connect vra-london.example.local:443 -servername vra-london.example.local 2>/dev/null \
@@ -180,6 +180,8 @@ echo | openssl s_client -connect vra-amsterdam.example.local:44046 2>/dev/null \
 ---
 
 ## Monthly DR Test Trigger
+
+![Monthly DR Test Trigger](../../../../assets/virtualization-vmware-vsphere-replicatio-hc-monthly-dr-test-trigger.svg)
 
 Run a test recovery on at least one VR-protected VM monthly. For VMs managed by SRM:
 ```text

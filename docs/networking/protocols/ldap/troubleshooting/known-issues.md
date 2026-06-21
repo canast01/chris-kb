@@ -12,57 +12,10 @@ Catalog of known LDAP and LDAPS issues covering bind failures, certificate error
 
 *Applies to: Microsoft Active Directory LDAP, OpenLDAP 2.6.x*
 </div>
+![LDAP / LDAPS — Known Issues and Error Codes](../../../../assets/networking-protocols-ldap-troubleshooting-known-issues.svg)
 
-```text
-┌──────────────────────────────────────────── LDAP / LDAPS ─────────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                    Directory protocol — bind, search, AD/OpenLDAP backends                    │   │
-│   │                Protocols: LDAP (389) · LDAPS (636) · Global Catalog (3268/3269)               │   │
-│   │                Management: ldapsearch CLI / Apache Directory Studio / ADSI Edit               │   │
-│   │              Client bind -> Search request -> Directory lookup -> Result/referral             │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │             Bind            │  │       Simple/SASL bind      │  │   Credential format varies  │   │
-│   │            Search           │  │       BaseDN + filter       │  │    base/onelevel/subtree    │   │
-│   │            Schema           │  │     Object classes/attrs    │  │    Defines storable data    │   │
-│   │           Security          │  │        LDAPS/StartTLS       │  │     Encrypts bind+search    │   │
-│   │           Backend           │  │        AD / OpenLDAP        │  │     Diff. DN conventions    │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
-│   │    ldapsearch    │ CLI search tool  │     LDAP/LDAPS    │    Bind DN+pw    │   Quick tests    │   │
-│   │     StartTLS     │  Upgrade to TLS  │     LDAP (389)    │       N/A        │Alt. to LDAPS port│   │
-│   │  Global Catalog  │Forest-wide search│     TCP 3268/9    │   Same as LDAP   │ AD multi-domain  │   │
-│   │     Referral     │Points to other DC│        N/A        │       N/A        │Client must follow│   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical: LDAP server(s) (AD DC or OpenLDAP) - clients over network                                  │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Bind DN        = the DN used to authenticate to the directory                                        │
-│  BaseDN         = starting point in the tree for a search                                             │
-│  Distinguished Name = full object path (cn=...,ou=...,dc=...)                                         │
-│  Simple bind    = plaintext user/pass bind, should use TLS                                            │
-│  SASL bind      = bind via pluggable mechanism (e.g. GSSAPI/Kerberos)                                 │
-│  LDAPS          = LDAP over TLS on port 636, encrypted from connect                                   │
-│  StartTLS       = upgrades a plaintext 389 connection to encrypted                                    │
-│  Global Catalog = AD service indexing objects across forest domains                                   │
-│  Referral       = points client to another server for a partial result                                │
-│  Paged results  = retrieves large result sets in pages                                                │
-│  objectClass    = schema attribute defining allowed attrs for an object                               │
-│  VLV            = Virtual List View; paging for sorted result sets                                    │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 
 ## Before you begin

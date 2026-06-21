@@ -12,50 +12,10 @@ How to escalate Dell PowerStore issues to Dell support: what data to collect, ho
 
 *Applies to: PowerStore 3.x*
 </div>
+![PowerStore — Escalation](../../../../assets/storage-dell-powerstore-troubleshooting-escalation.svg)
 
-```text
-┌──────────────────────────────────── Dell PowerStore — Escalation ─────────────────────────────────────┐
-│                                                                                                       │
-│  Escalate PowerStore issues to Dell when a controller is down, an appliance is                        │
-│  unreachable, I/O has completely stopped, or a drive failure has reduced redundancy.                  │
-│  Collect the support bundle and SupportAssist case BEFORE changing anything.                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Step 1 — Collect Data               │  │          Step 2 — Open the SR               │   │
-│   │  Check SupportAssist for auto-opened case    │  │  Go to www.dell.com/support → sign in       │   │
-│   │  Run: GET /api/rest/alert?state=active        │  │  Product: PowerStore; enter service tag     │  │
-│   │  Note PowerStoreOS version + service tag     │  │  Severity: P1 down / P2 major / P3 minor    │   │
-│   │  Collect support bundle via PSM              │  │  Attach support bundle + alert output       │   │
-│   │  Write timeline: last good → first failure   │  │  Include affected volumes and host list     │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  For P1: open portal case AND call Dell at +1 800 945 3355 immediately.                               │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Step 3 — Escalation Path            │  │         What NOT to Do                      │   │
-│   │  T1: triage + confirm bundle received        │  │  Do not reboot a controller without Dell    │   │
-│   │  TAM: engages engineering for P1             │  │  Do not replace drives without Dell go-ahead│   │
-│   │  Duty Manager: request if SLA breached       │  │  Do not modify volumes or hosts mid-case    │   │
-│   │  Change freeze until Dell gives go-ahead     │  │  Do not disable SupportAssist during case   │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  PSM          = PowerStore Manager; browser-based GUI and REST API endpoint for all operations        │
-│  SupportAssist= Dell telemetry agent; automatically opens cases for qualifying hardware faults        │
-│  Service tag  = 7-character alphanumeric serial; required for all Dell support cases                  │
-│  ProSupport   = Dell support contract; required for 24×7 SLA; upgraded to ProSupport Plus for TAM     │
-│  T-model      = PowerStore block-only appliance; iSCSI, FC, and NVMe-oF connectivity                  │
-│  X-model      = PowerStore unified block + file appliance; adds NAS capabilities                      │
-│  Metro        = PowerStore synchronous replication between two sites; zero RPO                        │
-│  Applied-to   = host mapping object; volumes are applied-to a host or host group for access           │
-│  P1           = production system completely down; no hosts can access storage; 24×7 response         │
-│  Protection policy = PowerStore object defining snapshot schedule, retention, and replication         │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ---
 

@@ -11,63 +11,10 @@ Hardening checklist and procedures for VxRail in the VMware product context. Cov
 
 *Applies to: VxRail 7.x / 8.x*
 </div>
+![VxRail — Hardening](../../../../assets/virtualization-vmware-vxrail-security-hardening.svg)
 
-```text
-┌───────────────────────────────────────── VxRail — Hardening ──────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │         VxRail Manager: mystic changed, LDAP configured, API and SSH restricted                │  │
-│   │         iDRAC per node: root/Calvin replaced, OOB VLAN only, LDAP, firmware current           │   │
-│   │         ESXi: Normal Lockdown, SSH disabled, Shell disabled, host profiles compliant           │  │
-│   │         Network: VLAN segregation, vSAN isolated, iDRAC OOB only, VAMI port restricted        │   │
-│   │         SupportAssist: outbound TLS only, data scope reviewed, regulated-env check done       │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Each layer hardened independently · defence in depth · checklist drives consistency                │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │       VxRail Manager        │  │        iDRAC / Hardware      │  │      vSphere / ESXi         │  │
-│   │   mystic → vault password   │  │   root/Calvin → replace     │  │   Normal Lockdown all hosts  │  │
-│   │   LDAP AD group mapping     │  │   OOB VLAN restriction       │  │   SSH disabled TSM-SSH      │  │
-│   │   API → jump hosts only     │  │   LDAP centralised auth      │  │   ESXi Shell disabled TSM   │  │
-│   │   SSH → jump hosts only     │  │   FW current via LCM         │  │   Host profiles compliant   │  │
-│   │   VM backup (not snapshot)  │  │   Secure Boot enabled        │  │   vSAN encryption enabled   │  │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│    Manager creds in vault · iDRAC on OOB · ESXi managed via vCenter only                              │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   VxRail Mgr    │      iDRAC         │   vSphere/ESXi   │    Network       │  SupportAssist  │    │
-│   │  mystic vault   │  root → changed    │  Lockdown: Norm  │  VLAN segments   │  Outbound only  │    │
-│   │  LDAP groups    │  OOB VLAN only     │  SSH: disabled   │  vSAN isolated   │  TLS encrypted  │    │
-│   │  API jump host  │  LDAP AD groups    │  Shell: disabled │  iDRAC OOB VLAN  │  Data scope chk │    │
-│   │  SSH jump host  │  FW current LCM    │  Profiles: yes   │  VAMI restricted │  Regulated env  │    │
-│   │  VM backup Veeam│  Secure Boot: on   │  vSAN encrypt    │  NSX DFW rules   │  No inbound     │    │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  Dell PowerEdge servers · TPM 2.0 · iDRAC OOB NIC · ToR switches · VLANs · CA infrastructure          │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  mystic              = VxRail Manager local admin account; must be vaulted and LDAP configured        │
-│  root/Calvin         = Factory iDRAC credentials; unique per-node replacement mandatory               │
-│  Normal Lockdown     = ESXi state forcing management through vCenter; DCUI accessible to exceptions   │
-│  TSM-SSH             = ESXi Tech Support Mode SSH service; must be stopped and disabled               │
-│  TSM                 = ESXi Tech Support Mode shell; must be stopped and disabled                     │
-│  Host Profile        = vCenter configuration template enforcing security, NTP, syslog baselines       │
-│  OOB VLAN            = Out-of-band VLAN; iDRAC IPs reachable only from NOC and jump hosts             │
-│  VAMI                = vCenter Appliance Management Interface; port 5480; admin-subnet only           │
-│  NSX DFW             = NSX Distributed Firewall; micro-segmentation for VM-to-VM traffic              │
-│  SupportAssist       = Dell proactive support tool; outbound TLS to Dell cloud; no inbound            │
-│  LCM                 = Lifecycle Manager; VxRail upgrade system managing FW, ESXi, and vCenter        │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ---
 

@@ -13,6 +13,8 @@ How to escalate VMware Aria Operations issues to Broadcom support: what data to 
 
 *Applies to: Aria Operations (formerly vRealize Operations) 8.x*
 </div>
+![Aria Operations — Escalation](../../../../assets/virtualization-vmware-aria-operations-troubleshooting-escala.svg)
+
 
 ```text
 ┌───────────────────────────────────── Aria Operations Escalation ──────────────────────────────────────┐

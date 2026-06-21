@@ -12,57 +12,10 @@ Catalog of known Aria Automation (vRA) bugs, error codes, and workarounds coveri
 
 *Applies to: Aria Automation 8.x / 8.16+*
 </div>
+![VMware Aria Automation — Known Issues and Error Codes](../../../../assets/virtualization-vmware-aria-automation-troubleshooting-known-.svg)
 
-```text
-┌─────────────────────────────────────── VMware Aria Automation ────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │           Cloud automation platform — self-service catalog, IaC, multi-cloud deploy           │   │
-│   │               Protocols: HTTPS (UI/API) · REST · vRO workflow API · LDAP · SAML               │   │
-│   │           Management: Aria Automation UI · REST API · Blueprint YAML · vRO workflows          │   │
-│   │           User -> catalog request -> blueprint -> cloud zone deploy -> IP/DNS assign          │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │           Catalog           │  │       Service catalog       │  │      Self-service items     │   │
-│   │             IaC             │  │       Blueprint (YAML)      │  │      Declarative deploy     │   │
-│   │          Cloud zone         │  │       vCenter / cloud       │  │     Target compute pool     │   │
-│   │          Networking         │  │          IPAM / NSX         │  │     IP assignment + SDN     │   │
-│   │        Extensibility        │  │          ABX / vRO          │  │     Subscription actions    │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
-│   │    Aria Auto     │Automation engine │     HTTPS 443     │   SAML / vIDM    │Lifecycle-managed │   │
-│   │    Blueprint     │ Deploy template  │    YAML / REST    │  Project scope   │ Versioned in Git │   │
-│   │    Cloud zone    │  Compute target  │    vCenter API    │ Service account  │Has placement pol.│   │
-│   │       vRO        │ Workflow engine  │    HTTPS (API)    │    vIDM / SSO    │Extensibility ext.│   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical: Aria Automation cluster -> vCenter / cloud endpoint -> deployed VMs / infra                │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Blueprint    = YAML infrastructure-as-code template defining resources to deploy                     │
-│  Cloud zone   = compute endpoint (vCenter cluster, AWS, Azure) for deployments                        │
-│  Flavor mapping = maps blueprint resource sizes to cloud-specific compute SKUs                        │
-│  Image mapping = maps blueprint OS references to cloud-specific image IDs                             │
-│  IPAM         = IP Address Management; Aria assigns IPs from configured ranges                        │
-│  ABX          = Action-Based Extensibility; FaaS-style subscription actions                           │
-│  vRO          = vRealize Orchestrator; Aria Automation workflow engine                                │
-│  Subscription = event-driven hook (e.g. post-provision DNS update via ABX/vRO)                        │
-│  Project      = Aria tenancy boundary; scopes blueprints, zones, and users                            │
-│  Deployment   = running instance of a blueprint; tracked in Aria as a lifecycle                       │
-│  Catalog item = published blueprint or vRO workflow visible in service catalog                        │
-│  vIDM         = VMware Identity Manager; SSO and SAML provider for Aria stack                         │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 
 ## Before you begin

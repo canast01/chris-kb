@@ -12,49 +12,10 @@ VPLEX diagnostic commands: run health-check --full and ll /clusters/*/health-ind
 
 *Applies to: VPLEX VS2 / VS6*
 </div>
+![Dell VPLEX — Diagnostics](../../../../assets/storage-dell-vplex-troubleshooting-diagnostics.svg)
 
-```text
-┌────────────────────────────────────── Dell VPLEX — Diagnostics ───────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   Start here — run in order and stop at first non-ok result:                                  │   │
-│   │   1. vplexcli -q -e "health-check --full"                                                    │    │
-│   │   2. ll /clusters/*/health-indications/                                                       │   │
-│   │   3. ll /distributed-storage/distributed-devices/*/health-indications/                        │   │
-│   │   4. ll /engines/*/directors/*/hardware/                                                      │   │
-│   │   5. ll /clusters/*/cluster-witness/                                                          │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Cluster and Device Health           │  │         Host Access and Metro               │   │
-│   │   health-check --full: overall health        │  │   storage-views: host access objects        │   │
-│   │   health-indications: per-cluster detail     │  │   initiator-ports: HBA WWN registration     │   │
-│   │   distributed-devices: Metro sync state      │  │   cluster-witness: Witness connectivity     │   │
-│   │   rebuild-progress: resync 0% → 100%         │  │   inter-cluster-links: ICL latency <5ms     │   │
-│   │   consistency-groups: CG suspend reason      │  │   virtual-volumes: volume operational state  │  │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  VPLEX VS2/VS6 engine chassis · Director pairs (A+B per engine) · Backend FC arrays                   │
-│  ICL (Inter-Cluster Link): dark fibre or DWDM for Metro (≤5ms RTT required)                           │
-│  Witness VM at third site for Metro quorum · Management Server (VMS) embedded Linux VM                │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│  Virtual volume     = VPLEX-abstracted LUN presented to hosts; backed by array LUNs                   │
-│  VPLEX Metro        = synchronous active-active stretch; same VV from two sites                       │
-│  Distributed device = virtual volume spanning two clusters; rebuilt automatically after ICL restore   │
-│  Witness            = third-site quorum arbiter; grants I/O rights to one cluster on ICL loss         │
-│  ICL                = Inter-Cluster Link; VPLEX Metro requires ≤5ms round-trip latency                │
-│  Director           = engine's compute module; Director A + B in each engine for redundancy           │
-│  Consistency group  = set of VVs that failover together maintaining write-order fidelity              │
-│  health-indications = VPLEX CLI attribute tree; per-object health state with fault reason             │
-│  WAN-COM            = WAN communication module in VPLEX Geo for async replication traffic             │
-│  Local device       = RAID device of backend volumes on one cluster; leaf of distributed device       │
-│  Storage view       = host access object: binds initiator-ports + target-ports + virtual-volumes      │
-│  Management Server  = embedded Linux VM (VMS); serves web UI and vplexcli; SSH as service user        │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ```mermaid
 graph TD

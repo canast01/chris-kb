@@ -6,6 +6,8 @@ search:
   boost: 1.5
 ---
 # Cisco MDS — Troubleshooting Diagnostics
+![Cisco MDS — Troubleshooting Diagnostics](../../../../assets/san-cisco-mds-troubleshooting-diagnostics.svg)
+
 
 ```bash
 # Detailed single port status
@@ -23,53 +25,7 @@ clear counters interface fc1/1
 # Check immediately after clearing to confirm problem is active
 show interface fc1/1 counters errors
 ```
-```text
-┌─────────────────────────────── Cisco MDS — Troubleshooting Diagnostics ───────────────────────────────┐
-│                                                                                                       │
-│  Diagnostic toolset: show commands, SPAN, FC Ping/Traceroute, and tech-support bundles.               │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             Show Command Toolkit             │  │            FC Ping and Traceroute           │   │
-│   │         show flogi database: logins          │  │         fcping: N_Port reachability         │   │
-│   │         show zone active: zone state         │  │           fctrace: path hop-by-hop          │   │
-│   │         show interface fc: counters          │  │         FC loopback: port self-test         │   │
-│   │          show topology: fabric map           │  │             DCNM: topology view             │   │
-│   │         show hardware: module status         │  │          Ethanalyzer: mgmt capture          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Show commands give state snapshots; FC ping/trace verify end-to-end path connectivity                │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               SPAN and Capture               │  │                Log Collection               │   │
-│   │          FC SPAN: mirror FC traffic          │  │          Tech-support: full bundle          │   │
-│   │           SPAN dest: analyzer port           │  │         show logging: syslog buffer         │   │
-│   │          RSPAN: remote SPAN over IP          │  │          Event history: per-module          │   │
-│   │        Capture with Wireshark via tap        │  │         Core dump: supervisor crash         │   │
-│   │           SPAN ACL: filter traffic           │  │         TAC upload: encrypted bundle        │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  MDS supervisor · FC analyzer port · management Ethernet · syslog/DCNM server                         │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  FC SPAN        = Fibre Channel Switched Port Analyzer; mirrors selected FC traffic                   │
-│  RSPAN          = Remote SPAN; forwards mirrored frames to remote analyzer over IP                    │
-│  fcping         = FC-layer reachability test using ECHO Extended Link Service                         │
-│  fctrace        = FC-layer traceroute; maps path from source to destination N_Port                    │
-│  Ethanalyzer    = Cisco tool capturing management-plane Ethernet packets on supervisor                │
-│  tech-support   = Comprehensive diagnostic bundle; includes logs, configs, counters                   │
-│  Event history  = Per-process ring buffer of internal events; survives minor faults                   │
-│  Core dump      = Memory snapshot taken when a process crashes; aids TAC analysis                     │
-│  TAC            = Technical Assistance Center; Cisco support team                                     │
-│  SPAN ACL       = Filter applied to SPAN session to capture only matching traffic                     │
-│  show topology  = CLI command displaying fabric-wide switch and ISL map                               │
-│  FC loopback    = Hardware self-test looping frames back at the port for validation                   │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 ```bash
 # All line cards and supervisor modules — confirm all status is 'ok'
 show module

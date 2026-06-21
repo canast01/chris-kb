@@ -12,6 +12,8 @@ Access Control reference covering RBAC Roles, Object-Level Access Permissions, C
 
 *Applies to: Aria Ops 8.x*
 </div>
+![Aria Operations — Access Control](../../../../assets/virtualization-vmware-aria-operations-security-access-contro.svg)
+
 
 ## Before you begin
 
@@ -44,51 +46,7 @@ Beyond role-level access, Aria Operations supports **object permissions** to res
 
 Create an object permission policy:
 
-```text
-┌─────────────────────────────────── Aria Operations Access Control ────────────────────────────────────┐
-│                                                                                                       │
-│  Admin, Content Admin, General User, and Read-only roles with group mapping.                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                Built-in Roles                │  │               Role Permissions              │   │
-│   │          Administrator: full access          │  │         Admin: all settings + users         │   │
-│   │          Content Admin: dashboards           │  │         ContentAdmin: dash + alerts         │   │
-│   │         General User: view+interact          │  │          GeneralUser: view/interact         │   │
-│   │             Read-Only: view only             │  │         ReadOnly: no config changes         │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Roles control UI access; group mapping assigns roles via AD; custom roles optional.                  │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Group Mapping (LDAP/vIDM)           │  │                 Custom Roles                │   │
-│   │            Admin > Access Control            │  │             Clone existing role             │   │
-│   │           Import AD group to vROps           │  │          Assign specific privileges         │   │
-│   │           Assign role to AD group            │  │          Limit to specific objects          │   │
-│   │               Review quarterly               │  │           Named for team function           │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  vROps cluster; AD/LDAP directory; vIDM optional SSO; network to LDAP server                          │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Administrator Role   = Full vROps access: data sources, users, settings, all ops                     │
-│  Content Admin        = Manage dashboards, alerts, and reports; no user mgmt                          │
-│  General User         = View and interact with dashboards; cannot change settings                     │
-│  Read-Only Role       = View-only; no interaction with alerts or config                               │
-│  Custom Role          = User-defined role cloned from built-in with scoped perms                      │
-│  AD Group Mapping     = AD security group assigned vROps role in Access Control                       │
-│  vIDM Group Mapping   = vIDM group assigned role; used when SSO is configured                         │
-│  Object Scope         = Restrict role to specific objects (e.g. one cluster)                          │
-│  Privilege            = Granular permission: view, interact, modify, manage users                     │
-│  Least Privilege      = Grant minimum role for each team; review regularly                            │
-│  Quarterly Review     = Periodic access audit: remove leavers, check role drift                       │
-│  Local Account        = vROps-internal account; use for break-glass only                              │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 | AD Group | Aria Operations Role | Object Scope |
 |---|---|---|
 | `GG-VROPS-Admins` | Administrator | All objects |

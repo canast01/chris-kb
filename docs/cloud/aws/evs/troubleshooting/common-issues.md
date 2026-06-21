@@ -12,33 +12,10 @@ Troubleshooting guide for EVS failures: host stuck in non-CREATED state, vSAN de
 
 *Applies to: Amazon EVS*
 </div>
+![Amazon EVS — Common Issues](../../../../assets/cloud-aws-evs-troubleshooting-common-issues.svg)
 
-```text
-┌───────────────────────────────────── Amazon EVS — Common Issues ──────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   Host FAILED state: AWS-side issue — contact AWS support; don't delete manually first        │   │
-│   │   vSAN degraded: check host connectivity before anything; resync before removing components   │   │
-│   │   HCX disconnected: verify DX connectivity and service mesh appliance health                  │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  FAILED host state = AWS-reported infrastructure failure; open AWS P1 support case                    │
-│  vSAN degraded = Reduced redundancy triggered by host failure, disk failure, or network issue         │
-│  HCX disconnected = Service mesh appliances unreachable; check DX path and security groups            │
-│  NSX-T BGP down = T0 router lost BGP peers; workloads lose north-south connectivity                   │
-│  NSX Manager down = Manager VMs inaccessible; check vSAN health and host connectivity first           │
-│  BytesToSync  = vSAN resync data volume; do not remove components while non-zero                      │
-│  DX           = Direct Connect; private AWS link; required for HCX and EVS management access          │
-│  SPOF         = Single Point of Failure; DX without redundant circuit is SPOF for HCX                 │
-│  ENI          = Elastic Network Interface; check ENI state in EC2 console for host issues             │
-│  Admission control breach = HA cannot guarantee failover; reduce VMs or add hosts                     │
-│  VCF bringup failure = SDDC Manager workflow failure during initial cluster deployment                │
-│  PSOD         = ESXi Purple Screen of Death; kernel panic; collect vm-support bundle immediately      │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ```mermaid
 graph TD

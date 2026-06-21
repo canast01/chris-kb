@@ -12,55 +12,10 @@ Data Domain diagnostic commands: check filesystem state with <code>filesys statu
 
 *Applies to: Data Domain DD OS 7.x*
 </div>
+![Data Domain — Diagnostics](../../../../assets/storage-dell-data-domain-troubleshooting-diagnostics.svg)
 
-```text
-┌──────────────────────────────────── Dell Data Domain — Diagnostics ───────────────────────────────────┐
-│                                                                                                       │
-│   ┌────────────────────────────────────────────────────────────────────────────────────────────┐      │
-│   │  Start here: alerts show current → filesys status → filesys show space                    │       │
-│   │  Disk alert: disk show state → identify failed/reconstructing drives → raid show detail    │      │
-│   │  Replication lag: replication status → net ping <dst> → check WAN bandwidth               │       │
-│   │  DDBoost failure: ddboost user list → ddboost show clients → log view audit               │       │
-│   └────────────────────────────────────────────────────────────────────────────────────────────┘      │
-│                                                                                                       │
-│   ┌─────────────────────────────────────────┐  ┌──────────────────────────────────────────────┐       │
-│   │       Filesystem and Capacity           │  │          Disk and Hardware Health            │       │
-│   │   filesys status: enabled / running?    │  │   disk show state: OK / failed / recon.      │       │
-│   │   filesys show space: usage + dedup     │  │   disk show hardware: S/N, firmware, model   │       │
-│   │   filesys show compression: dedup ratio │  │   raid show all: RAID group overview         │       │
-│   │   filesys clean status: cleaning state  │  │   raid show detail: rebuild % + member disks │       │
-│   │   filesys show log: FS-layer events     │  │   enclosure show hardware: fans, PSU, temp   │       │
-│   └─────────────────────────────────────────┘  └──────────────────────────────────────────────┘       │
-│                                                                                                       │
-│   ┌─────────────────────────────────────────┐  ┌──────────────────────────────────────────────┐       │
-│   │      Replication and DD Boost           │  │       Network and Log Access                 │       │
-│   │   replication status: context state     │  │   net show all: interfaces + link state      │       │
-│   │   replication show errors: error detail │  │   net show stats: rx/tx, errors, drops       │       │
-│   │   replication show stats: throughput    │  │   net ping <dst>: connectivity test          │       │
-│   │   ddboost status: service running?      │  │   log view: recent system log events         │       │
-│   │   ddboost show clients: connected apps  │  │   log view audit: admin + CLI actions        │       │
-│   └─────────────────────────────────────────┘  └──────────────────────────────────────────────┘       │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  Data Domain appliance or virtual edition · SATA/SAS/NVMe drives in a RAID group                      │
-│  10/25 GbE management and replication interfaces · serial console for inaccessible systems            │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│  filesys status     = confirms the filesystem is Enabled and Running; check this first                │
-│  filesys show space = shows pre-comp, post-comp, physical capacity, and compression factor            │
-│  alerts show        = active hardware or software alerts; highest-priority triage input               │
-│  disk show state    = per-disk state: normal, spare, reconstructing, failed, unknown, absent          │
-│  raid show detail   = RAID group rebuild status with percent complete and member disk list            │
-│  replication status = per-context state: Replicating, Idle, Error, Disabled; includes lag             │
-│  DD Boost           = Dell Dell Boost integration for backup apps; uses storage units + user auth     │
-│  ddboost status     = confirms DD Boost service is enabled and running                                │
-│  support bundle     = comprehensive diagnostic archive; always collect before calling Dell            │
-│  autosupport        = phone-home mechanism; can send bundle directly to Dell for an open case         │
-│  ddsh               = Data Domain diagnostic shell; provides iostat, vmstat, df, top, diagnose        │
-│  cleaning           = DD reclaim process; re-deduplication pass that recovers post-comp space         │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ```mermaid
 graph TD

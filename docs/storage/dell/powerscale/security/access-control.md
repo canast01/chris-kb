@@ -11,58 +11,9 @@ Roles, permissions, and least privilege access for Dell PowerScale.
 
 *Applies to: PowerScale (Isilon) 9.x*
 </div>
-```text
-┌────────────────────────────────── Dell PowerScale — Access Control ───────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │        PowerScale access control: RBAC roles, least-privilege, and access audit logging       │   │
-│   │        Roles: admin (full), operator (read/modify), read-only (view); map to AD groups        │   │
-│   │       Authentication: local accounts, LDAP/AD integration, and MFA for privileged users       │   │
-│   │          Audit: log all admin actions; review access logs monthly; rotate credentials         │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Identify user → assign role → enforce MFA → audit → review quarterly                               │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │           Function          │   │
-│   │              OS             │  │            OneFS            │  │        Distributed FS       │   │
-│   │           Tiering           │  │          SmartPools         │  │        Auto data move       │   │
-│   │         Replication         │  │            SyncIQ           │  │        Async DR copy        │   │
-│   │          Snapshots          │  │          SnapshotIQ         │  │       Space-efficient       │   │
-│   │         Load balance        │  │         SmartConnect        │  │       DNS client dist.      │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │       Role       │   Permissions    │       Scope       │       Auth       │   Review cycle   │   │
-│   │      Admin       │    Full CRUD     │       Global      │   MFA required   │     Monthly      │   │
-│   │     Operator     │   Read/modify    │      Assigned     │   MFA required   │    Quarterly     │   │
-│   │    Read-only     │    View only     │      Assigned     │     Password     │    Quarterly     │   │
-│   │   Service acct   │     API only     │    Specific API   │    Token/cert    │      Annual      │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: PowerScale nodes (All-Flash/Hybrid) · InfiniBand backend · 25/100 GbE frontend           │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    OneFS              = Dell PowerScale distributed filesystem OS; all nodes share a single namespace │
-│    SmartPools         = tiering engine; moves files between All-Flash, Hybrid, and Archive tiers      │
-│    SyncIQ             = async replication to DR cluster; RPO-based schedule; failover in minutes      │
-│    SnapshotIQ         = space-efficient snapshots; accessed via .snapshot directory in each share     │
-│    SmartConnect       = DNS-based load balancing; distributes NFS/SMB client connections across nodes │
-│    Access zone        = logical container with separate authentication and export namespace per tenant│
-│    Quota              = directory or user quota; hard/soft/advisory limits enforced by OneFS QuotaIQ  │
-│    CloudPools         = tiering to cloud object storage (S3/Blob); data remains accessible locally    │
-│    isi CLI            = OneFS command-line interface; all management operations available via isi c...│
-│    Node pool          = group of same-model nodes sharing protection domain for data distribution     │
-│    Protection level   = N+2:1, N+3:1 etc.; defines how many node or drive failures are tolerated      │
-│    File pool policy   = rule-based policy assigning files to specific node pools or storage tiers     │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+![PowerScale — Access Control](../../../../assets/storage-dell-powerscale-security-access-control.svg)
+
+
 
 
 ## Before you begin

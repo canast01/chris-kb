@@ -13,50 +13,10 @@ How to escalate VMware Tanzu / TKG issues to Broadcom support: what data to coll
 
 *Applies to: Tanzu Kubernetes Grid (TKG) 2.x / 3.x · vSphere with Tanzu 8.x*
 </div>
+![Tanzu — Escalation](../../../../assets/virtualization-vmware-tanzu-troubleshooting-escalation.svg)
 
-```text
-┌────────────────────────────── VMware Tanzu — Troubleshooting Escalation ──────────────────────────────┐
-│                                                                                                       │
-│  Escalate Tanzu issues to VMware GSS when the Supervisor is completely down,                          │
-│  a workload cluster cannot be created, all pods are stuck Pending on all clusters,                    │
-│  or a TKG management cluster is in an error state with no kubeconfig access.                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Step 1 — Collect Data               │  │          Step 2 — Open the SR               │   │
-│   │  Run: tanzu diagnostics collect              │  │  Go to support.broadcom.com → sign in       │   │
-│   │  Run: kubectl cluster-info dump              │  │  Product: VMware TKG or vSphere with Tanzu  │   │
-│   │  Note Tanzu CLI version + K8s version        │  │  Severity: P1 down / P2 degraded / P3 minor │   │
-│   │  Collect NSX/vCenter events for cluster VMs  │  │  Attach diagnostics bundle + cluster dump   │   │
-│   │  Write timeline: last deploy → first failure │  │  Include Tanzu CLI version and platform     │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  For P1: open portal case AND call Broadcom support immediately.                                      │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Step 3 — Escalation Path            │  │         What NOT to Do                      │   │
-│   │  T1: triage + confirm diagnostics received   │  │  Do not delete failed workload clusters     │   │
-│   │  T2: Tanzu SE assigned; deep analysis        │  │  Do not run tanzu mc reset without GSS      │   │
-│   │  T3: engineering review for code-level fix   │  │  Do not kubectl delete pods on mgmt cluster │   │
-│   │  CritSit: P1 with Supervisor down > 2 hours  │  │  Do not upgrade Tanzu version mid-incident  │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Supervisor    = vSphere Supervisor cluster; the control plane for vSphere with Tanzu namespaces      │
-│  TKG           = Tanzu Kubernetes Grid; enterprise Kubernetes distribution; TKGm (standalone)         │
-│  Management cluster = TKG cluster that provisions workload clusters; critical control plane           │
-│  Workload cluster = TKG cluster running application workloads; provisioned from MC                    │
-│  tanzu CLI     = Tanzu command-line tool; primary interface for TKG management                        │
-│  Pinniped      = Tanzu auth component; handles kubeconfig token exchange with vIDM                    │
-│  Harbor        = Tanzu image registry; OCI-compliant; Trivy scanning built in                         │
-│  NSX ALB       = NSX Advanced Load Balancer (AVI); used for Supervisor load balancer services         │
-│  carvel        = Tanzu package manager toolchain: kapp, ytt, imgpkg, kbld, vendir                     │
-│  GSS           = Global Support Services; Broadcom/VMware support team                                │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ---
 

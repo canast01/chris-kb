@@ -14,49 +14,10 @@ How to escalate NSX networking issues to Broadcom support: what data to collect,
 
 *Applies to: NSX 3.x / 4.x*
 </div>
+![NSX — Escalation](../../../../assets/virtualization-vmware-nsx-troubleshooting-escalation.svg)
 
-```text
-┌────────────────────────────────────────── NSX — Escalation ───────────────────────────────────────────┐
-│                                                                                                       │
-│  Escalate NSX issues to Broadcom GSS when the Manager cluster is DEGRADED, DFW                        │
-│  drops all traffic, BGP is flapping, or an upgrade failed mid-way through.                            │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Step 1 — Collect Data               │  │          Step 2 — Open the SR               │   │
-│   │  API: trigger NSX support bundle             │  │  Go to support.broadcom.com → sign in       │   │
-│   │  Run Traceflow and export results            │  │  Product: VMware NSX                        │   │
-│   │  Note NSX version + build + vCenter ver      │  │  Type: Technical → pick sub-category        │   │
-│   │  Capture Manager cluster status              │  │  Severity: S1 down / S2 major / S3 minor    │   │
-│   │  Write timeline: last good → first failure   │  │  Attach NSX bundle + Traceflow export       │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  For S1: open portal case AND call the phone number on the case confirmation page.                    │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Step 3 — Escalation Path            │  │         What NOT to Do                      │   │
-│   │  T1: triage + confirm bundle received        │  │  Do not restart NSX Manager unguided        │   │
-│   │  T2: NSX SE assigned; provides guidance      │  │  Do not change DFW rules mid-diagnosis      │   │
-│   │  T3: engineering review if SE cannot fix     │  │  Do not reboot Edge nodes without GSS OK    │   │
-│   │  CritSit: request if data at risk or 24h+    │  │  Do not run upgrade without GSS sign-off    │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  GSS           = Global Support Services; Broadcom's technical support team                           │
-│  SR            = Service Request; support case number assigned by Broadcom                            │
-│  S1 severity   = highest; production outage with no workaround; 30-min SLA                            │
-│  CritSit       = Critical Situation; executive escalation + dedicated war room                        │
-│  DFW           = Distributed Firewall; per-host kernel module enforcing micro-seg                     │
-│  TEP           = Tunnel Endpoint; encapsulates Geneve overlay traffic per host                        │
-│  Traceflow     = NSX packet path debug tool; shows hop-by-hop decision + drop reason                  │
-│  BGP flapping  = BGP session cycling up/down; causes route withdrawal and loss                        │
-│  DEGRADED      = NSX Manager cluster status when one or more nodes are unhealthy                      │
-│  Support bundle= NSX diagnostic archive; generated via API; Manager + Edge + hosts                    │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ---
 

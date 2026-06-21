@@ -12,57 +12,10 @@ Catalog of known Aria Operations for Networks (vRNI) bugs, error codes, and work
 
 *Applies to: Aria Operations for Networks 6.x*
 </div>
+![VMware Aria Operations for Networks — Known Issues and Error Codes](../../../../assets/virtualization-vmware-aria-operations-for-networks-troublesh.svg)
 
-```text
-┌───────────────────────────────── VMware Aria Operations for Networks ─────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │            Network visibility platform — topology, flow analytics, micro-seg audit            │   │
-│   │                Protocols: HTTPS (UI/API) · IPFIX / NetFlow · REST API · SNMP v3               │   │
-│   │               Management: Aria Networks web UI · REST API · Slack / email alerts              │   │
-│   │              Collector polls NSX/vCenter -> flow data -> topology map -> analysis             │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │           Platform          │  │       Aria Networks VM      │  │        OVA appliance        │   │
-│   │          Collection         │  │        Data collector       │  │          Per-DC VM          │   │
-│   │             Flow            │  │       IPFIX / NetFlow       │  │        VM-to-VM flows       │   │
-│   │           Topology          │  │        NSX + vCenter        │  │      Logical + physical     │   │
-│   │          Analytics          │  │       Micro-seg audit       │  │      Policy recommends      │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
-│   │  Aria Networks   │ Central platform │     HTTPS 443     │   vIDM / local   │ OVA + collectors │   │
-│   │    Collector     │ Data collection  │    IPFIX / API    │  Service creds   │Relays to platform│   │
-│   │    NSX source    │ Flow + topology  │      REST API     │    NSX admin     │ Main data source │   │
-│   │    Micro-seg     │  Security audit  │      Internal     │      Admin       │ DFW suggestions  │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical: collector VMs (per-DC) -> NSX/vCenter APIs -> Aria Networks platform                       │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Aria Networks = VMware network visibility platform (formerly vRealize Network Insight)               │
-│  Collector    = Aria Networks VM per DC that polls NSX/vCenter and forwards data                      │
-│  IPFIX        = IP Flow Information Export; standard for VM-to-VM flow telemetry                      │
-│  Micro-seg audit = analysis of actual traffic vs NSX DFW policy; finds gaps                           │
-│  Topology     = visual map of VMs, logical switches, routers, and physical paths                      │
-│  NSX DFW      = Distributed Firewall; security policy analyzed by Aria Networks                       │
-│  Security group = NSX object grouping VMs by tag or criteria for policy                               │
-│  Flow table   = time-series of src/dst/port/bytes per VM pair                                         │
-│  Path query   = Aria Networks trace of how traffic flows from A to B                                  │
-│  Data source  = registered vCenter, NSX, or physical switch in Aria Networks                          │
-│  Recommendation = Aria-suggested DFW rule based on observed flow patterns                             │
-│  Pinned entity = saved object in Aria Networks for quick-access analysis                              │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 
 ## Before you begin

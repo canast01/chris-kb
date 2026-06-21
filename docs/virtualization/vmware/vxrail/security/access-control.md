@@ -11,62 +11,10 @@ RBAC and access scoping for VxRail in the VMware product context. Covers VxRail 
 
 *Applies to: VxRail 7.x / 8.x*
 </div>
+![VxRail — Access Control](../../../../assets/virtualization-vmware-vxrail-security-access-control.svg)
 
-```text
-┌─────────────────────────────────────── VxRail — Access Control ───────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      VxRail Manager roles: Admin (mystic/LDAP) and Read-only scoped to VxRail operations      │   │
-│   │      vSphere RBAC: VxRail Admin at cluster scope; Storage/VM/Monitor roles at lower scopes    │   │
-│   │       Normal Lockdown on all VxRail ESXi hosts; VxRail Manager svc account in exception list  │   │
-│   │     OMIVV plugin requires minimum vCenter permissions for hardware alarm surfacing in vCenter  │  │
-│   │       iDRAC on OOB VLAN; VxRail Manager API and vCenter VAMI restricted to admin subnets      │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Roles define what can change · scope limits blast radius · network restricts who can reach it      │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │       VxRail Mgr RBAC       │  │        vSphere RBAC         │  │       Network Access        │   │
-│   │    Admin (LDAP or mystic)   │  │   VxRail Admin → Cluster    │  │   iDRAC: OOB VLAN only      │   │
-│   │    Read-only via LDAP group │  │   Storage Ops → Cluster     │  │   VxRail API: jump hosts    │   │
-│   │    LCM requires Admin role  │  │   VM Owner → Resource Pool  │  │   vCenter VAMI: admin nets  │   │
-│   │    LDAP group → role map    │  │   Read-only → Datacenter    │  │   vSAN: no VM subnet reach  │   │
-│   │    API access via JWT       │  │   Lockdown mode: Normal     │  │   SSH: jump host or VPN     │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│    VxRail Mgr roles scope plugin ops · vSphere roles scope vCenter ops · network isolates mgmt        │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │  VxRail Roles  │  vSphere Roles  │  Lockdown Mode  │  Exception List  │  Network Scoping     │    │
-│   │  Admin/RO      │  Admin/Storage  │  Normal on all  │  svc-vxrail      │  OOB VLAN iDRAC      │    │
-│   │  LDAP groups   │  VM Owner       │  Strict: avoid  │  root break-glass│  Jump host API       │    │
-│   │  API JWT auth  │  Monitor/RO     │  vCenter API ok │  Quarterly audit │  VAMI port restrict  │    │
-│   │  Vault creds   │  Scope column   │  SSH disabled   │  Min exception   │  vSAN VLAN isolated  │    │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  Dell PowerEdge servers · iDRAC OOB NIC · ToR switches · VLANs · vDS port groups                      │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  RBAC                = Role-Based Access Control; permissions assigned to roles, roles to principals  │
-│  Lockdown mode       = ESXi setting; Normal allows vCenter API path; Strict blocks all direct access  │
-│  Normal Lockdown     = Recommended for VxRail; allows VxRail Manager → vCenter → ESXi API path        │
-│  Strict Lockdown     = Blocks DCUI and all direct host access; breaks VxRail Manager LCM operations   │
-│  Exception user list = Named accounts exempt from lockdown; permitted direct ESXi access              │
-│  OMIVV               = OpenManage Integration for VMware vCenter; surfaces Dell hardware in vCenter   │
-│  vCenter scope       = vCenter object (Datacenter, Cluster, Resource Pool) a role assignment targets  │
-│  OOB VLAN            = Out-of-band management VLAN; iDRAC IPs reachable only from this network        │
-│  VAMI                = vCenter Appliance Management Interface on port 5480; admin UI for vCSA         │
-│  JWT                 = JSON Web Token; VxRail Manager API authentication token format                 │
-│  Resource Pool       = vCenter object grouping VMs; used to scope VM Owner role access                │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ---
 

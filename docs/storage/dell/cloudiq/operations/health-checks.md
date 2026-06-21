@@ -12,41 +12,7 @@ Health Checks reference covering Daily Checks, Health Check Commands, Change Rea
 *Applies to: CloudIQ*
 </div>
 
-```text
-┌───────────────────────────────────── Dell CloudIQ Health Checks ──────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │       Verify CloudIQ and SCG health: telemetry currency, SCG connectivity, alert review       │   │
-│   │        Check last telemetry timestamp per system; red/yellow health scores; open alerts       │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                  SCG Health                  │  │                CloudIQ Health               │   │
-│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
-│   │         SCG service status: running          │  │       All systems: last seen < 15 min       │   │
-│   │           Outbound connectivity OK           │  │        Health scores: no red systems        │   │
-│   │        All devices: poll state green         │  │            Active alerts reviewed           │   │
-│   │             SCG version current              │  │          Capacity runway > 30 days          │   │
-│   │             Certificate validity             │  │        No stale/disconnected systems        │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   │      Check       │      Where       │   Pass criteria   │   Fail action    │    Frequency     │   │
-│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
-│   │    SCG status    │     SCG CLI      │     All green     │   Restart SCG    │      Daily       │   │
-│   │  Telemetry age   │    CloudIQ UI    │      < 15 min     │  Test SCG conn   │      Daily       │   │
-│   │  Health scores   │   CloudIQ dash   │     All green     │  Review alerts   │      Daily       │   │
-│   │   Capacity IQ    │   CloudIQ dash   │      >30 days     │   Expand pools   │      Weekly      │   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    Telemetry age  = Time since last successful telemetry upload per system; > 15 min = gap            │
-│    Stale system   = System in CloudIQ with no telemetry for > 1 hour; SCG poll failure                │
-│    Capacity runway= Days until storage pool reaches fill threshold based on growth rate               │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 ## Before you begin
 
@@ -85,6 +51,8 @@ Health Checks reference covering Daily Checks, Health Check Commands, Change Rea
 
 ## Incident Triage
 
+![Incident Triage](../../../../assets/storage-dell-cloudiq-hc-incident-triage.svg)
+
 **On alert or issue:**
 1. Log in to CloudIQ and identify the affected system and alert severity
 2. Check the anomaly timeline on the system's detail page (Timeline tab) to identify when the issue began
@@ -104,6 +72,8 @@ Health Checks reference covering Daily Checks, Health Check Commands, Change Rea
 
 ## Post-Change Validation
 
+![Post-Change Validation](../../../../assets/storage-dell-cloudiq-hc-post-change-validation.svg)
+
 - [ ] System health score has returned to the pre-change baseline (or improved)
 - [ ] No new CRITICAL or WARNING alerts have been generated on the affected system
 - [ ] SCG connectivity for the system shows CONNECTED in CloudIQ
@@ -111,6 +81,8 @@ Health Checks reference covering Daily Checks, Health Check Commands, Change Rea
 - [ ] Alert notification routing is confirmed active — no suppression window left open
 
 ## Common Health Issues
+
+![Common Health Issues](../../../../assets/storage-dell-cloudiq-hc-common-health-issues.svg)
 
 | Issue | Likely Cause | Fix |
 |---|---|---|

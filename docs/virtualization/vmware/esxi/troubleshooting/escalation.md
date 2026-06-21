@@ -14,49 +14,10 @@ How to escalate ESXi host issues to Broadcom support: what data to collect, how 
 
 *Applies to: ESXi 7.x / 8.x*
 </div>
+![ESXi — Escalation](../../../../assets/virtualization-vmware-esxi-troubleshooting-escalation.svg)
 
-```text
-┌────────────────────────────────────────── ESXi — Escalation ──────────────────────────────────────────┐
-│                                                                                                       │
-│  Escalate ESXi issues to Broadcom GSS when a host has PSOD'd, data is at risk,                        │
-│  storage is in APD, or HA is not recovering. Collect vm-support bundle FIRST.                         │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Step 1 — Collect Data               │  │          Step 2 — Open the SR               │   │
-│   │  SSH to ESXi; run vm-support                 │  │  Go to support.broadcom.com → sign in       │   │
-│   │  Capture esxtop -b batch output              │  │  Product: VMware vSphere / ESXi             │   │
-│   │  Note ESXi version + build number            │  │  Type: Technical → pick sub-category        │   │
-│   │  Get PSOD dump path (if applicable)          │  │  Severity: S1 down / S2 major / S3 minor    │   │
-│   │  Write timeline: last good → first fail      │  │  Attach vm-support ZIP + timeline doc       │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  For S1: open portal case AND call the phone number on the case confirmation page.                    │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Step 3 — Escalation Path            │  │         What NOT to Do                      │   │
-│   │  T1: triage + confirm bundle received        │  │  Do not reboot a PSOD'd host (loses dump)   │   │
-│   │  T2: ESXi SE assigned; provides guidance     │  │  Do not run esxcli storage commands alone   │   │
-│   │  T3: engineering review if SE cannot fix     │  │  Do not put host in MM without GSS OK       │   │
-│   │  CritSit: request if data at risk or 24h+    │  │  Do not apply patches mid-incident          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  PSOD          = Purple Screen of Death; ESXi kernel panic with memory dump                           │
-│  vm-support    = ESXi diagnostic bundle script; generates a tar.gz for GSS                            │
-│  APD           = All Paths Down; all storage paths to a LUN are lost                                  │
-│  PDL           = Permanent Device Loss; storage reports LUN as permanently gone                       │
-│  SR            = Service Request; support case number assigned by Broadcom                            │
-│  GSS           = Global Support Services; Broadcom's technical support team                           │
-│  S1 severity   = highest; production outage with no workaround; 30-min SLA                            │
-│  CritSit       = Critical Situation; executive escalation + dedicated war room                        │
-│  HCL           = Hardware Compatibility List; verify NICs/HBAs before escalating                      │
-│  esxtop batch  = performance snapshot: esxtop -b -n 5 > /tmp/esxtop.txt                               │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ---
 

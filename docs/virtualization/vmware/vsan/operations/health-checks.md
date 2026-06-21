@@ -14,53 +14,7 @@ Health Checks reference covering Weekly Checks, Performance Baseline, Network He
 *Applies to: vSAN 7.x / 8.x*
 </div>
 
-```text
-┌──────────────────────────────────────── vSAN — Health Checks ─────────────────────────────────────────┐
-│                                                                                                       │
-│  vSAN health checks verify cluster, network, disk, and object health; run daily                       │
-│  via the vSAN Health UI or Test-VsanClusterHealth PowerCLI cmdlet.                                    │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                Cluster Health                │  │                Network Health               │   │
-│   │         All hosts: member of cluster         │  │             vSAN MTU test: 9000             │   │
-│   │             No host disconnected             │  │          Latency <1ms host to host          │   │
-│   │        Witness reachable (stretched)         │  │            No multicast required            │   │
-│   │         No decommission in progress          │  │            Unicast agent running            │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Cluster and network health are prerequisites; disk and object health depend on them.                 │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             Disk & Object Health             │  │               Capacity Health               │   │
-│   │            All disks: healthy/OK             │  │            Free space >30% total            │   │
-│   │            No degraded components            │  │               Resync ETA <24h               │   │
-│   │           Policy compliance: 100%            │  │           No dedup overhead alarm           │   │
-│   │           Resync: 0 bytes pending            │  │          Capacity per host balanced         │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  Physical disk health reported via SMART; failed disk shows degraded component;                       │
-│  replace disk within 60 minutes to avoid data loss window.                                            │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Degraded      = component lost; vSAN has no redundancy until rebuilt                                 │
-│  Absent        = component temporarily missing; wait 60min before rebuild                             │
-│  Resync        = rebuilding missing components after host/disk failure                                │
-│  Policy compliance= all VMs must meet FTT policy; red = risk                                          │
-│  MTU test      = vSAN sends 8972-byte pings to test jumbo frames end-to-end                           │
-│  Unicast agent = replaced multicast in vSAN 6.6+; always check running                                │
-│  SMART         = disk self-monitoring; pre-failure indicator                                          │
-│  Decommission  = remove host from vSAN while migrating data; slow                                     │
-│  60-min timer  = vSAN waits 60 min before marking absent as degraded                                  │
-│  Witness (stretched)= third-site VM; heartbeat must be <200ms RTT                                     │
-│  Free 30%      = vSAN needs headroom for resync; alert at <25%                                        │
-│  Resync ETA    = estimate shown in vSAN performance health panel                                      │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 ## Before you begin
 
 - **Access:** vCenter read-only minimum; Administrator role for remediation steps
@@ -125,6 +79,8 @@ echo "=== Done ==="
 
 ## Disk Group Health
 
+![Disk Group Health](../../../../assets/virtualization-vmware-vsan-hc-disk-group-health.svg)
+
 ```bash
 # List all disk groups — cache and capacity disks per host
 esxcli vsan storage list | grep -E "Is SSD|Disk Group UUID|naa\.|Display Name|Tier|Health"
@@ -152,6 +108,8 @@ esxcli vsan debug disk list | grep -i "congestion\|Disk Group"
 ---
 
 ## Object Health
+
+![Object Health](../../../../assets/virtualization-vmware-vsan-hc-object-health.svg)
 
 ```bash
 # Count of objects by health state
@@ -184,6 +142,8 @@ esxcli vsan debug resync list
 
 ## Skyline Health Categories
 
+![Skyline Health Categories](../../../../assets/virtualization-vmware-vsan-hc-skyline-health-categories.svg)
+
 Skyline Health in vCenter groups all checks into categories. The most important ones:
 
 **From vCenter UI:** Cluster → Monitor → vSAN → Skyline Health
@@ -204,6 +164,8 @@ Run `Get-VsanClusterHealthSummary -Cluster (Get-Cluster "VSAN-LON-01") -FetchFro
 ---
 
 ## Performance Baseline
+
+![Performance Baseline](../../../../assets/virtualization-vmware-vsan-hc-performance-baseline.svg)
 
 Normal operating ranges for a healthy vSAN cluster. Values vary by workload — establish a baseline during steady-state and alert on deviation.
 
@@ -226,6 +188,8 @@ esxcli vsan perf query -e host-domclient -st 2024-01-01T00:00:00
 
 ## Network Health
 
+![Network Health](../../../../assets/virtualization-vmware-vsan-hc-network-health.svg)
+
 | Check | Command | Expected Result |
 |---|---|---|
 | MTU end-to-end (9000) | `vmkping -I vmk2 -d -s 8972 <remote-vmk-ip>` | 100% success; any loss = MTU mismatch |
@@ -242,6 +206,8 @@ vmkping -I vmk2 -d -s 8972 <host3-vsan-ip>
 ---
 
 ## Stretched Cluster Checks
+
+![Stretched Cluster Checks](../../../../assets/virtualization-vmware-vsan-hc-stretched-cluster-checks.svg)
 
 Run these in addition to standard daily/weekly checks when managing a stretched cluster.
 

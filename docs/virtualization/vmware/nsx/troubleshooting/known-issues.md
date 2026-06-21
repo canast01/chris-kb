@@ -13,57 +13,10 @@ Catalog of known NSX-T / NSX 4.x bugs, error codes, and workarounds covering man
 
 *Applies to: NSX-T 3.x / NSX 4.x*
 </div>
+![VMware NSX — Known Issues and Error Codes](../../../../assets/virtualization-vmware-nsx-troubleshooting-known-issues.svg)
 
-```text
-┌───────────────────────────────────────────── VMware NSX ──────────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │            Software-defined networking — overlay, micro-segmentation, Edge routing            │   │
-│   │             Protocols: HTTPS (manager) · BGP/BFD · VXLAN/GENEVE overlay · REST API            │   │
-│   │                 Management: NSX Manager UI · REST API · Policy API (preferred)                │   │
-│   │               Policy -> transport node -> TEP (GENEVE) -> overlay segment -> DFW              │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │           Control           │  │         NSX Manager         │  │        3-node cluster       │   │
-│   │          Data plane         │  │       Transport nodes       │  │       ESXi + Edge VMs       │   │
-│   │           Routing           │  │         Edge cluster        │  │       BGP N/S routing       │   │
-│   │           Security          │  │             DFW             │  │      Per-vNIC firewall      │   │
-│   │           Overlay           │  │       GENEVE segments       │  │           UDP 6081          │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
-│   │   NSX Manager    │  Control plane   │     HTTPS 443     │   vIDM / local   │3-node HA cluster │   │
-│   │    Edge node     │   N/S gateway    │    BGP / HTTPS    │    NSX trust     │ VM or bare-metal │   │
-│   │       DFW        │Micro-seg firewall│      Internal     │    Policy API    │ESXi kernel module│   │
-│   │       TEP        │  Overlay encap   │  GENEVE UDP 6081  │       N/A        │ Needs MTU 1600+  │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical: ESXi hosts (transport nodes) -> GENEVE overlay -> Edge cluster -> physical TOR             │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  DFW          = Distributed Firewall; stateful per-vNIC firewall in ESXi kernel                       │
-│  Transport node = ESXi host or Edge VM with NSX data plane kernel modules                             │
-│  TEP          = Tunnel End Point; IP on transport node for GENEVE encapsulation                       │
-│  GENEVE       = Generic Network Virtualization Encapsulation; NSX overlay protocol                    │
-│  Segment      = NSX logical switch (L2 domain) running over GENEVE overlay                            │
-│  Tier-0 GW    = NSX North/South gateway; runs BGP to physical upstream                                │
-│  Tier-1 GW    = NSX East/West gateway; tenant-level routing                                           │
-│  Edge cluster = group of Edge nodes providing N/S routing and gateway services                        │
-│  BFD          = Bidirectional Forwarding Detection; sub-second link failure detection                 │
-│  BGP          = Border Gateway Protocol; Tier-0 routing to physical network                           │
-│  Policy API   = preferred NSX REST API; declarative intent-based config                               │
-│  Manager API  = legacy NSX API; still works but Policy API preferred for new config                   │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 
 ## Before you begin

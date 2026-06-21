@@ -11,58 +11,9 @@ SnapCenter authentication: AD/LDAP integration via Windows Authentication, servi
 
 *Applies to: SnapCenter 5.x*
 </div>
-```text
-┌───────────────────────────────── NetApp SnapCenter — Authentication ──────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │        SnapCenter authentication: local accounts, LDAP/AD, RADIUS, and SAML SSO options       │   │
-│   │        MFA: time-based OTP or hardware token required for all privileged admin accounts       │   │
-│   │         Service accounts: dedicated accounts for automation; API tokens/keys preferred        │   │
-│   │       Session: idle timeout enforced; concurrent session limits for admin role accounts       │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Login → authenticate LDAP/SAML/local → MFA → authorise role → session                              │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │            Server           │  │          Windows VM         │  │       Central control       │   │
-│   │           Plug-in           │  │          Host agent         │  │        App-consistent       │   │
-│   │            Policy           │  │       Schedule/retain       │  │         Backup rule         │   │
-│   │        Resource group       │  │       Grouped targets       │  │        Shared policy        │   │
-│   │           Recovery          │  │       Volume/LUN/file       │  │       Granular restore      │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Method      │     Use case     │  Config location  │       MFA        │     Priority     │   │
-│   │     LDAP/AD      │  Staff accounts  │   Auth settings   │     Required     │     Primary      │   │
-│   │     SAML SSO     │    Federated     │    SSO settings   │   IdP-enforced   │    Preferred     │   │
-│   │      Local       │   Break-glass    │    Local users    │     Required     │  Emergency only  │   │
-│   │    API token     │    Automation    │  Service account  │   N/A (token)    │    Automation    │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: SnapCenter Server (Windows) · ONTAP clusters · plug-in hosts · application servers       │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    SnapCenter         = NetApp backup orchestration; coordinates app-consistent snapshots via plug-ins│
-│    Plug-in            = host-side agent; quiesces application before snapshot: SQL, Oracle, VMware    │
-│    Resource group     = set of resources sharing a backup policy and schedule in SnapCenter           │
-│    Policy             = SnapCenter object defining snapshot frequency, retention, and replication t...│
-│    App-consistent     = snapshot taken after DB quiesce; guarantees crash-consistent recovery         │
-│    Clone lifecycle    = SnapCenter clone: create from snapshot, provision to host, then delete        │
-│    FlexClone          = underlying ONTAP technology; SnapCenter clone maps to an ONTAP FlexClone      │
-│    Vault policy       = SnapCenter policy that also replicates snapshots to SnapVault destination     │
-│    Mirror policy      = SnapCenter policy that replicates snapshots via SnapMirror to DR cluster      │
-│    RBAC               = SnapCenter role-based access; Admin, Backup Operator, Restore Operator roles  │
-│    SMF                = SnapCenter MySQL database storing job history, policies, and resource configs │
-│    SnapCenter API     = REST API on port 8143; full feature coverage for automation workflows         │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+![SnapCenter — Authentication](../../../../assets/storage-netapp-snapcenter-security-authentication.svg)
+
+
 
 
 ---

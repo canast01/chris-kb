@@ -12,41 +12,10 @@ SRDF/A diagnostic commands: check pair state with symrdf query, identify lag and
 
 *Applies to: Dell PowerMax / SRDF/A (Asynchronous)*
 </div>
+![SRDF/A — Diagnostics](../../../../assets/storage-dell-srdf-a-troubleshooting-diagnostics.svg)
 
-```text
-┌──────────────────────────────────────── SRDF/A — Diagnostics ─────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   Start here: symrdf query → identify pair state → check lag → check link → collect logs     │    │
-│   │   Healthy pair: R1_ST=Ready, R2_ST=Write Disabled, LINK_ST=Ready, MODE=Async                 │    │
-│   │   SRDF/A lag alert: check DSE_LAG in showperf; link bandwidth and WAN quality are root cause │    │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────┐  ┌───────────────────────────────────────────────┐     │
-│   │         Pair State Diagnostics           │  │          Lag and Performance                  │     │
-│   │     symrdf query -sid -rdfg              │  │      symrdf showperf -sid -rdfg              │      │
-│   │     symrdf verify -sid -rdfg             │  │      symcfg list -rdf                         │     │
-│   │     symdg show <group>                   │  │      syminq -sid rdf                         │      │
-│   └──────────────────────────────────────────┘  └───────────────────────────────────────────────┘     │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  Two PowerMax arrays (production + DR site) · FC or FCIP SRDF link (dedicated bandwidth) · RF ports   │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│  SRDF/A     = Asynchronous mode; delta sets shipped every cycle; RPO = cycle time (15–60 sec)         │
-│  R1          = source SRDF volume on production array; host writes flow here                          │
-│  R2          = target SRDF volume on DR array; receives replicated data asynchronously                │
-│  Delta Set   = batch of host writes accumulated per SRDF/A cycle; shipped atomically to R2            │
-│  Cycle Time  = SRDF/A replication interval (15–60 seconds); determines maximum RPO                    │
-│  DSE_LAG     = Delta Set Extension lag; how far behind R2 is relative to R1 writes                    │
-│  RF port     = SRDF director port on the PowerMax array; dedicated FC port for replication            │
-│  FCIP        = Fibre Channel over IP; tunnels FC SRDF traffic over IP WAN link                        │
-│  Suspended   = pair state where replication is paused; R2 data frozen at last cycle                   │
-│  Failover    = SRDF operation making R2 R/W; R1 becomes Not Ready to hosts                            │
-│  symrdf      = Solutions Enabler CLI for all SRDF operations                                          │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ```mermaid
 graph TD

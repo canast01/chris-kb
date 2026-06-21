@@ -14,53 +14,7 @@ VCF health checks: SDDC Manager health API, `lcm health check`, workload domain 
 </div>
 
 VCF Daily Health Check — Coverage Map
-```text
-┌─────────────────────────────── VMware Cloud Foundation — Health Checks ───────────────────────────────┐
-│                                                                                                       │
-│  VCF health checks span SDDC Manager, all vCenters, NSX managers, vSAN clusters,                      │
-│  and certificate validity across all workload and management domains.                                 │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             SDDC Manager Health              │  │               Component Health              │   │
-│   │         Dashboard: all green status          │  │           All vCenters: connected           │   │
-│   │          Free pool: hosts available          │  │              NSX: all nodes UP              │   │
-│   │            Backup: last run <24h             │  │              vSAN: health green             │   │
-│   │         LCM: no upgrade in progress          │  │           Credentials: not expired          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  SDDC Manager dashboard gives holistic view; drill into each domain for detail.                       │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              Certificate Health              │  │           Network & Storage Health          │   │
-│   │          SDDC Mgr cert expiry >30d           │  │            vSAN: resync = 0 bytes           │   │
-│   │            vCenter STS cert check            │  │              NSX: BGP/routes OK             │   │
-│   │             NSX cert expiry >30d             │  │             MTU: vSAN test pass             │   │
-│   │            Rotate before expiry!             │  │             Hosts: all connected            │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  All VCF components run as VMs on the management domain; SDDC Manager health                          │
-│  depends on underlying ESXi hosts and vSAN datastore availability.                                    │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  SDDC Manager  = checks aggregated health of all VCF components                                       │
-│  LCM           = Lifecycle Manager; controls upgrade pipelines                                        │
-│  Free pool     = unassigned hosts; availability affects domain growth                                 │
-│  STS cert      = SSO Security Token Service cert; 2yr expiry                                          │
-│  NSX cert      = NSX Manager and edge certs; auto-renew in 8.0+                                       │
-│  Credentials   = SDDC Mgr manages passwords for all components                                        │
-│  vSAN resync   = 0 bytes = no data movement in progress                                               │
-│  BGP           = NSX routing protocol to physical network                                             │
-│  MTU test      = vSAN jumbo frame validation across all hosts                                         │
-│  Backup health = SDDC Mgr tracks last backup success timestamp                                        │
-│  Rotate cert   = use SDDC Mgr to rotate certs >30d before expiry                                      │
-│  Domain view   = per-domain health in SDDC Mgr Workload Domains tab                                   │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 ## Before you begin
 
 - **Access:** vCenter read-only minimum; Administrator role for remediation steps
@@ -97,6 +51,8 @@ VCF Daily Health Check — Coverage Map
 
 ## Common Operational Issues
 
+![Common Operational Issues](../../../../assets/virtualization-vmware-vmware-cloud-found-hc-common-operational-issues.svg)
+
 | Symptom | Where to Check | Action |
 |---|---|---|
 | Workload domain shows Warning | SDDC Manager → Dashboard | Review component health; expand domain view |
@@ -109,6 +65,8 @@ VCF Daily Health Check — Coverage Map
 ---
 
 ## SDDC Manager Service Health
+
+![SDDC Manager Service Health](../../../../assets/virtualization-vmware-vmware-cloud-found-hc-sddc-manager-service-health.svg)
 
 All core VCF services must be running on SDDC Manager. SSH to SDDC Manager and verify:
 
@@ -136,6 +94,8 @@ journalctl -u vcf-operationsmanager --since "30 minutes ago" | tail -50
 
 ## Workload Domain Health
 
+![Workload Domain Health](../../../../assets/virtualization-vmware-vmware-cloud-found-hc-workload-domain-health.svg)
+
 1. **UI check**: SDDC Manager → **Inventory** → **Workload Domains** → confirm every domain shows **Status: Succeeded**
    - Yellow / Warning: drill in to identify which component (vCenter, ESXi, vSAN, NSX) is degraded
    - Red / Failed: treat as P1; component is unreachable or has failed validation
@@ -152,6 +112,8 @@ journalctl -u vcf-operationsmanager --since "30 minutes ago" | tail -50
 ---
 
 ## ESXi Host Pool Health
+
+![ESXi Host Pool Health](../../../../assets/virtualization-vmware-vmware-cloud-found-hc-esxi-host-pool-health.svg)
 
 Hosts not assigned to a domain (free pool) provide capacity for domain expansion. Hosts in a failed state block commissioning.
 
@@ -173,6 +135,8 @@ For hosts in FAILED state: check ESXi connectivity (ping FQDN), verify managemen
 ---
 
 ## Certificate Expiry Check
+
+![Certificate Expiry Check](../../../../assets/virtualization-vmware-vmware-cloud-found-hc-certificate-expiry-check.svg)
 
 Expired certificates in VCF cause SSO failures, API authentication errors, and blocked LCM operations.
 
@@ -197,6 +161,8 @@ Expired certificates in VCF cause SSO failures, API authentication errors, and b
 
 ## VCF Backup Health
 
+![VCF Backup Health](../../../../assets/virtualization-vmware-vmware-cloud-found-hc-vcf-backup-health.svg)
+
 SDDC Manager must be backed up daily; losing SDDC Manager without a backup makes domain recovery significantly harder.
 
 1. **UI check**: SDDC Manager → **Administration** → **Backup and Restore** → verify **Last Successful Backup** timestamp — alert if older than 24 hours
@@ -214,6 +180,8 @@ SDDC Manager must be backed up daily; losing SDDC Manager without a backup makes
 ---
 
 ## NSX Manager Health (within VCF)
+
+![NSX Manager Health (within VCF)](../../../../assets/virtualization-vmware-vmware-cloud-found-hc-nsx-manager-health-within-vcf.svg)
 
 All three NSX Manager nodes must be active and the management cluster must be stable.
 
@@ -238,6 +206,8 @@ UI check: NSX Manager → **System** → **Overview** — the cluster health ind
 
 ## vCenter Health (within VCF)
 
+![vCenter Health (within VCF)](../../../../assets/virtualization-vmware-vmware-cloud-found-hc-vcenter-health-within-vcf.svg)
+
 Each VCF workload domain has a dedicated vCenter; verify all are healthy.
 
 ```bash
@@ -260,6 +230,8 @@ If vCenter shows red: SSH to the vCenter appliance → `service-control --status
 ---
 
 ## Upgrade Precheck Status
+
+![Upgrade Precheck Status](../../../../assets/virtualization-vmware-vmware-cloud-found-hc-upgrade-precheck-status.svg)
 
 Run the upgrade precheck before every LCM-managed upgrade window. Do not proceed if any check fails.
 
@@ -284,6 +256,8 @@ Run the upgrade precheck before every LCM-managed upgrade window. Do not proceed
 ---
 
 ## LCM Bundle Repository
+
+![LCM Bundle Repository](../../../../assets/virtualization-vmware-vmware-cloud-found-hc-lcm-bundle-repository.svg)
 
 Upgrade bundles must be downloaded to SDDC Manager before an upgrade can be scheduled.
 

@@ -12,39 +12,10 @@ RecoverPoint diagnostic commands: RPA health, consistency group state, journal u
 
 *Applies to: Dell RecoverPoint 5.x / 6.x*
 </div>
+![RecoverPoint — Diagnostics](../../../../assets/storage-dell-recoverpoint-troubleshooting-diagnostics.svg)
 
-```text
-┌──────────────────────────────────────── RecoverPoint — Diagnostics ───────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────────┐│
-│   │   Start here: SSH to RPA → check system status → check CG states → collect support bundle        ││
-│   │   CG in "Initialization" = syncing; "Active" = healthy; "Paused" = suspended; "Error" = fault    ││
-│   │   Journal utilization > 80% = writes not draining; check link bandwidth and RPO lag              ││
-│   └───────────────────────────────────────────────────────────────────────────────────────────────────┘│
-│                                                                                                       │
-│   ┌────────────────────────────────┐  ┌────────────────────────────────┐  ┌────────────────────────┐  │
-│   │         RPA Health             │  │      CG Diagnostics            │  │     Support Bundle     │  │
-│   │   get system status            │  │   get cg list                  │  │  support collect       │  │
-│   │   get rpa status               │  │   get cg detailed_state        │  │  bundle (CLI)          │  │
-│   │   get network status           │  │   get journal stats            │  │  Admin UI → Support    │  │
-│   │   get alerts                   │  │   get link stats               │  │  → Collect Bundle      │  │
-│   └────────────────────────────────┘  └────────────────────────────────┘  └────────────────────────┘  │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  RPA virtual appliances on ESXi · Journal volumes on storage array · WAN link between sites           │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│  RPA         = RecoverPoint Appliance; manages journal and replication for all CGs at a cluster       │
-│  Splitter    = intercepts host I/O at hypervisor or array level; sends copy to RPA                    │
-│  Journal     = write-order-consistent storage capturing all writes for point-in-time access           │
-│  CG          = Consistency Group; set of volumes replicated together in write order                   │
-│  Bookmark    = named marker in journal; enables deterministic recovery to a known state               │
-│  Image Access= mounting a journal point-in-time image to a host for testing or recovery               │
-│  RPO Lag     = delay between source write and journal commit at recovery site                         │
-│  CDP         = Continuous Data Protection; every write journaled, not just scheduled snapshots        │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ```mermaid
 graph TD

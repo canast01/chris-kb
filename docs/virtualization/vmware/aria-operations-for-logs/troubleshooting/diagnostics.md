@@ -13,38 +13,10 @@ Aria Operations for Logs (vRLI) diagnostic commands: inspect runtime.log and ing
 
 *Applies to: VMware Aria Operations for Logs 8.x (vRealize Log Insight)*
 </div>
+![Aria Operations for Logs — Diagnostics](../../../../assets/virtualization-vmware-aria-operations-for-logs-troubleshooti.svg)
 
-```text
-┌─────────────────────────── Aria Operations for Logs — Diagnostics ────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   Start here: runtime.log → cluster node API → ingestion.log → agent liagentd              │      │
-│   │   No data ingested: check liagentd on agent host; check syslog port 9543 or 514             │     │
-│   │   Slow queries: check Cassandra compaction (nodetool compactionstats) and heap usage         │    │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             Built-in Diagnostics             │  │               Log File Review               │   │
-│   │   Admin → System Monitor: disk/CPU/EPS       │  │   /var/log/loginsight/runtime.log           │   │
-│   │   Admin → Cluster: node status               │  │   /var/log/loginsight/ingestion.log         │   │
-│   │   GET /api/v1/cluster/nodes (REST)           │  │   /var/log/loginsight/query.log             │   │
-│   │   VAMI :9543 → Support → Download bundle     │  │   /var/log/vmware/loginsight-agent/         │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  vRLI appliance (master + optional workers) · Cassandra DB · NTP · syslog sources · liagent hosts     │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│  runtime.log   = Main vRLI log; Java exceptions, startup errors, cluster events                       │
-│  ingestion.log = Records parse failures and dropped events; check when EPS is low                     │
-│  query.log     = Slow and failed queries; diagnose search timeout and performance issues              │
-│  liagentd      = vRLI agent daemon on source hosts; sends logs over port 9543                         │
-│  VAMI          = Virtual Appliance Management Interface at https://vRLI-IP:5480                       │
-│  nodetool      = Cassandra management CLI on the vRLI appliance; check compaction and heap            │
-│  EPS           = Events Per Second; the primary ingestion throughput metric                           │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ```mermaid
 graph TD

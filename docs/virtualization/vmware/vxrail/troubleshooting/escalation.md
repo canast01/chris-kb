@@ -13,51 +13,10 @@ How to escalate Dell VxRail issues to Dell Technologies support: what data to co
 
 *Applies to: VxRail 7.x / 8.x*
 </div>
+![VxRail — Escalation](../../../../assets/virtualization-vmware-vxrail-troubleshooting-escalation.svg)
 
-```text
-┌───────────────────────────────────── Dell VxRail — Escalation ────────────────────────────────────────┐
-│                                                                                                       │
-│  Escalate VxRail issues to Dell support when a node is offline and vSAN has no redundancy,            │
-│  LCM upgrade has failed mid-way through with nodes at mixed versions, VxRail Manager is               │
-│  unreachable, or the vSAN health dashboard shows critical failures across multiple nodes.             │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Step 1 — Collect Data               │  │          Step 2 — Open the Case             │   │
-│   │  VxRail Plugin → Support → Generate Bundle   │  │  Go to dell.com/support → My Cases         │    │
-│   │  Run vm-support on each affected ESXi host   │  │  Select product by node service tag         │   │
-│   │  Export iDRAC SEL (racadm getsel)            │  │  Severity: P1 node down / P2 degraded       │   │
-│   │  Capture vSAN health status                  │  │  Attach VxRail bundle + ESXi bundles        │   │
-│   │  Write timeline: last healthy → first fault  │  │  For P1: also call Dell support             │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  For P1: open portal case AND call Dell immediately.                                                  │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Step 3 — Escalation Path            │  │         What NOT to Do                      │   │
-│   │  T1: triage + confirm bundle received        │  │  Do not rebuild a failed node without Dell  │   │
-│   │  T2: VxRail SE assigned; deep analysis       │  │  Do not retry LCM upgrade mid-incident      │   │
-│   │  TAM: engage for prolonged or P1 issues      │  │  Do not evacuate vSAN without Dell OK       │   │
-│   │  Check SupportAssist for auto-created case   │  │  Do not modify vSAN policy mid-investigation│   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  LCM             = VxRail Lifecycle Management; handles cluster-wide coordinated upgrades             │
-│  VxRail Manager  = management appliance VM; runs on the cluster; coordinates node operations          │
-│  service tag     = Dell hardware serial number; unique per node; required to open any Dell case       │
-│  iDRAC           = Dell integrated Dell Remote Access Controller; OOB management on each node         │
-│  SupportAssist   = Dell's telemetry and auto-case creation embedded in iDRAC                          │
-│  vSAN            = VMware vSAN; distributed storage across VxRail nodes; health is cluster-wide       │
-│  SLA             = ProSupport Plus P1: < 2 hr response; 4-hour on-site hardware dispatch              │
-│  TAM             = Technical Account Manager; named Dell contact for critical case escalation         │
-│  GPS             = Global Priority Services; on-site or remote senior Dell engineering                │
-│  Absent objects  = vSAN data components with insufficient healthy copies; data at risk                │
-│  Pre-check       = LCM validation run before any upgrade; must pass green before upgrade proceeds     │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ---
 

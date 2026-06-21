@@ -12,25 +12,11 @@ Access Control reference covering vSphere Replication Uses vCenter RBAC, VR-Spec
 
 *Applies to: vSphere Replication 8.x*
 </div>
+![vSphere Replication — Access Control](../../../../assets/virtualization-vmware-vsphere-replication-security-access-co.svg)
+
 
   vSphere Replication RBAC (via vCenter)
-```text
-┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
-│  AD Groups              vCenter Custom Roles                                                          │
-│  ┌────────────────┐     ┌───────────────────────────────┐                                             │
-│  │ CORP\VR-       │────►│ VR-Operator                   │                                             │
-│  │  Operators     │     │  vSphere Replication → Monitor│                                             │
-│  │                │     │  vSphere Replication → Manage │                                             │
-│  ├────────────────┤     ├───────────────────────────────┤                                             │
-│  │ CORP\DR-       │────►│ VR-Recovery                   │                                             │
-│  │  Recovery-Team │     │  + vSphere Replication → Recover│                                           │
-│  │                │     │  (highest privilege — DR team)│                                             │
-│  └────────────────┘     └───────────────────────────────┘                                             │
-│                                                                                                       │
-│  VRA local accounts: admin (VAMI) / root (SSH)                                                        │
-│  Change default passwords immediately after deployment                                                │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 ---
 

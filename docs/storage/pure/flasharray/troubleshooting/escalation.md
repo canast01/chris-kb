@@ -12,51 +12,10 @@ How to escalate Pure Storage FlashArray issues to Pure support: what data to col
 
 *Applies to: FlashArray Purity 6.x*
 </div>
+![FlashArray — Escalation](../../../../assets/storage-pure-flasharray-troubleshooting-escalation.svg)
 
-```text
-┌──────────────────────────────────── Pure FlashArray — Escalation ─────────────────────────────────────┐
-│                                                                                                       │
-│  Escalate Pure FlashArray issues to Pure support when a controller is down,                           │
-│  all hosts have lost I/O access, drive failures have reduced RAID redundancy,                         │
-│  or an ActiveCluster pod has partitioned. Pure1 phone-home detects most hardware                      │
-│  faults automatically — check for an existing case before opening a new one.                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Step 1 — Collect Data               │  │          Step 2 — Open the SR               │   │
-│   │  Check Pure1 for auto-opened case            │  │  Go to support.purestorage.com → sign in    │   │
-│   │  Run: purealert list + purearray list        │  │  Product: FlashArray; enter array serial    │   │
-│   │  Note Purity version + array serial number   │  │  Severity: P1 down / P2 major / P3 minor    │   │
-│   │  Run: purediag --send (if phone-home active) │  │  Attach purediag bundle + purealert output  │   │
-│   │  Write timeline: last good → first failure   │  │  Include affected volumes and host count    │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  For P1: open portal case AND call Pure at +1-650-729-4088 immediately.                               │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Step 3 — Escalation Path            │  │         What NOT to Do                      │   │
-│   │  T1: triage + review Pure1 telemetry         │  │  Do not pull drives without Pure guidance   │   │
-│   │  Field engineer: dispatched for HW failures  │  │  Do not run purearray reset without Pure    │   │
-│   │  Engineering: for code-level Purity bugs     │  │  Do not delete protection groups mid-case   │   │
-│   │  AE: engage for P1 running > 2 hours         │  │  Do not disable phone-home during case      │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Purity//FA    = Pure FlashArray operating system; manages all array operations                       │
-│  DirectFlash   = Pure proprietary NVMe modules; no SAS translation layer                              │
-│  ActiveCluster = synchronous active-active replication; two arrays appear as one namespace            │
-│  ActiveDR      = async replication to DR site; RPO in seconds; promoted on DR activation              │
-│  SafeMode      = admin-locked immutable snapshot mode; cannot be disabled without Pure involvement    │
-│  Protection group = volumes sharing a snapshot and replication schedule                               │
-│  Pod           = ActiveCluster logical unit; volumes in a pod replicate synchronously                 │
-│  Pure1         = cloud-based telemetry and management portal; receives phone-home data                │
-│  purediag      = CLI tool to generate and optionally send a diagnostic bundle to Pure                 │
-│  Evergreen     = Pure support model; controller upgrades are non-disruptive; shelves persist          │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ---
 

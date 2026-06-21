@@ -12,57 +12,10 @@ Catalog of known Confluence Data Center bugs, error codes, and workarounds cover
 
 *Applies to: Confluence Data Center 8.x*
 </div>
+![Confluence — Known Issues and Error Codes](../../../assets/itsm-confluence-troubleshooting-known-issues.svg)
 
-```text
-┌─────────────────────────────────────── Confluence Data Center ────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │               Team wiki/collaboration — Synchrony, clustering, shared DB backend              │   │
-│   │              Protocols: HTTP/HTTPS · Synchrony (TCP 8091) · Hazelcast (TCP 5701)              │   │
-│   │                              Management: Confluence Admin Console                             │   │
-│   │            Page edit -> Synchrony collab -> DB write -> Cluster cache sync -> Index           │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │             App             │  │       Confluence node       │  │     Stateless, behind LB    │   │
-│   │            Collab           │  │          Synchrony          │  │     Real-time co-editing    │   │
-│   │           Cluster           │  │          Hazelcast          │  │     Cache+cluster member    │   │
-│   │              DB             │  │    Postgres/Oracle/MSSQL    │  │       Single shared DB      │   │
-│   │            Search           │  │         Lucene index        │  │    Per-node, rebuildable    │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
-│   │ Confluence node  │     Web app      │     HTTP/HTTPS    │    SSO/local     │Many in DC cluster│   │
-│   │    Synchrony     │ Collab. editing  │      TCP 8091     │     Internal     │Separate JVM proc.│   │
-│   │    Hazelcast     │  Cluster cache   │      TCP 5701     │     Internal     │ Split-brain risk │   │
-│   │   Lucene index   │      Search      │      Internal     │       N/A        │Rebuild via admin │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical: Confluence DC nodes - load balancer - shared DB - shared storage                           │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Synchrony      = separate process providing real-time collaborative editing                          │
-│  Hazelcast      = in-memory clustering library backing the DC cache layer                             │
-│  Confluence home= filesystem dir with config, logs, indexes, plugins                                  │
-│  Shared home    = NFS/shared storage required for DC clustering                                       │
-│  Split-brain    = cluster nodes diverge after losing contact                                          │
-│  Lucene         = full-text search indexing library                                                   │
-│  Support zip    = bundled diagnostic export (logs, config, dumps)                                     │
-│  Thread dump    = JVM snapshot for hangs; take 3 spaced 10s apart                                     │
-│  Heap dump      = full JVM memory capture for OOM diagnosis                                           │
-│  Safe mode      = starts Confluence without user-installed plugins                                    │
-│  CQL            = Confluence Query Language; macros and REST search                                   │
-│  Data Center    = clustered HA edition (vs Server/Cloud)                                              │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 
 ## Before you begin

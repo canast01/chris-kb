@@ -14,52 +14,10 @@ vCenter Server diagnostic commands: check disk partitions and service health wit
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
+![vCenter — Diagnostics](../../../../assets/virtualization-vmware-vcenter-troubleshooting-diagnostics.svg)
 
-```text
-┌──────────────────────────────────── vCenter Server — Diagnostics ─────────────────────────────────────┐
-│                                                                                                       │
-│  vCenter diagnostics use log bundles, service status checks, and database queries                     │
-│  to identify root causes of connectivity, performance, and auth failures.                             │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                Log Collection                │  │             Service Diagnostics             │   │
-│   │            Support bundle: VC UI             │  │             vmon-cli -l (status)            │   │
-│   │          vc-support.sh on appliance          │  │            journalctl -u vmware-*           │   │
-│   │              Key logs: vpxd.log              │  │           service-control --status          │   │
-│   │           SSO: ssoAdminServer.log            │  │           Check port 443/9443 open          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Collect support bundle first; vpxd.log and SSO logs cover 90% of issues.                             │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │            DB & Performance Diag             │  │             Network Diagnostics             │   │
-│   │      Postgres: select pg_stat_activity       │  │            Ping VC from ESXi host           │   │
-│   │          DB size: /storage/db usage          │  │           nslookup: VC FQDN + PTR           │   │
-│   │           Slow UI: vpxd CPU usage            │  │         traceroute: management path         │   │
-│   │          Stats rollup: latency logs          │  │           Port test: nc -zv vc 443          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  VCSA VM on ESXi · management network · vSphere Client browser → VCSA port 443 / VAMI 5480            │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│  vc-support.sh = generates support bundle on VCSA; exports to /tmp                                    │
-│  vpxd.log      = main vCenter Server log; task, event, error messages                                 │
-│  ssoAdminServer= SSO authentication service log; login failures here                                  │
-│  pg_stat_activity= Postgres view; shows active DB queries                                             │
-│  vmon-cli      = service monitor; shows RUNNING/STOPPED state for all services                        │
-│  journalctl    = systemd log; vmware-* services write here                                            │
-│  /storage      = VCSA data partition; contains DB, logs, stats                                        │
-│  nc -zv        = netcat; test TCP port reachability                                                   │
-│  nslookup PTR  = reverse DNS check; must match forward A record                                       │
-│  Support bundle= ZIP of all VCSA logs + config; send to GSS                                           │
-│  Stats rollup  = scheduled job; aggregates perf metrics; latency = problem                            │
-│  vecs-cli      = VMware Endpoint Certificate Store CLI; lists all certs with expiry                   │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ```mermaid
 graph TD

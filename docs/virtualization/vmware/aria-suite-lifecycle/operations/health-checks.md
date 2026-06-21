@@ -14,51 +14,7 @@ Health Checks reference covering Cluster Node Health via API, Locker Health Chec
 </div>
 
   LCM Health Check Chain
-```text
-┌──────────────────────────────────── Aria Suite LCM Health Checks ─────────────────────────────────────┐
-│                                                                                                       │
-│  Product health, depot connectivity, and certificate expiry checks for LCM.                           │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             LCM Appliance Health             │  │            Product Health Checks            │   │
-│   │            vlcm service running?             │  │          LCM: Environments > Health         │   │
-│   │            Disk < 80% on LCM VM?             │  │         All products: Green status?         │   │
-│   │                 NTP in sync?                 │  │         vIDM: accessible + auth OK?         │   │
-│   │               VAMI accessible?               │  │          vROps: collection active?          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  LCM appliance health feeds into product health; depot and cert checks follow.                        │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              Depot Connectivity              │  │              Certificate Health             │   │
-│   │          Depot: sync status green?           │  │           Certs: expiry > 30 days?          │   │
-│   │         Binaries: latest available?          │  │           LCM cert dashboard check          │   │
-│   │          Network: depot reachable?           │  │             Renew expiring certs            │   │
-│   │             Local NFS: mount OK?             │  │           Validate after rotation           │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  LCM VM on vSphere; NFS for depot/backup; internet or proxy for online depot                          │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  vlcm Service        = LCM main service; check status if UI is unresponsive                           │
-│  Product Health      = LCM Environments page showing green/yellow/red per product                     │
-│  Depot Sync          = LCM download of latest product PAK catalog from VMware                         │
-│  Cert Dashboard      = LCM page listing all managed certs with expiry dates                           │
-│  Cert Expiry         = Days remaining on TLS cert; alert at 60/30/14 day marks                        │
-│  NFS Mount           = Local depot content share; unmounted = install/upgrade fails                   │
-│  vIDM Health         = vIDM reachable and authenticating; critical for all products                   │
-│  NTP Sync            = LCM and all product VMs must sync to same NTP source                           │
-│  Disk Usage          = LCM disk fills with PAK files; monitor and clean old content                   │
-│  Green Status        = Product health indicator; all services running correctly                       │
-│  Pre-check Result    = LCM validation output; review before any upgrade action                        │
-│  Logscraper          = Run after health check failure to collect diagnostic logs                      │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 ## Before you begin
 
 - **Access:** vCenter read-only minimum; Administrator role for remediation steps
@@ -84,6 +40,8 @@ Run these 8 checks in order at the start of each shift or before any planned cha
 ---
 
 ## Locker Health Checks
+
+![Locker Health Checks](../../../../assets/virtualization-vmware-aria-suite-lifecyc-hc-locker-health-checks.svg)
 
 The Locker stores certificates, passwords, and licences. Run these checks weekly and before any upgrade.
 
@@ -117,6 +75,8 @@ UI path: **LCM → Locker → Certificates** — columns show Alias, Subject, Ex
 
 ## Pre-Upgrade Health Gate
 
+![Pre-Upgrade Health Gate](../../../../assets/virtualization-vmware-aria-suite-lifecyc-hc-pre-upgrade-health-gate.svg)
+
 Run this checklist before initiating any LCM-orchestrated upgrade:
 
 - [ ] All environment cards show green in **Lifecycle Operations → Environments**
@@ -132,6 +92,8 @@ Run this checklist before initiating any LCM-orchestrated upgrade:
 ---
 
 ## Checking Product Health via LCM API
+
+![Checking Product Health via LCM API](../../../../assets/virtualization-vmware-aria-suite-lifecyc-hc-checking-product-health-via-lcm-.svg)
 
 ```bash
 # Get health status for a specific environment
@@ -151,6 +113,8 @@ Expected output: `health` field should be `GREEN` for all products in a healthy 
 ---
 
 ## Log File Locations
+
+![Log File Locations](../../../../assets/virtualization-vmware-aria-suite-lifecyc-hc-log-file-locations.svg)
 
 | Log | Path on LCM Appliance | Purpose |
 |---|---|---|
@@ -176,6 +140,8 @@ tail -200 /var/log/vmware/vrlcm/upgrade/<latest-upgrade-log>
 
 ## Environment Deployment Health
 
+![Environment Deployment Health](../../../../assets/virtualization-vmware-aria-suite-lifecyc-hc-environment-deployment-health.svg)
+
 Check managed product service health via LCM UI and logs.
 
 **Product status check (UI):**
@@ -199,6 +165,8 @@ Common causes of stuck tasks: expired certificates mid-workflow, vCenter connect
 ---
 
 ## Certificate Expiry Check
+
+![Certificate Expiry Check](../../../../assets/virtualization-vmware-aria-suite-lifecyc-hc-certificate-expiry-check.svg)
 
 Run weekly. Alert on any certificate expiring within 60 days; critical below 30 days.
 
@@ -240,6 +208,8 @@ Renew any certificate expiring within 60 days using the procedure in the Procedu
 
 ## Backup Health Check
 
+![Backup Health Check](../../../../assets/virtualization-vmware-aria-suite-lifecyc-hc-backup-health-check.svg)
+
 Run daily (automated) and manually before any major change.
 
 **UI check:**
@@ -261,6 +231,8 @@ If no backup file exists for today: check LCM → Settings → Backup and Restor
 ---
 
 ## Disk Usage Check
+
+![Disk Usage Check](../../../../assets/virtualization-vmware-aria-suite-lifecyc-hc-disk-usage-check.svg)
 
 LCM accumulates product binaries, upgrade logs, and temp files. Monitor weekly; clean proactively.
 
@@ -291,6 +263,8 @@ find /data/lcm/upgrade/ -maxdepth 1 -type d -mtime +7 -exec ls -lhd {} \;
 ---
 
 ## Integration Health
+
+![Integration Health](../../../../assets/virtualization-vmware-aria-suite-lifecyc-hc-integration-health.svg)
 
 Verify all external system connections LCM depends on.
 

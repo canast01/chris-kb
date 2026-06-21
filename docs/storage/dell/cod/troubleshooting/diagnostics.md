@@ -12,38 +12,10 @@ Dell Capacity on Demand diagnostic commands: verify COD license state with symli
 
 *Applies to: Dell PowerMax Capacity on Demand (COD)*
 </div>
+![Dell COD — Diagnostics](../../../../assets/storage-dell-cod-troubleshooting-diagnostics.svg)
 
-```text
-┌──────────────────────────────────────── Dell COD — Diagnostics ───────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   Start here: symlicense list → symcfg capacity → sympd list → discover → check pool         │    │
-│   │   Key rejected: compare VENDOR_SN in key file to array SN from symcfg list                   │    │
-│   │   Capacity not visible after activation: run symcfg discover; wait 5 min; check pool         │    │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │           License State                      │  │         Capacity Verification               │   │
-│   │   symlicense -sid <SID> list                 │  │   symcfg -sid <SID> list -capacity          │   │
-│   │   symlicense -sid <SID> show -feature COD    │  │   sympd list -sid <SID>                     │   │
-│   │   symlicense -sid <SID> preview              │  │   symcfg -sid <SID> -pool -dp list          │   │
-│   │   symaudit -sid <SID> list -action license   │  │   symcfg -sid <SID> discover                │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  PowerMax array chassis · pre-installed COD drives (locked) · Solutions Enabler on management host    │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│  COD          = Capacity on Demand; pre-installed drives locked in firmware; unlocked by key          │
-│  VENDOR_SN    = array serial number in the license key file; must match array SN exactly              │
-│  sympd        = Solutions Enabler physical disk list; shows COD reserved drives as "Reserved"         │
-│  symcfg discover = triggers array to re-scan for newly available capacity after COD activation        │
-│  Pool expansion = after COD unlock, the new drives must be added to a thin provisioning pool          │
-│  symlicense   = CLI for license operations: list, install, preview, show                              │
-│  symaudit     = CLI for SYMCLI audit log; records all array operations with timestamp                 │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ```mermaid
 graph TD

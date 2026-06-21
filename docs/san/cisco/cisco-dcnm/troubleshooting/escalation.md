@@ -12,53 +12,10 @@ How to escalate Cisco DCNM (Data Center Network Manager) issues to Cisco TAC: wh
 
 *Applies to: Cisco DCNM 11.x — standalone VM or Native HA deployment managing MDS / Nexus SAN fabrics*
 </div>
+![Cisco DCNM — Escalation](../../../../assets/san-cisco-cisco-dcnm-troubleshooting-escalation.svg)
 
-```text
-┌──────────────────────────────── Cisco DCNM — Escalation ──────────────────────────────────────────────┐
-│                                                                                                       │
-│  Escalate DCNM issues to Cisco TAC when DCNM is completely unavailable and fabric management          │
-│  has stopped, zone pushes or fabric discovery are failing and no zone changes can be made,            │
-│  a DCNM upgrade has left the appliance in a failed state and it cannot be restarted, or               │
-│  the DCNM database is corrupted and no configuration data can be retrieved.                           │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Step 1 — Collect Data               │  │          Step 2 — Open the SR               │   │
-│   │  cat /var/dcnm/version (DCNM version)        │  │  Go to case.cisco.com → sign in with CCO   │    │
-│   │  collect-support-bundle.sh (bundle)          │  │  Product: DCNM; managed switch NX-OS vers   │   │
-│   │  appmgr status (service state)               │  │  Severity: Sev-1 DCNM down / Sev-2 partial │    │
-│   │  show tech-support on each affected MDS      │  │  Attach support bundle + show tech files    │   │
-│   │  Write timeline: last working → first error  │  │  For Sev-1: also call +1-800-553-2447       │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  For Sev-1 (DCNM completely down / fabric management unavailable): open SR AND call TAC.              │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Step 3 — Escalation Path            │  │         What NOT to Do                      │   │
-│   │  TAC SE: triage + review support bundle      │  │  Do not restart DCNM before collecting logs │   │
-│   │  DCNM SME: if Sev-1 unresolved > 2 hours    │  │  Do not make zone changes during incident   │    │
-│   │  Engineering: for DB corruption or code bug  │  │  Do not upgrade DCNM mid-incident           │   │
-│   │  TAM: engage for prolonged Sev-1 outages     │  │  Do not reboot appliance without TAC OK     │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  DCNM            = Data Center Network Manager; Cisco fabric management platform for MDS/Nexus        │
-│  appmgr          = DCNM VM CLI; manages DCNM services; key commands: status, stop, start, logs        │
-│  support bundle  = collect-support-bundle.sh output; primary artifact for Cisco TAC                   │
-│  show tech-support= NX-OS MDS full diagnostic bundle; one per affected switch                         │
-│  Native HA       = 3-appliance DCNM HA deployment; primary + standby + compute nodes                  │
-│  TAC             = Technical Assistance Center; Cisco L3 support; opened at case.cisco.com            │
-│  CCO             = Cisco Connection Online; account required for case.cisco.com                       │
-│  Sev-1           = complete DCNM outage; fabric management unavailable; Cisco SLA: 1-hour callback    │
-│  RCA             = Root Cause Analysis; Cisco provides after Sev-1 case closure                       │
-│  sane            = DCNM PostgreSQL database; fabric topology and configuration store                  │
-│  pmdb            = DCNM performance management database; holds historical metrics                     │
-│  Audit log CSV   = DCNM action log export; shows all configuration changes before the incident        │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ---
 

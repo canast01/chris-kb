@@ -6,6 +6,8 @@ search:
   boost: 1.5
 ---
 # Cisco Nexus Dashboard — Troubleshooting Diagnostics
+![Cisco Nexus Dashboard — Troubleshooting Diagnostics](../../../../assets/san-cisco-nexus-dashboard-troubleshooting-diagnostics.svg)
+
 
 ```bash
 ssh ndadmin@nd-dc1-1.corp.example.com
@@ -21,53 +23,7 @@ acs system logs --component security --tail 100
 # Show audit log entries (user activity)
 acs system logs --component audit --tail 50
 ```
-```text
-┌───────────────────────── Cisco Nexus Dashboard — Troubleshooting Diagnostics ─────────────────────────┐
-│                                                                                                       │
-│  ND diagnostic tools: acs CLI, pod logs, tech-support bundle, and REST API queries.                   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             Cluster Diagnostics              │  │               App Diagnostics               │   │
-│   │           acs health: node summary           │  │           acs logs <app>: pod logs          │   │
-│   │        acs cluster node: node detail         │  │         kubectl describe pod: events        │   │
-│   │         acs network: interface check         │  │        kubectl get pods -A: all pods        │   │
-│   │         df -h: disk usage per volume         │  │         App UI: built-in health page        │   │
-│   │         top: CPU/memory per process          │  │           REST: GET /api/v1/faults          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Start with acs health for cluster state; then kubectl/acs logs for app root cause                    │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │           Tech-Support Collection            │  │             Network Diagnostics             │   │
-│   │         acs techsupport: full bundle         │  │              ping: node to node             │   │
-│   │          GUI: Admin → Tech Support           │  │         curl -k: REST endpoint test         │   │
-│   │         Includes: logs, configs, DB          │  │           netstat: port listeners           │   │
-│   │          Upload: Cisco CX Cloud TAC          │  │           traceroute: path to site          │   │
-│   │             Size: 1-5 GB typical             │  │           nslookup: DNS resolution          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  ND cluster nodes · management switch · DNS server · TAC upload target (CX Cloud)                     │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  acs health     = Cluster-wide health summary: nodes, quorum, disk, NTP status                        │
-│  acs logs       = Streams log output from a named ND application pod                                  │
-│  kubectl        = Kubernetes CLI; describes pods, deployments, events in detail                       │
-│  acs techsupport= Generates comprehensive diagnostic archive for TAC analysis                         │
-│  CX Cloud       = Cisco customer experience portal; TAC case file upload target                       │
-│  GET /api/v1/faults= REST endpoint listing active fault objects on the cluster                        │
-│  kubectl describe= Shows pod spec, status, and recent events (OOM, image pull errors)                 │
-│  df -h          = Linux command showing disk usage per mounted volume                                 │
-│  curl -k        = Test HTTPS endpoint without cert validation; verify REST response                   │
-│  Crash-loop     = Pod state where container repeatedly exits; root cause in logs                      │
-│  nslookup       = Verify ND can resolve site hostnames and AAA server FQDNs                           │
-│  Tech-support   = All-in-one bundle; includes etcd snapshot, pod logs, cluster state                  │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 ```bash
 # CPU and memory usage per node
 acs system resources

@@ -11,58 +11,7 @@ Health Checks reference covering Daily Health Check, Pre-Maintenance Health Chec
 
 *Applies to: PowerPath*
 </div>
-```text
-┌─────────────────────────────────── Dell PowerPath — Health Checks ────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      PowerPath health checks: routine verification of operational status and performance      │   │
-│   │         Checks include: controller status, drive health, replication lag, and capacity        │   │
-│   │         Frequency: daily quick checks; weekly detailed review; monthly capacity report        │   │
-│   │        Configure threshold-based alerts for proactive incident prevention and awareness       │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Check status → review alerts → verify replication → capacity → log                                 │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │            Driver           │  │        powermt daemon       │  │           OS-level          │   │
-│   │            Paths            │  │        Active-active        │  │         ≥4 paths/LUN        │   │
-│   │            Policy           │  │        Adaptive/ALUA        │  │        Array-specific       │   │
-│   │           Failover          │  │         Auto reroute        │  │          <5 sec RTO         │   │
-│   │          Management         │  │           pp_mgmt           │  │         Centralised         │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Check area    │  How to verify   │   Pass criteria   │    Frequency     │       Tool       │   │
-│   │   Controllers    │   show status    │    All healthy    │      Daily       │     CLI/GUI      │   │
-│   │      Drives      │   show drives    │  No failed/pred.  │      Daily       │     CLI/GUI      │   │
-│   │   Replication    │ show replication │  Lag < threshold  │      Daily       │     CLI/GUI      │   │
-│   │     Capacity     │  show capacity   │     < 80% used    │      Daily       │     CLI/GUI      │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: Host OS (Windows/Linux) · HBA or iSCSI NIC ports · FC/IP switches · Dell arrays          │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    PowerPath          = Dell multipath driver; manages multiple I/O paths to storage for HA/perform...│
-│    powermt            = CLI utility; powermt display, powermt check, powermt save are core commands   │
-│    Pseudo device      = virtual block device created by PowerPath aggregating physical I/O paths      │
-│    Path health        = alive or dead status per path; dead paths trigger automatic I/O failover      │
-│    Adaptive policy    = load-balancing that distributes I/O across all active paths evenly            │
-│    CLARiiON policy    = active/passive policy for older VNX/CLARiiON arrays (one active path)         │
-│    ALUA               = Asymmetric Logical Unit Access; array signals preferred vs. non-preferred p...│
-│    Trespass           = LUN ownership movement between SP-A and SP-B on Unity or VNX arrays           │
-│    Ghost path         = stale path entry in PowerPath no longer backed by a physical device           │
-│    powermt check      = validates all paths and refreshes device table; run after fabric changes      │
-│    pp_mgmt            = PowerPath Management Appliance; central monitoring for all PowerPath hosts    │
-│    License key        = host-based license required per server; applied via powermt config license    │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 ## Before you begin
 
@@ -84,6 +33,8 @@ Health Checks reference covering Daily Health Check, Pre-Maintenance Health Chec
 7. **Save path configuration:** `powermt save` — ensure current config is saved
 
 ## Daily Health Check
+
+![Daily Health Check](../../../../assets/storage-dell-powerpath-hc-daily-health-check.svg)
 
 ```mermaid
 flowchart TD
@@ -123,6 +74,8 @@ powermt display dev=all | grep -E "^Pseudo|Dead|alive"
 
 ## Pre-Maintenance Health Check
 
+![Pre-Maintenance Health Check](../../../../assets/storage-dell-powerpath-hc-pre-maintenance-health-check.svg)
+
 Run these checks before any SAN maintenance or as first-response steps when a host reports I/O errors or path loss.
 
 - [ ] `powermt display dev=all` — all paths for all pseudo devices are in `alive` state; no `dead`, `unlic`, or missing paths
@@ -161,6 +114,8 @@ powermt config
 
 ## Path State Verification
 
+![Path State Verification](../../../../assets/storage-dell-powerpath-hc-path-state-verification.svg)
+
 All paths should show `alive` under normal conditions:
 
 ```bash
@@ -186,6 +141,8 @@ state=alive; policy=CLAROpt; priority=1; HBA id=fcs0
 
 ## Port / HBA Check
 
+![Port / HBA Check](../../../../assets/storage-dell-powerpath-hc-port-hba-check.svg)
+
 ```bash
 # Show HBA port status
 powermt display ports
@@ -195,6 +152,8 @@ powermt display dev=all | grep -c alive
 ```
 
 ## Policy Verification
+
+![Policy Verification](../../../../assets/storage-dell-powerpath-hc-policy-verification.svg)
 
 ```bash
 # Display load balance policy per device
@@ -215,6 +174,8 @@ Expected: `CLAROpt` (CLARiiON optimized) or `co` for Active/Optimized.
 ---
 
 ## Host Validation
+
+![Host Validation](../../../../assets/storage-dell-powerpath-hc-host-validation.svg)
 
 Validate PowerPath installation and path configuration after host provisioning or changes.
 

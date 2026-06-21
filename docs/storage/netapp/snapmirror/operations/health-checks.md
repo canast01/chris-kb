@@ -11,58 +11,7 @@ SnapMirror health checks: `snapmirror show -fields lag-time,health`, relationshi
 
 *Applies to: SnapMirror*
 </div>
-```text
-┌────────────────────────────────── NetApp SnapMirror — Health Checks ──────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      SnapMirror health checks: routine verification of operational status and performance     │   │
-│   │         Checks include: controller status, drive health, replication lag, and capacity        │   │
-│   │         Frequency: daily quick checks; weekly detailed review; monthly capacity report        │   │
-│   │        Configure threshold-based alerts for proactive incident prevention and awareness       │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Check status → review alerts → verify replication → capacity → log                                 │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │            Async            │  │        Periodic sync        │  │         RPO: minutes        │   │
-│   │             Sync            │  │           Zero RPO          │  │          Sub-ms lag         │   │
-│   │            SM-BC            │  │        Active-active        │  │        Transparent FO       │   │
-│   │            Vault            │  │        Long retention       │  │         Backup copy         │   │
-│   │            Cloud            │  │         ONTAP → CVO         │  │       Cloud DR/backup       │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Check area    │  How to verify   │   Pass criteria   │    Frequency     │       Tool       │   │
-│   │   Controllers    │   show status    │    All healthy    │      Daily       │     CLI/GUI      │   │
-│   │      Drives      │   show drives    │  No failed/pred.  │      Daily       │     CLI/GUI      │   │
-│   │   Replication    │ show replication │  Lag < threshold  │      Daily       │     CLI/GUI      │   │
-│   │     Capacity     │  show capacity   │     < 80% used    │      Daily       │     CLI/GUI      │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: Source ONTAP cluster · destination ONTAP cluster · intercluster LIFs · WAN link          │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    SnapMirror         = ONTAP replication; transfers only changed blocks after initial baseline sync  │
-│    Intercluster LIF   = dedicated logical interface for SnapMirror traffic between clusters           │
-│    SnapMirror policy  = defines schedule, retention, and transfer type (async/sync/vault)             │
-│    Baseline transfer  = first full snapshot transfer establishing the SnapMirror relationship         │
-│    Update             = incremental transfer; only sends new or changed blocks since last successfu...│
-│    Snapmirror break   = breaks the DR relationship; activates destination volume for read-write       │
-│    Resync             = re-establishes a broken SnapMirror relationship from the last common snapshot │
-│    SM-BC              = SnapMirror Business Continuity; synchronous zero-RPO active-active SAN volumes│
-│    Mediator           = ONTAP Mediator; quorum service for SM-BC running on Linux VM at third site    │
-│    SnapVault          = SnapMirror variant for backup retention; destination has independent schedule │
-│    MirrorAndVault     = policy combining SnapMirror DR and SnapVault backup retention copies          │
-│    Fanout             = single source volume replicating to multiple destination clusters simultane...│
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 ## Before you begin
 
@@ -87,6 +36,8 @@ SnapMirror health checks: `snapmirror show -fields lag-time,health`, relationshi
 
 ## Daily Checks
 
+![Daily Checks](../../../../assets/storage-netapp-snapmirror-hc-daily-checks.svg)
+
 | Check | Command | Notes |
 |---|---|---|
 | [ ] Run `snapmirror show -fields lag-time,healthy,state` | `snapmirror show -fields lag-time,healthy,state` | confirm all relationships are healthy with lag within RPO thresholds |
@@ -98,6 +49,8 @@ SnapMirror health checks: `snapmirror show -fields lag-time,health`, relationshi
 | [ ] For SMBC/AutomatedFailOver, verify mediator reachability | | |
 
 ## Health Check
+
+![Health Check](../../../../assets/storage-netapp-snapmirror-hc-health-check.svg)
 
 - [ ] All relationships show `healthy: true`
 - [ ] No relationships in `broken-off` state
@@ -129,6 +82,8 @@ snapmirror show -type sync -fields lag-time,healthy,is-healthy
 
 ## Relationship States
 
+![Relationship States](../../../../assets/storage-netapp-snapmirror-hc-relationship-states.svg)
+
 | State | Meaning |
 |---|---|
 | Snapmirrored | Healthy — replication current |
@@ -138,6 +93,8 @@ snapmirror show -type sync -fields lag-time,healthy,is-healthy
 | Transferring | Actively replicating |
 
 ## Lag Time
+
+![Lag Time](../../../../assets/storage-netapp-snapmirror-hc-lag-time.svg)
 
 Lag time is the age of the last successful transfer. For async SnapMirror:
 - **< 1 hour** — normal for hourly schedule

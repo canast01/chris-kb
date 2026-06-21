@@ -12,39 +12,10 @@ Dell PowerScale (Isilon) diagnostic commands: check cluster node and drive healt
 
 *Applies to: PowerScale OneFS 9.x (formerly Dell EMC Isilon)*
 </div>
+![PowerScale — Diagnostics](../../../../assets/storage-dell-powerscale-troubleshooting-diagnostics.svg)
 
-```text
-┌──────────────────────────────────── Dell PowerScale — Diagnostics ────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   Start here: isi status → isi event list --severity critical → isi job list                 │    │
-│   │   Node SMARTFAIL: open Dell case immediately; monitor restripe job progress                   │   │
-│   │   SyncIQ broken: isi sync reports list; check network path to target cluster                  │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │           Cluster and Node Health            │  │          Replication and Capacity           │   │
-│   │   isi status: node and drive summary         │  │   isi sync policies list: SyncIQ state     │    │
-│   │   isi event list: hardware and software      │  │   isi sync reports list: last run detail   │    │
-│   │   isi job list: background cluster jobs      │  │   isi storagepool list: tier capacity       │   │
-│   │   isi devices node list: per-node HW         │  │   isi quota list: directory quotas         │    │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  PowerScale nodes (All-Flash / Hybrid / Archive) · InfiniBand back-end · 25/100 GbE front-end         │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│  isi status       = cluster health summary; shows node availability and drive state                   │
-│  SMARTFAIL        = node marked for removal due to repeated errors; restripe starts automatically     │
-│  SyncIQ           = async replication; policy-based; RPO tracked in hours                             │
-│  SmartConnect     = DNS-based load balancing across nodes for NFS/SMB clients                         │
-│  isi_gather_info  = full cluster diagnostic bundle; saves to /ifs/data/Isilon_Support/                │
-│  Access zone      = logical tenant boundary; each has separate authentication and exports             │
-│  Quota            = directory or user capacity limit; hard/soft/advisory via QuotaIQ                  │
-│  isi statistics   = real-time and historical performance query tool; per-node or cluster-wide         │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ```mermaid
 graph TD

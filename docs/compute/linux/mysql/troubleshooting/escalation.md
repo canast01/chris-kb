@@ -12,6 +12,8 @@ How to escalate MySQL and MariaDB issues to Oracle MySQL support or Percona supp
 
 *Applies to: MySQL 8.x / MariaDB 10.x on RHEL / Ubuntu LTS*
 </div>
+![MySQL / MariaDB — Escalation](../../../../assets/compute-linux-mysql-troubleshooting-escalation.svg)
+
 
 ```text
 ┌──────────────────────────────── MySQL / MariaDB — Escalation ─────────────────────────────────────────┐

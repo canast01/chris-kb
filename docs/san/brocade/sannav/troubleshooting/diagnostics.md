@@ -12,38 +12,10 @@ SANnav diagnostic commands: check service health with sannav-admin and journalct
 
 *Applies to: Brocade SANnav 2.x*
 </div>
+![Brocade SANnav — Diagnostics](../../../../assets/san-brocade-sannav-troubleshooting-diagnostics.svg)
 
-```text
-┌──────────────────────────────────── Brocade SANnav — Diagnostics ─────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   Start here: sannav-admin status → /api/v1/health → journalctl -u sannav → db-status        │    │
-│   │   Switch not appearing: check discovery log for switch IP; test HTTPS to switch API          │    │
-│   │   Alerts not appearing: check SNMP trap reception with tcpdump on UDP 162                    │    │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          SANnav Service Diagnostics          │  │             Database Diagnostics            │   │
-│   │   sannav-admin status: all service state     │  │   sannav-admin db-status (PostgreSQL)       │   │
-│   │   journalctl -u sannav: service events       │  │   curl localhost:8086/health (InfluxDB)     │   │
-│   │   curl /api/v1/health: REST health           │  │   df -h: disk space per data directory      │   │
-│   │   top / free -h: CPU and RAM check           │  │   du -sh /opt/sannav/data/influxdb/         │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  SANnav VM (Linux) · PostgreSQL (metadata) · InfluxDB (performance metrics) · Brocade FC switches     │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│  sannav-admin  = SANnav VM CLI tool; subcommands: status, restart, db-status, backup                  │
-│  journalctl    = systemd log viewer; use -u sannav to filter to SANnav service events                 │
-│  /api/v1/health= SANnav REST health endpoint; returns JSON with per-service status                    │
-│  InfluxDB      = time-series DB for SAN performance metrics; disk saturation breaks performance views │
-│  PostgreSQL    = relational DB for SANnav configuration, topology, and events                         │
-│  MAPS          = Monitoring and Alerting Policy Suite; FOS alerting engine on each switch             │
-│  supportsave   = FOS command to generate the diagnostic bundle from a Brocade switch                  │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ```mermaid
 graph TD

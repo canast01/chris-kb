@@ -12,41 +12,10 @@ SnapMirror diagnostic commands: check relationship health and lag with snapmirro
 
 *Applies to: ONTAP 9.x SnapMirror (Async, Sync, SM-BC, SnapVault)*
 </div>
+![SnapMirror — Diagnostics](../../../../assets/storage-netapp-snapmirror-troubleshooting-diagnostics.svg)
 
-```text
-┌─────────────────────────────────── NetApp SnapMirror — Diagnostics ───────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   Start here: snapmirror show → check lag → check intercluster LIF → check EMS events        │    │
-│   │   Relationship unhealthy: check "Reason" column in snapmirror show — it has the error text   │    │
-│   │   SM-BC: always check mediator connectivity first — mediator loss can block I/O promotion    │    │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Relationship Diagnostics            │  │           Network / Transfer                │   │
-│   │   snapmirror show -fields lag-time,healthy   │  │   network interface show -role intercluster │   │
-│   │   snapmirror show -destination-path ...      │  │   ping -lif <lif> -destination <dest>       │   │
-│   │   snapmirror show-history                    │  │   network interface ping6 (for IPv6)        │   │
-│   │   snapmirror list-destinations               │  │   event log show -message-name snapmirror.* │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  Source ONTAP cluster · destination ONTAP cluster · intercluster LIFs · WAN / dark fiber link         │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│  SnapMirror       = ONTAP replication; transfers only changed blocks after initial baseline sync      │
-│  Intercluster LIF = dedicated logical interface for SnapMirror traffic between clusters               │
-│  Lag-time         = how far behind the destination is; for async: normal < 1× schedule interval       │
-│  SM-BC            = SnapMirror Business Continuity; zero-RPO active-active SAN; requires Mediator     │
-│  Mediator         = Linux VM at third site; provides quorum for SM-BC automated failover              │
-│  Baseline transfer= first full snapshot transfer establishing the SnapMirror relationship             │
-│  Resync           = re-establishes a broken relationship from the last common snapshot                │
-│  SnapVault        = SnapMirror for backup retention; destination has independent retention schedule   │
-│  MirrorAndVault   = policy combining SnapMirror DR and SnapVault backup retention copies              │
-│  Fanout           = single source replicating to multiple destination clusters simultaneously         │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ```mermaid
 graph TD

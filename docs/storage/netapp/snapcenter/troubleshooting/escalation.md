@@ -12,50 +12,10 @@ How to escalate NetApp SnapCenter issues to NetApp support: what data to collect
 
 *Applies to: SnapCenter 5.x*
 </div>
+![SnapCenter — Escalation](../../../../assets/storage-netapp-snapcenter-troubleshooting-escalation.svg)
 
-```text
-┌─────────────────────────────────── NetApp SnapCenter — Escalation ────────────────────────────────────┐
-│                                                                                                       │
-│  Escalate SnapCenter issues to NetApp when all backup jobs are failing, a restore                     │
-│  is failing during an active DR, a plugin is failing across all hosts, or                             │
-│  the SnapCenter Server service is down.                                                               │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Step 1 — Collect Data               │  │          Step 2 — Open the SR               │   │
-│   │  Get the failing Job ID and exact error text │  │  Go to mysupport.netapp.com → sign in       │   │
-│   │  Run: Get-SmSupportBundle to generate bundle │  │  Product: Storage Software → SnapCenter     │   │
-│   │  Note SC Server version + plugin versions    │  │  Priority: P1 down / P2 major / P3 minor    │   │
-│   │  Collect Windows Event Log from SC Server    │  │  Attach support bundle + job event log      │   │
-│   │  Write timeline: last success → first fail   │  │  Include SC server version + ONTAP version  │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  For P1: open portal case AND call NetApp at +1-888-463-8277 immediately.                             │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Step 3 — Escalation Path            │  │         What NOT to Do                      │   │
-│   │  TSE: triage + review support bundle         │  │  Do not delete failed jobs from history     │   │
-│   │  App specialist: for plugin-layer issues     │  │  Do not restart SC Server service mid-case  │   │
-│   │  Engineering: for confirmed code bugs        │  │  Do not upgrade SC Server during incident   │   │
-│   │  Duty Manager: request if SLA breached       │  │  Do not delete Snapshots tied to failed job │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  SnapCenter       = NetApp backup orchestration server; coordinates app-consistent snapshots          │
-│  Plug-in          = host-side agent installed on protected servers; quiesces application for backup   │
-│  Resource group   = set of resources sharing a backup policy and schedule in SnapCenter               │
-│  Policy           = defines snapshot frequency, retention count, and SnapMirror/SnapVault target      │
-│  App-consistent   = snapshot taken after application quiesce; guarantees a recoverable restore point  │
-│  Job ID           = unique identifier for a backup, restore, or clone operation                       │
-│  SMF              = SnapCenter MySQL database; stores job history, policies, and resource configs     │
-│  TSE              = Technical Support Engineer; first NetApp support engineer on the case             │
-│  SupportEdge      = NetApp support contract; 24×7 P1 response requires SupportEdge 24×7               │
-│  FlexClone        = ONTAP thin-clone technology underlying SnapCenter clone operations                │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ---
 

@@ -13,39 +13,10 @@ Horizon diagnostic commands: read Connection Server debug-*.log and vlsi-*.log l
 
 *Applies to: Horizon 8.x*
 </div>
+![Horizon — Diagnostics](../../../../assets/virtualization-vmware-horizon-troubleshooting-diagnostics.svg)
 
-```text
-┌──────────────────────────────────── VMware Horizon — Diagnostics ─────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   Start here: Horizon Admin UI → Events → filter ERROR → then Connection Server debug-*.log  │    │
-│   │   Session black screen: check agent debug-*.log and wsnm_*.log in the desktop VM             │    │
-│   │   UAG issue: curl https://uag:9443/rest/healthcheck; check esmanager.log via SSH             │    │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │            Connection Server Logs            │  │                Agent Logs                   │   │
-│   │   C:\ProgramData\VMware\VDM\logs\            │  │   C:\ProgramData\VMware\VDM\logs\           │   │
-│   │   debug-*.log: broker decisions, auth, pool  │  │   debug-*.log on desktop VM                 │   │
-│   │   vlsi-*.log: vCenter API calls              │  │   wsnm_*.log: Blast/PCoIP session           │   │
-│   │   support bundle: Horizon Admin UI           │  │   Windows Event Viewer: Application log     │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  Connection Server (Windows) · UAG appliance · desktop VMs · Horizon Client · vCenter                 │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│  debug-*.log  = Connection Server main broker log; auth decisions, pool operations, session routing   │
-│  vlsi-*.log   = Connection Server vCenter interaction log; provisioning steps and API errors          │
-│  wsnm_*.log   = Horizon Agent display path log; Blast/PCoIP protocol events                           │
-│  UAG          = Unified Access Gateway; edge proxy for external Horizon clients                       │
-│  esmanager.log= UAG edge service log; connection brokering and edge service events                    │
-│  PCoIP / Blast= display protocols; Blast uses HTTPS:8443 / DTLS:8443; PCoIP uses UDP 4172             │
-│  vdmadmin.exe = Horizon CLI on Connection Server; lists sessions, pools, and assignments              │
-│  Pool error   = red status in Horizon Admin UI → Desktops → pool; hover for provisioning reason       │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ```mermaid
 graph TD

@@ -10,38 +10,10 @@ MySQL hardening — removing defaults, binding to specific interfaces, disabling
 
 *Applies to: RHEL / Ubuntu LTS*
 </div>
+![MySQL / MariaDB — Hardening](../../../../assets/compute-linux-mysql-security-hardening.svg)
 
-```text
-┌────────────────────────────────────────── MySQL — Hardening ──────────────────────────────────────────┐
-│                                                                                                       │
-│   CIS MySQL Benchmark covers: account hygiene, network exposure, file permissions, and audit logging  │
-│   Most critical: remove anonymous users, disable remote root, bind to specific interface              │
-│   Run mysql_secure_installation immediately after every fresh install                                 │
-│                                                                                                       │
-│   Account hardening                                                                                   │
-│   Remove anonymous users: DELETE FROM mysql.user WHERE User=''; FLUSH PRIVILEGES                      │
-│   Disable remote root: DELETE FROM mysql.user WHERE User='root' AND Host != 'localhost'               │
-│   Remove test database: DROP DATABASE test; DELETE FROM mysql.db WHERE Db='test_%'                    │
-│   Audit accounts with no password: SELECT user,host FROM mysql.user WHERE authentication_string=''    │
-│                                                                                                       │
-│   Network and file hardening                                                                          │
-│   bind-address=127.0.0.1: listen only on localhost if no remote access needed                         │
-│   local_infile=OFF: disables LOAD DATA LOCAL INFILE (common attack vector)                            │
-│   File permissions: /var/lib/mysql owned by mysql:mysql with mode 750                                 │
-│   skip-symbolic-links=YES: prevents symlink attacks on data files                                     │
-│                                                                                                       │
-│   Audit and monitoring                                                                                │
-│   Enable audit plugin (MariaDB: audit_file; MySQL Enterprise: audit_log)                              │
-│   Log: connection events, failed logins, DDL statements (CREATE/DROP/ALTER)                           │
-│   general_log=OFF in production (high overhead); enable only for targeted debugging                   │
-│                                                                                                       │
-│   Key terms:                                                                                          │
-│   local_infile  = server variable; allows clients to load local files into tables if ON               │
-│   bind-address  = restricts MySQL listener to a specific network interface                            │
-│   audit_log     = MySQL Enterprise plugin; records all connection and query events                    │
-│   CIS Benchmark = Center for Internet Security hardening guide; defines pass/fail controls            │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Before you begin
 

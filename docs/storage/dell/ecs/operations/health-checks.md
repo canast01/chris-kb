@@ -11,58 +11,7 @@ Health Checks reference covering Health Check Layers, Daily Checks, Pre-Change H
 
 *Applies to: ECS 3.x*
 </div>
-```text
-┌────────────────────────────────────── Dell ECS — Health Checks ───────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │         ECS health checks: routine verification of operational status and performance         │   │
-│   │         Checks include: controller status, drive health, replication lag, and capacity        │   │
-│   │         Frequency: daily quick checks; weekly detailed review; monthly capacity report        │   │
-│   │        Configure threshold-based alerts for proactive incident prevention and awareness       │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Check status → review alerts → verify replication → capacity → log                                 │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │             Node            │  │        x86 appliance        │  │        Shared-nothing       │   │
-│   │         Storage pool        │  │          Node group         │  │        Erasure coded        │   │
-│   │             VDC             │  │          Virtual DC         │  │        Per-site unit        │   │
-│   │          Rep. group         │  │          Multi-VDC          │  │        Geo redundancy       │   │
-│   │            Bucket           │  │       Object container      │  │        S3/Swift/Blob        │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Check area    │  How to verify   │   Pass criteria   │    Frequency     │       Tool       │   │
-│   │   Controllers    │   show status    │    All healthy    │      Daily       │     CLI/GUI      │   │
-│   │      Drives      │   show drives    │  No failed/pred.  │      Daily       │     CLI/GUI      │   │
-│   │   Replication    │ show replication │  Lag < threshold  │      Daily       │     CLI/GUI      │   │
-│   │     Capacity     │  show capacity   │     < 80% used    │      Daily       │     CLI/GUI      │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: ECS appliance nodes · 10/25 GbE backend network · commodity SAS drives                   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    ECS                = Elastic Cloud Storage; Dell S3-compatible object store for unstructured data  │
-│    VDC                = Virtual Data Center; group of ECS nodes at a single geographic site           │
-│    Storage pool       = collection of nodes within a VDC; defines the erasure coding domain           │
-│    Replication group  = links VDCs for geo-redundant object storage; 3-way replication                │
-│    Bucket             = top-level S3 namespace; equivalent to S3 bucket or Azure container            │
-│    Erasure coding     = data protection scheme; default 12+4 provides 4-drive fault tolerance         │
-│    Namespace          = tenant-level isolation; multiple tenants share a single ECS cluster           │
-│    CAS                = Content Addressed Storage; fixed-content object storage with WORM support     │
-│    Replication factor = number of VDC copies; 3-way geo-replication for maximum durability            │
-│    Atmos API          = legacy Dell Atmos-compatible API; supported for migration from Atmos systems  │
-│    HDFS connector     = ECS Hadoop connector; ECS appears as HDFS namespace for analytics jobs        │
-│    Quota              = per-namespace or per-bucket storage quota; enforced as hard or soft limit     │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 ## Before you begin
 
@@ -84,6 +33,8 @@ Health Checks reference covering Health Check Layers, Daily Checks, Pre-Change H
 7. **API endpoint health:** `curl -sk https://<ecs-node>:9101/diagnostic/` — expect HTTP 200
 
 ## Health Check Layers
+
+![Health Check Layers](../../../../assets/storage-dell-ecs-hc-health-check-layers.svg)
 
 ```mermaid
 graph TD
@@ -113,6 +64,8 @@ graph TD
 
 ## Daily Checks
 
+![Daily Checks](../../../../assets/storage-dell-ecs-hc-daily-checks.svg)
+
 | Check | Command / Location | Notes |
 |---|---|---|
 | Log in to ECS Portal → Dashboard and review the Alerts panel | ECS Portal → Dashboard → Alerts | Triage by severity; any `ERROR` or `CRITICAL` alert requires same-day action |
@@ -125,6 +78,8 @@ graph TD
 | Check active alerts programmatically | `GET /vdc/alerts` | Automate this check from a monitoring script for 24/7 alerting |
 
 ## Pre-Change Health Check
+
+![Pre-Change Health Check](../../../../assets/storage-dell-ecs-hc-pre-change-health-check.svg)
 
 Run these checks before any planned change — node additions, software upgrades, replication group changes, or VDC configuration updates.
 
@@ -140,6 +95,8 @@ Run these checks before any planned change — node additions, software upgrades
 - [ ] ZooKeeper health: `echo stat | nc localhost 2181` from a node shows a valid `Mode: leader` or `Mode: follower`
 
 ## Health Check Commands
+
+![Health Check Commands](../../../../assets/storage-dell-ecs-hc-health-check-commands.svg)
 
 ```bash
 # --- Authenticate to the ECS Management REST API ---
@@ -195,6 +152,8 @@ ecscli bucket get --namespace <namespace> --name <bucket>
 
 ## Node-Level Diagnostic Checks
 
+![Node-Level Diagnostic Checks](../../../../assets/storage-dell-ecs-hc-node-level-diagnostic-checks.svg)
+
 SSH to individual nodes for lower-level health validation.
 
 ```bash
@@ -240,6 +199,8 @@ timedatectl status
 ```
 
 ## Capacity Planning Checks
+
+![Capacity Planning Checks](../../../../assets/storage-dell-ecs-hc-capacity-planning-checks.svg)
 
 Run these checks weekly or integrate into capacity reporting.
 

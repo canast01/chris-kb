@@ -12,57 +12,10 @@ Catalog of known Horizon bugs, error codes, and workarounds covering Blast Extre
 
 *Applies to: Horizon 8.x (2111+)*
 </div>
+![VMware Horizon — Known Issues and Error Codes](../../../../assets/virtualization-vmware-horizon-troubleshooting-known-issues.svg)
 
-```text
-┌───────────────────────────────────────── VMware Horizon VDI ──────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │              Virtual desktop/app delivery — pooled/dedicated VMs, session brokers             │   │
-│   │              Protocols: Blast Extreme (TCP/UDP 8443) · PCoIP · RDP · HTTPS (443)              │   │
-│   │                  Management: Horizon Console · PowerCLI · REST API · Event DB                 │   │
-│   │           User auth -> CS -> UAG -> agent in desktop VM -> display protocol session           │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │            Access           │  │        UAG appliance        │  │         DMZ gateway         │   │
-│   │            Broker           │  │      Connection Server      │  │      Session assignment     │   │
-│   │           Desktop           │  │       Horizon Agent VM      │  │    Display protocol host    │   │
-│   │           Protocol          │  │        Blast / PCoIP        │  │    Display + USB + audio    │   │
-│   │           Identity          │  │          AD + vIDM          │  │      Entitlement source     │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
-│   │       UAG        │  Secure gateway  │   HTTPS / Blast   │ Smart card/SAML  │ Replaces SecSrvr │   │
-│   │Connection Server │  Session broker  │     HTTPS 443     │   AD Kerberos    │LDAP-backed config│   │
-│   │  Horizon Agent   │ Desktop endpoint │    Blast/PCoIP    │       N/A        │In each desktop VM│   │
-│   │     App Vol      │   App delivery   │       HTTPS       │     AD group     │VMDK app packages │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical: client -> UAG (DMZ) -> Connection Server -> Horizon Agent in desktop VM                    │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  UAG          = Unified Access Gateway; DMZ reverse proxy replacing Security Server                   │
-│  Connection Server = Horizon broker; assigns user to desktop pool/farm                                │
-│  Blast Extreme = VMware HTML5/UDP display protocol; preferred over PCoIP                              │
-│  PCoIP        = PC-over-IP; Teradici display protocol; still used for thin clients                    │
-│  Desktop pool = logical grouping of VMs for user assignment                                           │
-│  Entitlement  = mapping of AD group/user to a desktop pool or app                                     │
-│  Instant clone = fast VM provisioning; linked to parent snapshot, no customization                    │
-│  Full clone   = independent VM copy; slower provision but fully isolated                              │
-│  App Volumes  = application delivery via VMDK attached at login                                       │
-│  DEM          = Dynamic Environment Manager; user profile and policy config                           │
-│  replica      = Horizon CS replica; shared LDAP state, load balances connections                      │
-│  vGPU         = GPU passthrough or SR-IOV for graphics-intensive desktops                             │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 
 ## Before you begin

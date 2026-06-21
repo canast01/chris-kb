@@ -12,55 +12,10 @@ PowerPath diagnostic commands: check path state and count with <code>powermt dis
 
 *Applies to: PowerPath*
 </div>
+![PowerPath — Diagnostics](../../../../assets/storage-dell-powerpath-troubleshooting-diagnostics.svg)
 
-```text
-┌──────────────────────────────────── Dell PowerPath — Diagnostics ─────────────────────────────────────┐
-│                                                                                                       │
-│   ┌────────────────────────────────────────────────────────────────────────────────────────────┐      │
-│   │  Start here: powermt display dev=all → count dead paths                                   │       │
-│   │  Dead paths: check HBA state → lsmod | grep emcp → dmesg | grep emcpower                 │        │
-│   │  HBA online but paths dead: check fabric (portshow, nsshow) → check array FA ports        │       │
-│   │  License issue: powermt check_registration → confirm license is valid                     │       │
-│   └────────────────────────────────────────────────────────────────────────────────────────────┘      │
-│                                                                                                       │
-│   ┌─────────────────────────────────────────┐  ┌──────────────────────────────────────────────┐       │
-│   │          PowerPath Layer                │  │             Host OS / HBA Layer              │       │
-│   │   powermt display dev=all: path states  │  │   lsmod | grep emcp: module loaded?          │       │
-│   │   powermt display ports class=all: HBAs │  │   systemctl status PowerPath: service state  │       │
-│   │   powermt display options: policy info  │  │   dmesg | grep emcpower: kernel events       │       │
-│   │   powermt check_registration: license   │  │   /sys/class/fc_host: HBA port states        │       │
-│   │   powermt version: installed version    │  │   lsblk -S: raw SCSI devices (raw paths)     │       │
-│   └─────────────────────────────────────────┘  └──────────────────────────────────────────────┘       │
-│                                                                                                       │
-│   ┌─────────────────────────────────────────┐  ┌──────────────────────────────────────────────┐       │
-│   │          Fabric Layer (SAN Switch)      │  │         Array Layer (Storage Side)           │       │
-│   │   Brocade: portshow, nsshow, errshow    │  │   Unity: Unisphere → FC Ports + Host Access  │       │
-│   │   Brocade: porterrshow, cfgshow         │  │   PowerMax: Director and Port health view    │       │
-│   │   Cisco: show interface fc, fcns db     │  │   Confirm FA port is Online + zone is active │       │
-│   │   Cisco: show zone active vsan <id>     │  │   Confirm host is registered with WWN        │       │
-│   │   Check: zone contains one init + tgt   │  │   Confirm LUN is in masking view / host grp  │       │
-│   └─────────────────────────────────────────┘  └──────────────────────────────────────────────┘       │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  Host OS (Windows/Linux/AIX/HP-UX) · FC HBA ports or iSCSI NICs                                       │
-│  FC or Ethernet switches · Dell storage array (Unity, PowerMax, VNX) front-end ports                  │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│  PowerPath          = Dell multipath driver; manages multiple I/O paths to storage for HA/perf        │
-│  powermt            = CLI utility; powermt display, powermt check, powermt save are core commands     │
-│  Pseudo device      = virtual block device created by PowerPath aggregating physical I/O paths        │
-│  Path health        = alive or dead status per path; dead paths trigger automatic I/O failover        │
-│  Adaptive policy    = load-balancing that distributes I/O across all active paths evenly              │
-│  CLARiiON policy    = active/passive policy for older VNX/CLARiiON arrays (one active path)           │
-│  ALUA               = Asymmetric Logical Unit Access; array signals preferred vs non-preferred        │
-│  Trespass           = LUN ownership movement between SP-A and SP-B on Unity or VNX arrays             │
-│  Ghost path         = stale path entry in PowerPath no longer backed by a physical device             │
-│  powermt check      = validates all paths and refreshes device table; run after fabric changes        │
-│  pp_mgmt            = PowerPath Management Appliance; central monitoring for all PowerPath hosts      │
-│  License key        = host-based license required per server; applied via powermt config license      │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ```mermaid
 graph TD

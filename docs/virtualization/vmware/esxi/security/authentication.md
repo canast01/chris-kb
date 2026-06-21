@@ -13,66 +13,12 @@ Authentication reference covering Create a Break-Glass Local Account, Password P
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
+![ESXi — Authentication](../../../../assets/virtualization-vmware-esxi-security-authentication.svg)
+
 
 ESXi Authentication Paths
-```text
-┌──────────────────────────────────────── ESXi — Authentication ────────────────────────────────────────┐
-│                                                                                                       │
-│  SSO, AD/LDAP join, smart card (CAC), and MFA configuration for ESXi access.                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                 vCenter SSO                  │  │             Host AD Integration             │   │
-│   │         vsphere.local default domain         │  │            Join host to AD domain           │   │
-│   │          Add AD as identity source           │  │           AD users log in to DCUI           │   │
-│   │            Password policy in SSO            │  │              ESXi Shell AD auth             │   │
-│   │         Token policy: timeout/count          │  │           AD group to DCUI access           │   │
-│   │          MFA: RSA SecurID / Radius           │  │            Leave domain on decomm           │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  SSO identity source → vCenter auth → RBAC mapping → ESXi host access.                                │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │            Smart Card / CAC Auth             │  │              MFA Configuration              │   │
-│   │          vCenter: enable cert auth           │  │           RSA SecurID integration           │   │
-│   │           Map cert UPN to AD user            │  │           Radius server configured          │   │
-│   │           CAC card + PIN required            │  │            SSO MFA policy enabled           │   │
-│   │          OCSP/CRL revocation check           │  │          Fallback: local admin only         │   │
-│   │           DOD/STIG CAC requirement           │  │            MFA for vCenter UI/API           │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  x86 hosts, management network, AD/LDAP servers, RSA/Radius MFA servers                               │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  SSO         = Single Sign-On; vCenter embedded auth service                                          │
-│  vsphere.local = built-in SSO domain; local admin accounts live here                                  │
-│  Identity source = AD/LDAP added to SSO; users can log in with domain                                 │
-│  CAC         = Common Access Card; US Gov smart card for auth                                         │
-│  OCSP        = Online Certificate Status Protocol; checks cert revocation                             │
-│  CRL         = Certificate Revocation List; offline revocation list                                   │
-│  RSA SecurID = MFA token; OTP used as second factor for vCenter                                       │
-│  Radius      = Remote Auth Dial-In User Service; MFA protocol                                         │
-│  UPN         = User Principal Name; cert field mapped to AD user                                      │
-│  DCUI        = Direct Console UI; local access; can use AD auth                                       │
-│  Token policy = SSO setting: session lifetime and concurrent count                                    │
-│  STIG        = Security Technical Implementation Guide; DOD hardening                                 │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-```text
-┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
-│  /Security/PasswordQualityControl                                                                     │
-│  ├── Minimum length: 12 chars                                                                         │
-│  ├── Complexity: upper + lower + digit + special                                                      │
-│  ├── History: last 5 passwords                                                                        │
-│  /Security/AccountLockFailures = 5 attempts                                                           │
-│  /Security/AccountUnlockTime   = 900 seconds                                                          │
-│  /Config/Etc/issue             = login banner text                                                    │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Local Account Management
 

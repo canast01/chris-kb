@@ -10,33 +10,10 @@ EVS hardening: NSX-T micro-segmentation default deny, VPC security groups, AWS V
 
 *Applies to: Amazon EVS*
 </div>
+![Amazon EVS — Hardening](../../../../assets/cloud-aws-evs-security-hardening.svg)
 
-```text
-┌─────────────────────────────────────── Amazon EVS — Hardening ────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   NSX-T DFW: default deny + explicit allow; isolate tenants and workload tiers by policy       │  │
-│   │   VPC security groups: limit inbound to management subnet CIDRs only; deny internet by default  │ │
-│   │   ESXi hardening: disable SSH after setup, enable lockdown mode, NTP sync required             │  │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  NSX-T DFW    = Distributed Firewall; enforces rules at each VM vNIC; default deny posture            │
-│  Micro-segmentation = Zero-trust network model; workloads only talk to explicitly allowed peers       │
-│  VPC security group = AWS stateful firewall at ENI level; restrict inbound to management CIDRs        │
-│  VPC Flow Logs = Captured ENI-level traffic metadata; stored in CloudWatch or S3 for audit            │
-│  Lockdown mode = ESXi feature restricting direct host access; API/UI only via vCenter                 │
-│  CIS benchmark = Center for Internet Security hardening guide for VMware ESXi and VCF                 │
-│  NTP          = Network Time Protocol; required for SSO and cert validity; use AWS NTP                │
-│  SSH          = Access to ESXi hosts; disable after initial setup; re-enable only when needed         │
-│  CloudTrail   = AWS audit service; all evs:* API calls recorded with actor and timestamp              │
-│  GuardDuty    = AWS threat detection; monitors VPC traffic and CloudTrail for anomalies               │
-│  Security Hub = AWS aggregator for CIS benchmark findings across the account                          │
-│  Normal lockdown = ESXi lockdown mode allowing DCUI + vCenter access (not Strict)                     │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Before you begin
 

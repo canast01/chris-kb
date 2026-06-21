@@ -13,40 +13,10 @@ Solutions for the most frequent PowerCLI problems: certificate errors, connectio
 
 *Applies to: PowerCLI 13.x*
 </div>
+![PowerCLI — Common Issues](../../../../assets/virtualization-vmware-powercli-troubleshooting-common-issues.svg)
 
-```text
-┌───────────────────────────────── PowerCLI — Common Issues and Fixes ──────────────────────────────────┐
-│                                                                                                       │
-│   Most PowerCLI issues occur at connect time, during module load, or when cmdlet parameters fail      │
-│   Start diagnosis with: Get-Module VMware.* and the full error message                                │
-│   Check vCenter version compatibility before upgrading PowerCLI in a multi-vCenter environment        │
-│                                                                                                       │
-│   Certificate error on Connect-VIServer                                                               │
-│   Symptom: "The underlying connection was closed" or "SSL/TLS" error on connect                       │
-│   Fix (lab): Set-PowerCLIConfiguration -InvalidCertificateAction Ignore -Confirm:$false               │
-│   Fix (production): import the vCenter CA certificate into the OS trusted root store                  │
-│                                                                                                       │
-│   Module not found                                                                                    │
-│   Symptom: "The term 'Connect-VIServer' is not recognized as the name of a cmdlet"                    │
-│   Fix: Install-Module -Name VMware.PowerCLI -Scope CurrentUser; then Import-Module VMware.PowerCLI    │
-│   Check PSModulePath includes the directory where the module was installed                            │
-│                                                                                                       │
-│   Session expired or disconnected                                                                     │
-│   Symptom: cmdlets fail silently or return empty results after long idle period                       │
-│   Fix: check ($global:DefaultVIServers).IsConnected; if $false, reconnect with Connect-VIServer       │
-│   Prevention: add reconnect logic with try/catch around session-sensitive cmdlets in long scripts     │
-│                                                                                                       │
-│   Cmdlet parameter mismatch                                                                           │
-│   Symptom: "A parameter cannot be found that matches parameter name 'ParameterName'"                  │
-│   Cause: parameter exists in newer PowerCLI version but connecting to an older vCenter API            │
-│   Fix: wrap in try/catch; use -Version parameter on Connect-VIServer to limit API negotiation         │
-│                                                                                                       │
-│   Key terms:                                                                                          │
-│   PSModulePath = environment variable; add custom module paths with $env:PSModulePath += ";path"      │
-│   API version  = vCenter exposes a versioned vSphere API; newer cmdlet params may not be available    │
-│   IsConnected  = property on DefaultVIServer object; false when session has expired or timed out      │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Diagnostic Flow
 

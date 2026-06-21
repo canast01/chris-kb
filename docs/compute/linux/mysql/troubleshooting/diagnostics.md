@@ -12,37 +12,10 @@ MySQL diagnostic commands: read the error log, inspect active sessions with SHOW
 
 *Applies to: MySQL 8.x and MariaDB 10.x on RHEL / Ubuntu LTS*
 </div>
+![MySQL / MariaDB — Diagnostics](../../../../assets/compute-linux-mysql-troubleshooting-diagnostics.svg)
 
-```text
-┌───────────────────────────────────────── MySQL — Diagnostics ─────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   Start here: error log → SHOW FULL PROCESSLIST → SHOW ENGINE INNODB STATUS → slow log       │    │
-│   │   Lock contention: innodb_lock_waits shows which thread is blocking another                   │   │
-│   │   InnoDB status: LATEST DETECTED DEADLOCK section shows the last deadlock and queries         │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │         Active Sessions and Locking          │  │            Performance Analysis             │   │
-│   │   SHOW FULL PROCESSLIST: all sessions        │  │   SHOW ENGINE INNODB STATUS (deadlocks)     │   │
-│   │   innodb_lock_waits: blocking chain          │  │   performance_schema.events_waits_current   │   │
-│   │   KILL QUERY thread_id: cancel query         │  │   slow query log + pt-query-digest          │   │
-│   │   innodb_trx: long-running transactions      │  │   EXPLAIN SELECT: index and join analysis   │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  MySQL/MariaDB primary · replica(s) · binary log · InnoDB buffer pool · slow query log                │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│  SHOW ENGINE INNODB STATUS = InnoDB internal diagnostic dump; includes deadlock history               │
-│  EXPLAIN    = query plan analyser; shows which indexes MySQL uses and estimated rows                  │
-│  long_query_time = threshold in seconds; queries exceeding it go to slow_query_log                    │
-│  innodb_trx  = information_schema table listing all currently running InnoDB transactions             │
-│  pt-query-digest = Percona tool that ranks queries by total execution time from slow log              │
-│  binlog     = binary log of all DDL/DML changes; required for replication and point-in-time recovery  │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ```mermaid
 graph TD

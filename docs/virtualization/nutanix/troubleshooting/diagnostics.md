@@ -13,56 +13,10 @@ Nutanix diagnostic commands: run NCC health checks across the cluster, inspect n
 
 *Applies to: AOS 6.x · AHV · Prism Element / Prism Central*
 </div>
+![Nutanix — Diagnostics](../../../assets/virtualization-nutanix-troubleshooting-diagnostics.svg)
 
-```text
-┌─────────────────────────────── Nutanix — Diagnostics ─────────────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   Start here: ncc health_checks run_all → cluster status → ncli host ls                      │    │
-│   │   CVM not joining: allssh 'genesis status' → check network between CVMs (port 2100)          │    │
-│   │   Disk failure: ncli disk ls → Prism → Hardware → Disk marked for removal                    │    │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │           NCC and Cluster Health             │  │           Alerts and Event Review           │   │
-│   │   ncc health_checks run_all (all tests)      │  │   ncli alert ls (active alerts)             │   │
-│   │   cluster status (all CVM services)          │  │   ncli events ls limit=100                  │   │
-│   │   genesis status (cluster mgmt daemon)       │  │   Prism UI: Home → Alerts (red bell)        │   │
-│   │   ncli host ls (node connectivity)           │  │   ncli disk ls (disk health per node)       │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Run NCC first → then narrow to host/disk/network layer                                               │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          allssh Cluster-wide Checks          │  │           Support Bundle Collection         │   │
-│   │   allssh 'df -h' — CVM disk usage           │  │   ncc log_collector (full bundle)           │    │
-│   │   allssh 'uptime' — CVM restart history     │  │   Sent via Pulse or downloaded from Prism   │    │
-│   │   allssh 'nodetool ring' — Cassandra ring   │  │   SCP from /home/nutanix/send/              │    │
-│   │   allssh 'genesis status' — service state   │  │   Upload to Nutanix Portal for support      │    │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  Nutanix nodes (hybrid or all-flash) · per-node CVM (Controller VM, AOS services) · AHV hypervisor    │
-│  Prism Element (per-cluster UI) · Prism Central (multi-cluster management) · IPMI for hardware access │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│  NCC           = Nutanix Cluster Check; automated test suite; run_all performs all health checks      │
-│  CVM           = Controller VM; runs AOS storage stack per node; manages disk I/O                     │
-│  Genesis       = cluster management daemon; runs on each CVM; coordinates service startup             │
-│  Cassandra     = distributed metadata DB; stores vDisk metadata, extent group location                │
-│  Stargate      = data I/O service; handles VM read/write operations through the CVM                   │
-│  Curator       = background cluster maintenance service; handles scrubbing and rebalancing            │
-│  allssh        = wrapper that runs a command on all CVMs simultaneously                               │
-│  nodetool ring = Cassandra CLI; shows ring membership and replication state of all nodes              │
-│  Pulse         = Nutanix cloud telemetry; auto-uploads logs and health data to Nutanix                │
-│  Protection domain = DR/backup boundary; contains VMs or files replicated to a remote site            │
-│  ncli          = Nutanix CLI; available from any CVM; equivalent to Prism UI operations               │
-│  log_collector = ncc subcommand that collects all CVM logs into a support bundle                      │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ```mermaid
 graph TD

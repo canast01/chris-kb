@@ -11,58 +11,9 @@ Encryption reference covering Data-at-Rest Encryption (D@RE), Encryption in Tran
 
 *Applies to: PowerStore 3.x*
 </div>
-```text
-┌──────────────────────────────────── Dell PowerStore — Encryption ─────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │       PowerStore encryption: data at rest and in transit encryption for all stored data       │   │
-│   │          At rest: AES-256 encryption using controller-managed or external key manager         │   │
-│   │          In transit: TLS 1.2+ for management; protocol encryption for data in flight          │   │
-│   │         Key management: external KMIP-compatible KMS or built-in key lifecycle manager        │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Enable encryption → configure KMS → verify → audit → rotate keys                                   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │           T-model           │  │          Block only         │  │        iSCSI/FC/NVMe        │   │
-│   │           X-model           │  │         Block + File        │  │       Unified protocol      │   │
-│   │            Metro            │  │       Sync replication      │  │       Zero-RPO stretch      │   │
-│   │          Protection         │  │        Snapshot/Clone       │  │       Immutable snaps       │   │
-│   │             Mgmt            │  │          PSM / REST         │  │         Unified pane        │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Layer       │     Standard     │     Key source    │       KMS        │      Notes       │   │
-│   │     At rest      │     AES-256      │     Controller    │  Internal/KMIP   │    Always on     │   │
-│   │    In transit    │     TLS 1.2+     │      PKI cert     │   Internal CA    │   Mgmt + data    │   │
-│   │   Key rotation   │      Annual      │     KMS policy    │   External KMS   │    Automated     │   │
-│   │    Key escrow    │     Required     │     KMS vault     │   External KMS   │    DR access     │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: PowerStore T/X appliance · NVMe drives · SAS expansion shelves · 10/25 GbE               │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    PowerStore         = Dell mid-range NVMe storage; T-model block-only, X-model unified block+file   │
-│    PowerStore Manager = browser GUI and REST API endpoint for all PowerStore operations               │
-│    Volume group       = logical collection of volumes sharing snapshot and replication policies       │
-│    Protection policy  = assigned to volumes; defines snapshot schedule, retention, and replication    │
-│    Metro volume       = synchronously replicated volume across two sites; zero RPO active-active      │
-│    Snapshot           = space-efficient point-in-time copy; crash-consistent or app-consistent        │
-│    Clone              = full writable copy of a volume or file system; independent lifecycle          │
-│    Applied-to         = PowerStore host mapping; volumes are applied-to a host or host group object   │
-│    Capacity license   = PowerStore uses usable-capacity licensing; licensed in TiB increments         │
-│    Storage container  = PowerStore X-model; unified block and file from the same storage pool         │
-│    Appliance          = single PowerStore node pair (dual controllers); scalable to 4 appliances      │
-│    NVMe-oF            = NVMe over Fabrics; FC-NVMe or NVMe/TCP host connectivity on PowerStore        │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+![PowerStore — Encryption](../../../../assets/storage-dell-powerstore-security-encryption.svg)
+
+
 
 
 ## Before you begin

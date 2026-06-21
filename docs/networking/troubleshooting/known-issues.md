@@ -11,57 +11,10 @@ Index of protocol-specific known issues and error codes for networking component
 
 *Applies to: All network protocols in this KB*
 </div>
+![Networking — Known Issues Reference](../../assets/networking-troubleshooting-known-issues.svg)
 
-```text
-┌───────────────────────────────── Networking Protocols — Known Issues ─────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │              Index linking DNS, NFS, SMB, iSCSI, FC, TLS, LDAP known-issues pages             │   │
-│   │            Scope: Layer 3 (IP/routing), Layer 4 (TCP/UDP), Layer 7 (app protocols)            │   │
-│   │                           Management: N/A — documentation index only                          │   │
-│   │                 Identify protocol layer -> Open known-issues page -> Diagnose                 │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Topic            │  │           Resource          │  │            Notes            │   │
-│   │           Layer 3           │  │         Routing, VPN        │  │     Routing tables, MTU     │   │
-│   │           Layer 4           │  │        TCP/UDP ports        │  │     Check firewall rules    │   │
-│   │           Layer 7           │  │        App protocols        │  │     DNS/NFS/SMB/iSCSI/FC    │   │
-│   │          Cross-cut          │  │             DNS             │  │    Root cause, many apps    │   │
-│   │          Cross-cut          │  │           TLS/PKI           │  │      See security pages     │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
-│   │     DNS page     │ Name resolution  │        N/A        │       N/A        │  protocols/dns   │   │
-│   │  NFS/SMB pages   │  File protocols  │        N/A        │       N/A        │protocols/nfs,smb │   │
-│   │  iSCSI/FC pages  │ Block protocols  │        N/A        │       N/A        │protocols/iscsi,fc│   │
-│   │  TLS/LDAP pages  │Security protocols│        N/A        │       N/A        │protocols/tls,ldap│   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical: N/A — documentation index page, not a deployed system                                      │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Layer 3        = IP routing layer; addressing and path selection                                     │
-│  Layer 4        = TCP/UDP transport layer; ports and connection state                                 │
-│  Layer 7        = application layer; protocol-specific behavior                                       │
-│  MTU            = Maximum Transmission Unit; affects fragmentation                                    │
-│  DNS            = translates names to IPs; root cause of many failures                                │
-│  TLS            = encrypts and authenticates network connections                                      │
-│  iSCSI          = block storage protocol over TCP/IP                                                  │
-│  Fibre Channel  = dedicated block storage network protocol/fabric                                     │
-│  NFS            = POSIX-style network file sharing protocol                                           │
-│  SMB            = Windows-native network file sharing protocol                                        │
-│  LDAP           = directory query and authentication protocol                                         │
-│  Split-horizon  = different internal vs external DNS resolution                                       │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 
 ## Before you begin

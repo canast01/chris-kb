@@ -14,57 +14,10 @@ Catalog of known Git server bugs, error codes, and workarounds covering GitLab s
 
 *Applies to: GitLab 16.x / 17.x self-managed; GitHub Enterprise*
 </div>
+![Git / GitLab / GitHub — Known Issues and Error Codes](../../../assets/itsm-git-troubleshooting-known-issues.svg)
 
-```text
-┌────────────────────────────────────── Git / GitLab Self-Managed ──────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                 Source control platform — Gitaly storage, CI runners, web/API                 │   │
-│   │                       Protocols: SSH (22) · HTTPS · Gitaly internal gRPC                      │   │
-│   │                   Management: GitLab Admin Area / gitlab-ctl / Rails console                  │   │
-│   │                 git push -> Workhorse -> Gitaly storage -> Webhook/CI trigger                 │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │           Web/API           │  │       GitLab Rails app      │  │       Puma app server       │   │
-│   │         Git storage         │  │            Gitaly           │  │      gRPC repo backend      │   │
-│   │            Proxy            │  │       GitLab Workhorse      │  │      Large file uploads     │   │
-│   │              CI             │  │        GitLab Runner        │  │    Separate job executor    │   │
-│   │            Cache            │  │            Redis            │  │      Sessions, sidekiq      │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
-│   │      Gitaly      │   Repo storage   │     gRPC 8075     │     Internal     │Can run standalone│   │
-│   │    Workhorse     │  Reverse proxy   │        HTTP       │     Internal     │Offloads big reqs │   │
-│   │  GitLab Runner   │ CI job executor  │       HTTPS       │   Runner token   │ Shared or scoped │   │
-│   │     Sidekiq      │ Background jobs  │       Redis       │     Internal     │Backlog = perf hit│   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical: GitLab app server(s) - Gitaly storage - Redis - PostgreSQL - runners                       │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Gitaly         = GitLab Git storage service; abstracts repo access via gRPC                          │
-│  Workhorse      = Go reverse proxy handling large requests before Rails                               │
-│  Sidekiq        = Redis-backed background job processor                                               │
-│  Runner         = separate process executing CI/CD pipeline jobs                                      │
-│  Pipeline       = CI/CD run made of stages/jobs from .gitlab-ci.yml                                   │
-│  Praefect       = Gitaly Cluster routing/replication layer (HA Gitaly)                                │
-│  Omnibus        = GitLab all-in-one packaged install (gitlab-ctl)                                     │
-│  CI/CD variable = key-value pair injected into job environments                                       │
-│  Mirroring      = one-way repo sync with an external Git remote                                       │
-│  Protected branch= branch with push/merge restrictions enforced                                       │
-│  Webhook        = HTTP callback fired on repo events (push, MR, etc.)                                 │
-│  gitlab-rake    = Rake task runner for maintenance/backups                                            │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 
 ## Before you begin

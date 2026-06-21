@@ -11,57 +11,10 @@ Catalog of known Ceph bugs, error codes, and workarounds covering OSD failures, 
 
 *Applies to: Ceph Reef (18.x) / Quincy (17.x)*
 </div>
+![Ceph — Known Issues and Error Codes](../../../assets/storage-ceph-troubleshooting-known-issues.svg)
 
-```text
-┌──────────────────────────────────────────────── Ceph ─────────────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │             Distributed storage cluster — block (RBD), file (CephFS), object (RGW)            │   │
-│   │            Protocols: RBD (librbd) · CephFS (kernel/FUSE) · S3/Swift (RGW) · iSCSI            │   │
-│   │             Management: ceph CLI · cephadm · Rook (k8s) · Ceph Dashboard (web UI)             │   │
-│   │           Client -> librados -> CRUSH map -> OSD set -> replicated/EC object stored           │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │           Control           │  │         MON cluster         │  │    Quorum (3 or 5 nodes)    │   │
-│   │             Data            │  │         OSD daemons         │  │   1 per disk, handles I/O   │   │
-│   │          Object/S3          │  │             RGW             │  │     S3/Swift API gateway    │   │
-│   │             File            │  │             MDS             │  │     CephFS metadata srvr    │   │
-│   │           Routing           │  │          CRUSH map          │  │     Placement algorithm     │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
-│   │       MON        │   Cluster map    │    msgr2 / TCP    │      CephX       │Odd count (quorum)│   │
-│   │       OSD        │  Object storage  │    msgr2 / TCP    │      CephX       │ HEALTH_WARN/loss │   │
-│   │       RGW        │  S3 / Swift API  │     HTTPS 443     │  S3 access keys  │ Multi-site repl  │   │
-│   │       MDS        │ CephFS metadata  │       msgr2       │      CephX       │ Active + standby │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical: client -> MON (map) -> librados -> OSD nodes (raw disks) -> data replicated                │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  RADOS        = Reliable Autonomic Distributed Object Store; Ceph object layer                        │
-│  OSD          = Object Storage Daemon; one per disk, handles data I/O + replication                   │
-│  MON          = Monitor; maintains cluster maps, quorum (PAXOS-based)                                 │
-│  PG           = Placement Group; shard of the object namespace mapped to OSDs                         │
-│  PG stuck     = PG not reaching active+clean; blocks writes to affected objects                       │
-│  CRUSH        = Controlled Replication Under Scalable Hashing; placement algorithm                    │
-│  RBD          = RADOS Block Device; thin-provisioned block volumes over Ceph                          │
-│  RGW          = RADOS Gateway; S3/Swift object storage API layer                                      │
-│  MDS          = Metadata Server; manages CephFS directory hierarchy                                   │
-│  CephX        = Ceph authentication system; shared-key per daemon/client                              │
-│  cephadm      = Ceph cluster deployment and management tool (container-based)                         │
-│  Slow ops     = operations exceeding threshold; logged as "slow request" in OSD log                   │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 
 ## Before you begin

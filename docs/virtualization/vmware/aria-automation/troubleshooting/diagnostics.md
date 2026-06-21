@@ -13,38 +13,10 @@ Aria Automation diagnostic commands: query failed deployments and requests via R
 
 *Applies to: VMware Aria Automation 8.x (vRealize Automation)*
 </div>
+![Aria Automation — Diagnostics](../../../../assets/virtualization-vmware-aria-automation-troubleshooting-diagno.svg)
 
-```text
-┌──────────────────────────────────── Aria Automation — Diagnostics ────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   Start here: GET /deployment/api/deployments?status=FAILED → pod logs → PostgreSQL health   │    │
-│   │   Deployment stuck: check catalog request status; then check pod logs for Java exceptions     │   │
-│   │   ABX action failure: check ABX run history in vRA UI → Action Runs → read stderr output     │    │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                Log Collection                │  │                Support Bundle               │   │
-│   │   kubectl logs -n prelude --all-containers   │  │   LCM: vRSLCM → Support → logscraper       │    │
-│   │   /var/log/vmware/vra/ on appliance          │  │   VAMI → Support → Generate bundle          │   │
-│   │   journalctl -u vra-cluster -n 500           │  │   Includes k8s pod logs + config + DB state │   │
-│   │   ABX run history: vRA UI → Action Runs      │  │   Upload to VMware SR for analysis          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  vRA Linux appliance(s) · k3s Kubernetes cluster · PostgreSQL · vIDM (identity) · NSX / vCenter       │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│  prelude namespace = Kubernetes namespace where all vRA micro-services run                            │
-│  ABX               = Action-Based eXtensibility; serverless functions triggered by vRA events         │
-│  Deployment        = vRA object representing a provisioned blueprint; has lifecycle state             │
-│  Catalog request   = user-submitted service catalog order; tracks through request workflow            │
-│  LCM logscraper   = LCM utility collecting logs from all Aria products into one archive               │
-│  vIDM              = VMware Identity Manager; handles vRA authentication and SSO                      │
-│  PostgreSQL        = vRA internal database; stores deployments, policies, and catalog items           │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ```mermaid
 graph TD

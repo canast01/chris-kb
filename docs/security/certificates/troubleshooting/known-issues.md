@@ -13,57 +13,10 @@ Catalog of known PKI and certificate bugs, error codes, and workarounds covering
 
 *Applies to: Microsoft ADCS, Let's Encrypt, general TLS/PKI*
 </div>
+![Certificates / PKI — Known Issues and Error Codes](../../../assets/security-certificates-troubleshooting-known-issues.svg)
 
-```text
-┌─────────────────────────────────────── TLS / PKI Certificates ────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │            X.509 certificate lifecycle — issuance, renewal, revocation, trust chain           │   │
-│   │                Protocols: TLS 1.2/1.3 · HTTPS · LDAPS · OCSP · CRL · SCEP · EST               │   │
-│   │             Management: CA web UI / CLI · Venafi · CyberArk · ACME / Let's Encrypt            │   │
-│   │              CSR -> CA signs -> cert deployed -> TLS handshake -> chain validated             │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │           Root CA           │  │       Offline root CA       │  │    Trust anchor; offline    │   │
-│   │         Intermediate        │  │          Issuing CA         │  │    Signs end-entity certs   │   │
-│   │          End-entity         │  │     Server / client cert    │  │     SAN must match FQDN     │   │
-│   │          Revocation         │  │          OCSP / CRL         │  │      Must be reachable      │   │
-│   │          Automation         │  │        ACME / Venafi        │  │     Auto-renew pipeline     │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
-│   │     Root CA      │   Trust anchor   │    Out-of-band    │  HSM-protected   │No direct issuance│   │
-│   │    Issuing CA    │    Sign CSRs     │    HTTPS / LDAP   │  CA admin cert   │  Sub to root CA  │   │
-│   │  OCSP responder  │ Live revocation  │      HTTP 80      │ Signed response  │Must be reachable │   │
-│   │   ACME client    │ Auto-renew certs │    HTTPS (ACME)   │   Domain token   │certbot / acme.sh │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical: HSM (root CA key) -> issuing CA server -> OCSP responder -> TLS endpoints                  │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  X.509        = ITU standard defining certificate format (version, SAN, key usage)                    │
-│  CSR          = Certificate Signing Request; sent to CA to obtain a signed cert                       │
-│  SAN          = Subject Alternative Name; extension listing valid hostnames/IPs                       │
-│  Chain of trust = Root CA -> Intermediate CA -> end-entity cert; all must be trusted                  │
-│  OCSP         = Online Certificate Status Protocol; real-time revocation check                        │
-│  CRL          = Certificate Revocation List; periodic bulk revocation list from CA                    │
-│  ACME         = Automated Certificate Management Environment; RFC 8555 protocol                       │
-│  HSM          = Hardware Security Module; stores CA private key securely                              │
-│  PKCS#12      = .p12/.pfx; bundle of cert + private key for import/export                             │
-│  PEM          = Base64-encoded cert/key format; most common on Linux                                  │
-│  DER          = Binary cert format; common on Windows/Java                                            │
-│  SCEP         = Simple Certificate Enrolment Protocol; used by network devices                        │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 
 ## Before you begin

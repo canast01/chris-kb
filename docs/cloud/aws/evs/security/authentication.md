@@ -10,33 +10,10 @@ vCenter SSO configuration, Active Directory integration for vSphere and NSX-T, M
 
 *Applies to: Amazon EVS*
 </div>
+![Amazon EVS — Authentication](../../../../assets/cloud-aws-evs-security-authentication.svg)
 
-```text
-┌───────────────────────────────────── Amazon EVS — Authentication ─────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   vCenter SSO: local vsphere.local domain; join AD for centralized authentication             │   │
-│   │   NSX-T: local admin account + LDAP integration for group-based access                        │   │
-│   │   AWS: MFA enforced for all IAM users; EVS operations require IAM role assumption             │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  vCenter SSO  = Single Sign-On for all vSphere auth; vsphere.local domain by default                  │
-│  AD identity source = Active Directory LDAP connection added to vCenter SSO for user login            │
-│  LDAP         = Lightweight Directory Access Protocol; used by vCenter and NSX-T for AD lookup        │
-│  NSX-T LDAP   = NSX Manager → System → Users and Roles → LDAP for group-based access                  │
-│  MFA          = Multi-Factor Authentication; enforced via IAM policy for console and CLI access       │
-│  IAM role assumption = Using sts:AssumeRole to get temporary credentials for EVS API calls            │
-│  SSH key      = EC2 key pair for bare-metal host access; rotate regularly; disable after setup        │
-│  Service account = Non-human identity for automation; store credentials in Secrets Manager            │
-│  Secrets Manager = AWS service for storing and rotating vCenter/SDDC Manager credentials              │
-│  AWS SSO      = AWS Identity Center; federates corporate IdP to AWS accounts including EVS            │
-│  OIDC         = OpenID Connect; used by AWS SSO for federation with Okta/Entra ID/Google              │
-│  Token expiry = IAM temporary credential TTL; default 1 hour for assumed roles; max 12 hours          │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Before you begin
 

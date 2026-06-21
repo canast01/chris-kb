@@ -4,6 +4,8 @@ tags:
   - security
 ---
 # Cisco MDS — Security Encryption
+![Cisco MDS — Security Encryption](../../../../assets/san-cisco-mds-security-encryption.svg)
+
 
 ```bash
 # Verify SSH is enabled
@@ -28,53 +30,7 @@ ssh version 2
 show ssh server
 show users
 ```
-```text
-┌─────────────────────────────────── Cisco MDS — Security Encryption ───────────────────────────────────┐
-│                                                                                                       │
-│  Management-plane TLS and FC-SP fabric encryption protecting MDS switch communications.               │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │            Management Encryption             │  │         Fabric Encryption (FC-SP-2)         │   │
-│   │         SSH: AES-128/256-CTR ciphers         │  │         FC-SP-2: AES-256-GCM frames         │   │
-│   │            HTTPS: TLS 1.2 minimum            │  │        IKE: key exchange between ISLs       │   │
-│   │         SNMP: v3 authPriv (AES-128)          │  │          Per-ISL encryption enable          │   │
-│   │         Syslog: TLS transport option         │  │         Rekey interval configurable         │   │
-│   │        Disable weak ciphers: RC4/DES         │  │         GCM: integrity + encryption         │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Management TLS protects CLI/API; FC-SP-2 protects ISL data in transit                                │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                Key Management                │  │              Compliance Posture             │   │
-│   │        Local key store on supervisor         │  │          FIPS 140-2 mode available          │   │
-│   │       KMS: external key server option        │  │          Common Criteria validation         │   │
-│   │        Key rotation: scheduled rekey         │  │        Audit: cipher negotiation log        │   │
-│   │       PKI trustpoint for cert storage        │  │         No plaintext mgmt protocols         │   │
-│   │        Entropy: hardware RNG on ASIC         │  │         Annual cipher review policy         │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  MDS supervisor ASIC (hardware RNG) · ISL fiber links · management Ethernet · KMS server              │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  FC-SP-2        = Fibre Channel Security Protocol v2; adds ISL frame encryption                       │
-│  GCM            = Galois/Counter Mode; AES cipher mode providing auth + encryption                    │
-│  IKE            = Internet Key Exchange; negotiates session keys for FC-SP-2                          │
-│  ISL            = Inter-Switch Link; E_Port connection between two MDS switches                       │
-│  FIPS 140-2     = US federal standard for cryptographic module security                               │
-│  KMS            = Key Management Server; centralizes key lifecycle for encryption                     │
-│  authPriv       = SNMPv3 security level: authentication + privacy (encryption)                        │
-│  Trustpoint     = Named PKI anchor; stores CA cert and associated key material                        │
-│  Rekey interval = How often session encryption keys are rotated to limit exposure                     │
-│  Hardware RNG   = Crypto-grade random number generator built into ASIC                                │
-│  Common Criteria= International security evaluation standard (ISO/IEC 15408)                          │
-│  TLS            = Transport Layer Security; encrypts management-plane sessions                        │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 ```bash
 # Generate a new self-signed certificate
 crypto ca trustpoint LOCAL-CA

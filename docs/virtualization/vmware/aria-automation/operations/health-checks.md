@@ -24,55 +24,13 @@ Health Checks reference covering Daily Checks, Weekly Checks, Pre-Maintenance Ch
 
 ## Daily Checks
 
+![Daily Checks](../../../../assets/virtualization-vmware-aria-automation-hc-daily-checks.svg)
+
 ### Cloud Account Status
 
 All vCenter and NSX cloud accounts must show a green status indicator:
 
-```text
-┌─────────────────────────────────── Aria Automation — Health Checks ───────────────────────────────────┐
-│                                                                                                       │
-│  Daily health checks cover service status, cloud account sync, Orchestrator, and vIDM.                │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                Service Health                │  │              Integration Health             │   │
-│   │        vracli status --all: all green        │  │      Cloud accounts: data collection OK     │   │
-│   │        kubectl get pods: all Running         │  │     vIDM: SSO login works for test user     │   │
-│   │         VAMI: disk/mem/CPU in limits         │  │    Orchestrator: endpoint connections OK    │   │
-│   │         Postgres replication lag: 0          │  │      NSX-T account: networks enumerated     │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Functional checks confirm catalog, requests, and event broker are operating correctly.               │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              Functional Checks               │  │               Alert Thresholds              │   │
-│   │     Catalog: items visible to consumers      │  │          Disk: warn >70%, crit >85%         │   │
-│   │        Test request: deploy+delete VM        │  │           Postgres lag: warn >30s           │   │
-│   │        ABX test action: runs in <30s         │  │         Data collection fail: alert         │   │
-│   │      Event broker: subscription active       │  │       Pod restart >3/hour: investigate      │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  vRA appliance VMs · Postgres nodes · vIDM VM · vCenter · NSX manager · NTP                           │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  vracli status     = CLI command returning per-service health (green/red) for all vRA services        │
-│  Data collection   = vRA background job syncing cloud resource inventory from each account            │
-│  Postgres lag      = Replication delay between primary and standby Postgres nodes                     │
-│  Pod restart count = kubectl restartCount; high value indicates crashing microservice                 │
-│  VAMI disk check   = /storage partition usage on vRA appliance; log growth can fill disk              │
-│  ABX test action   = Simple echo/ping ABX action run to verify FaaS execution pipeline                │
-│  Event broker sub  = Active subscription count; zero subscriptions means no event hooks fire          │
-│  SSO login test    = Browser login via vIDM to confirm SAML chain is working end-to-end               │
-│  Cloud account OK  = vRA data collection status shows green for all registered endpoints              │
-│  Orchestrator conn = vRA Orchestrator endpoint reachable and authenticated from vRA service           │
-│  NSX enumeration   = vRA lists NSX segments proving NSX-T integration is functional                   │
-│  Catalog visible   = Consumer role user sees expected items in self-service portal                    │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 ## Run This Routine
 
 Run these 8 checks in order at the start of each shift or before any planned change.
@@ -106,6 +64,8 @@ curl -sk -H "Authorization: Bearer $TOKEN" \
 ---
 
 ## Weekly Checks
+
+![Weekly Checks](../../../../assets/virtualization-vmware-aria-automation-hc-weekly-checks.svg)
 
 ### Pending Approval Requests
 
@@ -157,6 +117,8 @@ echo | openssl s_client -connect vra-prod-01.example.local:5480 2>/dev/null | \
 
 ## Pre-Maintenance Checks
 
+![Pre-Maintenance Checks](../../../../assets/virtualization-vmware-aria-automation-hc-pre-maintenance-checks.svg)
+
 Run before any planned change (upgrade, certificate rotation, cloud account re-credential):
 
 - [ ] No deployments in progress: **Deployments → All Deployments** — no CREATING or UPDATING state
@@ -169,6 +131,8 @@ Run before any planned change (upgrade, certificate rotation, cloud account re-c
 ---
 
 ## Platform Service Health Commands
+
+![Platform Service Health Commands](../../../../assets/virtualization-vmware-aria-automation-hc-platform-service-health-commands.svg)
 
 ```bash
 ssh root@vra-prod-01.example.local

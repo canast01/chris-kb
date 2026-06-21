@@ -12,33 +12,10 @@ AWS support escalation for EVS: severity levels, required data for support cases
 
 *Applies to: Amazon EVS*
 </div>
+![Amazon EVS — Escalation](../../../../assets/cloud-aws-evs-troubleshooting-escalation.svg)
 
-```text
-┌─────────────────────────────────── Amazon EVS — Support Escalation ───────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   EVS issues span two vendors: AWS (host/infrastructure) and VMware/Broadcom (VCF software)   │   │
-│   │   AWS support: required for host failures, ENI issues, and AWS-layer networking problems      │   │
-│   │   VMware support: required for vSAN, NSX-T, vCenter, and SDDC Manager software issues        │    │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  AWS Business/Enterprise Support = Required tier for EVS production; includes TAM and SLA             │
-│  TAM          = Technical Account Manager; AWS named escalation contact for production issues         │
-│  P1 case      = Severity 1 support case; production system down; 15-minute initial response           │
-│  P2 case      = Severity 2; significant impairment; 1-hour initial response SLA                       │
-│  Broadcom GSS = Global Support Services; VMware/Broadcom portal for VCF software issues               │
-│  Joint case   = AWS and VMware/Broadcom cases raised in parallel for EVS platform issues              │
-│  SOS report   = SDDC Manager → Support → SOS Report; captures full VCF platform state                 │
-│  vm-support   = ESXi support bundle; required for VMware/Broadcom case submission                     │
-│  NSX support bundle = NSX Manager → Troubleshoot → Support Bundle; required for NSX cases             │
-│  CR           = Change Request; formal process for non-urgent production modifications                │
-│  SLA          = Service Level Agreement; defines response and resolution time per severity level      │
-│  aws re:Post  = AWS community support forum; search before raising a P2/P3 support case               │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Before you begin
 

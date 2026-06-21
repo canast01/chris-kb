@@ -11,58 +11,9 @@ Hardening reference covering Overview, Unisphere Hardening, Solutions Enabler Ha
 
 *Applies to: PowerMax 2500 / 8500*
 </div>
-```text
-┌───────────────────────────────── Dell PowerMax — Security Hardening ──────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │       PowerMax hardening: disable unused protocols, enforce encryption, restrict access       │   │
-│   │         Network: dedicated storage VLAN; restrict management access to jump hosts only        │   │
-│   │        Auth: disable default accounts; enforce password complexity and rotation policy        │   │
-│   │         Audit: forward syslog to SIEM; alert on privilege escalation and failed logins        │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Baseline config → disable unused → enforce MFA → enable logging → audit                            │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │           Function          │   │
-│   │            Cache            │  │          DRAM 2 TB+         │  │        Sub-ms latency       │   │
-│   │         FE director         │  │        FC/iSCSI ports       │  │         Host facing         │   │
-│   │         BE director         │  │         NVMe drives         │  │        Storage facing       │   │
-│   │             SRDF            │  │         RDF director        │  │       Metro/remote DR       │   │
-│   │          TimeFinder         │  │         SnapVX/Clone        │  │       Local protection      │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │       Area       │     Control      │      Standard     │      Verify      │    Frequency     │   │
-│   │     Accounts     │ Disable defaults │  No default creds │   Login audit    │      Deploy      │   │
-│   │    Protocols     │  Disable unused  │   TLS 1.2+ only   │    Port scan     │     Monthly      │   │
-│   │       MFA        │ Enforce all admi │   TOTP/hardware   │    Auth logs     │    Continuous    │   │
-│   │     Logging      │ SIEM forwarding  │  All admin events │   SIEM alerts    │      Daily       │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: PowerMax 2500/8500 engine · FE/BE/RDF directors · DRAM cache · expansion bays            │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    PowerMax           = Dell flagship NVMe all-flash array; millions of IOPS at sub-millisecond lat...│
-│    SRDF               = Symmetrix Remote Data Facility; sync/async metro and remote site replication  │
-│    TimeFinder SnapVX  = space-efficient snapshot technology; up to 256 snapshots per storage group    │
-│    Storage group      = logical container for volumes sharing service level and host access policy    │
-│    Service level      = performance target for a storage group: Diamond, Platinum, Gold, Silver       │
-│    FE director        = front-end director providing FC or iSCSI host-facing ports on the engine      │
-│    BE director        = back-end director connecting engine cache to NVMe flash drive bays            │
-│    RDF director       = SRDF director providing dedicated bandwidth for replication traffic           │
-│    Solutions Enabler  = CLI and API toolkit; symcli commands cover all PowerMax management            │
-│    Unisphere          = web GUI and REST API server for PowerMax; unified management interface        │
-│    DCM                = Dynamic Cache Management; auto-balances workloads across available cache re...│
-│    Service level obj. = workload performance class assigned to storage group; enforced by DPTM        │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+![PowerMax — Hardening](../../../../assets/storage-dell-powermax-security-hardening.svg)
+
+
 
 
 ## Before you begin

@@ -12,37 +12,10 @@ Dell Flex on Demand (FoD) escalation: how to collect array serial number, licens
 
 *Applies to: Dell Flex on Demand / APEX Flex on Demand*
 </div>
+![FOD — Escalation](../../../../assets/storage-dell-fod-troubleshooting-escalation.svg)
 
-```text
-┌──────────────────────────────────────── Dell FoD — Escalation ────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   FoD escalation: when self-service fails, escalate to Dell licensing, TAC, or account team   │   │
-│   │    Dell licensing: key re-issue for array replacement, SN re-binding, duplicate resolution    │   │
-│   │      Dell TAC: feature not activating after valid key; firmware issues; event log errors      │   │
-│   │         Account team: contract/entitlement disputes; key not tied to support contract         │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │        Licensing Team       │  │           Dell TAC          │  │         Account Team        │   │
-│   │         Key re-issue        │  │       Feature inactive      │  │         Entitlement         │   │
-│   │        SN re-binding        │  │         Firmware bug        │  │        Contract query       │   │
-│   │        Duplicate key        │  │       License conflict      │  │           Pricing           │   │
-│   │        Account merge        │  │       Event log error       │  │       Exec escalation       │   │
-│   │        Order history        │  │        Bundle partial       │  │         Account link        │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    FoD             = Flex on Demand; Dell on-demand capacity licensing model for PowerMax/Unity       │
-│    SN re-binding   = Re-issuing FoD key for a replacement array with new serial number                │
-│    Dell Licensing  = Dell internal team managing FoD key purchase, SN binding, and re-issue           │
-│    Dell TAC        = Technical Assistance Center; handles firmware and feature activation issues      │
-│    SR              = Service Request; Dell support case opened at support.dell.com                    │
-│    P2 SLA          = 4-hour TAC response; FoD failure blocking production may qualify                 │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Before you begin
 

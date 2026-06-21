@@ -7,6 +7,8 @@ search:
   boost: 1.5
 ---
 # Aria Operations for Logs — Common Issues
+![Aria Operations for Logs — Common Issues](../../../../assets/virtualization-vmware-aria-operations-for-logs-troubleshooti.svg)
+
 
 ```bash
 # Check ingestion stats from master node
@@ -27,51 +29,7 @@ logger -n vrli-prod-01.example.local -P 514 -d "test ingestion check"
 # Check ingestion log for parse failures or drops
 grep -i "drop\|overflow\|parse error\|reject" /var/log/loginsight/ingestion.log | tail -50
 ```
-```text
-┌────────────────────────────── Aria Operations for Logs — Common Issues ───────────────────────────────┐
-│                                                                                                       │
-│  Common vRLI issues: disk full, missing sources, alert failures, LDAP auth errors.                    │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               Ingestion Issues               │  │            Authentication Issues            │   │
-│   │      Source not sending: check firewall      │  │     LDAP auth fail: bind account locked     │   │
-│   │       Drop rate high: disk nearly full       │  │      SSO fail: cert mismatch vIDM/vRLI      │   │
-│   │      ESXi logs missing: syslog not set       │  │       Login loop: check SAML assertion      │   │
-│   │      High ingest lag: worker overloaded      │  │       Local admin: password forgotten       │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Check disk first; full disk stops ingestion and can corrupt the vRLI index.                          │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │           Alert and Cluster Issues           │  │                 Quick Fixes                 │   │
-│   │       Alert not firing: check disabled       │  │     Disk full: archive + purge old data     │   │
-│   │       Webhook 500: target URL changed        │  │     Source missing: check syslog config     │   │
-│   │        Worker disconnected: NTP skew         │  │      LDAP: reset bind account password      │   │
-│   │       Cluster split: network partition       │  │         Alert: re-enable + test fire        │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  vRLI appliance · /storage disk · ESXi syslog config · AD/LDAP · vIDM · firewall                      │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Drop rate         = Events discarded; spikes when disk full or ingest rate exceeds capacity          │
-│  Disk full         = /storage partition fills with log index; causes ingestion to stop                │
-│  syslog not set    = ESXi syslog.global.logHost not configured or pointing to wrong host              │
-│  Bind account lock = LDAP service account locked in AD; vRLI cannot authenticate users                │
-│  SAML loop         = Browser redirects to vIDM repeatedly; check cert SAN and clock sync              │
-│  Alert disabled    = Imported or upgraded alerts may be disabled; manually re-enable                  │
-│  Webhook 500       = HTTP error from alert target; update URL or check target service                 │
-│  NTP skew          = Time difference between vRLI nodes breaks cluster consensus                      │
-│  Cluster split     = Network partition causing master and worker to lose contact                      │
-│  Archive + purge   = Export logs to NFS then reduce retention period to free disk                     │
-│  Ingest lag        = Events delayed; add worker node or reduce ingest sources                         │
-│  Worker overloaded = Worker CPU/RAM at limit; scale out by adding another worker VM                   │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 ```powershell
 # Check agent service status
 Get-Service "VMware Log Insight Agent"

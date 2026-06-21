@@ -13,57 +13,10 @@ Catalog of known OpenAI API bugs, error codes, and workarounds covering rate lim
 
 *Applies to: OpenAI API (platform.openai.com)*
 </div>
+![OpenAI API — Known Issues and Error Codes](../../../../assets/cloud-ai-openai-troubleshooting-known-issues.svg)
 
-```text
-┌───────────────────────────────────────────── OpenAI API ──────────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │           Cloud LLM API — chat completions, embeddings, rate-limited per usage tier           │   │
-│   │                          Protocols: HTTPS (TCP 443) to api.openai.com                         │   │
-│   │                      Management: platform.openai.com dashboard / API keys                     │   │
-│   │           API request -> Rate limit check -> Model inference -> Response -> Billing           │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │            Access           │  │       API key / org ID      │  │     Per-project scoping     │   │
-│   │             Tier            │  │          Usage tier         │  │    RPM/TPM scale w/ spend   │   │
-│   │            Models           │  │     GPT-4o, GPT-4, etc.     │  │     Deprecation schedule    │   │
-│   │           Billing           │  │         Token-based         │  │    Prompt+completion tok.   │   │
-│   │            Status           │  │      status.openai.com      │  │   Check before deep debug   │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
-│   │ Chat Completions │ Text generation  │       HTTPS       │     API key      │   Most common    │   │
-│   │    Embeddings    │Vector generation │       HTTPS       │     API key      │   Used for RAG   │   │
-│   │   Rate headers   │ Quota visibility │    HTTPS resp.    │       N/A        │  x-ratelimit-*   │   │
-│   │    Batch API     │ Async bulk req.  │       HTTPS       │     API key      │   24h, cheaper   │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical: N/A — fully managed SaaS API, no customer-operated infrastructure                          │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  API key        = secret credential authenticating requests to the OpenAI API                         │
-│  RPM/TPM        = Requests/Tokens Per Minute; the two rate limit dimensions                           │
-│  Context window = max tokens (prompt+completion) a model can process at once                          │
-│  Token          = sub-word text unit; billing and limits are measured in tokens                       │
-│  Tier           = usage tier unlocked by cumulative spend, raises RPM/TPM                             │
-│  Backoff        = retry strategy doubling wait time after each 429/500                                │
-│  Deprecation    = OpenAI retires older models on a published schedule                                 │
-│  Embedding      = vector representation of text for semantic search/RAG                               │
-│  Batch API      = async bulk endpoint, discounted pricing, ~24h SLA                                   │
-│  Function call  = model output structured to invoke a defined tool                                    │
-│  Streaming      = token-by-token response via server-sent events                                      │
-│  Org ID         = organization identifier scoping billing across API keys                             │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 
 ## Before you begin

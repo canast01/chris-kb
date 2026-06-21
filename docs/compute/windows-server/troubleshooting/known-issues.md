@@ -11,57 +11,10 @@ Catalog of known Windows Server bugs, error codes, and workarounds covering WinR
 
 *Applies to: Windows Server 2019 / 2022*
 </div>
+![Windows Server — Known Issues and Error Codes](../../../assets/compute-windows-server-troubleshooting-known-issues.svg)
 
-```text
-┌─────────────────────────────────────────── Windows Server ────────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │             General-purpose server OS — WinRM, RDP, Windows Update, Storage Spaces            │   │
-│   │                     Protocols: WinRM (5985/5986) · RDP (3389) · SMB (445)                     │   │
-│   │                     Management: Server Manager / PowerShell / Event Viewer                    │   │
-│   │             Boot -> Services start -> Network up -> Domain join (if any) -> Login             │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │         Remote mgmt         │  │            WinRM            │  │     HTTP/HTTPS listener     │   │
-│   │        Remote desktop       │  │             RDP             │  │      TCP 3389, CredSSP      │   │
-│   │           Patching          │  │     Windows Update/WSUS     │  │       GPO-driven scan       │   │
-│   │           Storage           │  │        Storage Spaces       │  │    Software-defined pool    │   │
-│   │           Logging           │  │         Event Viewer        │  │    Sys/App/Security logs    │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
-│   │      WinRM       │   Remote mgmt    │     HTTP/HTTPS    │  Kerberos/NTLM   │winrm quickconfig │   │
-│   │       RDP        │  Remote desktop  │      TCP 3389     │   NLA/CredSSP    │FW must allow 3389│   │
-│   │       WSUS       │    Patch mgmt    │     HTTP/HTTPS    │    GPO-scoped    │ Central approval │   │
-│   │  Storage Spaces  │  SDS pool/vdisk  │        N/A        │       N/A        │ Add-PhysicalDisk │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical: physical/virtual Windows Server host - local/SAN/iSCSI storage                             │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  WinRM          = Windows Remote Management; remoting over HTTP/HTTPS                                 │
-│  CredSSP        = credential delegation provider; vuln if outdated                                    │
-│  NLA            = Network Level Authentication; RDP pre-auth                                          │
-│  WSUS           = Windows Server Update Services; on-prem patch point                                 │
-│  Storage Spaces = software-defined storage virtualizing disks                                         │
-│  Storage Pool   = disk collection backing one or more virtual disks                                   │
-│  Event Viewer   = GUI for System/Application/Security event logs                                      │
-│  sfc /scannow   = System File Checker; repairs corrupted system files                                 │
-│  DISM           = repairs the Windows servicing image                                                 │
-│  gpresult       = shows which GPOs applied to a computer/user                                         │
-│  BITS           = Background Intelligent Transfer Service, used by WU                                 │
-│  Encr. Oracle   = CredSSP patch-mismatch RDP remediation error                                        │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 
 ## Before you begin

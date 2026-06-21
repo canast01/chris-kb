@@ -11,58 +11,7 @@ Health Checks reference covering Daily Checks, Health Check, Array Health, Blade
 
 *Applies to: FlashBlade Purity//FB 4.x*
 </div>
-```text
-┌─────────────────────────────────── Pure FlashBlade — Health Checks ───────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      FlashBlade health checks: routine verification of operational status and performance     │   │
-│   │         Checks include: controller status, drive health, replication lag, and capacity        │   │
-│   │         Frequency: daily quick checks; weekly detailed review; monthly capacity report        │   │
-│   │        Configure threshold-based alerts for proactive incident prevention and awareness       │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Check status → review alerts → verify replication → capacity → log                                 │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │            Blades           │  │           NVMe+CPU          │  │         Parallel I/O        │   │
-│   │             File            │  │           NFS/SMB           │  │        Scale-out NAS        │   │
-│   │            Object           │  │           S3/Swift          │  │         Bucket store        │   │
-│   │         Replication         │  │            Async            │  │          DR/backup          │   │
-│   │           SafeMode          │  │         Locked snaps        │  │      Ransomware resist      │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Check area    │  How to verify   │   Pass criteria   │    Frequency     │       Tool       │   │
-│   │   Controllers    │   show status    │    All healthy    │      Daily       │     CLI/GUI      │   │
-│   │      Drives      │   show drives    │  No failed/pred.  │      Daily       │     CLI/GUI      │   │
-│   │   Replication    │ show replication │  Lag < threshold  │      Daily       │     CLI/GUI      │   │
-│   │     Capacity     │  show capacity   │     < 80% used    │      Daily       │     CLI/GUI      │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: FlashBlade//S or //E chassis · storage blades · 100 GbE network · Pure1 SaaS             │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    FlashBlade         = Pure massively parallel all-flash NAS and object platform; single namespace   │
-│    Blade              = individual storage module in FlashBlade chassis; NVMe and CPU per blade       │
-│    File system        = FlashBlade NFS/SMB export namespace; up to 4 PiB per file system              │
-│    Object store       = S3-compatible bucket store on FlashBlade; versioning and lifecycle rules      │
-│    purefb CLI         = REST CLI client for FlashBlade: purefb fs list, purefb array show commands    │
-│    Replication        = async file or object replication between FlashBlade systems for DR            │
-│    SafeMode           = admin-locked snapshots; protected from deletion even by local array admin     │
-│    S3 multitenancy    = per-bucket policy and IAM-style access control for object storage             │
-│    NFS Kerberos       = FlashBlade NFS supports krb5, krb5i, and krb5p security flavours              │
-│    SMB multichannel   = FlashBlade uses SMB multichannel for improved Windows client performance      │
-│    Inline compression = always-on data reduction; typically 2-10x for unstructured data               │
-│    ActiveScale        = enterprise geo-distribution and erasure coding for large object workloads     │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 
 ```text
@@ -111,6 +60,8 @@ FlashBlade Health Check Sequence
 
 ## Daily Checks
 
+![Daily Checks](../../../../assets/storage-pure-flashblade-hc-daily-checks.svg)
+
 | Check | Command | Notes |
 |---|---|---|
 | [ ] Run `purefb alert list` | `purefb alert list` | review all active alerts; flag any hardware, capacity, or replication warnings |
@@ -122,6 +73,8 @@ FlashBlade Health Check Sequence
 | [ ] Check Pure1 portal for capacity growth forecasts, anomalies, and hardware alerts | | |
 
 ## Health Check
+
+![Health Check](../../../../assets/storage-pure-flashblade-hc-health-check.svg)
 
 - [ ] No active alerts in `purefb alert list`
 - [ ] All blades are `healthy` — no `failed` or `missing` blades in `purefb blade list`
@@ -162,6 +115,8 @@ purefb network interface list
 
 ## Array Health
 
+![Array Health](../../../../assets/storage-pure-flashblade-hc-array-health.svg)
+
 ```bash
 purefb array
 purefb hardware
@@ -175,6 +130,8 @@ Or via the FlashBlade GUI:
 
 ## Blade Health
 
+![Blade Health](../../../../assets/storage-pure-flashblade-hc-blade-health.svg)
+
 ```bash
 purefb blade list
 ```
@@ -182,6 +139,8 @@ purefb blade list
 All blades should show `status: healthy`. Any blade showing `unhealthy` or `failed` requires investigation.
 
 ## Drive / Media Health
+
+![Drive / Media Health](../../../../assets/storage-pure-flashblade-hc-drive-media-health.svg)
 
 FlashBlade uses direct-attached blade storage. Drive-level health is abstracted — monitor at the blade level:
 
@@ -191,6 +150,8 @@ purefb blade list --all
 
 ## Network Interface Health
 
+![Network Interface Health](../../../../assets/storage-pure-flashblade-hc-network-interface-health.svg)
+
 ```bash
 purefb network-interface list
 ```
@@ -198,6 +159,8 @@ purefb network-interface list
 All data VIPs should show `enabled: true` and `type: vip`.
 
 ## Replication Health
+
+![Replication Health](../../../../assets/storage-pure-flashblade-hc-replication-health.svg)
 
 ```bash
 purefb fs-replica-link list

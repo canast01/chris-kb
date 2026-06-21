@@ -11,58 +11,9 @@ ONTAP provides encryption at rest via NetApp Volume Encryption (NVE) and NetApp 
 
 *Applies to: ONTAP 9.x*
 </div>
-```text
-┌────────────────────────────────────── NetApp ONTAP — Encryption ──────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │          ONTAP encryption: data at rest and in transit encryption for all stored data         │   │
-│   │          At rest: AES-256 encryption using controller-managed or external key manager         │   │
-│   │          In transit: TLS 1.2+ for management; protocol encryption for data in flight          │   │
-│   │         Key management: external KMIP-compatible KMS or built-in key lifecycle manager        │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Enable encryption → configure KMS → verify → audit → rotate keys                                   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │           Cluster           │  │        HA node pairs        │  │          Scale-out          │   │
-│   │             SVM             │  │        Virtual server       │  │       Protocol access       │   │
-│   │          Aggregate          │  │         RAID groups         │  │         Storage pool        │   │
-│   │           FlexVol           │  │         Thin volume         │  │        Data container       │   │
-│   │          SnapMirror         │  │         Replication         │  │          Async/Sync         │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Layer       │     Standard     │     Key source    │       KMS        │      Notes       │   │
-│   │     At rest      │     AES-256      │     Controller    │  Internal/KMIP   │    Always on     │   │
-│   │    In transit    │     TLS 1.2+     │      PKI cert     │   Internal CA    │   Mgmt + data    │   │
-│   │   Key rotation   │      Annual      │     KMS policy    │   External KMS   │    Automated     │   │
-│   │    Key escrow    │     Required     │     KMS vault     │   External KMS   │    DR access     │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: AFF/FAS HA node pairs · cluster network · client access network · MetroCluster           │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    ONTAP              = NetApp storage OS; unified NAS, SAN, and object across AFF, FAS, ONTAP Select │
-│    SVM                = Storage Virtual Machine; logical storage server with protocols, IP, and vol...│
-│    Aggregate          = RAID group of disks; underpins FlexVols and FlexGroups within a node          │
-│    FlexVol            = flexible thin-provisioned volume within an aggregate; most common container   │
-│    FlexGroup          = scale-out volume spanning multiple aggregates; for very large NAS workloads   │
-│    SnapMirror         = async or synchronous replication between ONTAP systems for DR and backup      │
-│    SnapVault          = backup-oriented SnapMirror variant; independent retention at destination      │
-│    FlexClone          = instant space-efficient writable clone of a volume or LUN from snapshot       │
-│    Snapshot           = ONTAP space-efficient PiT copy; stored in .snapshot directory on NFS          │
-│    ONTAP Mediator     = third-site quorum for SnapMirror SM-BC; prevents split-brain scenarios        │
-│    SM-BC              = SnapMirror Business Continuity; synchronous zero-RPO active-active SAN repl...│
-│    vserver            = ONTAP CLI name for SVM; vserver show and vserver nfs show are common commands │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+![ONTAP — Encryption](../../../../assets/storage-netapp-ontap-security-encryption.svg)
+
+
 
 
  Key management is handled by the Onboard Key Manager (OKM) or an external KMIP key manager.

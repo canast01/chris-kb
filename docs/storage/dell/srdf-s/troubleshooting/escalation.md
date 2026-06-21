@@ -12,54 +12,10 @@ How to escalate Dell SRDF/S (Symmetrix Remote Data Facility Synchronous) replica
 
 *Applies to: SRDF/S (Metro) on PowerMax 2500 / 8500 running PowerMaxOS 10.x*
 </div>
+![SRDF/S — Escalation](../../../../assets/storage-dell-srdf-s-troubleshooting-escalation.svg)
 
-```text
-┌───────────────────────────────────── Dell SRDF/S — Escalation ────────────────────────────────────────┐
-│                                                                                                       │
-│  Escalate SRDF/S issues to Dell support when host I/O has stopped because the synchronous             │
-│  link has failed and SRDF/S is not failing over automatically, the pair state is stuck in             │
-│  Partitioned and write latency has increased dramatically, a failover at the DR site is               │
-│  required but R2 volumes cannot be activated, or an SRDF/S Metro relationship is split and            │
-│  both R1 and R2 are showing inconsistency errors.                                                     │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Step 1 — Collect Data               │  │          Step 2 — Open the Case             │   │
-│   │  symrdf query -g <group> -v (pair state)     │  │  Go to dell.com/support → My Cases          │   │
-│   │  symcfg -sid <SID> list -ra all (RDF ports)  │  │  Select product by array SID (both sites)   │   │
-│   │  symevent -sid <SID> list -last 500          │  │  Severity: P1 I/O stopped / P2 latency high │   │
-│   │  symdf list -sid <SID> (all SRDF groups)     │  │  Attach symrdf output + event log           │   │
-│   │  Write timeline: link failure → I/O impact   │  │  For P1: also call Dell support             │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  For P1 (host I/O stopped, SRDF/S link failure): open case AND call Dell immediately.                 │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Step 3 — Escalation Path            │  │         What NOT to Do                      │   │
-│   │  T1: triage + confirm symrdf data received   │  │  Do not run symrdf failover without Dell    │   │
-│   │  T2: PowerMax SE assigned; RDF Metro analysis│  │  Do not use --force on symrdf commands      │   │
-│   │  Engineering: for SRDF/S Adaptive Copy issues│  │  Do not modify host masking during incident │   │
-│   │  TAM: engage for P1 host I/O stopped         │  │  Do not change link topology mid-case       │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  SRDF/S          = SRDF Synchronous; zero-RPO replication; every host write must commit to R2         │
-│  R1              = source SRDF volume; production array; host writes must be confirmed at R2 first    │
-│  R2              = target SRDF volume; DR array; every write on R1 is synchronous to R2 before ACK    │
-│  Synchronized    = normal SRDF/S state; R1 and R2 are identical at every write                        │
-│  Partitioned     = link failure state; R1 and R2 are diverging; I/O may continue with SDDF            │
-│  SDDF            = Semi-Synchronous Disk Data Facility; fallback mode during link degradation         │
-│  Adaptive Copy   = optional mode allowing SRDF/S to accept host I/O even with link failure            │
-│  symrdf          = Solutions Enabler CLI for SRDF: establish, failover, restore, split                │
-│  Metro           = SRDF/S deployment at < 200 km; typically sub-millisecond latency on dark fiber     │
-│  SID             = Symmetrix ID; 12-digit array serial; used in all symcli commands                   │
-│  RDF Director    = dedicated SRDF port on PowerMax; provides the link to the remote array             │
-│  WriteDisabled   = state of R2 when SRDF relationship is intact; R2 accepts writes from R1 only       │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ---
 

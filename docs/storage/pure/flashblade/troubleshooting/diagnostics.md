@@ -12,37 +12,10 @@ FlashBlade diagnostic commands: check array health and active alerts with purefb
 
 *Applies to: Pure Storage FlashBlade with Purity//FB 4.x*
 </div>
+![FlashBlade — Diagnostics](../../../../assets/storage-pure-flashblade-troubleshooting-diagnostics.svg)
 
-```text
-┌──────────────────────────────────── FlashBlade — Diagnostics ─────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   Start here: purefb alert list → purefb blade list → purefb array list → check performance  │    │
-│   │   Storage not accessible: check network interface VIPs; check NFS/SMB/S3 mount or session    │    │
-│   │   Blade degraded: open Pure SR immediately — hardware faults are resolved by Pure field team  │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Array and Blade Health              │  │           Network and Replication           │   │
-│   │   purefb array list: version, capacity       │  │   purefb network interface list             │   │
-│   │   purefb alert list: active alerts           │  │   purefb replication list: lag and state    │   │
-│   │   purefb blade list: blade health            │  │   purefb replication arrayconnection list   │   │
-│   │   purefb hardware list: chassis components   │  │   purefb bucket list / purefb fs list       │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  FlashBlade chassis · Blade modules · chassis management module · 10/25GbE NIC · Pure1 telemetry      │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│  purefb          = FlashBlade CLI; SSH to the management IP and run these commands                    │
-│  Blade           = storage compute module in the FlashBlade chassis; each has NVMe flash              │
-│  VIP             = Virtual IP; floating management or data IP that moves between blades               │
-│  ActiveDR        = Pure's synchronous replication for zero-RPO file and object workloads              │
-│  Pure1           = cloud management portal; receives phone-home telemetry automatically               │
-│  purefb support diag = generates a diagnostic bundle; if phone-home is active, it uploads to Pure     │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ```mermaid
 graph TD

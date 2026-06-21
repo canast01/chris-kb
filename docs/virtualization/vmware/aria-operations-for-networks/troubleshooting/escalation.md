@@ -13,52 +13,10 @@ How to escalate VMware Aria Operations for Networks (vRNI) issues to Broadcom su
 
 *Applies to: Aria Operations for Networks (vRealize Network Insight) 6.x*
 </div>
+![Aria Operations for Networks — Escalation](../../../../assets/virtualization-vmware-aria-operations-for-networks-troublesh.svg)
 
-```text
-┌──────────────────────── VMware Aria Operations for Networks — Escalation ─────────────────────────────┐
-│                                                                                                       │
-│  Escalate Aria Ops for Networks (vRNI) issues to VMware GSS when the Platform VM is                   │
-│  completely unreachable, flow data has been missing for more than 2 hours, an upgrade is              │
-│  looping or has corrupted the platform, or data integrity issues are suspected.                       │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Step 1 — Collect Data               │  │          Step 2 — Open the SR               │   │
-│   │  Generate support bundle via SSH or VAMI     │  │  Go to support.broadcom.com → sign in       │   │
-│   │  Capture platform + proxy VM status          │  │  Product: VMware Aria Ops for Networks      │   │
-│   │  Note vRNI version (Settings → About)        │  │  Severity: P1 platform down / P2 flows lost │   │
-│   │  Collect data source status + error details  │  │  Attach bundle + data source status + log   │   │
-│   │  Write timeline: last flows → first failure  │  │  Include vRNI version and data source list  │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  For P1: open portal case AND call Broadcom support immediately.                                      │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Step 3 — Escalation Path            │  │         What NOT to Do                      │   │
-│   │  T1: triage + confirm bundle received        │  │  Do not delete flow data or reconfigure     │   │
-│   │  T2: vRNI SE assigned; deep analysis         │  │  Do not run PAK upgrade during incident     │   │
-│   │  T3: engineering review for platform bug     │  │  Do not power off Platform VM mid-incident  │   │
-│   │  TAM: bridge call for P1 platform outage     │  │  Do not remove Proxy VM during diagnosis    │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Aria Ops for Networks = network visibility and analytics platform; formerly vRNI / vRealize NI       │
-│  Platform VM    = central analytics appliance; runs the UI, query engine, and flow database           │
-│  Proxy VM       = data collector deployed near data sources; sends flows to Platform VM               │
-│  Data source    = vCenter, NSX, switch, or firewall configured in vRNI to send flow telemetry         │
-│  Flow data      = IPFIX/sFlow/NetFlow records collected from data sources; core vRNI dataset          │
-│  Support bundle = SSH-generated or VAMI-generated; contains platform logs, flow DB state, config      │
-│  PAK file       = vRNI upgrade package; upgrade loops are a common escalation trigger                 │
-│  GSS            = Global Support Services; Broadcom/VMware support team                               │
-│  TAM            = Technical Account Manager; escalation for P1/P2 with bridge call                    │
-│  Bridge call    = live conference with GSS + TAM + customer for critical P1 issues                    │
-│  RCA            = Root Cause Analysis; provided by GSS after P1/P2 resolution                         │
-│  Data corruption = suspected invalid flow or topology data; always P1 or P2 severity                  │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ---
 

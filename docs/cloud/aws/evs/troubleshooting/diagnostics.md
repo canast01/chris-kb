@@ -13,52 +13,10 @@ EVS diagnostic commands: check AWS host and ENI state, inspect CloudTrail for AP
 
 *Applies to: Amazon EVS (Elastic VMware Service)*
 </div>
+![Amazon EVS — Diagnostics](../../../../assets/cloud-aws-evs-troubleshooting-diagnostics.svg)
 
-```text
-┌────────────────────────────────────── Amazon EVS — Diagnostics ───────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   AWS: CloudTrail (API actions) + VPC Flow Logs (network) are always-on diagnostic sources    │   │
-│   │   VMware: vSAN support bundle + NSX-T bundle + vCenter log bundle for platform issues         │   │
-│   │   HCX: built-in log bundle from HCX Manager UI for migration/connectivity issues              │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              AWS Layer Checks                │  │            VMware Layer Checks              │   │
-│   │   evs list-environment-hosts (host state)    │  │   vCenter: vmon-cli -l / vpxd.log           │   │
-│   │   ec2 describe-instance-status (EC2 health)  │  │   vSAN: vSAN health plugin in vSphere UI   │    │
-│   │   ec2 describe-route-tables (VPC routes)     │  │   NSX-T: cluster status / BGP neighbors    │    │
-│   │   cloudtrail lookup-events evs.amazonaws.com │  │   SDDC Mgr: lcm.log / domainmanager.log    │    │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Triage order: AWS infra → VMware platform → NSX-T networking → Application layer                     │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │         Network Diagnostic Sources           │  │           Support Bundle Sources            │   │
-│   │   VPC Flow Logs: REJECT entries per ENI      │  │   vSphere: vc-support.sh / VAMI bundle      │   │
-│   │   CloudWatch: EVS namespace metrics          │  │   NSX-T: System > Support Bundle            │   │
-│   │   NSX-T Traceflow: packet path in overlay    │  │   HCX: Support > Download Log Bundle        │   │
-│   │   pktcap-uw / tcpdump on ESXi vmnic          │  │   SDDC Mgr: collect via SDDC Manager UI     │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  AWS bare-metal i4i hosts in dedicated Availability Zone · ENIs (management, vMotion, vSAN, NSX-T)    │
-│  VPC with dedicated subnets per traffic type · NSX-T TEP on uplink ENI · HCX interconnect tunnel      │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│  EVS environment = VMware SDDC running on AWS; includes ESXi hosts, vCenter, NSX-T, vSAN              │
-│  ENI           = Elastic Network Interface; AWS virtual NIC; one per traffic type per host            │
-│  CloudTrail    = AWS API audit log; records all evs:*, ec2:*, and iam:* calls                         │
-│  VPC Flow Logs = per-ENI traffic log at 1-minute granularity; shows ACCEPT/REJECT per flow            │
-│  HCX           = VMware Hybrid Cloud Extension; provides vMotion and network extension to AWS         │
-│  SDDC Manager  = EVS management layer for lifecycle operations; logs at /var/log/vmware/vcf/          │
-│  TEP           = Tunnel Endpoint; NSX-T overlay endpoint on ESXi uplink ENI                           │
-│  Pulse data    = CloudWatch metrics for EVS host CPU, memory, and network; namespace AWS/EVS          │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ```mermaid
 graph TD

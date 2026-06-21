@@ -11,58 +11,9 @@ SnapMirror access control: ONTAP RBAC role with `snapmirror-*` privileges, SVM a
 
 *Applies to: SnapMirror*
 </div>
-```text
-┌───────────────────────────────── NetApp SnapMirror — Access Control ──────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │        SnapMirror access control: RBAC roles, least-privilege, and access audit logging       │   │
-│   │        Roles: admin (full), operator (read/modify), read-only (view); map to AD groups        │   │
-│   │       Authentication: local accounts, LDAP/AD integration, and MFA for privileged users       │   │
-│   │          Audit: log all admin actions; review access logs monthly; rotate credentials         │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Identify user → assign role → enforce MFA → audit → review quarterly                               │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │            Async            │  │        Periodic sync        │  │         RPO: minutes        │   │
-│   │             Sync            │  │           Zero RPO          │  │          Sub-ms lag         │   │
-│   │            SM-BC            │  │        Active-active        │  │        Transparent FO       │   │
-│   │            Vault            │  │        Long retention       │  │         Backup copy         │   │
-│   │            Cloud            │  │         ONTAP → CVO         │  │       Cloud DR/backup       │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │       Role       │   Permissions    │       Scope       │       Auth       │   Review cycle   │   │
-│   │      Admin       │    Full CRUD     │       Global      │   MFA required   │     Monthly      │   │
-│   │     Operator     │   Read/modify    │      Assigned     │   MFA required   │    Quarterly     │   │
-│   │    Read-only     │    View only     │      Assigned     │     Password     │    Quarterly     │   │
-│   │   Service acct   │     API only     │    Specific API   │    Token/cert    │      Annual      │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: Source ONTAP cluster · destination ONTAP cluster · intercluster LIFs · WAN link          │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    SnapMirror         = ONTAP replication; transfers only changed blocks after initial baseline sync  │
-│    Intercluster LIF   = dedicated logical interface for SnapMirror traffic between clusters           │
-│    SnapMirror policy  = defines schedule, retention, and transfer type (async/sync/vault)             │
-│    Baseline transfer  = first full snapshot transfer establishing the SnapMirror relationship         │
-│    Update             = incremental transfer; only sends new or changed blocks since last successfu...│
-│    Snapmirror break   = breaks the DR relationship; activates destination volume for read-write       │
-│    Resync             = re-establishes a broken SnapMirror relationship from the last common snapshot │
-│    SM-BC              = SnapMirror Business Continuity; synchronous zero-RPO active-active SAN volumes│
-│    Mediator           = ONTAP Mediator; quorum service for SM-BC running on Linux VM at third site    │
-│    SnapVault          = SnapMirror variant for backup retention; destination has independent schedule │
-│    MirrorAndVault     = policy combining SnapMirror DR and SnapVault backup retention copies          │
-│    Fanout             = single source volume replicating to multiple destination clusters simultane...│
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+![SnapMirror — Access Control](../../../../assets/storage-netapp-snapmirror-security-access-control.svg)
+
+
 
 
 ---

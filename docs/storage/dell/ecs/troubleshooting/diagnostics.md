@@ -12,55 +12,10 @@ ECS diagnostic commands: authenticate to the Management REST API and check clust
 
 *Applies to: ECS 3.x*
 </div>
+![Dell ECS — Diagnostics](../../../../assets/storage-dell-ecs-troubleshooting-diagnostics.svg)
 
-```text
-┌────────────────────────────────────── Dell ECS — Diagnostics ─────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌────────────────────────────────────────────────────────────────────────────────────────────┐      │
-│   │  Start here: GET /vdc/nodes → all GOOD? → GET /vdc/alerts → identify failure domain       │       │
-│   │  Node DEGRADED: SSH → systemctl status storageos → df -h /data/ → lsblk                   │       │
-│   │  S3 access denied: check IAM user + bucket policy + addressing style + namespace           │      │
-│   │  Geo-replication lag: nc -zv remote 9100 → check remote VDC health → WAN bandwidth        │       │
-│   └────────────────────────────────────────────────────────────────────────────────────────────┘      │
-│                                                                                                       │
-│   ┌─────────────────────────────────────────┐  ┌──────────────────────────────────────────────┐       │
-│   │          Management API Health          │  │           Node and Service Health            │       │
-│   │   GET /vdc/nodes: GOOD | DEGRADED      │  │   systemctl status storageos caspian         │        │
-│   │   GET /vdc/alerts: active fault list   │  │   df -h /data/: data partition usage         │        │
-│   │   GET /vdc/capacity: provisioned/used  │  │   nodetool status: Cassandra ring (UN?)      │        │
-│   │   GET /vdc/geo-replication/status: lag │  │   echo srvr | nc localhost 2181: ZK mode     │        │
-│   │   GET /vdc/version: software version   │  │   lsblk: disk layout and state per node      │        │
-│   └─────────────────────────────────────────┘  └──────────────────────────────────────────────┘       │
-│                                                                                                       │
-│   ┌─────────────────────────────────────────┐  ┌──────────────────────────────────────────────┐       │
-│   │            S3 Data Path Tests           │  │       Geo-Replication Monitoring             │       │
-│   │   aws s3 ls: list buckets (auth test)  │  │   GET /vdc/geo-replication/status: lag       │        │
-│   │   aws s3api head-bucket: bucket exists │  │   nc -zv remote-vdc-node 9100: WAN port      │        │
-│   │   aws s3api head-object: object access │  │   chronyc tracking: clock sync per node      │        │
-│   │   get-bucket-policy: check policy      │  │   viprexec -v -cmd "free -h": cluster RAM    │        │
-│   │   openssl s_client :9021: TLS check    │  │   Portal → Geo Monitoring: per-RG lag view   │        │
-│   └─────────────────────────────────────────┘  └──────────────────────────────────────────────┘       │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  ECS appliance nodes (x86) · 10/25 GbE backend network · commodity SAS drives                         │
-│  ZooKeeper cluster (port 2181) · Cassandra metadata cluster · WAN link to remote VDC (port 9100)      │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│  ECS                = Elastic Cloud Storage; Dell S3-compatible object store for unstructured data    │
-│  VDC                = Virtual Data Center; group of ECS nodes at a single geographic site             │
-│  Storage pool       = collection of nodes within a VDC; defines the erasure coding domain             │
-│  Replication group  = links VDCs for geo-redundant object storage; 3-way replication                  │
-│  Bucket             = top-level S3 namespace; equivalent to S3 bucket or Azure container              │
-│  Erasure coding     = data protection scheme; default 12+4 provides 4-drive fault tolerance           │
-│  Namespace          = tenant-level isolation; multiple tenants share a single ECS cluster             │
-│  CAS                = Content Addressed Storage; fixed-content object storage with WORM support       │
-│  Replication factor = number of VDC copies; 3-way geo-replication for maximum durability              │
-│  Atmos API          = legacy Dell Atmos-compatible API; supported for migration from Atmos systems    │
-│  HDFS connector     = ECS Hadoop connector; ECS appears as HDFS namespace for analytics jobs          │
-│  Quota              = per-namespace or per-bucket storage quota; enforced as hard or soft limit       │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ```mermaid
 graph TD

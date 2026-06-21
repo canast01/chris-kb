@@ -12,57 +12,10 @@ Catalog of known Azure bugs, error codes, and workarounds covering ARM, VM provi
 
 *Applies to: Azure IaaS/PaaS — ARM, VMs, VNet, AKS*
 </div>
+![Microsoft Azure — Known Issues and Error Codes](../../../assets/cloud-azure-troubleshooting-known-issues.svg)
 
-```text
-┌─────────────────────────────────────────── Microsoft Azure ───────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                        Azure IaaS/PaaS — ARM, VMs, VNet, AKS, Entra ID                        │   │
-│   │                         Protocols: HTTPS (Azure Resource Manager API)                         │   │
-│   │                   Management: Azure Portal / az CLI / ARM templates / Bicep                   │   │
-│   │            ARM template -> Resource Group -> Resource provider -> Deployed resource           │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │           Identity          │  │     Entra ID (Azure AD)     │  │    Tenant-wide directory    │   │
-│   │           Compute           │  │           Azure VM          │  │      Scale Sets for HA      │   │
-│   │           Network           │  │           VNet/NSG          │  │  Subnet-level segmentation  │   │
-│   │             PaaS            │  │      AKS / App Service      │  │   Managed K8s/web hosting   │   │
-│   │          Governance         │  │       Subscription/RG       │  │    Quota+policy boundary    │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
-│   │       ARM        │Deployment engine │       HTTPS       │     Entra ID     │Declarative tmpls │   │
-│   │     Entra ID     │Identity provider │     HTTPS/SAML    │   Cond. Access   │   Was Azure AD   │   │
-│   │       VNet       │Network isolation │        N/A        │    NSG rules     │Peering supported │   │
-│   │       AKS        │   Managed K8s    │       HTTPS       │  Entra ID/RBAC   │Node pools/wkload │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical: N/A — Microsoft-managed regions; customer controls logical resources                       │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  ARM            = Azure Resource Manager; deployment/management layer                                 │
-│  Resource Group = logical container grouping resources by lifecycle                                   │
-│  Entra ID       = Microsoft identity platform, formerly Azure AD                                      │
-│  Subscription   = billing+access boundary; quotas apply per subscription                              │
-│  NSG            = Network Security Group; stateful firewall on subnets/NICs                           │
-│  VNet peering   = private connectivity between two virtual networks                                   │
-│  Managed Identity= Entra ID identity auto-assigned to an Azure resource                               │
-│  AKS            = Azure Kubernetes Service; managed control plane                                     │
-│  Availability Zone= physically separate datacenter within a region                                    │
-│  Cond. Access   = Entra ID policy enforcing MFA/device compliance                                     │
-│  Service principal= non-human Entra ID identity used by apps/automation                               │
-│  ACR            = Azure Container Registry; often paired with AKS                                     │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 
 ## Before you begin

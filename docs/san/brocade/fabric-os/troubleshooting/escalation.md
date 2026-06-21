@@ -12,50 +12,10 @@ How to escalate Brocade SAN switch issues to Broadcom TAC: what data to collect,
 
 *Applies to: Brocade Fabric OS 9.x*
 </div>
+![Brocade Fabric OS — Escalation](../../../../assets/san-brocade-fabric-os-troubleshooting-escalation.svg)
 
-```text
-┌─────────────────────────── Brocade Fabric OS — Troubleshooting Escalation ────────────────────────────┐
-│                                                                                                       │
-│  Escalate Brocade SAN issues to Broadcom TAC when the fabric is down, a principal                     │
-│  switch has failed, or zoning changes have caused widespread initiator-target loss.                   │
-│  Run supportsave on ALL affected switches BEFORE opening the case.                                    │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Step 1 — Collect Data               │  │          Step 2 — Open the Case             │   │
-│   │  Run supportsave on each affected switch     │  │  Go to support.broadcom.com → sign in       │   │
-│   │  Capture fabricshow + cfgshow + errshow      │  │  Product: Brocade Fibre Channel Switches    │   │
-│   │  Note FOS version + switch serial number     │  │  Severity: Sev1 fabric down / Sev2 partial  │   │
-│   │  Verify which ISLs and ports are affected    │  │  Attach supportsave ZIP + errshow output    │   │
-│   │  Write timeline: last good → first failure   │  │  Include switch serial + chassis model      │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  For Sev1: open portal case AND call Broadcom TAC immediately.                                        │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Step 3 — Escalation Path            │  │         What NOT to Do                      │   │
-│   │  T1: triage + confirm supportsave received   │  │  Do not rezone or modify active zone config │   │
-│   │  T2: SAN SE assigned; provides guidance      │  │  Do not reboot switches without TAC OK      │   │
-│   │  T3: engineering review if SE cannot fix     │  │  Do not replace SFPs or ISL cables alone    │   │
-│   │  Change freeze until TAC gives go-ahead      │  │  Do not upgrade FOS mid-incident            │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  supportsave   = full diagnostic bundle: logs, zone DB, config, port stats; run on all switches       │
-│  errshow       = event error log on each switch; shows hardware events and fabric changes             │
-│  fabricshow    = fabric topology: all domains, switches, and ISLs                                     │
-│  cfgshow       = zone configuration snapshot: active and saved zone databases                         │
-│  TAC           = Technical Assistance Center; Broadcom SAN support team                               │
-│  ISL           = Inter-Switch Link; E-port connections between FC switches                            │
-│  Principal     = switch elected as fabric principal; manages fabric services                          │
-│  Domain ID     = unique number (1–239) assigned to each switch in the fabric                          │
-│  FOS           = Fabric OS; Brocade switch operating system                                           │
-│  Sev1          = fabric completely down; all initiator-target paths lost; 24×7 SLA                    │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ---
 

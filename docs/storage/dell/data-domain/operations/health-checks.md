@@ -23,6 +23,8 @@ Health Checks reference covering Daily Checks, Weekly Health Check, Health Check
 
 ## Daily Checks
 
+![Daily Checks](../../../../assets/storage-dell-data-domain-hc-daily-checks.svg)
+
 ```mermaid
 flowchart TD
     A([Daily Health Check]) --> B["alerts show current\nAny active alerts?"]
@@ -40,41 +42,7 @@ flowchart TD
     L -->|No| N([All checks passed])
     D & G & J & M --> N
 ```
-```text
-┌─────────────────────────────────── Dell Data Domain Health Checks ────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │         Daily: filesys space < 80%, replication in sync, no disk faults, alerts clear         │   │
-│   │            Weekly: verify cleaning completed, check NVRAM, review dedup efficiency            │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                 Daily Checks                 │  │                Weekly Checks                │   │
-│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
-│   │           filesys show space < 80%           │  │        Cleaning: completed this week        │   │
-│   │          Replication lag < 4 hours           │  │          Dedup ratio not degrading          │   │
-│   │             No disk fault alerts             │  │               NVRAM no errors               │   │
-│   │            Backup jobs succeeded             │  │            Hardware health clean            │   │
-│   │             CloudIQ health score             │  │             License utilisation             │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   │      Check       │     Command      │   Pass criteria   │   Fail action    │    Frequency     │   │
-│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
-│   │     FS space     │filesys show space│     < 80% used    │  Expire backups  │      Daily       │   │
-│   │     Rep lag      │ replication show │       < 4 hr      │  Check WAN/link  │      Daily       │   │
-│   │   Disk health    │ disk show state  │       All OK      │   Replace disk   │      Daily       │   │
-│   │     Cleaning     │filesys clean show│   Ran this week   │  Manual trigger  │      Weekly      │   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    80% threshold  = DDOS performance degrades significantly above 80% full; expand or expire          │
-│    Cleaning cycle = Weekly automatic cleaning; reclaims space; takes 2–12 hours to complete           │
-│    Dedup efficiency= data factor (logical/physical) should be consistent; drop signals a change       │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 ## Run This Routine
 
@@ -87,6 +55,8 @@ flowchart TD
 7. **Space usage:** `filesys show space` — flag if >80% used
 
 ## Health Check — Pre-Change
+
+![Health Check — Pre-Change](../../../../assets/storage-dell-data-domain-hc-health-check-pre-change.svg)
 
 Run these checks before any planned change or as first-response steps when investigating backup failures or capacity alerts.
 
@@ -136,6 +106,8 @@ system show
 
 ## Capacity Monitoring
 
+![Capacity Monitoring](../../../../assets/storage-dell-data-domain-hc-capacity-monitoring.svg)
+
 | Metric | Threshold | Action |
 |---|---|---|
 | Post-comp used | > 80% | Plan expansion or cleaning cycle |
@@ -144,6 +116,8 @@ system show
 | Replication lag | > 4 hours | Investigate network or source load |
 
 ## Replication Health
+
+![Replication Health](../../../../assets/storage-dell-data-domain-hc-replication-health.svg)
 
 ```bash
 # All replication contexts
@@ -157,6 +131,8 @@ replication show stats
 ```
 
 ## Hardware Health
+
+![Hardware Health](../../../../assets/storage-dell-data-domain-hc-hardware-health.svg)
 
 ```bash
 # Disk states (no failed or reconstructing disks)

@@ -13,57 +13,10 @@ Catalog of known TLS issues covering handshake failures, certificate validation 
 
 *Applies to: TLS 1.2 / 1.3*
 </div>
+![TLS / SSL — Known Issues and Error Codes](../../../../assets/networking-protocols-tls-troubleshooting-known-issues.svg)
 
-```text
-┌────────────────────────────────────────────── TLS / SSL ──────────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │          Transport encryption — handshake, certificate validation, cipher negotiation         │   │
-│   │                   Protocols: TLS 1.2 / 1.3 (layered under HTTPS/LDAPS/etc.)                   │   │
-│   │                        Management: openssl CLI for testing/diagnostics                        │   │
-│   │              ClientHello -> ServerHello+cert -> Key exchange -> Encrypted session             │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │          Handshake          │  │        TLS handshake        │  │    Negotiates ver+cipher    │   │
-│   │            Trust            │  │      Certificate chain      │  │     Must chain to a root    │   │
-│   │          Validation         │  │        Hostname check       │  │     SAN must match host     │   │
-│   │            Cipher           │  │         Cipher suite        │  │    Both sides must agree    │   │
-│   │            Legacy           │  │         TLS 1.0/1.1         │  │     Disabled by default     │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
-│   │   ClientHello    │ Starts handshake │        TLS        │       N/A        │Lists ver/ciphers │   │
-│   │   ServerHello    │ Sends cert+picks │        TLS        │   Server cert    │ Picks ver/cipher │   │
-│   │ Chain validation │Trust verification│        TLS        │    CA-signed     │Client-side check │   │
-│   │       mTLS       │   Mutual auth    │        TLS        │Client+server cert│Stronger, complex │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical: N/A — TLS is a protocol layer, not a physical component                                    │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Handshake      = negotiation establishing a session before data flows                                │
-│  Cipher suite   = combination of algorithms used for a TLS session                                    │
-│  SAN            = Subject Alternative Name; modern hostname match field                               │
-│  CN             = Common Name; legacy field, ignored by modern browsers                               │
-│  Root CA        = top-level trusted CA anchoring a chain                                              │
-│  Intermediate CA= bridges a root CA to issued leaf certs                                              │
-│  mTLS           = mutual TLS; both sides present certificates                                         │
-│  ALPN           = Application-Layer Protocol Negotiation (HTTP/2)                                     │
-│  SNI            = Server Name Indication; hostname sent before cert                                   │
-│  Forward secrecy= session keys safe even if long-term key leaks                                       │
-│  TLS termination= decrypting at a proxy/LB before forwarding plaintext                                │
-│  OCSP stapling  = server includes revocation status in the handshake                                  │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 
 ## Before you begin

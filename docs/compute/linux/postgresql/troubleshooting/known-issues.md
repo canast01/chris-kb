@@ -12,57 +12,10 @@ Catalog of known PostgreSQL bugs, error codes, and workarounds covering connecti
 
 *Applies to: PostgreSQL 15.x / 16.x*
 </div>
+![PostgreSQL — Known Issues and Error Codes](../../../../assets/compute-linux-postgresql-troubleshooting-known-issues.svg)
 
-```text
-┌───────────────────────────────────────────── PostgreSQL ──────────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │              Relational DB — MVCC, streaming replication, extensible, Patroni HA              │   │
-│   │                         Protocols: PostgreSQL wire protocol (TCP 5432)                        │   │
-│   │                     Management: psql CLI / pgAdmin / Patroni REST API (HA)                    │   │
-│   │             Client connect -> pg_hba.conf check -> Query planner -> Storage -> WAL            │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │         Concurrency         │  │             MVCC            │  │  Readers never block writes │   │
-│   │         Replication         │  │       Streaming (WAL)       │  │        Async or sync        │   │
-│   │              HA             │  │        Patroni + etcd       │  │      Automated failover     │   │
-│   │         Maintenance         │  │          Autovacuum         │  │     Reclaims dead tuples    │   │
-│   │          Extensions         │  │      pg_stat_statements     │  │      Query perf insight     │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
-│   │     postgres     │ DB server proc.  │      TCP 5432     │   pg_hba rules   │ One per cluster  │   │
-│   │       WAL        │ Write-Ahead Log  │      Internal     │       N/A        │ Basis for repl.  │   │
-│   │     Patroni      │ HA orchestration │     REST 8008     │       N/A        │Needs etcd quorum │   │
-│   │     pg_dump      │  Logical backup  │        N/A        │     DB user      │  Per-DB export   │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical: DB server host(s) - WAL storage - standby replicas - etcd cluster                          │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  MVCC           = Multi-Version Concurrency Control; readers never block writers                      │
-│  WAL            = Write-Ahead Log; basis for replication and crash recovery                           │
-│  Autovacuum     = background process reclaiming space from dead rows                                  │
-│  TXID wraparound= critical failure if vacuum falls badly behind                                       │
-│  Patroni        = open-source HA template managing automatic failover                                 │
-│  pg_stat_activity = view of current connections and running queries                                   │
-│  Replication slot = reserves WAL on primary so replica retains segments                               │
-│  pg_hba.conf    = host-based auth rules controlling who can connect                                   │
-│  Logical repl.  = row-level replication, can target a subset of tables                                │
-│  Checkpoint     = periodic dirty-buffer flush, reduces crash recovery time                            │
-│  VACUUM FREEZE  = aggressive vacuum preventing transaction ID wraparound                              │
-│  HAProxy check  = routes traffic only to the current Patroni primary                                  │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 
 ## Before you begin

@@ -4,14 +4,10 @@ tags:
   - security
 ---
 # FlashBlade — Encryption
+![FlashBlade — Encryption](../../../../assets/storage-pure-flashblade-security-encryption.svg)
 
-```text
-┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
-│  Data at Rest (always-on)                                                                             │
-│  Write ──► blade NVMe drive ──► XTS-AES-256 (hardware)                                                │
-│  Drive removed → crypto erase (DEK destroyed)                                                         │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ```text
 ┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐

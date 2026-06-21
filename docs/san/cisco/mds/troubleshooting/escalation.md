@@ -12,50 +12,10 @@ How to escalate Cisco MDS SAN switch issues to Cisco TAC: what data to collect, 
 
 *Applies to: Cisco MDS 9000 series · NX-OS 8.x / 9.x*
 </div>
+![Cisco MDS — Escalation](../../../../assets/san-cisco-mds-troubleshooting-escalation.svg)
 
-```text
-┌─────────────────────────────── Cisco MDS — Troubleshooting Escalation ────────────────────────────────┐
-│                                                                                                       │
-│  Escalate Cisco MDS issues to TAC when a fabric is down, a line card has failed,                      │
-│  zones are causing widespread I/O loss, or an ISSU upgrade has failed.                                │
-│  Run show tech-support on ALL affected switches BEFORE opening the case.                              │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Step 1 — Collect Data               │  │          Step 2 — Open the SR               │   │
-│   │  Run show tech-support on each switch        │  │  Go to mycase.cloudapps.cisco.com → sign in │   │
-│   │  Capture show logging last 500               │  │  Product: Cisco MDS 9000 Series             │   │
-│   │  Note NX-OS version + switch serial          │  │  Severity: P1 down / P2 degraded / P3 minor │   │
-│   │  Capture show vsan + show fcdomain           │  │  Attach tech-support + logging output       │   │
-│   │  Write timeline: last good → first failure   │  │  Include switch serial + SmartNet contract  │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  For P1: open portal case AND call Cisco TAC immediately.                                             │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Step 3 — Escalation Path            │  │         What NOT to Do                      │   │
-│   │  T1: triage + confirm tech-support received  │  │  Do not modify zoneset during investigation │   │
-│   │  T2: MDS SE assigned; provides guidance      │  │  Do not reload modules without TAC OK       │   │
-│   │  T3: engineering review for code-level fix   │  │  Do not swap SFPs without TAC confirmation  │   │
-│   │  Change freeze until TAC gives go-ahead      │  │  Do not run ISSU upgrade mid-incident       │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  TAC          = Technical Assistance Center; Cisco support team                                       │
-│  SR           = Service Request; Cisco TAC case number                                                │
-│  tech-support = full diagnostic bundle; NX-OS version, config, port stats, logs, zone DB              │
-│  VSAN         = Virtual SAN; logical fabric partition on MDS; isolates traffic by VSAN ID             │
-│  FCNS         = Fibre Channel Name Server; per-VSAN directory of logged-in WWPNs                      │
-│  ISSU         = In-Service Software Upgrade; NX-OS upgrade without reboot                             │
-│  RMA          = Return Merchandise Authorization; defective hardware replacement process              │
-│  SmartNet     = Cisco support contract; required for TAC cases; includes software updates             │
-│  PSIRT        = Product Security Incident Response Team; Cisco security advisories                    │
-│  P1           = highest severity; fabric down; all initiator-target paths lost                        │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ---
 

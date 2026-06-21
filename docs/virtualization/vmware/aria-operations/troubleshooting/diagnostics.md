@@ -13,38 +13,10 @@ Aria Operations (vROps) diagnostic commands: check cluster service health with c
 
 *Applies to: VMware Aria Operations 8.x (vRealize Operations Manager)*
 </div>
+![Aria Operations — Diagnostics](../../../../assets/virtualization-vmware-aria-operations-troubleshooting-diagno.svg)
 
-```text
-┌───────────────────────────────────── Aria Operations — Diagnostics ───────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   Start here: GET /suite-api/api/health → analytics.log → cluster-mgmt-cli status           │     │
-│   │   Adapter not collecting: collector.log; test adapter credentials from vROps UI              │    │
-│   │   Cluster node not joining: VAMI → Cluster Status; check NTP sync between nodes             │     │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             Log File Diagnostics             │  │          REST API Diagnostic Checks         │   │
-│   │   /var/log/vmware/vcops/analytics.log        │  │   GET /suite-api/api/health: cluster info  │    │
-│   │   /var/log/vmware/vcops/collector.log        │  │   GET /api/resources: resource count       │    │
-│   │   grep ERROR analytics.log | tail -50        │  │   GET /api/alerts: active alert list       │    │
-│   │   journalctl -u vmware-vcops: service events │  │   GET /api/adapterinstances: adapter state │    │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  vROps cluster nodes (master + replicas + data nodes) · VAMI port 5480 · vCenter adapter endpoint     │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│  analytics.log    = core analytics engine log; OOM errors, processing failures, alert generation      │
-│  collector.log    = adapter collection log; per-adapter data collection attempts and failures         │
-│  cluster-mgmt-cli = SSH CLI showing node roles and cluster join state                                 │
-│  vcops-support    = CLI command to generate the full support bundle ZIP                               │
-│  Replica node     = secondary analytics node; if replica heartbeat fails, HA at risk                  │
-│  Adapter instance = configured collection source (vCenter, NSX, third-party); each has status         │
-│  Resource kind    = type of monitored object (VirtualMachine, HostSystem, Datastore)                  │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ```mermaid
 graph TD

@@ -12,53 +12,10 @@ How to escalate Dell SRDF/A (Symmetrix Remote Data Facility Asynchronous) replic
 
 *Applies to: SRDF/A on PowerMax 2500 / 8500 running PowerMaxOS 10.x*
 </div>
+![SRDF/A — Escalation](../../../../assets/storage-dell-srdf-a-troubleshooting-escalation.svg)
 
-```text
-┌───────────────────────────────────── Dell SRDF/A — Escalation ────────────────────────────────────────┐
-│                                                                                                       │
-│  Escalate SRDF/A issues to Dell support when all SRDF groups are suspended and the DR array           │
-│  is no longer receiving new write cycles, the SRDF link has failed and replication lag is             │
-│  growing beyond RPO limits, a planned failover cannot be completed because R2 volumes cannot          │
-│  be made read-write, or an SRDF/A upgrade has disrupted the cycle consistency mechanism.              │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Step 1 — Collect Data               │  │          Step 2 — Open the Case             │   │
-│   │  symrdf query -g <group> -v (SRDF state)     │  │  Go to dell.com/support → My Cases          │   │
-│   │  symcfg -sid <SID> list -ra all (RDF ports)  │  │  Select product by array SID (both sites)   │   │
-│   │  symevent -sid <SID> list -last 500          │  │  Severity: P1 all groups suspended / P2 lag │   │
-│   │  symdf list -sid <SID> (all SRDF groups)     │  │  Attach symrdf output + event log           │   │
-│   │  Write timeline: last sync cycle → first err │  │  For P1: also call Dell support             │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  For P1: open portal case AND call Dell immediately.                                                  │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Step 3 — Escalation Path            │  │         What NOT to Do                      │   │
-│   │  T1: triage + confirm symrdf data received   │  │  Do not run symrdf failover without Dell    │   │
-│   │  T2: PowerMax SE assigned; RDF analysis      │  │  Do not split SRDF groups unilaterally      │   │
-│   │  Engineering: for RDF cycle state issues     │  │  Do not use --force flags without Dell      │   │
-│   │  TAM: engage for P1 data loss risk           │  │  Do not establish (resync) without Dell OK  │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  SRDF/A          = Symmetrix Remote Data Facility Asynchronous; cycle-based async replication         │
-│  R1              = source SRDF volume; production array; host writes flow here                        │
-│  R2              = target SRDF volume; DR array; receives data asynchronously per cycle               │
-│  Delta Set       = batch of writes accumulated per cycle; shipped to R2 atomically                    │
-│  Cycle Time      = SRDF/A replication interval (15–60 sec); determines maximum RPO                    │
-│  RDF Group       = logical grouping of SRDF pairs sharing an RDF link; managed together               │
-│  symrdf          = Solutions Enabler CLI for SRDF: establish, split, failover, restore                │
-│  Suspended       = SRDF group state where replication is paused; R2 frozen at last committed cycle    │
-│  symdf list      = lists all SRDF groups and their current pair state                                 │
-│  FCIP            = Fibre Channel over IP; tunnels FC SRDF traffic over IP WAN                         │
-│  SID             = Symmetrix ID; 12-digit array serial; used in all symcli commands                   │
-│  Solutions Enabler= Dell CLI toolkit; all PowerMax and SRDF management; symcfg, symrdf, symevent      │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ---
 

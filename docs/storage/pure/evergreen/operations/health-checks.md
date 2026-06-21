@@ -11,58 +11,7 @@ Health Checks reference covering Quick Health Check (5 minutes), Full Health Che
 
 *Applies to: Evergreen*
 </div>
-```text
-┌─────────────────────────────── Storage Pure Evergreen — Health Checks ────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │         Pure health checks: routine verification of operational status and performance        │   │
-│   │         Checks include: controller status, drive health, replication lag, and capacity        │   │
-│   │         Frequency: daily quick checks; weekly detailed review; monthly capacity report        │   │
-│   │        Configure threshold-based alerts for proactive incident prevention and awareness       │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Check status → review alerts → verify replication → capacity → log                                 │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │             Core            │  │       Primary service       │  │        Main function        │   │
-│   │          Management         │  │        Control plane        │  │         Admin access        │   │
-│   │          Monitoring         │  │         Health/perf         │  │      Alerts/dashboards      │   │
-│   │           Security          │  │         Auth/encrypt        │  │        Access control       │   │
-│   │         Integration         │  │        APIs/plug-ins        │  │         Third-party         │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Check area    │  How to verify   │   Pass criteria   │    Frequency     │       Tool       │   │
-│   │   Controllers    │   show status    │    All healthy    │      Daily       │     CLI/GUI      │   │
-│   │      Drives      │   show drives    │  No failed/pred.  │      Daily       │     CLI/GUI      │   │
-│   │   Replication    │ show replication │  Lag < threshold  │      Daily       │     CLI/GUI      │   │
-│   │     Capacity     │  show capacity   │     < 80% used    │      Daily       │     CLI/GUI      │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: Storage Pure Evergreen infrastructure · management network · monitoring                  │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    Pure               = Storage Pure Evergreen platform overview and core concepts                    │
-│    Management         = management console and command-line interface for administration              │
-│    Monitoring         = health and performance monitoring dashboards and alerting                     │
-│    Automation         = REST API, scripting, and pipeline integration capabilities                    │
-│    Security           = access control, authentication, and encryption configuration                  │
-│    Backup             = backup and recovery procedures and schedule configuration                     │
-│    Upgrade            = software version upgrades and firmware patching procedures                    │
-│    Troubleshooting    = diagnostic procedures and common issue resolution steps                       │
-│    Escalation         = vendor support escalation path and severity triage process                    │
-│    Documentation      = vendor knowledge base and official product documentation                      │
-│    Change management  = change ticket requirements for production modifications                       │
-│    Audit log          = admin action logging for compliance and security review                       │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 
 ```text
@@ -114,6 +63,8 @@ Regular health checks confirm that FlashArray is operating within expected param
 
 ## Quick Health Check (5 minutes)
 
+![Quick Health Check (5 minutes)](../../../../assets/storage-pure-evergreen-hc-quick-health-check-5-minutes.svg)
+
 Run from Pure1 UI or CLI. No impact to production.
 
 ### Via Pure1 UI
@@ -156,6 +107,8 @@ puresupport list
 ```
 
 ## Full Health Check (20 minutes)
+
+![Full Health Check (20 minutes)](../../../../assets/storage-pure-evergreen-hc-full-health-check-20-minutes.svg)
 
 Run monthly and before/after Purity upgrades or hardware changes.
 
@@ -262,6 +215,8 @@ purehost list --performance | awk 'NR>1 && $2 < 2 {print $1, "WARNING: only " $2
 
 ## Health Check Checklist Template
 
+![Health Check Checklist Template](../../../../assets/storage-pure-evergreen-hc-health-check-checklist-template.svg)
+
 | Check | Result | Notes |
 |---|---|---|
 | Both controllers Online | | |
@@ -277,6 +232,8 @@ purehost list --performance | awk 'NR>1 && $2 < 2 {print $1, "WARNING: only " $2
 | Purity version within support | | |
 
 ## Evergreen Subscription Checks
+
+![Evergreen Subscription Checks](../../../../assets/storage-pure-evergreen-hc-evergreen-subscription-checks.svg)
 
 Validate annually and before a contract renewal:
 
@@ -294,6 +251,8 @@ purearray list --csv | grep phone_home
 ```
 
 ## Common Issues During Health Checks
+
+![Common Issues During Health Checks](../../../../assets/storage-pure-evergreen-hc-common-issues-during-health-checks.svg)
 
 | Finding | Action |
 |---|---|

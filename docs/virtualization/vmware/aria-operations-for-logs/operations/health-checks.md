@@ -12,51 +12,7 @@ Health checks for Aria Operations for Logs — cluster node status, disk and ing
 *Applies to: Aria Logs 8.x*
 </div>
 
-```text
-┌────────────────────────────── Aria Operations for Logs — Health Checks ───────────────────────────────┐
-│                                                                                                       │
-│  Daily vRLI health check: disk, ingestion rate, cluster nodes, alerts, and source flow.               │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                Cluster Health                │  │               Ingestion Health              │   │
-│   │     All nodes: green in Cluster section      │  │       Events/sec: steady baseline rate      │   │
-│   │        Disk: hot partition <80% used         │  │      Sources: all expected sending logs     │   │
-│   │          CPU/RAM: under 80% average          │  │      vSphere sources: heartbeat recent      │   │
-│   │          NTP: all nodes time-synced          │  │       Drop rate: near zero if healthy       │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Alert and forwarding health confirm the notification pipeline is operational.                        │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                 Alert Health                 │  │              Integration Health             │   │
-│   │     Alerts: all enabled (none disabled)      │  │          Aria Ops connection: green         │   │
-│   │     Test alert: fire and receive notify      │  │      SIEM forward: test event received      │   │
-│   │      Alert history: no unexpected gaps       │  │        SSO: AD login test user works        │   │
-│   │        Webhook: HTTP 200 from target         │  │      Archive: last export job succeeded     │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  vRLI master/worker VMs · disk storage · NTP · ESXi syslog config · SIEM target                       │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Hot partition      = /storage/var/loginsight/ disk; fills with indexed log data                      │
-│  Events/sec         = Real-time ingestion rate; baseline varies by environment size                   │
-│  Drop rate          = Percentage of received syslog messages discarded; should be ~0%                 │
-│  Heartbeat          = vSphere agent sends periodic log; gap indicates source disconnected             │
-│  Cluster nodes      = Master + workers visible in Administration → Cluster section                    │
-│  Alert test         = Manually trigger alert query to confirm notification delivery                   │
-│  Webhook 200        = Successful HTTP response from notification target on alert fire                 │
-│  Archive job        = Scheduled task exporting logs to NFS/S3; check last success time                │
-│  Aria Ops conn      = vRLI integration with Aria Operations; shows in Aria Ops admin page             │
-│  SSO test           = Browser login test confirming LDAP/AD authentication still working              │
-│  SIEM test event    = Send synthetic log and verify it appears in SIEM after forwarding               │
-│  NTP sync           = All vRLI nodes must be NTP-synced; time skew breaks cluster consensus           │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 ## Before you begin
 
@@ -84,6 +40,8 @@ Run these 8 checks in order at the start of each shift or after any infrastructu
 
 ## Cluster Node Status Commands
 
+![Cluster Node Status Commands](../../../../assets/virtualization-vmware-aria-operations-fo-hc-cluster-node-status-commands.svg)
+
 ```bash
 # Check all cluster nodes via API
 curl -sk -u 'admin:<password>' \
@@ -94,6 +52,8 @@ curl -sk -u 'admin:<password>' \
 
 ## Alert Configuration Commands
 
+![Alert Configuration Commands](../../../../assets/virtualization-vmware-aria-operations-fo-hc-alert-configuration-commands.svg)
+
 ```bash
 # Check that all alert definitions are enabled
 curl -sk -u 'admin:<password>' \
@@ -102,6 +62,8 @@ curl -sk -u 'admin:<password>' \
 # Output should be empty — no alerts should be disabled unintentionally
 ```
 ## Ingestion and Source Activity
+
+![Ingestion and Source Activity](../../../../assets/virtualization-vmware-aria-operations-fo-hc-ingestion-and-source-activity.svg)
 
 ```bash
 # Via API — get unique hosts seen in the last hour
@@ -120,6 +82,8 @@ Notification channel test: **Administration → Notification Channels → select
 
 ## Platform Log Checks
 
+![Platform Log Checks](../../../../assets/virtualization-vmware-aria-operations-fo-hc-platform-log-checks.svg)
+
 ```bash
 # Watch main runtime log for errors
 tail -f /var/log/loginsight/runtime.log | grep -i "error\|warn\|exception"
@@ -134,6 +98,8 @@ tail -100 /var/log/loginsight/cassandra/system.log | grep -i "error\|warn"
 ---
 
 ## Cluster Node Health
+
+![Cluster Node Health](../../../../assets/virtualization-vmware-aria-operations-fo-hc-cluster-node-health.svg)
 
 ```bash
 # SSH to vRLI master node
@@ -158,6 +124,8 @@ vRLI UI: **Administration → Cluster** — verify all nodes show **Status: Conn
 
 ## Ingestion Rate and Backpressure
 
+![Ingestion Rate and Backpressure](../../../../assets/virtualization-vmware-aria-operations-fo-hc-ingestion-rate-and-backpressure.svg)
+
 vRLI UI → **Administration** → **Cluster** → check **Events Per Second** counter per node.
 
 - Healthy sustained rate: **< 15,000 EPS per node**
@@ -181,6 +149,8 @@ If backpressure is confirmed: syslog senders receive TCP RST (TCP) or silent UDP
 
 ## Disk Usage and Retention
 
+![Disk Usage and Retention](../../../../assets/virtualization-vmware-aria-operations-fo-hc-disk-usage-and-retention.svg)
+
 ```bash
 # SSH to vRLI master
 df -h /storage/var/loginsight
@@ -202,6 +172,8 @@ Actions when disk > 75%:
 ---
 
 ## Certificate Expiry Check
+
+![Certificate Expiry Check](../../../../assets/virtualization-vmware-aria-operations-fo-hc-certificate-expiry-check.svg)
 
 Run monthly or integrate with a certificate monitoring tool.
 
@@ -233,6 +205,8 @@ If expiry < 60 days: follow the **Rotate the vRLI Certificate** procedure. Certi
 
 ## Log Source Activity Check
 
+![Log Source Activity Check](../../../../assets/virtualization-vmware-aria-operations-fo-hc-log-source-activity-check.svg)
+
 Verify all expected sources are actively sending logs — a silent source is often the first sign of a network or agent failure.
 
 **vSphere integration sources:**
@@ -259,6 +233,8 @@ If a critical syslog source (NSX Manager, SDDC Manager) shows no events > 15 min
 ---
 
 ## Alert Pipeline Health
+
+![Alert Pipeline Health](../../../../assets/virtualization-vmware-aria-operations-fo-hc-alert-pipeline-health.svg)
 
 Verify the full notification chain — query → alert firing → delivery — is functional.
 

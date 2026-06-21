@@ -13,58 +13,9 @@ Vendor escalation procedures, support contacts, and information requirements for
 
 *Applies to: VPLEX*
 </div>
-```text
-┌─────────────────────────────────────── Dell VPLEX — Escalation ───────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │       VPLEX escalation: severity triage, vendor support contact, and required artifacts       │   │
-│   │         L1: basic checks, restart services; L2: log analysis, config review, vendor SR        │   │
-│   │        Severity: P1 production down → immediate SR + on-call page; P2/P3 business hours       │   │
-│   │         Before escalating: collect support bundle, event timeline, and change history         │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Detect issue → triage severity → collect artifacts → open SR → update                              │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │        Virtualisation       │  │         Backend LUNs        │  │      Abstracted to VVs      │   │
-│   │            Metro            │  │         Sync stretch        │  │        <5ms RTT sites       │   │
-│   │             Geo             │  │      Async replication      │  │         Any distance        │   │
-│   │          Clustering         │  │        Active-active        │  │       Shared namespace      │   │
-│   │            Quorum           │  │          Witness VM         │  │      Split-brain guard      │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │     Severity     │     Criteria     │   Response time   │      Owner       │    Vendor SLA    │   │
-│   │        P1        │ Production down  │     Immediate     │   On-call + L2   │    1 hr 24x7     │   │
-│   │        P2        │  Major degraded  │       1 hour      │   L2 engineer    │   4 hr biz hrs   │   │
-│   │        P3        │  Minor degraded  │      4 hours      │   L2 engineer    │   8 hr biz hrs   │   │
-│   │        P4        │    No impact     │    Next biz day   │    L1 support    │    2 biz days    │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: VPLEX VS2/VS6 appliance · FC fabric · backend arrays · WAN link (Metro/Geo)              │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    VPLEX              = Dell storage federation; aggregates arrays into virtual volumes across vendors│
-│    Virtual volume     = VPLEX-abstracted LUN presented to hosts; backend is array LUNs                │
-│    VPLEX Metro        = synchronous active-active stretch cluster; same VV served from two sites      │
-│    VPLEX Geo          = asynchronous active-active replication; higher RPO, no distance constraint    │
-│    Distributed VV     = virtual volume spanning two sites for Metro active-active host access         │
-│    Witness            = third-site quorum arbiter for Metro; prevents split-brain island scenarios    │
-│    WAN-COM            = WAN communication module in VPLEX Geo; manages inter-site replication traffic │
-│    Management Server  = embedded Linux VM in VPLEX engine; serves web UI and vplex CLI                │
-│    Consistency group  = set of virtual volumes that failover together maintaining write order         │
-│    Backend volume     = LUN from underlying array presented to VPLEX engine for virtualisation        │
-│    Local device       = RAID device or extent of backend volumes on a single VPLEX cluster            │
-│    Cluster            = single VPLEX installation; Metro topology requires exactly two clusters       │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+![Dell VPLEX — Escalation](../../../../assets/storage-dell-vplex-troubleshooting-escalation.svg)
+
+
 
 
 ## Before you begin

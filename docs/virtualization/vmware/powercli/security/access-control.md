@@ -11,37 +11,10 @@ Managing vSphere RBAC via PowerCLI: auditing existing permissions, creating auto
 
 *Applies to: PowerCLI 13.x*
 </div>
+![PowerCLI — Access Control](../../../../assets/virtualization-vmware-powercli-security-access-control.svg)
 
-```text
-┌───────────────────────────── PowerCLI — vSphere RBAC and Access Control ──────────────────────────────┐
-│                                                                                                       │
-│   vSphere RBAC: a permission = role + principal + entity + propagation flag                           │
-│   Automation service accounts must use custom roles with the minimum required privilege set           │
-│   Audit permissions quarterly; flag any accounts with Administrator role outside management cluster   │
-│                                                                                                       │
-│   Auditing permissions                                                                                │
-│   Get-VIPermission: lists all permissions across the inventory; export to CSV for review              │
-│   Get-VIRole: lists all role definitions with their privilege sets                                    │
-│   Find accounts with too-broad scope: filter Get-VIPermission for Administrator role assignments      │
-│                                                                                                       │
-│   Creating automation roles                                                                           │
-│   Read-only automation: ReadOnly role on the vCenter root with propagation enabled                    │
-│   VM management: create custom role with Virtual Machine.Interact privileges only                     │
-│   Host management: add Host.Configuration privileges to a custom role; scope to the cluster           │
-│   Assign: New-VIPermission -Entity $entity -Principal "vsphere.local\svc-auto" -Role $role            │
-│                                                                                                       │
-│   Permission inheritance                                                                              │
-│   Propagate = $true: permission cascades to all child objects (VMs, hosts, datastores)                │
-│   Propagate = $false: permission applies only to the specific object where it is set                  │
-│   Object hierarchy: vCenter root → Datacenter → Cluster → Host / VM Folder → VM                       │
-│                                                                                                       │
-│   Key terms:                                                                                          │
-│   Role         = named set of privileges; defines what a principal can do on an object                │
-│   Principal    = user or group; must exist in an SSO identity source (vsphere.local, AD)              │
-│   Propagation  = whether the permission cascades to child objects in the inventory hierarchy          │
-│   Permission sprawl = accumulation of over-broad permissions; a common audit finding                  │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Before you begin
 

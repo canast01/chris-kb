@@ -10,41 +10,10 @@ MySQL authentication — auth plugins (caching_sha2, mysql_native_password, auth
 
 *Applies to: RHEL / Ubuntu LTS*
 </div>
+![MySQL / MariaDB — Authentication](../../../../assets/compute-linux-mysql-security-authentication.svg)
 
-```text
-┌─────────────────────────────────────── MySQL — Authentication ────────────────────────────────────────┐
-│                                                                                                       │
-│   MySQL 8.0 default plugin: caching_sha2_password (SHA-256); legacy clients may need native_password  │
-│   auth_socket: Linux-only; authenticates by OS user matching MySQL user; used for root@localhost      │
-│   SSL/TLS client certificates add a second factor beyond username/password                            │
-│                                                                                                       │
-│   Authentication plugins                                                                              │
-│   caching_sha2_password: SHA-256 with RSA key exchange; requires SSL or RSA public key exchange       │
-│   mysql_native_password: SHA1-based legacy plugin; weaker; use only for old client compatibility      │
-│   auth_socket: validates OS socket user = MySQL user; no password; secure for local root access       │
-│                                                                                                       │
-│   Plugin configuration                                                                                │
-│   ALTER USER 'user'@'host' IDENTIFIED WITH caching_sha2_password BY 'pass': set plugin per user       │
-│   default_authentication_plugin=mysql_native_password: server-wide fallback for legacy clients        │
-│   SELECT user, plugin FROM mysql.user: audit which plugin each account uses                           │
-│                                                                                                       │
-│   SSL and client certificates                                                                         │
-│   REQUIRE SSL: forces TLS for a user account; connection rejected without TLS                         │
-│   REQUIRE X509: requires valid client certificate; adds mutual TLS to the account                     │
-│   Generate certs: openssl req / openssl x509; configure ssl-ca, ssl-cert, ssl-key in my.cnf           │
-│                                                                                                       │
-│   Password policy                                                                                     │
-│   validate_password component: enforces length, complexity, dictionary checks                         │
-│   default_password_lifetime: force periodic rotation; set 0 to disable automatic expiry               │
-│   ALTER USER 'user'@'host' PASSWORD EXPIRE: immediately expires; user must change on next login       │
-│                                                                                                       │
-│   Key terms:                                                                                          │
-│   caching_sha2 = MySQL 8.0 default auth plugin; faster than native_password with RSA caching          │
-│   auth_socket  = OS-level authentication; Linux socket validates connecting OS user identity          │
-│   REQUIRE X509 = account-level mutual TLS enforcement; client must present a valid certificate        │
-│   validate_password = server plugin enforcing password complexity and minimum length rules            │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Before you begin
 

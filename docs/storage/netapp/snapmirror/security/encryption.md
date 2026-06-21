@@ -11,58 +11,9 @@ SnapMirror encryption: SnapMirror Traffic Encryption (SMT) using TLS, `snapmirro
 
 *Applies to: SnapMirror*
 </div>
-```text
-┌─────────────────────────────────── NetApp SnapMirror — Encryption ────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │       SnapMirror encryption: data at rest and in transit encryption for all stored data       │   │
-│   │          At rest: AES-256 encryption using controller-managed or external key manager         │   │
-│   │          In transit: TLS 1.2+ for management; protocol encryption for data in flight          │   │
-│   │         Key management: external KMIP-compatible KMS or built-in key lifecycle manager        │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Enable encryption → configure KMS → verify → audit → rotate keys                                   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │            Async            │  │        Periodic sync        │  │         RPO: minutes        │   │
-│   │             Sync            │  │           Zero RPO          │  │          Sub-ms lag         │   │
-│   │            SM-BC            │  │        Active-active        │  │        Transparent FO       │   │
-│   │            Vault            │  │        Long retention       │  │         Backup copy         │   │
-│   │            Cloud            │  │         ONTAP → CVO         │  │       Cloud DR/backup       │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Layer       │     Standard     │     Key source    │       KMS        │      Notes       │   │
-│   │     At rest      │     AES-256      │     Controller    │  Internal/KMIP   │    Always on     │   │
-│   │    In transit    │     TLS 1.2+     │      PKI cert     │   Internal CA    │   Mgmt + data    │   │
-│   │   Key rotation   │      Annual      │     KMS policy    │   External KMS   │    Automated     │   │
-│   │    Key escrow    │     Required     │     KMS vault     │   External KMS   │    DR access     │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: Source ONTAP cluster · destination ONTAP cluster · intercluster LIFs · WAN link          │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    SnapMirror         = ONTAP replication; transfers only changed blocks after initial baseline sync  │
-│    Intercluster LIF   = dedicated logical interface for SnapMirror traffic between clusters           │
-│    SnapMirror policy  = defines schedule, retention, and transfer type (async/sync/vault)             │
-│    Baseline transfer  = first full snapshot transfer establishing the SnapMirror relationship         │
-│    Update             = incremental transfer; only sends new or changed blocks since last successfu...│
-│    Snapmirror break   = breaks the DR relationship; activates destination volume for read-write       │
-│    Resync             = re-establishes a broken SnapMirror relationship from the last common snapshot │
-│    SM-BC              = SnapMirror Business Continuity; synchronous zero-RPO active-active SAN volumes│
-│    Mediator           = ONTAP Mediator; quorum service for SM-BC running on Linux VM at third site    │
-│    SnapVault          = SnapMirror variant for backup retention; destination has independent schedule │
-│    MirrorAndVault     = policy combining SnapMirror DR and SnapVault backup retention copies          │
-│    Fanout             = single source volume replicating to multiple destination clusters simultane...│
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+![SnapMirror — Encryption](../../../../assets/storage-netapp-snapmirror-security-encryption.svg)
+
+
 
 
 ---

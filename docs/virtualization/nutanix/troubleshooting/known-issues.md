@@ -11,57 +11,10 @@ Catalog of known Nutanix AOS / AHV bugs, error codes, and workarounds covering C
 
 *Applies to: Nutanix AOS 6.x / AHV 20220304.x+*
 </div>
+![Nutanix — Known Issues and Error Codes](../../../assets/virtualization-nutanix-troubleshooting-known-issues.svg)
 
-```text
-┌───────────────────────────────────────────── Nutanix HCI ─────────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │            Hyper-converged infrastructure — compute, storage, and networking on AOS           │   │
-│   │             Protocols: iSCSI (internal) · NFS · SMB · REST API · iDRAC/IPMI (IPMI)            │   │
-│   │            Management: Prism Element (per-cluster) · Prism Central (multi-cluster)            │   │
-│   │                VM I/O -> AHV hypervisor -> CVM DSF -> distributed storage ring                │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │           Storage           │  │          CVM + DSF          │  │        1 CVM per node       │   │
-│   │           Compute           │  │        AHV hypervisor       │  │     KVM-based (default)     │   │
-│   │           Network           │  │           AHV OVS           │  │     Open vSwitch fabric     │   │
-│   │          Management         │  │        Prism Central        │  │      Multi-cluster mgmt     │   │
-│   │            Health           │  │          NCC checks         │  │     Cluster health tests    │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
-│   │       CVM        │Storage controller│    iSCSI / NFS    │     Internal     │Must stay running │   │
-│   │       AHV        │    Hypervisor    │      Internal     │       N/A        │ ESXi also works  │   │
-│   │  Prism Element   │    Cluster UI    │     HTTPS 9440    │    Local / AD    │ Per-cluster view │   │
-│   │       NCC        │  Health checks   │      Internal     │      Admin       │Run after changes │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical: Nutanix nodes (NX/OEM) -> CVM ring -> Prism -> management network                          │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  CVM          = Controller VM; Nutanix storage services running on each node                          │
-│  DSF          = Distributed Storage Fabric; Nutanix virtual SAN across all CVMs                       │
-│  AOS          = Acropolis OS; Nutanix core software stack                                             │
-│  AHV          = Acropolis Hypervisor; Nutanix default KVM-based hypervisor                            │
-│  NCC          = Nutanix Cluster Check; suite of health tests run via CLI or Prism                     │
-│  Prism Element = per-cluster web UI on port 9440; direct cluster management                           │
-│  Prism Central = multi-cluster management appliance; policies, compliance, VM mgmt                    │
-│  Stargate     = CVM I/O service; handles all VM disk read/write operations                            │
-│  Cassandra    = CVM metadata service; distributed ring storing extent map                             │
-│  Curator      = background maintenance service; reclaim, rebalance, disk repair                       │
-│  RF           = Replication Factor; number of data copies (RF2 or RF3)                                │
-│  Expand cluster = adding nodes; must pass NCC before and after expansion                              │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 
 ## Before you begin

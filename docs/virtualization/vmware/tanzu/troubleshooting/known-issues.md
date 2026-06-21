@@ -12,57 +12,10 @@ Catalog of known Tanzu Kubernetes Grid (TKG) and Supervisor cluster bugs, error 
 
 *Applies to: Tanzu Kubernetes Grid 2.x / vSphere 7.x–8.x with Tanzu*
 </div>
+![VMware Tanzu — Known Issues and Error Codes](../../../../assets/virtualization-vmware-tanzu-troubleshooting-known-issues.svg)
 
-```text
-┌──────────────────────────────────────────── VMware Tanzu ─────────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │           Kubernetes on vSphere — Supervisor cluster, TKG workload clusters, Harbor           │   │
-│   │                Protocols: HTTPS (API/UI) · Kubernetes API · NSX-T · NFS / vSAN                │   │
-│   │             Management: vCenter (Tanzu UI) · kubectl + vsphere plugin · Tanzu CLI             │   │
-│   │            Supervisor -> namespace -> TKG cluster -> workload pods -> Harbor image            │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │           Control           │  │      Supervisor cluster     │  │    vSphere integrated K8s   │   │
-│   │           Workload          │  │         TKG cluster         │  │      Guest K8s cluster      │   │
-│   │           Registry          │  │            Harbor           │  │      Image scan + proxy     │   │
-│   │          Networking         │  │         NSX / Antrea        │  │       Pod overlay + LB      │   │
-│   │           Storage           │  │          vSAN / CSI         │  │         PVC backing         │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
-│   │    Supervisor    │K8s control plane │    HTTPS (K8s)    │   vCenter SSO    │  On ESXi hosts   │   │
-│   │   TKG cluster    │   Workload K8s   │    HTTPS (K8s)    │    kubeconfig    │ Sup. provisioned │   │
-│   │      Harbor      │  Image registry  │     HTTPS 443     │   OIDC / local   │   OVA or Helm    │   │
-│   │   vSphere CSI    │ PVC provisioner  │    vSphere API    │ Service account  │ Dynamic volumes  │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical: ESXi hosts -> Supervisor VMs -> TKG node VMs -> workload pods                              │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Supervisor cluster = Kubernetes control plane integrated into vSphere                                │
-│  TKG          = Tanzu Kubernetes Grid; guest K8s clusters managed by Supervisor                       │
-│  Namespace    = vSphere namespace scoping TKG clusters and resource quotas                            │
-│  Harbor       = CNCF container image registry with vulnerability scanning                             │
-│  Antrea       = CNI plugin for Tanzu; uses OVS for pod networking                                     │
-│  vSphere CSI  = Container Storage Interface driver for PVC on vSAN/datastores                         │
-│  kubectl vsphere = kubectl plugin to login to Supervisor with vCenter SSO                             │
-│  Tanzu CLI    = command-line tool for TKG cluster lifecycle management                                │
-│  ClusterClass = Tanzu declarative cluster topology spec (replaces older TKr)                          │
-│  Content library = vSphere store for OVAs and ISOs used by TKG provisioning                           │
-│  Workload management = vCenter feature enabling Supervisor on a vSphere cluster                       │
-│  NSX-T        = network provider for Tanzu; manages pod LB and ingress                                │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 
 ## Before you begin

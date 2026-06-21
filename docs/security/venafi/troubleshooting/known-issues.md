@@ -12,57 +12,10 @@ Catalog of known Venafi TPP bugs, error codes, and workarounds covering certific
 
 *Applies to: Venafi TPP 22.x / 23.x*
 </div>
+![Venafi Trust Protection Platform — Known Issues and Error Codes](../../../assets/security-venafi-troubleshooting-known-issues.svg)
 
-```text
-┌───────────────────────────────────────── Venafi TLS Protect ──────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │          Machine identity management — certificate discovery, policy, and automation          │   │
-│   │              Protocols: HTTPS (UI/API) · ACME · EST · REST · SSH cert management              │   │
-│   │          Management: Venafi web UI · VCert CLI · REST API · ACME · Terraform provider         │   │
-│   │          Scan -> discover cert -> policy check -> request from CA -> deploy + monitor         │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │          Discovery          │  │       Network scanner       │  │        TLS port sweep       │   │
-│   │            Policy           │  │        Policy folder        │  │      CA, key, SAN rules     │   │
-│   │           Issuance          │  │         CA connector        │  │    DigiCert/MSCA/Entrust    │   │
-│   │           Delivery          │  │      VCert / adaptable      │  │      Deploy to endpoint     │   │
-│   │          Monitoring         │  │       Expiry dashboard      │  │     Alert before expiry     │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
-│   │TPP / TLS Protect │ Central manager  │     HTTPS 443     │   LDAP / SAML    │ On-prem or cloud │   │
-│   │   CA connector   │Cert issuance link│    CA-specific    │  CA admin creds  │  Per-CA plugin   │   │
-│   │    VCert CLI     │ Cert automation  │    HTTPS (API)    │     API key      │  enroll + renew  │   │
-│   │  Policy folder   │ Policy container │      Internal     │    Role-based    │Inheritable rules │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical: Venafi server -> CA connectors -> managed endpoints (web, LB, app servers)                 │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  TPP          = Trust Protection Platform; original on-prem Venafi product name                       │
-│  TLS Protect  = current Venafi platform name; cloud or on-prem deployment                             │
-│  Policy folder = Venafi object defining CA, key length, SAN, and renewal rules                        │
-│  CA connector = plugin linking Venafi to a specific certificate authority                             │
-│  VCert        = Venafi CLI tool for enroll/renew from pipelines and automation                        │
-│  Discovery    = Venafi network scanner finding TLS certs on reachable hosts/ports                     │
-│  Adaptable CA = custom Venafi driver for CAs without a built-in connector                             │
-│  ACME         = RFC 8555 protocol supported by Venafi for automated cert issuance                     │
-│  EST          = Enrollment over Secure Transport; RFC 7030 device enrolment                           │
-│  Machine ID   = Venafi term for any TLS/SSH key managed by the platform                               │
-│  Expiry alert = Venafi notification sent before a certificate expires (configurable)                  │
-│  Terraform    = Venafi Terraform provider for IaC-driven cert lifecycle                               │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 
 ## Before you begin

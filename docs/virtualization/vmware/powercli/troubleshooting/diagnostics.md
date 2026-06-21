@@ -13,36 +13,10 @@ PowerCLI diagnostic techniques: enable verbose and debug output, trace API calls
 
 *Applies to: PowerCLI 13.x*
 </div>
+![PowerCLI — Diagnostics](../../../../assets/virtualization-vmware-powercli-troubleshooting-diagnostics.svg)
 
-```text
-┌───────────────────────────────── PowerCLI — Diagnostics and Tracing ──────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   Start here: enable -Verbose → read full exception → ExtensionData for raw API data         │    │
-│   │   Slow script: switch to Get-View instead of Get-VM; filter at source not after pipe         │    │
-│   │   Auth errors: confirm Connect-VIServer target; check certificate and credential             │    │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │         Verbose and Debug Output             │  │           API Tracing via ExtensionData     │   │
-│   │   $VerbosePreference = 'Continue'            │  │   $vm.ExtensionData: raw Managed Object     │   │
-│   │   $DebugPreference = 'Continue'              │  │   $vm.ExtensionData.Config: VM config       │   │
-│   │   Per-cmdlet: add -Verbose                   │  │   $vm.ExtensionData.Runtime: power/migr     │   │
-│   │   Capture output: 2>&1 | Out-File debug.txt  │  │   Get-View for efficient bulk API queries   │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  PowerShell session · vCenter HTTPS API (SDK endpoint) · vSphere API (SOAP/REST) · ESXi host API      │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│  ExtensionData  = property on any PowerCLI VI object; returns the raw vSphere API managed object      │
-│  Get-View       = low-level vSphere API query; specify -ViewType and -Filter for efficient queries    │
-│  Measure-Command= PowerShell cmdlet for timing code execution; use to profile script performance      │
-│  VerbosePreference= PowerShell preference variable; 'Continue' shows all -Verbose messages            │
-│  DebugPreference  = PowerShell preference variable; 'Continue' shows all -Debug messages (very verbose│
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ```mermaid
 graph TD

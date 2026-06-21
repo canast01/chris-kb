@@ -12,52 +12,10 @@ How to escalate Dell PowerMax issues to Dell Technologies support: what data to 
 
 *Applies to: PowerMax 2500 / 8500 running PowerMaxOS 10.x*
 </div>
+![PowerMax — Escalation](../../../../assets/storage-dell-powermax-troubleshooting-escalation.svg)
 
-```text
-┌──────────────────────────────── Dell PowerMax — Escalation ───────────────────────────────────────────┐
-│                                                                                                       │
-│  Escalate PowerMax issues to Dell support when a director goes offline causing host I/O failures,     │
-│  SRDF replication has broken and the DR site is out of sync, a drive failure has pushed the array     │
-│  below its rebuild threshold, or an upgrade has left the microcode in a transitional state.           │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Step 1 — Collect Data               │  │          Step 2 — Open the Case             │   │
-│   │  symcfg -sid <SID> show (array health)       │  │  Go to dell.com/support → My Cases          │   │
-│   │  symevent list (last 500 events)             │  │  Select product by array serial number      │   │
-│   │  sympd list (drive states)                   │  │  Severity: P1 I/O down / P2 SRDF broken    │    │
-│   │  symdf list (SRDF state)                     │  │  Attach symcfg snapshot + event log        │    │
-│   │  Write timeline: last healthy → first fault  │  │  For P1: also call Dell support             │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  For P1: open portal case AND call Dell immediately.                                                  │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Step 3 — Escalation Path            │  │         What NOT to Do                      │   │
-│   │  T1: triage + confirm symcfg data received   │  │  Do not failover SRDF without Dell approval │   │
-│   │  T2: PowerMax SE assigned; deep array review │  │  Do not modify storage groups mid-incident  │   │
-│   │  TAM: engage for P1 or prolonged issues      │  │  Do not run --force flags without Dell      │   │
-│   │  SRS: Dell remote session via SRS-VE gateway │  │  Do not start microcode upgrades mid-case   │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  SID              = Symmetrix ID; 12-digit array serial; all CLI commands use -sid <SID>              │
-│  symcli / symcfg  = Solutions Enabler CLI; all PowerMax management and diagnostic commands            │
-│  symevent         = audit and event log viewer; shows director faults, alerts, and changes            │
-│  sympd            = physical device command; lists drives and their health state                      │
-│  symdf            = SRDF command; lists replication groups and their current copy state               │
-│  SRDF             = Symmetrix Remote Data Facility; sync/async metro/remote replication               │
-│  Director         = internal PowerMax engine component; FE (host), BE (drives), RDF (replication)     │
-│  Unisphere        = HTML5 GUI and REST API management portal for PowerMax                             │
-│  SupportAssist    = Dell telemetry and auto-case creation; configured in Unisphere                    │
-│  SRS-VE           = Secure Remote Services Virtual Edition; Dell's remote access gateway              │
-│  TimeFinder SnapVX= space-efficient snapshot technology; up to 256 snaps per storage group            │
-│  CloudIQ          = Dell's SaaS analytics platform; health scores, forecasts, anomaly detection       │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ---
 

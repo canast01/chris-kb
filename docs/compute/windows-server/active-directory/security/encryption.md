@@ -11,58 +11,9 @@ Encryption reference covering AD Protocol Encryption Overview, Enforcing LDAP Si
 
 *Applies to: Windows Server 2019 / 2022*
 </div>
-```text
-┌─────────────────────────── Security Active Directory Security — Encryption ───────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Active Directory encryption: data at rest and in transit encryption for all stored data    │   │
-│   │          At rest: AES-256 encryption using controller-managed or external key manager         │   │
-│   │          In transit: TLS 1.2+ for management; protocol encryption for data in flight          │   │
-│   │         Key management: external KMIP-compatible KMS or built-in key lifecycle manager        │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Enable encryption → configure KMS → verify → audit → rotate keys                                   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │             Core            │  │       Primary service       │  │        Main function        │   │
-│   │          Management         │  │        Control plane        │  │         Admin access        │   │
-│   │          Monitoring         │  │         Health/perf         │  │      Alerts/dashboards      │   │
-│   │           Security          │  │         Auth/encrypt        │  │        Access control       │   │
-│   │         Integration         │  │        APIs/plug-ins        │  │         Third-party         │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Layer       │     Standard     │     Key source    │       KMS        │      Notes       │   │
-│   │     At rest      │     AES-256      │     Controller    │  Internal/KMIP   │    Always on     │   │
-│   │    In transit    │     TLS 1.2+     │      PKI cert     │   Internal CA    │   Mgmt + data    │   │
-│   │   Key rotation   │      Annual      │     KMS policy    │   External KMS   │    Automated     │   │
-│   │    Key escrow    │     Required     │     KMS vault     │   External KMS   │    DR access     │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: Security Active Directory Security infrastructure · management network · monitoring      │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    Active Directory   = Security Active Directory Security platform overview and core concepts        │
-│    Management         = management console and command-line interface for administration              │
-│    Monitoring         = health and performance monitoring dashboards and alerting                     │
-│    Automation         = REST API, scripting, and pipeline integration capabilities                    │
-│    Security           = access control, authentication, and encryption configuration                  │
-│    Backup             = backup and recovery procedures and schedule configuration                     │
-│    Upgrade            = software version upgrades and firmware patching procedures                    │
-│    Troubleshooting    = diagnostic procedures and common issue resolution steps                       │
-│    Escalation         = vendor support escalation path and severity triage process                    │
-│    Documentation      = vendor knowledge base and official product documentation                      │
-│    Change management  = change ticket requirements for production modifications                       │
-│    Audit log          = admin action logging for compliance and security review                       │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+![Active Directory — Encryption](../../../../assets/compute-windows-server-active-directory-security-encryption.svg)
+
+
 
 
 ## Before you begin

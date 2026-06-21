@@ -12,59 +12,10 @@ Catalog of known SnapMirror bugs, error codes, and workarounds. SnapMirror is an
 
 *Applies to: ONTAP 9.x SnapMirror / SnapVault / Cloud*
 </div>
+![NetApp SnapMirror — Known Issues and Error Codes](../../../../assets/storage-netapp-snapmirror-troubleshooting-known-issues.svg)
 
-```text
-┌────────────────────────────────────────── NetApp SnapMirror ──────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │        SnapMirror: ONTAP replication technology for DR, backup, and business continuity       │   │
-│   │     Protocols: SnapMirror protocol (encrypted) · NFS/SMB/iSCSI at destination after break     │   │
-│   │                       Management: ONTAP System Manager / SnapMirror CLI                       │   │
-│   │                Sections: Architecture · Operations · Security · Troubleshooting               │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Architecture → Operations → Security → Troubleshooting → Escalation                                │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │            Async            │  │        Periodic sync        │  │         RPO: minutes        │   │
-│   │             Sync            │  │           Zero RPO          │  │          Sub-ms lag         │   │
-│   │            SM-BC            │  │        Active-active        │  │        Transparent FO       │   │
-│   │            Vault            │  │        Long retention       │  │         Backup copy         │   │
-│   │            Cloud            │  │         ONTAP → CVO         │  │       Cloud DR/backup       │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
-│   │ Async SnapMirror │  DR replication  │    SM protocol    │   Certificate    │   RPO minutes    │   │
-│   │ Sync SnapMirror  │  Zero-RPO sync   │    SM protocol    │   Certificate    │ StrictSync/Sync  │   │
-│   │      SM-BC       │ Active-active SA │    SM protocol    │     Mediator     │    No RPO/RTO    │   │
-│   │    SnapVault     │ Backup retention │    SM protocol    │   Certificate    │ Longer retentio  │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: Source ONTAP cluster · destination ONTAP cluster · intercluster LIFs · WAN link          │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    SnapMirror         = ONTAP replication; transfers only changed blocks after initial baseline sync  │
-│    Intercluster LIF   = dedicated logical interface for SnapMirror traffic between clusters           │
-│    SnapMirror policy  = defines schedule, retention, and transfer type (async/sync/vault)             │
-│    Baseline transfer  = first full snapshot transfer establishing the SnapMirror relationship         │
-│    Update             = incremental transfer; only sends new or changed blocks since last successful  │
-│    Snapmirror break   = breaks the DR relationship; activates destination volume for read-write       │
-│    Resync             = re-establishes a broken SnapMirror relationship from the last common snapsho  │
-│    SM-BC              = SnapMirror Business Continuity; synchronous zero-RPO active-active SAN volum  │
-│    Mediator           = ONTAP Mediator; quorum service for SM-BC running on Linux VM at third site    │
-│    SnapVault          = SnapMirror variant for backup retention; destination has independent schedul  │
-│    MirrorAndVault     = policy combining SnapMirror DR and SnapVault backup retention copies          │
-│    Fanout             = single source volume replicating to multiple destination clusters simultaneo  │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 
 ## Before you begin

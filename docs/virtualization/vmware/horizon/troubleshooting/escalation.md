@@ -13,50 +13,10 @@ How to escalate VMware Horizon issues to Broadcom support: what data to collect,
 
 *Applies to: Horizon 8.x*
 </div>
+![Horizon — Escalation](../../../../assets/virtualization-vmware-horizon-troubleshooting-escalation.svg)
 
-```text
-┌───────────────────────────────────── VMware Horizon — Escalation ─────────────────────────────────────┐
-│                                                                                                       │
-│  Escalate Horizon issues to VMware GSS when all users cannot log in, the Connection                   │
-│  Server cluster is fully down, agent installation is failing on all desktops, or                      │
-│  pool provisioning is in a 100% error state.                                                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Step 1 — Collect Data               │  │          Step 2 — Open the SR               │   │
-│   │  Generate CS support bundle (Horizon Admin)  │  │  Go to support.broadcom.com → sign in       │   │
-│   │  Export agent logs from affected desktop VMs │  │  Product: VMware Horizon; pick version      │   │
-│   │  Note Horizon version + CS count + build     │  │  Severity: P1 down / P2 major / P3 minor    │   │
-│   │  Collect vCenter events for affected pool    │  │  Attach CS bundle + agent logs + vC events  │   │
-│   │  Write timeline: last login → first failure  │  │  Include CS version and pod topology        │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  For P1: open portal case AND call Broadcom support immediately.                                      │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Step 3 — Escalation Path            │  │         What NOT to Do                      │   │
-│   │  T1: triage + confirm CS bundle received     │  │  Do not decommission CS while case is open  │   │
-│   │  T2: Horizon SE assigned; deep analysis      │  │  Do not uninstall agents during investigation│  │
-│   │  T3: engineering review for code-level fix   │  │  Do not restore CS snapshot without GSS     │   │
-│   │  CritSit: P1 with all users down > 2 hours   │  │  Do not clear Horizon event DB mid-case     │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  CS            = Connection Server; Horizon broker and session management component (Windows)         │
-│  GSS           = Global Support Services; Broadcom/VMware support team                                │
-│  UAG           = Unified Access Gateway; external HTML5 proxy for Horizon; replaces Security Server   │
-│  Agent         = Horizon Agent installed in desktop or RDSH VM; handles display protocol              │
-│  vdmimport     = Horizon tool to restore CS config from LDAP backup (.ldif file)                      │
-│  Replica CS    = additional Connection Server nodes; share config via embedded LDAP replication       │
-│  Pool          = desktop pool (instant clone, linked clone, or full clone VMs)                        │
-│  RDSH          = Remote Desktop Services Host; published application source in Horizon                │
-│  CritSit       = Critical Situation; Broadcom war room with engineering; triggered for data loss      │
-│  CS bundle     = Horizon support bundle; generated from Horizon Admin → Help → Support                │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ---
 

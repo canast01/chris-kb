@@ -14,53 +14,7 @@ Daily and weekly health runbook for ESXi hosts: hardware sensors, service status
 *Applies to: vSphere 7.x / 8.x*
 </div>
 
-```text
-┌──────────────────────────────────────── ESXi — Health Checks ─────────────────────────────────────────┐
-│                                                                                                       │
-│  Daily/weekly health runbook: hardware sensors, alarms, capacity, and storage.                        │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               Hardware Health                │  │            vSphere Cluster Health           │   │
-│   │           IPMI/iDRAC sensor status           │  │          HA master elected & green          │   │
-│   │            CPU/mem/fan/PSU alarms            │  │            DRS balance score < 2            │   │
-│   │           esxcli hardware ipmi sdr           │  │          vMotion network reachable          │   │
-│   │            HBA/NIC link state up             │  │            No disconnected hosts            │   │
-│   │         Boot media health S.M.A.R.T.         │  │             EVC mode consistent             │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Hardware sensors → vSphere alarms → storage health → capacity review.                                │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                Storage Health                │  │               Capacity Review               │   │
-│   │           All paths active per LUN           │  │           Host CPU util < 70% avg           │   │
-│   │           No APD/PDL events today            │  │           Host mem util < 80% avg           │   │
-│   │             Datastore free > 20%             │  │             VM balloon/swap = 0             │   │
-│   │          VMFS no ATS heartbeat err           │  │           vSAN disk capacity < 70%          │   │
-│   │            vSAN health: all green            │  │          Trend forecast 30/60 days          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  x86 hosts with IPMI/iDRAC BMC, SAN/NAS/vSAN storage, 10/25 GbE NICs                                  │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  IPMI     = Intelligent Platform Mgmt Interface; OOB hardware sensor access                           │
-│  iDRAC    = Dell Remote Access Controller; OOB management BMC                                         │
-│  S.M.A.R.T = Self-Monitoring Analysis; disk health from boot media                                    │
-│  APD      = All Paths Down; storage unreachable but PDL not declared                                  │
-│  PDL      = Permanent Device Loss; device signals loss is permanent                                   │
-│  ATS      = Atomic Test & Set; VMFS locking primitive; heartbeat mechanism                            │
-│  DRS score= 1-5 imbalance rating; 1=balanced, 5=critical imbalance                                    │
-│  Balloon  = VMware memory mgmt; guest driver returns idle pages to host                               │
-│  EVC      = Enhanced vMotion Compat; consistent CPU flags across cluster                              │
-│  fdm      = Fault Domain Manager; HA agent; must run on all hosts                                     │
-│  vSAN health = Skyline Health dashboard in vCenter; 60+ automated checks                              │
-│  BMC      = Baseboard Management Controller; embedded OOB management chip                             │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 ## Before you begin
 
@@ -116,6 +70,8 @@ esxcli software vib list | wc -l
 
 ## Hardware Health
 
+![Hardware Health](../../../../assets/virtualization-vmware-esxi-hc-hardware-health.svg)
+
 ### Sensor Status
 
 ```bash
@@ -158,6 +114,8 @@ Get-VMHost | Select-Object Name, ConnectionState, PowerState
 
 ## Network Health
 
+![Network Health](../../../../assets/virtualization-vmware-esxi-hc-network-health.svg)
+
 ### Uplink and VMkernel
 
 ```bash
@@ -189,6 +147,8 @@ vmkping -I vmk2 -d -s 8972 <peer-vsan-vmk-ip>
 
 ## Storage Health
 
+![Storage Health](../../../../assets/virtualization-vmware-esxi-hc-storage-health.svg)
+
 ### Path and Datastore Status
 
 ```bash
@@ -217,6 +177,8 @@ grep -i "H:0x0 D:0x2\|reservation" /var/log/vmkernel.log | tail -20
 
 ## Capacity and Performance
 
+![Capacity and Performance](../../../../assets/virtualization-vmware-esxi-hc-capacity-and-performance.svg)
+
 ### CPU and Memory
 
 ```bash
@@ -242,6 +204,8 @@ Get-VM | Get-Stat -Stat mem.balloon.average,mem.swapped.average -MaxSamples 1 |
 
 ## VIB and Patch Compliance
 
+![VIB and Patch Compliance](../../../../assets/virtualization-vmware-esxi-hc-vib-and-patch-compliance.svg)
+
 ```bash
 # List all installed VIBs with version
 esxcli software vib list
@@ -257,6 +221,8 @@ esxcli software vib list | grep -v "VMware\|Broadcom\|Dell\|HPE\|Cisco"
 ```
 
 ## Health Checklist
+
+![Health Checklist](../../../../assets/virtualization-vmware-esxi-hc-health-checklist.svg)
 
 - [ ] All hosts Connected and PoweredOn in vCenter
 - [ ] No hardware health warnings or critical sensor alerts

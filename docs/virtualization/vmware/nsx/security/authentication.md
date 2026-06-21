@@ -6,6 +6,8 @@ tags:
   - vmware
 ---
 # NSX — Authentication
+![NSX — Authentication](../../../../assets/virtualization-vmware-nsx-security-authentication.svg)
+
 
 ```bash
 curl -sk -u 'admin:password' \
@@ -21,53 +23,7 @@ curl -sk -u 'admin:password' \
   }' \
   "https://<nsx-manager>/api/v1/node/aaa/auth-policy"
 ```
-```text
-┌──────────────────────────────────────── NSX — Authentication ─────────────────────────────────────────┐
-│                                                                                                       │
-│  NSX SSO via vCenter, local admin, LDAP identity source, and API token auth.                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │           vCenter SSO Integration            │  │             Local Admin Account             │   │
-│   │             NSX uses vCenter SSO             │  │           admin user local to NSX           │   │
-│   │          AD identity source in SSO           │  │            audit user: read-only            │   │
-│   │        Users log into NSX UI via SSO         │  │            guestuser1/2: limited            │   │
-│   │         vSphere role → NSX role map          │  │            Change admin password            │   │
-│   │            MFA via SSO Radius/RSA            │  │           Disable root if possible          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  SSO for UI access; API token or basic auth for automation; AD for ops.                               │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              API Authentication              │  │              Security Hardening             │   │
-│   │           Basic auth (admin:pass)            │  │          Password complexity policy         │   │
-│   │        Bearer token via /api/session         │  │           Account lockout after 5           │   │
-│   │          Principal Identity for ops          │  │             Session idle timeout            │   │
-│   │          Client certificates option          │  │            Log all auth attempts            │   │
-│   │          vIDM integration optional           │  │            Alert on failed logins           │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  NSX Manager VMs, vCenter SSO, AD/LDAP, Radius/RSA, management network                                │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  SSO         = Single Sign-On; vCenter embedded auth used by NSX                                      │
-│  Principal Identity = long-lived API credential for automation services                               │
-│  Bearer token= JWT session token from /api/session/create; short-lived                                │
-│  vIDM        = VMware Identity Manager; optional ext auth for NSX                                     │
-│  Local admin = NSX-local admin account; break-glass if SSO fails                                      │
-│  audit user  = read-only local NSX account for compliance review                                      │
-│  MFA         = Multi-Factor Auth; configured in vCenter SSO policy                                    │
-│  Radius      = remote auth server for MFA OTP tokens                                                  │
-│  Client cert = X.509 cert used as API client auth credential                                          │
-│  Password policy = NSX local: min length, complexity, rotation                                        │
-│  Lockout     = account disabled after N failed login attempts                                         │
-│  Session timeout = idle session expiry; configurable in NSX                                           │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 ```bash
 curl -sk -u 'admin:password' \
   -X POST \

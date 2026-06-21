@@ -13,57 +13,10 @@ Catalog of known vCenter / VCSA bugs, error codes, and workarounds. Each entry i
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
+![vCenter — Known Issues and Error Codes](../../../../assets/virtualization-vmware-vcenter-troubleshooting-known-issues.svg)
 
-```text
-┌──────────────────────────────────────── VMware vCenter Server ────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │             vSphere management server — inventory, SSO, HA, licensing, update mgr             │   │
-│   │                 Protocols: HTTPS 443 · SSO/SAML · vSphere API · LDAP · syslog                 │   │
-│   │              Management: vSphere Client (UI) · REST API · PowerCLI · VAMI (5480)              │   │
-│   │             VCSA appliance -> SSO auth -> inventory API -> ESXi mgmt -> HA vMotion            │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │           Platform          │  │        VCSA appliance       │  │        Photon OS OVA        │   │
-│   │           Identity          │  │          SSO / vIDM         │  │     SAML + LDAP sources     │   │
-│   │          Inventory          │  │         VPXD service        │  │     Core vCenter daemon     │   │
-│   │              HA             │  │          vCenter HA         │  │     Active/Passive pair     │   │
-│   │            Update           │  │          VUM / LCM          │  │     Host patch baseline     │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
-│   │       VCSA       │vCenter appliance │     HTTPS 443     │    SSO / SAML    │ Photon OS based  │   │
-│   │       SSO        │  Authentication  │    HTTPS / LDAP   │    AD / LDAP     │vsphere.local dom.│   │
-│   │       VPXD       │Inventory service │      Internal     │       N/A        │ Core vCenter svc │   │
-│   │       VAMI       │  Appliance mgmt  │     HTTPS 5480    │       root       │ Backup + network │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical: VCSA VM (on ESXi) -> SSO -> VPXD -> managed ESXi hosts -> VMs                              │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  VCSA         = vCenter Server Appliance; Linux OVA replacing Windows vCenter                         │
-│  SSO          = Single Sign-On; vSphere authentication domain (vsphere.local)                         │
-│  VPXD         = vCenter Server daemon; handles inventory and API requests                             │
-│  VAMI         = vCenter Appliance Management Interface; HTTPS on port 5480                            │
-│  vCenter HA   = active/passive/witness cluster for vCenter availability                               │
-│  PSC          = Platform Services Controller; deprecated in 7.0, merged into VCSA                     │
-│  VUM          = vSphere Update Manager; patch baseline tool (now part of LCM)                         │
-│  Content library = shared VM template and ISO repository across vCenters                              │
-│  Enhanced linked mode = multiple vCenters sharing SSO for single-pane view                            │
-│  alarm        = threshold or event trigger; sends email or runs script                                │
-│  permissions  = vCenter role + object + principal; inherited down hierarchy                           │
-│  vsphere.local = built-in SSO domain; administrator@vsphere.local is break-glass                      │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 
 ## Before you begin

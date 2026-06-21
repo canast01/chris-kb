@@ -11,58 +11,7 @@ Health Checks reference covering Health Check Decision Flow, Daily Checks, Healt
 
 *Applies to: ONTAP 9.x*
 </div>
-```text
-┌──────────────────────────────────── NetApp ONTAP — Health Checks ─────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │        ONTAP health checks: routine verification of operational status and performance        │   │
-│   │         Checks include: controller status, drive health, replication lag, and capacity        │   │
-│   │         Frequency: daily quick checks; weekly detailed review; monthly capacity report        │   │
-│   │        Configure threshold-based alerts for proactive incident prevention and awareness       │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Check status → review alerts → verify replication → capacity → log                                 │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │           Cluster           │  │        HA node pairs        │  │          Scale-out          │   │
-│   │             SVM             │  │        Virtual server       │  │       Protocol access       │   │
-│   │          Aggregate          │  │         RAID groups         │  │         Storage pool        │   │
-│   │           FlexVol           │  │         Thin volume         │  │        Data container       │   │
-│   │          SnapMirror         │  │         Replication         │  │          Async/Sync         │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Check area    │  How to verify   │   Pass criteria   │    Frequency     │       Tool       │   │
-│   │   Controllers    │   show status    │    All healthy    │      Daily       │     CLI/GUI      │   │
-│   │      Drives      │   show drives    │  No failed/pred.  │      Daily       │     CLI/GUI      │   │
-│   │   Replication    │ show replication │  Lag < threshold  │      Daily       │     CLI/GUI      │   │
-│   │     Capacity     │  show capacity   │     < 80% used    │      Daily       │     CLI/GUI      │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: AFF/FAS HA node pairs · cluster network · client access network · MetroCluster           │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    ONTAP              = NetApp storage OS; unified NAS, SAN, and object across AFF, FAS, ONTAP Select │
-│    SVM                = Storage Virtual Machine; logical storage server with protocols, IP, and vol...│
-│    Aggregate          = RAID group of disks; underpins FlexVols and FlexGroups within a node          │
-│    FlexVol            = flexible thin-provisioned volume within an aggregate; most common container   │
-│    FlexGroup          = scale-out volume spanning multiple aggregates; for very large NAS workloads   │
-│    SnapMirror         = async or synchronous replication between ONTAP systems for DR and backup      │
-│    SnapVault          = backup-oriented SnapMirror variant; independent retention at destination      │
-│    FlexClone          = instant space-efficient writable clone of a volume or LUN from snapshot       │
-│    Snapshot           = ONTAP space-efficient PiT copy; stored in .snapshot directory on NFS          │
-│    ONTAP Mediator     = third-site quorum for SnapMirror SM-BC; prevents split-brain scenarios        │
-│    SM-BC              = SnapMirror Business Continuity; synchronous zero-RPO active-active SAN repl...│
-│    vserver            = ONTAP CLI name for SVM; vserver show and vserver nfs show are common commands │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 ## Before you begin
 
@@ -86,6 +35,8 @@ Health Checks reference covering Health Check Decision Flow, Daily Checks, Healt
 
 ## Health Check Decision Flow
 
+![Health Check Decision Flow](../../../../assets/storage-netapp-ontap-hc-health-check-decision-flow.svg)
+
 ```mermaid
 flowchart TD
     start([Start Health Check]) --> clusterShow["cluster show\nall nodes healthy?"]
@@ -106,6 +57,8 @@ flowchart TD
 
 ## Daily Checks
 
+![Daily Checks](../../../../assets/storage-netapp-ontap-hc-daily-checks.svg)
+
 | Check | Command | Notes |
 |---|---|---|
 | [ ] Run `cluster show` | `cluster show` | verify all nodes are healthy and HA pairs are configured |
@@ -118,6 +71,8 @@ flowchart TD
 | [ ] Run `event log show -messagename callhome.*` | `event log show -messagename callhome.*` | check for any callhome EMS events since last check |
 
 ## Health Check
+
+![Health Check](../../../../assets/storage-netapp-ontap-hc-health-check.svg)
 
 - [ ] Cluster node count and status match expected inventory
 - [ ] All HA pairs show `true` for giveback-capability
@@ -157,6 +112,8 @@ network interface show -status-oper down
 ```
 
 ## Cluster Health
+
+![Cluster Health](../../../../assets/storage-netapp-ontap-hc-cluster-health.svg)
 
 ```bash
 cluster show

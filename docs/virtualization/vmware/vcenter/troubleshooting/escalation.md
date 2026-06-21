@@ -14,49 +14,10 @@ How to escalate vCenter Server issues to Broadcom support: what data to collect,
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
+![vCenter — Escalation](../../../../assets/virtualization-vmware-vcenter-troubleshooting-escalation.svg)
 
-```text
-┌───────────────────────────────────── vCenter Server — Escalation ─────────────────────────────────────┐
-│                                                                                                       │
-│  Escalate vCenter issues to Broadcom GSS when the VCSA is inaccessible or repeatedly                  │
-│  crashing, vMotion/DRS is broken cluster-wide, or data loss is suspected.                             │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Step 1 — Collect Data               │  │          Step 2 — Open the SR               │   │
-│   │  VCSA shell: run vc-support script           │  │  Go to support.broadcom.com → sign in       │   │
-│   │  Collect vcenter.log + vpxd.log              │  │  Product: VMware vCenter Server             │   │
-│   │  Note exact vCenter version + build          │  │  Type: Technical → pick sub-category        │   │
-│   │  Screenshot of error from vSphere Client     │  │  Severity: S1 down / S2 major / S3 minor    │   │
-│   │  Write timeline: last good → first failure   │  │  Attach VCSA bundle + vpxd.log              │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  For S1: open portal case AND call the phone number on the case confirmation page.                    │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Step 3 — Escalation Path            │  │         What NOT to Do                      │   │
-│   │  T1: triage + confirm bundle received        │  │  Do not reboot VCSA mid-incident            │   │
-│   │  T2: vCenter SE assigned; provides guidance  │  │  Do not modify VCSA DB without GSS          │   │
-│   │  T3: engineering review if SE cannot fix     │  │  Do not snapshot VCSA mid-upgrade           │   │
-│   │  CritSit: request if data at risk or 24h+    │  │  Do not apply patches mid-incident          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  VCSA          = vCenter Server Appliance; Photon OS Linux appliance running vCenter                  │
-│  vpxd.log      = primary vCenter daemon log; first file Broadcom requests                             │
-│  vc-support    = VCSA support bundle script; generates /var/core/vc-support-*.tgz                     │
-│  SR            = Service Request; support case number assigned by Broadcom                            │
-│  GSS           = Global Support Services; Broadcom's technical support team                           │
-│  S1 severity   = highest; vCenter inaccessible; no workaround; 30-min SLA                             │
-│  CritSit       = Critical Situation; executive escalation + dedicated war room                        │
-│  vCSHA         = vCenter Server High Availability; two-node active/passive setup                      │
-│  SSO           = Single Sign-On; vCenter identity provider; login failures start here                 │
-│  vPostgres     = embedded PostgreSQL database used by VCSA                                            │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ---
 

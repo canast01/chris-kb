@@ -11,58 +11,7 @@ Health Checks reference covering Monitoring Hierarchy, Daily Checks, Health Chec
 
 *Applies to: PowerMax 2500 / 8500*
 </div>
-```text
-┌──────────────────────────────────── Dell PowerMax — Health Checks ────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │       PowerMax health checks: routine verification of operational status and performance      │   │
-│   │         Checks include: controller status, drive health, replication lag, and capacity        │   │
-│   │         Frequency: daily quick checks; weekly detailed review; monthly capacity report        │   │
-│   │        Configure threshold-based alerts for proactive incident prevention and awareness       │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Check status → review alerts → verify replication → capacity → log                                 │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │           Function          │   │
-│   │            Cache            │  │          DRAM 2 TB+         │  │        Sub-ms latency       │   │
-│   │         FE director         │  │        FC/iSCSI ports       │  │         Host facing         │   │
-│   │         BE director         │  │         NVMe drives         │  │        Storage facing       │   │
-│   │             SRDF            │  │         RDF director        │  │       Metro/remote DR       │   │
-│   │          TimeFinder         │  │         SnapVX/Clone        │  │       Local protection      │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Check area    │  How to verify   │   Pass criteria   │    Frequency     │       Tool       │   │
-│   │   Controllers    │   show status    │    All healthy    │      Daily       │     CLI/GUI      │   │
-│   │      Drives      │   show drives    │  No failed/pred.  │      Daily       │     CLI/GUI      │   │
-│   │   Replication    │ show replication │  Lag < threshold  │      Daily       │     CLI/GUI      │   │
-│   │     Capacity     │  show capacity   │     < 80% used    │      Daily       │     CLI/GUI      │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: PowerMax 2500/8500 engine · FE/BE/RDF directors · DRAM cache · expansion bays            │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    PowerMax           = Dell flagship NVMe all-flash array; millions of IOPS at sub-millisecond lat...│
-│    SRDF               = Symmetrix Remote Data Facility; sync/async metro and remote site replication  │
-│    TimeFinder SnapVX  = space-efficient snapshot technology; up to 256 snapshots per storage group    │
-│    Storage group      = logical container for volumes sharing service level and host access policy    │
-│    Service level      = performance target for a storage group: Diamond, Platinum, Gold, Silver       │
-│    FE director        = front-end director providing FC or iSCSI host-facing ports on the engine      │
-│    BE director        = back-end director connecting engine cache to NVMe flash drive bays            │
-│    RDF director       = SRDF director providing dedicated bandwidth for replication traffic           │
-│    Solutions Enabler  = CLI and API toolkit; symcli commands cover all PowerMax management            │
-│    Unisphere          = web GUI and REST API server for PowerMax; unified management interface        │
-│    DCM                = Dynamic Cache Management; auto-balances workloads across available cache re...│
-│    Service level obj. = workload performance class assigned to storage group; enforced by DPTM        │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 ## Before you begin
 
@@ -85,6 +34,8 @@ Health Checks reference covering Monitoring Hierarchy, Daily Checks, Health Chec
 8. **Open alerts:** Unisphere for PowerMax → Alerts → open/unacknowledged count
 
 ## Monitoring Hierarchy
+
+![Monitoring Hierarchy](../../../../assets/storage-dell-powermax-hc-monitoring-hierarchy.svg)
 
 ```mermaid
 graph TD
@@ -125,6 +76,8 @@ graph TD
 
 ## Daily Checks
 
+![Daily Checks](../../../../assets/storage-dell-powermax-hc-daily-checks.svg)
+
 | Check | Command | Notes |
 |---|---|---|
 | [ ] Open Unisphere for PowerMax → Dashboard and review the Alerts pane | | |
@@ -137,6 +90,8 @@ graph TD
 | [ ] Confirm CloudIQ shows no critical findings for the array | | |
 
 ## Health Check
+
+![Health Check](../../../../assets/storage-dell-powermax-hc-health-check.svg)
 
 Run these commands from a host with Solutions Enabler installed to get a complete picture of array health before any change or incident response.
 
@@ -184,6 +139,8 @@ symreplicate list -sid XXXX
 
 ## Array Connectivity and Status
 
+![Array Connectivity and Status](../../../../assets/storage-dell-powermax-hc-array-connectivity-and-status.svg)
+
 ```bash
 # Verify Solutions Enabler can reach the array
 symcfg list
@@ -195,6 +152,8 @@ curl -sk -X GET "https://<unisphere-ip>:8443/univmax/restapi/system/symmetrix/<s
 ```
 
 ## Director and Port Status
+
+![Director and Port Status](../../../../assets/storage-dell-powermax-hc-director-and-port-status.svg)
 
 ```bash
 # Check all directors — flag any offline
@@ -209,6 +168,8 @@ symcfg -sid <sid> list -fa -online | grep -E "Port|Logins"
 
 ## Events and Alerts
 
+![Events and Alerts](../../../../assets/storage-dell-powermax-hc-events-and-alerts.svg)
+
 ```bash
 # Active/uncleared events
 symevent list -sid <sid> -v | grep -i "uncleared\|Warning\|Error\|Fatal" | head -20
@@ -218,6 +179,8 @@ symevent list -sid <sid> -start_time "$(date -d 'yesterday' '+%m/%d/%Y') 00:00:0
 ```
 
 ## Storage Pool (SRP) Capacity
+
+![Storage Pool (SRP) Capacity](../../../../assets/storage-dell-powermax-hc-storage-pool-srp-capacity.svg)
 
 ```bash
 # SRP subscription and free capacity
@@ -232,6 +195,8 @@ symcfg -sid <sid> list -srp | awk '$5+0 > 80 {print "WARNING:", $0}'
 
 ## SRDF Replication State
 
+![SRDF Replication State](../../../../assets/storage-dell-powermax-hc-srdf-replication-state.svg)
+
 ```bash
 # Check all SRDF groups
 symrdf -sid <sid> list -rdfg all
@@ -241,6 +206,8 @@ symrdf -sid <sid> query -rdfg all | grep -v "Synchronized\|InSync" | grep -v "^$
 ```
 
 ## Device Status
+
+![Device Status](../../../../assets/storage-dell-powermax-hc-device-status.svg)
 
 ```bash
 # Failed or degraded devices
@@ -255,12 +222,16 @@ symdev list -sid <sid> -spare
 
 ## Cache Health
 
+![Cache Health](../../../../assets/storage-dell-powermax-hc-cache-health.svg)
+
 ```bash
 # Cache write pending percentage — alert if > 50%
 symstat -sid <sid> list -type cache | grep -E "WP\|Write Pending"
 ```
 
 ## Health Check Decision Flow
+
+![Health Check Decision Flow](../../../../assets/storage-dell-powermax-hc-health-check-decision-flow.svg)
 
 ```mermaid
 flowchart TD
@@ -290,6 +261,8 @@ flowchart TD
 ```
 
 ## Health Check Summary
+
+![Health Check Summary](../../../../assets/storage-dell-powermax-hc-health-check-summary.svg)
 
 | Check | Command | Healthy |
 |---|---|---|

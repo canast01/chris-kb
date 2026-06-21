@@ -12,57 +12,10 @@ Catalog of known OpenShift bugs, error codes, and workarounds covering cluster o
 
 *Applies to: OpenShift Container Platform 4.12–4.16*
 </div>
+![Red Hat OpenShift — Known Issues and Error Codes](../../../assets/virtualization-openshift-troubleshooting-known-issues.svg)
 
-```text
-┌────────────────────────────────────────── Red Hat OpenShift ──────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │            Enterprise Kubernetes platform — control plane, operators, and workloads           │   │
-│   │              Protocols: HTTPS (API/UI) · etcd gRPC · CRI-O · CNI (OVN-Kubernetes)             │   │
-│   │             Management: oc CLI · web console · GitOps (ArgoCD) · OLM operator mgmt            │   │
-│   │               User -> API server -> etcd -> scheduler -> kubelet -> pod running               │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │        Control plane        │  │          API + etcd         │  │       3 masters for HA      │   │
-│   │           Compute           │  │         Worker nodes        │  │      CRI-O container rt     │   │
-│   │          Networking         │  │        OVN-Kubernetes       │  │     SDN + network policy    │   │
-│   │           Storage           │  │         CSI drivers         │  │     PVC -> StorageClass     │   │
-│   │          Operators          │  │         OLM managed         │  │     Day-2 config via CRD    │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
-│   │    API server    │ Cluster endpoint │     HTTPS 6443    │   OIDC / cert    │All ops route here│   │
-│   │       etcd       │   State store    │    gRPC 2379/80   │       mTLS       │3 members (quorum)│   │
-│   │       OLM        │Operator lifecycle│      Internal     │       RBAC       │  Manages op CSV  │   │
-│   │      oc CLI      │Cluster management│    HTTPS (API)    │    kubeconfig    │ Extends kubectl  │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical: bare-metal/VM masters (3) + worker nodes -> OVN overlay -> storage CSI                     │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  etcd         = distributed key-value store; single source of truth for cluster state                 │
-│  OLM          = Operator Lifecycle Manager; installs and updates operators from catalog               │
-│  CRI-O        = OpenShift container runtime; OCI-compliant, replaces Docker                           │
-│  OVN-Kubernetes = default SDN (replaces OpenShift SDN); uses OVS + OVN                                │
-│  MachineConfig = operator managing node-level OS and kubelet configuration                            │
-│  CSV          = ClusterServiceVersion; operator metadata including permissions                        │
-│  CRD          = Custom Resource Definition; extends Kubernetes API for operators                      │
-│  PVC          = Persistent Volume Claim; requests storage from a StorageClass                         │
-│  StorageClass = CSI driver config defining backend and provisioner                                    │
-│  ImageStream  = OpenShift abstraction for tracking container image versions                           │
-│  Route        = OpenShift ingress object exposing services externally                                 │
-│  Node NotReady = kubelet lost contact with API server or CRI-O is unhealthy                           │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 
 ## Before you begin

@@ -12,39 +12,10 @@ Superna Eyeglass support escalation: how to collect the support bundle via igls 
 
 *Applies to: Superna Eyeglass*
 </div>
+![Superna Eyeglass — Escalation](../../../../assets/storage-netapp-superna-eyeglass-troubleshooting-escalation.svg)
 
-```text
-┌──────────────────────────────────── Superna Eyeglass — Escalation ────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                               Superna Eyeglass — Escalation Path                              │   │
-│   │              L1 Triage: review logs, match to known issues in runbook (0–30 min)              │   │
-│   │         L2 Engineering: deep analysis, config review, lab reproduction (30 min – 4 h)         │   │
-│   │             Vendor Support: open case with log bundle if unresolved at L2 (> 4 h)             │   │
-│   │            Sev1 (failover blocked / DR inoperative): page on-call + open critical case        │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │         Escalation Triggers                  │  │           Required Artifacts                │   │
-│   │     DR readiness score below threshold       │  │       Support bundle (Admin UI)             │   │
-│   │     Failover blocked or incomplete           │  │       igls sync status output               │   │
-│   │     SyncIQ replication stopped               │  │       OneFS version both clusters           │   │
-│   │     RAPA quarantine causing access loss      │  │       DFS namespace status                  │   │
-│   │     License shows Unlicensed                 │  │       Eyeglass version (About page)         │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    Eyeglass      = Superna Eyeglass; software appliance for NAS DR and ransomware protection          │
-│    RAPA          = Ransomware Protection with Automated Response; detects and quarantines threats     │
-│    SyncIQ        = PowerScale built-in replication; Eyeglass monitors and orchestrates policies       │
-│    DFS-N         = Windows Distributed File System Namespace; Eyeglass automates DFS failover         │
-│    igls          = Eyeglass CLI; used for status, sync, DR, and RAPA operations                       │
-│    DR score      = Eyeglass DR readiness score; 100% = fully ready; < 80% = at risk                   │
-│    Runbook       = Eyeglass DR Assistant guided checklist for pre-checks, failover, and validation    │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Before you begin
 

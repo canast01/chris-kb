@@ -13,37 +13,10 @@ Aria Suite Lifecycle (vRSLCM) diagnostic commands: check service health, inspect
 
 *Applies to: Aria Suite Lifecycle 8.x*
 </div>
+![Aria Suite Lifecycle — Diagnostics](../../../../assets/virtualization-vmware-aria-suite-lifecycle-troubleshooting-d.svg)
 
-```text
-┌─────────────────────────────── Aria Suite Lifecycle — Diagnostics ────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   Start here: systemctl status vmware-vrlcm → vlcm.log → GET /lcm/api/v1/health             │     │
-│   │   Operation failed: grep the request ID in vlcm.log; check installer.log for deploy steps   │     │
-│   │   Certificate alert: use LCM UI → Lifecycle → Certificate Management to check all products  │     │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               LCM Log Files                  │  │              REST API Checks                │   │
-│   │   /var/log/vmware/vrlcm/vlcm.log             │  │   GET /lcm/api/v1/health: LCM health       │    │
-│   │   installer.log: deploy and upgrade steps    │  │   GET /lcm/api/v1/environments: env status  │   │
-│   │   grep ERROR vlcm.log | tail -50             │  │   GET /lcm/api/v1/operations?status=RUNNING │   │
-│   │   journalctl -u vmware-vrlcm -n 200          │  │   GET /lcm/api/v1/certificates: cert expiry │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  LCM appliance VM · PostgreSQL (embedded) · managed product VMs · vCenter · VAMI port 5480            │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│  vlcm.log          = primary LCM application log; first stop for any LCM issue                        │
-│  installer.log     = records each step of product deploy or upgrade action                            │
-│  Logscraper        = LCM built-in tool that collects logs from all managed products into a ZIP        │
-│  vmware-vrlcm      = LCM core service; must be running for UI and API                                 │
-│  vmware-vrlcm-db   = embedded PostgreSQL; stores LCM state and environment definitions                │
-│  Request ID log    = per-request log written by LCM for each triggered action; grep by request ID     │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ```mermaid
 graph TD

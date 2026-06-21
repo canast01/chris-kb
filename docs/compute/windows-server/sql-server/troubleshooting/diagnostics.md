@@ -12,37 +12,10 @@ SQL Server diagnostic commands: read sp_readerrorlog, query sys.dm_exec_requests
 
 *Applies to: SQL Server 2019 / 2022 on Windows Server 2019 / 2022*
 </div>
+![SQL Server — Diagnostics](../../../../assets/compute-windows-server-sql-server-troubleshooting-diagnostic.svg)
 
-```text
-┌────────────────────────────────────── SQL Server — Diagnostics ───────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   Start here: sp_readerrorlog → sys.dm_exec_requests → SHOW ENGINE equivalent: DBCC          │    │
-│   │   Blocking: sys.dm_exec_requests WHERE blocking_session_id > 0; KILL head blocker            │    │
-│   │   AG health: sys.dm_hadr_availability_replica_states; log_send_queue_size = bytes not sent   │    │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │         Active Requests and Blocking         │  │           AG and tempdb Health              │   │
-│   │   sys.dm_exec_requests: blocking_session_id  │  │   sys.dm_hadr_availability_replica_states   │   │
-│   │   sys.dm_exec_sql_text: query text           │  │   sys.dm_hadr_database_replica_states       │   │
-│   │   KILL session_id: terminate blocking        │  │   sys.dm_os_wait_stats PAGELATCH%           │   │
-│   │   sys.dm_os_waiting_tasks: wait chain        │  │   Query Store: plan regression history      │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  SQL Server instance · Windows Server · AG listener · WSFC cluster · log file (.ldf) and data (.mdf)  │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│  sp_readerrorlog = reads SQL Server ERRORLOG file; filters by text string                             │
-│  DMV             = Dynamic Management View; sys.dm_* views exposing live SQL Server state             │
-│  PAGELATCH       = wait for in-memory data page; high counts on 2:1:1, 2:1:3 = tempdb contention      │
-│  Query Store     = built-in workload tracking (SQL 2016+); captures plan history and regressions      │
-│  AG              = Availability Group; synchronous or async replica set with automatic failover       │
-│  log_send_queue  = bytes of log not yet sent to replica; > 0 and growing = AG lag or network issue    │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ```mermaid
 graph TD

@@ -10,33 +10,10 @@ EVS encryption: vSAN encryption at rest, VM encryption via vSphere Encryption, T
 
 *Applies to: Amazon EVS*
 </div>
+![Amazon EVS — Encryption](../../../../assets/cloud-aws-evs-security-encryption.svg)
 
-```text
-┌─────────────────────────────────────── Amazon EVS — Encryption ───────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   vSAN encryption: cluster-level; requires KMS; AWS KMS + vSphere Native Key Provider        │    │
-│   │   VM encryption: per-VM or per-policy; uses same KMS; independent of vSAN encryption         │    │
-│   │   In-transit: vMotion encrypted by default (AES-256); vSAN uses NVMe-oF with TCP/TLS         │    │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  vSAN encryption = Cluster-level data-at-rest encryption; encrypts all vSAN objects transparently     │
-│  KMS          = Key Management Service; manages encryption keys for vSAN and VM encryption            │
-│  Native Key Provider = Built-in vCenter KMS; no external KMS required; keys stored in VCSA            │
-│  AWS KMS      = External KMS option; use CMK (Customer Managed Key) for EVS encryption                │
-│  DEK          = Data Encryption Key; symmetric key encrypting actual vSAN data objects                │
-│  KEK          = Key Encryption Key; wraps DEKs; managed by KMS; rotate annually minimum               │
-│  VM Encryption = Per-VM or per-policy encryption; independent of vSAN cluster encryption              │
-│  vMotion encryption = AES-256 in-transit for all live migrations; enabled by default in EVS           │
-│  TLS          = Transport Layer Security; all VCF management APIs require TLS 1.2 minimum             │
-│  NVMe-oF TLS  = EVS vSAN network uses NVMe over Fabrics with TCP/TLS for in-transit encryption        │
-│  KMS cluster  = HA pair of KMS servers; single KMS instance is SPOF for encrypted cluster             │
-│  Re-key       = Replacing the KEK while cluster is running; shallow re-key replaces KEK only          │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Before you begin
 

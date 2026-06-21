@@ -12,57 +12,10 @@ Catalog of known Cisco MDS SAN switch bugs, error codes, and workarounds coverin
 
 *Applies to: Cisco MDS NX-OS 8.x / 9.x*
 </div>
+![Cisco MDS — Known Issues and Error Codes](../../../../assets/san-cisco-mds-troubleshooting-known-issues.svg)
 
-```text
-┌────────────────────────────────────────────── Cisco MDS ──────────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │               Multilayer Director Switch — enterprise FC SAN switching on NX-OS               │   │
-│   │           Protocols: Fibre Channel · FCIP (FC over IP) · iSCSI · FCoE (select SKUs)           │   │
-│   │               Management: NX-OS CLI (SSH) · Cisco DCNM / NDFC · SNMP v3 · syslog              │   │
-│   │            Host FLOGI -> VSAN assigned -> zone lookup -> storage target accessible            │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │            Fabric           │  │             VSAN            │  │      Isolated FC fabric     │   │
-│   │            Zoning           │  │     Zone set (per VSAN)     │  │      WWN or fcid scoped     │   │
-│   │           Trunking          │  │         Port-channel        │  │     LACP-like ISL bundle    │   │
-│   │          Extension          │  │         FCIP tunnel         │  │       FC over WAN / IP      │   │
-│   │             IVR             │  │      Inter-VSAN routing     │  │      Cross-VSAN access      │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
-│   │       VSAN       │ Fabric partition │    FC per VSAN    │  Domain-scoped   │Isolated fwd plane│   │
-│   │     Zone set     │  Access control  │     FC fabric     │    WWN / FCID    │1 active per VSAN │   │
-│   │       FCIP       │  WAN extension   │     TCP (3225)    │       N/A        │ISL over IP tunnel│   │
-│   │       IVR        │Cross-VSAN routing│         FC        │     CFS sync     │IVR zone required │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical: host HBA -> MDS port (FC) -> VSAN fabric -> target storage array port                      │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  VSAN         = Virtual SAN; logical isolation of ports within one physical switch                    │
-│  Zone set     = named group of zones activated together within a VSAN                                 │
-│  FCID         = Fibre Channel ID; 24-bit address assigned on FLOGI                                    │
-│  Port-channel = bonded ISL group for bandwidth and redundancy between MDS switches                    │
-│  FCIP         = Fibre Channel over IP; extends FC over routed IP WAN links                            │
-│  IVR          = Inter-VSAN Routing; controlled cross-VSAN resource sharing                            │
-│  CFS          = Cisco Fabric Services; distribution layer for IVR and zoning                          │
-│  FSPF         = Fabric Shortest Path First; FC routing protocol on MDS                                │
-│  NX-OS        = Cisco network OS powering MDS; CLI and config syntax                                  │
-│  SPAN         = Switched Port ANalyzer; port mirroring for traffic capture                            │
-│  NPIV         = N-Port ID Virtualization; multiple WWNs per physical HBA port                         │
-│  show flogi database = NX-OS command listing all logged-in initiators and targets                     │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 
 ## Before you begin

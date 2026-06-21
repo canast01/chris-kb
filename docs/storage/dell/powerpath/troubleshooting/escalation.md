@@ -12,53 +12,10 @@ How to escalate Dell EMC PowerPath multipath issues to Dell Technologies support
 
 *Applies to: PowerPath for Linux / Windows; PowerPath/VE for ESXi*
 </div>
+![PowerPath — Escalation](../../../../assets/storage-dell-powerpath-troubleshooting-escalation.svg)
 
-```text
-┌──────────────────────────────── Dell EMC PowerPath — Escalation ──────────────────────────────────────┐
-│                                                                                                       │
-│  Escalate PowerPath issues to Dell support when all paths to a production LUN are dead and I/O        │
-│  has stopped, a host cannot detect any paths after an HBA or zoning change, PowerPath is              │
-│  presenting the wrong path count and ALUA trespass is not occurring, or a PowerPath upgrade           │
-│  has broken the driver leaving the host unable to see storage devices.                                │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Step 1 — Collect Data               │  │          Step 2 — Open the Case             │   │
-│   │  powermt version (PP version)                │  │  Go to dell.com/support → My Cases          │   │
-│   │  powermt display dev=all (all path states)   │  │  Product: Dell EMC PowerPath (OS variant)   │   │
-│   │  powermt display ports class=all (HBA ports) │  │  Severity: P1 all paths dead / P2 degraded │    │
-│   │  dmesg / journalctl for I/O error context    │  │  Attach powermt output + kernel logs        │   │
-│   │  Write timeline: last working → first failure│  │  For P1: also call Dell support             │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  For P1: open portal case AND call Dell immediately.                                                  │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Step 3 — Escalation Path            │  │         What NOT to Do                      │   │
-│   │  T1: triage + confirm powermt output received│  │  Do not unclaim paths without Dell guidance │   │
-│   │  T2: PP SE assigned; deep driver review      │  │  Do not remove and re-add storage devices   │   │
-│   │  E-Lab: compatibility questions (self-service│  │  Do not restart powermt daemon mid-incident │   │
-│   │  TAM: engage for prolonged P1 issues         │  │  Do not upgrade HBA driver during incident  │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  powermt         = PowerPath CLI; powermt display, powermt check, powermt save are core commands      │
-│  pseudo device   = virtual block device aggregating all physical paths to one LUN                     │
-│  path health     = alive or dead status per physical path; dead = automatic I/O rerouting             │
-│  ALUA            = Asymmetric Logical Unit Access; array signals preferred vs. non-preferred paths    │
-│  trespass        = LUN ownership transfer between SP-A and SP-B on Unity/VNX arrays                   │
-│  ghost path      = stale path entry in PowerPath no longer backed by a physical device                │
-│  powermt check   = validates all paths and refreshes device table; run after fabric changes           │
-│  E-Lab Navigator = Dell's compatibility database; authoritative for OS/kernel/driver matrix           │
-│  PowerPath/VE    = PowerPath for VMware ESXi; manages paths as a kernel module on the ESXi host       │
-│  CLARiiON policy = active/passive path policy for older VNX/CLARiiON arrays                           │
-│  Adaptive policy = active-active load-balancing policy distributing I/O across all paths              │
-│  license key     = host-based license required per server; applied via powermt config license         │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ---
 

@@ -12,38 +12,10 @@ SnapCenter diagnostic commands: query failed jobs with Get-SmJob, inspect job de
 
 *Applies to: NetApp SnapCenter 5.x*
 </div>
+![SnapCenter — Diagnostics](../../../../assets/storage-netapp-snapcenter-troubleshooting-diagnostics.svg)
 
-```text
-┌─────────────────────────────────── NetApp SnapCenter — Diagnostics ───────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   Start here: Get-SmJob (failed) → Get-SmJobSummaryReport → check plugin host → check logs   │    │
-│   │   Job failure: read ErrorMessage column; then match to host plugin log for full stack trace   │   │
-│   │   Plugin connectivity: SnapCenter Server → host plugin is HTTPS; check firewall port 8145    │    │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          SnapCenter Server (Windows)         │  │            Plugin Host Agent                │   │
-│   │   Get-SmJob: list failed backup/clone jobs   │  │   Get-Service SnapCenter* (Windows)         │   │
-│   │   Get-SmHost: PlugInStatus per host          │  │   systemctl status spl (Linux)              │   │
-│   │   Get-SmStorageConnection: ONTAP clusters    │  │   /var/opt/snapcenter/spl/logs/ (Linux)     │   │
-│   │   Get-SmSupportBundle: collect all logs      │  │   C:\...\Snapcenter Plug-in Creator\log\    │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  SnapCenter Server (Windows) · plug-in hosts (Windows/Linux) · ONTAP clusters · IIS + MySQL repo      │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│  Plug-in       = host-side agent; quiesces the application (SQL, Oracle, VMware) before snapshot      │
-│  Resource group= set of resources sharing a backup policy and schedule in SnapCenter                  │
-│  Policy        = SnapCenter object defining snapshot frequency, retention, and replication type       │
-│  App-consistent= snapshot taken after application quiesce; guarantees recovery without log replay     │
-│  SMCore        = SnapCenter job execution engine; primary log for backup/restore job failures         │
-│  Port 8145     = SnapCenter plug-in communication port; must be open from server to each plug-in host │
-│  SMF           = SnapCenter MySQL database; stores job history, policies, and resource configs        │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ```mermaid
 graph TD

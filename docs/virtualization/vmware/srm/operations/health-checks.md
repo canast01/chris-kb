@@ -13,100 +13,8 @@ SRM health checks: `Get-SrmRecoveryPlan`, site pair connectivity test, VM protec
 *Applies to: SRM 8.x / 9.x*
 </div>
 
-```text
-┌───────────────────────────────────── VMware SRM — Health Checks ──────────────────────────────────────┐
-│                                                                                                       │
-│  SRM health checks verify site pair connectivity, replication status, plan test                       │
-│  compliance, and protection group coverage across all protected VMs.                                  │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               Site Pair Health               │  │              Replication Health             │   │
-│   │         Site pair: Connected status          │  │             All VMs: replicating            │   │
-│   │          Both SRM servers: running           │  │             No replication error            │   │
-│   │        vCenter: reachable both sites         │  │            RPO met: within target           │   │
-│   │          Datastore mappings: valid           │  │            Lag: within acceptable           │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Site pair connectivity and replication status are the primary daily health checks.                   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               Plan Compliance                │  │                Coverage Audit               │   │
-│   │           Last test: <90 days ago            │  │          All critical VMs protected         │   │
-│   │          RTO achieved in last test           │  │          Protection groups: no VMs          │   │
-│   │            Plan valid: no errors             │  │          Network mappings: complete         │   │
-│   │         Cleanup: completed post-test         │  │            IP rules: all defined            │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  WAN link quality affects replication health; monitor replication lag on slow links;                  │
-│  storage arrays report replication status to SRA.                                                     │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Site pair     = bidirectional link between two SRM Servers                                           │
-│  RPO met       = replication lag < configured RPO for each VM                                         │
-│  Last test     = date of most recent successful recovery plan test                                    │
-│  90-day SLA    = common DR test compliance requirement                                                │
-│  RTO achieved  = actual recovery time met target RTO in test                                          │
-│  Plan valid    = no VM, mapping, or datastore errors in plan                                          │
-│  Cleanup       = SRM removes test VMs after successful test                                           │
-│  Protection group= all VMs that should be protected                                                   │
-│  Network mapping= required for VMs to connect post-failover                                           │
-│  IP rules      = IP customisation for re-IP on failover                                               │
-│  Replication lag= seconds since last sync; must be < RPO target                                       │
-│  Datastore map = recovery datastore for each protected datastore                                      │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-```text
-┌───────────────────────────────────── VMware SRM — Health Checks ──────────────────────────────────────┐
-│                                                                                                       │
-│  SRM health checks verify site pair connectivity, replication status, plan test                       │
-│  compliance, and protection group coverage across all protected VMs.                                  │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               Site Pair Health               │  │              Replication Health             │   │
-│   │         Site pair: Connected status          │  │             All VMs: replicating            │   │
-│   │          Both SRM servers: running           │  │             No replication error            │   │
-│   │        vCenter: reachable both sites         │  │            RPO met: within target           │   │
-│   │          Datastore mappings: valid           │  │            Lag: within acceptable           │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Site pair connectivity and replication status are the primary daily health checks.                   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               Plan Compliance                │  │                Coverage Audit               │   │
-│   │           Last test: <90 days ago            │  │          All critical VMs protected         │   │
-│   │          RTO achieved in last test           │  │          Protection groups: no VMs          │   │
-│   │            Plan valid: no errors             │  │          Network mappings: complete         │   │
-│   │         Cleanup: completed post-test         │  │            IP rules: all defined            │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  WAN link quality affects replication health; monitor replication lag on slow links;                  │
-│  storage arrays report replication status to SRA.                                                     │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Site pair     = bidirectional link between two SRM Servers                                           │
-│  RPO met       = replication lag < configured RPO for each VM                                         │
-│  Last test     = date of most recent successful recovery plan test                                    │
-│  90-day SLA    = common DR test compliance requirement                                                │
-│  RTO achieved  = actual recovery time met target RTO in test                                          │
-│  Plan valid    = no VM, mapping, or datastore errors in plan                                          │
-│  Cleanup       = SRM removes test VMs after successful test                                           │
-│  Protection group= all VMs that should be protected                                                   │
-│  Network mapping= required for VMs to connect post-failover                                           │
-│  IP rules      = IP customisation for re-IP on failover                                               │
-│  Replication lag= seconds since last sync; must be < RPO target                                       │
-│  Datastore map = recovery datastore for each protected datastore                                      │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Before you begin
 
@@ -226,6 +134,8 @@ Site Recovery → Configure → Inventory Mappings
 
 ## RPO Compliance Check
 
+![RPO Compliance Check](../../../../assets/virtualization-vmware-srm-hc-rpo-compliance-check.svg)
+
 All protected VMs must be within their configured RPO. VMs outside RPO appear in amber/red:
 
 ```text
@@ -255,6 +165,8 @@ foreach ($pg in $pgs) {
 
 ## SRA Status (Array-Based Replication)
 
+![SRA Status (Array-Based Replication)](../../../../assets/virtualization-vmware-srm-hc-sra-status-array-based-replication.svg)
+
 ```bash
 Site Recovery → Storage → Array Pairs
   All array pairs should show: Enabled, Healthy
@@ -268,6 +180,8 @@ Site Recovery → Storage → Array Pairs
 ---
 
 ## Placeholder VMs at Recovery Site
+
+![Placeholder VMs at Recovery Site](../../../../assets/virtualization-vmware-srm-hc-placeholder-vms-at-recovery-site.svg)
 
 Placeholder VMs must exist at the recovery site for each protected VM:
 
@@ -284,6 +198,8 @@ vCenter (Recovery Site) → VMs and Templates
 
 ## Recovery Plan Pre-Check
 
+![Recovery Plan Pre-Check](../../../../assets/virtualization-vmware-srm-hc-recovery-plan-pre-check.svg)
+
 Run the built-in pre-check before any recovery:
 
 ```text
@@ -296,6 +212,8 @@ Site Recovery → Recovery Plans → [plan] → Test or Recover
 ---
 
 ## Certificate Expiry
+
+![Certificate Expiry](../../../../assets/virtualization-vmware-srm-hc-certificate-expiry.svg)
 
 ```bash
 # Check SRM Server certificate
@@ -313,6 +231,8 @@ echo | openssl s_client -connect vra-protected.example.local:443 2>/dev/null \
 ---
 
 ## Monthly Test Recovery Verification
+
+![Monthly Test Recovery Verification](../../../../assets/virtualization-vmware-srm-hc-monthly-test-recovery-verification.svg)
 
 Run a test failover monthly on at least one non-critical Recovery Plan:
 
@@ -334,6 +254,8 @@ Document test results and any issues found. Track trend of test durations — in
 
 ## Weekly Checks
 
+![Weekly Checks](../../../../assets/virtualization-vmware-srm-hc-weekly-checks.svg)
+
 | Check | Location / Command | Expected State |
 |---|---|---|
 | Protection group status | SRM UI → Protection Groups | All groups `OK` |
@@ -344,6 +266,8 @@ Document test results and any issues found. Track trend of test durations — in
 
 
 ## Quarterly
+
+![Quarterly](../../../../assets/virtualization-vmware-srm-hc-quarterly.svg)
 
 - Execute test failover on at least one non-critical recovery plan.
 - Document results and resolve any script or network mapping failures.

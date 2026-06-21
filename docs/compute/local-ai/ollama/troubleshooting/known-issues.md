@@ -12,57 +12,10 @@ Catalog of known Ollama bugs, error codes, and workarounds covering model loadin
 
 *Applies to: Ollama 0.3.x / 0.4.x*
 </div>
+![Ollama — Known Issues and Error Codes](../../../../assets/compute-local-ai-ollama-troubleshooting-known-issues.svg)
 
-```text
-┌─────────────────────────────────────────────── Ollama ────────────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │            Local LLM runner — model pull/serve, GPU offload, OpenAI-compatible API            │   │
-│   │                             Protocols: HTTP (TCP 11434, local API)                            │   │
-│   │                           Management: ollama CLI (pull/run/serve/ps)                          │   │
-│   │            ollama pull -> Model stored locally -> ollama serve -> API -> Inference            │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │         Model store         │  │       ~/.ollama/models      │  │       GGUF, quantized       │   │
-│   │            Server           │  │         ollama serve        │  │       Listens on 11434      │   │
-│   │             API             │  │     REST + OpenAI-compat    │  │   /api/generate, /v1/chat   │   │
-│   │         GPU offload         │  │         CUDA layers         │  │    Partial if VRAM short    │   │
-│   │          Modelfile          │  │     Custom model config     │  │     num_ctx, sys prompt     │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
-│   │   ollama serve   │ API server proc. │     HTTP 11434    │   None default   │Bind 0.0.0.0 4 rmt│   │
-│   │   ollama pull    │  Download model  │       HTTPS       │       N/A        │ From ollama.com  │   │
-│   │    ollama ps     │Show loaded models│        N/A        │       N/A        │GPU/CPU mem split │   │
-│   │    Modelfile     │Define model parms│        N/A        │       N/A        │num_ctx, template │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical: host with optional NVIDIA GPU - local disk for model storage                               │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  GGUF           = quantized model file format used by Ollama/llama.cpp                                │
-│  Quant. level   = e.g. Q4_K_M; trades model quality for size/speed                                    │
-│  num_ctx        = context window size set via Modelfile or API                                        │
-│  OLLAMA_HOST    = env var controlling bind address (default 127.0.0.1)                                │
-│  Modelfile      = config defining a custom model (base+params+prompt)                                 │
-│  ollama ps      = lists loaded models and their GPU/CPU memory split                                  │
-│  Context exceeded = prompt exceeds the model configured num_ctx                                       │
-│  GPU layers     = number of model layers offloaded to GPU vs CPU                                      │
-│  ollama pull    = downloads a model from the Ollama model registry                                    │
-│  API compat.    = Ollama exposes an OpenAI-compatible /v1/chat endpoint                               │
-│  Embedding model= specialized model type for vectors, not chat                                        │
-│  Model registry = ollama.com hosted catalog of pullable models                                        │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 
 ## Before you begin

@@ -13,50 +13,10 @@ How to escalate VMware Aria Automation issues to Broadcom support: what data to 
 
 *Applies to: Aria Automation 8.x / 9.x*
 </div>
+![Aria Automation — Escalation](../../../../assets/virtualization-vmware-aria-automation-troubleshooting-escala.svg)
 
-```text
-┌──────────────────────────────────── Aria Automation — Escalation ─────────────────────────────────────┐
-│                                                                                                       │
-│  Escalate Aria Automation issues to VMware GSS when the vRA UI is completely                          │
-│  unavailable, an upgrade has failed mid-run and services are in mixed state,                          │
-│  or cloud account connections are globally broken with no deployment possible.                        │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Step 1 — Collect Data               │  │          Step 2 — Open the SR               │   │
-│   │  Run: vracli support-bundle on the appliance  │  │  Go to support.broadcom.com → sign in       │  │
-│   │  Note vRA version + build (vracli version)   │  │  Product: VMware Aria Automation            │   │
-│   │  Capture kubectl get pods -n prelude          │  │  Severity: P1 down / P2 degraded / P3 minor │  │
-│   │  Check VAMI → Cluster Status and logs        │  │  Attach support bundle + pod state output   │   │
-│   │  Write timeline: last good → first failure   │  │  Include vRA version and deployment type    │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  For P1: open portal case AND call Broadcom support immediately.                                      │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Step 3 — Escalation Path            │  │         What NOT to Do                      │   │
-│   │  T1: triage + confirm bundle received        │  │  Do not restart vRA services mid-upgrade    │   │
-│   │  T2: vRA SE assigned; deep analysis          │  │  Do not delete failed deployments mid-case  │   │
-│   │  T3: engineering review for code-level fix   │  │  Do not manually restart Postgres services  │   │
-│   │  CritSit: P1 with upgrade stuck > 2 hours    │  │  Do not run vracli upgrade-apply mid-case   │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  vRA           = vRealize Automation; rebranded to Aria Automation in 2022                            │
-│  vracli        = Aria Automation appliance CLI; generates support bundle and checks cluster state     │
-│  prelude       = Kubernetes namespace in the vRA appliance where vRA microservices run                │
-│  VAMI          = Virtual Appliance Management Interface; port 5480; cluster health and upgrade UI     │
-│  vIDM          = VMware Identity Manager; auth backend for Aria Automation                            │
-│  LCM           = Lifecycle Manager; used to deploy and upgrade Aria Automation in suites              │
-│  Cloud account = vRA integration with vCenter, AWS, Azure, GCP, or NSX                                │
-│  Deployment    = vRA provisioned workload; VM or cloud resource with blueprint/catalog item           │
-│  GSS           = Global Support Services; Broadcom/VMware support team                                │
-│  CritSit       = Critical Situation; Broadcom war room with engineering; 24×7 engagement              │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ---
 

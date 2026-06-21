@@ -12,57 +12,10 @@ Catalog of known PowerCLI bugs, error codes, and workarounds covering module loa
 
 *Applies to: PowerCLI 12.x / 13.x*
 </div>
+![VMware PowerCLI — Known Issues and Error Codes](../../../../assets/virtualization-vmware-powercli-troubleshooting-known-issues.svg)
 
-```text
-┌─────────────────────────────────────────── VMware PowerCLI ───────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │              PowerShell automation for VMware — vCenter, NSX, vSAN, Horizon, HCX              │   │
-│   │                       Protocols: HTTPS (vCenter/NSX API) · WS-MAN · REST                      │   │
-│   │                 Management: PowerShell 5.1/7.x module; Connect-VIServer cmdlet                │   │
-│   │              Install-Module -> Connect-VIServer -> Get/Set cmdlets -> Disconnect              │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │           Runtime           │  │       PowerShell 5.1/7      │  │     Cross-platform (7.x)    │   │
-│   │           Modules           │  │       VMware.PowerCLI       │  │      PSGallery install      │   │
-│   │          Connection         │  │       Connect-VIServer      │  │       vCenter or ESXi       │   │
-│   │           Cmdlets           │  │       Get-VM / Set-VM       │  │        3000+ cmdlets        │   │
-│   │             REST            │  │       Invoke-VMRestAPI      │  │      Direct REST calls      │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
-│   │ PowerCLI module  │  cmdlet library  │    HTTPS (API)    │  VI credentials  │PSGallery install │   │
-│   │     VIServer     │  vCenter target  │     HTTPS 443     │     SSO / AD     │ Multi-vCenter ok │   │
-│   │    NSX module    │  NSX automation  │    HTTPS (REST)   │   Bearer token   │ Separate install │   │
-│   │   Cert policy    │  TLS validation  │      Internal     │       N/A        │InvalidCertAction │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical: PowerShell host -> HTTPS -> vCenter API or ESXi API -> VMware objects                      │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Connect-VIServer = establishes PowerCLI session to vCenter or ESXi                                   │
-│  VI credentials = username/password or credential object for vCenter login                            │
-│  InvalidCertAction = PowerCLI setting controlling TLS cert validation behavior                        │
-│  PSGallery    = PowerShell module repository; source for VMware.PowerCLI                              │
-│  Module update = Update-Module VMware.PowerCLI; may conflict with older versions                      │
-│  DefaultVIServer = current PowerCLI session target; shown in $global:DefaultVIServers                 │
-│  Get-VM       = retrieve VM objects; supports -Filter for efficient queries                           │
-│  New-VM       = create VM; requires template/content library or ISO                                   │
-│  Invoke-VMScript = run a script inside a guest VM via VMware Tools                                    │
-│  Set-PowerCLIConfiguration = global PowerCLI settings (cert, scope, proxy)                            │
-│  Disconnect-VIServer = closes session; always call at script end                                      │
-│  API version  = PowerCLI cmdlets target a minimum vCenter API version                                 │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 
 ## Before you begin

@@ -13,56 +13,9 @@ Structured troubleshooting entries for common VMware/vSAN operational issues. Ea
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-```text
-┌────────────────────────────────────── VMware vSphere Operations ──────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │             vSphere operational practices — cluster management, migrations, health            │   │
-│   │               Protocols: vSphere API · HTTPS (vCenter) · vMotion TCP · iSCSI/NFS              │   │
-│   │                Management: vCenter UI · PowerCLI · REST API · alarms + actions                │   │
-│   │               Cluster config -> DRS balance -> vMotion -> HA protect -> monitor               │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │           Compute           │  │         ESXi cluster        │  │       DRS + HA enabled      │   │
-│   │          Balancing          │  │             DRS             │  │     vMotion load-balance    │   │
-│   │          Resilience         │  │              HA             │  │    VM restart on failure    │   │
-│   │           Storage           │  │      vSAN / shared LUN      │  │    Datastore per cluster    │   │
-│   │           Network           │  │        VDS / vSwitch        │  │      Port-group config      │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
-│   │     vCenter      │ Cluster manager  │     HTTPS 443     │     SSO / AD     │Single UI for all │   │
-│   │       DRS        │ Resource balance │      vMotion      │   vCenter auth   │  Auto or manual  │   │
-│   │        HA        │    VM restart    │   ESXi heartbeat  │   vCenter auth   │FDM agent per host│   │
-│   │     vMotion      │  Live migration  │   TCP (vMotion)   │     vCenter      │Shared storage req│   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical: ESXi hosts in cluster -> shared storage (SAN/NAS/vSAN) -> vCenter mgmt                     │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  DRS          = Distributed Resource Scheduler; auto-balances VM load via vMotion                     │
-│  HA           = High Availability; restarts VMs on surviving host after ESXi failure                  │
-│  FDM          = Fault Domain Manager; HA agent running on each ESXi host                              │
-│  vMotion      = live VM migration between hosts without downtime                                      │
-│  Storage vMotion = migrates VM disk to a different datastore while running                            │
-│  Admission control = HA policy reserving capacity for failover scenarios                              │
-│  DRS rule     = affinity/anti-affinity constraint for VM placement                                    │
-│  Cluster      = group of ESXi hosts sharing compute resources and management                          │
-│  Resource pool = logical partition of cluster compute resources                                       │
-│  Maintenance mode = drains VMs from host before patching; blocks new deploys                          │
-│  Datastore    = storage abstraction for VM files; VMFS or NFS                                         │
-│  vSAN         = VMware software-defined storage using host local disks                                │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+![Known Issues and Fix Patterns](../../../../assets/virtualization-vmware-operations-troubleshooting-known-issue.svg)
+
+
 
 
 ---

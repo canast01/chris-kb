@@ -12,54 +12,10 @@ Hardening reference covering Hardening Checklist, Network Access Controls.
 
 *Applies to: VCF 4.x / 5.x*
 </div>
+![VCF — Hardening](../../../../assets/virtualization-vmware-vmware-cloud-foundation-security-harde.svg)
 
-```text
-┌───────────────────────────────── VMware Cloud Foundation — Hardening ─────────────────────────────────┐
-│                                                                                                       │
-│  VCF hardening follows the VMware Security Hardening Guide and VCF Security Config;                   │
-│  applies to all layers: SDDC Manager, vCenter, NSX, vSAN, and ESXi hosts.                             │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              Platform Hardening              │  │              Network Hardening              │   │
-│   │        FIPS 140-2: enable all layers         │  │             Mgmt VLAN: isolated             │   │
-│   │           MFA: all admin accounts            │  │          NSX firewall: default deny         │   │
-│   │           TLS 1.2+: all components           │  │             vSAN VLAN: dedicated            │   │
-│   │              Patch: 30-day SLA               │  │             No direct VM to mgmt            │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  FIPS mode and MFA are the highest-value controls across the VCF stack.                               │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             ESXi Host Hardening              │  │              Audit & Compliance             │   │
-│   │           Lockdown mode: all hosts           │  │            CIS vSphere benchmark            │   │
-│   │             SSH: off by default              │  │          SIEM: all events forwarded         │   │
-│   │          Shell: time-limited access          │  │            Quarterly: role review           │   │
-│   │        vLCM: enforce baseline images         │  │             SDDC Mgr: audit API             │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  Physical rack access controls, OOB (iDRAC/iLO) credential rotation, and BIOS                         │
-│  Secure Boot are essential complements to VCF software hardening.                                     │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  FIPS 140-2   = federal crypto standard; enable across all VCF layers                                 │
-│  MFA          = Multi-Factor Authentication; required for all admin logins                            │
-│  Lockdown mode= ESXi blocks direct access; all ops via vCenter                                        │
-│  vLCM         = vSphere Lifecycle Manager; baseline images for ESXi                                   │
-│  Default deny = NSX distributed firewall default posture                                              │
-│  CIS benchmark= Center for Internet Security vSphere hardening guide                                  │
-│  SIEM         = Security Information and Event Mgmt; log aggregation                                  │
-│  OOB          = Out-of-Band management (iDRAC/iLO); physical host control                             │
-│  Secure Boot  = BIOS/UEFI feature; validates ESXi bootloader integrity                                │
-│  Audit API    = SDDC Mgr /v1/audit-events; all platform changes logged                                │
-│  Patch SLA    = critical <7d, high <30d, medium <90d across all layers                                │
-│  Baseline image= vLCM image that all ESXi hosts must match                                            │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Before you begin
 

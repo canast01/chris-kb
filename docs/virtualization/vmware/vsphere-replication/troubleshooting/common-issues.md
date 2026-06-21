@@ -7,31 +7,10 @@ search:
   boost: 1.5
 ---
 # vSphere Replication — Common Issues
+![vSphere Replication — Common Issues](../../../../assets/virtualization-vmware-vsphere-replication-troubleshooting-co.svg)
 
-```text
-┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
-│  Symptom                  Check                  Fix                                                  │
-│  ┌─────────────────┐      ┌──────────────────┐                                                        │
-│  │ RPO Violation   │─────►│ Bandwidth?        │─► QoS / raise                                         │
-│  │ (amber/red)     │      │ ESXi CPU ready %? │   RPO value                                           │
-│  │                 │      │ VRA disk full?    │─► expand VMDK                                         │
-│  └─────────────────┘      └──────────────────┘                                                        │
-│  ┌─────────────────┐      ┌──────────────────┐                                                        │
-│  │ Site Pair       │─────►│ VRA services up?  │─► start hms/                                          │
-│  │ Disconnected    │      │ TCP 44046 open?   │   vrms                                                │
-│  │                 │      │ Cert expired?     │─► refresh                                             │
-│  └─────────────────┘      └──────────────────┘   thumbprints                                          │
-│  ┌─────────────────┐      ┌──────────────────┐                                                        │
-│  │ Conn Refused /  │─────►│ TCP 31031 open?   │─► firewall                                            │
-│  │ Initial Sync    │      │ Route to VRA?     │   rule / seed                                         │
-│  │ Stalled         │      │ Seed available?   │   pre-copy                                            │
-│  └─────────────────┘      └──────────────────┘                                                        │
-│  ┌─────────────────┐      ┌──────────────────┐                                                        │
-│  │ No Datastore    │─────►│ Target datastore  │─► mount DS /                                          │
-│  │ Available       │      │ mounted? space?   │   free space                                          │
-│  └─────────────────┘      └──────────────────┘                                                        │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 ```text
    Configure Replication → Step 4: Seeds → Use existing data
    ```

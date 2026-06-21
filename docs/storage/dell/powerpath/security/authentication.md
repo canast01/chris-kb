@@ -11,58 +11,9 @@ Authentication reference covering Overview, Linux Authentication, Windows Authen
 
 *Applies to: PowerPath*
 </div>
-```text
-┌─────────────────────────────────── Dell PowerPath — Authentication ───────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │        PowerPath authentication: local accounts, LDAP/AD, RADIUS, and SAML SSO options        │   │
-│   │        MFA: time-based OTP or hardware token required for all privileged admin accounts       │   │
-│   │         Service accounts: dedicated accounts for automation; API tokens/keys preferred        │   │
-│   │       Session: idle timeout enforced; concurrent session limits for admin role accounts       │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Login → authenticate LDAP/SAML/local → MFA → authorise role → session                              │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │            Driver           │  │        powermt daemon       │  │           OS-level          │   │
-│   │            Paths            │  │        Active-active        │  │         ≥4 paths/LUN        │   │
-│   │            Policy           │  │        Adaptive/ALUA        │  │        Array-specific       │   │
-│   │           Failover          │  │         Auto reroute        │  │          <5 sec RTO         │   │
-│   │          Management         │  │           pp_mgmt           │  │         Centralised         │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Method      │     Use case     │  Config location  │       MFA        │     Priority     │   │
-│   │     LDAP/AD      │  Staff accounts  │   Auth settings   │     Required     │     Primary      │   │
-│   │     SAML SSO     │    Federated     │    SSO settings   │   IdP-enforced   │    Preferred     │   │
-│   │      Local       │   Break-glass    │    Local users    │     Required     │  Emergency only  │   │
-│   │    API token     │    Automation    │  Service account  │   N/A (token)    │    Automation    │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: Host OS (Windows/Linux) · HBA or iSCSI NIC ports · FC/IP switches · Dell arrays          │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    PowerPath          = Dell multipath driver; manages multiple I/O paths to storage for HA/perform...│
-│    powermt            = CLI utility; powermt display, powermt check, powermt save are core commands   │
-│    Pseudo device      = virtual block device created by PowerPath aggregating physical I/O paths      │
-│    Path health        = alive or dead status per path; dead paths trigger automatic I/O failover      │
-│    Adaptive policy    = load-balancing that distributes I/O across all active paths evenly            │
-│    CLARiiON policy    = active/passive policy for older VNX/CLARiiON arrays (one active path)         │
-│    ALUA               = Asymmetric Logical Unit Access; array signals preferred vs. non-preferred p...│
-│    Trespass           = LUN ownership movement between SP-A and SP-B on Unity or VNX arrays           │
-│    Ghost path         = stale path entry in PowerPath no longer backed by a physical device           │
-│    powermt check      = validates all paths and refreshes device table; run after fabric changes      │
-│    pp_mgmt            = PowerPath Management Appliance; central monitoring for all PowerPath hosts    │
-│    License key        = host-based license required per server; applied via powermt config license    │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+![PowerPath — Authentication](../../../../assets/storage-dell-powerpath-security-authentication.svg)
+
+
 
 
 ## Before you begin

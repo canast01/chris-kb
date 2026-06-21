@@ -13,39 +13,10 @@ vSphere Replication (VR) diagnostic commands: check VRA service status with syst
 
 *Applies to: vSphere Replication 8.x*
 </div>
+![vSphere Replication — Diagnostics](../../../../assets/virtualization-vmware-vsphere-replication-troubleshooting-di.svg)
 
-```text
-┌───────────────────────────── vSphere Replication — Diagnostics ───────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   Start here: GET /api/rest/vr/health on VRA → check hbrsvc on source ESXi                  │     │
-│   │   Replication lagging: nc -zv target-VRA 31031 from source ESXi; check firewall             │     │
-│   │   VRA unreachable: systemctl status hms vrms on the VRA appliance; check disk and NTP       │     │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              VRA Appliance Logs              │  │           ESXi Source Host Logs             │   │
-│   │   /opt/vmware/logs/hms/ (Home Mgmt Server)   │  │   /var/log/hbr.log: replication events     │    │
-│   │   /opt/vmware/logs/vrms/ (VR Mgmt Service)  │  │   /var/log/hostd.log: VM operations        │     │
-│   │   journalctl -u hms: HMS service events      │  │   /etc/init.d/hbrsvc status               │     │
-│   │   journalctl -u vrms: VRMS service events    │  │   nc -vz VRA-IP 31031: port check          │    │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  VRA appliance (source site) · VRA appliance (target site) · source ESXi hosts · vCenter (each site)  │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│  VRA         = vSphere Replication Appliance; deployed as a VM at each site                           │
-│  HMS         = Home Management Server; VRA service handling vCenter registration and UI               │
-│  VRMS        = vSphere Replication Management Service; orchestrates replication workflows             │
-│  hbrsvc      = ESXi replication daemon on source host; sends replication data to target VRA           │
-│  hbr.log     = ESXi replication log; records per-VM replication transfer events                       │
-│  TCP 31031   = data port from source ESXi to target VRA; must be open in firewalls                    │
-│  TCP 44046   = inter-VRA management port; used between source and target VRA appliances               │
-│  pktcap-uw   = ESXi packet capture tool; captures traffic on VMkernel adapters to a pcap file         │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ```mermaid
 graph TD

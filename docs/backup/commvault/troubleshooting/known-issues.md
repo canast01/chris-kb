@@ -12,57 +12,10 @@ Catalog of known Commvault bugs, error codes, and workarounds covering backup jo
 
 *Applies to: Commvault 11.x (Feature Release)*
 </div>
+![Commvault — Known Issues and Error Codes](../../../assets/backup-commvault-troubleshooting-known-issues.svg)
 
-```text
-┌────────────────────────────────────────────── Commvault ──────────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │        Enterprise backup platform — CommServe orchestration, MediaAgents, client agents       │   │
-│   │            Protocols: NFS/CIFS · DD Boost · iSCSI/FC (block) · HTTPS (web console)            │   │
-│   │                      Management: CommCell Console / Command Center web UI                     │   │
-│   │        CommServe schedule -> MediaAgent -> Storage target -> Catalog -> Client restore        │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │           Control           │  │          CommServe          │  │  SQL Server-backed catalog  │   │
-│   │          Data mover         │  │          MediaAgent         │  │      Dedup, encryption      │   │
-│   │            Client           │  │          iDataAgent         │  │  App-aware (SQL/Oracle/VSA) │   │
-│   │           Storage           │  │    Disk lib / Data Domain   │  │     DD Boost integration    │   │
-│   │           Catalog           │  │         CommServe DB        │  │  SQL Server, sized per env  │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
-│   │    CommServe     │Orchestrate+catlg │     HTTPS/SQL     │     AD/local     │  Needs HA plan   │   │
-│   │    MediaAgent    │Moves data to disk│      TCP 8400     │       Cert       │  Dedup DB local  │   │
-│   │       VSA        │VMware/Hyper-V bkp│   HTTPS vCenter   │   Service acct   │    Agentless     │   │
-│   │   Web Console    │ Self-svc restore │       HTTPS       │    SAML/local    │ End-user portal  │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical: CommServe server(s) - MediaAgent hosts - disk lib/Data Domain - clients                    │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  CommCell       = entire Commvault env: CommServe + MediaAgents + clients as one unit                 │
-│  CommServe      = central SQL-backed control plane; scheduling, catalog, licensing                    │
-│  MediaAgent     = data mover; performs dedup, compression, encryption to storage                      │
-│  iDataAgent     = per-app agent (SQL, Oracle, file system) for app-aware backup                       │
-│  VSA            = Virtual Server Agent; agentless VM backup via vCenter API                           │
-│  DDB            = Deduplication Database; local per MediaAgent, tracks block sigs                     │
-│  Storage policy = defines retention, copy precedence, and target library                              │
-│  Subclient      = logical grouping within a client defining what gets backed up                       │
-│  DD Boost       = client-side dedup protocol integrating MediaAgents with Data Domain                 │
-│  Aux. copy      = secondary copy job replicating backup data to another target                        │
-│  Job Controller = console view showing all running/queued/failed jobs                                 │
-│  Synthetic full = full backup built from existing incrementals, no source re-read                     │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 
 ## Before you begin

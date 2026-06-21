@@ -12,53 +12,10 @@ How to escalate Dell RecoverPoint (RP4VM) replication issues to Dell Technologie
 
 *Applies to: RecoverPoint for Virtual Machines (RP4VM) 5.x / 6.x*
 </div>
+![RecoverPoint — Escalation](../../../../assets/storage-dell-recoverpoint-troubleshooting-escalation.svg)
 
-```text
-┌──────────────────────────────── Dell RecoverPoint — Escalation ───────────────────────────────────────┐
-│                                                                                                       │
-│  Escalate RecoverPoint issues to Dell support when all consistency groups for a production            │
-│  workload are paused and journal data is being lost, a failover is required but the CG cannot         │
-│  be enabled at the recovery site, the journal volume has filled causing replication to stop,          │
-│  or an RPA upgrade has left appliances at mixed versions and CGs cannot be activated.                 │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Step 1 — Collect Data               │  │          Step 2 — Open the Case             │   │
-│   │  get support_bundle on each RPA              │  │  Go to dell.com/support → My Cases          │   │
-│   │  Note RP version (both sites A and B)        │  │  Select product by RPA cluster serial       │   │
-│   │  Capture CG state and lag from RP UI         │  │  Severity: P1 CG offline / P2 lag critical  │   │
-│   │  Check journal fill level per CG             │  │  Attach RPA bundles from both sites         │   │
-│   │  Write timeline: last sync → first error     │  │  For P1: also call Dell support             │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  For P1: open portal case AND call Dell immediately.                                                  │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Step 3 — Escalation Path            │  │         What NOT to Do                      │   │
-│   │  T1: triage + confirm RPA bundles received   │  │  Do not fail over without Dell confirmation │   │
-│   │  T2: RP SE assigned; CG and journal analysis │  │  Do not delete journal volumes              │   │
-│   │  Engineering: for CG state or RPA code issues│  │  Do not pause/resume CGs without Dell OK   │    │
-│   │  TAM: engage for P1 data loss risk           │  │  Do not upgrade RP mid-incident             │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  RPA             = RecoverPoint Appliance; virtual appliance managing journal and replication         │
-│  CG              = Consistency Group; set of volumes protected together; journal is per-CG            │
-│  journal         = write-order-consistent storage capturing all writes for point-in-time access       │
-│  splitter        = intercepts host writes at hypervisor level; sends copy to RPA                      │
-│  lag             = time between latest write on source and latest entry committed to journal          │
-│  bookmark        = named marker in journal; enables recovery to a known application state             │
-│  image access    = mounting a journal point-in-time to a host for testing or recovery                 │
-│  failover        = activating the replica at the recovery site; breaks the replication link           │
-│  test copy       = non-disruptive image access for DR testing without breaking replication            │
-│  RPO             = Recovery Point Objective; lag is the real-time measure of RPO                      │
-│  CDP             = Continuous Data Protection; every write journaled at sub-second granularity        │
-│  reverse replication = after failover, replicates from recovery site back to re-sync production       │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ---
 

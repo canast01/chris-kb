@@ -12,34 +12,10 @@ CloudIQ support escalation: how to collect the SCG log bundle and API traces, op
 
 *Applies to: CloudIQ*
 </div>
+![CloudIQ — Escalation](../../../../assets/storage-dell-cloudiq-troubleshooting-escalation.svg)
 
-```text
-┌─────────────────────────────────────── Dell CloudIQ Escalation ───────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Escalate CloudIQ issues to Dell Support with SR; attach SCG log bundle and API trace     │   │
-│   │        SCG issues: collect scg logs, note SCG version, capture connectivity test output       │   │
-│   │         CloudIQ data issues: note system name, time window, expected vs actual values         │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              Before Escalating               │  │               Escalation Steps              │   │
-│   │          SCG version (scg version)           │  │         Open SR at support.dell.com         │   │
-│   │           Connectivity test output           │  │            Attach SCG log bundle            │   │
-│   │           SCG log bundle collected           │  │           Note affected system IDs          │   │
-│   │          Affected system name + ID           │  │            CloudIQ org ID from UI           │   │
-│   │             Time window of issue             │  │        Request CloudIQ backend check        │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    SCG            = Secure Connect Gateway; on-premises gateway that sends telemetry to CloudIQ       │
-│    Org ID         = Unique identifier for your CloudIQ tenant; visible in Settings > Organization     │
-│    Backend check  = Dell CloudIQ SRE team investigates ingest pipeline for missing data               │
-│    SR             = Service Request; Dell support case opened at support.dell.com                     │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Before you begin
 

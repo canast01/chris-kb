@@ -13,57 +13,10 @@ Catalog of known SANnav bugs, error codes, and workarounds covering switch disco
 
 *Applies to: SANnav 2.3.x*
 </div>
+![Brocade SANnav — Known Issues and Error Codes](../../../../assets/san-brocade-sannav-troubleshooting-known-issues.svg)
 
-```text
-┌─────────────────────────────────────────── Brocade SANnav ────────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │              SAN management platform — discovery, health, topology, and analytics             │   │
-│   │           Protocols: REST API · SNMP v3 · syslog · HTTPS (UI) · SSH (switch access)           │   │
-│   │                Management: SANnav web UI · REST API · email/SNMP alert delivery               │   │
-│   │             Switch discovery -> topology map -> MAPS event -> alert -> remediation            │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │          Management         │  │       SANnav server VM      │  │     Postgres + InfluxDB     │   │
-│   │          Discovery          │  │      Switch seed + scan     │  │    SSH credentials needed   │   │
-│   │          Monitoring         │  │      MAPS + port stats      │  │     Time-series metrics     │   │
-│   │           Topology          │  │      Fabric map + ISLs      │  │    Rebuilt on rediscover    │   │
-│   │          Analytics          │  │      Traffic + latency      │  │      Stored in InfluxDB     │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
-│   │  SANnav server   │Central management│     HTTPS 443     │   LDAP / local   │OVA or bare-metal │   │
-│   │   Switch agent   │ Telemetry source │     SSH / SNMP    │   Switch creds   │FOS 9.x+ required │   │
-│   │   Alert engine   │ MAPS event relay │    SNMP / email   │       N/A        │Customizable rules│   │
-│   │     REST API     │Automation access │     HTTPS 443     │    API token     │  JSON responses  │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical: SANnav server VM -> managed Brocade FC switches -> fabric topology data                    │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Discovery    = SANnav process that connects to seed switches and maps the fabric                     │
-│  Seed switch  = first switch SANnav contacts; used to traverse the rest of fabric                     │
-│  MAPS         = Monitoring and Alerting Policy Suite; threshold-based port alerts                     │
-│  Topology map = visual representation of switches, ISLs, and connected hosts                          │
-│  InfluxDB     = time-series database storing SANnav performance metrics                               │
-│  Port mirroring = SAN traffic copy for analysis (requires FOS license)                                │
-│  Audit log    = records all configuration changes made via SANnav or switch CLI                       │
-│  Collector    = SANnav component gathering telemetry from each managed switch                         │
-│  Alert group  = logical set of thresholds applied uniformly to a set of ports                         │
-│  Dashboard    = SANnav home view showing fabric health, alerts, and top talkers                       │
-│  REST token   = API Bearer token scoped to a SANnav user role                                         │
-│  OVA          = Open Virtual Appliance; SANnav deployment package for vSphere                         │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 
 ## Before you begin

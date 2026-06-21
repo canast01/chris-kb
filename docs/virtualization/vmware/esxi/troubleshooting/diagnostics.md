@@ -14,41 +14,10 @@ ESXi diagnostic commands: read vmkernel.log and hostd.log for errors, use esxcli
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
+![ESXi — Diagnostics](../../../../assets/virtualization-vmware-esxi-troubleshooting-diagnostics.svg)
 
-```text
-┌───────────────────────────────────────── ESXi — Diagnostics ──────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   Start here: vmkernel.log (storage/network/crash) → hostd.log → esxcli live state          │     │
-│   │   Host disconnected from vCenter: check vpxa.log; restart management agents                  │    │
-│   │   Performance issue: esxtop -b -d 2 -n 30 to capture metrics; check DAVG > 25ms            │      │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                Key Log Files                 │  │          esxcli Diagnostic Commands         │   │
-│   │   /var/log/vmkernel.log: kernel/storage/net  │  │   esxcli storage core path list            │    │
-│   │   /var/log/hostd.log: VM ops and config      │  │   esxcli network ip interface list         │    │
-│   │   /var/log/vpxa.log: vCenter agent           │  │   esxcli vm process list                   │    │
-│   │   /var/log/fdm.log: HA membership            │  │   esxcli system stats                      │    │
-│   │   /var/log/syslog.log: OS syslog             │  │   esxcli storage vmfs extent list          │    │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  x86 host · SAN/NAS storage · management network · vCenter server · syslog server                     │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│  vmkernel.log  = main ESXi kernel log; first stop for storage errors, NMP path events, crashes        │
-│  hostd.log     = host daemon log; VM power-on/off, snapshot, config changes                           │
-│  vpxa.log      = vCenter agent log; host connection issues to vCenter                                 │
-│  fdm.log       = HA agent log; cluster membership and failover events                                 │
-│  esxtop        = real-time performance tool; CPU/mem/disk/net metrics per VM and host                 │
-│  DAVG          = device average latency in esxtop; > 25ms indicates storage issue                     │
-│  KAVG          = kernel average latency; queue depth inside VMkernel                                  │
-│  vm-support    = CLI tool to create ESXi diagnostic bundle                                            │
-│  /scratch      = persistent log path; on SD/USB hosts this may be volatile or missing                 │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ```mermaid
 graph TD

@@ -10,38 +10,10 @@ SQL Server authentication — Windows vs Mixed Mode, service account configurati
 
 *Applies to: Windows Server 2019 / 2022*
 </div>
+![SQL Server — Authentication](../../../../assets/compute-windows-server-sql-server-security-authentication.svg)
 
-```text
-┌───────────────────────────────────── SQL Server — Authentication ─────────────────────────────────────┐
-│                                                                                                       │
-│   Windows Authentication uses Kerberos/NTLM via AD; recommended for internal applications             │
-│   Mixed Mode adds SQL logins; required for apps that cannot use Windows auth                          │
-│   Service accounts: use gMSA (Group Managed Service Account); avoid NETWORK SERVICE in production     │
-│                                                                                                       │
-│   Authentication modes                                                                                │
-│   Windows only: SERVERPROPERTY('IsIntegratedSecurityOnly') = 1                                        │
-│   Mixed Mode: both Windows and SQL logins; set via SQL Server setup or sp_configure                   │
-│   SQL auth only: no Windows auth — avoid; no Kerberos delegation or AD group management               │
-│                                                                                                       │
-│   Windows auth logins                                                                                 │
-│   Individual: CREATE LOGIN [DOMAIN\username] FROM WINDOWS                                             │
-│   AD group: CREATE LOGIN [DOMAIN\SQL_DBA_Group] FROM WINDOWS; all group members inherit access        │
-│                                                                                                       │
-│   SQL authentication                                                                                  │
-│   CREATE LOGIN appuser WITH PASSWORD = '...', CHECK_POLICY = ON, CHECK_EXPIRATION = ON                │
-│   CHECK_POLICY enforces Windows domain password complexity and lockout rules                          │
-│                                                                                                       │
-│   Service accounts                                                                                    │
-│   gMSA: New-ADServiceAccount; password auto-rotated by AD; no manual password management              │
-│   SQL Server service should run as DOMAIN\svc-sql-prod$ (gMSA) not NETWORK SERVICE                    │
-│                                                                                                       │
-│   Key terms:                                                                                          │
-│   Kerberos       = ticket-based auth protocol; used for Windows Authentication in AD domains          │
-│   gMSA           = Group Managed Service Account; AD-managed service account with auto-rotation       │
-│   CHECK_POLICY   = enforces Windows account lockout and complexity on SQL logins                      │
-│   Mixed Mode     = allows both Windows and SQL logins; changed via SQL Server Configuration Manager   │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Before you begin
 

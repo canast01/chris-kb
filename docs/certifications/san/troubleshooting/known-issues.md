@@ -12,57 +12,10 @@ Catalog of known issues related to SAN certification exam preparation — coveri
 
 *Applies to: Brocade BCFP, Cisco CCNP Data Center (SAN track), CompTIA Storage+*
 </div>
+![SAN Certifications — Known Issues and Error Codes](../../../assets/certifications-san-troubleshooting-known-issues.svg)
 
-```text
-┌───────────────────────────────────────── SAN Certifications ──────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │           Exam prep reference — Brocade BCFP, Cisco CCNP DC (SAN), CompTIA Storage+           │   │
-│   │                         Protocols (exam topics): FC-SW · FCoE · iSCSI                         │   │
-│   │               Resources: Brocade vFOS lab / Cisco dCloud / official study guides              │   │
-│   │            Study guide -> Lab practice -> Practice exam -> Official exam -> Renewal           │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Topic            │  │           Resource          │  │            Notes            │   │
-│   │         Brocade BCFP        │  │     vFOS virtual switch     │  │     Zoning, fabric admin    │   │
-│   │        Cisco CCNP DC        │  │       dCloud MDS/DCNM       │  │      VSAN, IVR, zoning      │   │
-│   │           Storage+          │  │      CompTIA self-study     │  │    Vendor-neutral basics    │   │
-│   │          Lab access         │  │     vFOS / GNS3 / dCloud    │  │       No FC HW needed       │   │
-│   │          Validation         │  │        Practice exams       │  │  Cross-check official docs  │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
-│   │   Brocade vFOS   │Practice fabric OS│        N/A        │    Free trial    │   30-day reset   │   │
-│   │   Cisco dCloud   │ Hosted MDS/DCNM  │       HTTPS       │  Cisco account   │Scheduled sessions│   │
-│   │  Official guide  │  Exam blueprint  │        N/A        │     Purchase     │Trust official src│   │
-│   │  Practice exam   │ Self-assessment  │        N/A        │  Purchase/free   │Verify vs official│   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical: N/A — virtual labs and hosted vendor lab environments only                                 │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  BCFP           = Brocade Certified Fabric Professional; core Brocade SAN cert                        │
-│  CCNP DC        = Cisco Certified Network Professional, Data Center track                             │
-│  Storage+       = CompTIA vendor-neutral storage fundamentals certification                           │
-│  FC-SW          = native Fibre Channel switching protocol (distinct from FCoE)                        │
-│  FCoE           = Fibre Channel over Ethernet; encapsulates FC frames in Ethernet                     │
-│  vFOS           = virtual Fabric OS; Brocade OVA for lab practice without hardware                    │
-│  dCloud         = Cisco free hosted lab environment for DCNM/MDS/ACI practice                         │
-│  Zoning         = SAN access control restricting which initiators see which targets                   │
-│  IVR            = Inter-VSAN Routing; Cisco feature for controlled cross-VSAN traffic                 │
-│  VSAN (Cisco)   = logical fabric partition on one switch (not VMware vSAN)                            │
-│  Zoneset        = the active collection of zones enforced on a fabric                                 │
-│  cfgsave        = Brocade command persisting config changes across reboots                            │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 
 ## Before you begin

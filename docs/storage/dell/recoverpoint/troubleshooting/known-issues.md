@@ -12,57 +12,10 @@ Catalog of known RecoverPoint bugs, error codes, and workarounds covering RPA cl
 
 *Applies to: RecoverPoint for VMs (RP4VM) 5.x / RecoverPoint Classic 5.x*
 </div>
+![Dell RecoverPoint — Known Issues and Error Codes](../../../../assets/storage-dell-recoverpoint-troubleshooting-known-issues.svg)
 
-```text
-┌────────────────────────────────────────── Dell RecoverPoint ──────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │           Continuous data protection — any-point-in-time recovery for block storage           │   │
-│   │                Protocols: FC · iSCSI (splitter) · IP WAN (journal replication)                │   │
-│   │               Management: RecoverPoint Management Application (RPMA) · REST API               │   │
-│   │             Write splitter -> journal capture -> replication -> any-point recovery            │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │           Cluster           │  │        RPA appliances       │  │        Min 2 per site       │   │
-│   │           Capture           │  │        Write splitter       │  │      FC or iSCSI layer      │   │
-│   │           Journal           │  │          Change log         │  │     Stores writes per CG    │   │
-│   │         Replication         │  │           WAN link          │  │     Async/sync to remote    │   │
-│   │           Recovery          │  │       Bookmark / APIT       │  │    Rollback to any point    │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
-│   │       RPA        │Replication engine│     FC / iSCSI    │     Internal     │Physical appliance│   │
-│   │     Splitter     │ Write intercept  │     FC / iSCSI    │       N/A        │On array or fabric│   │
-│   │     Journal      │    Write log     │      Internal     │       N/A        │  Sized for RPO   │   │
-│   │       RPMA       │  Management UI   │     HTTPS 443     │  Admin account   │   Java web app   │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical: host -> splitter (FC/iSCSI) -> RPA -> journal volumes -> remote RPA -> copy                │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  RPA          = RecoverPoint Appliance; physical or virtual appliance per site                        │
-│  CG           = Consistency Group; set of volumes protected and recovered together                    │
-│  Journal      = RecoverPoint write log; stores all changes to enable any-point recovery               │
-│  Splitter     = intercepts host writes; sends copy to RPA journal simultaneously                      │
-│  RPO          = Recovery Point Objective; max data loss; linked to replication lag                    │
-│  APIT         = Any Point In Time; RecoverPoint capability to restore to any second                   │
-│  Bookmark     = user-labeled APIT recovery point; e.g. before a patch                                 │
-│  Image access = mount a past journal image to a host without failing over                             │
-│  Failover     = activate the replica copy at DR site; reverse replication to recover                  │
-│  WAN          = IP link between RPA clusters; RecoverPoint replicates journal over WAN                │
-│  RPMA         = RecoverPoint Management Application; Java-based management UI                         │
-│  Lag          = difference in write log between production and replica; drives RPO                    │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 
 ## Before you begin

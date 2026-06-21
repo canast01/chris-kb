@@ -13,57 +13,10 @@ Catalog of known ESXi bugs, error codes, and workarounds. Each entry includes th
 
 *Applies to: ESXi 7.x / 8.x*
 </div>
+![VMware ESXi — Known Issues and Error Codes](../../../../assets/virtualization-vmware-esxi-troubleshooting-known-issues.svg)
 
-```text
-┌───────────────────────────────────────────── VMware ESXi ─────────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │           Type-1 hypervisor — direct hardware access, vSphere cluster building block          │   │
-│   │              Protocols: HTTPS (host UI) · vSphere API · NFS/iSCSI · FC · vMotion              │   │
-│   │               Management: vCenter · ESXCLI · Host Client (HTTPS) · host profiles              │   │
-│   │           VM -> VMkernel -> hardware (CPU/mem/disk/net) -> external storage/network           │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │            Kernel           │  │           VMkernel          │  │     Microkernel; 64-bit     │   │
-│   │           Compute           │  │        vCPU scheduler       │  │          NUMA-aware         │   │
-│   │          Networking         │  │        vSwitch / VDS        │  │   Standard or distributed   │   │
-│   │           Storage           │  │          VMFS / NFS         │  │    Datastores on LUN/NAS    │   │
-│   │          Management         │  │         hostd / vpxa        │  │        Agent daemons        │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
-│   │     VMkernel     │ Hypervisor core  │      Internal     │       N/A        │Micro-kernel ESXi │   │
-│   │      hostd       │    Host agent    │     HTTPS 443     │    root / AD     │Managed by vCenter│   │
-│   │       vpxa       │  vCenter proxy   │      Internal     │  vCenter trust   │Relays vCenter ops│   │
-│   │     vMotion      │  Live migration  │   TCP (vMotion)   │   vCenter auth   │Needs vMotion vmk │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical: bare-metal server (CPU/RAM/NIC/HBA) running VMkernel -> VMs -> SAN/NAS                     │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  PSOD         = Purple Screen of Death; VMkernel panic; host must be rebooted                         │
-│  VMkernel     = ESXi microkernel; handles scheduling, storage, network I/O                            │
-│  hostd        = ESXi management daemon; serves Host Client and vCenter API                            │
-│  vpxa         = vCenter proxy agent; runs on ESXi, receives vCenter commands                          │
-│  VMFS         = VMware File System; cluster-aware filesystem on SAN LUNs                              │
-│  VDS          = vSphere Distributed Switch; managed centrally from vCenter                            │
-│  vMotion      = live VM migration between ESXi hosts with no downtime                                 │
-│  HA           = High Availability; restarts VMs on surviving host after failure                       │
-│  DRS          = Distributed Resource Scheduler; load-balances VMs across hosts                        │
-│  Host profile = configuration template enforced on ESXi hosts by vCenter                              │
-│  vmk          = VMkernel NIC; ESXi interface used for mgmt/vMotion/iSCSI/NFS                          │
-│  ESXCLI       = ESXi CLI for troubleshooting and config from SSH or vCenter shell                     │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 
 ## Before you begin

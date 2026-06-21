@@ -13,51 +13,10 @@ How to escalate VMware Site Recovery Manager issues to Broadcom support: what da
 
 *Applies to: SRM 8.x / 9.x*
 </div>
+![SRM — Escalation](../../../../assets/virtualization-vmware-srm-troubleshooting-escalation.svg)
 
-```text
-┌─────────────────────────────────────── VMware SRM — Escalation ───────────────────────────────────────┐
-│                                                                                                       │
-│  Escalate SRM issues to VMware GSS when a real failover fails mid-run, the site                       │
-│  pair cannot reconnect, replication is permanently broken, or a recovery plan                         │
-│  cannot be modified or executed. Collect bundles from BOTH sites first.                               │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Step 1 — Collect Data               │  │          Step 2 — Open the SR               │   │
-│   │  Get SRM bundle: both protected + recovery   │  │  Go to support.broadcom.com → sign in       │   │
-│   │  Get vSR appliance bundle (both sites)       │  │  Product: VMware Site Recovery Manager      │   │
-│   │  Export recovery plan execution log          │  │  Severity: P1 failover failed / P2 degraded │   │
-│   │  Note SRM version + SRA version + array ver  │  │  Attach both site bundles + plan log        │   │
-│   │  Write timeline: last test → first failure   │  │  Include SRA vendor case number if open     │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Do NOT retry a failed real failover without GSS direction; further actions may                       │
-│  corrupt the recovery plan state and prevent any subsequent recovery attempt.                         │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Step 3 — Escalation Path            │  │         What NOT to Do                      │   │
-│   │  T1: triage + confirm both-site bundles      │  │  Do not retry failed real failover          │   │
-│   │  T2: SRM SE assigned; deep plan analysis     │  │  Do not modify recovery plan mid-incident   │   │
-│   │  SRA vendor: open parallel case for SRA bugs │  │  Do not remove SRA adapter during case      │   │
-│   │  CritSit: real failover stuck, DR at risk    │  │  Do not clear recovery plan history         │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  SRM          = Site Recovery Manager; VMware DR orchestration; runs on Windows or as appliance       │
-│  SRA          = Storage Replication Adapter; vendor-specific plugin for array-based replication       │
-│  vSR          = vSphere Replication; VMware's native hypervisor-based replication (not array-based)   │
-│  Recovery plan= SRM object defining the VM failover order, IP mappings, and custom scripts            │
-│  Protected site= primary datacenter; SRM Server and vCenter at this site                              │
-│  Recovery site= DR datacenter; SRM Server and vCenter; failover VMs start here                        │
-│  Site pair    = the logical link between protected and recovery SRM servers                           │
-│  RPO          = Recovery Point Objective; maximum acceptable data loss in time                        │
-│  CritSit      = Critical Situation; Broadcom war room; triggered for active failover failures         │
-│  ABR          = Array-Based Replication; uses SRA and storage vendor replication for DR               │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ---
 

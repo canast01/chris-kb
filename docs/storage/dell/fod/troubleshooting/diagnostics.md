@@ -12,37 +12,10 @@ Dell Flex on Demand diagnostic commands: inspect the FoD license key file, verif
 
 *Applies to: Dell Flex on Demand (FoD) / APEX Flex on Demand*
 </div>
+![FOD — Diagnostics](../../../../assets/storage-dell-fod-troubleshooting-diagnostics.svg)
 
-```text
-┌─────────────────────────────────────── Dell FoD — Diagnostics ────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   Start here: symlicense list → check key file SN → symlicense preview → check firmware      │    │
-│   │   Key rejected: compare VENDOR_SN in .lic to chassis label SN — mismatch = wrong key         │    │
-│   │   Feature not activating after successful import: check firmware meets FoD minimum version    │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             License Inspection               │  │           Key File Validation               │   │
-│   │      symlicense -sid <SID> list             │  │    grep VENDOR_SN /path/to/fod-key.lic      │    │
-│   │      symlicense -sid <SID> preview           │  │    grep ExpiryDate /path/to/fod-key.lic    │    │
-│   │      symcfg -sid <SID> list -v              │  │    symcfg list (find SID + SN)              │    │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  Dell array with FoD-capable firmware · Dell licensing portal · array management (Unisphere / CLI)    │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│  FoD            = Flex on Demand; software capabilities locked in firmware, unlocked by license key   │
-│  VENDOR_SN      = array serial number in the .lic file; must match the chassis label SN exactly       │
-│  SN re-binding  = re-issuing a FoD key for a replacement array with a new serial number               │
-│  symlicense     = Solutions Enabler CLI for license operations: list, install, preview, show          │
-│  preview        = dry-run install; checks if the key is valid for this array without activating       │
-│  Permanent key  = perpetual unlock; tied to the array SN                                              │
-│  Term key       = time-limited unlock; expires unless renewed                                         │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ```mermaid
 graph TD

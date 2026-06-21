@@ -12,52 +12,10 @@ How to escalate Dell Data Domain (PowerProtect DD) issues to Dell Technologies s
 
 *Applies to: Dell Data Domain / PowerProtect DD running DDOS 7.x*
 </div>
+![Dell Data Domain — Escalation](../../../../assets/storage-dell-data-domain-troubleshooting-escalation.svg)
 
-```text
-┌──────────────────────────────── Dell Data Domain — Escalation ────────────────────────────────────────┐
-│                                                                                                       │
-│  Escalate Data Domain issues to Dell support when the filesystem has gone offline stopping all        │
-│  backup jobs, a disk failure has reduced RAID protection below the safe threshold, replication        │
-│  has stopped and the DR copy is falling behind, or a DDOS upgrade has failed and the system           │
-│  cannot be rolled back without data loss risk.                                                        │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Step 1 — Collect Data               │  │          Step 2 — Open the Case             │   │
-│   │  system show (version + serial number)       │  │  Go to dell.com/support → My Cases          │   │
-│   │  alerts show current (active alerts)         │  │  Select product by DD serial number         │   │
-│   │  filesys status + filesys show space         │  │  Severity: P1 filesys offline / P2 degraded │   │
-│   │  disk show state (drive health)              │  │  Use autosupport send to attach bundle      │   │
-│   │  Write timeline: last healthy → first fault  │  │  For P1: also call Dell support             │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  For P1: open portal case AND call Dell immediately.                                                  │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Step 3 — Escalation Path            │  │         What NOT to Do                      │   │
-│   │  T1: triage + confirm bundle received        │  │  Do not rebuild RAID manually without Dell  │   │
-│   │  T2: DD SE assigned; deep filesystem review  │  │  Do not disable filesystem cleaning mid-case│   │
-│   │  Hardware dispatch: Dell sends field engineer│  │  Do not restart replication unilaterally    │   │
-│   │  TAM: engage for prolonged P1 or data risk   │  │  Do not run filesys enable on offline FS    │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  DDOS            = Data Domain Operating System; the DD operating system firmware                     │
-│  filesys         = Data Domain filesystem; stores all deduplicated backup data                        │
-│  autosupport     = DD feature; sends diagnostic bundle to Dell with the case number attached          │
-│  DDBoost         = Dell optimized deduplication protocol; used by Avamar, NetWorker, Commvault        │
-│  replication     = async copy of filesystem/MTrees between two DD appliances                          │
-│  MTree           = management tree; a logical partition within the DD filesystem                      │
-│  RAID6           = 6+2 erasure coding; Data Domain's default RAID level for disk protection           │
-│  service tag     = Dell hardware serial number; required to open a support case                       │
-│  cleaning        = Data Domain garbage collection; removes data no longer referenced by backups       │
-│  dedupe ratio    = compression efficiency metric; ratio of pre-dedup to post-dedup data size          │
-│  DD VE           = Data Domain Virtual Edition; software DD running as a VM; no hardware dispatch     │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ---
 

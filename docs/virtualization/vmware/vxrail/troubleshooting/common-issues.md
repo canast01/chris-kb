@@ -13,38 +13,10 @@ Concrete troubleshooting steps for the most frequent VxRail operational problems
 
 *Applies to: VxRail 7.x / 8.x*
 </div>
+![VxRail — Common Issues](../../../../assets/virtualization-vmware-vxrail-troubleshooting-common-issues.svg)
 
-```text
-┌─────────────────────────────────────── VxRail — Common Issues ────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────┐       │
-│   │  Symptom categories and first triage step for each                                        │       │
-│   │  Plugin unavailable → restart Mystic service on VxRail Manager VM                        │        │
-│   │  LCM pre-check fails → resolve vSAN health / resync / credentials before retrying        │        │
-│   │  LCM upgrade stuck → check lcm.log; retry via Plugin → LCM → Resume Upgrade             │         │
-│   │  vSAN health failure → match health check name to resolution table below                 │        │
-│   │  Node offline → ping iDRAC → ping ESXi mgmt → query VxRail API                          │         │
-│   │  Hardware alarm → racadm getsel → check vCenter host Hardware view                       │        │
-│   └───────────────────────────────────────────────────────────────────────────────────────────┘       │
-│                                                                                                       │
-│   Plugin Issues      LCM Failures       vSAN Degraded      Node Offline       HW Alarms               │
-│        │                  │                   │                  │                 │                  │
-│        ▼                  ▼                   ▼                  ▼                 ▼                  │
-│   Restart Mystic    Fix pre-check       Health check      Ping iDRAC/ESXi    racadm getsel            │
-│   Re-register       root cause          table below       VxRail API         iDRAC SEL log            │
-│   plugin            Resume LCM          Replace disk/     Return to svc      vCenter HW view          │
-│                                         node              or remove node                              │
-│                                                                                                       │
-│   Key terms:                                                                                          │
-│   Mystic service   = VxRail Manager daemon; restart recovers plugin and API connectivity              │
-│   LCM pre-check    = Validation gate before upgrade; must pass all checks to proceed                  │
-│   vSAN Degraded    = Object has fewer copies than FTT policy requires; still accessible               │
-│   vSAN Absent      = Object component is completely offline / inaccessible                            │
-│   MTU mismatch     = Physical switch port and vmkernel MTU must both be 9000 for jumbo frames         │
-│   iDRAC SEL        = System Event Log on iDRAC; records hardware faults chronologically               │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ---
 

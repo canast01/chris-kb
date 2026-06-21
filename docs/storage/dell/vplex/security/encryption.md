@@ -11,58 +11,9 @@ VPLEX itself is a virtualisation and federation layer and does not natively encr
 
 *Applies to: VPLEX*
 </div>
-```text
-┌─────────────────────────────────────── Dell VPLEX — Encryption ───────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │          VPLEX encryption: data at rest and in transit encryption for all stored data         │   │
-│   │          At rest: AES-256 encryption using controller-managed or external key manager         │   │
-│   │          In transit: TLS 1.2+ for management; protocol encryption for data in flight          │   │
-│   │         Key management: external KMIP-compatible KMS or built-in key lifecycle manager        │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Enable encryption → configure KMS → verify → audit → rotate keys                                   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │        Virtualisation       │  │         Backend LUNs        │  │      Abstracted to VVs      │   │
-│   │            Metro            │  │         Sync stretch        │  │        <5ms RTT sites       │   │
-│   │             Geo             │  │      Async replication      │  │         Any distance        │   │
-│   │          Clustering         │  │        Active-active        │  │       Shared namespace      │   │
-│   │            Quorum           │  │          Witness VM         │  │      Split-brain guard      │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Layer       │     Standard     │     Key source    │       KMS        │      Notes       │   │
-│   │     At rest      │     AES-256      │     Controller    │  Internal/KMIP   │    Always on     │   │
-│   │    In transit    │     TLS 1.2+     │      PKI cert     │   Internal CA    │   Mgmt + data    │   │
-│   │   Key rotation   │      Annual      │     KMS policy    │   External KMS   │    Automated     │   │
-│   │    Key escrow    │     Required     │     KMS vault     │   External KMS   │    DR access     │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: VPLEX VS2/VS6 appliance · FC fabric · backend arrays · WAN link (Metro/Geo)              │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    VPLEX              = Dell storage federation; aggregates arrays into virtual volumes across vendors│
-│    Virtual volume     = VPLEX-abstracted LUN presented to hosts; backend is array LUNs                │
-│    VPLEX Metro        = synchronous active-active stretch cluster; same VV served from two sites      │
-│    VPLEX Geo          = asynchronous active-active replication; higher RPO, no distance constraint    │
-│    Distributed VV     = virtual volume spanning two sites for Metro active-active host access         │
-│    Witness            = third-site quorum arbiter for Metro; prevents split-brain island scenarios    │
-│    WAN-COM            = WAN communication module in VPLEX Geo; manages inter-site replication traffic │
-│    Management Server  = embedded Linux VM in VPLEX engine; serves web UI and vplex CLI                │
-│    Consistency group  = set of virtual volumes that failover together maintaining write order         │
-│    Backend volume     = LUN from underlying array presented to VPLEX engine for virtualisation        │
-│    Local device       = RAID device or extent of backend volumes on a single VPLEX cluster            │
-│    Cluster            = single VPLEX installation; Metro topology requires exactly two clusters       │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+![Dell VPLEX — Encryption](../../../../assets/storage-dell-vplex-security-encryption.svg)
+
+
 
 
  Management traffic encryption is handled via TLS and SSH on the management plane.

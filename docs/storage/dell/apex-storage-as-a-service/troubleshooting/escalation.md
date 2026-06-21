@@ -12,39 +12,10 @@ Dell APEX Storage-as-a-Service escalation: how to collect multipath, SCG, and Cl
 
 *Applies to: APEX Storage-as-a-Service*
 </div>
+![APEX Storage as a Service — Escalation](../../../../assets/storage-dell-apex-storage-as-a-service-troubleshooting-escal.svg)
 
-```text
-┌──────────────────────────────────── Dell Apex STaaS — Escalation ─────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │         Apex escalation: severity triage, SR creation, log collection, TAC engagement         │   │
-│   │           P1 (production down): call Dell immediately + open SR; 4-hour response SLA          │   │
-│   │       P2 (degraded): open SR online; 8-hour response; attach multipath and CloudIQ logs       │   │
-│   │             Collect before calling: host OS logs, CloudIQ bundle, SCG diagnostics             │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │           Severity and What to Collect       │  │             APEX SR Process                 │   │
-│   │       P1: prod down → multipath + dmesg      │  │     APEX Console → Support → New Case       │   │
-│   │       P2: degraded → CloudIQ bundle          │  │     OR: support.dell.com → Create SR        │   │
-│   │       P3: limited  → iSCSI/FC event log      │  │     Attach CloudIQ + SCG bundle             │   │
-│   │       P4: question → usage metrics export    │  │     For P1: call after opening portal SR    │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: collect cable/SFP photos for P1 hardware failures · note rack and port labels            │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    APEX STaaS     = Dell APEX Storage-as-a-Service; consumption-based storage managed by Dell         │
-│    SCG            = Secure Connect Gateway; on-premises gateway for remote support and telemetry      │
-│    CloudIQ bundle = Downloadable diagnostic package from CloudIQ portal; attach to SR                 │
-│    multipath -ll  = Linux multipath topology; shows which paths to the array are active               │
-│    dmesg          = Linux kernel ring buffer; shows SCSI errors and path failover events              │
-│    RCA            = Root Cause Analysis; Dell provides written cause and prevention plan for P1/P2    │
-│    APEX Console   = Dell APEX management portal; used to open support cases for STaaS                 │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Before you begin
 

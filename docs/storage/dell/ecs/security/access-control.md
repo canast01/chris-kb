@@ -11,58 +11,9 @@ Access Control reference covering RBAC, Namespace Isolation, Compliance, Access 
 
 *Applies to: ECS 3.x*
 </div>
-```text
-┌────────────────────────────────────── Dell ECS — Access Control ──────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │           ECS access control: RBAC roles, least-privilege, and access audit logging           │   │
-│   │        Roles: admin (full), operator (read/modify), read-only (view); map to AD groups        │   │
-│   │       Authentication: local accounts, LDAP/AD integration, and MFA for privileged users       │   │
-│   │          Audit: log all admin actions; review access logs monthly; rotate credentials         │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Identify user → assign role → enforce MFA → audit → review quarterly                               │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │             Node            │  │        x86 appliance        │  │        Shared-nothing       │   │
-│   │         Storage pool        │  │          Node group         │  │        Erasure coded        │   │
-│   │             VDC             │  │          Virtual DC         │  │        Per-site unit        │   │
-│   │          Rep. group         │  │          Multi-VDC          │  │        Geo redundancy       │   │
-│   │            Bucket           │  │       Object container      │  │        S3/Swift/Blob        │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │       Role       │   Permissions    │       Scope       │       Auth       │   Review cycle   │   │
-│   │      Admin       │    Full CRUD     │       Global      │   MFA required   │     Monthly      │   │
-│   │     Operator     │   Read/modify    │      Assigned     │   MFA required   │    Quarterly     │   │
-│   │    Read-only     │    View only     │      Assigned     │     Password     │    Quarterly     │   │
-│   │   Service acct   │     API only     │    Specific API   │    Token/cert    │      Annual      │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: ECS appliance nodes · 10/25 GbE backend network · commodity SAS drives                   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    ECS                = Elastic Cloud Storage; Dell S3-compatible object store for unstructured data  │
-│    VDC                = Virtual Data Center; group of ECS nodes at a single geographic site           │
-│    Storage pool       = collection of nodes within a VDC; defines the erasure coding domain           │
-│    Replication group  = links VDCs for geo-redundant object storage; 3-way replication                │
-│    Bucket             = top-level S3 namespace; equivalent to S3 bucket or Azure container            │
-│    Erasure coding     = data protection scheme; default 12+4 provides 4-drive fault tolerance         │
-│    Namespace          = tenant-level isolation; multiple tenants share a single ECS cluster           │
-│    CAS                = Content Addressed Storage; fixed-content object storage with WORM support     │
-│    Replication factor = number of VDC copies; 3-way geo-replication for maximum durability            │
-│    Atmos API          = legacy Dell Atmos-compatible API; supported for migration from Atmos systems  │
-│    HDFS connector     = ECS Hadoop connector; ECS appears as HDFS namespace for analytics jobs        │
-│    Quota              = per-namespace or per-bucket storage quota; enforced as hard or soft limit     │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+![Dell ECS — Access Control](../../../../assets/storage-dell-ecs-security-access-control.svg)
+
+
 
 
 ## Before you begin

@@ -11,58 +11,9 @@ Authentication for VPLEX management is split across two interfaces: SSH-based `v
 
 *Applies to: VPLEX*
 </div>
-```text
-┌───────────────────────────────────── Dell VPLEX — Authentication ─────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │          VPLEX authentication: local accounts, LDAP/AD, RADIUS, and SAML SSO options          │   │
-│   │        MFA: time-based OTP or hardware token required for all privileged admin accounts       │   │
-│   │         Service accounts: dedicated accounts for automation; API tokens/keys preferred        │   │
-│   │       Session: idle timeout enforced; concurrent session limits for admin role accounts       │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Login → authenticate LDAP/SAML/local → MFA → authorise role → session                              │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │        Virtualisation       │  │         Backend LUNs        │  │      Abstracted to VVs      │   │
-│   │            Metro            │  │         Sync stretch        │  │        <5ms RTT sites       │   │
-│   │             Geo             │  │      Async replication      │  │         Any distance        │   │
-│   │          Clustering         │  │        Active-active        │  │       Shared namespace      │   │
-│   │            Quorum           │  │          Witness VM         │  │      Split-brain guard      │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Method      │     Use case     │  Config location  │       MFA        │     Priority     │   │
-│   │     LDAP/AD      │  Staff accounts  │   Auth settings   │     Required     │     Primary      │   │
-│   │     SAML SSO     │    Federated     │    SSO settings   │   IdP-enforced   │    Preferred     │   │
-│   │      Local       │   Break-glass    │    Local users    │     Required     │  Emergency only  │   │
-│   │    API token     │    Automation    │  Service account  │   N/A (token)    │    Automation    │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: VPLEX VS2/VS6 appliance · FC fabric · backend arrays · WAN link (Metro/Geo)              │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    VPLEX              = Dell storage federation; aggregates arrays into virtual volumes across vendors│
-│    Virtual volume     = VPLEX-abstracted LUN presented to hosts; backend is array LUNs                │
-│    VPLEX Metro        = synchronous active-active stretch cluster; same VV served from two sites      │
-│    VPLEX Geo          = asynchronous active-active replication; higher RPO, no distance constraint    │
-│    Distributed VV     = virtual volume spanning two sites for Metro active-active host access         │
-│    Witness            = third-site quorum arbiter for Metro; prevents split-brain island scenarios    │
-│    WAN-COM            = WAN communication module in VPLEX Geo; manages inter-site replication traffic │
-│    Management Server  = embedded Linux VM in VPLEX engine; serves web UI and vplex CLI                │
-│    Consistency group  = set of virtual volumes that failover together maintaining write order         │
-│    Backend volume     = LUN from underlying array presented to VPLEX engine for virtualisation        │
-│    Local device       = RAID device or extent of backend volumes on a single VPLEX cluster            │
-│    Cluster            = single VPLEX installation; Metro topology requires exactly two clusters       │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+![Dell VPLEX — Authentication](../../../../assets/storage-dell-vplex-security-authentication.svg)
+
+
 
 
 ```mermaid

@@ -12,57 +12,10 @@ Catalog of known ServiceNow bugs, error codes, and workarounds covering MID Serv
 
 *Applies to: ServiceNow Washington DC / Xanadu releases*
 </div>
+![ServiceNow — Known Issues and Error Codes](../../../assets/itsm-servicenow-troubleshooting-known-issues.svg)
 
-```text
-┌───────────────────────────────────────────── ServiceNow ──────────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │               ITSM/ITOM platform — MID Server, instance, REST/SOAP integrations               │   │
-│   │                    Protocols: HTTPS · MID Server outbound to instance (443)                   │   │
-│   │                   Management: instance UI (System Diagnostics, System Logs)                   │   │
-│   │               MID Server discovery -> Instance DB -> Business rules -> Workflow               │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │           Instance          │  │       ServiceNow cloud      │  │      Multi-tenant SaaS      │   │
-│   │         Integration         │  │          MID Server         │  │    On-prem, outbound only   │   │
-│   │             Data            │  │             CMDB            │  │     Config item database    │   │
-│   │           Workflow          │  │        Flow Designer        │  │    Business logic engine    │   │
-│   │             Auth            │  │      SSO/LDAP/MID creds     │  │    Per-integration scope    │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
-│   │     Instance     │ SaaS application │       HTTPS       │    SSO/local     │   Multi-tenant   │   │
-│   │    MID Server    │  On-prem agent   │     HTTPS out     │   Service acct   │No inbound needed │   │
-│   │       CMDB       │   Config data    │      Internal     │    ACL-scoped    │Discovery fills it│   │
-│   │     REST API     │Integration endpt │       HTTPS       │   OAuth/Basic    │web_service_admin │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical: ServiceNow SaaS instance (cloud) - on-prem MID Server host(s)                              │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  MID Server     = on-prem agent for outbound-only ServiceNow integration                              │
-│  CMDB           = Configuration Mgmt Database; tracks config items                                    │
-│  Discovery      = MID Server feature scanning networks for the CMDB                                   │
-│  sys_log        = ServiceNow internal application log table                                           │
-│  Business rule  = server-side script on insert/update/delete                                          │
-│  ACL            = Access Control List; row/field-level security rule                                  │
-│  Update Set     = packaged customization moved between instances                                      │
-│  Flow Designer  = no-code workflow automation tool                                                    │
-│  Inbound Action = email-triggered automation rule                                                     │
-│  Scoped app     = isolated namespace for custom development                                           │
-│  web_service_admin = role required for most REST integrations                                         │
-│  Clone          = full copy of one instance to another                                                │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 
 ## Before you begin

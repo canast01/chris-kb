@@ -12,38 +12,10 @@ Cisco DCNM (Data Center Network Manager) diagnostic commands: check all service 
 
 *Applies to: Cisco DCNM 11.x / NDFC (Nexus Dashboard Fabric Controller) 12.x*
 </div>
+![Cisco DCNM — Diagnostics](../../../../assets/san-cisco-cisco-dcnm-troubleshooting-diagnostics.svg)
 
-```text
-┌────────────────────────────────────── Cisco DCNM — Diagnostics ───────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   Start here: appmgr status → GET /rest/health → journalctl -u dcnm → DB and disk check     │     │
-│   │   Discovery failed: grep switch-IP /var/log/dcnm/discovery.log; test SSH and SNMP to switch │     │
-│   │   DB issues: pg_isready; check pmdb for retention; curl localhost:9200/_cluster/health       │    │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          DCNM Platform Diagnostics           │  │             Database Diagnostics            │   │
-│   │   appmgr status: all services health         │  │   pg_isready: PostgreSQL accept conns       │   │
-│   │   GET /rest/health: API health JSON          │  │   psql sane: schema and table sizes         │   │
-│   │   journalctl -u dcnm: service errors         │  │   Elasticsearch /_cluster/health: shards   │    │
-│   │   netstat -tlnp 443: ports listening         │  │   df -h: disk usage per mount              │    │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  DCNM VM (or NDFC on Nexus Dashboard) · PostgreSQL (sane + pmdb) · Elasticsearch · Cisco MDS/NX-OS    │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│  appmgr status   = DCNM CLI; shows all service health in one view                                     │
-│  GET /rest/health = DCNM REST health endpoint; returns per-service status JSON                        │
-│  sane DB         = DCNM configuration and topology database (PostgreSQL)                              │
-│  pmdb             = DCNM performance data database (PostgreSQL); stores collected metrics             │
-│  Elasticsearch   = DCNM analytics database; cluster health shows shard allocation status              │
-│  show tech-support= MDS/NX-OS full diagnostic bundle; required for Cisco TAC cases                    │
-│  show flogi database= FC login table on MDS; shows which HBAs logged in to which ports                │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ```mermaid
 graph TD

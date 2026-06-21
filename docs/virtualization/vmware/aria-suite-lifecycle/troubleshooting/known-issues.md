@@ -12,57 +12,10 @@ Catalog of known Aria Suite Lifecycle (LCM) bugs, error codes, and workarounds c
 
 *Applies to: Aria Suite Lifecycle 8.x*
 </div>
+![VMware Aria Suite Lifecycle — Known Issues and Error Codes](../../../../assets/virtualization-vmware-aria-suite-lifecycle-troubleshooting-k.svg)
 
-```text
-┌────────────────────────────────── VMware Aria Suite Lifecycle (LCM) ──────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │            Lifecycle management for the Aria suite — deploy, upgrade, patch, scale            │   │
-│   │               Protocols: HTTPS (UI/API) · vCenter API · SSH (node access) · NFS               │   │
-│   │             Management: LCM web UI · REST API · binary downloads from VMware depot            │   │
-│   │           LCM deploys OVA -> configures product -> installs cert -> validates health          │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │           Platform          │  │        LCM appliance        │  │        OVA on vCenter       │   │
-│   │           Products          │  │        Aria stack VMs       │  │      Auto/Logs/Ops/Nets     │   │
-│   │           Packages          │  │        Depot binaries       │  │      Online or NFS repo     │   │
-│   │            Certs            │  │      VMware CA / custom     │  │     LCM handles cert ops    │   │
-│   │           Identity          │  │         vIDM (VIDM)         │  │      SSO for Aria stack     │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
-│   │  LCM appliance   │Lifecycle manager │     HTTPS 443     │   admin@local    │Manages full stack│   │
-│   │     vCenter      │  Deploy target   │    vCenter API    │ Service account  │OVA deploy target │   │
-│   │      Depot       │  Binary source   │    HTTPS / NFS    │   depot creds    │Online or air-gap │   │
-│   │       vIDM       │   SSO provider   │     HTTPS 443     │   admin@local    │Integrated by LCM │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical: LCM VM (vCenter) -> deploys Aria product VMs -> manages cert/upgrade lifecycle             │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  LCM          = Lifecycle Manager; VMware tool managing Aria product installs + upgrades              │
-│  Environment  = LCM grouping of Aria products sharing vIDM and certificate config                     │
-│  Product node = LCM-managed VM (e.g. Aria Operations master node)                                     │
-│  Depot        = VMware product binary repository; online (vmware.com) or offline NFS                  │
-│  Patch        = incremental version update applied via LCM without full redeploy                      │
-│  Upgrade      = major or minor version update orchestrated by LCM                                     │
-│  vIDM         = VMware Identity Manager; manages SSO and SAML for Aria products                       │
-│  Certificate  = LCM replaces certs on all products in an environment at once                          │
-│  Locker       = LCM credential and certificate vault for managed products                             │
-│  Precheck     = LCM health validation run before an upgrade begins                                    │
-│  Snapshot     = LCM takes VM snapshots before upgrade for rollback                                    │
-│  Air-gap      = LCM configured with local NFS depot when internet is unavailable                      │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 
 ## Before you begin

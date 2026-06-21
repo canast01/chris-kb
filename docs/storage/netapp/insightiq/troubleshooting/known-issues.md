@@ -12,57 +12,10 @@ Catalog of known InsightIQ bugs, error codes, and workarounds covering data coll
 
 *Applies to: NetApp InsightIQ 4.x (formerly Isilon InsightIQ)*
 </div>
+![NetApp InsightIQ — Known Issues and Error Codes](../../../../assets/storage-netapp-insightiq-troubleshooting-known-issues.svg)
 
-```text
-┌────────────────────────────────────────── NetApp InsightIQ ───────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │             OneFS performance analytics — data collection, trending, and reporting            │   │
-│   │                  Protocols: HTTPS (UI) · REST API · PAPI (OneFS cluster API)                  │   │
-│   │                Management: InsightIQ web UI · CLI (iiq) · PostgreSQL DB backend               │   │
-│   │            Cluster PAPI poll -> InsightIQ ingest -> PostgreSQL -> report dashboard            │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │          Collection         │  │         PAPI poller         │  │     Queries cluster API     │   │
-│   │           Storage           │  │        PostgreSQL DB        │  │     Metrics time series     │   │
-│   │          Analytics          │  │        Report engine        │  │      Aggregates DB data     │   │
-│   │              UI             │  │        Web dashboard        │  │      Charts and exports     │   │
-│   │            Export           │  │       PDF / CSV report      │  │      Scheduled delivery     │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
-│   │   InsightIQ VM   │  Analytics host  │     HTTPS 443     │   Local / LDAP   │VMware OVA deploy │   │
-│   │   PAPI poller    │Metric collection │    HTTPS (PAPI)   │   OneFS creds    │Per-cluster config│   │
-│   │    PostgreSQL    │   Metric store   │     Local TCP     │     DB user      │Grows by retention│   │
-│   │  Report engine   │Charting / export │      Internal     │    User role     │ PDF / CSV output │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical: InsightIQ VM -> OneFS cluster PAPI (HTTPS) -> PostgreSQL DB -> web UI                      │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  InsightIQ    = NetApp analytics appliance for PowerScale/Isilon performance                          │
-│  PAPI         = Platform API; OneFS REST interface used by InsightIQ for data                         │
-│  OneFS        = PowerScale (Isilon) operating system; PAPI is its management API                      │
-│  Datastore    = InsightIQ monitored cluster + data retention config                                   │
-│  Collection interval = how often InsightIQ polls the cluster (default 30 s)                           │
-│  Report       = scheduled or on-demand summary of node/disk/protocol metrics                          │
-│  Retention    = how long metric data is kept; affects PostgreSQL DB disk usage                        │
-│  iiq CLI      = InsightIQ command-line tool for status and config tasks                               │
-│  Quota report = InsightIQ report showing directory quota utilization                                  │
-│  Protocol report = breakdown of NFS/SMB/HDFS throughput per cluster node                              │
-│  DB vacuum    = PostgreSQL maintenance task reclaiming space from old metrics                         │
-│  VM snapshot  = InsightIQ backup method; also DB dump for portability                                 │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 
 ## Before you begin

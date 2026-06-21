@@ -11,58 +11,9 @@ Authentication reference covering Overview, Unisphere Local Accounts, Active Dir
 
 *Applies to: PowerMax 2500 / 8500*
 </div>
-```text
-┌─────────────────────────────────── Dell PowerMax — Authentication ────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │         PowerMax authentication: local accounts, LDAP/AD, RADIUS, and SAML SSO options        │   │
-│   │        MFA: time-based OTP or hardware token required for all privileged admin accounts       │   │
-│   │         Service accounts: dedicated accounts for automation; API tokens/keys preferred        │   │
-│   │       Session: idle timeout enforced; concurrent session limits for admin role accounts       │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Login → authenticate LDAP/SAML/local → MFA → authorise role → session                              │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │           Function          │   │
-│   │            Cache            │  │          DRAM 2 TB+         │  │        Sub-ms latency       │   │
-│   │         FE director         │  │        FC/iSCSI ports       │  │         Host facing         │   │
-│   │         BE director         │  │         NVMe drives         │  │        Storage facing       │   │
-│   │             SRDF            │  │         RDF director        │  │       Metro/remote DR       │   │
-│   │          TimeFinder         │  │         SnapVX/Clone        │  │       Local protection      │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Method      │     Use case     │  Config location  │       MFA        │     Priority     │   │
-│   │     LDAP/AD      │  Staff accounts  │   Auth settings   │     Required     │     Primary      │   │
-│   │     SAML SSO     │    Federated     │    SSO settings   │   IdP-enforced   │    Preferred     │   │
-│   │      Local       │   Break-glass    │    Local users    │     Required     │  Emergency only  │   │
-│   │    API token     │    Automation    │  Service account  │   N/A (token)    │    Automation    │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: PowerMax 2500/8500 engine · FE/BE/RDF directors · DRAM cache · expansion bays            │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    PowerMax           = Dell flagship NVMe all-flash array; millions of IOPS at sub-millisecond lat...│
-│    SRDF               = Symmetrix Remote Data Facility; sync/async metro and remote site replication  │
-│    TimeFinder SnapVX  = space-efficient snapshot technology; up to 256 snapshots per storage group    │
-│    Storage group      = logical container for volumes sharing service level and host access policy    │
-│    Service level      = performance target for a storage group: Diamond, Platinum, Gold, Silver       │
-│    FE director        = front-end director providing FC or iSCSI host-facing ports on the engine      │
-│    BE director        = back-end director connecting engine cache to NVMe flash drive bays            │
-│    RDF director       = SRDF director providing dedicated bandwidth for replication traffic           │
-│    Solutions Enabler  = CLI and API toolkit; symcli commands cover all PowerMax management            │
-│    Unisphere          = web GUI and REST API server for PowerMax; unified management interface        │
-│    DCM                = Dynamic Cache Management; auto-balances workloads across available cache re...│
-│    Service level obj. = workload performance class assigned to storage group; enforced by DPTM        │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+![PowerMax — Authentication](../../../../assets/storage-dell-powermax-security-authentication.svg)
+
+
 
 
 ## Before you begin

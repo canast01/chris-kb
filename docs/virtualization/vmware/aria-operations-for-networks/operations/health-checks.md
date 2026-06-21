@@ -12,51 +12,7 @@ Health checks for Aria Operations for Networks (vRNI) — collector connectivity
 *Applies to: Aria Networks 6.x*
 </div>
 
-```text
-┌───────────────────────────────────────── vRNI Health Checks ──────────────────────────────────────────┐
-│                                                                                                       │
-│  Data source status, flow freshness, and collector health checks for vRNI.                            │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              Data Source Health              │  │               Collector Health              │   │
-│   │          All sources: green status?          │  │           Collector: online in UI?          │   │
-│   │         Last sync time < 15 minutes          │  │             Flow rate: non-zero?            │   │
-│   │          Credential test: passing?           │  │         Collector service: running?         │   │
-│   │         Red source: check API access         │  │            proxy.log: no errors?            │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Source and collector health feed into overall platform flow freshness validation.                    │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │            Flow Freshness Checks             │  │               Platform Health               │   │
-│   │          Flows updated < 5 min ago?          │  │              Disk usage < 80%?              │   │
-│   │          Flow Map: traffic visible?          │  │            CPU/RAM within sizing?           │   │
-│   │         Search returns live results?         │  │              NTP sync: in sync?             │   │
-│   │        Alert rules: firing correctly?        │  │            Services: all running?           │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  vRNI platform VM on vSphere; collector VMs per segment; monitoring via vROps optional                │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Data Source Status  = Green/Yellow/Red indicator in vRNI UI for each configured source               │
-│  Flow Freshness      = Time since last flow record received; should be < 5 minutes                    │
-│  Collector Online    = Collector registered and heartbeating to platform                              │
-│  proxy.log           = Collector log file; shows flow receipt rate and forwarding errors              │
-│  Credential Test     = vRNI API validation that stored source credentials still work                  │
-│  Flow Map            = Real-time traffic topology view; blank = no flows received                     │
-│  NTP Sync            = Time accuracy required for flow timestamp correlation                          │
-│  Disk Usage          = Platform datastore; >80% causes flow drop and performance issues               │
-│  Alert Rule          = Configured threshold; validate firing on known traffic pattern                 │
-│  Service Status      = SSH: service network-insight status; collector: service collector              │
-│  Support Bundle      = Full diagnostic archive; generate if platform health is degraded               │
-│  Sizing Headroom     = CPU/RAM utilisation should stay below 75% for stable operation                 │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 ## Before you begin
 
@@ -84,6 +40,8 @@ Run these 8 checks in order at the start of each shift or after any infrastructu
 
 ## Collector API Status Check
 
+![Collector API Status Check](../../../../assets/virtualization-vmware-aria-operations-fo-hc-collector-api-status-check.svg)
+
 ```bash
 TOKEN=$(curl -sk -X POST "https://aon.example.local/api/ni/auth/token" \
   -H "Content-Type: application/json" \
@@ -105,6 +63,8 @@ for c in data.get('results', []):
 
 ## Flow Queries (AON Natural Language)
 
+![Flow Queries (AON Natural Language)](../../../../assets/virtualization-vmware-aria-operations-fo-hc-flow-queries-aon-natural-languag.svg)
+
 ```bash
 # Flows in the last 15 minutes
 flows where time_range = "last 15 minutes"
@@ -117,6 +77,8 @@ flows where time_range = "last 1 hour" order by bytes desc
 ```
 ## Collector Flow Ingestion Check
 
+![Collector Flow Ingestion Check](../../../../assets/virtualization-vmware-aria-operations-fo-hc-collector-flow-ingestion-check.svg)
+
 ```bash
 ssh ubuntu@aon-collector.example.local
 
@@ -128,6 +90,8 @@ sudo tcpdump -i eth0 udp port 2055 -n 2>/dev/null | \
   awk '{print $3}' | cut -d. -f1-4 | sort | uniq -c | sort -rn | head -20
 ```
 ## Platform Disk Usage
+
+![Platform Disk Usage](../../../../assets/virtualization-vmware-aria-operations-fo-hc-platform-disk-usage.svg)
 
 ```bash
 ssh ubuntu@aon-platform.example.local
@@ -152,6 +116,8 @@ sudo du -sh /var/lib/elasticsearch/data/* 2>/dev/null | sort -rh | head -10
 df -i
 ```
 ## Certificate Expiry Check
+
+![Certificate Expiry Check](../../../../assets/virtualization-vmware-aria-operations-fo-hc-certificate-expiry-check.svg)
 
 ```bash
 # Check the currently installed certificate expiry
@@ -192,6 +158,8 @@ sudo tcpdump -r /tmp/netflow-capture.pcap -n | head -20
 ```
 ## Automated Health Check Script
 
+![Automated Health Check Script](../../../../assets/virtualization-vmware-aria-operations-fo-hc-automated-health-check-script.svg)
+
 ```bash
 #!/bin/bash
 # aon-health-check.sh
@@ -228,6 +196,8 @@ echo "OK: All collectors connected, API reachable"
 exit 0
 ```
 ## Platform Resource Utilisation
+
+![Platform Resource Utilisation](../../../../assets/virtualization-vmware-aria-operations-fo-hc-platform-resource-utilisation.svg)
 
 ```bash
 ssh ubuntu@aon-platform.example.local

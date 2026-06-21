@@ -13,57 +13,10 @@ Catalog of known AWS EVS bugs and workarounds. EVS runs VMware vSphere, vSAN, an
 
 *Applies to: AWS EVS (GA 2025)*
 </div>
+![AWS Elastic VMware Service (EVS) — Known Issues and Error Codes](../../../../assets/cloud-aws-evs-troubleshooting-known-issues.svg)
 
-```text
-┌───────────────────────────────────── AWS Elastic VMware Service ──────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                   VCF running on AWS bare-metal hosts inside a customer VPC                   │   │
-│   │              Protocols: HTTPS (AWS API) · vSphere/NSX mgmt protocols on EVS hosts             │   │
-│   │             Management: AWS Console/CLI (EVS) + vCenter/NSX Manager (VMware layer)            │   │
-│   │              AWS API provision -> Bare-metal hosts -> VCF bring-up -> vCenter/NSX             │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │        Control (AWS)        │  │       EVS service API       │  │   Bare-metal+VPC provision  │   │
-│   │        Control (VMw)        │  │      vCenter / NSX Mgr      │  │     Runs inside EVS env     │   │
-│   │           Compute           │  │     i4i bare-metal hosts    │  │    Dedicated, not shared    │   │
-│   │           Network           │  │         VPC + DX/VPN        │  │     Connects to on-prem     │   │
-│   │           Storage           │  │      vSAN on EVS hosts      │  │     Same vSAN as on-prem    │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
-│   │     EVS API      │Cluster lifecycle │       HTTPS       │       IAM        │AWS-native control│   │
-│   │  vCenter (EVS)   │   VMware mgmt    │       HTTPS       │       SSO        │ Same as on-prem  │   │
-│   │  NSX Mgr (EVS)   │Net. virtualizatn │       HTTPS       │    Local/LDAP    │ Same as on-prem  │   │
-│   │      DX/VPN      │  Connect to EVS  │   IPsec/private   │       N/A        │Needed for hybrid │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical: AWS i4i.metal hosts in an AWS AZ - customer VPC - Direct Connect/VPN                       │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  EVS            = Elastic VMware Service; AWS-managed bare-metal hosts running VCF                    │
-│  i4i.metal      = AWS bare-metal instance type used as EVS host hardware                              │
-│  VCF            = VMware Cloud Foundation; the SDDC stack EVS deploys on AWS                          │
-│  VPC            = Virtual Private Cloud; the AWS network EVS hosts live in                            │
-│  Direct Connect = dedicated private network link from on-prem to AWS                                  │
-│  AWS Health Dash.= service status page; check before assuming a bug                                   │
-│  Bring-up       = initial VCF deployment process onto EVS bare-metal hosts                            │
-│  Workload domain= VCF logical grouping of clusters for a given purpose                                │
-│  SDDC Manager   = VCF lifecycle/orchestration component, present on EVS too                           │
-│  Security group = AWS-level firewall controlling traffic to/from EVS hosts                            │
-│  vSAN ports     = UDP 12345/12346 used for vSAN traffic between ESXi hosts                            │
-│  GA (2025)      = EVS reached General Availability in 2025                                            │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 
 ## Before you begin

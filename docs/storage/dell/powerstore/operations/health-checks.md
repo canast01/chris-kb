@@ -11,58 +11,7 @@ Health Checks reference covering Daily Health Check Procedure, Change Readiness 
 
 *Applies to: PowerStore 3.x*
 </div>
-```text
-┌─────────────────────────────────── Dell PowerStore — Health Checks ───────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      PowerStore health checks: routine verification of operational status and performance     │   │
-│   │         Checks include: controller status, drive health, replication lag, and capacity        │   │
-│   │         Frequency: daily quick checks; weekly detailed review; monthly capacity report        │   │
-│   │        Configure threshold-based alerts for proactive incident prevention and awareness       │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Check status → review alerts → verify replication → capacity → log                                 │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │           T-model           │  │          Block only         │  │        iSCSI/FC/NVMe        │   │
-│   │           X-model           │  │         Block + File        │  │       Unified protocol      │   │
-│   │            Metro            │  │       Sync replication      │  │       Zero-RPO stretch      │   │
-│   │          Protection         │  │        Snapshot/Clone       │  │       Immutable snaps       │   │
-│   │             Mgmt            │  │          PSM / REST         │  │         Unified pane        │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Check area    │  How to verify   │   Pass criteria   │    Frequency     │       Tool       │   │
-│   │   Controllers    │   show status    │    All healthy    │      Daily       │     CLI/GUI      │   │
-│   │      Drives      │   show drives    │  No failed/pred.  │      Daily       │     CLI/GUI      │   │
-│   │   Replication    │ show replication │  Lag < threshold  │      Daily       │     CLI/GUI      │   │
-│   │     Capacity     │  show capacity   │     < 80% used    │      Daily       │     CLI/GUI      │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: PowerStore T/X appliance · NVMe drives · SAS expansion shelves · 10/25 GbE               │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    PowerStore         = Dell mid-range NVMe storage; T-model block-only, X-model unified block+file   │
-│    PowerStore Manager = browser GUI and REST API endpoint for all PowerStore operations               │
-│    Volume group       = logical collection of volumes sharing snapshot and replication policies       │
-│    Protection policy  = assigned to volumes; defines snapshot schedule, retention, and replication    │
-│    Metro volume       = synchronously replicated volume across two sites; zero RPO active-active      │
-│    Snapshot           = space-efficient point-in-time copy; crash-consistent or app-consistent        │
-│    Clone              = full writable copy of a volume or file system; independent lifecycle          │
-│    Applied-to         = PowerStore host mapping; volumes are applied-to a host or host group object   │
-│    Capacity license   = PowerStore uses usable-capacity licensing; licensed in TiB increments         │
-│    Storage container  = PowerStore X-model; unified block and file from the same storage pool         │
-│    Appliance          = single PowerStore node pair (dual controllers); scalable to 4 appliances      │
-│    NVMe-oF            = NVMe over Fabrics; FC-NVMe or NVMe/TCP host connectivity on PowerStore        │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 ## Before you begin
 
@@ -84,6 +33,8 @@ Health Checks reference covering Daily Health Check Procedure, Change Readiness 
 7. **Drive health:** `pstcli /drive show | grep -v Healthy`
 
 ## Daily Health Check Procedure
+
+![Daily Health Check Procedure](../../../../assets/storage-dell-powerstore-hc-daily-health-check-procedure.svg)
 
 Run this procedure each morning on all production PowerStore systems. The checks can be automated using the PowerStore REST API — see the scripts in the [Scripts](scripts/index.md) section.
 
@@ -198,6 +149,8 @@ Complete this checklist before any maintenance window or change on a PowerStore 
 
 ## Post-Change Validation
 
+![Post-Change Validation](../../../../assets/storage-dell-powerstore-hc-post-change-validation.svg)
+
 After completing maintenance, verify the following before closing the change:
 
 ```bash
@@ -219,6 +172,8 @@ curl -k -X GET "https://<mgmt-ip>/api/rest/host?select=name,type,health_state" \
 
 ## Quick Reference — Key REST API Health Endpoints
 
+![Quick Reference — Key REST API Health Endpoints](../../../../assets/storage-dell-powerstore-hc-quick-reference-key-rest-api-health-endpoints.svg)
+
 | Check | Endpoint |
 |---|---|
 | Active alerts | `GET /api/rest/alert?state=active` |
@@ -233,6 +188,8 @@ curl -k -X GET "https://<mgmt-ip>/api/rest/host?select=name,type,health_state" \
 | Snapshot status | `GET /api/rest/volume_snapshot?select=name,state,creation_timestamp` |
 
 ## Incident Triage
+
+![Incident Triage](../../../../assets/storage-dell-powerstore-hc-incident-triage.svg)
 
 When a CRITICAL alert fires on PowerStore:
 

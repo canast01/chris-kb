@@ -12,57 +12,10 @@ Catalog of known Cisco DCNM (Data Center Network Manager) bugs, error codes, and
 
 *Applies to: Cisco DCNM 11.x / NDFC 12.x*
 </div>
+![Cisco DCNM — Known Issues and Error Codes](../../../../assets/san-cisco-cisco-dcnm-troubleshooting-known-issues.svg)
 
-```text
-┌───────────────────────────────────────────── Cisco DCNM ──────────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │              Data Center Network Manager — LAN and SAN fabric management platform             │   │
-│   │               Protocols: SNMP v3 · SSH · REST API · HTTPS (UI) · NX-API · syslog              │   │
-│   │            Management: DCNM web UI · REST API · CLI; migrated to NDFC in NX-OS 10.x           │   │
-│   │           Switch discovery -> fabric inventory -> zone set push -> traffic analytics          │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │           Control           │  │         DCNM server         │  │    Linux OVA / bare-metal   │   │
-│   │          LAN fabric         │  │         NX-OS fabric        │  │     VXLAN/EVPN templates    │   │
-│   │          SAN fabric         │  │        MDS zone sets        │  │       VSAN + zone push      │   │
-│   │          Discovery          │  │        CDP/SNMP scan        │  │       Seed IP required      │   │
-│   │          Analytics          │  │         SAN Insights        │  │    Latency + I/O metrics    │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
-│   │   DCNM server    │Fabric management │     HTTPS 443     │   LDAP / local   │OVA or ISO install│   │
-│   │       POAP       │ Zero-touch boot  │    DHCP + TFTP    │       N/A        │ NX-OS auto-boot  │   │
-│   │   SAN Insights   │  I/O analytics   │      Internal     │    Role-based    │NX-OS lic. needed │   │
-│   │     Zone set     │SAN access control│     FC / FCIP     │   VSAN scoped    │1 active set/VSAN │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical: DCNM server -> managed Cisco MDS/Nexus switches -> hosts + storage arrays                  │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  DCNM         = Data Center Network Manager; Cisco fabric management platform                         │
-│  NDFC         = Nexus Dashboard Fabric Controller; successor to DCNM                                  │
-│  POAP         = Power-On Auto Provisioning; zero-touch NX-OS bootstrap                                │
-│  SAN Insights = DCNM analytics: per-flow latency and I/O throughput from MDS                          │
-│  Zone set     = named collection of zones activated together in a VSAN                                │
-│  VSAN         = Virtual SAN; logical partitioning of a Cisco FC fabric                                │
-│  Fabric template = DCNM/NDFC config skeleton defining VXLAN/BGP overlay params                        │
-│  NX-API       = Cisco REST API on NX-OS switches for programmatic config                              │
-│  CDP          = Cisco Discovery Protocol; used by DCNM to map switch topology                         │
-│  Federation   = linking multiple DCNM servers to manage a larger fabric                               │
-│  SNMP trap    = alert pushed from switch to DCNM on threshold or port event                           │
-│  Performance  = DCNM built-in port utilisation and error-rate trending                                │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 
 ## Before you begin

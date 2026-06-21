@@ -12,57 +12,10 @@ Dell AIOps is a SaaS analytics layer on CloudIQ. All operational issues relate t
 
 *Applies to: Dell AIOps / CloudIQ AIOps*
 </div>
+![Dell AIOps — Known Issues and Error Codes](../../../../assets/storage-dell-dell-aiops-troubleshooting-known-issues.svg)
 
-```text
-┌──────────────────────────────────────── Dell AIOps / CloudIQ ─────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │        AI-driven storage observability — telemetry, anomaly detection, recommendations        │   │
-│   │                 Protocols: HTTPS (collector) · REST API · syslog · SMTP alerts                │   │
-│   │          Management: CloudIQ web portal · REST API · email digest · Slack integration         │   │
-│   │            Array telemetry -> CloudIQ ingest -> ML model -> anomaly alert -> action           │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │          Collection         │  │       Array telemetry       │  │       Pushed via HTTPS      │   │
-│   │          Analytics          │  │      ML anomaly engine      │  │     Cloud-side AI model     │   │
-│   │           Alerting          │  │      Notification rules     │  │     Email / Slack / API     │   │
-│   │         Integration         │  │      ServiceNow / ITSM      │  │     Auto-incident create    │   │
-│   │          Inventory          │  │        Asset catalog        │  │     Contracts + versions    │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
-│   │  CloudIQ cloud   │ Analytics portal │     HTTPS 443     │     Dell SSO     │ SaaS; no on-prem │   │
-│   │   Array agent    │  Telemetry push  │   HTTPS 443 out   │     API key      │  Outbound only   │   │
-│   │     ML model     │Anomaly detection │      Internal     │       N/A        │ Fleet-trained ML │   │
-│   │  ITSM connector  │Incident creation │     HTTPS REST    │  OAuth / token   │ServiceNow / Jira │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical: Dell arrays (PowerStore/Unity/PowerMax) -> CloudIQ SaaS portal -> IT ops team              │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  CloudIQ      = Dell SaaS analytics platform for storage and compute observability                    │
-│  AIOps        = AI for IT Operations; ML-driven anomaly detection and root-cause                      │
-│  Telemetry    = array performance and capacity metrics pushed to CloudIQ hourly                       │
-│  Anomaly      = ML-detected deviation from baseline; scored by impact level                           │
-│  Health score = composite 0-100 metric per array; lower means more issues                             │
-│  Recommendation = CloudIQ suggested action to improve efficiency or fix anomaly                       │
-│  Proactive alert = early warning before threshold breach causes outage                                │
-│  Connectivity = CloudIQ requires outbound HTTPS from array/proxy to Dell cloud                        │
-│  Asset tag    = Dell serial used to associate array with a CloudIQ tenant                             │
-│  Digest       = scheduled email summary of health scores and top anomalies                            │
-│  Bandwidth throttle = CloudIQ limits telemetry rate to avoid impacting array perf                     │
-│  SaaS         = CloudIQ is fully cloud-hosted; no on-premises deployment option                       │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 
 ## Before you begin

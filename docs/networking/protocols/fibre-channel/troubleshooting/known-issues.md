@@ -13,57 +13,10 @@ Catalog of known Fibre Channel issues covering HBA, fabric login, zoning, and li
 
 *Applies to: Fibre Channel fabric (Brocade / Cisco MDS), 16G / 32G FC*
 </div>
+![Fibre Channel — Known Issues and Error Codes](../../../../assets/networking-protocols-fibre-channel-troubleshooting-known-iss.svg)
 
-```text
-┌──────────────────────────────────────────── Fibre Channel ────────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                  Dedicated SAN fabric — HBA, zoning, fabric login, 16G/32G FC                 │   │
-│   │                       Protocols: FC-SW (native FC) · FCP (SCSI over FC)                       │   │
-│   │               Management: Switch CLI (Brocade FOS / Cisco NX-OS) / HBA software               │   │
-│   │               HBA FLOGI -> Fabric login -> Zoning lookup -> Target PLOGI -> I/O               │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │             HBA             │  │       Host Bus Adapter      │  │       Physical FC port      │   │
-│   │            Fabric           │  │        FC switch(es)        │  │     Name server, zoning     │   │
-│   │            Zoning           │  │       Soft/hard zoning      │  │      WWN or port-based      │   │
-│   │            Target           │  │    Storage array FC port    │  │        Presents LUNs        │   │
-│   │            Fault            │  │       CRC/link errors       │  │      SFP/cable quality      │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
-│   │       HBA        │ Host FC connect  │       FC-SW       │   WWN identity   │Driver ver matters│   │
-│   │    FC switch     │ Fabric services  │       FC-SW       │    Zoning ACL    │   Name server    │   │
-│   │     Zoneset      │  Access control  │        N/A        │       N/A        │Must be activated │   │
-│   │       ISL        │Inter-switch link │       FC-SW       │       N/A        │ BB credit limits │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical: HBAs in hosts - FC switches/directors - array FC ports - fiber                             │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  HBA            = Host Bus Adapter; the FC interface card in a server                                 │
-│  WWN            = World Wide Name; unique 64-bit FC device identifier                                 │
-│  FLOGI          = Fabric Login; HBA registers with the fabric on link-up                              │
-│  PLOGI          = Port Login; device-to-device login before I/O starts                                │
-│  Zoning         = SAN access control; restricts initiator/target pairs                                │
-│  Zoneset        = the active collection of zones enforced on a fabric                                 │
-│  Name server    = fabric service mapping WWNs to addresses                                            │
-│  ISL            = Inter-Switch Link; connects two FC switches                                         │
-│  BB credit      = Buffer-to-Buffer credit; FC flow control mechanism                                  │
-│  F_Port         = switch port connected to a host or storage HBA                                      │
-│  E_Port         = switch port connected to another switch (forms ISL)                                 │
-│  LOGO           = Logout; HBA explicitly leaving the fabric                                           │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 
 ## Before you begin

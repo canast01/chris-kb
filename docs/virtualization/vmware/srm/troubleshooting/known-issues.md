@@ -12,57 +12,10 @@ Catalog of known SRM bugs, error codes, and workarounds covering protection grou
 
 *Applies to: SRM 8.x / 9.x*
 </div>
+![VMware Site Recovery Manager — Known Issues and Error Codes](../../../../assets/virtualization-vmware-srm-troubleshooting-known-issues.svg)
 
-```text
-┌──────────────────────────────────── VMware Site Recovery Manager ─────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │            DR orchestration — automated failover, test failover, and recovery plans           │   │
-│   │              Protocols: HTTPS (SRM API) · vCenter API · VRMS (SRM-to-SRM) · VAIO              │   │
-│   │              Management: SRM UI (vCenter plugin) · REST API · PowerCLI SRM module             │   │
-│   │            Protection group -> recovery plan -> test/failover -> VM power-on -> DNS           │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │          Protection         │  │       Protection group      │  │     VMs grouped per RPO     │   │
-│   │         Replication         │  │       Array / vSphere       │  │      SRA or VR adapter      │   │
-│   │        Orchestration        │  │        Recovery plan        │  │     Ordered steps + cmds    │   │
-│   │           Testing           │  │        Test failover        │  │    Isolated network test    │   │
-│   │           Pairing           │  │      Protected/DR site      │  │      VRMS link required     │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
-│   │    SRM server    │ DR orchestrator  │     HTTPS 443     │     SSO / AD     │ Paired per site  │   │
-│   │       VRMS       │    Site link     │       HTTPS       │    SRM trust     │ Cross-site link  │   │
-│   │       SRA        │Array replication │   Array-specific  │   Array creds    │Per-vendor plugin │   │
-│   │  Recovery plan   │  Failover steps  │      Internal     │    SRM admin     │ Test or real run │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical: protected site (SRM + vCenter) -> replication -> DR site (SRM + vCenter)                   │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  SRM          = Site Recovery Manager; VMware DR orchestration product                                │
-│  Protection group = set of VMs protected together; maps to a replication group                        │
-│  Recovery plan = ordered failover procedure; includes custom steps and scripts                        │
-│  SRA          = Storage Replication Adapter; array-vendor plugin for SRM                              │
-│  VRMS         = vSphere Replication Management Server; SRM site-link component                        │
-│  Test failover = runs recovery plan in isolated network; no prod impact                               │
-│  Planned migration = graceful failover; shuts down source before starting target                      │
-│  Disaster recovery = emergency failover; source may be unavailable                                    │
-│  Reprotect    = reverses replication after failover; preps for failback                               │
-│  Failback     = returns VMs to original protected site after reprotect                                │
-│  Network mapping = maps protected-site portgroup to DR-site portgroup                                 │
-│  IP customization = SRM changes VM IP on failover per mapping rules                                   │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 
 ## Before you begin

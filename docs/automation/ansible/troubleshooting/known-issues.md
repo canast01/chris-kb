@@ -12,57 +12,10 @@ Catalog of known Ansible Automation Platform bugs, error codes, and workarounds 
 
 *Applies to: Ansible Automation Platform 2.x*
 </div>
+![Ansible / AAP — Known Issues and Error Codes](../../../assets/automation-ansible-troubleshooting-known-issues.svg)
 
-```text
-┌───────────────────────────────────── Ansible Automation Platform ─────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │         AAP — Controller, Execution Environments, Receptor mesh, Event-Driven Ansible         │   │
-│   │                    Protocols: SSH · WinRM · Receptor (TCP 27199) · REST API                   │   │
-│   │                     Management: Automation Controller UI / awx-manage CLI                     │   │
-│   │       Inventory -> Playbook execution -> Receptor mesh -> Execution node -> Target host       │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │        Control plane        │  │    Automation Controller    │  │      Job sched. + RBAC      │   │
-│   │          Execution          │  │    Execution Environment    │  │  Container, ansible-runner  │   │
-│   │             Mesh            │  │           Receptor          │  │   Node routing, TCP 27199   │   │
-│   │          Inventory          │  │       Dynamic / static      │  │    AWX inventory plugins    │   │
-│   │         Credentials         │  │       Credential store      │  │   Vault-backed, encrypted   │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
-│   │    Controller    │Job orchestration │       HTTPS       │   OAuth2/LDAP    │  Cluster-aware   │   │
-│   │  Execution node  │  Runs playbooks  │    Receptor/SSH   │   Cert (mesh)    │   Isolated EE    │   │
-│   │  Receptor mesh   │Node-to-node route│     TCP 27199     │       mTLS       │  Mesh topology   │   │
-│   │  Automation Hub  │Content/collection│       HTTPS       │      Token       │ Private + Galaxy │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical: Controller HA cluster - execution nodes - PostgreSQL DB - target hosts (SSH/WinRM)         │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  AAP            = Ansible Automation Platform; Red Hat enterprise suite (Controller+Hub+EDA)          │
-│  Controller     = formerly AWX/Tower; orchestrates job templates, schedules, and RBAC                 │
-│  Exec. Env.     = container bundling Ansible + collections + Python deps for a job run                │
-│  Receptor       = mesh networking layer routing work to execution/hop nodes; TCP 27199                │
-│  Playbook       = YAML automation script defining tasks and target hosts                              │
-│  Become         = privilege escalation (sudo/su) used to run tasks as another user                    │
-│  Inventory      = list of managed hosts; static file or dynamic plugin (cloud, CMDB)                  │
-│  Credential     = encrypted secret (SSH key, vault pw, API key) stored in Controller                  │
-│  Job template   = reusable definition: playbook + inventory + credentials + survey                    │
-│  Automation Hub = private content repository for certified/validated collections                      │
-│  EDA            = Event-Driven Ansible; reacts to webhooks/alerts, triggers rulebooks                 │
-│  ansible-vault  = encrypts sensitive variables/files at rest inside playbooks                         │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 
 ## Before you begin

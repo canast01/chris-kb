@@ -13,37 +13,10 @@ Aria Operations for Networks (vRNI) diagnostic commands: check platform API heal
 
 *Applies to: VMware Aria Operations for Networks 6.x (vRealize Network Insight)*
 </div>
+![Aria Operations for Networks — Diagnostics](../../../../assets/virtualization-vmware-aria-operations-for-networks-troublesh.svg)
 
-```text
-┌───────────────────────── Aria Operations for Networks — Diagnostics ──────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   Start here: GET /api/ni/health → data source status → collector logs → NetFlow tcpdump     │    │
-│   │   Missing data: check last-sync timestamp on data source; check collector service status      │   │
-│   │   No NetFlow: verify switch is sending UDP 2055 to collector IP; check firewall              │    │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             Log File Diagnostics             │  │               REST API Checks               │   │
-│   │   /var/log/app.log: main platform log        │  │   GET /api/ni/health: component health      │   │
-│   │   /var/log/proxy.log: collector flow log     │  │   GET /api/ni/data-sources/vcenters         │   │
-│   │   grep ERROR /var/log/app.log                │  │   GET /api/ni/flows: verify receipt         │   │
-│   │   journalctl -u collector: collector events  │  │   GET /api/ni/entities/vms: VM count        │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  vRNI platform VM · collector VM(s) · network switches (NetFlow sources) · vCenter / NSX data sources │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│  Platform VM   = vRNI central analytics engine; receives data from collectors                         │
-│  Collector VM  = lightweight proxy deployed per datacenter; polls vCenter/NSX and receives NetFlow    │
-│  app.log       = Primary platform log; errors, auth events, analytics and indexing issues             │
-│  proxy.log     = Collector log; records NetFlow receipt rate and forwarding status                    │
-│  NetFlow       = network flow telemetry sent from switches to the collector on UDP port 2055          │
-│  Data source   = vCenter, NSX, or physical switch registered in vRNI to provide topology/flow data    │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ```mermaid
 graph TD

@@ -13,53 +13,10 @@ How to escalate VMware Aria Suite Lifecycle (LCM) issues to Broadcom support: wh
 
 *Applies to: Aria Suite Lifecycle (vRealize Suite Lifecycle Manager) 8.x*
 </div>
+![Aria Suite Lifecycle — Escalation](../../../../assets/virtualization-vmware-aria-suite-lifecycle-troubleshooting-e.svg)
 
-```text
-┌───────────────────────────── VMware Aria Suite Lifecycle — Escalation ────────────────────────────────┐
-│                                                                                                       │
-│  Escalate Aria Suite Lifecycle (LCM) issues to VMware GSS when the LCM UI is completely               │
-│  inaccessible, a deployment or upgrade has failed and left a product in a broken state,               │
-│  all managed products are degraded after an LCM action, or a certificate expiry is                    │
-│  causing an outage across the Aria Suite.                                                             │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Step 1 — Collect Data               │  │          Step 2 — Open the SR               │   │
-│   │  Run logscraper from LCM UI or SSH           │  │  Go to support.broadcom.com → sign in       │   │
-│   │  Get LCM version + all managed product vers  │  │  Product: VMware Aria Suite Lifecycle        │  │
-│   │  Note request ID for the failed operation    │  │  Severity: P1 LCM down / P2 deploy fails    │   │
-│   │  Collect issue-specific data per table below │  │  Attach logscraper bundle + request ID      │   │
-│   │  Write timeline: last good → failure start   │  │  Include all affected product versions       │  │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  For P1: open portal case AND call Broadcom support immediately.                                      │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Step 3 — Escalation Path            │  │         What NOT to Do                      │   │
-│   │  T1: triage + confirm bundle received        │  │  Do not power off LCM VM mid-upgrade        │   │
-│   │  T2: LCM SE assigned; request log analysis   │  │  Do not delete Locker certificates          │   │
-│   │  T3: engineering review for LCM bugs         │  │  Do not retry failed upgrade immediately    │   │
-│   │  TAM: bridge call for P1 LCM outage          │  │  Do not manually edit LCM database records  │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  LCM        = Lifecycle Manager; manages deploy, upgrade, cert lifecycle for Aria suite               │
-│  Logscraper = LCM tool that collects logs from LCM and all managed products; mandatory for SR         │
-│  Locker     = LCM credential/certificate vault; stores certs and passwords for all products           │
-│  Environment = LCM grouping of products deployed together; has a unique environment ID                │
-│  Request ID = unique ID for each LCM operation; use to find logs for a specific failed task           │
-│  GSS        = Global Support Services; Broadcom/VMware support team                                   │
-│  TAM        = Technical Account Manager; engaged for P1/P2 with bridge call                           │
-│  Bridge call = live conference with GSS + TAM + customer for P1 resolution                            │
-│  VIDM       = VMware Identity Manager; identity and SSO backend managed by LCM                        │
-│  PAK file   = product update package used by LCM for upgrades                                         │
-│  Change log = recent changes provided to GSS to narrow root cause                                     │
-│  RCA        = Root Cause Analysis document issued after P1 resolution                                 │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ---
 

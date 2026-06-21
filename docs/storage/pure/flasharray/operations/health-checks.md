@@ -11,58 +11,7 @@ Health Checks reference covering Daily Checks, Health Check, Controller Health, 
 
 *Applies to: FlashArray Purity 6.x*
 </div>
-```text
-┌─────────────────────────────────── Pure FlashArray — Health Checks ───────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      FlashArray health checks: routine verification of operational status and performance     │   │
-│   │         Checks include: controller status, drive health, replication lag, and capacity        │   │
-│   │         Frequency: daily quick checks; weekly detailed review; monthly capacity report        │   │
-│   │        Configure threshold-based alerts for proactive incident prevention and awareness       │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Check status → review alerts → verify replication → capacity → log                                 │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │         Controllers         │  │        Active-active        │  │           No SPOF           │   │
-│   │            Drives           │  │         DirectFlash         │  │         NVMe native         │   │
-│   │           Volumes           │  │       Thin provisioned      │  │        Instant clone        │   │
-│   │        ActiveCluster        │  │       Sync replication      │  │           Zero RPO          │   │
-│   │           SafeMode          │  │       Immutable snaps       │  │      Ransomware resist      │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Check area    │  How to verify   │   Pass criteria   │    Frequency     │       Tool       │   │
-│   │   Controllers    │   show status    │    All healthy    │      Daily       │     CLI/GUI      │   │
-│   │      Drives      │   show drives    │  No failed/pred.  │      Daily       │     CLI/GUI      │   │
-│   │   Replication    │ show replication │  Lag < threshold  │      Daily       │     CLI/GUI      │   │
-│   │     Capacity     │  show capacity   │     < 80% used    │      Daily       │     CLI/GUI      │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: FlashArray//X or //C controllers · DirectFlash NVMe modules · 25/100 GbE / 32Gb FC       │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    FlashArray         = Pure all-NVMe block/file array; inline dedup and compression always enabled   │
-│    DirectFlash        = Pure proprietary NVMe modules; direct flash access without SAS translation    │
-│    ActiveCluster      = synchronous active-active stretch cluster; hosts see a single namespace       │
-│    ActiveDR           = asynchronous replication to DR site; recovery point objective in seconds      │
-│    SafeMode           = admin-locked immutable snapshots; cannot be deleted even by array administr...│
-│    Protection group   = set of volumes and hosts sharing a snapshot and replication schedule          │
-│    purefa CLI         = REST CLI tool for FlashArray; purefa CLI connects via REST API key            │
-│    purearray          = purectl CLI command: purearray list and purearray show monitoring             │
-│    Volume tag         = user-defined key-value label on volumes for policy and reporting purposes     │
-│    Host group         = logical collection of hosts sharing volume access via a host group object     │
-│    Inline dedup       = content-based deduplication performed inline before data is written to flash  │
-│    Evergreen          = Pure architecture; controllers upgrade non-disruptively, shelves remain in ...│
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 
 ```text
@@ -110,6 +59,8 @@ FlashArray Health Check Sequence
 
 ## Daily Checks
 
+![Daily Checks](../../../../assets/storage-pure-flasharray-hc-daily-checks.svg)
+
 | Check | Command | Notes |
 |---|---|---|
 | [ ] Run `purealert list` | `purealert list` | review all active alerts; flag any with severity `error` or `warning` |
@@ -122,6 +73,8 @@ FlashArray Health Check Sequence
 | [ ] Confirm replication to the secondary array is current | `purepod list --replicating` |  |
 
 ## Health Check
+
+![Health Check](../../../../assets/storage-pure-flasharray-hc-health-check.svg)
 
 - [ ] No active alerts in `purealert list`
 - [ ] All drives healthy — `puredrive list` shows no `failed` or `recovering` drives
@@ -167,6 +120,8 @@ purehgroup list
 
 ## Controller Health
 
+![Controller Health](../../../../assets/storage-pure-flasharray-hc-controller-health.svg)
+
 ```bash
 purehw list | grep -i ct
 ```
@@ -174,6 +129,8 @@ purehw list | grep -i ct
 Both controllers (CT0, CT1) should show `status: ok` and `temperature` within normal range.
 
 ## Drive Health
+
+![Drive Health](../../../../assets/storage-pure-flasharray-hc-drive-health.svg)
 
 ```bash
 puredrive list
@@ -183,6 +140,8 @@ All drives should show `status: healthy`. Any drive in `failed`, `unhealthy`, or
 
 ## Volume Health
 
+![Volume Health](../../../../assets/storage-pure-flasharray-hc-volume-health.svg)
+
 ```bash
 purevol list
 purevol list --space
@@ -191,6 +150,8 @@ purevol list --space
 Verify no volumes are in an unexpected state and capacity is within expected range.
 
 ## Host Connectivity
+
+![Host Connectivity](../../../../assets/storage-pure-flasharray-hc-host-connectivity.svg)
 
 ```bash
 # List hosts and their connected volumes
@@ -205,6 +166,8 @@ Confirm all expected hosts are connected.
 
 ## Replication Health
 
+![Replication Health](../../../../assets/storage-pure-flasharray-hc-replication-health.svg)
+
 ```bash
 # FlashArray Async Replication (ActiveDR or async)
 purepod list
@@ -215,6 +178,8 @@ purepod list --schedule
 Verify pod/protection group replication is healthy.
 
 ## Pure1 Cloud Monitoring
+
+![Pure1 Cloud Monitoring](../../../../assets/storage-pure-flasharray-hc-pure1-cloud-monitoring.svg)
 
 Pure1 provides proactive health monitoring and AI-driven alerts:
 - Log in to **Pure1 → Arrays** → verify all arrays show green

@@ -12,57 +12,10 @@ Catalog of known SQL Server bugs, error codes, and workarounds covering connecti
 
 *Applies to: SQL Server 2019 / 2022*
 </div>
+![Microsoft SQL Server — Known Issues and Error Codes](../../../../assets/compute-windows-server-sql-server-troubleshooting-known-issu.svg)
 
-```text
-┌──────────────────────────────────────── Microsoft SQL Server ─────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │            Relational DB — Always On Availability Groups, TempDB, blocking analysis           │   │
-│   │                     Protocols: TDS (TCP 1433) · Kerberos (SPN-based auth)                     │   │
-│   │                         Management: SSMS / sqlcmd / Azure Data Studio                         │   │
-│   │            Client connect -> SPN/auth -> Query -> Buffer pool -> Storage/AG replica           │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │            Engine           │  │       Database Engine       │  │     sqlservr.exe process    │   │
-│   │              HA             │  │         Always On AG        │  │     Sync/async replicas     │   │
-│   │             Auth            │  │       Windows/SQL auth      │  │     SPN needed for Kerb.    │   │
-│   │            TempDB           │  │       Shared system DB      │  │    1 file/core recommend    │   │
-│   │           Locking           │  │         Lock manager        │  │    Blocking chains, DMVs    │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
-│   │    SQL Server    │    DB engine     │      TCP 1433     │   Windows/SQL    │   sqlservr.exe   │   │
-│   │   AG listener    │ HA virtual endpt │      TCP 1433     │       N/A        │Moves w/ failover │   │
-│   │      TempDB      │Temp object store │      Internal     │       N/A        │ PAGELATCH issues │   │
-│   │       DMVs       │ Diagnostic views │        N/A        │     sysadmin     │ dm_exec_requests │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical: SQL Server host(s) - Windows Failover Cluster - shared/local storage                       │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  TDS            = Tabular Data Stream; SQL Server network wire protocol                               │
-│  Always On AG   = Availability Group; databases replicated for HA                                     │
-│  AG listener    = virtual name/IP that follows the current primary                                    │
-│  SPN            = Service Principal Name; required for Kerberos auth                                  │
-│  TempDB         = shared system DB for temp objects, sorts, versioning                                │
-│  PAGELATCH      = contention on an in-memory page, often TempDB-related                               │
-│  Blocking sess. = a session holding a lock another session waits on                                   │
-│  WFC            = Windows Failover Cluster; underlies AG auto-failover                                │
-│  Failover mode  = AG setting: automatic vs manual failover                                            │
-│  dm_exec_requests= DMV showing currently executing requests/blocking                                  │
-│  Double-hop     = Kerberos delegation issue acting on a remote resource                               │
-│  Mirroring endpt= AG comms endpoint, default port 5022                                                │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 
 ## Before you begin

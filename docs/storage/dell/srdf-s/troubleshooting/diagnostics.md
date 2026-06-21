@@ -12,41 +12,10 @@ SRDF/S diagnostic commands: check pair state and link health with symrdf, measur
 
 *Applies to: Dell PowerMax / SRDF/S (Synchronous)*
 </div>
+![SRDF/S — Diagnostics](../../../../assets/storage-dell-srdf-s-troubleshooting-diagnostics.svg)
 
-```text
-┌──────────────────────────────────────── SRDF/S — Diagnostics ─────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   Start here: symrdf query → check pair state → ping RTT → check RF ports → collect logs     │    │
-│   │   SRDF/S adds WAN RTT to every host write ACK — RTT > 5ms = latency impact on all writes     │    │
-│   │   Pair Partitioned: replication interrupted; resolve network issue before resuming            │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Pair State Diagnostics              │  │           Link and Performance              │   │
-│   │     symrdf query -g <group> -v              │  │     ping <dr-site-ip> (RTT check)           │    │
-│   │     symrdf query -sid -rdfg                 │  │     symstat -sid -type rdf -v               │    │
-│   │     symrdf verify -sid -rdfg               │  │     symcfg list -rdfg all                   │     │
-│   │     symevent list -type rdf                 │  │     symcfg -sid -rdfg <n> -v                │    │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  Two PowerMax arrays · Dark fiber / DWDM FC link · Low-latency network (< 200 km) · RF director ports │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│  SRDF/S     = Synchronous SRDF; every R1 write is held until R2 confirms — RTT adds to host latency   │
-│  R1          = source volume; write pended until R2 confirms receipt                                  │
-│  R2          = target volume; must acknowledge each write before R1 releases it to the host           │
-│  RTT         = Round-Trip Time between R1 and R2 arrays; directly added to host write latency         │
-│  RF port     = Remote Fabric port on PowerMax; dedicated FC port for SRDF replication traffic         │
-│  RDFG        = RDF Group; logical grouping of SRDF pairs sharing the same link and parameters         │
-│  Synchronized= healthy state: R1 and R2 are in lock-step; no outstanding writes                       │
-│  Consistent  = transient state: write in transit from R1 to R2; normal under load                     │
-│  Partitioned = link interrupted; R2 is frozen at point of interruption; data may diverge              │
-│  Failover    = R2 becomes R/W; R1 is set Not Ready; production continues from DR site                 │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ```mermaid
 graph TD

@@ -11,58 +11,9 @@ Hardening reference covering Hardening Checklist, Step-by-Step Controls, Post-Ha
 
 *Applies to: FlashBlade Purity//FB 4.x*
 </div>
-```text
-┌──────────────────────────────── Pure FlashBlade — Security Hardening ─────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      FlashBlade hardening: disable unused protocols, enforce encryption, restrict access      │   │
-│   │         Network: dedicated storage VLAN; restrict management access to jump hosts only        │   │
-│   │        Auth: disable default accounts; enforce password complexity and rotation policy        │   │
-│   │         Audit: forward syslog to SIEM; alert on privilege escalation and failed logins        │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Baseline config → disable unused → enforce MFA → enable logging → audit                            │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │            Blades           │  │           NVMe+CPU          │  │         Parallel I/O        │   │
-│   │             File            │  │           NFS/SMB           │  │        Scale-out NAS        │   │
-│   │            Object           │  │           S3/Swift          │  │         Bucket store        │   │
-│   │         Replication         │  │            Async            │  │          DR/backup          │   │
-│   │           SafeMode          │  │         Locked snaps        │  │      Ransomware resist      │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │       Area       │     Control      │      Standard     │      Verify      │    Frequency     │   │
-│   │     Accounts     │ Disable defaults │  No default creds │   Login audit    │      Deploy      │   │
-│   │    Protocols     │  Disable unused  │   TLS 1.2+ only   │    Port scan     │     Monthly      │   │
-│   │       MFA        │ Enforce all admi │   TOTP/hardware   │    Auth logs     │    Continuous    │   │
-│   │     Logging      │ SIEM forwarding  │  All admin events │   SIEM alerts    │      Daily       │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: FlashBlade//S or //E chassis · storage blades · 100 GbE network · Pure1 SaaS             │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    FlashBlade         = Pure massively parallel all-flash NAS and object platform; single namespace   │
-│    Blade              = individual storage module in FlashBlade chassis; NVMe and CPU per blade       │
-│    File system        = FlashBlade NFS/SMB export namespace; up to 4 PiB per file system              │
-│    Object store       = S3-compatible bucket store on FlashBlade; versioning and lifecycle rules      │
-│    purefb CLI         = REST CLI client for FlashBlade: purefb fs list, purefb array show commands    │
-│    Replication        = async file or object replication between FlashBlade systems for DR            │
-│    SafeMode           = admin-locked snapshots; protected from deletion even by local array admin     │
-│    S3 multitenancy    = per-bucket policy and IAM-style access control for object storage             │
-│    NFS Kerberos       = FlashBlade NFS supports krb5, krb5i, and krb5p security flavours              │
-│    SMB multichannel   = FlashBlade uses SMB multichannel for improved Windows client performance      │
-│    Inline compression = always-on data reduction; typically 2-10x for unstructured data               │
-│    ActiveScale        = enterprise geo-distribution and erasure coding for large object workloads     │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+![FlashBlade — Hardening](../../../../assets/storage-pure-flashblade-security-hardening.svg)
+
+
 
 
 ```text

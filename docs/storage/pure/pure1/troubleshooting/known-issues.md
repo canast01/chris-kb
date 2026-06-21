@@ -12,57 +12,10 @@ Catalog of known Pure1 issues covering array connectivity, portal access, and da
 
 *Applies to: Pure1 cloud portal*
 </div>
+![Pure1 — Known Issues and Error Codes](../../../../assets/storage-pure-pure1-troubleshooting-known-issues.svg)
 
-```text
-┌──────────────────────────────────────────────── Pure1 ────────────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │          Cloud management portal — health, analytics, AI workload planning, licensing         │   │
-│   │               Protocols: HTTPS (UI) · REST API · phonehome (HTTPS 443 outbound)               │   │
-│   │             Management: Pure1 web portal · REST API · mobile app · alert webhooks             │   │
-│   │            Array phonehome -> Pure1 ingest -> AI model -> health/capacity dashboard           │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │          Collection         │  │       Phonehome agent       │  │     HTTPS out, per array    │   │
-│   │          Analytics          │  │         AI/ML engine        │  │       Cloud-side model      │   │
-│   │            Portal           │  │         Pure1 web UI        │  │       Fleet-wide view       │   │
-│   │          Licensing          │  │        Evergreen mgmt       │  │     Capacity entitlement    │   │
-│   │            Alerts           │  │       Webhook / email       │  │       Threshold based       │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
-│   │   Pure1 portal   │ Fleet management │     HTTPS 443     │     Pure SSO     │ SaaS; no on-prem │   │
-│   │    Phonehome     │ Telemetry upload │   HTTPS 443 out   │    Array cert    │No inbound needed │   │
-│   │    AI engine     │ Capacity predict │      Internal     │       N/A        │ Fleet-trained ML │   │
-│   │     REST API     │Portal automation │     HTTPS 443     │    API token     │  Pipeline mgmt   │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical: FlashArray/FlashBlade -> phonehome HTTPS -> Pure cloud -> Pure1 portal                     │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Pure1        = Pure Storage SaaS management and analytics portal                                     │
-│  Phonehome    = Purity outbound telemetry to Pure1 cloud (HTTPS 443)                                  │
-│  Array registration = linking a FlashArray/Blade serial to a Pure1 org account                        │
-│  Fleet        = all arrays registered to a Pure1 organization                                         │
-│  AI prediction = Pure1 ML-based capacity runout and performance headroom forecast                     │
-│  Health score = per-array composite score; drives SLA and proactive support                           │
-│  Workload     = Pure1 per-volume performance and latency tracking entity                              │
-│  Evergreen mgmt = Pure1 shows current entitlement, capacity usage, upgrade eligibility                │
-│  Alert        = Pure1 threshold breach or anomaly notification (email/webhook)                        │
-│  REST API     = Pure1 programmatic interface for fleet data and alert management                      │
-│  Tagging      = user-defined labels on arrays in Pure1 for filtering/grouping                         │
-│  Proxy        = optional on-prem proxy for phonehome if direct internet blocked                       │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 
 ## Before you begin

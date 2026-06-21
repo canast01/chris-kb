@@ -10,37 +10,10 @@ MySQL access control — user creation, GRANT/REVOKE, privilege hierarchy, role-
 
 *Applies to: RHEL / Ubuntu LTS*
 </div>
+![MySQL / MariaDB — Access Control](../../../../assets/compute-linux-mysql-security-access-control.svg)
 
-```text
-┌─────────────────────────────────────── MySQL — Access Control ────────────────────────────────────────┐
-│                                                                                                       │
-│   MySQL access control: user accounts are scoped to user@host — same username, different hosts        │
-│   Principle of least privilege: each app gets its own account with only required privileges           │
-│   Roles (MySQL 8.0+) simplify bulk privilege assignment across multiple service accounts              │
-│                                                                                                       │
-│   User management                                                                                     │
-│   CREATE USER 'app'@'10.0.1.%' IDENTIFIED BY 'pass': restricts access to subnet only                  │
-│   GRANT SELECT, INSERT, UPDATE ON db.* TO 'app'@'host': grant minimum required privileges             │
-│   REVOKE ALL ON db.* FROM 'app'@'host': remove all privileges without dropping the user               │
-│   DROP USER 'app'@'host': removes user account entirely                                               │
-│                                                                                                       │
-│   Privilege hierarchy                                                                                 │
-│   Global (*.*)  → Database (db.*)  → Table (db.table)  → Column level                                 │
-│   SUPER, PROCESS, REPLICATION SLAVE: powerful admin privs; restrict to DBA accounts only              │
-│   SHOW GRANTS FOR 'user'@'host': audit what a specific account can do                                 │
-│                                                                                                       │
-│   Roles (MySQL 8.0+)                                                                                  │
-│   CREATE ROLE 'app_rw'; GRANT SELECT, INSERT, UPDATE ON db.* TO 'app_rw'                              │
-│   GRANT 'app_rw' TO 'user'@'host': assign role to user; SET DEFAULT ROLE to activate at login         │
-│   SELECT * FROM information_schema.APPLICABLE_ROLES: shows roles available to current session         │
-│                                                                                                       │
-│   Key terms:                                                                                          │
-│   user@host    = MySQL account identifier; 'app'@'%' matches all hosts, 'app'@'10.0.1.%' restricts    │
-│   GRANT OPTION  = allows a user to grant their own privileges to others; rarely needed                │
-│   mysql.user   = system table storing account definitions and hashed credentials                      │
-│   FLUSH PRIVILEGES = reloads grant tables; needed after direct mysql.user table edits                 │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Before you begin
 

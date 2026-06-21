@@ -11,57 +11,10 @@ Catalog of known Linux OS bugs, error codes, and workarounds covering boot issue
 
 *Applies to: RHEL 8.x / 9.x, Ubuntu 22.04 / 24.04*
 </div>
+![Linux — Known Issues and Error Codes](../../../assets/compute-linux-troubleshooting-known-issues.svg)
 
-```text
-┌───────────────────────────────────────── Linux (RHEL/Ubuntu) ─────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │             General-purpose OS — systemd, LVM, NetworkManager, package management             │   │
-│   │                       Protocols: SSH (22) · various per running service                       │   │
-│   │                 Management: systemctl / journalctl / dnf (RHEL) / apt (Ubuntu)                │   │
-│   │               Boot -> systemd init -> Service units start -> Network up -> Login              │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │             Init            │  │           systemd           │  │     PID 1, manages units    │   │
-│   │           Storage           │  │             LVM             │  │     PV/VG/LV abstraction    │   │
-│   │           Network           │  │        NetworkManager       │  │      nmcli/nmtui config     │   │
-│   │           Logging           │  │           journald          │  │    Binary log, journalctl   │   │
-│   │           Packages          │  │          dnf / apt          │  │      Repo-based install     │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
-│   │     systemd      │Service/boot mgmt │        N/A        │       root       │ systemctl status │   │
-│   │     journald     │ Central logging  │        N/A        │  root (varies)   │  journalctl -u   │   │
-│   │  NetworkManager  │ Interface config │        N/A        │       root       │  nmcli not ifup  │   │
-│   │       LVM        │ Storage virtual. │        N/A        │       root       │ pvs/vgs/lvs cmds │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical: physical/virtual server - local/SAN/NFS storage - network uplink                           │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  systemd        = init system and service manager; PID 1 on modern Linux                              │
-│  Unit           = systemd object: service, socket, mount, timer, etc.                                 │
-│  journald       = systemd logging daemon; binary structured log storage                               │
-│  LVM            = Logical Volume Manager; PV -> VG -> LV abstraction                                  │
-│  dracut         = builds the initramfs used early in Linux boot                                       │
-│  initramfs      = temporary root filesystem loaded before real root mounts                            │
-│  NetworkManager = default network config service on RHEL/Ubuntu                                       │
-│  fstab          = static filesystem mount table read at boot                                          │
-│  nofail         = fstab option preventing boot hang if a mount fails                                  │
-│  SELinux        = mandatory access control framework on RHEL-family                                   │
-│  OOM killer     = kernel mechanism killing processes under memory pressure                            │
-│  tmpfs          = RAM-backed temporary filesystem, often used for /tmp                                │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 
 ## Before you begin

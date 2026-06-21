@@ -12,41 +12,7 @@ Health Checks reference covering Daily Checks, Health Check Commands, Change Rea
 *Applies to: Cloud for Desktop (COD)*
 </div>
 
-```text
-┌─────────────────────────────────────── Dell COD Health Checks ────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │       Monthly COD health check: verify remaining unlocked capacity, plan next activation      │   │
-│   │                Alert when COD remaining < 20%; track activation history in CMDB               │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                What to Check                 │  │                Pass Criteria                │   │
-│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
-│   │           COD remaining per array            │  │       > 20% of purchased COD available      │   │
-│   │               License validity               │  │        All licenses valid, no expiry        │   │
-│   │                CMDB currency                 │  │       CMDB matches array license state      │   │
-│   │               Key store entry                │  │           All keys stored in vault          │   │
-│   │              Growth projection               │  │      > 90 days runway with current COD      │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   │      Check       │    Frequency     │        Tool       │ Alert threshold  │      Action      │   │
-│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
-│   │  COD remaining   │     Monthly      │     CMDB/array    │      < 20%       │  Order more COD  │   │
-│   │   Growth rate    │     Monthly      │      CloudIQ      │    < 90 days     │   Activate COD   │   │
-│   │  License valid   │    Quarterly     │     Array GUI     │   Any invalid    │   Re-issue key   │   │
-│   │    CMDB sync     │     Monthly      │       Manual      │     Mismatch     │   Update CMDB    │   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    COD remaining = Total COD purchased minus COD already activated; stored in CMDB                    │
-│    Growth rate   = Monthly capacity consumption rate; used to project activation trigger date         │
-│    90-day runway = If current rate consumes remaining COD in < 90 days, activate more now             │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 ## Before you begin
 
@@ -84,6 +50,8 @@ Health Checks reference covering Daily Checks, Health Check Commands, Change Rea
 | Post-activation headroom calculated | | |
 
 ## Post-Change Validation
+
+![Post-Change Validation](../../../../assets/storage-dell-cod-hc-post-change-validation.svg)
 
 - [ ] New capacity is visible in `symcfg -sid <sid> show -capacity -gb` output
 - [ ] Licensed capacity now reflects the activated COD amount in `symlmf -sid <sid> list`

@@ -13,52 +13,10 @@ How to escalate VMware Aria Operations for Logs issues to Broadcom support: what
 
 *Applies to: Aria Operations for Logs (vRealize Log Insight) 8.x*
 </div>
+![Aria Ops for Logs — Escalation](../../../../assets/virtualization-vmware-aria-operations-for-logs-troubleshooti.svg)
 
-```text
-┌─────────────────────── VMware Aria Operations for Logs — Escalation ──────────────────────────────────┐
-│                                                                                                       │
-│  Escalate Aria Ops for Logs issues to VMware GSS when log ingestion has stopped for more than         │
-│  1 hour, a cluster node is offline and cannot recover, disk corruption or index errors are            │
-│  detected, or compliance-critical log data may have been permanently lost.                            │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Step 1 — Collect Data               │  │          Step 2 — Open the SR               │   │
-│   │  Generate VAMI support bundle (all nodes)    │  │  Go to support.broadcom.com → sign in       │   │
-│   │  Note Aria Logs version (API or VAMI About)  │  │  Product: VMware Aria Ops for Logs          │   │
-│   │  Capture ingestion log + cluster node status │  │  Severity: P1 data loss / P2 node down      │   │
-│   │  Collect issue-specific logs per table below │  │  Attach bundle + ingestion log + timeline   │   │
-│   │  Write timeline: last good → first failure   │  │  Flag compliance risk if log data lost      │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  For P1: open portal case AND call Broadcom support immediately.                                      │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Step 3 — Escalation Path            │  │         What NOT to Do                      │   │
-│   │  T1: triage + confirm bundle received        │  │  Do not delete or purge log data            │   │
-│   │  T2: Aria Logs SE assigned; deep analysis    │  │  Do not change retention or index settings  │   │
-│   │  Compliance: notify security team if data    │  │  Do not run PAK upgrade during incident     │   │
-│   │  lost; TAM for P1 compliance incidents       │  │  Do not power off cluster nodes without GSS │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Aria Ops for Logs = VMware log analytics platform; formerly vRealize Log Insight (vRLI)              │
-│  Support bundle    = VAMI → Administration → Cluster → Support Bundle; mandatory for every SR         │
-│  Master node       = primary Aria Logs cluster node; hosts the UI and orchestrates ingestion          │
-│  Worker node       = additional cluster nodes; each ingests and indexes a share of log data           │
-│  Ingestion log     = /var/log/loginsight/ingestion.log; shows why logs stopped arriving               │
-│  Cassandra         = embedded DB used by Aria Logs for query metadata; check with nodetool status     │
-│  SIEM fallback     = direct syslog to Splunk/SIEM while Aria Logs is being recovered                  │
-│  TAM               = Technical Account Manager; escalation for compliance-critical P1                 │
-│  Index error       = vRLI log data index corruption; may require rebuild with potential data loss     │
-│  Disk corruption   = /storage filesystem error; requires vRLI restore from backup                     │
-│  Compliance notify = inform security/compliance team if regulated log data is lost                    │
-│  RCA               = Root Cause Analysis; required after P1 by most compliance frameworks             │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ---
 

@@ -13,46 +13,10 @@ SRM diagnostic commands: collect the SRM support bundle, parse vmware-dr-*.log f
 
 *Applies to: VMware Site Recovery Manager 8.x / 9.x*
 </div>
+![SRM — Diagnostics](../../../../assets/virtualization-vmware-srm-troubleshooting-diagnostics.svg)
 
-```text
-┌────────────────────────────────────── VMware SRM — Diagnostics ───────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   Start here: SRM support bundle → vmware-dr-*.log → SRA log → vSphere Rep log               │    │
-│   │   Plan failed: check vmware-dr-*.log for the STEP that failed and its error message           │   │
-│   │   Site pairing issue: check certificate trust; verify SRM service running on both sites       │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               SRM Server Logs                │  │               vSphere Rep Logs              │   │
-│   │   C:\ProgramData\VMware\VMware vCenter SRM   │  │       vSphere Rep appliance: /var/log       │   │
-│   │          vmware-dr-*.log: main log           │  │           hbrsrv.log: replication           │   │
-│   │            vmware-srmserver-*.log            │  │           hbrfilter.log: I/O path           │   │
-│   │            Support bundle: SRM UI            │  │           vR appliance: VM on ESXi          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               SRA Diagnostics                │  │                vCenter Events               │   │
-│   │          SRA: vendor-specific tool           │  │              Filter: SRM events             │   │
-│   │            Dell: SRDF/Metro diag             │  │          Tasks: SRM plan run tasks          │   │
-│   │           NetApp: snapmirror show            │  │          Events: site pair connect          │   │
-│   │             SRA log: C:\SRA\logs             │  │          Alarms: replication error          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  SRM Server on Windows VM · vSphere Replication appliance VM · Storage array SRA adapter (optional)   │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│  vmware-dr-*.log = main SRM log; contains plan execution steps, errors, and timing                    │
-│  vmware-srmserver= SRM application service log; service-level errors                                  │
-│  hbrsrv.log     = vSphere Replication server log; replication relationship state                      │
-│  hbrfilter.log  = I/O filter log; per-VM replication I/O path health                                  │
-│  SRA            = Storage Replication Adapter; vendor plugin handling array-based failover            │
-│  ProgramData    = Windows hidden folder where SRM writes logs (C:\ProgramData\VMware\...)             │
-│  Site pairing   = the trust relationship between the protected and recovery site vCenter/SRM          │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ```mermaid
 graph TD

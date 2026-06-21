@@ -12,57 +12,10 @@ Catalog of known NetBackup bugs, error codes, and workarounds covering backup po
 
 *Applies to: NetBackup 10.x*
 </div>
+![Veritas NetBackup — Known Issues and Error Codes](../../../assets/backup-netbackup-troubleshooting-known-issues.svg)
 
-```text
-┌────────────────────────────────────────── Veritas NetBackup ──────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │             Enterprise backup — Master/Media servers, policies, NetBackup catalog             │   │
-│   │               Protocols: NDMP · VTL emulation · DD Boost · TCP 1556 (PBX/vnetd)               │   │
-│   │                Management: NetBackup Admin Console / OpsCenter / Web UI (10.x)                │   │
-│   │           Policy schedule -> Master server -> Media server -> Storage unit -> Client          │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │           Control           │  │        Master server        │  │   Catalog (NBDB), policies  │   │
-│   │          Data mover         │  │         Media server        │  │   Writes to storage units   │   │
-│   │            Client           │  │          bpcd agent         │  │    Per-host backup agent    │   │
-│   │           Storage           │  │      Storage unit / DD      │  │     Disk, tape, DD Boost    │   │
-│   │            Certs            │  │     Host ID certificates    │  │      NBU 8.x+ mandatory     │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
-│   │  Master server   │ Catalog+schedule │      TCP 1556     │  Cert (NBU 8+)   │NBDB Sybase-based │   │
-│   │   Media server   │  Data movement   │      TCP 1556     │       Cert       │ Many per master  │   │
-│   │       bpcd       │   Client agent   │      TCP 1556     │       Cert       │ Each client runs │   │
-│   │       AIR        │ Auto Img Replic. │      TCP 1556     │       Cert       │Cross-domain copy │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical: master server - media servers - Data Domain/tape library - clients                         │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Master server  = central control plane; owns the catalog and policies                                │
-│  Media server   = writes backup data to storage units; can combine with master                        │
-│  NBDB           = NetBackup relational database (Sybase) storing the catalog                          │
-│  Policy         = defines schedule, client list, and backup type for clients                          │
-│  Storage unit   = logical target (disk pool, tape, cloud) media servers write to                      │
-│  bpcd           = NetBackup client daemon listening for backup/restore requests                       │
-│  vnetd          = NetBackup network daemon; multiplexes traffic over fewer ports                      │
-│  AIR            = Auto Image Replication; replicates images between NBU domains                       │
-│  Host ID cert   = NBU 8.x+ mandatory cert authenticating client to master                             │
-│  DD Boost       = NetBackup-to-Data-Domain dedup offload integration                                  │
-│  Catalog backup = backup of the NBDB itself; critical for full env recovery                           │
-│  bpps           = command listing active NetBackup processes for triage                               │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 
 ## Before you begin

@@ -12,57 +12,10 @@ Catalog of known Veeam bugs, error codes, and workarounds covering backup jobs, 
 
 *Applies to: Veeam B&R v12.x*
 </div>
+![Veeam Backup & Replication — Known Issues and Error Codes](../../../assets/backup-veeam-troubleshooting-known-issues.svg)
 
-```text
-┌───────────────────────────────────── Veeam Backup & Replication ──────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │          VM-centric backup — VBR server, proxies, repositories, scale-out repository          │   │
-│   │           Protocols: HTTPS (vCenter API) · NBD/SAN/HotAdd transport · TCP 2500-5000           │   │
-│   │                         Management: Veeam Backup & Replication Console                        │   │
-│   │          Job schedule -> Proxy snapshot -> Data mover -> Repository -> Restore point          │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │           Control           │  │          VBR server         │  │     SQL Server config DB    │   │
-│   │          Transport          │  │         Backup proxy        │  │     NBD/SAN/HotAdd modes    │   │
-│   │           Storage           │  │      Backup repository      │  │   Local, SOBR, dedup appl.  │   │
-│   │            Source           │  │         vCenter/ESXi        │  │      VADP snapshot API      │   │
-│   │          Cloud tier         │  │      SOBR capacity tier     │  │       S3/Blob offload       │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
-│   │    VBR server    │Job orchestration │       HTTPS       │     AD/local     │  SQL config DB   │   │
-│   │   Backup proxy   │  Data transport  │   NBD/SAN/HotAdd  │       Cert       │CPU/RAM for dedup │   │
-│   │    Repository    │Stores backup file│   SMB/NFS/local   │  Win/Linux auth  │  Per-VM chains   │   │
-│   │       SOBR       │  Scale-out repo  │      Internal     │       N/A        │  Tiers to cloud  │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical: VBR server - proxy VMs/hosts - repository storage - capacity tier                          │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  VBR            = Veeam Backup & Replication; core product + management server                        │
-│  Proxy          = component performing data transport from source to repository                       │
-│  Transport mode = how a proxy reads VM data: Direct SAN, HotAdd, NBD (network)                        │
-│  Repository     = storage target holding backup files (VBK/VIB) and metadata                          │
-│  SOBR           = Scale-Out Backup Repository; pools extents + cloud capacity tier                    │
-│  VADP           = vSphere APIs for Data Protection; snapshot-based VM backup                          │
-│  Helper appl.   = temp VM used for SAN/HotAdd transport disk attach                                   │
-│  Instant Recov. = boots a VM directly from backup storage via iSCSI presentation                      │
-│  CBT            = Changed Block Tracking; lets incrementals skip unchanged blocks                     │
-│  Backup chain   = full + incremental restore points forming one recoverable set                       │
-│  Capacity tier  = SOBR object-storage extension for offloading older backups                          │
-│  SureBackup     = automated test-restore job verifying backup recoverability                          │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 
 ## Before you begin

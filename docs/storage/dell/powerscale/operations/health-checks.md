@@ -11,58 +11,7 @@ Health Checks reference covering Daily Checks, Health Check, Cluster Health Comm
 
 *Applies to: PowerScale (Isilon) 9.x*
 </div>
-```text
-┌─────────────────────────────────── Dell PowerScale — Health Checks ───────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      PowerScale health checks: routine verification of operational status and performance     │   │
-│   │         Checks include: controller status, drive health, replication lag, and capacity        │   │
-│   │         Frequency: daily quick checks; weekly detailed review; monthly capacity report        │   │
-│   │        Configure threshold-based alerts for proactive incident prevention and awareness       │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Check status → review alerts → verify replication → capacity → log                                 │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │           Function          │   │
-│   │              OS             │  │            OneFS            │  │        Distributed FS       │   │
-│   │           Tiering           │  │          SmartPools         │  │        Auto data move       │   │
-│   │         Replication         │  │            SyncIQ           │  │        Async DR copy        │   │
-│   │          Snapshots          │  │          SnapshotIQ         │  │       Space-efficient       │   │
-│   │         Load balance        │  │         SmartConnect        │  │       DNS client dist.      │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Check area    │  How to verify   │   Pass criteria   │    Frequency     │       Tool       │   │
-│   │   Controllers    │   show status    │    All healthy    │      Daily       │     CLI/GUI      │   │
-│   │      Drives      │   show drives    │  No failed/pred.  │      Daily       │     CLI/GUI      │   │
-│   │   Replication    │ show replication │  Lag < threshold  │      Daily       │     CLI/GUI      │   │
-│   │     Capacity     │  show capacity   │     < 80% used    │      Daily       │     CLI/GUI      │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: PowerScale nodes (All-Flash/Hybrid) · InfiniBand backend · 25/100 GbE frontend           │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    OneFS              = Dell PowerScale distributed filesystem OS; all nodes share a single namespace │
-│    SmartPools         = tiering engine; moves files between All-Flash, Hybrid, and Archive tiers      │
-│    SyncIQ             = async replication to DR cluster; RPO-based schedule; failover in minutes      │
-│    SnapshotIQ         = space-efficient snapshots; accessed via .snapshot directory in each share     │
-│    SmartConnect       = DNS-based load balancing; distributes NFS/SMB client connections across nodes │
-│    Access zone        = logical container with separate authentication and export namespace per tenant│
-│    Quota              = directory or user quota; hard/soft/advisory limits enforced by OneFS QuotaIQ  │
-│    CloudPools         = tiering to cloud object storage (S3/Blob); data remains accessible locally    │
-│    isi CLI            = OneFS command-line interface; all management operations available via isi c...│
-│    Node pool          = group of same-model nodes sharing protection domain for data distribution     │
-│    Protection level   = N+2:1, N+3:1 etc.; defines how many node or drive failures are tolerated      │
-│    File pool policy   = rule-based policy assigning files to specific node pools or storage tiers     │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 ## Before you begin
 
@@ -84,6 +33,8 @@ Health Checks reference covering Daily Checks, Health Check, Cluster Health Comm
 7. **Active alerts:** `isi events list --is_alertable=true --resolved=false`
 
 ## Daily Checks
+
+![Daily Checks](../../../../assets/storage-dell-powerscale-hc-daily-checks.svg)
 
 ```mermaid
 flowchart TD
@@ -115,6 +66,8 @@ flowchart TD
 | [ ] Confirm SyncIQ RPO compliance by checking `isi sync reports list` | `isi sync reports list --limit 5` |  |
 
 ## Health Check
+
+![Health Check](../../../../assets/storage-dell-powerscale-hc-health-check.svg)
 
 Run these checks before any maintenance or change, or as first steps when investigating a reported issue.
 
@@ -157,6 +110,8 @@ isi license list
 ```
 
 ## Cluster Health Commands
+
+![Cluster Health Commands](../../../../assets/storage-dell-powerscale-hc-cluster-health-commands.svg)
 
 ```bash
 # Cluster identity, version, and status
@@ -258,6 +213,8 @@ isi job jobs list | grep -i "FlexProtect\|Repair"
 ```
 
 ## Health Check Summary
+
+![Health Check Summary](../../../../assets/storage-dell-powerscale-hc-health-check-summary.svg)
 
 | Check | Command | Healthy |
 |---|---|---|

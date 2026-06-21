@@ -12,37 +12,10 @@ Dell Cloud on Demand (COD) escalation: how to collect array license state, key f
 
 *Applies to: Dell Cloud on Demand (COD) / PowerMax Cloud on Demand*
 </div>
+![COD — Escalation](../../../../assets/storage-dell-cod-troubleshooting-escalation.svg)
 
-```text
-┌──────────────────────────────────────── Dell CoD — Escalation ────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │     CoD escalation: when self-service resolution fails, escalate to Dell licensing or TAC     │   │
-│   │   Dell Licensing team: for key purchase issues, duplicate keys, SN re-binding, wrong account  │   │
-│   │   Dell TAC: for capacity not appearing after valid key applied; firmware or hardware faults   │   │
-│   │   Account team: for budget or contract issues affecting CoD entitlements or key availability  │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │        Licensing Team       │  │           Dell TAC          │  │         Account Team        │   │
-│   │         Key re-issue        │  │        Firmware issue       │  │       Contract dispute      │   │
-│   │        SN re-binding        │  │        Hardware fault       │  │      Entitlement query      │   │
-│   │        Account merge        │  │      Capacity conflict      │  │        Pricing review       │   │
-│   │        Duplicate key        │  │       License conflict      │  │       Key pre-purchase      │   │
-│   │        Order history        │  │       Event log review      │  │       Exec escalation       │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    CoD          = Cloud on Demand; Dell capacity-on-demand licensing model for PowerMax               │
-│    SN re-binding  = Dell process to re-issue a key for a replacement array serial number              │
-│    Dell Licensing = Dell internal team managing CoD keys, SN binding, and licensing portal accounts   │
-│    Dell TAC       = Technical Assistance Center; handles firmware, hardware, and capacity issues      │
-│    SR             = Service Request; Dell support case opened at support.dell.com                     │
-│    P2 SLA         = Dell TAC 4-hour response for degraded production; CoD failure may qualify         │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Before you begin
 

@@ -12,51 +12,7 @@ Health checks for Aria Operations — cluster node status, adapter collection he
 *Applies to: Aria Ops 8.x*
 </div>
 
-```text
-┌──────────────────────────────────── Aria Operations Health Checks ────────────────────────────────────┐
-│                                                                                                       │
-│  Node status, adapter health, and collection status checks for Aria Operations (vROps).               │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             Cluster Node Health              │  │                Adapter Health               │   │
-│   │         Admin > Cluster: all green?          │  │           Data Sources: all green?          │   │
-│   │            Master: ONLINE status             │  │          Last collection < 10 min?          │   │
-│   │         Data nodes: ONLINE + joined          │  │           Adapter logs: no errors?          │   │
-│   │         Collector: COLLECTING status         │  │          Object count as expected?          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Node and adapter health are primary checks; collection status confirms data flow.                    │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │           Collection Status Checks           │  │           Platform Resource Checks          │   │
-│   │           Alerts firing normally?            │  │           Disk: /storage/db < 80%?          │   │
-│   │           Dashboards loading data?           │  │           RAM usage within sizing?          │   │
-│   │          Capacity data up to date?           │  │                NTP: in sync?                │   │
-│   │            Reports generating OK?            │  │              Cert: not expired?             │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  vROps cluster on vSphere; SSD-backed datastore; NTP server; SMTP for alert delivery                  │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Cluster Status      = vROps Admin UI showing all node roles and health states                        │
-│  ONLINE Status       = Node is fully joined, serving requests, and collecting data                    │
-│  COLLECTING Status   = Remote collector actively sending metrics to master cluster                    │
-│  Adapter Green       = Data source collecting without errors in last 10 minutes                       │
-│  Last Collection     = Timestamp of most recent successful adapter data pull                          │
-│  Object Count        = Expected number of monitored resources; drop = issue                           │
-│  /storage/db         = vROps metric database path; monitor disk consumption                           │
-│  Alert Firing        = Verify known issue triggers alert; confirms policy active                      │
-│  Dashboard Data      = Widgets show current metrics; blank = collection problem                       │
-│  Capacity Freshness  = Capacity model updates every cycle; stale = issue                              │
-│  NTP Sync            = Required for accurate metric timestamps and alert timing                       │
-│  Cert Expiry         = vROps UI cert; expired cert blocks browser and API access                      │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 ## Before you begin
 
@@ -84,22 +40,34 @@ Run these 8 checks in order at the start of each shift or after any infrastructu
 
 ## Adapter Collection Commands
 
+![Adapter Collection Commands](../../../../assets/virtualization-vmware-aria-operations-hc-adapter-collection-commands.svg)
+
 ```bash
 # List adapters with verbose collection state
 vracli adapter list --verbose
 
 ## Check the collector service log for adapter errors
+
+![Check the collector service log for adapter errors](../../../../assets/virtualization-vmware-aria-operations-hc-check-the-collector-service-log-for.svg)
 tail -200 /data/vcops/log/collector.log | grep -i "error\|exception\|fail"
 
 ## Restart an adapter that is stuck in "Not Collecting"
+
+![Restart an adapter that is stuck in "Not Collecting"](../../../../assets/virtualization-vmware-aria-operations-hc-restart-an-adapter-that-is-stuck-in.svg)
 ## UI: Administration → Solutions → select adapter → Restart Instance
+
+![UI: Administration → Solutions → select adapter → Restart Instance](../../../../assets/virtualization-vmware-aria-operations-hc-ui-administration-solutions-select-.svg)
 ## Or via API:
+
+![Or via API:](../../../../assets/virtualization-vmware-aria-operations-hc-or-via-api.svg)
 curl -sk -X POST -H "Authorization: vRealizeOpsToken $TOKEN" \
   "https://vrops-prod-01.example.local/suite-api/api/adapters/<adapter-id>/monitoringstatedescriptor" \
   -H "Content-Type: application/json" \
   -d '{"collectorId": "<collector-id>", "resourceKindKey": "ADAPTER", "adapterKindKey": "VMWARE"}'
 ```
 ## Disk and Resource Commands
+
+![Disk and Resource Commands](../../../../assets/virtualization-vmware-aria-operations-hc-disk-and-resource-commands.svg)
 
 ```bash
 ssh admin@vrops-prod-01.example.local
@@ -108,31 +76,57 @@ ssh admin@vrops-prod-01.example.local
 df -h /storage/db /storage/log /storage/core
 
 ## Check Cassandra data directory sizes (main metrics store)
+
+![Check Cassandra data directory sizes (main metrics store)](../../../../assets/virtualization-vmware-aria-operations-hc-check-cassandra-data-directory-size.svg)
 du -sh /storage/db/cassandra/data/*
 
 ## Check available inodes — can cause "disk full" errors even with space remaining
+
+![Check available inodes — can cause "disk full" errors even with space remaining](../../../../assets/virtualization-vmware-aria-operations-hc-check-available-inodes-can-cause-di.svg)
 df -i /storage/db
 ```
 ## Service Health Commands
+
+![Service Health Commands](../../../../assets/virtualization-vmware-aria-operations-hc-service-health-commands.svg)
 
 ```bash
 # Check all vmware services on the primary node
 systemctl list-units 'vmware-*' --state=active
 
 ## Check a specific service that appears failed
+
+![Check a specific service that appears failed](../../../../assets/virtualization-vmware-aria-operations-hc-check-a-specific-service-that-appea.svg)
 systemctl status vmware-vcops-analytics
 journalctl -u vmware-vcops-analytics --since "1 hour ago" | tail -100
 
 ## Key services and expected states
+
+![Key services and expected states](../../../../assets/virtualization-vmware-aria-operations-hc-key-services-and-expected-states.svg)
 ## vmware-vcops-analytics   — active (running)
+
+![vmware-vcops-analytics   — active (running)](../../../../assets/virtualization-vmware-aria-operations-hc-vmware-vcops-analytics-active-runni.svg)
 ## vmware-vcops-cassandra   — active (running)
+
+![vmware-vcops-cassandra   — active (running)](../../../../assets/virtualization-vmware-aria-operations-hc-vmware-vcops-cassandra-active-runni.svg)
 ## vmware-vcops-postgres    — active (running)
+
+![vmware-vcops-postgres    — active (running)](../../../../assets/virtualization-vmware-aria-operations-hc-vmware-vcops-postgres-active-runnin.svg)
 ## vmware-vcops-gemfire     — active (running)
+
+![vmware-vcops-gemfire     — active (running)](../../../../assets/virtualization-vmware-aria-operations-hc-vmware-vcops-gemfire-active-running.svg)
 ## vmware-casa              — active (running)
+
+![vmware-casa              — active (running)](../../../../assets/virtualization-vmware-aria-operations-hc-vmware-casa-active-running.svg)
 ## nginx                    — active (running)
+
+![nginx                    — active (running)](../../../../assets/virtualization-vmware-aria-operations-hc-nginx-active-running.svg)
 ## vmware-vcops-watchdog    — active (running)
+
+![vmware-vcops-watchdog    — active (running)](../../../../assets/virtualization-vmware-aria-operations-hc-vmware-vcops-watchdog-active-runnin.svg)
 ```
 ## NTP Health
+
+![NTP Health](../../../../assets/virtualization-vmware-aria-operations-hc-ntp-health.svg)
 
 ```bash
 # Check NTP sync on each cluster node
@@ -142,6 +136,8 @@ for node in vrops-prod-01 vrops-prod-02 vrops-prod-03; do
 done
 
 ## Force sync if drift is detected
+
+![Force sync if drift is detected](../../../../assets/virtualization-vmware-aria-operations-hc-force-sync-if-drift-is-detected.svg)
 chronyc makestep
 
 ## See also
@@ -151,9 +147,13 @@ chronyc makestep
 - [Aria Operations — CLI Reference](cli-reference/)
 
 ## Verify NTP sources
+
+![Verify NTP sources](../../../../assets/virtualization-vmware-aria-operations-hc-verify-ntp-sources.svg)
 chronyc sources -v
 ```
 ## Alert API Queries
+
+![Alert API Queries](../../../../assets/virtualization-vmware-aria-operations-hc-alert-api-queries.svg)
 
 ```bash
 # Get all active alerts grouped by criticality
@@ -162,11 +162,15 @@ curl -sk -H "Authorization: vRealizeOpsToken $TOKEN" \
   jq '[.alerts[] | .criticality] | group_by(.) | map({criticality: .[0], count: length})'
 
 ## Get all CRITICAL alerts with their object and alert name
+
+![Get all CRITICAL alerts with their object and alert name](../../../../assets/virtualization-vmware-aria-operations-hc-get-all-critical-alerts-with-their-.svg)
 curl -sk -H "Authorization: vRealizeOpsToken $TOKEN" \
   "https://vrops-prod-01.example.local/suite-api/api/alerts?activeOnly=true&criticality=CRITICAL" | \
   jq '.alerts[] | {alert: .type.name, object: .resourceName, since: .startTimeUTC}'
 ```
 ## Capacity Summary via API
+
+![Capacity Summary via API](../../../../assets/virtualization-vmware-aria-operations-hc-capacity-summary-via-api.svg)
 
 ```bash
 # Check cluster-level capacity summary
@@ -180,6 +184,8 @@ Also verify alert definitions are active: **Administration → Alert Settings �
 ---
 
 ## Remote Collector Health
+
+![Remote Collector Health](../../../../assets/virtualization-vmware-aria-operations-hc-remote-collector-health.svg)
 
 1. **UI status**: Aria Ops → **Administration** → **Remote Collectors** — every collector must show **State: OK**; any showing **Offline** or **Error** needs immediate investigation
 2. **Service check** — SSH to each remote collector node:
@@ -201,6 +207,8 @@ Also verify alert definitions are active: **Administration → Alert Settings �
 
 ## Adapter Collection Status Check
 
+![Adapter Collection Status Check](../../../../assets/virtualization-vmware-aria-operations-hc-adapter-collection-status-check.svg)
+
 1. **UI scan**: Aria Ops → **Administration** → **Solutions** → review the **Last Collection Time** column for every adapter instance
    - Stale > 15 minutes: investigate immediately — indicates collection failure
    - Stale > 60 minutes: high likelihood of service or network fault
@@ -217,6 +225,8 @@ Also verify alert definitions are active: **Administration → Alert Settings �
 ---
 
 ## Database Health (Cassandra)
+
+![Database Health (Cassandra)](../../../../assets/virtualization-vmware-aria-operations-hc-database-health-cassandra.svg)
 
 Cassandra is the primary metrics store; node failures cause metric gaps and eventually alert misfires.
 
@@ -246,6 +256,8 @@ If a node shows `DN`: check VM power state → if powered on, check service: `sy
 
 ## Capacity and Scaling Indicators
 
+![Capacity and Scaling Indicators](../../../../assets/virtualization-vmware-aria-operations-hc-capacity-and-scaling-indicators.svg)
+
 1. **Node resource utilisation**: Aria Ops → **Administration** → **Cluster Management** → review each node's CPU and memory usage bar
    - CPU > 85% sustained: add a data node or remote collector to distribute load
    - Memory > 90%: check for memory leak in analytics service — `systemctl restart vmware-vcops-analytics` as a short-term fix; engage VMware support if recurring
@@ -266,6 +278,8 @@ If a node shows `DN`: check VM power state → if powered on, check service: `sy
 ---
 
 ## Alert Queue Health
+
+![Alert Queue Health](../../../../assets/virtualization-vmware-aria-operations-hc-alert-queue-health.svg)
 
 1. **Stale alert detection**: Aria Ops → **Alerts** → **All Alerts** → sort by **Start Time** ascending
    - Any alert in **Active** state older than 7 days without acknowledgement indicates policy or notification failure

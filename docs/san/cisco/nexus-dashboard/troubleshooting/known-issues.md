@@ -12,57 +12,10 @@ Catalog of known Nexus Dashboard bugs, error codes, and workarounds covering clu
 
 *Applies to: Nexus Dashboard 3.x*
 </div>
+![Cisco Nexus Dashboard — Known Issues and Error Codes](../../../../assets/san-cisco-nexus-dashboard-troubleshooting-known-issues.svg)
 
-```text
-┌──────────────────────────────────────── Cisco Nexus Dashboard ────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │            Unified management platform — hosts NDFC, NAE, and fabric assurance apps           │   │
-│   │                  Protocols: HTTPS · REST API · gRPC telemetry · SSH · SNMP v3                 │   │
-│   │                Management: ND web UI · REST API · NDFC fabric controller · NAE                │   │
-│   │               ND cluster -> site onboarding -> NDFC/NAE app -> fabric management              │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │           Platform          │  │    ND cluster (3+ nodes)    │  │      OVA or bare-metal      │   │
-│   │         Fabric ctrl         │  │       NDFC (SAN / LAN)      │  │        Replaces DCNM        │   │
-│   │          Assurance          │  │           NAE app           │  │      Policy + telemetry     │   │
-│   │            Sites            │  │       Multi-site mgmt       │  │      MSO / NDO overlay      │   │
-│   │          Telemetry          │  │       gRPC / streaming      │  │      Real-time metrics      │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
-│   │    ND cluster    │App host platform │     HTTPS 443     │   LDAP / local   │3-node HA required│   │
-│   │       NDFC       │Fabric controller │    HTTPS / SSH    │    Role-based    │LAN and SAN modes │   │
-│   │       NAE        │Network assurance │    gRPC / REST    │     API key      │ Pre/post-change  │   │
-│   │       NDO        │Multi-site overlay│       HTTPS       │    LDAP / SSO    │  MSO successor   │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical: ND cluster nodes -> managed Cisco NX-OS/MDS switches -> physical DC fabric                 │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  ND           = Nexus Dashboard; Cisco unified operations platform (3-node cluster)                   │
-│  NDFC         = Nexus Dashboard Fabric Controller; successor to DCNM                                  │
-│  NDFC-LAN     = NDFC in LAN mode; manages VXLAN/BGP EVPN underlay + overlay                           │
-│  NDFC-SAN     = NDFC in SAN mode; manages Cisco MDS FC zoning and VSANs                               │
-│  NAE          = Network Assurance Engine; validates fabric policy and telemetry                       │
-│  NDO          = Nexus Dashboard Orchestrator; multi-site VXLAN policy management                      │
-│  Site         = a fabric registered with ND; can span multiple DCs                                    │
-│  gRPC         = Google RPC; used for streaming telemetry from NX-OS to ND/NAE                         │
-│  Micro-seg.   = endpoint policy enforcement at VM/port level via NAE                                  │
-│  Assurance    = continuous validation of network state against intended policy                        │
-│  MSO          = Multi-Site Orchestrator; predecessor to NDO                                           │
-│  Fabric template = NDFC config skeleton for VXLAN/BGP overlay deployment                              │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 
 ## Before you begin

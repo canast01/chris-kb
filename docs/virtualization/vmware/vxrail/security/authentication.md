@@ -11,63 +11,10 @@ Authentication reference for VxRail components. Covers VxRail Manager local and 
 
 *Applies to: VxRail 7.x / 8.x*
 </div>
+![VxRail — Authentication](../../../../assets/virtualization-vmware-vxrail-security-authentication.svg)
 
-```text
-┌─────────────────────────────────────── VxRail — Authentication ───────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │          VxRail Manager local mystic account; LDAP/AD groups mapped to VxRail roles           │   │
-│   │         iDRAC root/Calvin must be replaced; LDAP for centralised OOB auth; 2FA optional       │   │
-│   │        vCenter SSO domain as management plane identity provider; AD identity source added      │  │
-│   │        ESXi root host.local account; SSO pass-through for normal admin access via vCenter     │   │
-│   │   Dedicated service accounts for VxRail Manager, OMIVV, SupportAssist — minimal permissions   │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    All component access gated by identity source · service accounts hold least privilege              │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │       VxRail Manager        │  │        iDRAC / OOB          │  │      vCenter / ESXi         │   │
-│   │    mystic local account     │  │   root/Calvin → change      │  │   SSO domain vsphere.local  │   │
-│   │   LDAP group → role map     │  │    LDAP AD group mapping     │  │   AD identity source add    │  │
-│   │   Admin / Read-only roles   │  │    2FA on iDRAC console      │  │   admin@vsphere.local mgmt  │  │
-│   │   Credential in vault       │  │    OOB VLAN restriction      │  │   ESXi host.local root      │  │
-│   │   API and SSH access        │  │    Firmware current via LCM  │  │   SSO pass-through normal   │  │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│    VxRail Mgr API auth · iDRAC OOB auth · vCenter SSO for all mgmt plane                              │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   VxRail Mgr      │      iDRAC         │    vCenter SSO    │    ESXi hosts    │   Svc Accts   │   │
-│   │  mystic local     │  root → change     │  vsphere.local    │  host.local root │  svc-vxrail   │   │
-│   │   LDAP groups     │  LDAP AD groups    │  AD identity src  │  SSO passthru    │  svc-omivv    │   │
-│   │   Admin/RO role   │  2FA optional      │  admin acct pol   │  lockdown mode   │  svc-support  │   │
-│   │   Vault stored    │  OOB VLAN only     │  session timeout  │  exception list  │  min perms    │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  Dell PowerEdge servers · iDRAC OOB NIC · TPM 2.0 · Active Directory / LDAP · CA infrastructure       │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  mystic              = Default VxRail Manager local admin account; rename or disable after LDAP setup │
-│  iDRAC               = Integrated Dell Remote Access Controller; OOB hardware management interface    │
-│  root/Calvin         = Factory-default iDRAC credentials; must be changed before production use       │
-│  vCenter SSO         = vSphere Single Sign-On; management plane identity provider for vCenter/ESXi    │
-│  AD identity source  = Active Directory registered in vCenter SSO for user/group authentication       │
-│  host.local          = ESXi local authentication domain; root account used only when vCenter absent   │
-│  SSO pass-through    = ESXi uses vCenter SSO token for admin logins; no separate ESXi password needed │
-│  Lockdown mode       = ESXi setting disabling direct SSH/DCUI; all admin access via vCenter only      │
-│  Exception user list = Accounts permitted direct ESXi access even when lockdown mode is active        │
-│  Service account     = Non-human account for VxRail Manager, OMIVV, SupportAssist automation          │
-│  OMIVV               = OpenManage Integration for VMware vCenter; uses svc account for vCenter auth   │
-│  2FA on iDRAC        = Two-factor authentication for iDRAC console logins; reduces OOB access risk    │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ---
 

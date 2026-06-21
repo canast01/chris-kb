@@ -12,53 +12,10 @@ How to escalate NetApp SnapMirror replication issues to NetApp support: what dat
 
 *Applies to: SnapMirror Async, Sync, SM-BC, SVM-DR on ONTAP 9.x*
 </div>
+![SnapMirror — Escalation](../../../../assets/storage-netapp-snapmirror-troubleshooting-escalation.svg)
 
-```text
-┌────────────────────────────── NetApp SnapMirror — Escalation ─────────────────────────────────────────┐
-│                                                                                                       │
-│  Escalate SnapMirror issues to NetApp support when a DR relationship has broken and the               │
-│  destination volume is not current, SM-BC is in a quorum-loss state and I/O is failing,               │
-│  a SnapMirror Sync relationship is reporting errors and is no longer synchronous, or                  │
-│  a resync after planned failover is failing and the relationship cannot be restored.                  │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Step 1 — Collect Data               │  │          Step 2 — Open the SR               │   │
-│   │  snapmirror show -expanded (both clusters)   │  │  Go to mysupport.netapp.com → sign in       │   │
-│   │  Invoke AutoSupport on source AND dest       │  │  Product: ONTAP; both cluster serials       │   │
-│   │  event log show -message-name snapmirror.*   │  │  Priority: P1 DR broken / P2 lag at risk    │   │
-│   │  network interface show -role intercluster   │  │  Attach SnapMirror show + EMS events        │   │
-│   │  Write timeline: last success → first error  │  │  For P1: also call +1-888-463-8277          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  For P1 (DR unavailable / SM-BC quorum lost): open case AND call NetApp immediately.                  │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Step 3 — Escalation Path            │  │         What NOT to Do                      │   │
-│   │  TSE: triage + review AutoSupport from both  │  │  Do not run snapmirror break without NetApp │   │
-│   │  SE: if DR failover is being considered      │  │  Do not delete destination snapshots        │   │
-│   │  Duty Manager: request if SLA breached       │  │  Do not resync before NetApp confirms       │   │
-│   │  TAM: especially for SM-BC implementations  │  │  Do not upgrade ONTAP mid-incident          │    │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  SnapMirror     = ONTAP replication; transfers only changed blocks after initial baseline sync        │
-│  intercluster LIF= dedicated logical interface for SnapMirror traffic between clusters                │
-│  Async XDP      = extended data protection; async replication; RPO in minutes; most common DR mode    │
-│  SnapMirror Sync= RPO=0; every write on source is synchronous to destination before ACK to host       │
-│  SM-BC          = SnapMirror Business Continuity; active-active SAN zero-RPO with Mediator            │
-│  Mediator       = ONTAP Mediator; quorum service for SM-BC; Linux VM at a third site                  │
-│  SVM-DR         = SVM-level replication including configuration, volumes, and NAS protocol config     │
-│  resync         = re-establishes a broken relationship from the last common snapshot                  │
-│  snapmirror break= makes destination volume read-write; breaks the relationship                       │
-│  SnapVault      = SnapMirror variant for backup retention; longer retention schedules                 │
-│  AutoSupport    = ONTAP telemetry; must be invoked on BOTH clusters before opening a NetApp case      │
-│  TSE            = Technical Support Engineer; first NetApp engineer assigned to a case                │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ---
 

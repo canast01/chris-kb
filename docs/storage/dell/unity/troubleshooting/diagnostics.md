@@ -12,55 +12,10 @@ Unity XT diagnostic commands: check system-wide health with <code>uemcli /env/he
 
 *Applies to: Unity XT*
 </div>
+![Unity — Diagnostics](../../../../assets/storage-dell-unity-troubleshooting-diagnostics.svg)
 
-```text
-┌───────────────────────────────────── Dell Unity XT — Diagnostics ─────────────────────────────────────┐
-│                                                                                                       │
-│   ┌────────────────────────────────────────────────────────────────────────────────────────────┐      │
-│   │  Start here: uemcli /env/health show -filter "health.value ne OK"                         │       │
-│   │  SP issue: uemcli /env/sp show -detail → check CPU, memory, battery, temperature          │       │
-│   │  Pool/disk alert: uemcli /stor/config/disk show → identify faulted or rebuilding drives   │       │
-│   │  Host access: uemcli /stor/config/lunacl show → confirm LUN access control for host       │       │
-│   └────────────────────────────────────────────────────────────────────────────────────────────┘      │
-│                                                                                                       │
-│   ┌─────────────────────────────────────────┐  ┌──────────────────────────────────────────────┐       │
-│   │         System Health and Alerts        │  │         Storage Processors (SP-A/SP-B)       │       │
-│   │   /env/health show: non-OK components  │  │   /env/sp show -detail: CPU, memory, temp    │        │
-│   │   /prac/alert show: active alerts      │  │   /env/sp -id spa show: SP-A component view  │        │
-│   │   /sys/general show: system info       │  │   /env/sp -id spb show: SP-B component view  │        │
-│   │   /event/syslog show: event log        │  │   /sys/battery show: BBU (write cache guard) │        │
-│   │   /event/audit show: admin actions     │  │   /sys/powersupply show: PSU health          │        │
-│   └─────────────────────────────────────────┘  └──────────────────────────────────────────────┘       │
-│                                                                                                       │
-│   ┌─────────────────────────────────────────┐  ┌──────────────────────────────────────────────┐       │
-│   │       Storage Pools and Disks           │  │        LUN, NAS, and Network Access          │       │
-│   │   /stor/config/pool show: capacity      │  │   /stor/config/lun show: LUN health          │       │
-│   │   /stor/config/dg show: disk groups     │  │   /stor/config/lunacl show: host access      │       │
-│   │   /stor/config/disk show: drive states  │  │   /nas/server show: NAS server health        │       │
-│   │   /stor/config/fastcache show: cache    │  │   /net/if show: interfaces + link state      │       │
-│   │   /prot/rep/session show: replication   │  │   /net/port/fc show: FC port state           │       │
-│   └─────────────────────────────────────────┘  └──────────────────────────────────────────────┘       │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  Unity XT 380F/480F/680F/880F · dual SPs (SP-A, SP-B) · DPE / DAE expansion enclosures                │
-│  10/25 GbE data ports · FC ports (front-end) · management port (SSH/HTTPS to Unisphere)               │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│  Unity XT           = Dell unified mid-range array; block LUNs, file NAS, and VMware vVols            │
-│  Unisphere          = HTML5 GUI and REST API for Unity XT management; SP-hosted management portal     │
-│  UEMCLI             = CLI for Unity XT; uemcli -d <ip> -u admin -p <pw> /show commands                │
-│  Storage pool       = collection of drives forming a usable pool; FAST VP tiers data automatically    │
-│  FAST VP            = Fully Automated Storage Tiering VP; moves hot and cold data between tiers       │
-│  NAS server         = virtual file server on Unity; each has its own IP, DNS, and CIFS/NFS shares     │
-│  Data Mover         = older EMC term for NAS server; used in VNX and early Unity documentation        │
-│  SP-A / SP-B        = storage processors; active-active HA pair with mirrored cache                   │
-│  Snapshot           = space-efficient PiT copy of LUN or FS; writable snapshots supported             │
-│  RecoverPoint       = RP4VM; journal-based continuous data protection for Unity volumes               │
-│  Metro              = synchronous replication between two Unity XT sites; active-active zero RPO      │
-│  vVols              = Virtual Volumes; VASA provider exposes per-VM storage objects to vCenter        │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ```mermaid
 graph TD

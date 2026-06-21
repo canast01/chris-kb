@@ -12,55 +12,10 @@ ONTAP diagnostic commands: check cluster and HA health with <code>cluster show</
 
 *Applies to: ONTAP 9.x*
 </div>
+![ONTAP — Diagnostics](../../../../assets/storage-netapp-ontap-troubleshooting-diagnostics.svg)
 
-```text
-┌───────────────────────────────────── NetApp ONTAP — Diagnostics ──────────────────────────────────────┐
-│                                                                                                       │
-│   ┌────────────────────────────────────────────────────────────────────────────────────────────┐      │
-│   │  Start here: cluster show → system health status show → storage failover show             │       │
-│   │  Disk/aggregate: storage disk show -broken → storage aggregate show -state !online        │       │
-│   │  Volume: volume show -state !online → volume show percent-used > 90%                      │       │
-│   │  Network: network interface show -status-oper down → cluster ping-cluster                 │       │
-│   └────────────────────────────────────────────────────────────────────────────────────────────┘      │
-│                                                                                                       │
-│   ┌─────────────────────────────────────────┐  ┌──────────────────────────────────────────────┐       │
-│   │     Cluster, Node, and HA Health        │  │          Storage and Disk Diagnostics        │       │
-│   │   cluster show: node health/eligibility │  │   storage aggregate show -state !online      │       │
-│   │   system node show: uptime + state      │  │   storage aggregate show-status: RAID detail │       │
-│   │   storage failover show: HA state       │  │   storage disk show -broken: failed disks    │       │
-│   │   cluster ring show: cluster services   │  │   storage disk show -raid-state recon.       │       │
-│   │   system health alert show: any alerts  │  │   storage shelf show: shelf health           │       │
-│   └─────────────────────────────────────────┘  └──────────────────────────────────────────────┘       │
-│                                                                                                       │
-│   ┌─────────────────────────────────────────┐  ┌──────────────────────────────────────────────┐       │
-│   │       Volume, SVM, and Protocol         │  │        SnapMirror and Performance            │       │
-│   │   volume show -state !online: offline   │  │   snapmirror show -health false: unhealthy   │       │
-│   │   network interface show -oper down     │  │   snapmirror lag show: per-relationship lag  │       │
-│   │   vserver nfs show + connected-client   │  │   statistics start -object volume: latency   │       │
-│   │   vserver cifs session show: sessions   │  │   qos statistics performance show: throttle  │       │
-│   │   iscsi session show: connected hosts   │  │   event log show -severity CRITICAL: EMS     │       │
-│   └─────────────────────────────────────────┘  └──────────────────────────────────────────────┘       │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  AFF/FAS HA node pairs · cluster interconnect (10/25/100 GbE) · client access network                 │
-│  Disk shelves (SAS/NVMe) · MetroCluster or SM-BC for site-level HA · ONTAP Mediator (SM-BC)           │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│  ONTAP              = NetApp storage OS; unified NAS, SAN, and object across AFF, FAS, Select         │
-│  SVM                = Storage Virtual Machine; logical storage server with protocols, IP, and vols    │
-│  Aggregate          = RAID group of disks; underpins FlexVols and FlexGroups within a node            │
-│  FlexVol            = flexible thin-provisioned volume within an aggregate; most common container     │
-│  FlexGroup          = scale-out volume spanning multiple aggregates; for very large NAS workloads     │
-│  SnapMirror         = async or sync replication between ONTAP systems for DR and backup               │
-│  SnapVault          = backup-oriented SnapMirror variant; independent retention at destination        │
-│  FlexClone          = instant space-efficient writable clone of a volume or LUN from snapshot         │
-│  Snapshot           = ONTAP space-efficient PiT copy; stored in .snapshot directory on NFS            │
-│  ONTAP Mediator     = third-site quorum for SnapMirror SM-BC; prevents split-brain scenarios          │
-│  SM-BC              = SnapMirror Business Continuity; sync zero-RPO active-active SAN replication     │
-│  vserver            = ONTAP CLI name for SVM; vserver show and vserver nfs show are common cmds       │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ```mermaid
 graph TD

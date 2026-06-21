@@ -12,57 +12,10 @@ Catalog of known Terraform and Terraform Enterprise bugs, error codes, and worka
 
 *Applies to: Terraform 1.5.x / 1.9.x, TFE (Terraform Enterprise)*
 </div>
+![Terraform / OpenTofu — Known Issues and Error Codes](../../../assets/automation-terraform-troubleshooting-known-issues.svg)
 
-```text
-┌──────────────────────────────────────── Terraform / OpenTofu ─────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │          Infrastructure-as-code: declarative state-driven provisioning via providers          │   │
-│   │           Protocols: HTTPS to provider APIs · HTTPS to remote state backend (S3/TFE)          │   │
-│   │                   Management: terraform CLI / Terraform Enterprise (TFE) UI                   │   │
-│   │           plan -> diff against state -> apply -> provider API calls -> state updated          │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │            State            │  │      State file + lock      │  │    S3/TFE/Consul backend    │   │
-│   │          Providers          │  │    AWS/Azure/vSphere etc.   │  │       Plugin binaries       │   │
-│   │          Execution          │  │       CLI / TFE agent       │  │     Local or remote runs    │   │
-│   │           Modules           │  │    Registry / Git source    │  │      Reusable IaC units     │   │
-│   │          Workspace          │  │        TFE workspace        │  │    Per-environment state    │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
-│   │  State backend   │  Stores tfstate  │       HTTPS       │    IAM/Token     │  Lock vs. races  │   │
-│   │ Provider plugin  │ API translation  │ Provider-specific │   Cloud creds    │Versioned, cached │   │
-│   │    TFE agent     │ Remote execution │    HTTPS to TFE   │   Agent token    │  On-prem access  │   │
-│   │ Module registry  │Shared IaC modules│     HTTPS/Git     │ Token (priv reg) │ Public + private │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical: CLI/agent host running terraform - state backend - target cloud/on-prem APIs               │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  State file     = JSON record mapping resources to real infrastructure IDs                            │
-│  State lock     = prevents two concurrent applies from corrupting the same state                      │
-│  Provider       = plugin translating HCL resources into API calls for a platform                      │
-│  Plan           = dry-run diff between desired config and current state                               │
-│  Apply          = executes the plan, calling provider APIs to reach desired state                     │
-│  Drift          = real infrastructure diverges from what state file records                           │
-│  Module         = reusable bundle of resources with input variables and outputs                       │
-│  TFE            = Terraform Enterprise; self-hosted remote run/state platform                         │
-│  Workspace      = isolated state + variable set, typically one per environment                        │
-│  Agent pool     = group of self-hosted runners executing TFE runs in private networks                 │
-│  Parallelism    = max concurrent resource operations per apply (default 10)                           │
-│  force-unlock   = manually clears a stuck state lock after confirming no other run                    │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 
 ## Before you begin

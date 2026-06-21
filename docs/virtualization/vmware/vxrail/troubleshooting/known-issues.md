@@ -13,57 +13,10 @@ Catalog of known VxRail bugs, error codes, and workarounds covering LCM upgrades
 
 *Applies to: VxRail 7.x / 8.x*
 </div>
+![Dell VxRail — Known Issues and Error Codes](../../../../assets/virtualization-vmware-vxrail-troubleshooting-known-issues.svg)
 
-```text
-┌───────────────────────────────────────────── Dell VxRail ─────────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │              Dell HCI appliance — vSphere + vSAN pre-integrated on Dell PowerEdge             │   │
-│   │              Protocols: HTTPS (VxM UI/API) · vSphere API · iDRAC · vSAN internal              │   │
-│   │                Management: VxRail Manager (VxM) UI · REST API · MARVIN · iDRAC                │   │
-│   │            VxM API -> vCenter + ESXi -> vSAN cluster -> node health -> LCM upgrade            │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │          Management         │  │        VxRail Manager       │  │       VM on first node      │   │
-│   │           Compute           │  │        ESXi on nodes        │  │     Dell PowerEdge base     │   │
-│   │           Storage           │  │         vSAN cluster        │  │          OSA or ESA         │   │
-│   │           Hardware          │  │         iDRAC / iSM         │  │      OOB mgmt + health      │   │
-│   │           Upgrade           │  │          LCM bundle         │  │       VxM-orchestrated      │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
-│   │  VxRail Manager  │  HCI control VM  │     HTTPS 443     │    local / AD    │VxM runs on node 1│   │
-│   │      iDRAC       │  OOB management  │    HTTPS / IPMI   │    root / AD     │Per-node hardware │   │
-│   │    LCM bundle    │  Stack upgrade   │    HTTPS (VxM)    │      Admin       │Dell+VMware bundle│   │
-│   │       vSAN       │ Cluster storage  │      Internal     │       N/A        │  Health via VxM  │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical: Dell PowerEdge nodes -> VxRail Manager VM -> vSAN cluster -> vCenter                       │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  VxRail       = Dell HCI appliance; factory-integrated vSphere + vSAN on PowerEdge                    │
-│  VxM          = VxRail Manager; management VM handling cluster lifecycle                              │
-│  LCM bundle   = versioned upgrade package for ESXi, vCenter, vSAN, and firmware                       │
-│  iDRAC        = Integrated Dell Remote Access Controller; OOB hardware management                     │
-│  iSM          = iDRAC Service Module; in-OS agent bridging ESXi and iDRAC                             │
-│  MARVIN       = VxRail API layer used by Dell support for diagnostics                                 │
-│  Node expansion = adding a new PowerEdge to an existing VxRail cluster                                │
-│  Health check = VxM continuous monitoring of hardware, ESXi, vSAN, and vCenter                        │
-│  Persona      = VxRail deployment mode: Standard, Dynamic Node, or VCF                                │
-│  VxRail VCF   = VxRail operating within VMware Cloud Foundation (managed by SDDC Mgr)                 │
-│  OSA          = Original Storage Architecture vSAN (cache + capacity disk groups)                     │
-│  ESA          = Express Storage Architecture vSAN; all-NVMe, single-tier pool                         │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 
 ## Before you begin

@@ -13,38 +13,10 @@ VMware Tanzu diagnostic commands: collect the tanzu diagnostics bundle, access S
 
 *Applies to: VMware Tanzu Kubernetes Grid 2.x / vSphere with Tanzu 8.x*
 </div>
+![Tanzu — Diagnostics](../../../../assets/virtualization-vmware-tanzu-troubleshooting-diagnostics.svg)
 
-```text
-┌───────────────────────────────── VMware Tanzu — Diagnostics ──────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   Start here: kubectl get events -A --sort-by .lastTimestamp → kubectl describe pod          │    │
-│   │   Supervisor issue: SSH to control plane VM → journalctl -u kube-apiserver                   │    │
-│   │   PVC not bound: kubectl get pods -n vmware-system-csi; check CSI controller log            │     │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │           Cluster-Level Diagnostics          │  │             Component Diagnostics           │   │
-│   │   kubectl get events -A --sort-by timestamp  │  │   kubectl logs -n vmware-system-csi         │   │
-│   │   kubectl cluster-info dump --all-namespaces │  │   kubectl logs -n pinniped-supervisor       │   │
-│   │   tanzu diagnostics collect: full bundle     │  │   docker-compose logs core (Harbor VM)      │   │
-│   │   kubectl describe pod: events section       │  │   TANZU_LOG_LEVEL=debug tanzu cluster ...   │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  ESXi hosts · Supervisor control plane VMs · TKG workload cluster nodes · Harbor VM or k8s deploy     │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│  Supervisor      = vSphere 8 built-in Kubernetes control plane; runs as VMs on ESXi hosts             │
-│  TKG             = Tanzu Kubernetes Grid; manages guest Kubernetes clusters inside the Supervisor     │
-│  vmware-system-csi= namespace where the vSphere CSI driver runs; required for PV binding              │
-│  Pinniped        = Tanzu identity federation; bridges vSphere SSO to Kubernetes RBAC                  │
-│  tanzu diagnostics= CLI subcommand that collects logs and state from management + workload clusters   │
-│  kubectl cluster-info dump= full cluster state snapshot; nodes, pods, events, configs                 │
-│  TANZU_LOG_LEVEL  = env var to set tanzu CLI debug verbosity; debug = most verbose                    │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ```mermaid
 graph TD

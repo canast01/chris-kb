@@ -12,50 +12,10 @@ How to escalate SQL Server issues to Microsoft support: what data to collect bef
 
 *Applies to: SQL Server 2019 / 2022 on Windows Server*
 </div>
+![SQL Server — Escalation](../../../../assets/compute-windows-server-sql-server-troubleshooting-escalation.svg)
 
-```text
-┌──────────────────────────────────── SQL Server — Escalation ──────────────────────────────────────────┐
-│                                                                                                       │
-│  Escalate SQL Server issues to Microsoft CSS when the service is down, an AG primary has failed       │
-│  with no automatic failover, a blocking chain exceeds 10 minutes, the transaction log is full,        │
-│  or a database is in SUSPECT state. Collect evidence before calling; reduces triage time.             │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Step 1 — Collect Data               │  │          Step 2 — Open the Case             │   │
-│   │  Run sp_readerrorlog; save output            │  │  Go to support.microsoft.com → sign in      │   │
-│   │  Capture sys.dm_exec_requests (blocking)     │  │  Product: SQL Server                        │   │
-│   │  Capture sys.dm_hadr_* (AG health)           │  │  Severity: A (down) / B (degraded) / C/D   │    │
-│   │  Run xp_fixeddrives; DBCC SQLPERF(LOGSPACE)  │  │  Attach error log + blocking + AG output   │    │
-│   │  Write timeline: last good → first failure   │  │  For Sev A: also call Microsoft CSS          │  │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  FORCE_FAILOVER_ALLOW_DATA_LOSS = last-resort only; explicit data loss acknowledged.                  │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Step 3 — Escalation Path            │  │         What NOT to Do                      │   │
-│   │  T1: triage + confirm evidence received      │  │  Do not run DBCC CHECKDB REPAIR_DATA_LOSS   │   │
-│   │  T2: SQL SE assigned; deep analysis          │  │  Do not restart SQL on SUSPECT database     │   │
-│   │  T3: engineering review for SQL Server bug   │  │  Do not clear error log before capturing    │   │
-│   │  CritSit: data loss / service down > 1 hr    │  │  Do not run FORCE_FAILOVER without DBA      │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  AG              = Availability Group; SQL Server HA feature; primary + secondary replicas            │
-│  FORCE_FAILOVER_ALLOW_DATA_LOSS = manual AG failover when primary is lost; last-resort operation      │
-│  SUSPECT         = database in SUSPECT state after crash; do not restart SQL without DBA              │
-│  blocking chain  = session waiting for another session's lock; > 10 min = P1                          │
-│  log_send_queue  = unsent transaction log bytes in AG; growing queue = RPO risk                       │
-│  DBCC CHECKDB    = database consistency check; REPAIR mode can destroy data; run with CSS only        │
-│  sp_readerrorlog = system procedure; reads SQL Server error log; key diagnostic                       │
-│  xp_fixeddrives  = shows free disk space per drive; critical for log-full diagnosis                   │
-│  DBCC SQLPERF    = shows log file usage per database; use LOGSPACE argument                           │
-│  CSS             = Customer Support Services; Microsoft support engineers                             │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ---
 

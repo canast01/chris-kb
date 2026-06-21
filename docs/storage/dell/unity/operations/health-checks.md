@@ -11,58 +11,7 @@ Daily and pre/post-change health checks for Dell Unity storage systems.
 
 *Applies to: Unity XT*
 </div>
-```text
-┌──────────────────────────────────── Dell Unity XT — Health Checks ────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │       Unity XT health checks: routine verification of operational status and performance      │   │
-│   │         Checks include: controller status, drive health, replication lag, and capacity        │   │
-│   │         Frequency: daily quick checks; weekly detailed review; monthly capacity report        │   │
-│   │        Configure threshold-based alerts for proactive incident prevention and awareness       │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Check status → review alerts → verify replication → capacity → log                                 │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │             Ctrl            │  │         SP-A + SP-B         │  │        Cache mirrored       │   │
-│   │             Pool            │  │       Dynamic FAST VP       │  │         Auto-tiering        │   │
-│   │          NAS server         │  │        File protocols       │  │          Per-tenant         │   │
-│   │           Snapshot          │  │        Writable snaps       │  │        Thin PiT copy        │   │
-│   │         Replication         │  │         Async/Metro         │  │       Native or RP4VM       │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Check area    │  How to verify   │   Pass criteria   │    Frequency     │       Tool       │   │
-│   │   Controllers    │   show status    │    All healthy    │      Daily       │     CLI/GUI      │   │
-│   │      Drives      │   show drives    │  No failed/pred.  │      Daily       │     CLI/GUI      │   │
-│   │   Replication    │ show replication │  Lag < threshold  │      Daily       │     CLI/GUI      │   │
-│   │     Capacity     │  show capacity   │     < 80% used    │      Daily       │     CLI/GUI      │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: Unity XT 380F/480F/680F/880F · dual SPs · DPE/DAE expansion · 10/25 GbE                  │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    Unity XT           = Dell unified mid-range array; block LUNs, file NAS, and VMware vVols          │
-│    Unisphere          = HTML5 GUI and REST API for Unity XT management; SP-hosted management portal   │
-│    UEMCLI             = CLI for Unity XT; uemcli -d <ip> -u admin -p <pw> /show commands              │
-│    Storage pool       = collection of drives forming a usable pool; FAST VP tiers data automatically  │
-│    FAST VP            = Fully Automated Storage Tiering VP; moves hot and cold data between tiers     │
-│    NAS server         = virtual file server on Unity; each has its own IP, DNS, and CIFS/NFS shares   │
-│    Data Mover         = older EMC term for NAS server; used in VNX and early Unity documentation      │
-│    SP-A / SP-B        = storage processors; active-active HA pair with mirrored cache                 │
-│    Snapshot           = space-efficient PiT copy of LUN or FS; writable snapshots supported           │
-│    RecoverPoint       = RP4VM; journal-based continuous data protection for Unity volumes             │
-│    Metro              = synchronous replication between two Unity XT sites; active-active zero RPO    │
-│    vVols              = Virtual Volumes; VASA provider exposes per-VM storage objects to vCenter      │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 ## Before you begin
 
@@ -85,6 +34,8 @@ Daily and pre/post-change health checks for Dell Unity storage systems.
 
 ## Daily Checks
 
+![Daily Checks](../../../../assets/storage-dell-unity-hc-daily-checks.svg)
+
 | Check | Command | Notes |
 |---|---|---|
 | [ ] Run `uemcli /env/health show -filter "health.value ne OK"` | `uemcli /env/health show -filter "health.value ne OK"` | any non-OK result requires immediate investigation before proceeding with other work |
@@ -97,6 +48,8 @@ Daily and pre/post-change health checks for Dell Unity storage systems.
 | [ ] Review Unisphere Dashboard for any threshold warnings or capacity |  |  |
 
 ## Health Check
+
+![Health Check](../../../../assets/storage-dell-unity-hc-health-check.svg)
 
 Run these checks before any planned change or as first-response steps when investigating a reported issue.
 
@@ -140,6 +93,8 @@ uemcli /store/lun show
 
 ## System Status Commands
 
+![System Status Commands](../../../../assets/storage-dell-unity-hc-system-status-commands.svg)
+
 ```bash
 # System general info and health
 uemcli -d <ip> -u admin /sys/general show -detail
@@ -154,6 +109,8 @@ uemcli -d <ip> -u admin /sys/sp show -detail | grep -E "Health|State|Model"
 
 ## Alerts and Events
 
+![Alerts and Events](../../../../assets/storage-dell-unity-hc-alerts-and-events.svg)
+
 ```bash
 # Active alerts — any critical alerts require immediate attention
 uemcli -d <ip> -u admin /prac/alert show
@@ -164,6 +121,8 @@ uemcli -d <ip> -u admin /event/syslog show
 ```
 
 ## Hardware
+
+![Hardware](../../../../assets/storage-dell-unity-hc-hardware.svg)
 
 ```bash
 # Disk health
@@ -179,6 +138,8 @@ uemcli -d <ip> -u admin /sys/sp show -detail | grep -E "Health|Power|Temp"
 
 ## Storage Pool Capacity
 
+![Storage Pool Capacity](../../../../assets/storage-dell-unity-hc-storage-pool-capacity.svg)
+
 ```bash
 # Pool list with capacity and health
 uemcli -d <ip> -u admin /stor/config/pool show -detail
@@ -190,6 +151,8 @@ uemcli -d <ip> -u admin /stor/config/pool show | awk '
 
 ## LUN Status
 
+![LUN Status](../../../../assets/storage-dell-unity-hc-lun-status.svg)
+
 ```bash
 # All LUNs and health
 uemcli -d <ip> -u admin /stor/config/lun show -detail | grep -E "Name|Health|Size"
@@ -199,6 +162,8 @@ uemcli -d <ip> -u admin /stor/config/lun show | grep -v "OK\|Name"
 ```
 
 ## Replication Sessions
+
+![Replication Sessions](../../../../assets/storage-dell-unity-hc-replication-sessions.svg)
 
 ```bash
 # All replication sessions
@@ -210,12 +175,16 @@ uemcli -d <ip> -u admin /prot/rep/session show | grep -v "OK\|Session ID"
 
 ## Network Interfaces
 
+![Network Interfaces](../../../../assets/storage-dell-unity-hc-network-interfaces.svg)
+
 ```bash
 # Network interface status
 uemcli -d <ip> -u admin /net/if show | grep -E "ID|Health|IP"
 ```
 
 ## Health Check Summary
+
+![Health Check Summary](../../../../assets/storage-dell-unity-hc-health-check-summary.svg)
 
 | Check | Command | Healthy |
 |---|---|---|
@@ -228,6 +197,8 @@ uemcli -d <ip> -u admin /net/if show | grep -E "ID|Health|IP"
 | Both SPs online | `/sys/sp show` | Both = OK |
 
 ## Daily Health Check Sequence
+
+![Daily Health Check Sequence](../../../../assets/storage-dell-unity-hc-daily-health-check-sequence.svg)
 
 ```mermaid
 graph TD

@@ -13,57 +13,10 @@ Catalog of known vSAN bugs, error codes, and workarounds including degraded comp
 
 *Applies to: vSAN 7.x / 8.x (ESA and OSA)*
 </div>
+![VMware vSAN — Known Issues and Error Codes](../../../../assets/virtualization-vmware-vsan-troubleshooting-known-issues.svg)
 
-```text
-┌───────────────────────────────────────────── VMware vSAN ─────────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                Software-defined storage — pooled local disks across ESXi hosts                │   │
-│   │             Protocols: vSAN (internal) · iSCSI (file service/target) · NFS v3/v4.1            │   │
-│   │                Management: vCenter vSAN UI · ESXCLI · RVC · vSAN Health checks                │   │
-│   │             VM write -> object manager -> CLOM placement -> disk group -> replica             │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │            Cache            │  │       Cache disk (SSD)      │  │        Per disk group       │   │
-│   │           Capacity          │  │        Capacity disks       │  │          HDD or SSD         │   │
-│   │           Cluster           │  │        vSAN datastore       │  │      Single per cluster     │   │
-│   │           Witness           │  │      Stretched cluster      │  │     Third site tie-break    │   │
-│   │            Health           │  │       vSAN Health Svc       │  │     70+ built-in checks     │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
-│   │    Disk group    │   Storage unit   │   vSAN internal   │       N/A        │1 cache+N capacity│   │
-│   │       CLOM       │ Object placement │      Internal     │       N/A        │Honors FTT policy │   │
-│   │      CLOMD       │ Placement daemon │      Internal     │       N/A        │Runs on each host │   │
-│   │  Health Service  │  Cluster health  │  HTTPS (vCenter)  │      Admin       │ Proactive alarms │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical: ESXi hosts with local disks (cache SSD + capacity disks) -> vSAN datastore                 │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  FTT          = Failures to Tolerate; vSAN storage policy defining redundancy                         │
-│  PFTT/SFTT    = Primary/Secondary FTT; stretched cluster tolerance levels                             │
-│  Disk group   = cache SSD + capacity disks grouped on one host                                        │
-│  Object       = vSAN unit of data (e.g. VM home, vmdk, swap)                                          │
-│  CLOM         = Cluster Level Object Manager; decides component placement                             │
-│  Resync       = vSAN rebalancing or repair after disk/host event                                      │
-│  Stretched cluster = vSAN across two sites + witness for FTT=1                                        │
-│  Witness      = lightweight host in third site providing quorum votes                                 │
-│  vSAN ESA     = Express Storage Architecture; all-NVMe, no disk groups                                │
-│  OSA          = Original Storage Architecture; cache + capacity disk group model                      │
-│  Deduplication = reduces capacity by eliminating duplicate blocks per disk group                      │
-│  SPBM         = Storage Policy-Based Management; per-VM vSAN policy config                            │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 
 ## Before you begin

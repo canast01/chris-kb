@@ -15,52 +15,10 @@ How to escalate Nutanix cluster issues to Nutanix Global Support Services (GSS):
 
 *Applies to: AOS 6.x · AHV*
 </div>
+![Nutanix — Escalation](../../../assets/virtualization-nutanix-troubleshooting-escalation.svg)
 
-```text
-┌─────────────────────────────────── Nutanix — Escalation ──────────────────────────────────────────────┐
-│                                                                                                       │
-│  Escalate to Nutanix GSS immediately when the cluster cannot tolerate another failure,                │
-│  production VMs are down, data loss is suspected (Stargate I/O errors), or a CVM is                   │
-│  unresponsive with hardware-level faults. Collect NCC and support bundle first.                       │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Step 1 — Collect Data               │  │          Step 2 — Open the Case             │   │
-│   │  Run NCC all health checks; save output      │  │  Go to portal.nutanix.com → Cases           │   │
-│   │  Collect support bundle via Prism or CLI     │  │  Select cluster; set severity S1/S2/S3/S4   │   │
-│   │  Run ncli cluster info + host list           │  │  Attach NCC output + support bundle         │   │
-│   │  Note AOS version + cluster UUID             │  │  Include timeline + affected VMs            │   │
-│   │  Write timeline: last good → first failure   │  │  For S1/S2: also call the phone number     │    │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  For S1: open portal case AND call Nutanix phone support immediately.                                 │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Step 3 — Escalation Path            │  │         What NOT to Do                      │   │
-│   │  T1: triage + confirm bundle received        │  │  Do not restart CVMs simultaneously         │   │
-│   │  T2: SE assigned; deep cluster analysis      │  │  Do not remove failed disks without GSS     │   │
-│   │  Pulse: enable for remote access if possible │  │  Do not shut down degraded cluster nodes    │   │
-│   │  RCA: provided by GSS within 5 days (S1)     │  │  Do not run disk repair without GSS         │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  CVM         = Controller VM; Nutanix storage controller; one per node; must not be powered off       │
-│  AOS         = Acropolis Operating System; Nutanix hyperconverged OS; runs on each node               │
-│  AHV         = Acropolis Hypervisor; Nutanix's KVM-based hypervisor                                   │
-│  NCC         = Nutanix Configuration Check; health diagnostic tool; run before every GSS call         │
-│  Stargate    = Nutanix storage I/O layer; Stargate I/O errors indicate possible data loss             │
-│  Prism       = Nutanix management UI; Prism Element (per cluster) / Prism Central (multi-cluster)     │
-│  RF          = Replication Factor; RF2 = tolerate 1 failure; RF3 = tolerate 2 failures                │
-│  GSS         = Global Support Services; Nutanix support team; portal.nutanix.com                      │
-│  Pulse       = Nutanix call-home mechanism; allows GSS remote cluster access via tunnel               │
-│  Genesis     = Nutanix cluster management service; handles CVM startup and cluster ops                │
-│  ncli        = Nutanix CLI; primary command-line interface for cluster management                     │
-│  RCA         = Root Cause Analysis; provided by GSS after S1 resolution; < 5 business days            │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ---
 

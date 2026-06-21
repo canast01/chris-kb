@@ -13,51 +13,10 @@ How to escalate VMware vSphere Replication issues to Broadcom support: what data
 
 *Applies to: vSphere Replication 8.x*
 </div>
+![vSphere Replication — Escalation](../../../../assets/virtualization-vmware-vsphere-replication-troubleshooting-es.svg)
 
-```text
-┌──────────────────────────────── VMware vSphere Replication — Escalation ──────────────────────────────┐
-│                                                                                                       │
-│  Escalate vSphere Replication issues to VMware GSS when an active DR recovery is failing,             │
-│  all replications are stopped with no RPO data flowing, the VRA appliance is inaccessible,            │
-│  or replication is permanently broken with no recovery path.                                          │
-│  Collect data from BOTH protected and recovery sites before opening the case.                         │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Step 1 — Collect Data               │  │          Step 2 — Open the SR               │   │
-│   │  VRA VAMI bundle from BOTH sites             │  │  Go to support.broadcom.com → sign in       │   │
-│   │  ESXi hbr.log and hostd.log (source host)    │  │  Product: VMware vSphere Replication        │   │
-│   │  vCenter system logs (both sites)            │  │  Severity: P1 active recovery / P2 all down │   │
-│   │  Replication status screenshot + VR version  │  │  Attach both-site bundles + hbr logs        │   │
-│   │  Write timeline: last sync → first failure   │  │  Include SRM case number if open in parallel│   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  For P1 (active recovery failing): open portal case AND call Broadcom support immediately.            │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Step 3 — Escalation Path            │  │         What NOT to Do                      │   │
-│   │  T1: triage + confirm both-site bundles      │  │  Do not restart VRA without GSS direction   │   │
-│   │  T2: VR SE assigned; deep analysis           │  │  Do not configure new replications mid-case │   │
-│   │  T3: engineering review for VR code bug      │  │  Do not remove/re-add SRM pairing           │   │
-│   │  CritSit: active recovery failing > 2 hours  │  │  Do not reconfigure ESXi vmkernels mid-case │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  VRA          = vSphere Replication Appliance; per-site virtual appliance that orchestrates VR        │
-│  hbr.log      = ESXi host-based replication log; shows replication traffic per-VM at host level       │
-│  hbrsrv.log   = VRA server log; shows VR orchestration, site-pair status, and RPO tracking            │
-│  VRMS         = vSphere Replication Management Server; part of VRA; manages the replication config    │
-│  RPO          = Recovery Point Objective; max acceptable data age at the recovery site                │
-│  Site pair    = the logical connection between protected-site VRA and recovery-site VRA               │
-│  GSS          = Global Support Services; Broadcom/VMware support team                                 │
-│  CritSit      = Critical Situation; Broadcom war room; triggered when recovery is actively failing    │
-│  Recovery site = DR datacenter; VMs are started here during failover                                  │
-│  Protected site = primary datacenter; VMs run here and replicate to the recovery site                 │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ---
 

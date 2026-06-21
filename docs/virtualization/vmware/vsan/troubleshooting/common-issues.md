@@ -8,6 +8,8 @@ search:
   boost: 2
 ---
 # vSAN — Common Issues
+![vSAN — Common Issues](../../../../assets/virtualization-vmware-vsan-troubleshooting-common-issues.svg)
+
 
 ```bash
 # 1. Cluster membership and overall status
@@ -28,53 +30,7 @@ esxcli vsan storage list
 # 6. Network connectivity between hosts
 esxcli vsan debug network test
 ```
-```text
-┌──────────────────────────────────────── vSAN — Common Issues ─────────────────────────────────────────┐
-│                                                                                                       │
-│  Common vSAN issues: degraded components, resync stalls, disk failures, network                       │
-│  latency causing I/O aborts, capacity alarms, and policy non-compliance.                              │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             Degraded Components              │  │                Resync Stalls                │   │
-│   │            Symptom: health UI red            │  │         Resync bytes not decreasing         │   │
-│   │           Check: disk SMART errors           │  │          Check: host in maint mode          │   │
-│   │           Fix: replace failed disk           │  │             Fix: exit maint mode            │   │
-│   │         60-min timer before rebuild          │  │            Bandwidth limit: raise           │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Degraded = policy at risk; check health UI immediately; resync removes the risk.                     │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             Network & I/O Issues             │  │           Capacity & Policy Issues          │   │
-│   │        I/O abort: check MTU mismatch         │  │             Capacity >70%: alert            │   │
-│   │        Latency spike: resync traffic         │  │           Non-compliant: re-apply           │   │
-│   │           MTU test: vSAN health UI           │  │          Dedup savings gone: expand         │   │
-│   │         NIC team fail: check uplinks         │  │           Stretched: witness down           │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  Most issues trace to: disk SMART failure, network MTU mismatch, host in maintenance,                 │
-│  or capacity >70%; check all four before deep investigation.                                          │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Degraded      = replica lost; policy not met; data at risk                                           │
-│  Absent        = component missing <60min; vSAN waits before rebuilding                               │
-│  60-min timer  = vSAN delay before treating absent as degraded                                        │
-│  SMART error   = disk pre-failure indicator; replace proactively                                      │
-│  MTU mismatch  = jumbo frames not configured end-to-end; causes I/O errors                            │
-│  Resync BW     = configurable limit; default 128Mbps; raise for faster rebuild                        │
-│  Policy non-compliant= VM does not meet FTT policy; fix = re-apply policy                             │
-│  Witness down  = stretched cluster loses quorum; VMs may stall                                        │
-│  NIC team fail = check uplink status on vDS; failover should be automatic                             │
-│  Dedup savings = dedup ratio drops when data is incompressible                                        │
-│  I/O abort     = VM I/O fails; check vSAN health for root cause                                       │
-│  Capacity 70%  = alert threshold; keep 30% free for resync headroom                                   │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 ```text
 Normal vSAN:
 Host 1 ──── data copy 1

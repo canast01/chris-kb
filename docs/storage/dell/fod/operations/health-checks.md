@@ -11,58 +11,7 @@ Dell FoD health checks: SCG connectivity status, entitlement consumption review 
 
 *Applies to: Dell FOD*
 </div>
-```text
-┌────────────────────────────────────── Dell FoD — Health Checks ───────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │         FoD health checks: routine verification of operational status and performance         │   │
-│   │         Checks include: controller status, drive health, replication lag, and capacity        │   │
-│   │         Frequency: daily quick checks; weekly detailed review; monthly capacity report        │   │
-│   │        Configure threshold-based alerts for proactive incident prevention and awareness       │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Check status → review alerts → verify replication → capacity → log                                 │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │         License type        │  │        Permanent/Term       │  │       Feature-specific      │   │
-│   │          Activation         │  │         Key → array         │  │        Instant unlock       │   │
-│   │            Scope            │  │         Per-array SN        │  │       Non-transferable      │   │
-│   │           Features          │  │       Replication/Tier      │  │       Product-defined       │   │
-│   │            Audit            │  │        License report       │  │          Compliance         │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Check area    │  How to verify   │   Pass criteria   │    Frequency     │       Tool       │   │
-│   │   Controllers    │   show status    │    All healthy    │      Daily       │     CLI/GUI      │   │
-│   │      Drives      │   show drives    │  No failed/pred.  │      Daily       │     CLI/GUI      │   │
-│   │   Replication    │ show replication │  Lag < threshold  │      Daily       │     CLI/GUI      │   │
-│   │     Capacity     │  show capacity   │     < 80% used    │      Daily       │     CLI/GUI      │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: Dell array with FoD-capable firmware · Dell licensing portal · array management          │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    FoD                = Feature on Demand; software capabilities locked in firmware, unlocked by li...│
-│    License key        = alphanumeric string generated at purchase; applied via GUI, CLI, or REST API  │
-│    Permanent license  = perpetual feature unlock; tied to specific array serial number                │
-│    Term license       = time-limited feature unlock; expires unless renewed through Dell portal       │
-│    Entitlement        = purchased right to use a feature; tracked in Dell software licensing portal   │
-│    License transfer   = FoD licenses are non-transferable between different array serial numbers      │
-│    Replication FoD    = unlocks synchronous or asynchronous array replication features                │
-│    Tier FoD           = unlocks FAST VP or cloud tiering between performance and capacity tiers       │
-│    License audit      = periodic reconciliation of active features versus licensed entitlements       │
-│    LicenseManager     = Dell tool for bulk license management across multiple array systems           │
-│    Array serial       = unique array identifier; FoD licenses are cryptographically bound to it       │
-│    FoD portal         = licensing.dell.com; purchase, download, and track all FoD license keys        │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 ## Before you begin
 
@@ -86,6 +35,8 @@ Dell FoD health checks: SCG connectivity status, entitlement consumption review 
 
 ## Daily Checks
 
+![Daily Checks](../../../../assets/storage-dell-fod-hc-daily-checks.svg)
+
 | Check | Command | Notes |
 |---|---|---|
 | [ ] Check if FOD burst is currently active on any array | | burst should only be active if a planned workload increase justified it |
@@ -94,6 +45,8 @@ Dell FoD health checks: SCG connectivity status, entitlement consumption review 
 | [ ] Check that base capacity allocation has not changed unexpectedly | | |
 
 ## Health Check Commands
+
+![Health Check Commands](../../../../assets/storage-dell-fod-hc-health-check-commands.svg)
 
 ```bash
 # Authenticate to Unisphere REST API
@@ -126,6 +79,8 @@ curl -s -k \
 - [ ] Document the current base and burst consumption figures before the workload change
 
 ## Post-Change Validation
+
+![Post-Change Validation](../../../../assets/storage-dell-fod-hc-post-change-validation.svg)
 
 - [ ] FOD burst consumption returns to the pre-change baseline after any temporary workload increase
 - [ ] Burst is not active where it was not expected to be

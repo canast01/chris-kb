@@ -13,51 +13,10 @@ VMware Cloud Foundation diagnostic commands: check SDDC Manager services and hea
 
 *Applies to: VCF 4.x / 5.x*
 </div>
+![VCF — Diagnostics](../../../../assets/virtualization-vmware-vmware-cloud-foundation-troubleshootin.svg)
 
-```text
-┌──────────────────────────────── VMware Cloud Foundation — Diagnostics ────────────────────────────────┐
-│                                                                                                       │
-│  VCF diagnostics use SDDC Manager task logs, SOS utility, component logs, and                         │
-│  health reports to identify root causes across all VCF layers.                                        │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              SDDC Manager Logs               │  │                 SOS Utility                 │   │
-│   │             /var/log/vmware/vcf/             │  │     sudo sos --collect-all-logs             │   │
-│   │            operationsmanager.log             │  │     sudo sos --health-check                 │   │
-│   │           lcm-debug.log: LCM detail          │  │     sudo sos --connectivity-check           │   │
-│   │         Tasks API: get failed tasks          │  │               Send ZIP to GSS               │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  SOS utility generates a comprehensive bundle across all VCF components.                              │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │            Component Diagnostics             │  │                Health Reports               │   │
-│   │            vCenter: vc-support.sh            │  │    GET /v1/system/health-summary            │   │
-│   │            NSX: get cluster status           │  │    GET /v1/domains — domain status          │   │
-│   │           ESXi: vm-support bundle            │  │    GET /v1/hosts — host connectivity        │   │
-│   │           vSAN: esxcli vsan debug            │  │    Get-VCFTask via PowerVCF                 │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  SDDC Manager appliance · Management domain vCenter + NSX + vSAN · Workload domain vCenter + NSX      │
-│  SOS utility runs on SDDC Manager; component CLI access requires SSH to each appliance individually   │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│  SOS utility   = VCF diagnostic bundle collector; /usr/lib/vmware-sddc-support/sos                    │
-│  operationsmanager= SDDC Mgr main service log; task and API events                                    │
-│  lcm-debug.log = LCM upgrade log; step-by-step upgrade stage progress and failures                    │
-│  Tasks API     = GET /v1/tasks; lists failed or in-progress tasks with error details                  │
-│  vc-support.sh = vCenter support bundle script; run on VCSA appliance                                 │
-│  vmware-vcf-lcm= LCM systemd service; manages patch and upgrade orchestration                         │
-│  Health summary= GET /v1/system/health-summary; cross-component health in one API call                │
-│  Domain        = VCF workload boundary; each domain has its own vCenter, NSX, vSAN                    │
-│  Credentials   = SDDC Mgr manages all component passwords; rotation failures show in /v1/credentials  │
-│  Root access   = SOS utility requires root (sudo); SSH as vcf user then sudo                          │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ```mermaid
 graph TD

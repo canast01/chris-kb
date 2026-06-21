@@ -13,54 +13,10 @@ Authentication reference covering SSO Security, TLS Configuration, Certificates 
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
+![vCenter Security — Authentication](../../../../assets/virtualization-vmware-vcenter-security-authentication.svg)
 
-```text
-┌─────────────────────────────────── vCenter Server — Authentication ───────────────────────────────────┐
-│                                                                                                       │
-│  vCenter authentication is handled by the embedded SSO service; it validates                          │
-│  credentials against identity sources and issues SAML tokens for session access.                      │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             Authentication Flow              │  │                 MFA Options                 │   │
-│   │         User → vSphere Client login          │  │               Smart card / CAC              │   │
-│   │          SSO validates credentials           │  │              RSA SecurID token              │   │
-│   │          SAML token issued (8h TTL)          │  │              RADIUS integration             │   │
-│   │           Token used for API calls           │  │             Duo via RADIUS proxy            │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  SSO token TTL is 8h; re-login required; API calls use bearer token from POST /api/session.           │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              Session Management              │  │               Lockout Policies              │   │
-│   │           Max concurrent sessions            │  │              5 failed → lockout             │   │
-│   │          Idle timeout: configurable          │  │           Lockout duration: 5 min           │   │
-│   │        Force re-auth on privilege op         │  │              Unlock: SSO admin              │   │
-│   │        API session token: short-lived        │  │            Alert on failed logins           │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  SSO service runs on VCSA; AD/LDAP identity source must be reachable from                             │
-│  management network on port 389 (LDAP) or 636 (LDAPS).                                                │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  SSO          = Single Sign-On; built into VCSA; core auth service                                    │
-│  SAML token   = XML security assertion; vCenter uses this internally                                  │
-│  SAML TTL     = 8 hours default; configurable in SSO configuration                                    │
-│  Smart card   = PIV/CAC certificate-based login; requires vCenter config                              │
-│  RSA SecurID  = one-time password hardware token; RADIUS integration                                  │
-│  RADIUS       = Remote Authentication Dial-In User Service; MFA backend                               │
-│  Duo          = MFA provider; integrates via RADIUS proxy to vCenter                                  │
-│  Lockout      = SSO account temporarily blocked after failed attempts                                 │
-│  Idle timeout = browser session closes after inactivity period                                        │
-│  POST /api/session= REST API login; returns bearer token in response                                  │
-│  LDAPS        = LDAP over TLS/SSL; port 636; required for AD in vcenter 8+                            │
-│  AD identity  = Active Directory added as SSO identity source                                         │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 ## Before you begin
 
 - **Access:** vCenter Administrator role

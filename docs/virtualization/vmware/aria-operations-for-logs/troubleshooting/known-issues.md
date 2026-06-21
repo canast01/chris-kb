@@ -12,57 +12,10 @@ Catalog of known Aria Operations for Logs (vRLI) bugs, error codes, and workarou
 
 *Applies to: Aria Operations for Logs 8.x*
 </div>
+![VMware Aria Operations for Logs — Known Issues and Error Codes](../../../../assets/virtualization-vmware-aria-operations-for-logs-troubleshooti.svg)
 
-```text
-┌─────────────────────────────────── VMware Aria Operations for Logs ───────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │           Log analytics and monitoring — real-time syslog/event ingestion and search          │   │
-│   │             Protocols: syslog UDP/TCP 514 · CFAPI (8543) · HTTPS (9543) · REST API            │   │
-│   │             Management: Aria Logs web UI · REST API · content packs · alert rules             │   │
-│   │             Device syslog -> Aria Logs ingestion -> index -> query/alert -> notify            │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │          Ingestion          │  │        syslog / CFAPI       │  │        UDP 514 or TCP       │   │
-│   │            Index            │  │       Integrated store      │  │      Local disk bucket      │   │
-│   │          Analytics          │  │        Content packs        │  │     Pre-built dashboards    │   │
-│   │           Alerting          │  │         Alert rules         │  │       Email / webhook       │   │
-│   │           Cluster           │  │         Worker nodes        │  │     Scale out ingestion     │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
-│   │   Master node    │   Log platform   │     HTTPS 9543    │   vIDM / local   │Primary + workers │   │
-│   │  syslog intake   │  Log ingestion   │    UDP/TCP 514    │       N/A        │  or CFAPI 8543   │   │
-│   │   Content pack   │Dashboards+alerts │      Internal     │      Admin       │vCenter, NSX packs│   │
-│   │     REST API     │  Query / export  │     HTTPS 9543    │   Bearer token   │  Ad-hoc queries  │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical: log sources (ESXi, NSX, apps) -> syslog/CFAPI -> Aria Logs cluster                         │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Aria Logs    = VMware log analytics platform (formerly vRealize Log Insight)                         │
-│  CFAPI        = Cloud Foundry API; Aria Logs native structured log intake port 8543                   │
-│  Content pack = pre-built dashboards and alerts for a specific product (e.g. NSX)                     │
-│  Syslog       = standard UDP/TCP 514 log ingestion; most network devices use this                     │
-│  Alert        = rule that fires when log query returns > threshold results                            │
-│  Ingestion rate = logs/second; platform throttles if workers are overwhelmed                          │
-│  Retention    = disk-based; older logs rolled off when bucket hits capacity                           │
-│  Interactive analytics = ad-hoc Aria Logs query with charts and field extraction                      │
-│  Worker node  = scale-out log processing node; master distributes queries to workers                  │
-│  Forwarder    = Aria Logs agent on a source that sends logs to the cluster                            │
-│  SMTP alert   = email delivery of alert notification; requires SMTP relay config                      │
-│  Export       = Aria Logs query result sent to external syslog or S3/NFS archive                      │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 
 ## Before you begin

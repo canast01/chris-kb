@@ -12,46 +12,7 @@ Daily and weekly health check routine for VxRail clusters. Covers VxRail Plugin 
 *Applies to: VxRail 7.x / 8.x*
 </div>
 
-```text
-┌─────────────────────────────────────── VxRail — Health Checks ────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   Daily checks: VxRail Plugin node status · vSAN health green · iDRAC alarms · resync = 0    │    │
-│   │   Weekly checks: capacity trend · LCM bundle availability · ESXi version consistency         │    │
-│   │   Alert thresholds: vSAN capacity > 70% · resync bytes > 0 sustained · node count mismatch   │    │
-│   │   Run-This-Routine: single PowerCLI + bash sequence checking all conditions in order          │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │        VxRail Plugin        │  │         vSAN Health         │  │       iDRAC Hardware        │   │
-│   │   All nodes green           │  │   health cluster get        │  │   getsysinfo per node       │   │
-│   │   No cluster alarms         │  │   resync list = 0 bytes     │  │   getsel recent events      │   │
-│   │   LCM status current        │  │   storage list OK           │  │   No critical faults        │   │
-│   │   SupportAssist enabled     │  │   network test pass         │  │   All fans/temps in range   │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                                          ▼                                                            │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │           Capacity Check           │             LCM Status              │   ESXi Consistent  │   │
-│   │   vSAN datastore < 70% used        │   No available bundles = healthy    │   All nodes match  │   │
-│   │   Alert at 70% · Critical at 80%   │   Available bundle = plan upgrade   │   Same version+bld │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  Dell PowerEdge servers · iDRAC OOB port per node · vSAN NVMe/SSD disk groups · 25GbE NICs            │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│  Resync bytes  = data being rebuilt or rebalanced in vSAN; must reach 0 before maintenance ops        │
-│  PFTT          = Primary Failures To Tolerate; cluster must have PFTT headroom at all times           │
-│  LCM bundle    = Dell upgrade package; availability means a tested upgrade is ready to apply          │
-│  SupportAssist = Dell proactive support; auto-opens cases on iDRAC or OMIVV hardware alerts           │
-│  OMIVV         = OpenManage Integration for VMware vCenter; surfaces Dell alarms in vCenter           │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 ---
 
@@ -65,6 +26,8 @@ Daily and weekly health check routine for VxRail clusters. Covers VxRail Plugin 
 ---
 
 ## Alert Threshold Table
+
+![Alert Threshold Table](../../../../assets/virtualization-vmware-vxrail-hc-alert-threshold-table.svg)
 
 | Metric | Warning | Critical | Action |
 |---|---|---|---|
@@ -80,6 +43,8 @@ Daily and weekly health check routine for VxRail clusters. Covers VxRail Plugin 
 ---
 
 ## Daily Health Checks
+
+![Daily Health Checks](../../../../assets/virtualization-vmware-vxrail-hc-daily-health-checks.svg)
 
 ### 1. VxRail Plugin — Node Status
 
@@ -175,6 +140,8 @@ If a bundle is available, record it and plan an upgrade in the next maintenance 
 ---
 
 ## Weekly Health Checks
+
+![Weekly Health Checks](../../../../assets/virtualization-vmware-vxrail-hc-weekly-health-checks.svg)
 
 ### ESXi Version Consistency
 

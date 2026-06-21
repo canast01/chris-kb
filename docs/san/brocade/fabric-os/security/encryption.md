@@ -11,6 +11,8 @@ FabricOS encryption: in-flight data encryption via FC-SP-2, IPsec for FCIP tunne
 
 *Applies to: Brocade FOS 9.x*
 </div>
+![FabricOS — Encryption](../../../../assets/san-brocade-fabric-os-security-encryption.svg)
+
 
 ---
 
@@ -48,53 +50,7 @@ graph TB
     backupServer["Backup Server"] --> scp
     monSystem["Monitoring Platform"] --> snmp3
 ```
-```text
-┌─────────────────────────────────── Brocade Fabric OS — Encryption ────────────────────────────────────┐
-│                                                                                                       │
-│  Fabric OS encryption: FC-SP for fabric security, management TLS, optional data-at-rest.              │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │         Management Plane Encryption          │  │           Fabric Security (FC-SP)           │   │
-│   │         SSH: encrypted CLI sessions          │  │         FC-SP: ISL encryption option        │   │
-│   │          HTTPS: TLS 1.2/1.3 for GUI          │  │         DH-CHAP: auth + key exchange        │   │
-│   │           SNMPv3: AES-128 privacy            │  │       Shared secret rotated per fabric      │   │
-│   │       syslog: TLS encrypted forwarding       │  │        FCAP: cert-based key exchange        │   │
-│   │           Disable Telnet/FTP/HTTP            │  │          Per-port auth enforcement          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Management traffic encrypted via SSH/HTTPS; fabric traffic secured via FC-SP DH-CHAP.                │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │         Data-at-Rest (Hardware Enc)          │  │                Key Management               │   │
-│   │        Brocade Encryption Switch (ES)        │  │           KMIP: NetApp/Thales KMAX          │   │
-│   │        FS8-18 blade encryption engine        │  │          Master key in hardware HSM         │   │
-│   │            LUN-level AES-256-XTS             │  │           Key zeroisation on decom          │   │
-│   │        Transparent to host and array         │  │       Dual control: 2 admins required       │   │
-│   │         Re-keying without data loss          │  │        Audit: key usage events logged       │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  Brocade FC switch / FS8-18 blade · HSM appliance · FC cables · storage array                         │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  FC-SP           = Fibre Channel Security Protocol; optional ISL authentication/encryption            │
-│  DH-CHAP         = Diffie-Hellman CHAP; generates shared session key for FC-SP                        │
-│  FS8-18          = Brocade encryption blade for DCX directors; LUN-level AES-256                      │
-│  KMIP            = Key Management Interoperability Protocol; connects to external KMS                 │
-│  AES-256-XTS     = AES in XEX-based Tweaked-codebook mode XTS; disk encryption standard               │
-│  SNMPv3 privacy  = AES-128 encryption for SNMP PDU payload; auth + privacy mode                       │
-│  HSM             = Hardware Security Module; tamper-proof storage for encryption keys                 │
-│  Key zeroisation = secure key erasure on decommission; NIST SP800-88 procedure                        │
-│  Re-keying       = rotating encryption keys for stored data without decrypting first                  │
-│  SSH             = Secure Shell; replaces Telnet for encrypted CLI management access                  │
-│  TLS 1.2/1.3     = Transport Layer Security; HTTPS management GUI encryption                          │
-│  Dual control    = key operations require two independent admin approvals                             │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 ### Test SNMP v3 from Monitoring Server
 

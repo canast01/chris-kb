@@ -12,57 +12,10 @@ Catalog of known vSphere Replication bugs, error codes, and workarounds covering
 
 *Applies to: vSphere Replication 8.x*
 </div>
+![VMware vSphere Replication — Known Issues and Error Codes](../../../../assets/virtualization-vmware-vsphere-replication-troubleshooting-kn.svg)
 
-```text
-┌───────────────────────────────────── VMware vSphere Replication ──────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │           VM-level async replication — hypervisor-based disk replication to DR site           │   │
-│   │                 Protocols: HTTPS (VRMS) · hbr (TCP 31031/44046) · vCenter API                 │   │
-│   │                 Management: vSphere Client plugin · VRMS appliance · REST API                 │   │
-│   │             VR agent in VMkernel -> delta capture -> hbr -> target VRMS -> DR disk            │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │            Agent            │  │     VR agent (VMkernel)     │  │     Tracks disk changes     │   │
-│   │            Server           │  │        VRMS appliance       │  │       1 per site (OVA)      │   │
-│   │           Channel           │  │        hbr connection       │  │       TCP 31031 delta       │   │
-│   │            Target           │  │         DR site VRMS        │  │       Receives replica      │   │
-│   │        Orchestration        │  │        SRM (optional)       │  │     Failover automation     │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
-│   │       VRMS       │Replication server│     HTTPS 8043    │  vCenter trust   │   OVA per site   │   │
-│   │     VR agent     │ VMkernel tracker │   hbr TCP 31031   │       N/A        │ Built into ESXi  │   │
-│   │    hbr server    │  Transfer relay  │     TCP 44046     │       N/A        │ On VRMS or ESXi  │   │
-│   │       SRM        │ DR orchestration │       HTTPS       │       SSO        │Consumes VR groups│   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical: source ESXi (VR agent) -> hbr TCP -> DR site VRMS -> DR datastore                          │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  VRMS         = vSphere Replication Management Server; central replication appliance                  │
-│  VR agent     = VMkernel module tracking dirty blocks for replication                                 │
-│  hbr          = host-based replication; proprietary protocol for delta transfer                       │
-│  RPO          = Recovery Point Objective; minimum 5 minutes for vSphere Replication                   │
-│  Delta        = set of changed disk blocks transferred each replication cycle                         │
-│  Replication group = set of VMs replicated and recovered together                                     │
-│  Recovery point = point-in-time copy at DR site; configurable retention count                         │
-│  Multiple point recovery = VR keeps N recovery points; recover to any one                             │
-│  Test recovery = recovers VM in isolated network at DR site; non-destructive                          │
-│  Failover     = activates DR copy; source replication stops                                           │
-│  Reprotect    = starts replication back from DR to original site after failover                       │
-│  Lag          = time behind RPO target; alert when lag > RPO                                          │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 
 ## Before you begin

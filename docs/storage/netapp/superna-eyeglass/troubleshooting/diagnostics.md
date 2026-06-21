@@ -12,40 +12,10 @@ Superna Eyeglass diagnostic commands: check service health with igls adm status,
 
 *Applies to: Superna Eyeglass 2.x*
 </div>
+![Superna Eyeglass — Diagnostics](../../../../assets/storage-netapp-superna-eyeglass-troubleshooting-diagnostics.svg)
 
-```text
-┌─────────────────────────────────── Superna Eyeglass — Diagnostics ────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   Start here: igls adm status → igls dr readiness → igls synciq status → read sync.log       │    │
-│   │   DR score < 80%: at least one policy is not replicating or config is out of sync            │    │
-│   │   RAPA quarantine active: do NOT un-quarantine without security team confirmation             │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │         Eyeglass Service Health              │  │          SyncIQ / Config Sync               │   │
-│   │      igls adm status                         │  │    igls synciq status                       │   │
-│   │      igls version                            │  │    igls config replication status           │   │
-│   │      igls dr readiness                       │  │    igls dfs status                          │   │
-│   │      igls license status                     │  │    isi sync policies list (on cluster)      │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  ESXi VM (Eyeglass appliance) · PowerScale cluster pair (production + DR) · SyncIQ replication link   │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│  Eyeglass   = Superna Eyeglass; software appliance for NAS DR and ransomware protection               │
-│  igls       = Eyeglass CLI; used for status, sync, DR, and RAPA operations                            │
-│  SyncIQ     = PowerScale built-in replication; Eyeglass monitors and orchestrates policies            │
-│  DFS-N      = Windows Distributed File System Namespace; Eyeglass automates DFS failover              │
-│  RAPA       = Ransomware Protection with Automated Response; detects and quarantines threats          │
-│  DR score   = Eyeglass DR readiness score; 100% = fully ready; < 80% = at risk                        │
-│  Quarantine = RAPA isolation of a suspect directory; blocks writes, alerts ops team                   │
-│  Runbook    = Eyeglass DR Assistant guided checklist for pre-checks, failover, and validation         │
-│  Config sync= replication of shares, exports, quotas, NFS aliases between clusters                    │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ```mermaid
 graph TD

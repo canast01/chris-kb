@@ -12,53 +12,10 @@ How to escalate Cisco Nexus Dashboard (ND) issues to Cisco TAC: what data to col
 
 *Applies to: Cisco Nexus Dashboard 3.x (VMware OVA or UCS physical) with NDFC 12.x or NDI 6.x*
 </div>
+![Cisco Nexus Dashboard — Escalation](../../../../assets/san-cisco-nexus-dashboard-troubleshooting-escalation.svg)
 
-```text
-┌────────────────────────── Cisco Nexus Dashboard — Escalation ─────────────────────────────────────────┐
-│                                                                                                       │
-│  Escalate Nexus Dashboard issues to Cisco TAC when the ND cluster is completely unreachable           │
-│  and all hosted applications are down, an ND app (NDFC, NDI) is failing and SAN management            │
-│  is unavailable, the etcd cluster has lost quorum and the ND nodes cannot form a cluster,             │
-│  or an ND platform or app upgrade has failed and the cluster cannot be brought back to service.       │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Step 1 — Collect Data               │  │          Step 2 — Open the SR               │   │
-│   │  acs version (ND platform version)           │  │  Go to case.cisco.com → sign in with CCO   │    │
-│   │  acs apps status (all installed app vers)    │  │  Product: Nexus Dashboard; ND + app vers    │   │
-│   │  acs health; acs nodes list (cluster state)  │  │  Severity: Sev-1 cluster down / Sev-2 app  │    │
-│   │  acs techsupport (primary TAC artifact)      │  │  Attach ND bundle + app bundle              │   │
-│   │  Write timeline: last healthy → first error  │  │  For Sev-1: also call +1-800-553-2447       │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  For Sev-1 (ND cluster down / all apps unavailable): open SR AND call TAC immediately.                │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Step 3 — Escalation Path            │  │         What NOT to Do                      │   │
-│   │  TAC SE: triage + review ND bundle           │  │  Do not collect bundle after restarting ND  │   │
-│   │  ND SME: if cluster or etcd issue > 2 hrs    │  │  Do not make fabric changes during incident │   │
-│   │  Engineering: for etcd data loss or k8s bug  │  │  Do not attempt restore without backup      │   │
-│   │  TAM: engage for prolonged Sev-1 outage      │  │  Do not upgrade ND mid-incident             │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  ND               = Nexus Dashboard; 3-node or 5-node k8s cluster hosting Cisco DC apps               │
-│  NDFC             = Nexus Dashboard Fabric Controller; SAN/LAN fabric management (DCNM successor)     │
-│  NDI              = Nexus Dashboard Insights; telemetry and assurance for ACI and NX-OS fabrics       │
-│  NDDO             = Nexus Dashboard Orchestrator; Multi-Site Orchestrator for ACI/Cloud               │
-│  acs              = Nexus Dashboard CLI; all cluster management commands run here                     │
-│  etcd             = distributed key-value store; ND uses it for cluster state; quorum required        │
-│  acs techsupport  = generates full ND cluster diagnostic bundle; primary artifact for TAC             │
-│  CX Cloud         = Cisco customer portal for SR management and file upload                           │
-│  CCO              = Cisco Connection Online; account required for case.cisco.com and CX Cloud         │
-│  Sev-1            = ND cluster completely unavailable; all apps down; Cisco SLA: 1-hour callback      │
-│  quorum           = etcd requires majority of nodes (2 of 3, or 3 of 5) to be up for operation        │
-│  node replace     = remove a failed ND node; add a new node; cluster automatically re-joins           │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ---
 

@@ -13,54 +13,10 @@ Dell PowerStore diagnostic commands: query cluster and hardware health via the R
 
 *Applies to: Dell PowerStore OS 3.x / 4.x*
 </div>
+![PowerStore — Diagnostics](../../../../assets/storage-dell-powerstore-troubleshooting-diagnostics.svg)
 
-```text
-┌──────────────────────────────────── Dell PowerStore — Diagnostics ────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   Start here: REST GET /api/rest/cluster → GET /api/rest/hardware → GET /api/rest/event      │    │
-│   │   I/O failures: GET /api/rest/volume with status filter → check host connectivity            │    │
-│   │   Appliance alerts: PowerStore Manager → Infrastructure → Alerts → filter by Severity        │    │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │            REST API Health Checks            │  │             Alert and Event Review          │   │
-│   │   GET /api/rest/cluster (cluster state)      │  │   GET /api/rest/event (recent events)       │   │
-│   │   GET /api/rest/hardware (component health)  │  │   Filter: severity=in(Critical,Major)       │   │
-│   │   GET /api/rest/appliance (per-node state)   │  │   PowerStore Manager → Alerts page          │   │
-│   │   GET /api/rest/volume (volume health)       │  │   GET /api/rest/alert_email (email config)  │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Check cluster → hardware → events → volume → host connectivity                                       │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │         Host and Volume Connectivity         │  │           Support Bundle Collection         │   │
-│   │   GET /api/rest/host (registered hosts)      │  │   PowerStore Manager → Settings → Support   │   │
-│   │   GET /api/rest/host_volume_mapping           │  │   SupportAssist → Collect Support Materials │  │
-│   │   GET /api/rest/fc_port (FC port health)     │  │   Includes: logs, alerts, config snapshot   │   │
-│   │   GET /api/rest/eth_port (iSCSI/NAS ports)  │  │   Upload to Dell SR via SFTP or TechDirect  │    │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  PowerStore appliance (one or two nodes per appliance) · internal NVMe drives · SFP+ ports for FC/iSCSI│
-│  Management interface (dedicated 1 GbE) · optional MetroSync replication link between appliances      │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│  Appliance     = physical PowerStore unit; one or two engine nodes; manages its own NVMe drives       │
-│  Engine node   = compute node inside the appliance; runs PowerStore OS                                │
-│  Cluster       = one or more appliances joined for management; single Mgmt IP                         │
-│  REST API      = primary diagnostic and management interface; auth via cookie or bearer token         │
-│  SupportAssist = Dell remote support agent; auto-uploads health data; generates support bundles       │
-│  FC port       = Fibre Channel host-facing port; health shown in /api/rest/fc_port                    │
-│  Eth port      = Ethernet port; used for iSCSI, NFS/SMB (NAS), and replication                        │
-│  Volume        = block storage object; maps to LUNs presented to hosts                                │
-│  Storage group = set of volumes with shared access policy; similar to host group                      │
-│  MetroSync     = synchronous active-active replication between two PowerStore appliances              │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ```mermaid
 graph TD

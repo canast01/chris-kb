@@ -13,53 +13,7 @@ Health checks for NSX — Manager cluster status, transport node health, Edge BG
 *Applies to: NSX-T 3.x / NSX 4.x*
 </div>
 
-```text
-┌───────────────────────────────────────── NSX — Health Checks ─────────────────────────────────────────┐
-│                                                                                                       │
-│  Daily/weekly health runbook: cluster, transport nodes, edges, and DFW state.                         │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │            Manager Cluster Health            │  │            Transport Node Health            │   │
-│   │              All 3 nodes STABLE              │  │           All ESXi nodes: Success           │   │
-│   │         CCP cluster: leader elected          │  │                Edge nodes: Up               │   │
-│   │            MP: policy sync active            │  │              N-VDS status green             │   │
-│   │           Certificate expiry check           │  │              Tunnel endpoint up             │   │
-│   │            Backup age < 24 hours             │  │           BGP sessions established          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Manager health → transport nodes → edge BGP → DFW rule count check.                                  │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             Edge Gateway Health              │  │            DFW and Policy Health            │   │
-│   │          T0 gateway active standby           │  │             DFW rule sync green             │   │
-│   │           BGP sessions up/prefixes           │  │           No policy realise errors          │   │
-│   │             ECMP paths balanced              │  │          Groups resolved correctly          │   │
-│   │               NAT rules active               │  │            Segment VNI table sync           │   │
-│   │          Edge CPU < 70%, mem < 80%           │  │              Alarm queue empty              │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  NSX Manager VMs, Edge VMs, ESXi transport nodes, physical ToR switches                               │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  CCP         = Central Control Plane; distributes config to dataplane                                 │
-│  MP          = Management Plane; NSX policy API and UI backend                                        │
-│  N-VDS       = NSX virtual distributed switch; dataplane on ESXi/Edge                                 │
-│  TEP         = Tunnel Endpoint; VTEP for GENEVE overlay encapsulation                                 │
-│  GENEVE      = tunnel protocol; carries overlay traffic between TEPs                                  │
-│  T0 gateway  = Tier-0; north-south routing; BGP to physical fabric                                    │
-│  DFW         = Distributed Firewall; stateful kernel-level L4 firewall                                │
-│  ECMP        = Equal Cost Multi-Path; load-balances traffic across paths                              │
-│  Policy realise = NSX applying config changes to dataplane                                            │
-│  VNI         = VXLAN Network Identifier; unique ID per overlay segment                                │
-│  STABLE      = NSX Manager cluster status meaning all nodes healthy                                   │
-│  BGP session = Edge peering with physical router; must be Established                                 │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 ## Before you begin
 
@@ -209,6 +163,8 @@ get bgp neighbor <peer-ip>
 
 ## NSX Manager CLI Quick Reference
 
+![NSX Manager CLI Quick Reference](../../../../assets/virtualization-vmware-nsx-hc-nsx-manager-cli-quick-reference.svg)
+
 ```bash
 # SSH to any NSX Manager node
 nsxcli
@@ -227,6 +183,8 @@ get services | grep -v " running"
 ```
 
 ## Alarm Review
+
+![Alarm Review](../../../../assets/virtualization-vmware-nsx-hc-alarm-review.svg)
 
 ```bash
 # Critical alarms (action required immediately)
@@ -250,6 +208,8 @@ print(f'MEDIUM alarms open: {d.get(\"result_count\",0)}')
 ```
 ## Certificate Expiry Check
 
+![Certificate Expiry Check](../../../../assets/virtualization-vmware-nsx-hc-certificate-expiry-check.svg)
+
 ```bash
 curl -sk -u 'admin:password' \
   "https://<nsx-manager>/api/v1/trust-management/certificates?details=true" | \
@@ -270,6 +230,8 @@ for c in d.get('results', []):
 ```
 
 ## IP Pool Utilisation
+
+![IP Pool Utilisation](../../../../assets/virtualization-vmware-nsx-hc-ip-pool-utilisation.svg)
 
 ```bash
 curl -sk -u 'admin:password' \
@@ -294,6 +256,8 @@ for s in d.get('subnets', []):
 "
 ```
 ## Post-Change Verification
+
+![Post-Change Verification](../../../../assets/virtualization-vmware-nsx-hc-post-change-verification.svg)
 
 ```bash
 # 1. Check for new alarms

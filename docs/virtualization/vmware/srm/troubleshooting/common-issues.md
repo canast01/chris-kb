@@ -7,54 +7,10 @@ search:
   boost: 1.5
 ---
 # VMware SRM — Common Issues
+![VMware SRM — Common Issues](../../../../assets/virtualization-vmware-srm-troubleshooting-common-issues.svg)
 
-```text
-┌───────────────────────────────────── VMware SRM — Common Issues ──────────────────────────────────────┐
-│                                                                                                       │
-│  Common SRM issues: site pair disconnected, replication lag exceeded RPO, plan test                   │
-│  failure, IP customisation not applied, and cleanup stuck after test.                                 │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               Site Pair Issues               │  │              Replication Issues             │   │
-│   │         Pair disconnected: check net         │  │           Lag > RPO: check WAN BW           │   │
-│   │            Cert expired: re-pair             │  │          vSR error: check vRAM host         │   │
-│   │          vCenter unreachable: check          │  │          ABR error: check SRA logs          │   │
-│   │          Port 9086: check firewall           │  │          Disk full: clear vSR logs          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Cert expiry is the most common site pair disconnection cause; monitor 30+ days ahead.                │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              Plan Test Failures              │  │               Post-Test Issues              │   │
-│   │         VM fail to power on: vSphere         │  │             Cleanup stuck: force            │   │
-│   │          IP script error: check log          │  │             Test VMs not deleted            │   │
-│   │          Network mapping wrong: fix          │  │           Snapshots remain: purge           │   │
-│   │           Script timeout: increase           │  │           Re-run cleanup in SRM UI          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  Most issues: WAN bandwidth (lag), network mapping (IP/VLAN), cert expiry (pair),                     │
-│  or vCenter connectivity; check all four before deep investigation.                                   │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Site pair disconnected= SRM Servers lost TCP connectivity                                            │
-│  Port 9086     = SRM inter-site communication; must be open in FW                                     │
-│  Cert expired  = site pair uses TLS certs; expiry breaks connection                                   │
-│  Re-pair       = re-establish site trust after cert or config change                                  │
-│  vSR host      = vSphere Replication Server appliance; check logs                                     │
-│  SRA logs      = Storage Replication Adapter log; array errors here                                   │
-│  IP script     = customisation script; failure blocks VM connectivity                                 │
-│  Network mapping= maps protected-site portgroup to recovery portgroup                                 │
-│  Cleanup stuck = SRM cleanup task hung; force via SRM UI                                              │
-│  Force cleanup = right-click plan > Cleanup in SRM UI                                                 │
-│  WAN BW        = insufficient bandwidth causes replication lag                                        │
-│  Snapshot purge= manual delete of orphan snapshots after stuck cleanup                                │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 ```python
    Site Recovery → Storage → Array Pairs → [pair] → Configure Adapter
    Test credentials against array directly:
@@ -238,45 +194,7 @@ flowchart TD
     class q1,planFailed decision
     class start terminal
 ```
-```text
-┌───────────────────────────────────────── SRM — Common Issues ─────────────────────────────────────────┐
-│                                                                                                       │
-│   │     Symptom      │   Likely Cause   │    First Check    │       Fix        │      Verify      │   │
-│   │    Plan fails    │   SRA timeout    │ check array repli │re-run or fix SRA │  srm-cli histor  │   │
-│   │     VM no IP     │customization err │ check IP customiz │ fix NIC mapping  │    vmware.log    │   │
-│   │    Test stuck    │snapshot not rele │    srm cleanup    │  force cleanup   │  srm-cli cleanu  │   │
-│   │   Pair broken    │  cert mismatch   │ check SRM pairing │  re-pair sites   │  srm-cli site i  │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                                     General Triage Pattern                                    │   │
-│   │          Is the issue new or recurring? New = recent change; Recurring = config problem       │   │
-│   │             Is it isolated to one source or all? Isolated = agent; All = server/repo          │   │
-│   │                               Check logs first: srm-cli plan test                             │   │
-│   │                    If unresolved in 2h: open vendor case with full log bundle                 │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  Two vCenter instances (protected + recovery) · SRA on SRM server · Array replication link            │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  SRM           = Site Recovery Manager; VMware product for DR orchestration and testing               │
-│  SRA           = Storage Replication Adapter; plugin linking SRM to specific array replication        │
-│  Protection Group= logical grouping of VMs covered by a single replication consistency group          │
-│  Recovery Plan = automated DR runbook: power-off order, datastore failover, IP customization          │
-│  IP Customization= per-VM network settings applied at recovery site (different subnet/gateway)        │
-│  Test Failover = non-disruptive plan validation using snapshot; production unaffected                 │
-│  Planned Migration= graceful workload movement; VMs shutdown at protected, started at recovery        │
-│  Emergency Failover= disaster scenario; VMs powered on from latest available replica                  │
-│  Failback      = after recovery, re-protect VMs and migrate back to production site                   │
-│  Re-protect    = reverses replication direction; DR site becomes new protected site                   │
-│  Recovery Point= specific replication snapshot used for VM recovery; RPO = interval                   │
-│  vCenter Pair  = SRM connection between two vCenter instances enables cross-site orchestration        │
-│  Startup Priority= ordering within recovery plan; lower number = powers on first                      │
-│  Site Pair     = trust relationship between protected and recovery SRM servers                        │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 1. SRM → Configure → Array Managers → check status
 2. Verify SRA service is running:

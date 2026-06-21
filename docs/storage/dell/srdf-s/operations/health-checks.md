@@ -55,45 +55,7 @@ flowchart TD
     style investigateDir fill:#be123c,color:#fff
     style investigateLink fill:#b45309,color:#fff
 ```
-```text
-┌─────────────────────────────────────── SRDF/S — Health Checks ────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                                SRDF/S — Health Check Procedures                               │   │
-│   │                 Run these checks daily/weekly to confirm protection is working                │   │
-│   │                                           symrdf query                                        │   │
-│   │                  Review job completion rate — target 100%; investigate failures               │   │
-│   │                         Check replication/backup lag against RPO target                       │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   │      Check       │  What to verify  │      Expected     │    Frequency     │  Action if bad   │   │
-│   │    Job status    │All jobs complete │    100% success   │      Daily       │ Triage failures  │   │
-│   │    Lag / RPO     │ Replication lag  │    < RPO target   │      Daily       │  Tune bandwidth  │   │
-│   │     Capacity     │ Repo space used  │     < 80% full    │      Weekly      │ Expand or expire │   │
-│   │   Restore test   │  Random restore  │    Data intact    │     Monthly      │ Fix backup chain │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  Two PowerMax arrays · Dark fiber / DWDM FC link · Low-latency network (< 200 km) · RF director ports │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  SRDF/S        = Synchronous SRDF; every R1 write is mirrored to R2 before host acknowledgment        │
-│  R1            = source volume; write is held pending R2 confirmation — adds WAN RTT to latency       │
-│  R2            = target volume; must acknowledge each write; acts as synchronous mirror               │
-│  RTT           = Round-Trip Time between R1 and R2 arrays; directly added to host write latency       │
-│  RPO=0         = zero recovery point objective; no data loss possible under normal operation          │
-│  RTO           = Recovery Time Objective; SRDF/S failover typically < 5 minutes manual, < 1 min       │
-│  symrdf        = CLI for all SRDF operations: establish, split, suspend, failover, restore, ver       │
-│  Pair State    = Synchronized | Consistent | Suspended | Failed Over | Split                          │
-│  Consistent    = transient state where R1 write is in transit but not yet confirmed on R2             │
-│  Failover      = makes R2 read-write; production continues from DR site after R1 failure              │
-│  Restore       = re-synchronises after failover; direction is reversed until R1 catches up            │
-│  RDFG          = RDF Group: logical grouping of SRDF pairs sharing same link and parameters           │
-│  FA Port       = Front-End Adapter port on PowerMax; used for host connectivity (non-SRDF)            │
-│  RF Port       = Remote Fabric port on PowerMax; used exclusively for SRDF replication traffic        │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 ## Before you begin
 
@@ -166,6 +128,8 @@ A sustained WAN RTT increase of more than 2 ms above baseline should be reported
 
 ## Configuration Consistency Check
 
+![Configuration Consistency Check](../../../../assets/storage-dell-srdf-s-hc-configuration-consistency-check.svg)
+
 ```bash
 # Confirm RDFG group membership matches expected device list
 symrdf -g 10 list -v
@@ -184,6 +148,8 @@ symcfg list -rdfg all
 
 ## Health Check Summary Table
 
+![Health Check Summary Table](../../../../assets/storage-dell-srdf-s-hc-health-check-summary-table.svg)
+
 | Check | Command | Healthy Result | Alert Threshold |
 |---|---|---|---|
 | Pair state | `symrdf -g <rdfg> query` | All Synchronized | Any non-Synchronized |
@@ -196,6 +162,8 @@ symcfg list -rdfg all
 
 ## Known Issues and Field Notes
 
+![Known Issues and Field Notes](../../../../assets/storage-dell-srdf-s-hc-known-issues-and-field-notes.svg)
+
 - **Intermittent "Transmit Idle" during off-peak hours**: Normal behaviour when there are no writes to replicate. Does not indicate a problem. Confirm by checking that track count remains 0.
 - **Director shows Online but link shows Partitioned**: Usually a transient WAN interruption. Wait 2 minutes and re-query. If it persists, escalate to network team to check the dark fibre or IP WAN path.
 - **Health check script timeouts on large arrays**: If `symcfg list -rdfg all` takes > 60 seconds, break queries into per-group calls and parallelize across RDFG groups using a shell loop.
@@ -204,6 +172,8 @@ symcfg list -rdfg all
 ---
 
 ## Validation
+
+![Validation](../../../../assets/storage-dell-srdf-s-hc-validation.svg)
 
 Validation confirms that SRDF/S replication is protecting data as designed, that pair states are correct, and that a failover would succeed if required. Validation runs are performed after configuration changes, after DR tests, after link maintenance, and on a scheduled basis (typically monthly). Validation differs from health checks in that it actively verifies end-to-end data integrity and failover readiness rather than just checking operational status.
 

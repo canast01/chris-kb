@@ -4,6 +4,8 @@ tags:
   - security
 ---
 # Cisco DCNM — Security Hardening
+![Cisco DCNM — Security Hardening](../../../../assets/san-cisco-cisco-dcnm-security-hardening.svg)
+
 
 ```bash
 ssh root@dcnm-dc1.corp.example.com
@@ -18,53 +20,7 @@ passwd root
 # Disable the default 'dcnm' local OS account if not needed
 usermod -L dcnm   # lock (disable password login)
 ```
-```text
-┌─────────────────────────────────── Cisco DCNM — Security Hardening ───────────────────────────────────┐
-│                                                                                                       │
-│  DCNM hardening: disable defaults, enforce ISE TACACS+, TLS, RBAC, patch management.                  │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              Platform Hardening              │  │               Access Hardening              │   │
-│   │        Change default admin password         │  │          ISE TACACS+: no local use          │   │
-│   │           Disable HTTP; HTTPS only           │  │           RBAC: operator read-only          │   │
-│   │           Firewall: port 443 only            │  │          API IP whitelist: restrict         │   │
-│   │         TLS 1.2+ only; disable older         │  │           Session timeout: 30 min           │   │
-│   │          Disable unused OS services          │  │               MFA via SAML SSO              │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Change defaults day 1; restrict API; enforce ISE TACACS+ before production use.                      │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │         Monitoring & Alert Hardening         │  │               Patch Management              │   │
-│   │        Audit log: all actions logged         │  │            Quarterly DCNM upgrade           │   │
-│   │          Failed logins: SIEM alert           │  │          Cisco PSIRT: check monthly         │   │
-│   │         Config change: diff + alert          │  │          OS patches: monthly cycle          │   │
-│   │             API token expiry: 8h             │  │            Backup before upgrade            │   │
-│   │         Cert expiry: 60-day warning          │  │            Test in staging first            │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  DCNM Linux VM · vSphere host · management-only VLAN · Cisco ISE appliance                            │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  TLS 1.2+        = minimum required; disable TLS 1.0/1.1 and SSL 3.0                                  │
-│  ISE TACACS+     = Cisco ISE centralised CLI auth; all admin actions audited                          │
-│  RBAC            = Role-Based Access Control; operator = read-only; admin = full                      │
-│  IP whitelist    = restrict DCNM REST API to known source IP ranges                                   │
-│  SAML SSO        = DCNM integrates with IdP; MFA enforced at identity provider                        │
-│  Session timeout = idle GUI/API session terminated after 30 minutes                                   │
-│  API token expiry= JWT expires after configurable period; 8h default                                  │
-│  Cisco PSIRT     = Product Security Incident Response; Cisco security advisories                      │
-│  Audit log       = all DCNM GUI and API calls logged with user and timestamp                          │
-│  Config diff     = DCNM detects out-of-band zone changes and sends alert                              │
-│  Cert expiry     = TLS certificate monitored; 60-day warning before expiry                            │
-│  Staging test    = validate DCNM upgrade in non-prod before production rollout                        │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 ```bash
 cat > /etc/issue.net << 'EOF'
 WARNING: This system is for authorized use only.

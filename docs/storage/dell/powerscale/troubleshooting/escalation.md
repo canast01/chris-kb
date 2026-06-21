@@ -12,52 +12,10 @@ How to escalate Dell PowerScale (Isilon) issues to Dell Technologies support: wh
 
 *Applies to: PowerScale (Isilon) OneFS 9.x*
 </div>
+![PowerScale — Escalation](../../../../assets/storage-dell-powerscale-troubleshooting-escalation.svg)
 
-```text
-┌──────────────────────────────── Dell PowerScale — Escalation ─────────────────────────────────────────┐
-│                                                                                                       │
-│  Escalate PowerScale issues to Dell support when a node is SMARTFAILed and data is unprotected,       │
-│  NFS or SMB access has stopped for client-facing workloads, SyncIQ replication has failed with        │
-│  no valid recovery point, or a OneFS upgrade has corrupted the cluster configuration.                 │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Step 1 — Collect Data               │  │          Step 2 — Open the Case             │   │
-│   │  Run isi_gather_info on the cluster          │  │  Go to dell.com/support → My Cases          │   │
-│   │  Note OneFS version (isi version)            │  │  Select product by cluster serial number    │   │
-│   │  Capture isi status + isi storagepool list   │  │  Severity: P1 down / P2 degraded / P3 minor │   │
-│   │  Check isi alerts list --limit 50            │  │  Attach isi_gather_info bundle              │   │
-│   │  Write timeline: last healthy → first fault  │  │  For P1: also call Dell support             │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  For P1: open portal case AND call Dell immediately.                                                  │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Step 3 — Escalation Path            │  │         What NOT to Do                      │   │
-│   │  T1: triage + confirm bundle received        │  │  Do not remove a SMARTFAILed node prematurely│  │
-│   │  T2: PS SE assigned; deep cluster analysis   │  │  Do not format/rebuild without Dell         │   │
-│   │  TAM: engage for P1 or prolonged issues      │  │  Do not disable SupportAssist mid-case      │   │
-│   │  GPS: on-site senior engineer for complex    │  │  Do not start a OneFS upgrade mid-incident  │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  OneFS           = PowerScale distributed filesystem OS; all nodes share a single namespace           │
-│  SMARTFAIL       = controlled node/drive removal process; protects data during degraded state         │
-│  isi_gather_info = full cluster diagnostic bundle; mandatory for every Dell support case              │
-│  SyncIQ          = async replication to DR cluster; RPO-based schedule; one active at a time          │
-│  SmartPools      = tiering engine; moves files between All-Flash, Hybrid, Archive tiers               │
-│  SmartConnect    = DNS-based load balancing; distributes NFS/SMB connections across nodes             │
-│  SnapshotIQ      = space-efficient snapshots; accessed via .snapshot directory in each share          │
-│  isi CLI         = OneFS command-line interface; all management operations available                  │
-│  SupportAssist   = Dell's auto-case creation; triggers on hardware faults via phone-home              │
-│  ProSupport Plus = Dell's highest support tier; 24×7; P1 response in < 2 hours                        │
-│  TAM             = Technical Account Manager; escalation path for prolonged or critical issues        │
-│  GPS             = Global Priority Services; on-site or remote senior Dell engineering support        │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ---
 

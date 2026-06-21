@@ -7,54 +7,10 @@ search:
   boost: 1.5
 ---
 # VMware Horizon — Common Issues
+![VMware Horizon — Common Issues](../../../../assets/virtualization-vmware-horizon-troubleshooting-common-issues.svg)
 
-```text
-┌─────────────────────────────────── VMware Horizon — Common Issues ────────────────────────────────────┐
-│                                                                                                       │
-│  Common Horizon issues: black screen, pool provisioning failure, Connection Server                    │
-│  error, slow Blast sessions, and UAG certificate errors.                                              │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             Black Screen Issues              │  │            Provisioning Failures            │   │
-│   │           Agent not running on VM            │  │            vCenter: not reachable           │   │
-│   │           Blast port 8443 blocked            │  │            Template: no snapshot            │   │
-│   │             GPU driver mismatch              │  │          Disk space: datastore full         │   │
-│   │           Profile load fails: DEM            │  │          Clone error: check events          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Black screen = Blast connected but agent not ready; check agent services.                            │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               CS & UAG Issues                │  │              Performance Issues             │   │
-│   │           CS error: check services           │  │             Blast latency >100ms            │   │
-│   │         Cert expired: replace on CS          │  │             Check ESXi host CPU             │   │
-│   │           UAG: health check fails            │  │          Disk IOPS: vSAN contention         │   │
-│   │         AD unreachable: local user?          │  │           Network BW: 1–5Mbps/user          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  Most issues: agent not running (black screen), network ports blocked, vCenter                        │
-│  unreachable (provisioning), or cert expired (login/UAG); check all four.                             │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Horizon Agent = service on desktop VM; must be running for session                                   │
-│  Blast port 8443= UDP/TCP port for display protocol; must be open                                     │
-│  Black screen  = connected session but no display; agent issue                                        │
-│  DEM           = Dynamic Environment Manager; profile load at login                                   │
-│  UAG health    = REST /rest/healthcheck; returns 200 if healthy                                       │
-│  CS services   = VMware Horizon View Connection Server service on Windows                             │
-│  Template      = golden image VM must have current snapshot                                           │
-│  Clone error   = check vCenter tasks and events for provisioning log                                  │
-│  GPU driver    = agent + driver version must match; black screen if not                               │
-│  Blast latency = display round-trip; >100ms = degraded user experience                                │
-│  IOPS contention= vSAN or NFS storage saturation during peak clone                                    │
-│  1–5Mbps/user  = Blast bandwidth per session; plan WAN accordingly                                    │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 ```text
    vCenter → Monitor → Tasks — filter by the stuck desktop VM name
    ```

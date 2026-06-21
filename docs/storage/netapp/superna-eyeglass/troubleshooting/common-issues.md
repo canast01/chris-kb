@@ -13,46 +13,10 @@ Common Superna Eyeglass issues — sync failures, DR test errors, configuration 
 
 *Applies to: Superna Eyeglass*
 </div>
+![Superna Eyeglass — Common Issues](../../../../assets/storage-netapp-superna-eyeglass-troubleshooting-common-issue.svg)
 
-```text
-┌────────────────────────────────── Superna Eyeglass — Common Issues ───────────────────────────────────┐
-│                                                                                                       │
-│   │     Symptom      │   Likely Cause   │    First Check    │       Fix        │      Verify      │   │
-│   │     Sync lag     │SyncIQ policy slo │  igls sync status │ check bandwidth  │  isi sync polic  │   │
-│   │    RAPA alert    │ransomware detect │  igls rapa status │quarantine + esca │   rapa report    │   │
-│   │    DFS broken    │namespace not upd │  igls dfs status  │ retry DFS update │   dfsutil view   │   │
-│   │  Failover fail   │ pre-check error  │  igls dr precheck │fix issue + re-ru │     igls log     │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                                     General Triage Pattern                                    │   │
-│   │          Is the issue new or recurring? New = recent change; Recurring = config problem       │   │
-│   │             Is it isolated to one source or all? Isolated = agent; All = server/repo          │   │
-│   │                                Check logs first: igls sync status                             │   │
-│   │                    If unresolved in 2h: open vendor case with full log bundle                 │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  ESXi VM (Eyeglass appliance) · PowerScale cluster pair (production + DR) · SyncIQ replication link   │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Eyeglass      = Superna Eyeglass; software appliance for NAS DR and ransomware protection            │
-│  RAPA          = Ransomware Protection with Automated Response; detects and quarantines threats       │
-│  SyncIQ        = PowerScale built-in replication; Eyeglass monitors and orchestrates policies         │
-│  DFS-N         = Windows Distributed File System Namespace; Eyeglass automates failover of DFS        │
-│  Failover      = Eyeglass-orchestrated shift of NAS access from production to DR cluster              │
-│  Failback      = reversing failover; Eyeglass re-syncs DR changes back and cuts back to product       │
-│  Quota Sync    = Eyeglass replicates SmartQuotas from source to DR to preserve user limits            │
-│  Export Sync   = NFS exports and SMB shares replicated so clients can reconnect at DR site            │
-│  Quarantine    = RAPA isolation of suspect directory; blocks writes, alerts ops team                  │
-│  Shadow Copy   = Eyeglass exposes PowerScale snapshots as Windows Previous Versions for NFS sha       │
-│  Runbook       = Eyeglass DR Assistant guided checklist for pre-checks, failover, and validation      │
-│  igls          = Eyeglass CLI; used for status, sync, DR, and RAPA operations                         │
-│  SmartConnect  = PowerScale DNS load balancing; failover changes SmartConnect zone delegation         │
-│  Configuration = shares, exports, quotas, NFS aliases; Eyeglass syncs these between clusters          │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 Common Eyeglass issues include SyncIQ policies not being detected, low DR readiness scores, DNS cutover failures, and failover jobs that stall or complete with errors. Most issues trace back to API connectivity between Eyeglass and the PowerScale clusters, configuration drift between the primary and DR cluster, or DNS delegation misconfiguration.
 
 | Issue | Likely Cause | Resolution |

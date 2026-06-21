@@ -12,57 +12,10 @@ Catalog of known Active Directory bugs, error codes, and workarounds covering re
 
 *Applies to: Windows Server 2019 / 2022 Active Directory Domain Services*
 </div>
+![Active Directory — Known Issues and Error Codes](../../../../assets/compute-windows-server-active-directory-troubleshooting-know.svg)
 
-```text
-┌────────────────────────────────────────── Active Directory ───────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │           Windows directory service — domain controllers, replication, Kerberos auth          │   │
-│   │                Protocols: Kerberos (88) · LDAP (389/636) · SMB (445) · DNS (53)               │   │
-│   │                       Management: ADUC / PowerShell (Get-AD*) / dsa.msc                       │   │
-│   │                Client auth -> DC (Kerberos) -> Ticket issued -> Resource access               │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │           Identity          │  │      Domain Controller      │  │      Holds NTDS.dit DB      │   │
-│   │         Replication         │  │         Multi-master        │  │     USN-based, KCC topo     │   │
-│   │             Auth            │  │           Kerberos          │  │    5-min clock skew tol.    │   │
-│   │             DNS             │  │     AD-integrated zones     │  │    SRV recs for DC disc.    │   │
-│   │             FSMO            │  │       5 special roles       │  │      Single-master ops      │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
-│   │        DC        │ Directory + auth │   Kerb/LDAP/SMB   │       N/A        │NTDS.dit database │   │
-│   │     repadmin     │ Replication tool │        N/A        │   Domain admin   │showrepl, syncall │   │
-│   │      dcdiag      │ DC health check  │        N/A        │   Domain admin   │ test:all common  │   │
-│   │    FSMO roles    │Single-master ops │        N/A        │ Enterprise admin │  PDC, RID, etc.  │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical: domain controller server(s) - replicated across sites via WAN                              │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  NTDS.dit       = the Active Directory database file on each DC                                       │
-│  FSMO           = Flexible Single Master Operations; 5 roles, one DC each                             │
-│  PDC Emulator   = FSMO role handling password changes and time sync                                   │
-│  KCC            = Knowledge Consistency Checker; auto-builds repl. topology                           │
-│  USN            = Update Sequence Number; tracks object changes for repl.                             │
-│  Lingering obj. = stale object from a DC offline beyond tombstone life                                │
-│  Kerberos skew  = >5 min client/DC time diff breaks authentication                                    │
-│  SRV record     = DNS record type letting clients locate DCs/services                                 │
-│  RODC           = Read-Only Domain Controller; no writable DB copy                                    │
-│  Tombstone life = how long deleted objects are retained (default 180d)                                │
-│  ntdsutil       = low-level AD database maintenance and FSMO seize tool                               │
-│  nltest         = CLI tool for trust and DC connectivity diagnostics                                  │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 
 ## Before you begin

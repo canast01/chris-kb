@@ -12,53 +12,11 @@ Authentication reference covering Workspace ONE Access Integration, Active Direc
 
 *Applies to: Aria LCM 8.x*
 </div>
+![Aria Suite Lifecycle — Authentication](../../../../assets/virtualization-vmware-aria-suite-lifecycle-security-authenti.svg)
+
 
   LCM Authentication Architecture
-```text
-┌──────────────────────────────────── Aria Suite LCM Authentication ────────────────────────────────────┐
-│                                                                                                       │
-│  vIDM SSO, local admin break-glass, and API token authentication for LCM.                             │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              vIDM SSO (Primary)              │  │          Local Admin (Break-glass)          │   │
-│   │             Register LCM in vIDM             │  │           admin@local: OVA set pw           │   │
-│   │           Map vIDM groups to roles           │  │           Use only when vIDM down           │   │
-│   │           SAML2 redirect on login            │  │              Rotate pw 90 days              │   │
-│   │            MFA enforced via vIDM             │  │           Store in password vault           │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  vIDM is primary auth; local admin is break-glass; API token for automation.                          │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │           API Token Authentication           │  │                MFA & Security               │   │
-│   │         POST /lcm/api/v1/auth/login          │  │            MFA: enforced at vIDM            │   │
-│   │          Body: username + password           │  │            LDAPS: secure dir auth           │   │
-│   │           Response: session token            │  │           Token TTL: session-based          │   │
-│   │           Use token in API headers           │  │             Invalidate on logout            │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  LCM VM; vIDM appliance; AD/LDAP for directory auth; PKI for LDAPS and certs                          │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  vIDM SSO            = Primary auth method; all users login via SAML2 redirect                        │
-│  SAML2               = Federation protocol; vIDM issues assertion to LCM                              │
-│  MFA                 = Multi-Factor Auth enforced in vIDM; transparent to LCM                         │
-│  admin@local         = LCM local admin; set at OVA deploy; break-glass only                           │
-│  Break-glass         = Local login when vIDM is unreachable or misconfigured                          │
-│  Password Vault      = Secrets manager storing LCM admin and service creds                            │
-│  API Token           = Session token from POST /auth/login; use in REST headers                       │
-│  Token TTL           = Session-based; expires on inactivity or explicit logout                        │
-│  LDAPS               = LDAP over TLS; vIDM uses LDAPS to query AD for users                           │
-│  vIDM Registration   = LCM added as application in vIDM settings for SSO                              │
-│  Group Mapping       = vIDM AD group assigned LCM role for authorisation                              │
-│  90-day Rotation     = Local admin password changed every 90 days                                     │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 Provide:
 - VIDM FQDN (must be resolvable from LCM)
 - VIDM admin credentials

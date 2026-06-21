@@ -13,49 +13,10 @@ How to open a Broadcom support case for VMware Cloud Foundation: what data to co
 
 *Applies to: VCF 4.x / 5.x*
 </div>
+![VCF Troubleshooting — Escalation](../../../../assets/virtualization-vmware-vmware-cloud-foundation-troubleshootin.svg)
 
-```text
-┌──────────────────────────────── VMware Cloud Foundation — Escalation ─────────────────────────────────┐
-│                                                                                                       │
-│  Escalate VCF issues to Broadcom GSS when upgrade is stuck, data is at risk,                          │
-│  or SDDC Manager is inaccessible. Collect the SOS bundle BEFORE opening the case.                     │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │           Step 1 — Collect Data              │  │          Step 2 — Open the SR               │   │
-│   │  SSH to SDDC Mgr; run SOS health-summary     │  │  Go to support.broadcom.com → sign in       │   │
-│   │  Run full SOS bundle (15–30 min)             │  │  Product: VMware Cloud Foundation           │   │
-│   │  Note VCF version + build from UI            │  │  Type: Technical → select sub-category      │   │
-│   │  Copy failed task ID from Tasks view         │  │  Severity: S1 down / S2 major / S3 minor    │   │
-│   │  Write timeline: last good → first failure   │  │  Attach SOS ZIP + timeline doc              │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  For S1: open the portal case AND call the phone number shown on the case confirmation page.          │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Step 3 — Escalation Path            │  │         What NOT to Do                      │   │
-│   │  T1: triage + confirm SOS received           │  │  Do not retry a stuck upgrade task          │   │
-│   │  T2: VCF SE assigned; provides guidance      │  │  Do not restart SDDC Manager services       │   │
-│   │  T3: engineering review if SE cannot fix     │  │  Do not reboot NSX Managers unguided        │   │
-│   │  CritSit: request if data at risk or 24h+    │  │  Do not delete and re-create failed tasks   │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  SDDC Manager  = VCF control plane VM; orchestrates lifecycle and SDDC operations                     │
-│  SOS utility   = VCF support bundle script; /opt/vmware/sddc-support/sos                              │
-│  SR            = Service Request; the support case number assigned by Broadcom                        │
-│  GSS           = Global Support Services; Broadcom's technical support organisation                   │
-│  Task ID       = SDDC Manager async operation ID; find in Tasks view in the UI                        │
-│  S1 severity   = highest; production outage, no workaround; 30-minute SLA                             │
-│  CritSit       = Critical Situation; executive escalation + dedicated war room                        │
-│  T2 VCF SE     = Senior Engineer specialising in VCF; assigned after initial triage                   │
-│  Timeline      = chronological list: what changed, when issue first appeared, what you tried          │
-│  Component bundle= per-product log bundle (vCenter, NSX, ESXi) for isolated component issues          │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ---
 

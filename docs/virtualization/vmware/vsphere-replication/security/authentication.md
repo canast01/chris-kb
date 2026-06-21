@@ -12,28 +12,11 @@ Authentication reference covering VRA Registered with vCenter SSO, Site Pairing 
 
 *Applies to: vSphere Replication 8.x*
 </div>
+![vSphere Replication — Authentication](../../../../assets/virtualization-vmware-vsphere-replication-security-authentic.svg)
+
 
   VR Authentication Architecture
-```text
-┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
-│  User / Script            vCenter SSO           VRA                                                   │
-│  ┌──────────────┐         ┌──────────────┐      ┌─────────┐                                           │
-│  │ vCenter UI / │────────►│  SSO session │─────►│ VR feat.│                                           │
-│  │ PowerCLI     │         │  (no separate│      │ via VC  │                                           │
-│  └──────────────┘         │   VR login)  │      └─────────┘                                           │
-│                           └──────────────┘                                                            │
-│                                                                                                       │
-│  Site Pairing (cert-based)                                                                            │
-│  ┌──────────────────────────────────────────────────────┐                                             │
-│  │ VRA Site A cert thumbprint ──► accepted at Site B    │                                             │
-│  │ VRA Site B cert thumbprint ──► accepted at Site A    │                                             │
-│  │ Refresh thumbprints after any cert replacement       │                                             │
-│  └──────────────────────────────────────────────────────┘                                             │
-│                                                                                                       │
-│  REST API: POST /api/rest/vr/authentication/token                                                     │
-│  Token TTL: 300 seconds                                                                               │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 ---
 

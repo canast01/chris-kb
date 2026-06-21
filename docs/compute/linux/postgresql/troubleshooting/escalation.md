@@ -12,52 +12,10 @@ How to escalate PostgreSQL issues to vendor support (EDB, Percona, or Crunchy Da
 
 *Applies to: PostgreSQL 14 / 15 / 16 on RHEL / Ubuntu LTS*
 </div>
+![PostgreSQL — Escalation](../../../../assets/compute-linux-postgresql-troubleshooting-escalation.svg)
 
-```text
-┌───────────────────────────────── PostgreSQL — Escalation ─────────────────────────────────────────────┐
-│                                                                                                       │
-│  Escalate PostgreSQL issues to vendor support or DBA on-call when the postmaster is completely        │
-│  down, a PANIC entry appears in the log (data corruption), a lock wait chain exceeds 10 minutes,      │
-│  disk on the data directory or WAL volume exceeds 90%, or XID wraparound is imminent.                 │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Step 1 — Collect Data               │  │          Step 2 — Open the Case             │   │
-│   │  Save error log (last 500 lines)             │  │  EDB: support.enterprisedb.com              │   │
-│   │  Capture pg_stat_activity + pg_locks         │  │  Percona: customers.percona.com             │   │
-│   │  Run pg_stat_replication (if primary)        │  │  Crunchy: access.crunchydata.com            │   │
-│   │  Check disk on PGDATA and WAL volume         │  │  Severity: P1 (down) / P2 (degraded)        │   │
-│   │  Write timeline: last good → first failure   │  │  Attach error log + pg_stat_activity output │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  For P1: engage DBA on-call immediately AND open vendor support case.                                 │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Step 3 — Escalation Path            │  │         What NOT to Do                      │   │
-│   │  T1: triage + confirm log received           │  │  Do not restart on PANIC without DBA        │   │
-│   │  T2: PG SE assigned; deep log analysis       │  │  Do not cancel active long-running txns     │   │
-│   │  DBA: involve for schema or data issues      │  │  Do not delete WAL files manually           │   │
-│   │  P1 wraparound: emergency VACUUM FREEZE now  │  │  Do not run VACUUM FULL on large tables     │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  postmaster     = master PostgreSQL daemon; runs as postgres OS user; owns all backends               │
-│  PANIC          = PostgreSQL log level for unrecoverable error; indicates corruption risk             │
-│  WAL            = Write-Ahead Log; transaction journal; loss of WAL = data loss or unrecoverable      │
-│  wraparound     = XID (transaction ID) exhaustion; PG shuts down DB at limit; requires VACUUM         │
-│  VACUUM FREEZE  = forces visibility update on all rows; prevents XID wraparound shutdown              │
-│  pg_blocking_pids = function returning PIDs holding locks that block a given session                  │
-│  PGDATA         = PostgreSQL data directory; contains cluster config, data, and WAL by default        │
-│  pg_stat_activity = system view; shows all active connections and their current query/state           │
-│  pg_locks       = system view; shows all current lock requests; NOT granted = waiting                 │
-│  autovacuum     = background daemon; automatically vacuums tables; critical for XID wraparound        │
-│  EDB            = EnterpriseDB; provides PostgreSQL enterprise support and extensions                 │
-│  replication slot = WAL retention mechanism for streaming replicas; can cause disk fill if stuck      │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ---
 

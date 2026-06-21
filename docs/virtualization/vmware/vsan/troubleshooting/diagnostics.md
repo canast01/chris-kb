@@ -14,57 +14,10 @@ vSAN diagnostic commands: check all vSAN health checks from the Skyline Health U
 
 *Applies to: vSAN 7.x / 8.x*
 </div>
+![vSAN — Diagnostics](../../../../assets/virtualization-vmware-vsan-troubleshooting-diagnostics.svg)
 
-```text
-┌───────────────────────────────────────── vSAN — Diagnostics ──────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   Start here: vSphere Client → Cluster → Monitor → vSAN → Skyline Health                     │    │
-│   │   Object absent/degraded: esxcli vsan debug object list | grep -v Healthy                    │    │
-│   │   Performance issue: vSAN Perf Service graphs → esxcli vsan perf get                         │    │
-│   │   Network partition: esxcli vsan debug network test → vmkping -d -s 8972 peer-vmk-ip         │    │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               Health UI Checks               │  │               CLI Diagnostics               │   │
-│   │           vSAN Health: all green?            │  │           esxcli vsan debug object          │   │
-│   │          Object health: policy met?          │  │         cmmds-tool find -t DOM_NAME         │   │
-│   │           Network: MTU test pass?            │  │           esxcli vsan storage list          │   │
-│   │           Disk: all SMART healthy?           │  │         vsan.resync_dashboard (RVC)         │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Start in health UI; drill to object level with esxcli for per-component detail.                      │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │           Performance Diagnostics            │  │                Log Collection               │   │
-│   │          vSAN Perf: latency graphs           │  │         VC support bundle: host logs        │   │
-│   │         vsanObserver: per-host stats         │  │           vm-support on host shell          │   │
-│   │        IOPS/throughput per datastore         │  │               vsan_health*.log              │   │
-│   │         NIC utilisation: esxtop net          │  │             vsantraces: I/O path            │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  ESXi hosts (NVMe/SSD local disks) · vCenter managing the cluster · vSAN vmkernel (vmk2) network      │
-│  vSAN Skyline Health Service · vSAN Performance Service (enables perf graphs)                         │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│  cmmds-tool    = Cluster Membership and Directory Service CLI; resolves object/component UUIDs        │
-│  DOM_NAME      = Distributed Object Manager; per-object UUID and placement                            │
-│  RVC           = Ruby vSphere Console; vsan.resync_dashboard shows resync status                      │
-│  vsanObserver  = performance data collection tool; requires RVC; writes HTML report                   │
-│  vsan trace    = detailed I/O path log; written per host to /tmp/vsantrace                            │
-│  vm-support    = ESXi support bundle generator; per host; includes vSAN logs                          │
-│  esxtop net    = real-time ESXi NIC stats; throughput + drops                                         │
-│  MTU test      = vmkping with -d -s 8972 to verify jumbo frames end-to-end                            │
-│  IOPS graph    = vSAN Performance Service; must be enabled before data is available                   │
-│  vsan_health   = health service log; check for ERROR lines                                            │
-│  Object health = per-VM health; shows absent/degraded components                                      │
-│  SMART         = disk self-test; Reallocated/Pending sectors are pre-failure indicators               │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ```mermaid
 graph TD

@@ -12,57 +12,10 @@ Catalog of known MySQL bugs, error codes, and workarounds covering replication, 
 
 *Applies to: MySQL 8.0 / 8.4*
 </div>
+![MySQL — Known Issues and Error Codes](../../../../assets/compute-linux-mysql-troubleshooting-known-issues.svg)
 
-```text
-┌──────────────────────────────────────────────── MySQL ────────────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                 Relational DB — InnoDB storage engine, async/Group Replication                │   │
-│   │                 Protocols: MySQL wire protocol (TCP 3306) · X Protocol (33060)                │   │
-│   │                       Management: mysql CLI / MySQL Workbench / mysqlsh                       │   │
-│   │             Client connect -> Auth -> Query -> InnoDB engine -> Binlog (if repl.)             │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │            Engine           │  │            InnoDB           │  │      Row-level locking      │   │
-│   │         Replication         │  │      Async/Group Repl.      │  │          GTID-based         │   │
-│   │             Auth            │  │     caching_sha2/native     │  │       Per-user plugin       │   │
-│   │           Logging           │  │          Binary log         │  │    Needed for replication   │   │
-│   │            Tuning           │  │      InnoDB buffer pool     │  │       Top perf setting      │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
-│   │      mysqld      │ DB server proc.  │      TCP 3306     │    Native/PAM    │ One per instance │   │
-│   │      Binlog      │ Replication src  │      Internal     │       N/A        │  Row/stmt/mixed  │   │
-│   │   Group Repl.    │ Multi-primary HA │     Group port    │       Cert       │  3+ node quorum  │   │
-│   │    mysqldump     │  Logical backup  │        N/A        │     DB user      │ Single-threaded  │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical: DB server host(s) - local/SAN storage for InnoDB files - replicas                          │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  InnoDB         = default storage engine; ACID transactions, row locking                              │
-│  Binary log     = records data changes; source for replication and PITR                               │
-│  GTID           = Global Transaction ID; identifies a txn for replication                             │
-│  Group Repl.    = built-in multi/single-primary HA plugin                                             │
-│  Buffer pool    = InnoDB main memory cache for data and indexes                                       │
-│  Replica        = server applying changes from a source via binary log                                │
-│  SQL_SLAVE_SKIP_COUNTER = skips N events on a replica to clear an error                               │
-│  pt-table-sync  = Percona tool to find/fix drift between source/replica                               │
-│  mysqlsh        = MySQL Shell; CLI supporting SQL, Python, JS modes                                   │
-│  Buffer warmup  = repopulating buffer pool cache after a restart                                      │
-│  max_connect_errors = failed-login threshold before MySQL blocks a host                               │
-│  Performance Schema = built-in instrumentation for server internals                                   │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 
 ## Before you begin

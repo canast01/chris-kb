@@ -6,6 +6,8 @@ search:
   boost: 1.5
 ---
 # Dell CloudIQ Common Issues
+![Dell CloudIQ Common Issues](../../../../assets/storage-dell-cloudiq-troubleshooting-common-issues.svg)
+
 
 ```bash
 # SSH to the SCG appliance
@@ -21,42 +23,7 @@ systemctl restart dsagw
 journalctl -u dsagw -f
 # Look for: "connection refused", "TLS handshake failed", "authentication error"
 ```
-```text
-┌───────────────────────────────────── Dell CloudIQ Common Issues ──────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │       Top issues: SCG offline, stale/missing telemetry, system not appearing in CloudIQ       │   │
-│   │        Most problems root-cause to SCG connectivity loss or credential expiry on device       │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │          SCG Issues         │  │       Telemetry Issues      │  │      CloudIQ UI Issues      │   │
-│   │      ─────────────────      │  │      ─────────────────      │  │      ─────────────────      │   │
-│   │       SCG service down      │  │       Stale data > 1h       │  │        System missing       │   │
-│   │       Firewall blocked      │  │       Device poll fail      │  │      Wrong health score     │   │
-│   │       Proxy auth fail       │  │         Cred expired        │  │       Alert not firing      │   │
-│   │        SSL cert error       │  │       API unreachable       │  │       Login fails SSO       │   │
-│   │       SCG version old       │  │       Incomplete data       │  │         Report blank        │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│   │     Problem      │   Likely cause   │    First check    │       Fix        │      Verify      │   │
-│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
-│   │ Stale telemetry  │   SCG offline    │     scg status    │   Restart SCG    │   Check UI age   │   │
-│   │  System missing  │  Not registered  │  scg device list  │    Add device    │  Appears in UI   │   │
-│   │    Poll fail     │  Cred/firewall   │  scg device test  │   Fix creds/FW   │    Poll green    │   │
-│   │   SCG offline    │  VM powered off  │   vSphere check   │   Power on VM    │  scg status OK   │   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    Stale telemetry = Last-seen timestamp > 1 hour; data gap; UI shows last known state                │
-│    Device poll fail= SCG cannot reach storage REST API; check IP, credentials, and port 443           │
-│    Proxy auth fail = SCG proxy requires authentication; configure proxy creds in SCG settings         │
-│    SSL cert error  = SCG cannot validate CloudIQ endpoint cert; add CA to SCG trust store             │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 ```bash
 # Reproduce the failure with verbose output
 CLIENT_ID="<your-client-id>"

@@ -11,62 +11,10 @@ Encryption reference for VxRail in the VMware product context. Covers vSAN data-
 
 *Applies to: VxRail 7.x / 8.x*
 </div>
+![VxRail — Encryption](../../../../assets/virtualization-vmware-vxrail-security-encryption.svg)
 
-```text
-┌───────────────────────────────────────── VxRail — Encryption ─────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      vSAN data-at-rest encryption via KMIP KMS or vCenter Native Key Provider (NKP)           │   │
-│   │      vSAN in-transit encryption: no KMS required, AES-NI accelerated, no rebuild needed       │   │
-│   │      iDRAC HTTPS enforced; Telnet and HTTP disabled on all node management interfaces         │   │
-│   │      Secure Boot on all VxRail ESXi nodes: UEFI verifies VIB signatures at every boot         │   │
-│   │      VxRail Manager TLS certificate management; NKP backup downloaded and stored in vault     │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Data at rest protected by vSAN encrypt · data in flight protected by in-transit + TLS              │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │       vSAN Encryption       │  │      iDRAC / Firmware       │  │      Mgmt Plane TLS         │   │
-│   │   At-rest: KMS or NKP req   │  │   HTTPS only on iDRAC UI    │  │   VxRail Mgr TLS cert       │   │
-│   │   In-transit: no KMS, fast  │  │   Telnet/HTTP disabled      │  │   vCenter TLS chain valid   │   │
-│   │   AES-NI HW acceleration    │  │   Secure Boot: UEFI VIBs    │  │   NKP backup in vault       │   │
-│   │   FULL REBUILD on at-rest   │  │   LCM keeps FW current      │  │   Cert renewal procedure    │   │
-│   │   >25% free before enable   │  │   RACADM verify Secure Boot  │  │   CA-signed recommended    │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│    vSAN at-rest needs KMS/NKP · in-transit is free · Secure Boot protects node firmware integrity     │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │  vSAN At-Rest   │  vSAN In-Transit │  iDRAC HTTPS    │  Secure Boot     │  VxRail Mgr TLS   │     │
-│   │  KMS or NKP     │  Enable via UI   │  HTTPS only     │  RACADM check    │  TLS cert mgmt    │     │
-│   │  FULL REBUILD   │  No rebuild      │  Telnet disable │  UEFI verify     │  Renewal process  │     │
-│   │  >25% free req  │  AES-NI accel    │  HTTP disable   │  LCM FW current  │  NKP vault backup │     │
-│   │  NKP backup     │  No KMS needed   │  Cert check     │  Boot VIB sigs   │  CA-signed cert   │     │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  Dell PowerEdge servers · TPM 2.0 · AES-NI CPU extensions · NVMe/SSD/HDD · iDRAC OOB network          │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  vSAN data-at-rest  = Encryption of data written to vSAN disk groups; keys from KMS or NKP            │
-│  vSAN in-transit    = Encryption of vSAN replication traffic between nodes; AES-NI accelerated        │
-│  KMS/KMIP           = Key Management Server / protocol; external key store for at-rest encryption     │
-│  NKP                = Native Key Provider; vCenter-internal key provider, no external KMS required    │
-│  FULL DATA REBUILD  = Enabling at-rest encryption reformats all vSAN disks; all data rewritten        │
-│  Secure Boot        = UEFI feature verifying ESXi VIB/module signatures at every boot                 │
-│  RACADM             = Dell remote configuration CLI for iDRAC management operations                   │
-│  AES-NI             = Intel/AMD CPU hardware acceleration for AES encryption operations               │
-│  VxRail Manager TLS = TLS certificate on VxRail Manager VM API and plugin endpoint                    │
-│  NKP backup         = Encrypted key material download from vCenter; must be stored securely           │
-│  LCM                = Lifecycle Manager; VxRail upgrade system that includes iDRAC firmware updates   │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ---
 

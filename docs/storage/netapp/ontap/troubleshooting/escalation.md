@@ -12,50 +12,10 @@ How to escalate NetApp ONTAP issues to NetApp support: what data to collect, how
 
 *Applies to: ONTAP 9.x*
 </div>
+![ONTAP — Escalation](../../../../assets/storage-netapp-ontap-troubleshooting-escalation.svg)
 
-```text
-┌────────────────────────────────────── NetApp ONTAP — Escalation ──────────────────────────────────────┐
-│                                                                                                       │
-│  Escalate ONTAP issues to NetApp support when a node is down, an aggregate is                         │
-│  degraded, I/O is failing, or SnapMirror is broken in an active DR scenario.                          │
-│  Invoke AutoSupport BEFORE opening the case to give NetApp instant system context.                    │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Step 1 — Collect Data               │  │          Step 2 — Open the SR               │   │
-│   │  Invoke AutoSupport tied to the incident     │  │  Go to mysupport.netapp.com → sign in       │   │
-│   │  Run: event log show -severity error         │  │  Product: ONTAP; pick your version          │   │
-│   │  Note cluster + node + ONTAP version         │  │  Priority: P1 down / P2 major / P3 minor    │   │
-│   │  Capture health alerts + failed disks        │  │  Attach event log output + timeline         │   │
-│   │  Write timeline: last good → first failure   │  │  AutoSupport case links automatically       │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  For P1: open portal case AND call NetApp support at +1-888-463-8277 immediately.                     │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Step 3 — Escalation Path            │  │         What NOT to Do                      │   │
-│   │  TSE: triage + review AutoSupport data       │  │  Do not pull disks without NetApp guidance  │   │
-│   │  Specialist SE: if TSE cannot resolve        │  │  Do not destroy an aggregate under repair   │   │
-│   │  Duty Manager: request if SLA breached       │  │  Do not delete Snapshots during incident    │   │
-│   │  Account team: for P1 running > 4 hours      │  │  Do not upgrade ONTAP mid-incident          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  AutoSupport  = telemetry bundle sent to NetApp; required before opening every case                   │
-│  TSE          = Technical Support Engineer; first NetApp engineer assigned to a case                  │
-│  ONTAP        = NetApp storage OS; unified NAS, SAN, object across AFF, FAS, ONTAP Select             │
-│  Aggregate    = RAID group of disks underpinning FlexVols on a node                                   │
-│  SVM          = Storage Virtual Machine; logical storage server with protocols and IPs                │
-│  SnapMirror   = async or synchronous replication between ONTAP systems for DR and backup              │
-│  SR           = Service Request; support case assigned by NetApp; referenced as case number           │
-│  SupportEdge  = NetApp support contract tier; P1 response requires 24×7 SupportEdge                   │
-│  EMS          = ONTAP Event Management System; generates error/warning/info events                    │
-│  SM-BC        = SnapMirror Business Continuity; zero-RPO sync replication                             │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ---
 

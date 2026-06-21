@@ -12,57 +12,10 @@ Catalog of known AWS bugs, error codes, and workarounds covering IAM, EC2, netwo
 
 *Applies to: AWS general services — EC2, VPC, IAM, S3, RDS*
 </div>
+![AWS — Known Issues and Error Codes](../../../assets/cloud-aws-troubleshooting-known-issues.svg)
 
-```text
-┌───────────────────────────────────── AWS — IAM, EC2, Networking ──────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │             Core AWS services — EC2, VPC, IAM, S3, RDS; general infra known issues            │   │
-│   │                Protocols: HTTPS to AWS APIs · per-service data-plane protocols                │   │
-│   │                   Management: AWS Console / CLI / CloudFormation / Terraform                  │   │
-│   │       IAM auth -> API request -> Service control plane -> Resource action -> CloudTrail       │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │           Identity          │  │        IAM role/user        │  │   Least-privilege policies  │   │
-│   │           Compute           │  │         EC2 instance        │  │      AMI-based, per-AZ      │   │
-│   │           Network           │  │        VPC/Subnet/SG        │  │      L3/L4 segmentation     │   │
-│   │           Storage           │  │           S3 / EBS          │  │       Object vs block       │   │
-│   │          Governance         │  │        Service Quotas       │  │   Per-region, per-service   │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
-│   │       IAM        │ Identity/access  │       HTTPS       │   Policy-based   │ Roles over keys  │   │
-│   │       EC2        │ Virtual compute  │   HTTPS/SSH/RDP   │   Key pair/IAM   │ Per-AZ capacity  │   │
-│   │       VPC        │Network isolation │        N/A        │ Security groups  │  Subnets per AZ  │   │
-│   │    CloudTrail    │  API audit log   │       HTTPS       │     IAM read     │Key for incidents │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical: N/A — AWS-managed regions/AZs; customer controls logical resources                         │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  IAM            = Identity and Access Management; AWS auth/authz service                              │
-│  Region/AZ      = geographic AWS area / isolated datacenter within it                                 │
-│  SCP            = Service Control Policy; org-level guardrail over IAM                                │
-│  Security group = stateful virtual firewall attached to ENIs/instances                                │
-│  NACL           = Network ACL; stateless subnet firewall, evaluated before SG                         │
-│  Service Quota  = per-account, per-region limit on a resource                                         │
-│  CloudTrail     = audit log of all API calls made against the account                                 │
-│  ENI            = Elastic Network Interface; virtual NIC for EC2 instances                            │
-│  IMDS           = Instance Metadata Service; how EC2 fetches its IAM creds                            │
-│  STS            = Security Token Service; issues temp creds for assumed roles                         │
-│  Capacity resv. = guarantees EC2 capacity in an AZ for an instance type                               │
-│  Conn. tracking = state table letting existing flows persist after SG change                          │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 
 ## Before you begin

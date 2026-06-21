@@ -12,51 +12,10 @@ How to escalate Brocade SANnav Management Portal issues to Broadcom support: wha
 
 *Applies to: SANnav Management Portal 2.x*
 </div>
+![Brocade SANnav — Escalation](../../../../assets/san-brocade-sannav-troubleshooting-escalation.svg)
 
-```text
-┌──────────────────────────── Brocade SANnav — Troubleshooting Escalation ──────────────────────────────┐
-│                                                                                                       │
-│  Escalate SANnav issues to Broadcom TAC when the management portal is completely unreachable,         │
-│  zone changes cannot be pushed to any fabric, SANnav discovery has stopped for all switches,          │
-│  or a SANnav upgrade has left the appliance in an inconsistent or inaccessible state.                 │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Step 1 — Collect Data               │  │          Step 2 — Open the SR               │   │
-│   │  Run sannav support-bundle                   │  │  Go to support.broadcom.com → sign in       │   │
-│   │  Note SANnav version (sannav version)        │  │  Product: Brocade SANnav Management Portal  │   │
-│   │  Capture journalctl SANnav service log       │  │  Severity: Sev1 down / Sev2 degraded        │   │
-│   │  Run supportsave on affected switches        │  │  Attach bundle + journalctl + switch saves  │   │
-│   │  Write timeline: last good → first failure   │  │  Include all FOS versions per switch        │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  For Sev1: open portal case AND call Broadcom TAC immediately.                                        │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Step 3 — Escalation Path            │  │         What NOT to Do                      │   │
-│   │  T1: triage + confirm bundle received        │  │  Do not restart SANnav mid-upgrade          │   │
-│   │  T2: SANnav SE assigned; deep log analysis   │  │  Do not push zone changes during incident   │   │
-│   │  TAC remote: Broadcom SSH to SANnav VM       │  │  Do not delete SANnav DB without TAC        │   │
-│   │  RCA: provided by TAC after Sev1 close       │  │  Do not change switch credentials mid-case  │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  SANnav          = Brocade SAN management platform; replaces DCFM and BNA; manages FOS switches       │
-│  support-bundle  = SANnav CLI command generating a log archive; mandatory for every TAC case          │
-│  journalctl      = Linux systemd journal; SANnav service logs are here; share compressed dump         │
-│  sannav-admin    = SANnav appliance admin CLI; shows database and service status                      │
-│  supportsave     = FOS command on each switch; generates per-switch diagnostic archive                │
-│  FOS             = Fabric OS; Brocade switch operating system; version must match SANnav matrix       │
-│  TAC             = Technical Assistance Center; Broadcom support engineers for SANnav                 │
-│  Sev1            = SANnav completely down; fabric management unavailable; no zone changes possible    │
-│  Sev2            = SANnav partially working; zone push failing or discovery partial                   │
-│  TAC remote      = Broadcom engineer SSH to SANnav VM with customer permission to diagnose live       │
-│  RCA             = Root Cause Analysis document; Broadcom provides after Sev1 close                   │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ---
 

@@ -12,38 +12,10 @@ PostgreSQL diagnostic commands: read the error log, query pg_stat_activity for b
 
 *Applies to: PostgreSQL 14–17 on RHEL / Ubuntu LTS*
 </div>
+![PostgreSQL — Diagnostics](../../../../assets/compute-linux-postgresql-troubleshooting-diagnostics.svg)
 
-```text
-┌────────────────────────────────────── PostgreSQL — Diagnostics ───────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   Start here: error log → pg_stat_activity → pg_blocking_pids → pg_stat_statements           │    │
-│   │   Lock contention: use pg_blocking_pids(pid) to find which session is blocking another        │   │
-│   │   Slow queries: pg_stat_statements tracks cumulative execution stats per query fingerprint    │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │         Active Sessions and Blocking         │  │           Replication and Autovacuum         │  │
-│   │   pg_stat_activity: state, wait_event, query │  │   pg_stat_replication: lag_bytes per replica │  │
-│   │   pg_blocking_pids(pid): who blocks this pid │  │   pg_last_xact_replay_timestamp(): lag secs  │  │
-│   │   pg_cancel_backend(pid): cancel gracefully  │  │   pg_stat_user_tables: last_autovacuum,      │  │
-│   │   pg_terminate_backend(pid): force kill      │  │   n_dead_tup: tables needing VACUUM          │  │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  PostgreSQL primary · standby replicas · WAL archiver · pg_stat_statements extension                  │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│  pg_stat_activity  = live view of all backend processes and their current query state                 │
-│  pg_blocking_pids  = function returning PIDs that hold locks blocking a given session PID             │
-│  pg_stat_statements= extension tracking top queries by total and mean execution time                  │
-│  LSN               = Log Sequence Number; WAL position; used to calculate replication lag bytes       │
-│  autovacuum        = background process that reclaims dead tuple space; prevents table bloat          │
-│  n_dead_tup        = count of dead tuples in a table; high count = autovacuum not keeping up          │
-│  WAL               = Write-Ahead Log; replication log; standby replays WAL to stay in sync            │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ```mermaid
 graph TD

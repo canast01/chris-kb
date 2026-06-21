@@ -11,57 +11,10 @@ Index of storage product known issues and error codes. This top-level page links
 
 *Applies to: All storage products in this KB*
 </div>
+![Storage — Known Issues Reference](../../assets/storage-troubleshooting-known-issues.svg)
 
-```text
-┌────────────────────────────────────── Storage Products Overview ──────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │            Enterprise storage platforms — block, file, object, and unified storage            │   │
-│   │                    Protocols: FC · iSCSI · NFS · SMB · S3 · NVMe-oF · iSER                    │   │
-│   │            Management: vendor web UI · REST API · CLI · ONTAP / PURITY / Unisphere            │   │
-│   │             Host -> fabric/network -> storage array -> volume/share -> application            │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │             Dell            │  │      PowerStore / Unity     │  │     Block + file unified    │   │
-│   │            NetApp           │  │        ONTAP clusters       │  │        NAS + SAN + S3       │   │
-│   │             Pure            │  │      FlashArray / Blade     │  │    All-flash + Evergreen    │   │
-│   │             Ceph            │  │        RADOS cluster        │  │    Block/file/object OSS    │   │
-│   │          Analytics          │  │       CloudIQ / Pure1       │  │      AI-driven insights     │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
-│   │  Block storage   │   LUN / volume   │     FC / iSCSI    │   CHAP / zones   │ SCSI command set │   │
-│   │   File storage   │    NAS share     │     NFS / SMB     │  Kerberos / AD   │POSIX permissions │   │
-│   │  Object storage  │   Bucket / key   │     S3 / Swift    │    HMAC / IAM    │Eventual consist. │   │
-│   │   Replication    │     DR copy      │   Array-specific  │   Array trust    │  Sync or async   │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical: host initiators -> SAN/LAN fabric -> storage controllers -> drive shelves                  │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  LUN          = Logical Unit Number; block storage volume presented to hosts                          │
-│  RAID         = Redundant Array of Independent Disks; data protection across drives                   │
-│  NVMe-oF      = NVMe over Fabrics; low-latency block storage over FC or RDMA                          │
-│  ONTAP        = NetApp unified storage OS for NAS, SAN, and object                                    │
-│  Purity       = Pure Storage OS running FlashArray and FlashBlade                                     │
-│  Unisphere    = Dell EMC management UI for Unity and PowerStore arrays                                │
-│  CloudIQ      = Dell AI-driven storage analytics and anomaly detection                                │
-│  RADOS        = Reliable Autonomic Distributed Object Store; Ceph core layer                          │
-│  RDO / ROOK   = Ceph deployment methods; bare-metal and Kubernetes respectively                       │
-│  Thin provisioning = allocate capacity on demand, not upfront                                         │
-│  Snapshot     = point-in-time copy of a volume; space-efficient via CoW                               │
-│  Clone        = writable copy of a snapshot; independent of the source                                │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 
 ## Before you begin

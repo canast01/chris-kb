@@ -14,55 +14,10 @@ NSX diagnostic commands: check cluster and transport node health with nsxcli, in
 
 *Applies to: NSX 4.x*
 </div>
+![NSX — Diagnostics](../../../../assets/virtualization-vmware-nsx-troubleshooting-diagnostics.svg)
 
-```text
-┌────────────────────────────────────────── NSX — Diagnostics ──────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   Start here: nsxcli → get cluster status → get alarms → get transport-nodes                 │    │
-│   │   DFW rule drop: summarize-dvfilter on ESXi → vsipioctl getrules → Traceflow in NSX UI      │     │
-│   │   BGP not forming: Edge → vrf → get bgp neighbor summary → check underlay MTU (vmkping -d)  │     │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                Key Log Files                 │  │                Traceflow Tool               │   │
-│   │          /var/log/proton (manager)           │  │           NSX UI: Plan > Traceflow          │   │
-│   │             /var/log/nsx-syslog              │  │            Inject L2/L3/L4 packet           │   │
-│   │          /var/log/bfd.log (routing)          │  │             See path hop by hop             │   │
-│   │           ESXi: /var/log/nsx-*.log           │  │           Identify drop + rule hit          │   │
-│   │           Edge: /var/log/nsx-*.log           │  │             Bidirectional trace             │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Logs → Traceflow for path/DFW → IPFIX for flows → bundle for GSS.                                    │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             IPFIX / Flow Export              │  │                Support Bundle               │   │
-│   │          DFW IPFIX per-rule export           │  │         UI: System > Support Bundle         │   │
-│   │          Collector: Aria NI / sflow          │  │          API: POST /api/v1/suppbndl         │   │
-│   │          Flow visibility map build           │  │            Includes all node logs           │   │
-│   │         Used for micro-seg planning          │  │           Select: manager + edges           │   │
-│   │         Identify undocumented flows          │  │             Upload to VMware SR             │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  NSX Manager VMs (3-node cluster) · Edge VMs or BMs · ESXi transport nodes · IPFIX collector          │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│  proton log  = NSX Manager core process log; cluster/config events                                    │
-│  Traceflow   = NSX packet path simulation; shows rule hits and drops                                  │
-│  IPFIX       = IP Flow Info Export; protocol for DFW flow telemetry                                   │
-│  Aria NI     = Aria Network Insight; NSX flow analytics platform                                      │
-│  BFD         = Bidirectional Forwarding Detection; fast link failure detect                           │
-│  nsx-syslog  = aggregated NSX system log; forwarded to SIEM                                           │
-│  DFW filter  = per-vNIC firewall kernel module; rules realised from NSX Manager policy                │
-│  TEP         = Tunnel Endpoint; vmkernel interface on ESXi for Geneve overlay traffic                 │
-│  Geneve      = tunnel protocol used for NSX overlay (UDP port 6081)                                   │
-│  vsipioctl   = ESXi tool to inspect DFW filter rules and hit counts per vNIC                          │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ```mermaid
 graph TD

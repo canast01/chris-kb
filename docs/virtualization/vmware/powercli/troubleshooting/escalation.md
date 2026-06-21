@@ -13,50 +13,10 @@ How to escalate VMware PowerCLI issues to Broadcom support: what diagnostic data
 
 *Applies to: PowerCLI 13.x*
 </div>
+![PowerCLI — Escalation](../../../../assets/virtualization-vmware-powercli-troubleshooting-escalation.svg)
 
-```text
-┌─────────────────────────────── VMware PowerCLI — Escalation ──────────────────────────────────────────┐
-│                                                                                                       │
-│  Escalate PowerCLI issues to VMware GSS when the issue persists after verifying module version,       │
-│  cert config, and API compatibility — and when the failure is reproducible with a minimal script.     │
-│  Check community resources first; most PowerCLI issues have a known solution without a formal SR.     │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Step 1 — Collect Data               │  │          Step 2 — Open the SR               │   │
-│   │  Get PowerCLI + PowerShell + vCenter vers    │  │  Go to support.broadcom.com → sign in       │   │
-│   │  Run diagnostic collection script below      │  │  Product: VMware vSphere (covers PowerCLI)  │   │
-│   │  Capture $Error[0] | Format-List * -Force    │  │  Severity: Sev 3 (non-urgent) for most      │   │
-│   │  Enable verbose/debug and capture API trace  │  │  Attach diag output + trace log + repro     │   │
-│   │  Write minimal reproduction script           │  │  Note: same operation works in vCenter UI?  │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  For production outages caused by a failed automation script, open Sev 1/2 and call.                  │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Step 3 — Escalation Path            │  │         What NOT to Do                      │   │
-│   │  Community: VMware {code} forums first       │  │  Do not clear $Error before capturing it    │   │
-│   │  GitHub: check issues tab for known bugs     │  │  Do not run destructive cmdlets to reproduce│   │
-│   │  GSS SR: formal case with diag + repro       │  │  Do not disable cert checking permanently   │   │
-│   │  Product team: escalated via SR for defects  │  │  Do not upgrade PowerCLI mid-incident       │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  GSS            = Global Support Services; Broadcom/VMware formal support case portal                 │
-│  Minimal repro  = smallest possible script that reproduces the issue; no credentials or env data      │
-│  vSphere API Ref = API reference documentation; documents all managed object types and methods        │
-│  SOAP trace     = raw XML API call/response captured by PowerCLI; required for API-layer bugs         │
-│  InvalidCertificateAction = PowerCLI setting controlling TLS cert validation; never set to Ignore     │
-│  $Error[0]      = PowerShell's last error record; contains the full exception detail for GSS          │
-│  Module conflict = multiple installed versions of the same VMware.* module; causes import errors      │
-│  $VerbosePreference = set to Continue to show raw API calls in the PowerShell console                 │
-│  VimClient      = PowerCLI's underlying .NET client; trace logging exposes its SOAP traffic           │
-│  DefaultVIServers = connected vCenter/ESXi sessions; includes version + build + connection state      │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ---
 

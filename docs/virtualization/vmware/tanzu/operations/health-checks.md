@@ -12,58 +12,7 @@ Health Checks reference covering Supervisor Cluster Health, TKG Cluster Health, 
 
 *Applies to: Tanzu 3.x*
 </div>
-```text
-┌───────────────────────────── Virtualization Vmware Tanzu — Health Checks ─────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │        Vmware health checks: routine verification of operational status and performance       │   │
-│   │         Checks include: controller status, drive health, replication lag, and capacity        │   │
-│   │         Frequency: daily quick checks; weekly detailed review; monthly capacity report        │   │
-│   │        Configure threshold-based alerts for proactive incident prevention and awareness       │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Check status → review alerts → verify replication → capacity → log                                 │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │             Core            │  │       Primary service       │  │        Main function        │   │
-│   │          Management         │  │        Control plane        │  │         Admin access        │   │
-│   │          Monitoring         │  │         Health/perf         │  │      Alerts/dashboards      │   │
-│   │           Security          │  │         Auth/encrypt        │  │        Access control       │   │
-│   │         Integration         │  │        APIs/plug-ins        │  │         Third-party         │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Check area    │  How to verify   │   Pass criteria   │    Frequency     │       Tool       │   │
-│   │   Controllers    │   show status    │    All healthy    │      Daily       │     CLI/GUI      │   │
-│   │      Drives      │   show drives    │  No failed/pred.  │      Daily       │     CLI/GUI      │   │
-│   │   Replication    │ show replication │  Lag < threshold  │      Daily       │     CLI/GUI      │   │
-│   │     Capacity     │  show capacity   │     < 80% used    │      Daily       │     CLI/GUI      │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: Virtualization Vmware Tanzu infrastructure · management network · monitoring             │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    Vmware             = Virtualization Vmware Tanzu platform overview and core concepts               │
-│    Management         = management console and command-line interface for administration              │
-│    Monitoring         = health and performance monitoring dashboards and alerting                     │
-│    Automation         = REST API, scripting, and pipeline integration capabilities                    │
-│    Security           = access control, authentication, and encryption configuration                  │
-│    Backup             = backup and recovery procedures and schedule configuration                     │
-│    Upgrade            = software version upgrades and firmware patching procedures                    │
-│    Troubleshooting    = diagnostic procedures and common issue resolution steps                       │
-│    Escalation         = vendor support escalation path and severity triage process                    │
-│    Documentation      = vendor knowledge base and official product documentation                      │
-│    Change management  = change ticket requirements for production modifications                       │
-│    Audit log          = admin action logging for compliance and security review                       │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 ## Before you begin
 
@@ -114,6 +63,8 @@ Health Checks reference covering Supervisor Cluster Health, TKG Cluster Health, 
 
 ## Supervisor Cluster Health
 
+![Supervisor Cluster Health](../../../../assets/virtualization-vmware-tanzu-hc-supervisor-cluster-health.svg)
+
 ```text
 vCenter → Workload Management → Supervisor Clusters
   Status: Running (green checkmark)
@@ -134,6 +85,8 @@ kubectl get namespaces  # Should return list of vSphere Namespaces
 ---
 
 ## TKG Cluster Health
+
+![TKG Cluster Health](../../../../assets/virtualization-vmware-tanzu-hc-tkg-cluster-health.svg)
 
 ```bash
 # Check all clusters and status
@@ -156,6 +109,8 @@ kubectl get pods -A | grep -v Running | grep -v Completed
 
 ## Node Resource Utilization
 
+![Node Resource Utilization](../../../../assets/virtualization-vmware-tanzu-hc-node-resource-utilization.svg)
+
 ```bash
 # Node-level CPU and memory (requires metrics-server)
 kubectl top nodes
@@ -172,6 +127,8 @@ kubectl describe nodes | grep -A 5 "Conditions:"
 ---
 
 ## PVC and Storage Health
+
+![PVC and Storage Health](../../../../assets/virtualization-vmware-tanzu-hc-pvc-and-storage-health.svg)
 
 ```bash
 # List all PVCs and their status
@@ -205,6 +162,8 @@ kubectl delete pvc test-pvc
 
 ## Load Balancer / Service Health
 
+![Load Balancer / Service Health](../../../../assets/virtualization-vmware-tanzu-hc-load-balancer-service-health.svg)
+
 ```bash
 # List Services of type LoadBalancer — verify all have EXTERNAL-IP assigned
 kubectl get svc -A | grep LoadBalancer
@@ -217,6 +176,8 @@ kubectl get svc -A | grep LoadBalancer
 ---
 
 ## Harbor Registry Health
+
+![Harbor Registry Health](../../../../assets/virtualization-vmware-tanzu-hc-harbor-registry-health.svg)
 
 ```bash
 # Harbor health API (no auth required)
@@ -238,6 +199,8 @@ docker pull harbor.example.local/library/busybox:test
 
 ## Certificate Expiry
 
+![Certificate Expiry](../../../../assets/virtualization-vmware-tanzu-hc-certificate-expiry.svg)
+
 ```bash
 # Check Supervisor API server cert
 echo | openssl s_client -connect supervisor.example.local:443 2>/dev/null \
@@ -256,6 +219,8 @@ echo | openssl s_client -connect $CLUSTER_API 2>/dev/null \
 ---
 
 ## CSR and Cert Manager Health
+
+![CSR and Cert Manager Health](../../../../assets/virtualization-vmware-tanzu-hc-csr-and-cert-manager-health.svg)
 
 ```bash
 # Check for pending CertificateSigningRequests in cluster

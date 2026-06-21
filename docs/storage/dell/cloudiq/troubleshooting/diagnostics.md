@@ -12,38 +12,10 @@ CloudIQ diagnostic commands: check SCG service health, test outbound connectivit
 
 *Applies to: Dell CloudIQ / Secure Connect Gateway (SCG)*
 </div>
+![CloudIQ — Diagnostics](../../../../assets/storage-dell-cloudiq-troubleshooting-diagnostics.svg)
 
-```text
-┌────────────────────────────────────── Dell CloudIQ — Diagnostics ─────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   Start here: scg status → scg connectivity --test → scg device test → scg log collect       │    │
-│   │   System not reporting: check SCG service; check TLS/proxy; check device credentials          │   │
-│   │   Alert not firing: verify SCG telemetry is reaching cloudiq.dell.com (HTTPS 443)            │    │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │            SCG Service Health                │  │         Device Connectivity                 │   │
-│   │   ssh admin@<SCG_IP>                         │  │   scg device test --id <device_id>          │   │
-│   │   scg status                                 │  │   scg device list                           │   │
-│   │   systemctl status dsagw                     │  │   curl -sk https://<array-mgmt-ip>/         │   │
-│   │   scg connectivity --test                    │  │   nslookup cloudiq.dell.com                 │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  SCG VM or physical appliance · Outbound HTTPS to cloudiq.dell.com · Array management interfaces      │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│  SCG         = Secure Connect Gateway; on-premises appliance that polls arrays and forwards data      │
-│  dsagw       = Dell SCG gateway service; handles TLS-encrypted telemetry upload to CloudIQ cloud      │
-│  scg device  = individual storage system registered with SCG for polling                              │
-│  CloudIQ     = Dell SaaS analytics portal; receives telemetry from SCG to display array health        │
-│  Proxy       = optional HTTP/HTTPS proxy for SCG outbound traffic; configured in SCG UI Settings      │
-│  esrs3.emc.com= legacy ESRS endpoint; some SCG versions use this alongside cloudiq.dell.com           │
-│  Poll cycle  = interval at which SCG queries each device and uploads telemetry to CloudIQ             │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ```mermaid
 graph TD

@@ -12,39 +12,10 @@ APEX Storage as a Service diagnostic commands: check host-side iSCSI and multipa
 
 *Applies to: Dell APEX Storage-as-a-Service (block storage)*
 </div>
+![APEX Storage as a Service — Diagnostics](../../../../assets/storage-dell-apex-storage-as-a-service-troubleshooting-diagn.svg)
 
-```text
-┌──────────────────────────── Dell APEX Storage as a Service — Diagnostics ─────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   Start here: multipath -ll → iscsiadm session → APEX Console → SCG → array Unisphere       │     │
-│   │   Storage not visible to host: check multipath; check iSCSI/FC login; check zoning           │    │
-│   │   APEX Console shows no data: check SCG connectivity; check CloudIQ agent on SCG             │    │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             Host-Side Diagnostics            │  │          APEX Console / SCG                 │   │
-│   │   multipath -ll (Linux)                      │  │   scg status (on SCG appliance)             │   │
-│   │   iscsiadm -m session (iSCSI hosts)          │  │   scg connectivity --test                   │   │
-│   │   mpclaim -s -d (Windows MPIO)               │  │   scg device list                           │   │
-│   │   Get-Disk (Windows)                         │  │   APEX Console → Systems                    │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  Dell arrays on-premises (PowerStore / PowerFlex) · customer iSCSI VLAN or FC fabric · APEX Console   │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│  APEX STaaS    = on-prem Dell storage consumed as a subscription; Dell owns hardware, you own data    │
-│  APEX Console  = SaaS portal for provisioning, capacity visibility, and support requests              │
-│  SCG           = Secure Connect Gateway; relays array telemetry to CloudIQ and APEX Console           │
-│  Committed base= minimum contracted capacity billed monthly; burst capacity billed when consumed      │
-│  multipath -ll = shows all active I/O paths from Linux host to array LUNs                             │
-│  iscsiadm      = Linux iSCSI initiator utility; manages sessions, discovery, and node records         │
-│  mpclaim       = Windows MPIO claim tool; shows multipath disk and path status                        │
-│  vVols         = Virtual Volumes; per-VM storage objects via VASA provider to vCenter                 │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ```mermaid
 graph TD
