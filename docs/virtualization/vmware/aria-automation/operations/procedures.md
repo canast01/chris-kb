@@ -12,51 +12,7 @@ Day-2 operational procedures for Aria Automation — managing cloud accounts, pr
 *Applies to: Aria Automation 8.x*
 </div>
 
-```text
-┌────────────────────────────── Aria Automation — Operational Procedures ───────────────────────────────┐
-│                                                                                                       │
-│  Common vRA operational tasks: cert rotation, password rotation, account changes, cleanup.            │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             Certificate Rotation             │  │              Password Rotation              │   │
-│   │      Generate new cert (SAN: vRA FQDN)       │  │      vRA admin password: VAMI → change      │   │
-│   │        Import via LCM cert management        │  │     Postgres password: vracli + restart     │   │
-│   │       LCM redeploys certs to products        │  │      Cloud account creds: update in UI      │   │
-│   │        Validate SSO and catalog after        │  │      Service account: rotate + test ABX     │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Account and resource management procedures keep vRA clean and correctly scoped.                      │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │           Cloud Account Management           │  │               Resource Cleanup              │   │
-│   │       Add: wizard + test connectivity        │  │      Orphaned deployments: force delete     │   │
-│   │        Update creds: edit + reconnect        │  │    Stale catalog items: unpublish+delete    │   │
-│   │      Remove: detach from projects first      │  │      Expired leases: auto or manual del     │   │
-│   │      Data collection: trigger manually       │  │     ABX logs: retained 30d, purge older     │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  vRA appliances · LCM appliance · Postgres · vIDM · vCenter · CA for cert issuance                    │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Cert rotation     = Replacing expiring TLS cert on vRA via LCM certificate management UI             │
-│  LCM cert push     = LCM distributes updated cert to all products in the Environment                  │
-│  VAMI password     = Root/admin password for vRA appliance changed via VAMI web UI at :5480           │
-│  Postgres creds    = DB credentials stored in vracli config; update and restart service               │
-│  Cloud account creds= AWS access key / vCenter password stored in vRA; edit without removing          │
-│  Force delete      = vRA admin can hard-delete stuck deployments via API or UI override               │
-│  Orphaned resource = Deployment record in vRA with no matching resource in cloud account              │
-│  Data collection   = vRA polls cloud accounts for resource inventory; trigger via UI or API           │
-│  Lease expiry      = Automated deletion triggered by lease policy when deployment exceeds TTL         │
-│  ABX log retention = Action run logs stored 30 days; older logs purged automatically                  │
-│  Unpublish item    = Remove catalog item from consumer view without deleting the template             │
-│  Service account   = vRA uses a service account to authenticate to AD, vCenter, and NSX               │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 ---
 
@@ -489,11 +445,15 @@ When a blueprint deployment fails, Aria Automation records the failure at the re
 
 ### Step 1 — Open the Deployment Detail
 
+![Step 1 — Open the Deployment Detail](../../../../assets/aria-automation-proc-step-1-open-the-deployment-detail.svg)
+
 **Service Broker → Deployments** → locate the failed deployment (Status: **Failed**) → click to open.
 
 The deployment detail shows each resource's provisioning status. Find the first resource with **Failed** status — this is typically the root cause; later failures are cascading.
 
 ### Step 2 — Read the Resource Error
+
+![Step 2 — Read the Resource Error](../../../../assets/aria-automation-proc-step-2-read-the-resource-error.svg)
 
 Click the failed resource → **History** tab → expand the last action (usually **Create** or **Provision**) → read the error message.
 
@@ -511,6 +471,8 @@ Common error patterns:
 
 ### Step 3 — Inspect Detailed Logs
 
+![Step 3 — Inspect Detailed Logs](../../../../assets/aria-automation-proc-step-3-inspect-detailed-logs.svg)
+
 For ABX/extensibility failures, go to **Extensibility → Activity → select the failed action run** — full stdout/stderr from the script is recorded here.
 
 For vSphere provisioning failures, cross-reference the vCenter **Tasks** panel at the time of the failure — vSphere error messages are often more descriptive than what Aria Automation surfaces.
@@ -522,6 +484,8 @@ tail -f /var/log/vmware/vra/deployment-service.log | grep ERROR
 ```
 
 ### Step 4 — Fix and Retry
+
+![Step 4 — Fix and Retry](../../../../assets/aria-automation-proc-step-4-fix-and-retry.svg)
 
 After fixing the root cause:
 
@@ -539,6 +503,8 @@ Use when a vCenter, AWS account, or other cloud endpoint is being retired. Remov
 
 ### Step 1 — Check for Dependencies
 
+![Step 1 — Check for Dependencies](../../../../assets/aria-automation-proc-step-1-check-for-dependencies.svg)
+
 Before removing, identify all resources that reference this cloud account:
 
 1. **Infrastructure → Cloud Zones** — note all cloud zones associated with the account
@@ -548,17 +514,23 @@ Before removing, identify all resources that reference this cloud account:
 
 ### Step 2 — Update or Delete Dependent Blueprints
 
+![Step 2 — Update or Delete Dependent Blueprints](../../../../assets/aria-automation-proc-step-2-update-or-delete-dependent-blueprints.svg)
+
 For each dependent blueprint:
 - If the blueprint should still work: update it to use a different cloud zone
 - If the blueprint is no longer needed: unpublish from the catalog and delete the blueprint version
 
 ### Step 3 — Remove the Cloud Account
 
+![Step 3 — Remove the Cloud Account](../../../../assets/aria-automation-proc-step-3-remove-the-cloud-account.svg)
+
 1. **Infrastructure → Connections → Cloud Accounts** → select the cloud account → **Delete**
 2. Confirm — Aria Automation removes the cloud account and all its associated cloud zones, image mappings, flavor mappings, and network/storage profiles
 3. Any VMs or other resources that were provisioned via this cloud account remain in their cloud environment — Aria Automation will no longer manage them (they become "orphaned" in Aria Automation's perspective)
 
 ### Step 4 — Clean Up Orphaned Deployments
+
+![Step 4 — Clean Up Orphaned Deployments](../../../../assets/aria-automation-proc-step-4-clean-up-orphaned-deployments.svg)
 
 After removing the cloud account, deployments that used it will show in a degraded state:
 
@@ -572,9 +544,13 @@ Notification templates customise the email content sent to users when catalog re
 
 ### Step 1 — Access Notification Templates
 
+![Step 1 — Access Notification Templates](../../../../assets/aria-automation-proc-step-1-access-notification-templates.svg)
+
 **Infrastructure → Administration → Notifications** (or **Configuration → Notifications** depending on Aria Automation version)
 
 ### Step 2 — Create a Custom Template
+
+![Step 2 — Create a Custom Template](../../../../assets/aria-automation-proc-step-2-create-a-custom-template.svg)
 
 1. Click **Add** → select the trigger event:
    - `Request Submitted` — confirmation to the requester
@@ -602,6 +578,8 @@ Available template variables:
 4. Save and enable the template
 
 ### Step 3 — Test the Template
+
+![Step 3 — Test the Template](../../../../assets/aria-automation-proc-step-3-test-the-template.svg)
 
 Submit a test deployment request and verify the email is received with the correct content. Check the **Infrastructure → Activity → Notifications** log if emails are not arriving — errors are logged per notification attempt.
 

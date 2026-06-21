@@ -12,19 +12,7 @@ Common operational procedures using PowerCLI: VM lifecycle, bulk operations, sto
 *Applies to: PowerCLI 13.x*
 </div>
 
-```text
-┌────────────────────────────── PowerCLI — Common Operational Procedures ───────────────────────────────┐
-│                                                                                                       │
-│   All procedures follow: pre-check → act → verify → report pattern                                    │
-│   Use -WhatIf with Set-/Remove- cmdlets to preview impact before committing                           │
-│   Capture output with Start-Transcript or | Tee-Object -FilePath change.log                           │
-│                                                                                                       │
-│   VM lifecycle: create from template, resize hardware, move, delete with safety checks                │
-│   Bulk ops: power, snapshot, tag, portgroup, annotation — always scope to cluster or folder           │
-│   Reporting: export VM inventory / snapshot report / capacity report to CSV                           │
-│   Platform: vSAN disk group health, DRS recommendations, host profile apply                           │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 ## Before you begin
 
@@ -564,6 +552,8 @@ Production scripts must validate the vCenter TLS certificate rather than using `
 
 ### Option A — Import the vCenter Certificate into the Local Store
 
+![Option A — Import the vCenter Certificate into the Local Store](../../../../assets/powercli-proc-option-a-import-the-vcenter-certificate-into-the-local-store.svg)
+
 ```powershell
 # Step 1: Retrieve the vCenter certificate
 $vcFqdn = "vcenter.example.local"
@@ -591,6 +581,8 @@ Connect-VIServer -Server vcenter.example.local -Credential (Get-Credential)
 
 ### Option B — Configure PowerCLI to Skip Validation (Dev/Test Only)
 
+![Option B — Configure PowerCLI to Skip Validation (Dev/Test Only)](../../../../assets/powercli-proc-option-b-configure-powercli-to-skip-validation-dev-test-only.svg)
+
 ```powershell
 # ONLY for dev/test environments — never use in production scripts
 Set-PowerCLIConfiguration -InvalidCertificateAction Ignore -Confirm:$false
@@ -600,6 +592,8 @@ Set-PowerCLIConfiguration -InvalidCertificateAction Fail -Confirm:$false
 ```
 
 ### Store Credentials Securely (No Plaintext Passwords)
+
+![Store Credentials Securely (No Plaintext Passwords)](../../../../assets/powercli-proc-store-credentials-securely-no-plaintext-passwords.svg)
 
 ```powershell
 # Save credential to encrypted file (encrypted with current user's Windows DPAPI key)
@@ -653,6 +647,8 @@ Write-Host "Exported to C:\Reports\vc-events-$(Get-Date -Format 'yyyyMMdd').csv"
 ```
 
 ### Filter by Event Type
+
+![Filter by Event Type](../../../../assets/powercli-proc-filter-by-event-type.svg)
 
 PowerCLI exposes typed event classes — use `Where-Object {$_.GetType().Name -eq "<type>"}` to narrow results:
 

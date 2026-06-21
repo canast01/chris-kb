@@ -12,51 +12,7 @@ Day-2 procedures for VMware Aria Operations for Networks — data source managem
 *Applies to: Aria Networks 6.x*
 </div>
 
-```text
-┌───────────────────────────────────── vRNI Operational Procedures ─────────────────────────────────────┐
-│                                                                                                       │
-│  Add data source, certificate rotation, and credential rotation procedures for vRNI.                  │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               Add Data Source                │  │             Certificate Rotation            │   │
-│   │          1. Settings > Data Sources          │  │           1. Generate new cert/CSR          │   │
-│   │            2. Select source type             │  │           2. Upload cert via VAMI           │   │
-│   │          3. Enter IP + credentials           │  │            3. Restart UI service            │   │
-│   │         4. Test + Save; verify green         │  │          4. Validate browser trust          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Data source addition and cert rotation are common day-2 operational tasks.                           │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             Credential Rotation              │  │            Application Definition           │   │
-│   │         1. Update source account pw          │  │          1. Applications > Add New          │   │
-│   │         2. Edit data source in vRNI          │  │          2. Define VM/IP membership         │   │
-│   │           3. Enter new credential            │  │           3. Name tiers and groups          │   │
-│   │         4. Test + Save; verify green         │  │           4. View app in Flow Map           │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  vRNI platform VM; vCenter and NSX as credential targets; CA for cert signing                         │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Data Source         = vRNI connection object; requires valid credentials to collect                  │
-│  Credential Rotation = Updating stored API/service account password in vRNI source config             │
-│  Certificate         = TLS cert for vRNI web UI; uploaded via VAMI SSL settings                       │
-│  CSR                 = Certificate Signing Request; generated for CA-signed cert flow                 │
-│  VAMI                = Virtual Appliance Management Interface; used for cert upload                   │
-│  Application         = Logical grouping of VMs/IPs in vRNI for Flow Map filtering                     │
-│  Tier                = Sub-group within an Application; e.g. Web, App, DB layers                      │
-│  Flow Map            = Visual traffic graph; Applications appear as named nodes                       │
-│  Green Status        = Data source successfully syncing; last seen < 15 minutes ago                   │
-│  Service Account     = Dedicated read-only account used by vRNI for API polling                       │
-│  LDAP Credential     = Directory service account for vRNI group-based auth mapping                    │
-│  Test Connection     = vRNI built-in check that validates API reachability + auth                     │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 ---
 
@@ -620,9 +576,13 @@ Aria Operations for Networks (vRNI) is upgraded via Aria Suite Lifecycle for man
 
 ### Option A — Upgrade via Aria Suite Lifecycle (Recommended)
 
+![Option A — Upgrade via Aria Suite Lifecycle (Recommended)](../../../../assets/aria-operations-for-networks-proc-option-a-upgrade-via-aria-suite-lifecycle-.svg)
+
 Follow the standard LCM upgrade procedure: LCM → Lifecycle Operations → Environments → select the environment → **Upgrade** → select Aria Operations for Networks. See the [Aria Suite Lifecycle — Upgrade a Product via LCM](../../aria-suite-lifecycle/operations/procedures/#upgrade-a-product-via-lcm) procedure for full steps.
 
 ### Option B — Standalone Upgrade (No LCM)
+
+![Option B — Standalone Upgrade (No LCM)](../../../../assets/aria-operations-for-networks-proc-option-b-standalone-upgrade-no-lcm.svg)
 
 1. Download the upgrade bundle from the Broadcom portal (file extension `.pak`)
 2. Log in to the vRNI admin UI at `https://<platform-ip>:8443`
@@ -634,6 +594,8 @@ Follow the standard LCM upgrade procedure: LCM → Lifecycle Operations → Envi
     vRNI enforces version parity. If the Platform upgrades successfully but a Collector fails, the Collector will appear as **Disconnected** until it is upgraded to the matching version. Upgrade Collectors immediately after the Platform.
 
 ### Step — Monitor and Validate
+
+![Step — Monitor and Validate](../../../../assets/aria-operations-for-networks-proc-step-monitor-and-validate.svg)
 
 ```bash
 # After upgrade, verify versions match
@@ -657,6 +619,8 @@ Remote Collectors allow a single vRNI Platform to collect data from multiple sit
 
 ### Step 1 — Deploy the Collector OVA at the Remote Site
 
+![Step 1 — Deploy the Collector OVA at the Remote Site](../../../../assets/aria-operations-for-networks-proc-step-1-deploy-the-collector-ova-at-the-rem.svg)
+
 1. Download the vRNI Collector OVA from the Broadcom portal
 2. Deploy to the remote site's vCenter: right-click cluster → **Deploy OVF Template**
 3. In the OVA wizard:
@@ -665,6 +629,8 @@ Remote Collectors allow a single vRNI Platform to collect data from multiple sit
    - Do not power on yet — SSH access must be configured first
 
 ### Step 2 — Register the Collector with the Platform
+
+![Step 2 — Register the Collector with the Platform](../../../../assets/aria-operations-for-networks-proc-step-2-register-the-collector-with-the-pla.svg)
 
 1. Power on the Collector VM
 2. SSH to the Collector: `ssh consoleuser@<collector-ip>` (default password: `ark1nc0ns0l3`)
@@ -680,6 +646,8 @@ sudo python /home/ubuntu/registration.py --platform-ip <platform-ip> \
 
 ### Step 3 — Assign Data Sources to the Remote Collector
 
+![Step 3 — Assign Data Sources to the Remote Collector](../../../../assets/aria-operations-for-networks-proc-step-3-assign-data-sources-to-the-remote-c.svg)
+
 After registration, assign the remote site's vCenter and NSX to the new Collector:
 
 1. **Settings → Accounts and Data Sources** → **Add vCenter**
@@ -688,6 +656,8 @@ After registration, assign the remote site's vCenter and NSX to the new Collecto
 4. Repeat for NSX-T and any physical switches at the remote site
 
 ### Step 4 — Validate Collection
+
+![Step 4 — Validate Collection](../../../../assets/aria-operations-for-networks-proc-step-4-validate-collection.svg)
 
 ```bash
 # Verify Collector is collecting from the remote vCenter
@@ -703,6 +673,8 @@ Use when a monitored application has been decommissioned or is no longer relevan
 
 ### Step 1 — Remove DFW Rules Linked to the Application (If Pushed to NSX)
 
+![Step 1 — Remove DFW Rules Linked to the Application (If Pushed to NSX)](../../../../assets/aria-operations-for-networks-proc-step-1-remove-dfw-rules-linked-to-the-appl.svg)
+
 If micro-segmentation recommendations for this application were pushed to NSX DFW, remove them first:
 
 1. In NSX Manager: **Security → Distributed Firewall** → filter rules by the application's security group
@@ -710,6 +682,8 @@ If micro-segmentation recommendations for this application were pushed to NSX DF
 3. Verify no production traffic flows are broken before proceeding
 
 ### Step 2 — Delete the Application in vRNI
+
+![Step 2 — Delete the Application in vRNI](../../../../assets/aria-operations-for-networks-proc-step-2-delete-the-application-in-vrni.svg)
 
 1. vRNI UI → **Applications** → locate the application → click to open
 2. Click **Actions → Delete Application**
@@ -719,6 +693,8 @@ If micro-segmentation recommendations for this application were pushed to NSX DF
     Deleting the application removes only the logical grouping (tiers and VM assignments). All historical flow data for the VMs that were in the application remains available in vRNI's flow search. The application name label will no longer appear in flow search results.
 
 ### Step 3 — Verify Removal
+
+![Step 3 — Verify Removal](../../../../assets/aria-operations-for-networks-proc-step-3-verify-removal.svg)
 
 1. **Applications** page — the deleted application should no longer appear
 2. Run a flow search for one of the former application VMs — flows are still visible but no longer tagged with the application name

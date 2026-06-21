@@ -12,51 +12,7 @@ Day-2 operational procedures for Aria Operations — adding adapters, configurin
 *Applies to: Aria Ops 8.x*
 </div>
 
-```text
-┌───────────────────────────────────── Aria Operations Procedures ──────────────────────────────────────┐
-│                                                                                                       │
-│  Add adapter, certificate rotation, and policy management procedures for vROps.                       │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             Add Adapter Instance             │  │             Certificate Rotation            │   │
-│   │            1. Data Sources > Add             │  │           1. Generate CSR in VAMI           │   │
-│   │            2. Choose adapter kind            │  │            2. Get CA-signed cert            │   │
-│   │         3. Enter host + credentials          │  │          3. Upload cert in VAMI SSL         │   │
-│   │         4. Test + Save; check green          │  │           4. Verify browser trust           │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Adapter add and cert rotation are routine; policy management is ongoing governance.                  │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              Policy Management               │  │             Credential Rotation             │   │
-│   │            1. Policies > Add/Edit            │  │         1. Update source account pw         │   │
-│   │          2. Set symptom thresholds           │  │           2. Edit adapter instance          │   │
-│   │          3. Assign to object groups          │  │           3. Enter new credential           │   │
-│   │           4. Validate alert firing           │  │                4. Test + Save               │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  vROps cluster; vCenter/NSX as adapter targets; CA for cert signing; AD for accounts                  │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Adapter Instance    = Configured connection from vROps to a specific data source                     │
-│  Adapter Kind        = Type of adapter: vSphere, NSX, AWS, etc.                                       │
-│  Test Connection     = vROps built-in check validating credentials and reachability                   │
-│  CSR                 = Certificate Signing Request; sent to CA for signing                            │
-│  VAMI SSL            = Certificate upload page in VAMI for vROps web cert                             │
-│  Policy              = Named ruleset defining alert thresholds for an object group                    │
-│  Symptom             = Single condition (e.g. CPU > 90%) contributing to an alert                     │
-│  Object Group        = Collection of objects sharing a policy assignment                              │
-│  Credential Rotation = Updating stored adapter credentials after password change                      │
-│  Adapter Green       = Status showing adapter collecting without errors                               │
-│  Alert Validation    = Test that a known condition triggers the expected alert                        │
-│  Policy Inheritance  = Child groups inherit parent policy; overridden at child level                  │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 ---
 
@@ -465,6 +421,8 @@ Two suppression mechanisms are available: **Alert Suspension** (suppress alert n
 
 ### Option A — Place an Object in Maintenance Mode (Recommended for Full Downtime)
 
+![Option A — Place an Object in Maintenance Mode (Recommended for Full Downtime)](../../../../assets/aria-operations-proc-option-a-place-an-object-in-maintenance-mode-recommende.svg)
+
 Use when the object will be unavailable (e.g., a host being patched):
 
 1. Navigate to **Environment → Object Browser** → find the object (host, VM, cluster)
@@ -483,6 +441,8 @@ curl -sk -u 'admin:password' \
 
 ### Option B — Suspend Alert Notifications (For Rolling Maintenance)
 
+![Option B — Suspend Alert Notifications (For Rolling Maintenance)](../../../../assets/aria-operations-proc-option-b-suspend-alert-notifications-for-rolling-mainte.svg)
+
 Use when the object remains monitored (metrics still collected) but notifications should be quiet:
 
 1. Navigate to the object → **Alerts** tab → filter to the alert types you expect
@@ -490,6 +450,8 @@ Use when the object remains monitored (metrics still collected) but notification
 3. Or: navigate to **Operations → Alerts** → filter by object → bulk suspend
 
 ### Verify Suppression is Active
+
+![Verify Suppression is Active](../../../../assets/aria-operations-proc-verify-suppression-is-active.svg)
 
 - Object shows a wrench icon in Environment Browser during maintenance mode
 - Alert list shows suppressed alerts with a "Suspended" badge
@@ -506,6 +468,8 @@ Use when permanently removing a monitored system — decommissioning the adapter
 
 ### Step 1 — Remove the Adapter Instance
 
+![Step 1 — Remove the Adapter Instance](../../../../assets/aria-operations-proc-step-1-remove-the-adapter-instance.svg)
+
 1. Navigate to **Data Sources → Integrations → Repository**
 2. Find the adapter instance for the system being decommissioned (filter by product type)
 3. Select the instance → **Delete**
@@ -515,6 +479,8 @@ Use when permanently removing a monitored system — decommissioning the adapter
 
 ### Step 2 — Remove the Object from Inventory
 
+![Step 2 — Remove the Object from Inventory](../../../../assets/aria-operations-proc-step-2-remove-the-object-from-inventory.svg)
+
 After deleting the adapter instance, the object may still appear in the inventory for up to one collection cycle (typically 5 minutes):
 
 1. **Environment → Object Browser** → search for the decommissioned system's name
@@ -522,6 +488,8 @@ After deleting the adapter instance, the object may still appear in the inventor
 3. If the object reappears after deletion, the adapter instance was not fully removed — re-check Data Sources → Integrations → Repository
 
 ### Step 3 — Clean Up Associated Configuration
+
+![Step 3 — Clean Up Associated Configuration](../../../../assets/aria-operations-proc-step-3-clean-up-associated-configuration.svg)
 
 - Remove any alert policies that were targeted at the decommissioned system (or that reference it via a custom group)
 - Remove the system from any custom groups: **Environment → Custom Groups** → edit groups and remove the object
@@ -535,6 +503,8 @@ Outbound plugins push Aria Operations alerts to external systems — typically a
 
 ### Step 1 — Enable the Plugin
 
+![Step 1 — Enable the Plugin](../../../../assets/aria-operations-proc-step-1-enable-the-plugin.svg)
+
 1. Navigate to **Data Sources → Integrations → Outbound**
 2. Click **Add** → select the plugin type:
    - **REST** — for generic webhook endpoints (Slack, PagerDuty, custom)
@@ -547,6 +517,8 @@ Outbound plugins push Aria Operations alerts to external systems — typically a
 
 ### Step 2 — Create a Notification Rule Using the Plugin
 
+![Step 2 — Create a Notification Rule Using the Plugin](../../../../assets/aria-operations-proc-step-2-create-a-notification-rule-using-the-plugin.svg)
+
 Plugins alone don't send anything — they must be referenced in a Notification Rule:
 
 1. **Operations → Notifications → Alert Notifications → Add**
@@ -556,6 +528,8 @@ Plugins alone don't send anything — they must be referenced in a Notification 
 5. Save and enable
 
 ### Step 3 — Test the Integration
+
+![Step 3 — Test the Integration](../../../../assets/aria-operations-proc-step-3-test-the-integration.svg)
 
 1. Edit the notification rule → **Test Action** — Aria Operations sends a test payload to the plugin endpoint
 2. Verify receipt on the receiving end (Slack message, PagerDuty incident, webhook log)

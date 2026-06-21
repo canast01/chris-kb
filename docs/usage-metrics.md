@@ -17,10 +17,10 @@ Knowledge base statistics: page counts, section distribution, and content type c
 │   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
 │   │       Content Totals        │  │      Top 3 Sections          │  │      Content Types          │  │
 │   │       ─────────────         │  │      ─────────────           │  │      ─────────────          │  │
-│   │  Total pages:       2,638   │  │  Storage:          709       │  │  ASCII diagrams:     2,618  │  │
-│   │  Sections:             13   │  │  Virtualization:   685       │  │  SVG diagrams:         128  │  │
+│   │  Total pages:       2,638   │  │  Storage:          709       │  │  ASCII diagrams:     2,612  │  │
+│   │  Sections:             13   │  │  Virtualization:   685       │  │  SVG diagrams:         134  │  │
 │   │  Avg pages/section:   236   │  │  Cloud:            295       │  │  Mermaid diagrams:     680  │  │
-│   │  Updated 2026-06-18         │  │                              │  │  kb-summary divs:    2,358  │  │
+│   │  Updated 2026-06-21         │  │                              │  │  kb-summary divs:    2,358  │  │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
 │                          ▼                                                 ▼                          │
@@ -47,7 +47,7 @@ Knowledge base statistics: page counts, section distribution, and content type c
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
-Generated: 2026-06-18
+Generated: 2026-06-21
 
 ## Current totals
 
@@ -55,8 +55,8 @@ Generated: 2026-06-18
 |---|---:|
 | Total markdown pages | 2,638 |
 | Sections | 11 |
-| Pages with full-width ASCII diagrams | 2,618 |
-| Pages with SVG diagrams | 128 |
+| Pages with full-width ASCII diagrams | 2,612 |
+| Pages with SVG diagrams | 134 |
 | Pages with Mermaid diagrams | 680 |
 | Pages with kb-summary | 2,358 |
 | Pages with tags | 2,611 |

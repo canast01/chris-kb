@@ -13,51 +13,7 @@ Procedures reference for Aria Suite Lifecycle Manager. Covers password and certi
 *Applies to: Aria LCM 8.x*
 </div>
 
-```text
-┌────────────────────────────────────── Aria Suite LCM Procedures ──────────────────────────────────────┐
-│                                                                                                       │
-│  Certificate rotation, password rotation, and add product procedures for LCM.                         │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             Certificate Rotation             │  │              Password Rotation              │   │
-│   │          1. Import new cert to LCM           │  │          1. Update account password         │   │
-│   │        2. Assign cert to environment         │  │          2. LCM: Locker > Password          │   │
-│   │         3. LCM: replace cert action          │  │         3. Update stored credential         │   │
-│   │           4. Validate all products           │  │            4. Test product health           │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Cert rotation via LCM covers all nodes; password rotation via LCM Locker.                            │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Add Product to Environment          │  │                Remove Product               │   │
-│   │         1. Depot: ensure PAK synced          │  │            1. LCM: Delete product           │   │
-│   │         2. Environment > Add Product         │  │           2. LCM removes from env           │   │
-│   │          3. Complete product wizard          │  │            3. Delete VM manually            │   │
-│   │         4. Validate health post-add          │  │           4. Clean DNS + firewall           │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  LCM VM; managed product VMs on vSphere; CA for cert signing; AD for accounts                         │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Cert Rotation       = LCM replaces TLS cert across all nodes of a product                            │
-│  LCM Locker          = Secure password store in LCM; holds all product creds                          │
-│  Password Rotation   = Update credential in LCM Locker after account pw change                        │
-│  Cert Import         = Upload CA-signed cert and key to LCM trust store                               │
-│  Cert Assignment     = Link imported cert to an environment or specific product                       │
-│  Replace Cert Action = LCM-orchestrated cert push to all product VMs                                  │
-│  Add Product         = Deploy new Aria product into existing LCM environment                          │
-│  Product Wizard      = LCM UI wizard collecting hostname, IP, size for new product                    │
-│  Remove Product      = LCM unregisters product; VM must be deleted separately                         │
-│  PAK Sync            = Required before adding product; ensures binary is available                    │
-│  Health Validation   = Post-procedure check that all products remain green                            │
-│  Credential Test     = LCM verifies stored account password still authenticates                       │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 ---
 
@@ -347,6 +303,8 @@ LCM product upgrades run as multi-phase jobs (Precheck → Deploy → Configure 
 
 ### Step 1 — Identify the Failure Point
 
+![Step 1 — Identify the Failure Point](../../../../assets/aria-suite-lifecycle-proc-step-1-identify-the-failure-point.svg)
+
 1. LCM → Requests → locate the failed upgrade request
 2. Expand each phase to identify the first **Failed** task; click the task to view the error message and log snippet
 3. Download the full log: **Settings → Logs → Download Logs** — search for `ERROR` lines near the timestamp of the failure
@@ -363,6 +321,8 @@ Common failure reasons:
 
 ### Step 2 — Revert to Pre-Upgrade Snapshot (Preferred Recovery)
 
+![Step 2 — Revert to Pre-Upgrade Snapshot (Preferred Recovery)](../../../../assets/aria-suite-lifecycle-proc-step-2-revert-to-pre-upgrade-snapshot-preferred-re.svg)
+
 If a snapshot was taken before the upgrade (strongly recommended):
 
 1. LCM → Requests → select the failed request → **Cancel** (if still in progress)
@@ -372,6 +332,8 @@ If a snapshot was taken before the upgrade (strongly recommended):
 5. Identify and resolve the root cause of the upgrade failure before reattempting
 
 ### Step 3 — Retry the Upgrade (After Root Cause Fixed)
+
+![Step 3 — Retry the Upgrade (After Root Cause Fixed)](../../../../assets/aria-suite-lifecycle-proc-step-3-retry-the-upgrade-after-root-cause-fixed.svg)
 
 1. LCM → Requests → select the failed request → **Retry** (only if LCM supports retry for the failed phase)
 2. If retry is not available: create a new upgrade request from LCM → Lifecycle Operations → Environments → product card → **Upgrade**
@@ -389,6 +351,8 @@ Without proxy configuration, LCM cannot sync with the Broadcom depot to list ava
 
 ### Step 1 — Configure Proxy in LCM Settings
 
+![Step 1 — Configure Proxy in LCM Settings](../../../../assets/aria-suite-lifecycle-proc-step-1-configure-proxy-in-lcm-settings.svg)
+
 1. LCM → **Settings → My Broadcom → Proxy Settings**
 2. Enable the **Use Proxy** toggle
 3. Configure:
@@ -401,11 +365,15 @@ Without proxy configuration, LCM cannot sync with the Broadcom depot to list ava
 
 ### Step 2 — Validate Depot Sync
 
+![Step 2 — Validate Depot Sync](../../../../assets/aria-suite-lifecycle-proc-step-2-validate-depot-sync.svg)
+
 1. Navigate to **Lifecycle Operations → Settings → My Broadcom**
 2. Click **Sync Now** — LCM fetches the latest product catalog from the Broadcom depot
 3. After sync completes, navigate to **Lifecycle Operations → Environments → Add Product** and confirm available product versions are listed
 
 ### Proxy Not Available — Air-Gapped Import
+
+![Proxy Not Available — Air-Gapped Import](../../../../assets/aria-suite-lifecycle-proc-proxy-not-available-air-gapped-import.svg)
 
 If no proxy is available and the environment is air-gapped:
 
@@ -421,6 +389,8 @@ Required when the vCenter that hosts Aria product VMs is migrated to a new FQDN,
 
 ### Step 1 — Update or Re-add the vCenter in LCM Settings
 
+![Step 1 — Update or Re-add the vCenter in LCM Settings](../../../../assets/aria-suite-lifecycle-proc-step-1-update-or-re-add-the-vcenter-in-lcm-setting.svg)
+
 1. LCM → **Settings → vCenter Servers**
 2. Locate the affected vCenter — it may show as **Disconnected** or have an SSL thumbprint error
 3. Click **Edit** → update the FQDN if it changed → click **Accept Certificate** to accept the new thumbprint → click **Test Connection**
@@ -428,12 +398,16 @@ Required when the vCenter that hosts Aria product VMs is migrated to a new FQDN,
 
 ### Step 2 — Re-associate Environments to the New vCenter
 
+![Step 2 — Re-associate Environments to the New vCenter](../../../../assets/aria-suite-lifecycle-proc-step-2-re-associate-environments-to-the-new-vcente.svg)
+
 1. LCM → **Lifecycle Operations → Environments** → select each environment that used the changed vCenter
 2. Click **Edit Environment → vCenter Configuration** → change the linked vCenter to the updated/new registration
 3. Click **Validate** — LCM verifies it can reach the product VMs via the new vCenter
 4. Save
 
 ### Step 3 — Verify Product Connectivity
+
+![Step 3 — Verify Product Connectivity](../../../../assets/aria-suite-lifecycle-proc-step-3-verify-product-connectivity.svg)
 
 1. For each environment: **Lifecycle Operations → Environments → select environment → Health Check**
 2. All product cards should return green; if any show red investigate the specific product's connectivity log

@@ -12,51 +12,7 @@ Step-by-step procedures for Aria Operations for Logs — adding log sources, ins
 *Applies to: Aria Logs 8.x*
 </div>
 
-```text
-┌──────────────────────────────── Aria Operations for Logs — Procedures ────────────────────────────────┐
-│                                                                                                       │
-│  Common operational procedures: add sources, rotate certs, manage disk, adjust alerts.                │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                Add Log Source                │  │             Certificate Rotation            │   │
-│   │     1. Install content pack if available     │  │    1. Generate new cert with correct SAN    │   │
-│   │      2. Configure device syslog to vRLI      │  │        2. Import cert via VAMI → SSL        │   │
-│   │     3. Verify events arriving in Explore     │  │        3. Restart loginsight service        │   │
-│   │      4. Tag source: env/product fields       │  │     4. Verify sources still sending logs    │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Disk and retention management prevent appliance from filling up during high-volume events.           │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               Disk Management                │  │               Alert Management              │   │
-│   │       Monitor: Admin → System Monitor        │  │         Add: Queries → create alert         │   │
-│   │        Archive: trigger manual export        │  │      Test: fire test from alert editor      │   │
-│   │        Purge: reduce retention period        │  │       Route: map to webhook/email/SNow      │   │
-│   │      Expand: add worker for more space       │  │     Suppress: noise via suppression rule    │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  vRLI appliance · /storage disk · NFS archive target · vCenter · syslog sources                       │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Content pack      = Install before onboarding; provides parsers and dashboards for source            │
-│  Explore           = vRLI real-time log viewer; used to confirm new sources are sending               │
-│  Source tag        = Custom field on ingested events identifying environment or product               │
-│  SAN cert          = Subject Alternative Name; FQDN of vRLI must be in cert SAN list                  │
-│  loginsight service= Linux service restarted after cert change to apply new TLS cert                  │
-│  System Monitor    = vRLI Admin section showing disk, CPU, RAM, and ingestion metrics                 │
-│  Manual archive    = Trigger export of log data to NFS/S3 before disk fills                           │
-│  Retention period  = Days of hot log data kept on disk; reduce to free space                          │
-│  Worker node       = Add for more disk and processing; joins cluster automatically                    │
-│  Alert suppression = Rule preventing noisy known-good events from firing notifications                │
-│  Webhook route     = Notification channel sending HTTP POST to external system on alert               │
-│  Alert test        = Manual trigger in alert editor; confirms notification delivery                   │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 ---
 
@@ -495,12 +451,16 @@ When a log source is configured but no events appear in Aria Operations for Logs
 
 ### Step 1 — Verify the Log Source Configuration
 
+![Step 1 — Verify the Log Source Configuration](../../../../assets/aria-operations-for-logs-proc-step-1-verify-the-log-source-configuration.svg)
+
 **Administration → Log Sources** → locate the source → check:
 
 - **Status**: should show **Connected**; if **Disconnected** or **Unknown**, the source cannot reach Aria Logs
 - **Last received**: timestamp of the last event; if blank or stale (> 5 minutes for an active host), no events are arriving
 
 ### Step 2 — Test Connectivity from the Source
+
+![Step 2 — Test Connectivity from the Source](../../../../assets/aria-operations-for-logs-proc-step-2-test-connectivity-from-the-source.svg)
 
 On the log-sending host, verify it can reach the Aria Logs appliance:
 
@@ -521,6 +481,8 @@ If the connection is refused, check:
 - Aria Logs worker/master health: `ssh root@<aria-logs-ip>` → `service cfapi status`
 
 ### Step 3 — Check Syslog Daemon Configuration on the Source
+
+![Step 3 — Check Syslog Daemon Configuration on the Source](../../../../assets/aria-operations-for-logs-proc-step-3-check-syslog-daemon-configuration-on-th.svg)
 
 **For Linux hosts (rsyslog):**
 
@@ -543,6 +505,8 @@ esxcli system syslog config get
 
 ### Step 4 — Verify the Content Pack / Field Extraction
 
+![Step 4 — Verify the Content Pack / Field Extraction](../../../../assets/aria-operations-for-logs-proc-step-4-verify-the-content-pack-field-extractio.svg)
+
 If logs appear in Aria Logs (raw events visible) but the pre-built dashboard shows nothing, the content pack may not be extracting fields correctly:
 
 1. Run a search for raw events: `hostname contains <source-host>` (Interactive Analytics)
@@ -556,6 +520,8 @@ If logs appear in Aria Logs (raw events visible) but the pre-built dashboard sho
 Aria Operations for Logs can collect Windows Event Log entries via two methods: VMware Tools agent (for vSphere-hosted Windows VMs) or the Windows Event Collector (WEC) forwarding model.
 
 ### Method A — VMware Tools Agent (vSphere VMs Only)
+
+![Method A — VMware Tools Agent (vSphere VMs Only)](../../../../assets/aria-operations-for-logs-proc-method-a-vmware-tools-agent-vsphere-vms-only.svg)
 
 This method requires VMware Tools installed on the Windows VM and the Aria Logs plugin for VMware Tools enabled.
 
@@ -580,6 +546,8 @@ event_types=Application,Security,System
 
 ### Method B — Windows Event Forwarding (WEF / WEC)
 
+![Method B — Windows Event Forwarding (WEF / WEC)](../../../../assets/aria-operations-for-logs-proc-method-b-windows-event-forwarding-wef-wec.svg)
+
 For Windows hosts not on vSphere (physical servers, other hypervisors), configure Windows to forward events to a Windows Event Collector, then have the WEC forward via syslog to Aria Logs.
 
 1. On the WEC server, enable WinRM: `winrm quickconfig`
@@ -603,11 +571,15 @@ Use when permanently decommissioning a monitored host or service so Aria Logs st
 
 ### Step 1 — Remove the Log Source Record
 
+![Step 1 — Remove the Log Source Record](../../../../assets/aria-operations-for-logs-proc-step-1-remove-the-log-source-record.svg)
+
 **Administration → Log Sources** → locate the source → **Delete**
 
 Note: Deleting a log source record does **not** delete historical log data that was already ingested. All previously collected events remain searchable in Aria Logs. The deletion only stops collection and removes the source from the active source list.
 
 ### Step 2 — Stop Log Forwarding on the Decommissioned Host
+
+![Step 2 — Stop Log Forwarding on the Decommissioned Host](../../../../assets/aria-operations-for-logs-proc-step-2-stop-log-forwarding-on-the-decommission.svg)
 
 Before decommissioning the host, disable syslog forwarding to Aria Logs to avoid generating "source unreachable" errors:
 
@@ -635,6 +607,8 @@ Set-Service VMwareLogInsightAgentService -StartupType Disabled
 ```
 
 ### Step 3 — Verify Removal
+
+![Step 3 — Verify Removal](../../../../assets/aria-operations-for-logs-proc-step-3-verify-removal.svg)
 
 In Aria Logs: **Administration → Log Sources** — the removed source should no longer appear. Run an Interactive Analytics search for `hostname = <removed-host>` and confirm no new events arrive after the removal.
 
