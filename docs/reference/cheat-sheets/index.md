@@ -74,4 +74,20 @@ Replication configuration, status, and recovery via PowerCLI and VRMS.
 <strong>PowerCLI</strong><br>
 Essential PowerCLI one-liners for VM, host, storage, and network ops.
 </a>
+<a class="kb-card" href="ontap-cli/">
+<strong>ONTAP CLI</strong><br>
+Cluster, SVM, volume, SnapMirror, and protocol commands for NetApp ONTAP.
+</a>
+<a class="kb-card" href="pure-flasharray-cli/">
+<strong>Pure FlashArray CLI</strong><br>
+Array status, volumes, snapshots, hosts, and protection group commands for Pure Storage.
+</a>
+<a class="kb-card" href="nsx-cli/">
+<strong>NSX-T CLI</strong><br>
+Manager CLI, transport nodes, logical networking, DFW, and Edge commands for NSX-T.
+</a>
+<a class="kb-card" href="veeam-powershell/">
+<strong>Veeam PowerShell</strong><br>
+Jobs, repositories, restore, backup copy, tape, and reporting cmdlets for Veeam B&R.
+</a>
 </div>

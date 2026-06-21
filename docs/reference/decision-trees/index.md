@@ -94,3 +94,78 @@ Which Aria product fits your need — monitoring, logging, automation, network v
 | **Best for (Day 0/1/2)** | **Day 1-2**: Config management, post-deploy hardening, patching, service config on VMs | **Day 0-1**: Infrastructure provisioning (deploy VMs, networks, clusters, datastores) | **Day 1-2**: Interactive admin, one-off scripting, deep vSphere API tasks, health checks |
 
 > **When to choose:** Use **Terraform** to provision VMware infrastructure (VMs, port groups, datastores) as code with full lifecycle management. Use **Ansible** for configuration management, compliance enforcement, and Day 2 operations on running VMs. Use **PowerCLI** for ad-hoc administration, reporting, and tasks requiring deep vSphere API access beyond what provider modules expose. In practice, all three often coexist: Terraform provisions, Ansible configures, PowerCLI audits.
+
+---
+
+## Use-Case to Product Recommendation Guide
+
+### 1. Choosing a Primary Storage Platform
+
+**Scenario:** "I need to choose storage for a new VMware environment"
+
+| Workload Type | Recommended Platform | Why | Watch out for |
+|---|---|---|---|
+| All-flash NVMe performance (databases, VDI) | Pure Storage FlashArray | NVMe-first architecture, always-on inline dedup/compression, sub-100µs latency | Higher per-TB cost; block-only (no native NAS without additional products) |
+| Mid-range hybrid or mixed block/file | Dell PowerStore | Unified block + file on a single platform, strong REST API, PowerStore Manager simplicity | Less mature NAS than ONTAP; ecosystem smaller than legacy VNX/Unity |
+| VMware-native HCI (small-to-medium clusters) | VMware vSAN | Fully integrated with vSphere, no external array needed, scales with compute | Performance tied to cluster size; not ideal when storage and compute scale independently |
+| Enterprise multi-protocol NAS/SAN at scale | NetApp ONTAP | Richest data management (SnapMirror, FlexClone, FabricPool), broad protocol support, decades of maturity | Operational complexity; licensing can be expensive; CLI steep for new users |
+| Scale-out NAS / analytics / unstructured data | Dell PowerScale or Pure FlashBlade | Massively parallel NFS/SMB at petabyte scale; linear performance scaling | Not suited for block workloads; overkill for small environments |
+| Object storage (S3, cloud-native apps) | Dell ECS or Pure FlashBlade S3 | S3-compatible API, geographic distribution, erasure coding for durability | Object semantics only — not a drop-in for file or block; latency higher than block arrays |
+
+---
+
+### 2. Choosing a Backup Strategy
+
+**Scenario:** "I need to protect 500+ VMs with &lt;4h RTO and ransomware protection"
+
+| Requirement | Solution | Notes |
+|---|---|---|
+| Image-level VM backup with fast RTO | Veeam Backup &amp; Replication | Instant VM Recovery boots directly from backup repo in seconds; SureBackup validates recoverability automatically |
+| Enterprise multi-workload (VMs + Oracle + SAP + files) | Commvault Complete Backup &amp; Recovery | IntelliSnap for array-integrated snapshots; broad workload agents; analytics for anomaly detection |
+| Large-scale tape/cloud tiering with complex SLA policies | Veritas NetBackup | FETB licensing suits high-volume environments; CloudCatalyst deduplication to cloud; strong ROBO support |
+| Hardware snapshot offload + software orchestration | Veeam + FlashArray Storage Snapshots or ONTAP SnapVault | Offloads backup I/O from production; near-zero impact; Veeam orchestrates snapshot catalogue |
+| Immutable backups (ransomware-proof) | Pure SafeMode (FlashArray) or NetApp ONTAP SnapLock | SafeMode snapshots cannot be deleted without Pure support involvement; SnapLock enforces WORM retention on volumes |
+| Cloud-tier backup (long-term retention to S3) | Veeam + AWS S3 (with Object Lock) | Capacity Tier moves older restore points to object storage; Object Lock provides immutability; cost-effective for cold data |
+
+---
+
+### 3. Choosing a DR Strategy
+
+**Scenario:** "What DR approach fits my RPO/RTO requirements?"
+
+| RPO | RTO | Solution | Notes |
+|---|---|---|---|
+| 0 (zero data loss) | Seconds (transparent failover) | Pure ActiveDR / SM-BC (SnapMirror Business Continuity) / NetApp MetroCluster | Synchronous replication; both sites active; applications see no outage; requires low-latency inter-site link (&lt;5ms RTT) |
+| &lt;15 min | Minutes | NetApp SnapMirror Async + VMware SRM | SRM automates failover runbooks; SnapMirror replicates at configurable intervals; widely deployed for Tier-1 apps |
+| &lt;1 h | &lt;1 h | Dell RecoverPoint + VMware SRM | Journal-based replication enables any-point-in-time recovery; particularly strong for Dell/EMC storage estates |
+| &lt;4 h | &lt;4 h | Veeam Replication | Replicates VM snapshots to secondary site; SureReplica tests failover health; no additional storage array required |
+| &lt;24 h | Hours (manual) | NetApp SnapVault + manual runbook | Daily or hourly SnapVault schedule protects secondary copies; runbook-driven failover; cost-effective for Tier-3 apps |
+
+---
+
+### 4. Choosing a Network Virtualisation Approach
+
+**Scenario:** "I need microsegmentation for a multi-tenant VMware environment"
+
+| Scale | Approach | Tools | Notes |
+|---|---|---|---|
+| Small (&lt;50 VMs, single site) | VLAN-based segmentation + vDS port-group firewall | vSphere Distributed Switch (vDS), NSX not required | Low complexity; VLAN-per-tenant works at this scale; limited dynamic policy; no workload-following firewall |
+| Medium (50–500 VMs, single or dual site) | NSX-T Distributed Firewall (DFW) | NSX-T Manager, DFW policy groups, vCenter tag-based membership | Policy follows workloads via VM tags; enforced at each vNIC in the hypervisor kernel; centrally managed |
+| Large (500+ VMs, multi-site, multi-tenant) | NSX-T DFW + Active Directory IDFW + VMware Cloud Foundation | NSX-T, AD IDFW, VCF SDDC Manager, NSX Federation (optional) | IDFW ties firewall policy to AD user identity; VCF standardises lifecycle; NSX Federation spans multiple NSX deployments |
+| Cloud-hybrid (on-prem + public cloud) | NSX Federation or Antrea (Kubernetes) | NSX Federation for VM workloads; Antrea CNI for Tanzu/K8s | Extends consistent policy to AVS/VMC; Antrea provides K8s-native NetworkPolicy with optional NSX integration |
+
+---
+
+### 5. Choosing an Automation Approach
+
+**Scenario:** "I want to automate Day 2 VM and storage operations"
+
+| Use Case | Tool | When to Use |
+|---|---|---|
+| Ad-hoc VM configuration, one-off scripting, deep vSphere API access | PowerCLI | When you need native access to vSphere/vSAN/NSX/Aria APIs beyond what provider modules expose; ideal for interactive admin, health checks, and reporting scripts |
+| Idempotent infrastructure provisioning (VMs, port groups, datastores, clusters) | Terraform + vSphere Provider | Day 0–1 infrastructure-as-code; state tracking detects drift; plan/apply workflow enforces review before change; also supports ONTAP, FlashArray, and PowerStore providers |
+| Configuration management at scale, compliance enforcement, patching | Ansible + community.vmware collection | Day 1–2 config management; 200+ VMware modules; stateless but idempotent at module level; Ansible Automation Platform adds RBAC and scheduling |
+| Full lifecycle automation with self-service portal | VMware Aria Automation | When teams need a self-service catalog, multi-cloud provisioning, approval workflows, and integration with ITSM; higher operational overhead to set up |
+| Scripting, reporting, and custom integrations | Python + pyVmomi | When PowerCLI is unavailable (Linux-only pipelines) or when building custom tooling, CI/CD integrations, or REST API clients against vCenter/NSX/ONTAP |
+
+> **Key principle:** No tool wins all scenarios — the best environments use all 5 in their right context. Terraform provisions the infrastructure, Ansible enforces configuration and compliance, PowerCLI handles ad-hoc tasks and audits, Aria Automation provides self-service to application teams, and Python glues it all together in pipelines and custom integrations.

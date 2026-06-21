@@ -97,6 +97,28 @@ PAGE_TYPES = {
         ],
         'footer': 'Ports Reference',
     },
+    'faq': {
+        'subtitle': 'Frequently Asked Questions',
+        'boxes': [
+            ('Identify', 'Question', '#e3f2fd', '#1565c0'),
+            ('Find', 'Answer', '#e8eaf6', '#3949ab'),
+            ('Verify', 'Context', '#fff8e1', '#f57f17'),
+            ('Apply', 'Solution', '#fce4ec', '#c62828'),
+            ('✓ Issue', 'Resolved', GREEN_L, GREEN),
+        ],
+        'footer': 'FAQ Reference',
+    },
+    'release-notes': {
+        'subtitle': 'Release Notes & Version History',
+        'boxes': [
+            ('Identify', 'Version', '#e3f2fd', '#1565c0'),
+            ('Review', 'Changes', '#e8eaf6', '#3949ab'),
+            ('Test', 'Compatibility', '#fff8e1', '#f57f17'),
+            ('Deploy', 'Update', '#fce4ec', '#c62828'),
+            ('✓ Running', 'Current', GREEN_L, GREEN),
+        ],
+        'footer': 'Release Notes',
+    },
     'how-it-works': {
         'subtitle': 'Architecture Overview',
         'boxes': [
