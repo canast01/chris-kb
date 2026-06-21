@@ -10,6 +10,8 @@ Azure Integration reference covering Azure VM Deployment Flow, Azure AD Connect 
 
 *Applies to: Azure*
 </div>
+![Azure Integration](../../../../assets/cloud-azure-architecture-integrations-index.svg)
+
 
 ## Azure VM Deployment Flow
 
@@ -27,53 +29,7 @@ flowchart LR
 
     request --> rbacCheck --> policyCheck --> resourceGroup --> vnetPlace --> nsgApply --> diskAttach --> extensions --> running
 ```
-```text
-┌────────────────────────────────── Azure Architecture — Integrations ──────────────────────────────────┐
-│                                                                                                       │
-│  Azure integrates with on-premises via ExpressRoute/VPN, AD sync, and hybrid networking.              │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             Identity Integration             │  │             Network Integration             │   │
-│   │          Entra ID Connect: AD sync           │  │       ExpressRoute: private 1/10 Gbps       │   │
-│   │          SAML/OIDC: federate to IdP          │  │        Site-to-Site VPN: IPSec tunnel       │   │
-│   │      Password hash sync or passthrough       │  │       VNet Peering: cross-region VNets      │   │
-│   │        Seamless SSO: transparent auth        │  │          Virtual WAN: hub-and-spoke         │   │
-│   │       B2B: external partner identities       │  │        Private Endpoint: no internet        │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  ExpressRoute bypasses internet; Private Endpoints restrict service access to VNet only.              │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │            Data & App Integration            │  │            Monitoring Integration           │   │
-│   │      Azure Arc: manage on-prem in Azure      │  │       Azure Monitor: unified telemetry      │   │
-│   │       Logic Apps: workflow automation        │  │       Log Analytics: central log sink       │   │
-│   │       API Management: gateway + portal       │  │       Defender for Cloud: posture mgmt      │   │
-│   │      Event Grid: event routing service       │  │         Sentinel: cloud-native SIEM         │   │
-│   │      Service Bus: enterprise messaging       │  │        Cost Management: billing view        │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  Azure global backbone · ExpressRoute partner peering locations · Regional POPs                       │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Entra ID Connect= Tool syncing on-premises AD users and groups to Entra ID                           │
-│  Password hash sync= Syncs hashed passwords; allows cloud auth without on-prem dependency             │
-│  PassthroughAuth = Validates passwords against on-prem AD; requires agent online                      │
-│  ExpressRoute    = Dedicated private circuit to Azure bypassing public internet                       │
-│  S2S VPN         = IPSec/IKEv2 encrypted tunnel over internet to Azure VPN Gateway                    │
-│  Virtual WAN     = Azure managed hub-and-spoke network for global connectivity                        │
-│  Azure Arc       = Extends Azure management plane to on-prem and multi-cloud resources                │
-│  Private Endpoint= NIC in VNet with private IP for a PaaS service; no public exposure                 │
-│  B2B federation  = Allows external Azure AD/Entra tenants to access your resources                    │
-│  Seamless SSO    = Kerberos-based SSO for domain-joined machines accessing Azure apps                 │
-│  Event Grid      = Publish-subscribe event routing service; connects Azure services                   │
-│  Azure Sentinel  = Cloud-native SIEM/SOAR; ingests logs and generates security alerts                 │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 ## Azure AD Connect (Hybrid Identity)
 

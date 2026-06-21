@@ -8,42 +8,10 @@ tags:
 <div class="kb-summary">
 Security operational runbooks — certificate renewal, PAM credential rotation, firewall rule review, access recertification, and hardening check schedule.
 </div>
+![Security — Operational Runbooks](../../../assets/security-operations-runbooks-index.svg)
 
-```text
-┌─────────────────────────────────── Security — Operational Runbooks ───────────────────────────────────┐
-│                                                                                                       │
-│   Five runbooks: certificate renewal, CyberArk PAM rotation, access recertification, firewall review  │
-│   Plus hardening schedule: daily/weekly/monthly/quarterly/annual cadences                             │
-│   Pre-work: always check current cert expiry and PAM rotation log before raising an incident          │
-│   Evidence: log every rotation and review action with date, operator, and ticket ref                  │
-│                                                                                                       │
-│   Certificate renewal                                                                                 │
-│   Expiry check: openssl s_client -connect host:443 | openssl x509 -noout -enddate                     │
-│   CSR: openssl req -new -key server.key -out server.csr -subj "/CN=host.corp.local/O=Corp/C=AU"       │
-│   Deploy: copy new-cert.crt; systemctl restart nginx / haproxy; verify expiry post-deploy             │
-│                                                                                                       │
-│   PAM rotation and access recertification                                                             │
-│   CyberArk CPM: Policies → Safe Management → check Last Modified = expected rotation interval         │
-│   Monthly recert: Get-ADGroupMember "SQL_DBA" → cross-ref HR offboarding list                         │
-│   Dormant accounts: Search-ADAccount -AccountInactive -TimeSpan 90 → disable → 30-day hold            │
-│                                                                                                       │
-│   Hardening schedule                                                                                  │
-│   Daily:    Privileged account login review via SIEM / CyberArk audit trail                           │
-│   Weekly:   Failed auth events > threshold (SIEM alert); firewall rule review                         │
-│   Monthly:  CIS benchmark scan (Lynis / CIS-CAT); firewall zero-hit rule cleanup                      │
-│   Quarterly: Penetration test — internal red team                                                     │
-│   Annually: Full security audit — external assessor                                                   │
-│                                                                                                       │
-│   Key terms:                                                                                          │
-│   CPM          = CyberArk Central Policy Manager; automates account credential rotation               │
-│   CSR          = Certificate Signing Request; sent to CA to obtain a signed certificate               │
-│   Lynis        = open-source Unix security auditing and hardening tool                                │
-│   CIS-CAT      = CIS Configuration Assessment Tool; scores system against CIS Benchmark               │
-│   dormant acct = account inactive >90 days; disable then delete after 30-day grace period             │
-│   zero-hit rule= firewall rule with no traffic hits in 90 days; candidate for removal                 │
-│   offboarding  = HR process for departing employees; used to cross-check active AD accounts           │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 <div class="kb-grid kb-grid-2">
 <a class="kb-card" href="account-unlock/"><strong>Account Unlock</strong><span>Account unlock runbook for AD and CyberArk PAM accounts — verification, unlock steps, and audit trail.</span></a>

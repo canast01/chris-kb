@@ -10,56 +10,10 @@ vCenter High Availability (VCHA) deploys three vCenter instances — active, pas
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
+![vCenter HA Internals](../../../../assets/virtualization-vmware-internals-vcha-internals-index.svg)
 
-```text
-┌─────────────────────────────── vCenter HA (VCHA) — Three-Node Topology ───────────────────────────────┐
-│                                                                                                       │
-│  VCHA deploys three vCenter instances — active, passive, and witness — with                           │
-│  Postgres streaming replication; witness prevents split-brain; RTO ~4 min.                            │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                VCHA Topology                 │  │              Failover Behaviour             │   │
-│   │        Active: primary vCenter (R/W)         │  │        Witness + passive detect loss        │   │
-│   │       Passive: standby; Postgres sync        │  │          Quorum: 2 of 3 nodes agree         │   │
-│   │        Witness: tie-breaker (1 vCPU)         │  │          Failover time: ~4 min RTO          │   │
-│   │          HA network: private 1 GbE           │  │        Split-brain: witness prevents        │   │
-│   │       Replication: Postgres streaming        │  │        Manual failover: VCHA admin UI       │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  VCHA is HA only — it does not replace VCSA file-based backup for DR.                                 │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             Network Requirements             │  │            Maintenance and Backup           │   │
-│   │        HA network: /24 dedicated VLAN        │  │           VCHA != backup: HA only           │   │
-│   │        Mgmt IP: all 3 on same subnet         │  │        File-based backup: daily SFTP        │   │
-│   │       Witness: can be on WAN (low BW)        │  │          Restore: backup + new VCSA         │   │
-│   │       Maintenance: disable VCHA first        │  │          Rebuild VCHA after restore         │   │
-│   │        All 3 nodes: must match build         │  │       Patch: active -> passive -> wit       │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  Three VCSA VMs on separate hosts/clusters for fault isolation; HA network                            │
-│  on isolated VLAN; witness can be on remote ESXi or vCenter-managed host.                             │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  VCHA         = vCenter High Availability; 3-node active/passive/witness                              │
-│  Active node  = runs vCenter services and responds to all requests                                    │
-│  Passive node = warm standby; Postgres replica; takes over on failover                                │
-│  Witness node = tie-breaker only; no vCenter services; 1 vCPU/1 GB                                    │
-│  Postgres     = vCenter internal database; streamed from active to passive                            │
-│  RTO          = Recovery Time Objective; ~4 min for VCHA automatic failover                           │
-│  Split-brain  = both active and passive believe they are primary; prevented by witness                │
-│  Quorum       = 2 of 3 VCHA nodes must agree before promoting passive                                 │
-│  HA network   = private /24 VLAN for replication; not management network                              │
-│  File-based backup= VCSA backup via SFTP/NFS/SMB; separate from VCHA                                  │
-│  Build match  = all 3 VCHA nodes must run identical vCenter build number                              │
-│  Maintenance  = disable VCHA before patching; re-enable after all 3 updated                           │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ```mermaid
 graph LR

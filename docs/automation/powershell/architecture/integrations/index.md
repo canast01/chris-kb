@@ -11,6 +11,8 @@ Integrations reference covering PowerCLI VM Management Flow, Windows.
 
 *Applies to: PowerShell 7.x*
 </div>
+![PowerShell — Integrations](../../../../assets/automation-powershell-architecture-integrations-index.svg)
+
 
 ## PowerCLI VM Management Flow
 
@@ -42,29 +44,7 @@ graph LR
     configure --> disconnect
     migrateDS --> disconnect
 ```
-```text
-┌────────────────────────────────────── PowerShell — Integrations ──────────────────────────────────────┐
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    PowerShell integrates with Microsoft ecosystem and infrastructure platforms via modules    │   │
-│   │   Key modules: Az (Azure), ActiveDirectory, VMware.PowerCLI, DellEMC.OpenManage, ImportExcel  │   │
-│   │      REST API integration via Invoke-RestMethod; parses JSON/XML responses to PS objects      │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │      Microsoft Platform     │  │        Infra Platform       │  │          Automation         │   │
-│   │     Az: Azure management    │  │       VMware.PowerCLI       │  │    GitHub Actions runner    │   │
-│   │    ActiveDirectory module   │  │       Dell OpenManage       │  │     Ansible WinRM target    │   │
-│   │   ExchangeOnlineManagement  │  │      NetApp PowerShell      │  │  Scheduled Task (schtasks)  │   │
-│   │    Microsoft.Graph module   │  │    Rubrik Security Cloud    │  │   PS Remoting (WinRM/SSH)   │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Invoke-RestMethod = HTTP client; returns PS objects from JSON APIs; handles auth headers   │   │
-│   │       PowerCLI          = VMware.PowerCLI; Connect-VIServer then Get-VM, Start-VM, etc.       │   │
-│   │        Az module         = Connect-AzAccount; then Get-AzVM, New-AzResourceGroup, etc.        │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 ### Snapshots
 

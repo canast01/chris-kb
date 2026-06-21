@@ -12,32 +12,10 @@ Ansible escalation: when to open a Red Hat support case for AAP, how to file a c
 
 *Applies to: Ansible 2.14+ / AWX / Ansible Automation Platform (AAP)*
 </div>
+![Ansible — Escalation](../../../../assets/automation-ansible-troubleshooting-escalation-index.svg)
 
-```text
-┌──────────────────────────────────────── Ansible — Escalation ─────────────────────────────────────────┐
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   Escalate Ansible issues when: AWX pod crash-loops, Vault key lost, bulk playbook failures   │   │
-│   │           Tier 1: automation team (AWX job config, playbook bugs, inventory issues)           │   │
-│   │           Tier 2: platform/infra team (AWX Kubernetes deployment, network, storage)           │   │
-│   │         Tier 3: Red Hat support (AAP licensing, Ansible Core bugs, EE build failures)         │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             Escalation Triggers              │  │                Info to Gather               │   │
-│   │            AWX pods crash-looping            │  │         AWX version, Ansible version        │   │
-│   │             Vault password lost              │  │          kubectl logs all AWX pods          │   │
-│   │            >20% job failure rate             │  │          Job ID and full event log          │   │
-│   │        Performance: queue backing up         │  │        Inventory count, fork setting        │   │
-│   │          EE build broken repeatedly          │  │          ansible-builder log output         │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │       Red Hat support  = access via access.redhat.com; requires active AAP subscription       │   │
-│   │   Must-gather      = AWX support bundle: Settings → Subscriptions → Download support bundle   │   │
-│   │          SLA              = AAP Premium: 1-hour response for Sev 1; Standard: 4 hours         │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ```mermaid
 flowchart LR

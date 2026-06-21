@@ -11,30 +11,10 @@ search:
 <div class="kb-summary">
 FC Troubleshooting reference covering Diagnostic Flow, Quick Diagnostics, Common Issues Reference, Error Counter Interpretation (Brocade), Log Locations.
 </div>
+![FC Troubleshooting](../../../../assets/networking-protocols-fibre-channel-troubleshooting-index.svg)
 
-```text
-┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
-│  1. No LUN visible on host                                                                            │
-│          │                                                                                            │
-│          ▼                                                                                            │
-│  Check WWPN in zone? ── No ──► Add WWPN to zone, activate                                             │
-│          │ Yes                                                                                        │
-│          ▼                                                                                            │
-│  Zone set active? ──── No ──► cfgenable / zoneset activate                                            │
-│          │ Yes                                                                                        │
-│          ▼                                                                                            │
-│  Target port online? ─ No ──► Check SFP, cable, port state                                            │
-│          │ Yes                                                                                        │
-│          ▼                                                                                            │
-│  LUN mapped to host group? No ► Add host to storage group                                             │
-│          │ Yes                                                                                        │
-│          ▼                                                                                            │
-│  Multipath sees paths? ─ No ──► Rescan HBAs, reload mpio                                              │
-│          │ Yes                                                                                        │
-│          ▼                                                                                            │
-│  Check OS / filesystem layer                                                                          │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Before you begin
 

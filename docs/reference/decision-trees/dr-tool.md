@@ -10,15 +10,10 @@ tags:
 <div class="kb-summary">
 Choose the right DR tool for your environment: SRM, vSphere Replication, or backup-based DR — based on RPO, RTO, application requirements, and licensing.
 </div>
+![DR Tool Selection Decision Tree](../../assets/reference-decision-trees-dr-tool.svg)
 
-```text
-┌────────────────────────────────────── DR Tool Decision Tree ──────────────────────────────────────────┐
-│  RPO under 5 min → SRM + array replication (SRA) or SRM + vSphere Replication                         │
-│  RPO 5 min – 24 h → vSphere Replication (included with vSphere, no storage dependency)                │
-│  RPO over 24 h   → Backup-based DR (Veeam · Commvault · NetBackup)                                    │
-│  Orchestrated multi-VM failover → SRM Recovery Plan · ordered power-on · IP remapping                 │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ```mermaid
 flowchart TD

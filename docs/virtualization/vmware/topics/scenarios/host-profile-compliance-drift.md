@@ -14,35 +14,10 @@ to capture the intended new state.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
+![Host Profile Compliance Drift](../../../../assets/virtualization-vmware-topics-scenarios-host-profile-complian.svg)
 
-```text
-┌───────────────────────── Host Profile Compliance Drift — Investigation Flow ──────────────────────────┐
-│                                                                                                       │
-│  OVERVIEW                                                                                             │
-│  Host profiles enforce a desired configuration state across ESXi hosts in a cluster                   │
-│  Drift occurs when a host setting deviates from the profile — manual change or patch side-effect      │
-│                                                                                                       │
-│  START: vCenter alarm or scheduled compliance check shows one or more hosts Non-Compliant             │
-│                                                                                                       │
-│  STEP 1 — Run the Compliance Report                                                                   │
-│  Host Profiles → select profile → Check Host Profile Compliance                                       │
-│  Review per-host, per-setting non-compliance details                                                  │
-│                                                                                                       │
-│  STEP 2 — Classify the Drift                                                                          │
-│  Intentional: a deliberate change that the profile should now reflect                                 │
-│  Accidental: a manual change or patch side-effect that should be reverted                             │
-│                                                                                                       │
-│  STEP 3 — Resolve: Remediate or Update Profile                                                        │
-│  Intentional drift → update the host profile from the reference host                                  │
-│  Accidental drift → apply the host profile to the drifted host to revert                              │
-│                                                                                                       │
-│  STEP 4 — Re-check Compliance                                                                         │
-│  Re-run compliance check after remediation · confirm all hosts Compliant                              │
-│                                                                                                       │
-│  CLOSE: All hosts Compliant · no new alarms · profile version updated if needed                       │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 
 !!! warning "Hosts reboot during remediation"

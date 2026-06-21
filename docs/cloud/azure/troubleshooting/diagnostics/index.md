@@ -12,38 +12,10 @@ Azure diagnostic commands: check account and subscription context with az cli, d
 
 *Applies to: Microsoft Azure — all core IaaS services*
 </div>
+![Azure — Diagnostics](../../../../assets/cloud-azure-troubleshooting-diagnostics-index.svg)
 
-```text
-┌──────────────────────────────────────── Azure — Diagnostics ──────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   Start here: az account show → az vm get-instance-view → Activity Log → NSG effective rules │    │
-│   │   VM not reachable: check NSG effective rules; use Network Watcher connectivity test          │   │
-│   │   Intermittent: check Activity Log for recent changes (deployments, NSG edits, scale events) │    │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               VM Diagnostics                 │  │         Network and Activity Log            │   │
-│   │   az vm get-instance-view: power/ext state   │  │   az network nic show-effective-nsg         │   │
-│   │   az vm boot-diagnostics get-boot-log        │  │   az network watcher test-connectivity      │   │
-│   │   az vm run-command invoke (cmd on VM)       │  │   az monitor activity-log list              │   │
-│   │   az vm extension list: extension status     │  │   Log Analytics: Heartbeat / SecurityEvent  │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  Azure fabric (hypervisor) · VNet / NSG / UDR · VM (OS on managed disk) · Azure Monitor / Log Workspace│
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│  NSG              = Network Security Group; stateful firewall; rules evaluated in priority order      │
-│  UDR              = User-Defined Route; overrides Azure system routes; can redirect traffic           │
-│  Network Watcher  = Azure service for connectivity tests, packet capture, and flow log analysis       │
-│  Boot diagnostics = serial console log and screenshot from the VM hypervisor; works even if OS fails  │
-│  Activity Log     = Azure control-plane audit log; records all ARM API calls and state changes        │
-│  Log Analytics    = Azure Monitor log store; KQL queries over VM metrics, events, and security logs   │
-│  Run Command      = Azure feature to execute a script on a VM via the guest agent, no SSH needed      │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ```mermaid
 graph TD

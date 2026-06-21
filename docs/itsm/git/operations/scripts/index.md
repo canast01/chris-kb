@@ -4,6 +4,8 @@ tags:
   - operations
 ---
 # Git — Operations Scripts
+![Git — Operations Scripts](../../../../assets/itsm-git-operations-scripts-index.svg)
+
 
 ```bash
 #!/usr/bin/env bash
@@ -68,51 +70,7 @@ fi
 
 echo "Done. Repositories in: $DEST_DIR"
 ```
-```text
-┌────────────────────────────────────── Git — Operations Scripts ───────────────────────────────────────┐
-│                                                                                                       │
-│  Shell scripts and hooks for automating Git operations: cleanup, audit, and enforcement.              │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │            Branch Cleanup Scripts            │  │                Audit Scripts                │   │
-│   │        Delete merged branches locally        │  │       List repos without branch prot.       │   │
-│   │          Prune remote tracking refs          │  │       Find repos with secrets in hist.      │   │
-│   │       Find stale branches: last commit       │  │          Report large files > 50 MB         │   │
-│   │           Batch delete via gh CLI            │  │      List contributors + commit counts      │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Cleanup scripts run weekly; audit scripts run monthly or on-demand                                 │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                  Git Hooks                   │  │             Automation Patterns             │   │
-│   │        pre-commit: lint + secret scan        │  │         gh CLI: scripting GitHub API        │   │
-│   │       commit-msg: enforce conv. format       │  │        glab CLI: scripting GitLab API       │   │
-│   │         pre-push: run tests locally          │  │       Cron: mirror backup sync nightly      │   │
-│   │       pre-receive: server enforcement        │  │       GitHub Actions: automate cleanup      │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  Developer workstations · CI runners · GitHub/GitLab server hooks · cron jobs                         │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  pre-commit hook  = client-side script run before git commit creates commit                           │
-│  commit-msg hook  = validates commit message format; rejects non-conforming                           │
-│  pre-push hook    = client-side; runs before push; can block if tests fail                            │
-│  pre-receive hook = server-side; enforces policy before refs update                                   │
-│  gh CLI           = GitHub official CLI; scriptable access to repos, PRs, issues                      │
-│  glab CLI         = GitLab official CLI; mirrors gh functionality for GitLab                          │
-│  Stale branch     = branch with last commit > 60 days; candidate for deletion                         │
-│  Secret scan      = detect API keys/passwords in diffs before commit                                  │
-│  Conv. format     = Conventional Commits: type(scope): subject                                        │
-│  Mirror sync      = nightly cron: cd mirror && git remote update                                      │
-│  GitHub Actions   = workflow YAML in .github/workflows/ triggered by events                           │
-│  Batch delete     = gh api /repos/{owner}/{repo}/branches/{branch} -X DELETE                          │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 ```bash
 #!/usr/bin/env bash
 # scan-secrets.sh

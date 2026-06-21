@@ -11,23 +11,11 @@ Pure Storage Evergreen Security reference covering Hardening Checklist, RBAC, En
 
 *Applies to: Evergreen*
 </div>
+![Pure Storage Evergreen Security](../../../../assets/storage-pure-evergreen-security-index.svg)
+
 
 Evergreen Security Controls
-```text
-┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
-│  Same FlashArray/FlashBlade security model applies                                                    │
-│  ├── AES-256 encryption at rest (always-on SEDs)                                                      │
-│  ├── TLS for all management + replication traffic                                                     │
-│  ├── RBAC: array_admin / storage_admin / ops / readonly                                               │
-│  ├── SafeMode snapshots (Pure Support required to delete)                                             │
-│  └── AD/LDAP/SAML SSO for human admin auth                                                            │
-├──────────────────────────────────────────────────────────┤
-│  Evergreen-specific controls                                                                          │
-│  ├── Rotate API tokens every 90 days                                                                  │
-│  ├── Phone-home always active (contractual)                                                           │
-│  └── Controller refresh: drives sanitised before return                                               │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

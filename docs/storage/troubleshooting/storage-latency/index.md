@@ -10,6 +10,8 @@ search:
 <div class="kb-summary">
 Storage Latency Troubleshooting reference covering Overview, Latency Threshold Reference, Diagnostic Flowchart, VMware ESXi esxtop Storage Analysis, PowerMax / VMAX Performance Analysis and 6 more sections.
 </div>
+![Storage Latency Troubleshooting](../../../assets/storage-troubleshooting-storage-latency-index.svg)
+
 
 ## Before you begin
 
@@ -69,43 +71,7 @@ flowchart TD
     U -- Yes --> V[Working set exceeds cache\nTiering or capacity expansion needed]
     U -- No --> W[Check for snapshot/replication I/O\nSchedule during maintenance window]
 ```
-```text
-┌─────────────────────────────────── Storage Latency Troubleshooting ───────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │           High storage latency: check queue depth, path health, array load, and KAVG          │   │
-│   │            ESXi: KAVG > 5ms = host queue issue; DAVG = array latency; GAVG = total            │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │          Host Layer         │  │          Path / HBA         │  │         Array Layer         │   │
-│   │      ─────────────────      │  │      ─────────────────      │  │      ─────────────────      │   │
-│   │          KAVG > 5ms         │  │          Dead paths         │  │         DAVG > 10ms         │   │
-│   │      Queue depth limit      │  │        Degraded paths       │  │        Hot pool/tier        │   │
-│   │         ABPG (abort)        │  │          HBA errors         │  │       Array queue full      │   │
-│   │         IO scheduler        │  │        MPIO imbalance       │  │       Cache hit ratio       │   │
-│   │        VMware balloon       │  │       FC fabric errors      │  │        Drive rebuild        │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│   │      Metric      │       Tool       │     Threshold     │      Cause       │       Fix        │   │
-│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
-│   │       KAVG       │esxtop/vscsistats │       < 5ms       │    Host queue    │Reduce queue depth│   │
-│   │       DAVG       │esxtop/vscsistats │       < 10ms      │    Array perf    │Array QoS/tiering │   │
-│   │       GAVG       │      esxtop      │     KAVG+DAVG     │     Combined     │  Isolate layer   │   │
-│   │   Path health    │    esxcli nmp    │     All active    │    Dead path     │   Rescan HBAs    │   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    KAVG = Kernel Average latency; time I/O spends in ESXi storage stack (queue)                       │
-│    DAVG = Device Average latency; time I/O spends on storage array (wire + array)                     │
-│    GAVG = Guest Average; total latency seen by VM; KAVG + DAVG approximately                          │
-│    ABPG = Abort Per Second; commands timing out; indicates severe latency or path issue               │
-│    MPIO = Multipath I/O; balanced across paths; single active path = higher DAVG                      │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 ### esxtop Storage Threshold Summary
 

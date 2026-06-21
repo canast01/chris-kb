@@ -10,41 +10,10 @@ Pre-change checks confirm the platform is healthy before maintenance begins. Run
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
+![Pre-Change Checks](../../../../assets/virtualization-vmware-operations-health-checks-pre-change-ch.svg)
 
-```text
-┌─────────────────────────────── Pre-Change Checks — Before Maintenance ────────────────────────────────┐
-│                                                                                                       │
-│    Verify platform is healthy before any host maintenance, upgrade, or config change                  │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │        vCenter Health       │  │        vSAN + Storage       │  │      Snapshots + Backup     │   │
-│   │      ─────────────────      │  │      ─────────────────      │  │      ─────────────────      │   │
-│   │     All hosts connected     │  │      vSAN health green      │  │      No stale snapshots     │   │
-│   │       No active alarms      │  │      No resync in prog.     │  │      Snaps < 24h/10 GB      │   │
-│   │        HA/DRS enabled       │  │       All paths active      │  │       Backup ran < 24h      │   │
-│   │      Admission ctrl OK      │  │       Datastore < 80%       │  │     Change rec. approv.     │   │
-│   │      Tasks/events clear     │  │       No stale extents      │  │      MW window confirm.     │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                                            │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │             All PASS → proceed with change    ·    Any FAIL → hold until resolved             │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    Admission ctrl = HA policy reserving cluster capacity to restart all protected VMs                 │
-│    Resync         = vSAN rebuilding data after a failure; change causes resync cascade                │
-│    Stale extent   = vSAN object component with no active mirror; signals degraded health              │
-│    Active paths   = Storage paths from ESXi to array; all should be active/optimised                  │
-│    MW window      = Maintenance window; agreed time with app owner and change manager                 │
-│    Change rec.    = ITSM change record; must be approved before any maintenance begins                │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

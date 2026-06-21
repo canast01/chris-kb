@@ -3,6 +3,8 @@ tags:
   - servicenow
 ---
 # Migration Procedure
+![Migration Procedure](../../../../assets/itsm-servicenow-lifecycle-migration-procedure-index.svg)
+
 
 ```yaml
 Migration Plan — <HOSTNAME> / <WORKLOAD>
@@ -19,44 +21,7 @@ Dependencies:     <external services / integrations>
 Data volume:      <GB / TB>
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
-```text
-┌───────────────────────────────────────── Migration Procedure ─────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │          Migration: move workload/data from source to destination with cutover window         │   │
-│   │      Phases: plan → pre-migrate (bulk) → cutover (delta) → validate → decommission source     │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Plan → pre-migrate bulk data → cutover window → delta sync → validate → retire source              │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │        Pre-Migration        │  │           Cutover           │  │        Post-Migration       │   │
-│   │      ─────────────────      │  │      ─────────────────      │  │      ─────────────────      │   │
-│   │       Inventory source      │  │        Quiesce source       │  │        Validate dest        │   │
-│   │        Bulk data copy       │  │       Final delta sync      │  │        Test workload        │   │
-│   │       Test destination      │  │        DNS/IP cutover       │  │       Monitor 24–72 hr      │   │
-│   │       Size validation       │  │         Update CMDB         │  │       Decommission src      │   │
-│   │     Application mapping     │  │     Notify stakeholders     │  │        Confirm backup       │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│   │      Phase       │     Duration     │     RPO during    │     Rollback     │    Key check     │   │
-│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
-│   │    Bulk copy     │    Days/hours    │  Source stays up  │   Cancel copy    │  Data integrity  │   │
-│   │     Cutover      │  Minutes/hours   │   Outage window   │   Re-point DNS   │    Service up    │   │
-│   │    Validation    │     24–72 hr     │     Dest only     │  Re-point back   │   No data loss   │   │
-│   │   Decommission   │   After stable   │         —         │  Restore backup  │   CMDB updated   │   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    Bulk copy      = Initial large data transfer before cutover; source remains live                   │
-│    Delta sync     = Final sync of changes made during bulk copy; minimises cutover downtime           │
-│    DNS cutover    = Update DNS to point clients to new destination; fast client redirect              │
-│    Quiesce source = Stop writes to source for delta sync; creates RPO = zero at cutover               │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 ```powershell
 # Live migration — no downtime
 Move-VM -VM "HOSTNAME" -Destination (Get-VMHost "esxi02.example.com") -Confirm:$false

@@ -10,34 +10,10 @@ ESXi Host Failure Runbook reference covering Confirm Impact, Check Power State, 
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
+![ESXi Host Failure Runbook](../../../../assets/virtualization-vmware-operations-runbooks-host-evacuation.svg)
 
-```text
-┌──────────────────────────────────── ESXi Host Evacuation Runbook ─────────────────────────────────────┐
-│                                                                                                       │
-│    Drain all VMs from a host before patching, hardware work, or decommission                          │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Phase       │      Action      │       Verify      │     On FAIL      │       Tool       │   │
-│   │  ──────────────  │  ──────────────  │  ───────────────  │  ──────────────  │  ──────────────  │   │
-│   │   1  Pre-check   │Confirm cluster OK│   HA/DRS enabled  │ Fix before start │  vSphere Client  │   │
-│   │  2  Maintenance  │Enter maint. mode │  DRS vMotions VMs │ vMotion manually │  vSphere Client  │   │
-│   │ 3  Verify drain  │  No VMs on host  │     0 VM count    │  Force migrate   │  vSphere Client  │   │
-│   │     4  Work      │   Perform task   │   Task completed  │  Rollback plan   │  Per procedure   │   │
-│   │  5  Exit maint.  │ Exit maint. mode │  Host reconnects  │ Check hostd/vpxa │  vSphere Client  │   │
-│   │  6  Post-check   │ Validate health  │   DRS rebalances  │  Review alarms   │  vSphere Client  │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    Maintenance mode = ESXi state that blocks new VM placement and triggers DRS evacuation             │
-│    vMotion          = Live migration of a running VM between ESXi hosts; zero downtime                │
-│    DRS              = Distributed Resource Scheduler; automates vMotion during evacuation             │
-│    hostd            = ESXi host management daemon; restart if host fails to reconnect                 │
-│    vpxa             = vCenter agent on ESXi; restart to fix disconnected host state                   │
-│    HA admission     = Cluster must have spare capacity to accept evacuated VMs                        │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

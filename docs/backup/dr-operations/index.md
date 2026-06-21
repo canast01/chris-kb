@@ -7,32 +7,10 @@ tags:
 <div class="kb-summary">
 Cross-product disaster recovery governance and operations — DR design, runbooks, recovery testing, Isolated Recovery Environment, backup validation, health checks, failure testing, reliability engineering, SLOs, and service availability. Defines backup retention schedules per RTO/RPO tier and governs daily, weekly, and monthly recovery window compliance.
 </div>
+![DR Operations](../../assets/backup-dr-operations-index.svg)
 
-```text
-┌────────────────────────────────────────── DR Operations Hub ──────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    DR governance: define RTO/RPO tiers → build runbooks → test recovery → validate backups    │   │
-│   │       DR without testing is a hypothesis — validated DR requires evidence and sign-off        │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │         Design              │  │          Testing            │  │        Governance           │   │
-│   │   RTO/RPO tier matrix       │  │   Tabletop exercises        │  │   SLOs and SLIs             │   │
-│   │   Replication strategy      │  │   Functional failover       │  │   Service availability      │   │
-│   │   Site topology             │  │   Full DR tests             │  │   Reliability engineering   │   │
-│   │   Network DR design         │  │   Ransomware recovery       │  │   Error budgets             │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│  RTO         = Recovery Time Objective; max acceptable downtime before restore                        │
-│  RPO         = Recovery Point Objective; max acceptable data loss window                              │
-│  IRE         = Isolated Recovery Environment; air-gapped clean-room for ransomware recovery           │
-│  IRE/Failover= activating the DR site; redirecting hosts to replica resources                         │
-│  SLO         = Service Level Objective; target for availability, latency, or error rate               │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Governance & Design
 

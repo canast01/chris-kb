@@ -13,24 +13,10 @@ End-to-end Nutanix cluster deployment — Foundation imaging, IPMI/iDRAC pre-fli
 
 *Applies to: AOS 6.x · AHV*
 </div>
+![Nutanix — Deploy](../../../assets/virtualization-nutanix-deploy-index.svg)
 
-```text
-┌──────────────────────────────── Nutanix Cluster Deployment Phases ────────────────────────────────────┐
-│                                                                                                       │
-│   Phase 1          Phase 2             Phase 3           Phase 4           Phase 5                    │
-│   Pre-flight  →    Foundation     →    Cluster      →    Initial      →    Validate                   │
-│   checks           imaging             creation          config             NCC                       │
-│                                                                                                       │
-│   ■ IPMI access    ■ Upload AOS ISO    ■ ncli cluster    ■ DNS + NTP        ■ NCC --health_checks     │
-│   ■ Network IPs    ■ Discover nodes    ■ create-cluster  ■ SMTP alerts      ■ All checks green        │
-│   ■ DNS + NTP      ■ Set AHV + CVM     ■ Set VIP         ■ AD join          ■ Cluster resilience      │
-│   ■ Switch MTU     ■ Image nodes       ■ Set DSIP        ■ Storage pools    ■ vDisk creation test     │
-│   ■ VLAN tags      ■ ~45 min/node      ■ Name cluster    ■ Containers       ■ VM power-on test        │
-│                                                                                                       │
-│   Exit criterion: NCC all green · Prism accessible · VMs can power on and reach network               │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ---
 

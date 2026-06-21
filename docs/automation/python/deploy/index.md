@@ -6,54 +6,14 @@ search:
   boost: 1.5
 ---
 # Python Automation — Environment Setup
+![Python Automation — Environment Setup](../../../assets/automation-python-deploy-index.svg)
+
 
 This guide covers installing Python, isolating dependencies with a virtual environment,
 managing packages, loading secrets safely, integrating with VS Code, and wiring a CI
 pipeline before running your first automation scripts.
 
-```text
-┌──────────────────────────────── Python Automation — Environment Setup ────────────────────────────────┐
-│                                                                                                       │
-│   Python 3.10+ recommended; manage multiple versions with pyenv (avoid system Python)                 │
-│   Install on RHEL/Rocky: dnf install python3 python3-pip                                              │
-│   Install on Debian/Ubuntu: apt install python3 python3-pip                                           │
-│   Install on macOS: brew install python3  or  use pyenv for version management                        │
-│                                                                                                       │
-│   Virtual environment (venv)                                                                          │
-│   Create: python3 -m venv .venv  (per project; committed as gitignored directory)                     │
-│   Activate: source .venv/bin/activate  (Linux/macOS)  or  .venv\Scripts\Activate.ps1                  │
-│   Deactivate: deactivate; always activate before installing packages into a project                   │
-│   Confirm isolation: which python  should show .venv/bin/python, not system python                    │
-│                                                                                                       │
-│   Package management                                                                                  │
-│   Install: pip install requests paramiko PyYAML  (or pip install -r requirements.txt)                 │
-│   Freeze dependencies: pip freeze > requirements.txt  (pin for reproducibility)                       │
-│   Upgrade: pip install --upgrade packagename; check outdated: pip list --outdated                     │
-│   Use pip-tools or poetry for more robust dependency locking in production automation                 │
-│                                                                                                       │
-│   Secrets handling                                                                                    │
-│   Use os.environ.get('SECRET_KEY') — never hard-code credentials in scripts                           │
-│   .env file + python-dotenv: load_dotenv() reads .env into environment at runtime                     │
-│   Add .env to .gitignore; never commit secrets to version control                                     │
-│                                                                                                       │
-│   VS Code integration                                                                                 │
-│   Select interpreter: Ctrl+Shift+P → Python: Select Interpreter → choose .venv                        │
-│   Install Pylance and Black formatter extensions for type hints and auto-formatting                   │
-│   Debug: launch.json with python type; set breakpoints; F5 to run with debugger                       │
-│                                                                                                       │
-│   Physical infrastructure                                                                             │
-│   Any Linux/macOS workstation or automation VM with Python 3.10+                                      │
-│   CI runner needs Python and pip; use requirements.txt for consistent builds                          │
-│                                                                                                       │
-│   Key terms:                                                                                          │
-│   venv         = isolated Python environment; per-project packages, independent of system             │
-│   pip          = Python package installer; installs from PyPI or requirements.txt                     │
-│   pyenv        = Python version manager; install/switch multiple Python versions                      │
-│   dotenv       = python-dotenv library; loads .env key=value file into os.environ                     │
-│   requirements.txt = pinned dependency list; ensures reproducible installs across envs                │
-│   poetry       = advanced dependency and packaging tool; replaces requirements.txt workflow           │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 ---
 

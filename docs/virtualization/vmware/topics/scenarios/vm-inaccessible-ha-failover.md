@@ -12,33 +12,10 @@ assess vSAN component health during the outage, and confirm the cluster is re-ar
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
+![VM Inaccessible / HA Failover](../../../../assets/virtualization-vmware-topics-scenarios-vm-inaccessible-ha-fa.svg)
 
-```text
-┌───────────────────────── VM Inaccessible / HA Failover — Investigation Flow ──────────────────────────┐
-│                                                                                                       │
-│  OVERVIEW                                                                                             │
-│  Host fails or loses connectivity — VMs become inaccessible until HA restarts them elsewhere          │
-│  Key distinction: host disconnected (hardware failure) vs host isolated (network partition only)      │
-│                                                                                                       │
-│  START: VMs unreachable · Aria Ops alert: host disconnected or not responding                         │
-│                                                                                                       │
-│  STEP 1 — Determine Failure Type                                                                      │
-│  Host disconnected in vCenter → hardware or management network failure                                │
-│  Host isolated (network partition) → VMs may still be running on the isolated host                    │
-│                                                                                                       │
-│  STEP 2 — Check HA Status                                                                             │
-│  Host disconnected: vCenter → Cluster → Monitor → vSphere HA → check restart log                      │
-│  Host isolated: review isolation response policy (power off vs leave powered on)                      │
-│                                                                                                       │
-│  STEP 3 — Check vSAN Path State                                                                       │
-│  Check vSAN: resyncing objects · APD vs PDL path state · VMCP policy                                  │
-│  APD: wait for path to recover; vSAN will resync on reconnect                                         │
-│  PDL: VMCP triggers immediate HA restart on surviving hosts                                           │
-│                                                                                                       │
-│  CLOSE: VMs running · vSAN health green · HA re-armed · resync queue draining                         │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Products Involved
 

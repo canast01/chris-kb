@@ -4,57 +4,15 @@ tags:
   - servicenow
 ---
 # ServiceNow — CLI Reference
+![ServiceNow — CLI Reference](../../../../assets/itsm-servicenow-operations-cli-reference-index.svg)
+
 
 ```bash
 export INSTANCE="https://mycompany.service-now.com"
 export USER="api_user"
 export PASS="your-password"
 ```
-```text
-┌───────────────────────────────────── ServiceNow — CLI Reference ──────────────────────────────────────┐
-│                                                                                                       │
-│  ServiceNow CLI tools: SN CLI for source control, MID server CLI, and REST API via curl.              │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                 SN CLI (snc)                 │  │                MID Server CLI               │   │
-│   │       snc profile set --instance <url>       │  │          agent.sh start|stop|status         │   │
-│   │        snc app install --id <app-id>         │  │      wrapper.conf: JVM args + log level     │   │
-│   │       snc ui-testing run --suite <id>        │  │      logs/: agent0.log for diagnostics      │   │
-│   │       snc source-control apply-remote        │  │       Upgrade MID: HI portal download       │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    SN CLI for developer workflows; MID CLI for on-prem agent management                               │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              REST API via curl               │  │          Table API Quick Reference          │   │
-│   │          Auth: Basic or OAuth token          │  │          GET /api/now/table/{table}         │   │
-│   │           curl -u user:pass <url>            │  │         POST /api/now/table/{table}         │   │
-│   │        Content-Type: application/json        │  │    PATCH /api/now/table/{table}/{sys_id}    │   │
-│   │        sysparm_limit / sysparm_offset        │  │    DELETE /api/now/table/{table}/{sys_id}   │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  ServiceNow SaaS · MID server hosts · developer workstation · CI/CD pipeline                          │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  snc              = ServiceNow CLI tool; npm-installed developer utility                              │
-│  snc profile      = stores instance URL + auth for subsequent commands                                │
-│  apply-remote     = pulls scoped app changes from connected Git branch                                │
-│  agent.sh         = MID server start/stop script; wrapper around Java agent                           │
-│  wrapper.conf     = MID JVM configuration: heap size, log level, proxy settings                       │
-│  agent0.log       = primary MID log; shows connection status and discovery jobs                       │
-│  sys_id           = internal GUID for every SN record; used in API paths                              │
-│  sysparm_limit    = REST query param; limits result count (max 10000)                                 │
-│  sysparm_offset   = REST query param; paginates through large result sets                             │
-│  Table API        = /api/now/table/*; generic CRUD for any SN table via REST                          │
-│  OAuth token      = preferred auth; obtained via /oauth_token.do endpoint                             │
-│  PATCH            = HTTP method for partial record update by sys_id                                   │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 ```bash
 # Create an incident
 curl -s -u "$USER:$PASS" \

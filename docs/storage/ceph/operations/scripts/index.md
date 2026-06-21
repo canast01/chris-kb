@@ -5,56 +5,15 @@ tags:
 ---
 # Ceph — Scripts
 
-```text
-┌─────────────────────────────────────── Ceph — Scripts Overview ───────────────────────────────────────┐
-│                                                                                                       │
-│  Script Categories                                                                                    │
-│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
-│  ┌─────────────────────────┐  ┌─────────────────────────┐  ┌─────────────────────────┐                │
-│  │  Health Check           │  │  OSD Replacement        │  │  Reporting              │                │
-│  │  ceph-health-check.sh   │  │  osd-replace.sh         │  │  capacity-report.sh     │                │
-│  │  HEALTH_OK / WARN / ERR │  │  safe sequence: out →   │  │  per-pool usage         │                │
-│  │  OSD state, PG status   │  │  wait heal → purge →    │  │  PG distribution table  │                │
-│  │  capacity, slow ops     │  │  create, verify done    │  │  latency per OSD        │                │
-│  └─────────────────────────┘  └─────────────────────────┘  └─────────────────────────┘                │
-│                                                                                                       │
-│  Script Usage Patterns                                                                                │
-│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
-│  Health check: run daily via cron on a monitor node; exit 0 = HEALTH_OK, exit 1 = degraded            │
-│  OSD replacement: interactive; prompts at each step; confirms data migration complete before swap     │
-│  Capacity report: tabular output (pool, used, available, %full); alert if > 80% threshold             │
-│  PG summary: counts PGs per state (active+clean, degraded, backfilling, inactive); flags issues       │
-│                                                                                                       │
-│  Operational Conventions                                                                              │
-│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
-│  All scripts require Ceph admin keyring (/etc/ceph/ceph.client.admin.keyring) on execution host       │
-│  Run from a monitor node or any host with ceph.conf pointing at the correct cluster                   │
-│  Scripts use set -euo pipefail for safe error propagation; non-zero exit = check required             │
-│  Output format: [OK] / [WARN] / [FAIL] prefixed lines + summary count at bottom                       │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  ceph -s      = Cluster status: health, OSD up/in counts, PG summary, I/O rate, capacity              │
-│  ceph osd tree= Visual tree of hosts, buckets, OSDs, and their weights and up/in state                │
-│  ceph df      = Per-pool capacity: stored objects, data used, available, and quota                    │
-│  ceph pg stat = Aggregate PG count by state (active+clean, degraded, recovering, etc.)                │
-│  PASS/WARN/FAIL= Script exit convention: all PASS = exit 0, any WARN = exit 1, any FAIL = exit 2      │
-│  admin keyring= /etc/ceph/ceph.client.admin.keyring; required on execution host for all scripts       │
-│  ceph.conf    = Cluster config file; must point to correct monitors for scripts to connect            │
-│  set -euo pipefail = Bash safe mode: exit on error, unset var, or pipe failure in scripts             │
-│  nearfull ratio= Configurable OSD full threshold (default 85%); script alerts when exceeded           │
-│  OSD_DOWN     = Health code raised when OSD is not responding; scripts parse this for alerting        │
-│  ceph health detail = Enumerates health codes with per-item detail; parsed by health-check script     │
-│  cron         = Linux task scheduler; used to run health-check and capacity scripts daily             │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 <div class="kb-summary">
 Operational scripts for Ceph: daily health check, OSD replacement workflow, capacity report, cluster health snapshot, OSD utilization report, and RBD snapshot rotation.
 
 *Applies to: Ceph Reef / Squid*
 </div>
+![Ceph — Scripts](../../../../assets/storage-ceph-operations-scripts-index.svg)
+
 
 ```mermaid
 graph LR

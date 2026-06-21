@@ -3,6 +3,8 @@ tags:
   - dell
 ---
 # Dell AIOps — Reporting
+![Dell AIOps — Reporting](../../../../assets/storage-dell-dell-aiops-reporting-index.svg)
+
 
 ```bash
 # Generate an executive health summary report
@@ -33,34 +35,4 @@ curl -sk -X GET "<download_url>" \
   -H "Authorization: Bearer <access_token>" \
   -o aiops-exec-summary.pdf
 ```
-```text
-┌─────────────────────────────────────── Dell AIOps — Reporting ────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               Built-in Reports               │  │               Export / Custom               │   │
-│   │             Fleet health summary             │  │              CSV metric export              │   │
-│   │                Alert history                 │  │                  PDF report                 │   │
-│   │              Capacity forecast               │  │                API data pull                │   │
-│   │            Recommendation status             │  │               Scheduled email               │   │
-│   │              Performance trends              │  │                Grafana panels               │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  Reports generated on AIOps master · CSV/PDF via browser · API for automation                         │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Fleet health report = Summary of all monitored systems with health score and issue count             │
-│  Alert history = Time-series of alert activity; useful for trend and MTTR analysis                    │
-│  Capacity forecast report = Per-system projected fill dates for procurement planning                  │
-│  Performance trend = Historical IOPS/latency/throughput per system over custom window                 │
-│  Recommendation status = Open/resolved/dismissed counts by category and priority                      │
-│  CSV export = Raw metric data download for spreadsheet or BI tool consumption                         │
-│  PDF report = Formatted document suitable for management or audit review                              │
-│  Scheduled email = AIOps sending report on configured cadence to recipient list                       │
-│  API data pull = REST GET to retrieve report data for custom downstream tooling                       │
-│  Grafana panels = AIOps metrics exposed via REST and visualised in Grafana dashboards                 │
-│  MTTR = Mean Time To Resolve; calculated from alert history open/close timestamps                     │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+

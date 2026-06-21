@@ -9,35 +9,10 @@ Common operational procedures: node drain and maintenance mode, scaling MachineS
 
 *Applies to: OpenShift 4.x*
 </div>
+![OpenShift — Procedures](../../../../assets/virtualization-openshift-operations-procedures-index.svg)
 
-```text
-┌────────────────────────────────── OpenShift Operational Procedures ───────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   Always: health check before maintenance; cordon then drain; verify workloads rescheduled    │   │
-│   │   Scale: edit MachineSet replicas (not manual node creation); approve CSRs after scale-out    │   │
-│   │   Certs: cluster auto-rotates < 1 year; etcd peer certs need manual intervention if expired  │    │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │     Node Maintenance        │  │     Cluster Scaling          │  │   Certificate Rotation      │  │
-│   │      ─────────────          │  │      ─────────────           │  │      ─────────────          │  │
-│   │  cordon → drain → work      │  │  Edit MachineSet replicas    │  │  Auto-rotated by cluster    │  │
-│   │  Respect PodDisruptionBudge │  │  Approve new worker CSRs     │  │  Manual: oc adm ocp-certs   │  │
-│   │  DaemonSets: --ignore-ds    │  │  Label/taint new nodes       │  │  etcd: special procedure    │  │
-│   │  uncordon when done         │  │  ClusterAutoscaler for auto  │  │  kubeconfig: oc login again │  │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    PDB          = PodDisruptionBudget; limits how many pods can be unavailable; drain respects it     │
-│    MachineConfig= OS-level configuration object applied by MCO (files, kernel args, systemd units)    │
-│    MachineSet   = Template for worker nodes; scale by editing replicas field                          │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ```mermaid
 graph TD

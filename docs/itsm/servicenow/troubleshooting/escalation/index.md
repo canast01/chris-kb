@@ -12,37 +12,10 @@ ServiceNow escalation: how to collect stats.do output and sys_log entries, open 
 
 *Applies to: ServiceNow (SaaS — any release)*
 </div>
+![ServiceNow — Escalation](../../../../assets/itsm-servicenow-troubleshooting-escalation-index.svg)
 
-```text
-┌──────────────────────────────────────── ServiceNow Escalation ────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                                        Escalation Path                                        │   │
-│   │                       L1: Local admin → check logs, ECC queue, stats.do                       │   │
-│   │                   L2: ServiceNow support → HI portal case with instance logs                  │   │
-│   │                    L3: ServiceNow engineering → P1 hotfix or patch request                    │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              Before Escalating               │  │                HI Portal Case               │   │
-│   │           Capture stats.do output            │  │           Instance name + version           │   │
-│   │            Export sys_log entries            │  │              Steps to reproduce             │   │
-│   │           Note exact error + time            │  │            Attach diagnostics zip           │   │
-│   │             Check Known Error DB             │  │             Set correct severity            │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  HI Portal   = Hi.service-now.com; ServiceNow customer support case management                        │
-│  P1          = Priority 1 incident; production down; 24x7 response from ServiceNow                    │
-│  stats.do    = Instance health page; shows JVM stats, database connections, scheduler state           │
-│  sys_log     = application log table; filter by level=error and created time of incident              │
-│  Thread dump = JVM stack trace; identifies deadlocked or stuck threads                                │
-│  Hotfix      = emergency patch for critical defect outside normal release cycle                       │
-│  ECC queue   = External Communication Channel; monitors MID Server heartbeat and messages             │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Before you begin
 

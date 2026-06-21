@@ -11,27 +11,10 @@ search:
 <div class="kb-summary">
 NFS Troubleshooting reference covering Diagnostic Flow, Quick Diagnostics, Common Issues, Performance Tuning, Export Configuration Reference and 2 more sections.
 </div>
+![NFS Troubleshooting](../../../../assets/networking-protocols-nfs-troubleshooting-index.svg)
 
-```text
-┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
-│  1. nc -zv <server> 2049 ── fail ──► firewall / routing                                               │
-│          │ ok                                                                                         │
-│          ▼                                                                                            │
-│  2. showmount -e <server> ─ no export ► check /etc/exports                                            │
-│          │ export visible                                                                             │
-│          ▼                                                                                            │
-│  3. Mount attempt fails? ── yes ───► check export ACL (IP)                                            │
-│          │ mounts ok                                                                                  │
-│          ▼                                                                                            │
-│  4. Stale file handle? ──── yes ───► umount -l; remount                                               │
-│          │ no                                                                                         │
-│          ▼                                                                                            │
-│  5. Permission denied? ──── yes ───► check UID/GID mapping                                            │
-│          │ no                        check root_squash                                                │
-│          ▼                                                                                            │
-│  6. Check server exports & network (nfsstat -c for retrans)                                           │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Before you begin
 

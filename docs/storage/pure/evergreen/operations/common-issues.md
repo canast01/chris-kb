@@ -11,6 +11,8 @@ Common Issues reference covering Incident Triage Checklist, Common Issues Refere
 
 *Applies to: Evergreen*
 </div>
+![Evergreen — Common Issues](../../../../assets/storage-pure-evergreen-operations-common-issues.svg)
+
 
 ```text
 Evergreen Common Issues — Triage

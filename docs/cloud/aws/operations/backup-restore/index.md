@@ -11,54 +11,10 @@ Backup & Restore reference covering EBS Snapshot — Manual, Restore EC2 from EB
 
 *Applies to: AWS*
 </div>
+![AWS — Backup & Restore](../../../../assets/cloud-aws-operations-backup-restore-index.svg)
 
-```text
-┌──────────────────────────── AWS Operations — Backup & Restore Procedures ─────────────────────────────┐
-│                                                                                                       │
-│  Operational backup and restore procedures covering EC2, RDS, EBS, and S3 workflows.                  │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              Backup Procedures               │  │              Restore Procedures             │   │
-│   │     EBS: create snapshot via console/CLI     │  │     EBS: restore snapshot to new volume     │   │
-│   │      RDS: automated + manual snapshots       │  │        RDS: restore to point-in-time        │   │
-│   │     EC2 AMI: image from running instance     │  │             EC2: launch from AMI            │   │
-│   │     S3: versioning + replication policy      │  │         S3: restore previous version        │   │
-│   │      AWS Backup: vault + plan schedule       │  │        Backup: restore job from vault       │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Verify restore procedures regularly; test AMI launches and RDS PITR in non-prod accounts.            │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              Operational Checks              │  │                  Automation                 │   │
-│   │      Verify snapshot completion status       │  │        AWS Backup plan: cron schedule       │   │
-│   │      Check cross-region copy completion      │  │       Lambda: custom snapshot scripts       │   │
-│   │     Validate retention policy compliance     │  │       EventBridge: trigger on schedule      │   │
-│   │      Test restore RTO: measure duration      │  │       SNS: notify on job success/fail       │   │
-│   │       Review cost of snapshot storage        │  │       Lifecycle: auto-expire old snaps      │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  AWS S3 snapshot storage · Cross-region replication infrastructure · Regional endpoints               │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  EBS snapshot    = Point-in-time copy of an EBS volume stored durably in S3                           │
-│  AMI             = Amazon Machine Image; snapshot + metadata needed to launch EC2                     │
-│  RDS snapshot    = Database-level backup; automated (daily) or manual on demand                       │
-│  PITR            = Point-in-time recovery; RDS/DynamoDB restore to any second in window               │
-│  AWS Backup vault= Encrypted container for backup recovery points with access policy                  │
-│  Recovery point  = A backup copy stored in a vault; has expiry and lifecycle rules                    │
-│  Cross-region copy= Backup rule that replicates snapshots to another region                           │
-│  RTO             = Recovery time objective; target time to restore from backup                        │
-│  RPO             = Recovery point objective; maximum acceptable data loss window                      │
-│  Restore job     = AWS Backup task that re-creates a resource from a recovery point                   │
-│  Snapshot lifecycle= Policy that transitions or deletes snapshots after N days                        │
-│  Incremental snapshot= After first full, EBS snapshots store only changed blocks                      │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 ---
 
 ## Before you begin

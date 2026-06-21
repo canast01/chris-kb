@@ -12,35 +12,10 @@ AWS support case creation, severity level selection, data collection with AWS CL
 
 *Applies to: AWS (all services)*
 </div>
+![AWS — Escalation](../../../../assets/cloud-aws-troubleshooting-escalation-index.svg)
 
-```text
-┌───────────────────────────── AWS Escalation — Support & Trusted Advisor ──────────────────────────────┐
-│                                                                                                       │
-│  AWS support tiers, escalation paths, and Trusted Advisor checks for proactive guidance.              │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                Support Plans                 │  │               Escalation Path               │   │
-│   │       Developer: 12h business response       │  │         1. Internal runbook attempt         │   │
-│   │       Business: 1h production response       │  │         2. AWS console support case         │   │
-│   │      Enterprise On-Ramp: 30min critical      │  │       3. Severity: Urgent/High/Normal       │   │
-│   │     Enterprise: 15min + TAM + Concierge      │  │       4. TAM escalation if Enterprise       │   │
-│   │    Business+: all Trusted Advisor checks     │  │       5. AWS executive escalation path      │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Include CloudTrail events, CloudWatch metrics, and resource IDs when opening cases.                  │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  TAM             = Technical Account Manager; designated AWS engineer for Enterprise plans            │
-│  Severity Urgent  = Production system down; 15-min response time on Enterprise plan                   │
-│  Severity High   = Significant business impact; 1h response on Business plan                          │
-│  Trusted Advisor = AWS automated best-practice checks across 5 pillars                                │
-│  CRR             = Case Reference Resource; ARN of the affected resource in the SR                    │
-│  CloudTrail      = API audit log; filter by service + error code to find root cause events            │
-│  Service Quotas  = Service that tracks and enables self-service quota increase requests               │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Before you begin
 

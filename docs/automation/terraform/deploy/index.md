@@ -16,6 +16,8 @@ search:
 ---
 
 # Terraform — Environment Setup
+![Terraform — Environment Setup](../../../assets/automation-terraform-deploy-index.svg)
+
 
 This guide covers setting up a production-ready Terraform environment: installation, remote state backend, provider credentials, module structure, workspaces per environment, CI/CD integration, and drift detection.
 

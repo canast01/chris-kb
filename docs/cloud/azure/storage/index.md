@@ -9,63 +9,10 @@ Azure Storage articles, operational checks, troubleshooting notes, and reference
 
 *Applies to: Azure*
 </div>
+![Azure Storage](../../../assets/cloud-azure-storage-index.svg)
 
-```text
-┌─────────────────────────────────────── Azure Storage Overview ────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                Azure Storage — Blob, Managed Disks, Files, and Storage Accounts               │   │
-│   │  Blob Storage: Hot / Cool / Cold / Archive access tiers; lifecycle management; immutable WORM │   │
-│   │     Managed Disks: Premium SSD / Standard SSD / Ultra; ZRS for zone redundancy; snapshots     │   │
-│   │  Azure Files: managed SMB and NFS shares; AD integration for Windows shares; Azure File Sync  │   │
-│   │     Storage accounts: replication LRS/ZRS/GRS/GZRS; encryption at rest by default; private    │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Blob serves objects · Managed Disks serve VM block I/O · Files serve shared mounts                 │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │         Blob Storage        │  │        Managed Disks        │  │         Azure Files         │   │
-│   │     Hot: frequent access    │  │     Premium SSD: low lat    │  │      SMB 2.1/3.0 shares     │   │
-│   │      Cool/Cold: infreq      │  │    Standard SSD: gen use    │  │        NFS 4.1: Linux       │   │
-│   │    Archive: offline store   │  │       Ultra: 160K IOPS      │  │       AD auth: Windows      │   │
-│   │    Lifecycle: tier rules    │  │     ZRS: zone redundant     │  │      File Sync: on-prem     │   │
-│   │      Immutability: WORM     │  │    Snapshots: incremental   │  │      Backup: RSV policy     │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│    Blob for unstructured objects · Managed Disks for VM boot/data · Files for shared SMB/NFS workloads│
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   Blob Storage   │  Managed Disks   │    Azure Files    │  Storage Accts   │    Snapshots     │   │
-│   │  Upload: AzCopy  │ Create: P10/P30  │    Create share   │   LRS/ZRS/GRS    │ Disk snap: incr  │   │
-│   │ Lifecycle: rule  │   Attach to VM   │   Mount: Windows  │  Private endpt   │    Blob snap     │   │
-│   │   Immutability   │ Expand: no stop  │    Mount: Linux   │    SAS token     │  Restore: snap   │   │
-│   │  Tier: archive   │   ZRS: 3-zone    │     File Sync     │   CMK encrypt    │  Copy to region  │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  Azure Storage clusters (LRS/ZRS/GRS) · Managed Disk fabric per AZ · Storage account endpoints        │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Storage account  = Top-level namespace for Blob, Files, Queue, Table; controls replication and access│
-│  LRS              = Locally Redundant Storage; 3 copies in one data centre; cheapest option           │
-│  ZRS              = Zone-Redundant Storage; 3 copies across 3 AZs; survives zone failure              │
-│  GRS              = Geo-Redundant Storage; 6 copies across 2 regions; async replication to secondary  │
-│  GZRS             = Geo-Zone-Redundant Storage; ZRS in primary + LRS in secondary region              │
-│  Blob access tier  = Hot (frequent), Cool (infrequent), Cold (rare), Archive (offline); cost tiers    │
-│  Lifecycle policy = Automatically transitions or deletes blobs based on age and last-modified date    │
-│  Immutable storage= WORM policy on container; Legal hold or time-based; prevents delete/overwrite     │
-│  Managed Disk     = Azure-managed block storage for VMs; types: Premium SSD, Standard SSD, Ultra      │
-│  ZRS disk         = Zone-Redundant disk; synchronously replicates across 3 AZs; no AZ downtime impact │
-│  Azure File Sync  = Syncs Azure Files share to on-premises Windows Server; cloud tiering option       │
-│  SAS token        = Shared Access Signature; time-limited URL token for scoped blob/container access  │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Articles
 

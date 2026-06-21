@@ -4,6 +4,8 @@ tags:
   - git
 ---
 # Git — Integrations
+![Git — Integrations](../../../../assets/itsm-git-architecture-integrations-index.svg)
+
 
 ```yaml
 # .github/workflows/ci.yml
@@ -34,51 +36,7 @@ jobs:
       - name: Test
         run: go test -race ./...
 ```
-```text
-┌───────────────────────────────────────── Git — Integrations ──────────────────────────────────────────┐
-│                                                                                                       │
-│  Git integrations: CI/CD pipelines, issue tracking, IaC tools, and IDE plugins.                       │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              CI/CD Integration               │  │                Issue Tracking               │   │
-│   │         GitHub Actions: on: push/PR          │  │       Jira: commit message references       │   │
-│   │       Jenkins: webhook triggers build        │  │         GitHub Issues: linked via PR        │   │
-│   │        Branch policy: require CI pass        │  │           Auto-close: "Fixes #123"          │   │
-│   │        Artifact: publish on tag push         │  │       Smart commit: time / transition       │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Push events trigger CI; issue keys in commits auto-update tracking systems                         │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               IaC / Automation               │  │               IDE Integration               │   │
-│   │        Terraform: repo per workspace         │  │         VS Code: Git Graph / GitLens        │   │
-│   │          Ansible: playbooks in Git           │  │       JetBrains: built-in VCS tooling       │   │
-│   │          GitOps: Argo CD / Flux CD           │  │        Conflict resolution: 3-pane UI       │   │
-│   │      Secret scanning: pre-receive hook       │  │         SSH key management per user         │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  GitHub/GitLab server · CI runners · Jira/issue tracker · developer workstations                      │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  GitHub Actions = event-driven CI/CD built into GitHub; triggered by push/PR/tag                      │
-│  Webhook        = HTTP POST from Git server to CI system on push events                               │
-│  Smart commit   = Jira commit syntax: ABC-123 #comment #time 1h #done                                 │
-│  GitOps         = Git as single source of truth for infrastructure state                              │
-│  Argo CD        = GitOps controller for Kubernetes; syncs repo to cluster state                       │
-│  Flux CD        = alternative GitOps operator; push-based reconciliation                              │
-│  Pre-receive    = server-side hook; runs before refs update; blocks bad pushes                        │
-│  Branch policy  = GitHub/GitLab rule requiring CI + reviews before merge                              │
-│  Auto-close     = PR/commit message "Fixes #n" closes issue on merge to default                       │
-│  GitLens        = VS Code extension showing inline blame and history                                  │
-│  Workspace      = Terraform isolated state environment mapped to a Git branch                         │
-│  Artifact       = built output (container, binary) published on tag push to registry                  │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 ```yaml
 git commit -m "PROJ-123 Add retry logic for payment API
 

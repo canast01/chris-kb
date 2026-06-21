@@ -9,6 +9,8 @@ tags:
 <div class="kb-summary">
 | Field | Value | |---|---| | Risk | Low | | Approval | Verify requester identity — no change ticket required for standard user accounts | | Estimated time | 5–15 minutes | | Impact | User regains access; no service disruption |
 </div>
+![Account Unlock Runbook](../../../../assets/security-operations-runbooks-account-unlock-index.svg)
+
 
 | Field | Value |
 |---|---|
@@ -28,50 +30,7 @@ tags:
 
 ## Process Flow
 
-```text
-┌────────────────────────────────────── Runbook — Account Unlock ───────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │             Unlock AD account; identify lockout source; prevent re-lock before fix            │   │
-│   │          Pre-check: confirm account is locked; find lockout source DC and application         │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │           Identify Lockout Source            │  │                 Unlock Steps                │   │
-│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
-│   │       Check Security Event Log (4740)        │  │          ADUC: right-click → Unlock         │   │
-│   │          Use LockoutStatus.exe tool          │  │         PowerShell: Unlock-ADAccount        │   │
-│   │         Find PDC emulator for events         │  │          Reset password if unknown          │   │
-│   │         Caller workstation in event          │  │         Clear cached creds on device        │   │
-│   │       Service account = check services       │  │           Update service/app creds          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                                # PowerShell — unlock and check                                │   │
-│   │         Get-ADUser <user> -Properties LockedOut,BadLogonCount | Select Name,LockedOut         │   │
-│   │                               Unlock-ADAccount -Identity <user>                               │   │
-│   │              Search-ADAccount -LockedOut | Select Name,LockedOut,PasswordExpired              │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   │       Step       │      Action      │    Command/tool   │      Verify      │      Notes       │   │
-│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
-│   │   Confirm lock   │   Check state    │     Get-ADUser    │  LockedOut=True  │  Before unlock   │   │
-│   │   Find source    │    Event 4740    │   LockoutStatus   │   Caller found   │   PDC emulator   │   │
-│   │      Unlock      │   Unlock acct    │  Unlock-ADAccount │ LockedOut=False  │   Sync all DCs   │   │
-│   │    Fix cause     │   Clear creds    │   Device/service  │    No re-lock    │    Test login    │   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    Event 4740     = Windows Security Event: account was locked out; caller and workstation noted      │
-│    PDC emulator   = FSMO role; receives lockout events fastest; check Security log here first         │
-│    LockoutStatus  = Microsoft tool; shows bad password count and lockout status per DC                │
-│    Cached creds   = Windows stores last-used credentials; stale cached cred causes re-lock            │
-│    Service account= Non-interactive account; lockout = service failing; update credential source      │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 Key fields in Event ID 4740:
 
 | Field | Meaning |

@@ -12,39 +12,10 @@ Certificate diagnostic commands: check expiry and SANs with openssl s_client, ve
 
 *Applies to: Linux (RHEL/Ubuntu) · Windows Server · OpenSSL 3.x · ADCS*
 </div>
+![Certificates — Diagnostics](../../../../assets/security-certificates-troubleshooting-diagnostics-index.svg)
 
-```text
-┌───────────────────────── Security Certificates — Diagnostics ─────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   Start here: openssl s_client -connect host:443 -showcerts → check notAfter and chain       │    │
-│   │   TLS handshake fails: verify chain with openssl verify; check SAN matches hostname          │    │
-│   │   Windows cert issues: Get-ChildItem Cert:\LocalMachine\My; certutil -verify cert.cer       │     │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              Linux / OpenSSL                 │  │               Windows / ADCS                │   │
-│   │   openssl s_client -connect host:443         │  │   Get-ChildItem Cert:\LocalMachine\My      │    │
-│   │   openssl x509 -in cert.pem -noout -text     │  │   certutil -verify cert.cer               │     │
-│   │   openssl verify -CAfile root.pem cert.pem   │  │   Test-Certificate; sc query certsvc      │     │
-│   │   openssl s_client -status (OCSP stapling)   │  │   certutil -ping (ADCS CA reachability)   │     │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  Client (browser / app) · TLS endpoint · CA server · CRL/OCSP responder · trust store                 │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│  SAN             = Subject Alternative Name; the X.509 extension that lists valid hostnames/IPs       │
-│  AIA             = Authority Information Access; extension containing the issuing CA download URL     │
-│  CDP             = CRL Distribution Point; extension with URL to download the certificate revocation  │
-│  OCSP            = Online Certificate Status Protocol; real-time revocation check (faster than CRL)   │
-│  Chain           = sequence from end-entity cert → intermediate(s) → root CA                          │
-│  Trust store     = OS or browser list of trusted root CA certificates                                 │
-│  certutil        = Windows built-in CLI for PKI operations; also Linux tool via openssl-legacy pkg    │
-│  AIA fetching    = clients download missing intermediates from the AIA URL to build the chain         │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ```mermaid
 graph TD

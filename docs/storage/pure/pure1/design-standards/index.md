@@ -10,35 +10,10 @@ Pure1 Standards reference covering Array Tagging Policy, Capacity Threshold Stan
 
 *Applies to: Pure1*
 </div>
+![Pure1 Standards](../../../../assets/storage-pure-pure1-design-standards-index.svg)
 
-```text
-┌────────────────────────────────────── Pure1 — Design Standards ───────────────────────────────────────┐
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │            Registration Standards            │  │               Alert Standards               │   │
-│   │             All arrays in Pure1              │  │              Email ops-storage@             │   │
-│   │              Phonehome verified              │  │               ITSM webhook set              │   │
-│   │            TCP 443 open outbound             │  │              Auto-case enabled              │   │
-│   │              Tag env + location              │  │                Review weekly                │   │
-│   │             Service account API              │  │            Capacity plan monthly            │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  All FlashArrays and FlashBlades on TCP 443 to pure1.purestorage.com                                  │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Phonehome verified = Array shows Connected; data age < 2 min in Pure1 UI                             │
-│  ITSM webhook = Pure1 webhook configured to create ServiceNow incident on alert                       │
-│  Auto-case enabled = Pure1 setting allowing automatic TAC case opening                                │
-│  Tag = Pure1 org labels by env (prod/dev), location (dc1/dc2), and team                               │
-│  Service account = Non-personal Pure1 account for API registration                                    │
-│  Weekly review = Review Pure1 fleet health and open proactive alerts every Monday                     │
-│  Capacity monthly = Monthly export of Pure1 forecast data for procurement planning                    │
-│  Purity current = All arrays on supported Purity release; Pure1 flags end-of-life                     │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Capacity Threshold Standards
 

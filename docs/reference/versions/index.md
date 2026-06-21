@@ -12,13 +12,10 @@ tags:
 <div class="kb-summary">
 Minimum product versions for 65+ features across vSphere Compute/HA, Storage/vSAN, NSX/Networking, VCF, Aria Suite, and Tanzu. Use this page to check whether a feature is available before upgrading.
 </div>
+![Version Compatibility Matrix](../../assets/reference-versions-index.svg)
 
-```text
-┌──────────────────────────── VMware Version Compatibility Matrix ──────────────────────────────────────┐
-│  65+ features mapped to minimum product versions                                                      │
-│  Sections: Compute/HA · Storage/vSAN · NSX · VCF · Aria Suite · Tanzu                                 │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 Jump: [Compute / HA / DRS](#compute--ha--drs) · [Storage / vSAN](#storage--vsan) · [NSX / Networking](#nsx--networking) · [VCF](#vcf) · [Aria Suite](#aria-suite) · [Tanzu](#tanzu) · [Release timeline](#release-timeline)
 

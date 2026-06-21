@@ -16,35 +16,10 @@ search:
 ---
 
 # SRDF/S — Initial Deployment
+![SRDF/S — Initial Deployment](../../../../assets/storage-dell-srdf-s-deploy-index.svg)
 
-```text
-┌────────────────────────────────── Dell SRDF/S — Deployment Sequence ──────────────────────────────────┐
-│                                                                                                       │
-│  Step 1 · Prerequisites                                                                               │
-│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
-│  Two PowerMax/VMAX arrays within low-latency WAN (<10ms RTT between SRDF director ports)              │
-│  FC or IP SRDF links between sites; SRDF synchronous licence on both arrays                           │
-│  R2 (target) must have capacity equal to all R1 devices planned for SRDF/S protection                 │
-│                                                                                                       │
-│                                        │  zone ports and create group                                 │
-│                                        ▼                                                              │
-│  Step 2 · Zone Ports and Create SRDF/S Group                                                          │
-│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
-│  FC zoning between R1 SRDF director ports and corresponding R2 ports (one-to-one per director)        │
-│  Create group: symrdf createpair -sid <source-sid> -rdfg <n> -rdfgtype synchronous -remote_sid <t>    │
-│  Add devices: symrdf addpair -sid <source> -rdfg <n> -dev <R1-devs> -remote_dev <R2-devs>             │
-│                                                                                                       │
-│                                        │  establish and validate                                      │
-│                                        ▼                                                              │
-│  Step 3 · Establish and Validate                                                                      │
-│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
-│  Start sync: symrdf -sid <source> -rdfg <n> establish — all host writes held until R2 acknowledges    │
-│  Monitor: symrdf query — all pairs must reach Synchronized state before declaring production-ready    │
-│  Measure host write latency before/after; confirm RTT stable <10ms; verify no SLA breach              │
-│  Test failover on non-production pair; record RTO achieved; document in DR runbook                    │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Prerequisites
 

@@ -14,36 +14,10 @@ to prevent recurrence.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
+![Datastore Full / Capacity Alarm](../../../../assets/virtualization-vmware-topics-scenarios-datastore-full-capaci.svg)
 
-```text
-┌─────────────────────────── Datastore Full / Capacity Alarm — Response Flow ───────────────────────────┐
-│                                                                                                       │
-│  OVERVIEW                                                                                             │
-│  Full datastore stops VM writes — VMs pause or crash; on vSAN writes stop at 80% capacity             │
-│  Snapshots are the most common cause of sudden unexpected capacity consumption                        │
-│                                                                                                       │
-│  START: vCenter capacity alarm fires OR VMs pause / report disk write errors                          │
-│                                                                                                       │
-│  STEP 1 — Identify Datastore Type                                                                     │
-│  VMFS: find large VMDKs, snapshots, and orphaned files                                                │
-│  vSAN: writes stop at 80%; VMs pause — find snapshots first                                           │
-│  NFS: check NFS volume on the storage array for capacity                                              │
-│                                                                                                       │
-│  STEP 2 — Find the Space Consumers                                                                    │
-│  Snapshots → large VMDKs → orphaned delta files → thick-provisioned disks                             │
-│  Run datastore browser or esxcli to list files by size                                                │
-│                                                                                                       │
-│  STEP 3 — Free Space                                                                                  │
-│  Delete stale snapshots (confirm with VM owner before deleting)                                       │
-│  Remove orphaned VMDKs after confirming no VM references them                                         │
-│  Expand datastore or add capacity to vSAN cluster if needed                                           │
-│                                                                                                       │
-│  KEY TERMS                                                                                            │
-│  vSAN 80% threshold — vSAN stops all writes at 80% full; VMs freeze rather than crash                 │
-│  Delta file — snapshot changed-block tracking file; grows unbounded if left long-term                 │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Products Involved
 

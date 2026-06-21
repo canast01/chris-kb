@@ -9,14 +9,10 @@ tags:
 <div class="kb-summary">
 Deploy NSX Manager into the Lab 1 nested environment, prepare ESXi transport nodes, create overlay segments, and configure a basic Distributed Firewall rule. Estimated time: 2–3 hours.
 </div>
+![Lab 3 — NSX-T in Nested ESXi](../../assets/labs-nsx-nested-index.svg)
 
-```text
-┌──────────────────────────── NSX-T Nested Lab — Architecture ──────────────────────────────────────────┐
-│  NSX Manager VM (16 GB RAM · single node for lab)                                                     │
-│  Transport Nodes: ESXi-01 + ESXi-02 (NSX VIBs installed · Geneve TEP vmkernel)                        │
-│  Overlay Segment → T1 Gateway (optional) → T0 Gateway → Edge VM (optional)                            │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Prerequisites
 

@@ -11,6 +11,8 @@ PowerShell is a cross-platform task automation shell built on .NET. This page co
 
 *Applies to: PowerShell 7.x*
 </div>
+![PowerShell — How It Works](../../../../assets/automation-powershell-architecture-how-it-works-index.svg)
+
 
 ---
 
@@ -50,29 +52,7 @@ flowchart LR
     style F fill:#1565c0,color:#fff
     style I fill:#2e7d32,color:#fff
 ```
-```text
-┌────────────────────────────────────── PowerShell — How It Works ──────────────────────────────────────┐
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    PowerShell execution: script parsed to AST → pipeline stages → cmdlet execution → output   │   │
-│   │      Pipeline stages: BeginProcessing → ProcessRecord (per input object) → EndProcessing      │   │
-│   │     Error streams: terminating (throw) vs non-terminating (Write-Error); $ErrorActionPref     │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │         Parse Phase         │  │        Execute Phase        │  │         Output Phase        │   │
-│   │    Script → tokens → AST    │  │        Cmdlet Begin()       │  │         Write-Output        │   │
-│   │      Syntax validation      │  │     Process() per object    │  │     Select-Object filter    │   │
-│   │     AMSI scan (Windows)     │  │        End() finalise       │  │     Format-* for display    │   │
-│   │    Execution policy check   │  │    Error stream handling    │  │    Export-Csv, ConvertTo    │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   AST           = Abstract Syntax Tree; PS parses before executing; enables static analysis   │   │
-│   │    $ErrorActionPreference = Stop causes all errors to be terminating; catches via try/catch   │   │
-│   │ Runspace        = isolated execution context; enables parallel processing via Start-ThreadJob │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 ---
 

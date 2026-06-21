@@ -12,51 +12,10 @@ Aria Operations: Alert Definitions and Policies reference covering Alert Policie
 
 *Applies to: Aria Ops 8.x*
 </div>
+![Aria Operations: Alert Definitions and Policies](../../../../assets/virtualization-vmware-aria-operations-operations-alerts.svg)
 
-```text
-┌────────────────────────────────────── Aria Operations — Alerts ───────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │       Aria Operations Alert Framework — Symptoms, Recommendations, and Outbound Actions       │   │
-│   │             Alert anatomy: Alert Definition → Symptom(s) → Recommendation → Action            │   │
-│   │       Symptoms: metric threshold · property change · event (fault/task) · message event       │   │
-│   │          Impact: Health · Risk · Efficiency — each drives different response priority         │   │
-│   │           Outbound: email · REST · ServiceNow · SNMP trap · Log Insight notification          │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Impact type drives dashboard placement: Health=Ops board · Risk=Capacity board                     │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │        Symptom Types        │  │         Impact Types        │  │       Outbound Actions      │   │
-│   │       Metric threshold      │  │        Health impact        │  │          Email SMTP         │   │
-│   │       Property change       │  │         Risk impact         │  │         REST webhook        │   │
-│   │        Event (fault)        │  │      Efficiency impact      │  │      ServiceNow ticket      │   │
-│   │        Message event        │  │       Criticality 1-5       │  │          SNMP trap          │   │
-│   │         KPI symptom         │  │       Wait cycle conf       │  │      Log Insight notify     │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  Alert engine runs on Aria Ops master node · outbound connectors configured in Administration         │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Alert definition  = Named policy grouping one or more symptoms with a recommendation                 │
-│  Symptom           = Specific condition triggering an alert (metric, property, event, message)        │
-│  Recommendation    = Suggested remediation step linked to an alert definition                         │
-│  Health impact     = Alert affecting current operational state (e.g. CPU critical)                    │
-│  Risk impact       = Alert indicating future degradation (e.g. disk will fill in 7 days)              │
-│  Efficiency impact = Alert flagging resource waste (e.g. oversized idle VMs)                          │
-│  Criticality       = 1-5 scale; 1=Critical, 5=Info; drives UI badge colour                            │
-│  Wait cycle        = Number of collection cycles a symptom must persist before alert fires            │
-│  KPI symptom       = Symptom based on a KPI metric defined in a dashboard super metric                │
-│  Super metric      = Custom metric formula combining multiple raw metrics                             │
-│  Cancel alert      = Manual or automated resolution of an active alert                                │
-│  Outbound action   = Configured connector sending alert payload to external system                    │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 Suppression rules can also be set at the policy level to automatically suppress alerts for objects placed in maintenance mode.
 

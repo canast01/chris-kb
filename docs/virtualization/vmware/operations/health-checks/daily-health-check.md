@@ -10,36 +10,10 @@ Morning checks covering all components that can silently degrade overnight. Targ
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
+![Daily Health Check](../../../../assets/virtualization-vmware-operations-health-checks-daily-health-.svg)
 
-```text
-┌──────────────────────────────── Daily Health Check — Morning Sequence ────────────────────────────────┐
-│                                                                                                       │
-│    Run every morning; target completion under 15 minutes; document failures in the change log         │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │       Step       │    Component     │   Pass Condition  │     On FAIL      │       Tool       │   │
-│   │  ──────────────  │  ──────────────  │  ───────────────  │  ──────────────  │  ──────────────  │   │
-│   │    1  vCenter    │  No red alarms   │  All green/clear  │ Investigate 1st  │  vSphere Client  │   │
-│   │  2  Host status  │  All connected   │   No disconnects  │   Restart vpxa   │  vSphere Client  │   │
-│   │  3  Cluster HA   │    HA enabled    │    Admission OK   │  Check HA logs   │   esxcli / UI    │   │
-│   │  4  vSAN health  │   Green status   │     No resync     │  vSAN Health UI  │  vSAN Health UI  │   │
-│   │  5  Datastores   │    < 80% used    │    No overprov.   │  Free up space   │   Storage view   │   │
-│   │   6  VM state    │  All powered on  │   No stuck tasks  │  Force-end task  │  vSphere Client  │   │
-│   │  7  Backup jobs  │  All succeeded   │   No failed jobs  │ → backup runbook │  Backup console  │   │
-│   │   8  Snapshots   │    None stale    │   < 24h or 10 GB  │ Consolidate VMs  │   Snapshot mgr   │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    vpxa       = VMware vCenter Agent on each ESXi host; restart restores host connection              │
-│    hostd      = ESXi host management daemon; restart if vpxa restart fails                            │
-│    HA admission = Policy ensuring enough cluster capacity to restart all protected VMs                │
-│    Resync     = vSAN rebuilding data to meet the storage policy; do not patch during                  │
-│    Consolidate = Merging stale snapshots into the VM base disk; run via vSphere Client                │
-│    Stuck task  = vCenter task in running state > 30 min; cancel via task manager panel                │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

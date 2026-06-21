@@ -8,13 +8,10 @@ tags:
 <div class="kb-summary">
 Top-10 vCenter commands for appliance management, inventory queries, and service control via <code>govc</code> and <code>dcli</code>.
 </div>
+![vCenter Cheat Sheet](../../assets/reference-cheat-sheets-vcenter.svg)
 
-```text
-┌────────────────────────────────────── vCenter Cheat Sheet ────────────────────────────────────────────┐
-│  CLI: govc (open-source govmomi CLI)  ·  dcli (built-in appliance CLI)  ·  vCenter REST API           │
-│  Categories: Inventory · VMs · Hosts · Datastores · Services · Appliance                              │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Common commands
 

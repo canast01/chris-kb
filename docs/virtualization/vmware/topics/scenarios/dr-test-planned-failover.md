@@ -15,33 +15,10 @@ them to fail.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
+![DR Test and Planned Failover](../../../../assets/virtualization-vmware-topics-scenarios-dr-test-planned-failo.svg)
 
-```text
-┌───────────────────────────── DR Test / Planned Failover — Procedure Flow ─────────────────────────────┐
-│                                                                                                       │
-│  OVERVIEW                                                                                             │
-│  DR Test: non-disruptive — VMs boot in isolated bubble network, production continues                  │
-│  Planned Failover: real migration — graceful shutdown at primary, services move to DR site            │
-│                                                                                                       │
-│  START: SRM Recovery Plan selected — choose execution type                                            │
-│                                                                                                       │
-│  DR TEST PATH                                                                                         │
-│  SRM powers on VM replicas in isolated bubble network at DR site                                      │
-│  Application smoke test on isolated VMs — production unaffected throughout                            │
-│  Cleanup: SRM powers off test VMs, removes test network · production unaffected                       │
-│                                                                                                       │
-│  PLANNED FAILOVER PATH                                                                                │
-│  Pre-flight: check DR site capacity and verify replication RPO is within target                       │
-│  SRM shuts down primary VMs · syncs final changed blocks → powers on at DR with prod IPs              │
-│  Validate: VMs up · DNS resolves · NSX segments mapped · Aria Ops alerts clear                        │
-│                                                                                                       │
-│  COMMON ERRORS                                                                                        │
-│  RPO not met before failover — check vSphere Replication health first                                 │
-│  Forgot to run Cleanup after DR test — test replicas block real failover capacity                     │
-│  NSX segment mapping not configured — VMs power on with no network at DR site                         │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 
 !!! warning "Production traffic cutover"

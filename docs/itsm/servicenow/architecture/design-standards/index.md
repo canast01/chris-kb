@@ -11,6 +11,8 @@ This page documents operational standards enforced within the ServiceNow platfor
 
 *Applies to: ServiceNow*
 </div>
+![ServiceNow — ITSM Standards](../../../../assets/itsm-servicenow-architecture-design-standards-index.svg)
+
 
 ---
 
@@ -125,51 +127,7 @@ flowchart TD
     G -- Rejected --> I
     H --> K --> L
 ```
-```text
-┌──────────────────────────────────── ServiceNow — Design Standards ────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                         ServiceNow Design and Configuration Standards                         │   │
-│   │                MID Server: min 4 vCPU / 8 GB RAM; Windows or Linux; n+1 for HA                │   │
-│   │           Instance: prod/test/dev; clone prod to test monthly for regression testing          │   │
-│   │             Script standards: always use GlideRecord; avoid cross-scope scripting             │   │
-│   │          Change management: all SNOW config changes via Update Set; tracked in source         │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    SNOW design standards govern MID sizing, scripting, and config management                          │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             MID Server Standards             │  │              Platform Standards             │   │
-│   │               Min 4 vCPU/8 GB                │  │           Update Sets for changes           │   │
-│   │              n+1 MID redundancy              │  │            Scripting: GlideRecord           │   │
-│   │              Outbound 443 only               │  │            No cross-scope scripts           │   │
-│   │            Dedicated MID per env             │  │            Test in sub-prod first           │   │
-│   │              JVM: 4 GB heap min              │  │             CMDB: CI naming std             │   │
-│   │             OS patching schedule             │  │            SLA definition review            │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  MID Server VMs (prod/test/dev) · firewall allowing outbound 443 only                                 │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Update Set    = container for SNOW config changes; migrate via XML export/import                     │
-│  GlideRecord   = SNOW server-side API; always preferred over raw SQL or direct DB                     │
-│  Cross-scope   = accessing data from different application scope; use public APIs                     │
-│  MID HA        = n+1 MID Servers; SNOW auto-fails over to available MID                               │
-│  Clone         = copy prod data to test/dev; Admin > System Clone > Clone Instance                    │
-│  CI naming     = consistent CMDB naming: hostname in lowercase, FQDN preferred                        │
-│  SLA definition = Agreement + SLA Definition + Workflow; reviewed quarterly                           │
-│  Dedicated MID = separate MID Server per environment (prod/test) to avoid confusion                   │
-│  JVM heap      = set in JAVA_OPTS in MID Server wrapper.conf; min 4 GB for prod                       │
-│  Script scope  = ServiceNow app scope isolation; prevents cross-app data access                       │
-│  Sub-prod test = always test Update Sets in test before applying to prod                              │
-│  Outbound 443  = MID Server only needs outbound HTTPS to *.service-now.com                            │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 | Token | Values | Example |
 |---|---|---|

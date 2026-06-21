@@ -12,39 +12,10 @@ Terraform diagnostic commands: enable TF_LOG trace logging, inspect plan output 
 
 *Applies to: Terraform 1.x / OpenTofu 1.x*
 </div>
+![Terraform — Diagnostics](../../../../assets/automation-terraform-troubleshooting-diagnostics-index.svg)
 
-```text
-┌─────────────────────────────────────── Terraform — Diagnostics ───────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   Start here: TF_LOG=DEBUG → terraform validate → plan -out → state list → check auth        │    │
-│   │   Provider auth failure: check env vars; run terraform providers to confirm plugin loaded     │   │
-│   │   State lock: never force-unlock without confirming the locking process is truly gone         │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                 Log Capture                  │  │                Plan Analysis                │   │
-│   │       TF_LOG=DEBUG terraform plan            │  │       tf plan -out=p; tf show -json p       │   │
-│   │        TF_LOG_PROVIDER=DEBUG for API         │  │     cat plan.json | jq .resource_changes    │   │
-│   │         TF_LOG_PATH=./terraform.log          │  │       terraform state show <resource>       │   │
-│   │         terraform version (verify)           │  │       terraform refresh (resync state)      │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  Terraform runs on: local workstation, CI runner, or Terraform Cloud agent                            │
-│  State stored in: local file, S3 (AWS), Azure Blob, GCS, or Terraform Cloud                           │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│  TF_LOG       = env var controlling log verbosity: TRACE, DEBUG, INFO, WARN, ERROR                    │
-│  Provider     = plugin that calls a cloud/platform API (aws, azurerm, vsphere, etc.)                  │
-│  State        = terraform.tfstate or remote state; maps config to real infrastructure                 │
-│  State lock   = prevents concurrent apply; stored in DynamoDB (S3 backend) or Terraform Cloud         │
-│  Plan         = proposed set of changes; must inspect this BEFORE apply in all workflows              │
-│  Backend      = remote location for state storage and locking                                         │
-│  force-unlock = dangerous operation that removes a state lock; only use if process is confirmed dead  │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ```mermaid
 graph TD

@@ -10,6 +10,8 @@ Pure Storage Evergreen//One Vendor Support reference covering Support Portal, Op
 
 *Applies to: Evergreen//One*
 </div>
+![Pure Storage Evergreen//One Vendor Support](../../../../assets/storage-pure-evergreen-one-vendor-support-index.svg)
+
 
 ```text
   Pure Support Case Flow

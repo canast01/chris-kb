@@ -12,39 +12,10 @@ Veeam diagnostic commands: check job status and session history with PowerShell,
 
 *Applies to: Veeam Backup & Replication 12.x*
 </div>
+![Veeam — Diagnostics](../../../../assets/backup-veeam-troubleshooting-diagnostics-index.svg)
 
-```text
-┌───────────────────────────────────────── Veeam — Diagnostics ─────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   Start here: VBR Console → Dashboard → check failed jobs → export logs → open SR            │    │
-│   │   Job failed: check session log in console first; "Failed to read CBT" = reset CBT            │   │
-│   │   Proxy/repo offline: Test-NetConnection 2500 (proxy), 2500/445 (repo); check VeeamTransport  │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Job and Session Status              │  │         Infrastructure Health               │   │
-│   │   Get-VBRJob | Select Name,LastResult        │  │   Get-VBRViProxy                            │   │
-│   │   Get-VBRBackupSession -Last 10              │  │   Get-VBRBackupRepository                   │   │
-│   │   Get-VBRSession -Last 10 (replication)      │  │   Test-NetConnection <proxy> 2500           │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  Windows Server (Backup Server) · Proxy VMs on ESXi · Backup storage (NAS/SAN) · Management LAN       │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│  Backup Server = central Veeam component: scheduler, job engine, catalog, REST API                    │
-│  Backup Proxy  = data mover between vSphere and repository; runs in virtual-appliance mode or HotAdd  │
-│  CBT           = Changed Block Tracking; VMware VADP mechanism tracking changed disk sectors          │
-│  SOBR          = Scale-Out Backup Repository; tiers extents; moves cold data to object storage        │
-│  VeeamTransport= Windows service on proxy/repo; handles data transfer (port 2500)                     │
-│  Instant Recovery = mounts VM disks from backup directly to ESXi; VM live in seconds                  │
-│  GFS Retention = Grandfather-Father-Son: daily, weekly, monthly, yearly restore points                │
-│  Immutable Repo= object storage (S3 WORM) or Linux XFS repo with immutable flag; ransomware safety    │
-│  Health Check  = periodic backup integrity scan; verifies restore points are readable                 │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ```mermaid
 graph TD

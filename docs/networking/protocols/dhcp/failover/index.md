@@ -8,29 +8,10 @@ tags:
 <div class="kb-summary">
 DHCP Failover reference covering Overview, Configuring Failover, Checking Failover State, Failover States Reference, Split Scope (Pre-2012 Fallback) and 2 more sections.
 </div>
+![DHCP Failover](../../../../assets/networking-protocols-dhcp-failover-index.svg)
 
-```text
-┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
-│  LOAD BALANCE (50/50 split):                                                                          │
-│  ┌─────────────────────┐    ┌─────────────────────────────┐                                           │
-│  │   DHCP Primary      │    │   DHCP Secondary            │                                           │
-│  │   Serves .100–.175  │◄──►│   Serves .176–.254          │                                           │
-│  │   (50% of pool)     │TCP │   (50% of pool)             │                                           │
-│  │                     │647 │                             │                                           │
-│  └─────────────────────┘    └─────────────────────────────┘                                           │
-│  Both active; pool split; MCLT timer for lease sync                                                   │
-│                                                                                                       │
-│  HOT STANDBY:                                                                                         │
-│  ┌─────────────────────┐    ┌─────────────────────────────┐                                           │
-│  │   DHCP Active       │    │   DHCP Standby              │                                           │
-│  │   Serves all leases │◄──►│   Holds 5% reserve pool     │                                           │
-│  │   (primary)         │TCP │   Takes over if primary down │                                          │
-│  │                     │647 │                             │                                           │
-│  └─────────────────────┘    └─────────────────────────────┘                                           │
-│                                                                                                       │
-│  Both modes: TCP 647 must be open between DHCP servers                                                │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Overview
 

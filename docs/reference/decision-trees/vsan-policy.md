@@ -9,15 +9,10 @@ tags:
 <div class="kb-summary">
 Choose the right vSAN storage policy: FTT level, RAID type (mirror vs erasure coding), encryption, and dedup/compression based on cluster size and requirements.
 </div>
+![vSAN Storage Policy Decision Tree](../../assets/reference-decision-trees-vsan-policy.svg)
 
-```text
-┌────────────────────────────── vSAN Storage Policy Decision Tree ──────────────────────────────────────┐
-│  FTT 1: RAID-5 EC (≥4 hosts, 1.33× overhead) or RAID-1 Mirror (≥3 hosts, 2× overhead)                 │
-│  FTT 2: RAID-6 EC (≥6 hosts, 1.5× overhead) or RAID-1 Mirror (≥5 hosts, 3× overhead)                  │
-│  FTT 3: RAID-1 Mirror only (≥7 hosts, 4× overhead)                                                    │
-│  Options: D@RE encryption (KMIP KMS) · dedup+compression OSA · compression only ESA                   │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ```mermaid
 flowchart TD

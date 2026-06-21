@@ -12,27 +12,10 @@ Comprehensive reference for vSphere networking. Covers the architecture differen
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
+![vSphere Networking — VSS, VDS, VMkernel, and NIOC](../../../../assets/virtualization-vmware-internals-vsphere-networking-index.svg)
 
-```text
-┌──────────────────────────────────── ESXi Host — Networking Stack ─────────────────────────────────────┐
-│                                                                                                       │
-│   VMkernel Ports (vmk0 … vmkN)                                                                        │
-│   ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐                                    │
-│   │  vmk0    │ │  vmk1    │ │  vmk2    │ │  vmk3    │ │  vmk4    │                                    │
-│   │  Mgmt    │ │ vMotion  │ │   vSAN   │ │  iSCSI   │ │   FT     │                                    │
-│   └────┬─────┘ └────┬─────┘ └────┬─────┘ └────┬─────┘ └────┬─────┘                                    │
-│        │            │            │            │            │                                          │
-│   ┌────▼────────────▼────────────▼────────────▼────────────▼────────────┐                             │
-│   │          vSphere Standard Switch (VSS) or Distributed Switch (VDS)  │                             │
-│   │         Port Groups · Uplinks · Load Balancing · NIOC Policies      │                             │
-│   └────────────────────────────────┬───────────────────────────────────┘                              │
-│                                    │                                                                  │
-│   ┌────────────────────────────────▼───────────────────────────────────┐                              │
-│   │           Physical Uplinks — vmnic0, vmnic1, vmnic2, vmnic3        │                              │
-│   │      Active/Active or Active/Standby teaming · 10/25/100 GbE       │                              │
-│   └────────────────────────────────────────────────────────────────────┘                              │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ---
 

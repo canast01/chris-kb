@@ -10,28 +10,11 @@ VxRail Post-Upgrade Validation reference covering Overview, Where It Fits, Daily
 
 *Applies to: VxRail 7.x · 8.x*
 </div>
+![VxRail Post-Upgrade Validation](../../../../assets/virtualization-vmware-vxrail-lifecycle-post-upgrade-validati.svg)
+
 
 Post-Upgrade Validation Sequence
-```text
-┌──────────────────────────── ┐     ┌────────────┐     ┌────────────┐     ┌ ────────────────────────────┐
-│  Services  │     │   Health   │     │    VMs     │     │    Docs                                      │
-│            │     │            │     │            │     │                                              │
-│ VxRail Mgr │ →   │ vSAN Sky-  │ →   │ DRS / HA   │ →   │ Change                                       │
-│ shows      │     │ line green │     │ healthy    │     │ ticket                                       │
-│ target ver │     │ no resync  │     │ VMs all up │     │ updated                                      │
-│            │     │            │     │            │     │                                              │
-│ all hosts  │     │ FW matches │     │ backups    │     │ versions                                     │
-│ Connected  │     │ baseline   │     │ working    │     │ recorded                                     │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-       │                 │                  │                   │
-       └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-                                    │
-                         ┌────────────────────────────────────────────────── ▼ ──────────────────────────────────────────────────┐
-                         │  All checks pass?   │
-                         │  YES → close change │
-                         │  NO  → investigate  │
-                         └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 ## Overview
 

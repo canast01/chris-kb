@@ -12,54 +12,10 @@ ServiceNow diagnostic tools: check instance health and thread state via stats.do
 
 *Applies to: ServiceNow Washington / Xanadu*
 </div>
+![ServiceNow — Diagnostics](../../../../assets/itsm-servicenow-troubleshooting-diagnostics-index.svg)
 
-```text
-┌─────────────────────────────────────── ServiceNow Diagnostics ────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   Start here: /stats.do — memory, threads, DB pool, request queue depth                      │    │
-│   │   Slow instance: DB Activity Monitor → Slow Queries → identify table and query               │    │
-│   │   Integration failing: MID server log agent0.log.0 → ECC queue errors in UI                  │    │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │           Performance Diagnostics            │  │           Integration Diagnostics           │   │
-│   │   stats.do — node heap, thread count         │  │   ECC queue error review in UI              │   │
-│   │   thread_monitor.do — Java thread dump        │  │   REST message log: sys_rest_message_fn     │  │
-│   │   Slow Queries — DB query > 10s              │  │   MID server log tailing: agent0.log.0      │   │
-│   │   Session Debug — per-request SQL trace      │  │   Discovery status: /discovery_status.do    │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Check stats.do first → DB Activity Monitor → System Diagnostics → MID logs → Session Debug           │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Application Log (sys_log)           │  │          Support Data Collection            │   │
-│   │   System Logs > All (UI nav)                 │  │   stats.do screenshot at time of issue      │   │
-│   │   Filter: source, level, time window         │  │   thread_monitor.do if perf-related         │   │
-│   │   Script log: gs.log()/gs.error() output     │  │   Log excerpts from System Logs > All       │   │
-│   │   Export as CSV for HI ticket submission     │  │   Background Script diagnostic snapshot     │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  ServiceNow SaaS nodes (multi-tenant, no file system access) · MID Server VM (on-prem or cloud)       │
-│  Log aggregation via Splunk/ELK integration or UI export only                                         │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│  stats.do    = real-time node statistics page; memory heap, thread counts, DB pool, queue depth       │
-│  sys_log     = application log table; records script errors, info messages, and warnings              │
-│  Transaction = single user HTTP request from arrival to response; logged with duration in ms          │
-│  Semaphore   = concurrency lock; leaks cause requests to queue and eventually time out                │
-│  Script profiler= measures script execution time per business rule; identifies slow rules             │
-│  ECC queue   = External Communication Channel; queues outbound REST and SOAP integration calls        │
-│  MID server log= agent.log on MID server host; shows discovery and integration errors                 │
-│  Slow query  = SQL taking > 1 second; logged in transaction log; needs index review                   │
-│  Session Debug= per-session diagnostic mode; captures SQL, ACL, business rule trace without impact    │
-│  Queue depth = pending requests waiting for an available thread; high depth = saturation              │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ```mermaid
 graph TD

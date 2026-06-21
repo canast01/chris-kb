@@ -13,46 +13,10 @@ End-to-end deployment guide for VMware Horizon VDI and published applications. P
 
 *Applies to: Horizon 8.x*
 </div>
+![Horizon — Deploy](../../../../assets/virtualization-vmware-horizon-deploy-index.svg)
 
-```text
-┌───────────────────────────────────── Horizon — Deployment Phases ─────────────────────────────────────┐
-│                                                                                                       │
-│  Six phases from AD/vCenter prerequisites to a validated VDI environment. Complete each phase         │
-│  and confirm the exit criterion before advancing to the next phase.                                   │
-│                                                                                                       │
-│   ┌────────────────────────────┐  ┌────────────────────────────┐  ┌──────────────────────────────┐    │
-│   │  Phase 1: Prerequisites    │  │   Phase 2: Connection      │  │  Phase 3: Unified Access     │    │
-│   │  AD OUs + service accounts │  │   Server Pod               │  │  Gateway (UAG)               │    │
-│   │  SQL: Events DB + AV DB    │  │  Install primary CS        │  │  Deploy OVA — DMZ NIC config │    │
-│   │  DNS: FQDNs + VIP A-record │  │  Install replica CSs       │  │  Blast + PCoIP edge service  │    │
-│   │  vCenter linked, certs CA  │  │  Load balancer pool + VIP  │  │  SAML / cert trust to CS     │    │
-│   └────────────────────────────┘  └────────────────────────────┘  └──────────────────────────────┘    │
-│                                                                                                       │
-│                ▼                               ▼                               ▼                      │
-│                                                                                                       │
-│   ┌────────────────────────────┐  ┌────────────────────────────┐  ┌──────────────────────────────┐    │
-│   │  Phase 4: Desktop Pools    │  │  Phase 5: App Volumes      │  │  Phase 6: Validation         │    │
-│   │  & RDSH Farms              │  │  & DEM                     │  │                              │    │
-│   │  Golden image + IC parent  │  │  App Volumes Mgr deploy    │  │  Session broker: all CS up   │    │
-│   │  Instant clone pool config │  │  AppStack capture + assign │  │  UAG: external Blast test    │    │
-│   │  RDSH farm + app publish   │  │  DEM agent + GPO + share   │  │  Pool: VMs available + login │    │
-│   │  Entitlement: AD groups    │  │  Writable volumes for users│  │  App Volumes: AppStack attach│    │
-│   └────────────────────────────┘  └────────────────────────────┘  └──────────────────────────────┘    │
-│                                                                                                       │
-│  Physical Infrastructure: Connection Server VMs (Windows 2019/2022, 8 vCPU/32 GB) on vSphere;         │
-│  UAG VMs in DMZ with dual-NIC; ESXi hosts with vSAN/NFS storage for desktop pools.                    │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Connection Server = Windows broker service; ADAM (AD LDS) config store; max 7 per pod                │
-│  Replica CS        = secondary broker; auto-replicates ADAM from primary CS                           │
-│  UAG               = Unified Access Gateway; OVA appliance; DMZ; proxies Blast/PCoIP                  │
-│  Instant clone     = vmFork-based pool; ~30 sec provision from running parent VM                      │
-│  AppStack          = App Volumes VMDK; attached at login; real-time app delivery                      │
-│  DEM               = Dynamic Environment Manager; GPO-based user profile and env policy               │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ---
 

@@ -12,38 +12,10 @@ Venafi TLS Protect diagnostic commands: check Windows service status, test SQL S
 
 *Applies to: Venafi TLS Protect (TPP) on Windows Server*
 </div>
+![Venafi — Diagnostics](../../../../assets/security-venafi-troubleshooting-diagnostics-index.svg)
 
-```text
-┌──────────────────────────────────────── Venafi — Diagnostics ─────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   Start here: Get-Service Venafi* → SQL connectivity → CA connector → VdcLogFile logs        │    │
-│   │   Cert not issuing: check CA connector status in TPP UI → Config → CAs → Test Connection     │    │
-│   │   Renewal failed: check certificate object in TPP for error field; then check VdcLogFile     │    │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             Venafi TPP Services              │  │           CA Connectors and Logs            │   │
-│   │   Get-Service -Name Venafi*                  │  │   TPP UI → Config → CA Templates           │    │
-│   │   VedWebSDK (REST API service)               │  │   TPP UI → Config → CAs → Test Connection  │    │
-│   │   VenafiEngine (policy engine)               │  │   C:\ProgramData\Venafi\log\VdcLogFile*.log │   │
-│   │   VenafiLog (audit/event logging)            │  │   C:\inetpub\logs\LogFiles\ (IIS web log)  │    │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  Venafi TPP servers (Windows) · SQL Server database · CA connectors (ADCS / DigiCert / Entrust)       │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│  TPP           = Trust Protection Platform; the Venafi server component; runs on Windows IIS          │
-│  VedWebSDK     = REST API service for Venafi; required for automation and UI                          │
-│  VenafiEngine  = Policy engine that enforces certificate policies and triggers renewals               │
-│  CA connector  = integration with a CA (ADCS, DigiCert, Entrust); issues certificates via TPP         │
-│  VdcLogFile    = Primary Venafi application log; records all engine activity and CA responses         │
-│  Policy folder = TPP object tree node defining certificate policies for child certificate objects     │
-│  CertificateDN = Distinguished Name in the TPP object tree (e.g., \VED\Policy\Org\...)                │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ```mermaid
 flowchart TD

@@ -18,31 +18,10 @@ tags:
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
+![vCenter File-Based Backup Runbook](../../../../assets/virtualization-vmware-operations-runbooks-vcenter-backup.svg)
 
-```text
-┌──────────────────────────── vCenter File-Based Backup — Runbook ──────────────────────────────────────┐
-│                                                                                                       │
-│  OVERVIEW                                                                                             │
-│  VCSA ships with a built-in file-based backup to SFTP, FTP, FTPS, HTTP, or NFS                        │
-│  Backup includes: configuration, inventory, licences, stats, events, alarms, tasks                    │
-│  Does NOT back up VM data — use Veeam/Commvault for VM-level backup                                   │
-│                                                                                                       │
-│  SCHEDULE                                                                                             │
-│  Daily backup recommended; retain at least 3 copies                                                   │
-│  Always run an ad-hoc backup before a major upgrade or change                                         │
-│                                                                                                       │
-│  RESTORE                                                                                              │
-│  Restore via VCSA installer → Stage 1 deploys new appliance → Stage 2 restores backup                 │
-│  Restore replaces all configuration; requires the exact VCSA version that created the backup          │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│  VCSA         = vCenter Server Appliance; the Linux OVA that runs vCenter services                    │
-│  VAMI         = Virtual Appliance Management Interface; https://<vcsa>:5480                           │
-│  File-based   = VCSA-native backup; not the same as a VM snapshot of the VCSA                         │
-│  Backup token = encrypted passphrase protecting the backup; required for restore                      │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Before you begin
 

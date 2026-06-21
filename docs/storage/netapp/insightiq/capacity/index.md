@@ -10,37 +10,10 @@ InsightIQ: Capacity Trending, Protocol Breakdown, and Quota Monitoring reference
 
 *Applies to: InsightIQ*
 </div>
+![InsightIQ: Capacity Trending, Protocol Breakdown, and Quota Monitoring](../../../../assets/storage-netapp-insightiq-capacity-index.svg)
 
-```text
-┌─────────────────────────────────── InsightIQ — Capacity Management ───────────────────────────────────┐
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               Capacity Metrics               │  │                 Forecasting                 │   │
-│   │              Total usable space              │  │              Growth rate trend              │   │
-│   │              Used vs available               │  │             Projected full date             │   │
-│   │              Per-tier breakdown              │  │              Linear regression              │   │
-│   │             Dedup/compress ratio             │  │                Custom horizon               │   │
-│   │              Quota utilisation               │  │             Export for planning             │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  Capacity data from PAPI · trend analysis in InsightIQ · export for spreadsheet planning              │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Usable space = Total cluster capacity after RAID overhead                                            │
-│  Tier = Storage class within PowerScale (SSD, SAS, HDD) each with separate capacity                   │
-│  Dedup ratio = Data deduplication factor; 2.0 means half the physical space used                      │
-│  Compression ratio = Data compression factor; reduces physical footprint of data                      │
-│  Quota = Per-directory or per-user space limit; tracked in InsightIQ for trend                        │
-│  Growth rate = MB/day or GB/week consumption rate; derived from time-series                           │
-│  Linear regression = Statistical method for projecting capacity exhaustion date                       │
-│  Projected full date = Estimated date cluster reaches capacity at current growth rate                 │
-│  Custom horizon = User-defined forecast window (30/60/90/180 days)                                    │
-│  CSV export = Downloading capacity data for external planning tools                                   │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 Quota types in OneFS:
 

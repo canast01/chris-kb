@@ -4,6 +4,8 @@ tags:
   - security
 ---
 # Linux — Authentication
+![Linux — Authentication](../../../../assets/compute-linux-security-authentication-index.svg)
+
 
 ```bash
 # Create a service account (no login shell, no home directory)
@@ -24,49 +26,7 @@ passwd -S username
 # List all accounts with UID >= 1000 (non-system)
 awk -F: '$3 >= 1000 { print $1, $3, $7 }' /etc/passwd
 ```
-```text
-┌─────────────────────────────────────── Linux — Authentication ────────────────────────────────────────┐
-│                                                                                                       │
-│  Linux authentication: PAM stack, SSH keys, MFA, LDAP/Kerberos, and audit logging.                    │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                  PAM Stack                   │  │              SSH Authentication             │   │
-│   │             /etc/pam.d/* config              │  │          Public key auth preferred          │   │
-│   │            auth / account modules            │  │            ~/.ssh/authorized_keys           │   │
-│   │              session / password              │  │              ed25519 / RSA-4096             │   │
-│   │            pam_faillock: lockout             │  │            sshd_config hardening            │   │
-│   │             pam_unix / pam_ldap              │  │          Certificate authority SSH          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              Directory Services              │  │                 MFA & Audit                 │   │
-│   │             SSSD: AD/LDAP bridge             │  │            pam_google_auth / TOTP           │   │
-│   │            Kerberos: ticket auth             │  │               pam_duo: Duo MFA              │   │
-│   │             realmd: AD join tool             │  │             auditd: login events            │   │
-│   │             krb5.conf: realm cfg             │  │             last / lastlog / who            │   │
-│   │             klist: view tickets              │  │              /var/log/auth.log              │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  x86-64 servers · AD/LDAP servers · NTP (Kerberos req) · NIC · HSM for CA keys                        │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  PAM         = Pluggable Authentication Modules; modular auth framework for Linux                     │
-│  SSSD        = System Security Services Daemon; caches AD/LDAP credentials locally                    │
-│  Kerberos    = Network auth protocol using encrypted tickets; AD uses it natively                     │
-│  TGT         = Ticket Granting Ticket; initial Kerberos ticket from KDC (AS)                          │
-│  realm       = Kerberos/AD domain identifier (e.g. CORP.EXAMPLE.COM)                                  │
-│  realmd      = Discovers and joins AD/Kerberos realms; configures SSSD + krb5                         │
-│  pam_faillock= Locks account after N failed auth attempts; thwarts brute force                        │
-│  TOTP        = Time-based One-Time Password (RFC 6238); 30-second rotating code                       │
-│  authorized_keys= File listing public keys allowed to log in via SSH                                  │
-│  ed25519     = Modern elliptic-curve SSH key type; faster and more secure than RSA                    │
-│  Certificate = SSH CA-signed cert; enables expiring, revocable SSH credentials                        │
-│  auditd      = Linux audit daemon; records logins, sudo, file access as events                        │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 ```bash
 # /etc/security/pwquality.conf
 minlen = 14

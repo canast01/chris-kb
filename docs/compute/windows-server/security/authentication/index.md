@@ -4,6 +4,8 @@ tags:
   - windows
 ---
 # Windows Server — Authentication
+![Windows Server — Authentication](../../../../assets/compute-windows-server-security-authentication-index.svg)
+
 
 ```mermaid
 sequenceDiagram
@@ -19,54 +21,7 @@ sequenceDiagram
     server-->>client: AP-REP — mutual auth confirmation
     client->>server: Application request (authorised session)
 ```
-```text
-┌─────────────────────────────────── Windows Server — Authentication ───────────────────────────────────┐
-│                                                                                                       │
-│  Authentication stack: Kerberos primary, NTLM fallback, certificate-based, MFA enforcement.           │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │           Kerberos Authentication            │  │             NTLM Authentication             │   │
-│   │        Default AD protocol (port 88)         │  │          Fallback: no DC reachable          │   │
-│   │            AS-REQ → AS-REP (TGT)             │  │           Challenge-response 3-way          │   │
-│   │         TGS-REQ → TGS-REP (service)          │  │        Disable NTLMv1; allow v2 only        │   │
-│   │        Mutual authentication built-in        │  │          Block NTLM via GPO Network         │   │
-│   │         SPNs register services in AD         │  │          Monitor event 4776 for use         │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Kerberos preferred; NTLM restricted by GPO; both generate audit events 4624/4625.                    │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │           Certificate & Smart Card           │  │           MFA & Conditional Access          │   │
-│   │       PKI: Enterprise CA issues certs        │  │         Azure AD MFA per-user policy        │   │
-│   │         Smart card logon: PIN + cert         │  │           Duo MFA proxy on DC/RDS           │   │
-│   │          PKINIT: Kerberos via cert           │  │        Conditional access: compliant        │   │
-│   │       SCEP/ACME enrollment for devices       │  │          NPS for RADIUS 802.1x auth         │   │
-│   │         Autoenroll via GPO certtempl         │  │          Event 4625 lockout alerts          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  Domain controller servers · HSM for CA key storage · smart card readers · NPS servers                │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Kerberos       = network auth protocol; ticket-based; default in AD domains since Win2000            │
-│  TGT            = Ticket-Granting Ticket; issued by KDC AS; used to request service tickets           │
-│  TGS            = Ticket-Granting Service; issues service tickets from presented TGT                  │
-│  SPN            = Service Principal Name; identifies service instance for Kerberos                    │
-│  NTLM           = NT LAN Manager; older challenge-response; kept for compatibility                    │
-│  NTLMv2         = improved NTLM; uses HMAC-MD5; still weaker than Kerberos                            │
-│  PKI            = Public Key Infrastructure; CA hierarchy issuing X.509 certificates                  │
-│  PKINIT         = Kerberos extension; uses X.509 certs for initial TGT request                        │
-│  NPS            = Network Policy Server; RADIUS server for 802.1x and VPN auth                        │
-│  Event 4624     = successful logon audit event; includes logon type and auth package                  │
-│  Event 4625     = failed logon audit event; source for lockout and brute-force alerts                 │
-│  Event 4776     = NTLM authentication attempt; monitor to detect NTLM usage                           │
-│  Conditional Access= Azure AD policy evaluating signals before granting resource access               │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 ```text
 
 ## Before you begin

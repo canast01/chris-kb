@@ -8,26 +8,10 @@ tags:
 <div class="kb-summary">
 NFS Exports reference covering Overview, /etc/exports Syntax, Key Export Options, Applying Export Changes, Verifying Exports from Client Side and 1 more sections.
 </div>
+![NFS Exports](../../../../assets/networking-protocols-nfs-exports-index.svg)
 
-```text
-┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
-│  /etc/exports                                                                                         │
-│  ┌────────────────────────────────────────────────────────┐                                           │
-│  │ /data/shared  192.168.10.0/24(rw,sync,no_subtree_check)│                                           │
-│  │ /data/readonly  *(ro,sync,root_squash)                 │                                           │
-│  └──────────────────────┬─────────────────────────────────┘                                           │
-│                         │ exportfs -ra (reload without restart)                                       │
-│                         ▼                                                                             │
-│  ┌────────────────────────────────────────────────────────┐                                           │
-│  │  Active exports (exportfs -v)                          │                                           │
-│  │  /data/shared  192.168.10.0/24(rw,sync,...)           │                                            │
-│  │  /data/readonly  <world>(ro,sync,root_squash,...)      │                                           │
-│  └──────────────────────┬─────────────────────────────────┘                                           │
-│                         │ TCP 2049                                                                    │
-│                         ▼                                                                             │
-│                    NFS clients mount                                                                  │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Overview
 

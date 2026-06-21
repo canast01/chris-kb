@@ -12,39 +12,10 @@ Linux diagnostic commands: query journald for service errors, read dmesg for har
 
 *Applies to: RHEL 8/9 · Ubuntu 22.04/24.04 LTS*
 </div>
+![Linux — Diagnostics](../../../../assets/compute-linux-troubleshooting-diagnostics-index.svg)
 
-```text
-┌───────────────────────────────────────── Linux — Diagnostics ─────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   Start here: journalctl -b -p err → dmesg -T → ausearch for SELinux or auth events         │     │
-│   │   Process crashing: strace -p PID to trace syscalls; lsof -p PID for open file leaks        │     │
-│   │   Performance: vmstat 1 for memory and I/O; sar -u 1 10 for CPU; perf top for hotspots      │     │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                 Log Analysis                 │  │               Process Tracing               │   │
-│   │   journalctl -b -p err: boot errors          │  │   strace -p PID: syscall trace             │    │
-│   │   dmesg -T: timestamped kernel events        │  │   lsof -p PID: open files and sockets      │    │
-│   │   ausearch -m avc: SELinux denials           │  │   /proc/PID/: maps, fd, status, cmdline    │    │
-│   │   journalctl -u unit: per-service log        │  │   gdb -p PID: interactive debugger         │    │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  x86-64 server · NIC · storage (local SSD or SAN/NAS) · out-of-band IPMI · monitoring agent           │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│  journalctl   = systemd log query tool; reads from the binary journal; filter by unit/priority/time   │
-│  dmesg        = kernel ring buffer; hardware events, OOM kills, NIC errors, storage SCSI errors       │
-│  auditd       = kernel audit daemon; logs syscalls, file access, auth events by policy                │
-│  ausearch     = searches auditd log by type, user, file, syscall, or time                             │
-│  strace       = system call tracer; attaches to a running process and shows all kernel calls          │
-│  lsof         = list open files; shows files, sockets, pipes, and shared memory held by each process  │
-│  perf         = Linux performance counter profiler; CPU sampling, flamegraph generation               │
-│  vmstat       = virtual memory statistics; shows procs, memory, swap, I/O, CPU per interval           │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ```mermaid
 graph TD

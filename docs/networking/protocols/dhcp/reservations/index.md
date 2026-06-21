@@ -8,30 +8,10 @@ tags:
 <div class="kb-summary">
 DHCP Reservations reference covering Overview, Creating a Reservation, Bulk Reservations from CSV, Reservation Conflicts, Reservation Management Reference and 2 more sections.
 </div>
+![DHCP Reservations](../../../../assets/networking-protocols-dhcp-reservations-index.svg)
 
-```text
-┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
-│  DHCP Scope: 192.168.10.0/24                                                                          │
-│  ┌──────────────────────────────────────────────────────┐                                             │
-│  │  Dynamic pool:  .100 – .254                          │                                             │
-│  │  Reservations:  .51  – .99 (outside dynamic range)   │                                             │
-│  └──────────────────────────────────────────────────────┘                                             │
-│                                                                                                       │
-│  Printer-floor2 sends DISCOVER:                                                                       │
-│  ┌──────────────────────────┐                                                                         │
-│  │ Client MAC: 00-1A-2B-... │                                                                         │
-│  └─────────────┬────────────┘                                                                         │
-│                │ DHCP server checks reservation table                                                 │
-│                ▼                                                                                      │
-│  ┌──────────────────────────────────────────────────────┐                                             │
-│  │  Reservation: 00-1A-2B-3C-4D-5E → 192.168.10.200     │                                             │
-│  │  (always gets the same IP, regardless of lease timer) │                                            │
-│  └──────────────────────────────────────────────────────┘                                             │
-│                │ OFFER + ACK 192.168.10.200                                                           │
-│                ▼                                                                                      │
-│  Printer gets same IP on every boot                                                                   │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Overview
 

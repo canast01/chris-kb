@@ -12,27 +12,10 @@ This guide covers the end-to-end deployment of a NetApp ONTAP cluster — from p
 
 *Applies to: ONTAP 9.12+*
 </div>
+![ONTAP — Deploy](../../../../assets/storage-netapp-ontap-deploy-index.svg)
 
-```text
-┌──────────────────────────────── NetApp ONTAP — Deployment Sequence ───────────────────────────────────┐
-│                                                                                                       │
-│  Phase 1               Phase 2               Phase 3               Phase 4                            │
-│  Physical Layer   ──►  Initial Cluster  ──►  Cluster Config   ──►  Network Config                     │
-│  • Rack / cable        Setup                 • Licenses             • Cluster IPs                     │
-│  • Disk shelves        • Console boot        • NTP / timezone       • Data LIFs                       │
-│  • OOB / BMC           • cluster setup       • AutoSupport          • Broadcast domains               │
-│  • Power sequence      • Join Node 2         • Active IQ                    │                         │
-│  • HCL check                                                                ▼                         │
-│                                                                      Phase 5                          │
-│  Phase 7               Phase 6               Phase 5 (cont.)        Storage Provisioning              │
-│  Validation       ◄──  Data Protection  ◄──  Storage Provisioning   • Disk assign                     │
-│  • cluster show        • Snapshot policy     • Aggregates            • Aggregates                     │
-│  • Ping / LUN test     • SnapMirror peer     • SVMs                  • SVMs / volumes                 │
-│  • NFS mount           • SM relationships    • Volumes               • NFS exports                    │
-│  • AutoSupport test    • SM initialise       • LUNs / igroups        • iSCSI LUNs                     │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ---
 

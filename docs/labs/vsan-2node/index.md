@@ -9,14 +9,10 @@ tags:
 <div class="kb-summary">
 Add vSAN shared storage to the Lab 1 cluster. Configures a 2-node vSAN cluster with a witness VM — the minimum production-supportable vSAN topology. Estimated time: 1–2 hours.
 </div>
+![Lab 2 — vSAN 2-node + Witness](../../assets/labs-vsan-2node-index.svg)
 
-```text
-┌───────────────────────── vSAN 2-node + Witness — Architecture ────────────────────────────────────────┐
-│  ESXi-01 (data node)  ── vSAN vmk  ── Disk Group: 1× SSD (cache) + 1× HDD/SSD (capacity)              │
-│  ESXi-02 (data node)  ── vSAN vmk  ── Disk Group: 1× SSD (cache) + 1× HDD/SSD (capacity)              │
-│  Witness VM           ── mgmt vmk  ── Metadata only (no VM data stored here)                          │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Prerequisites
 

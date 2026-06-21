@@ -11,6 +11,8 @@ PowerShell encryption: `ConvertTo-SecureString`, `New-SelfSignedCertificate`, en
 
 *Applies to: PowerShell 7.x*
 </div>
+![PowerShell — Encryption](../../../../assets/automation-powershell-security-encryption-index.svg)
+
 
 ---
 
@@ -44,29 +46,7 @@ graph TD
     secureString -->|New-PSSession -UseSSL| winrmHTTPS
     winrmHTTPS --> remoteSession
 ```
-```text
-┌─────────────────────────────────────── PowerShell — Encryption ───────────────────────────────────────┐
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      PS encryption: SecureString in-memory, DPAPI user-scope, SecretManagement for vaults     │   │
-│   │ Transport: WinRM HTTPS (TLS 1.2+); enforce: winrm set winrm/config/listener @{Transport=HTTPS}│   │
-│   │   Avoid: ConvertTo-SecureString with -Key flag stores key alongside data — use vault instead  │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               Secret Handling                │  │              Transport Security             │   │
-│   │         SecureString: in-memory only         │  │            WinRM HTTPS: port 5986           │   │
-│   │          DPAPI: current user scope           │  │              TLS 1.2+ enforced              │   │
-│   │       SecretManagement: AKV / KeePass        │  │         Certificate required on host        │   │
-│   │       No plain-text passwords in .ps1        │  │        Disable HTTP WinRM (port 5985)       │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    DPAPI           = Windows Data Protection API; encrypts to current user or machine scope   │   │
-│   │  SecureString    = in-memory encrypted string; cannot be stored safely to disk without DPAPI  │   │
-│   │    Azure Key Vault = recommended back-end for SecretManagement in cloud/hybrid environments   │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 ## Encryption Reference
 

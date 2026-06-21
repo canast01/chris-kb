@@ -11,36 +11,10 @@ Troubleshooting guide for frequent OpenShift failures: CrashLoopBackOff, ImagePu
 
 *Applies to: OpenShift 4.x*
 </div>
+![OpenShift — Common Issues](../../../../assets/virtualization-openshift-troubleshooting-common-issues-index.svg)
 
-```text
-┌─────────────────────────────────────── OpenShift Common Issues ───────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   First: check events (oc get events) and logs (oc logs); 90% of issues visible there        │    │
-│   │   Node NotReady: check kubelet and CRI-O status on node; network plugin issues common        │    │
-│   │   Operator Degraded: check operator pod logs and Conditions message on the CO object         │    │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │      Pod Failures           │  │      Node Issues             │  │    Operator / Platform      │  │
-│   │      ─────────────          │  │      ─────────────           │  │      ─────────────          │  │
-│   │  CrashLoopBackOff           │  │  NotReady: kubelet/CRI-O     │  │  Degraded CO: check pods   │   │
-│   │  ImagePullBackOff           │  │  NotSchedulable: cordoned    │  │  Progressing long: upgrade?│   │
-│   │  OOMKilled: mem limits      │  │  DiskPressure: disk full     │  │  etcd high latency: IOPS   │   │
-│   │  Pending: no resources/SCC  │  │  NTP drift: etcd elections   │  │  DNS failures: CoreDNS pod │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    Back-off     = Exponential delay between restart attempts; resets if pod runs > 10 minutes         │
-│    OOMKilled    = Container exceeded memory limit; kernel killed it; increase limit or fix leak       │
-│    DiskPressure = Node disk > eviction threshold; kubelet starts evicting pods                        │
-│    Taint        = Node property that repels pods without matching toleration                          │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ```mermaid
 graph TD

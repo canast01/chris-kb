@@ -10,63 +10,10 @@ PowerCLI is VMware's official PowerShell module suite for automating and managin
 
 *Applies to: PowerCLI 13.x*
 </div>
+![VMware PowerCLI](../../../assets/virtualization-vmware-powercli-index.svg)
 
-```text
-┌────────────────────────────────────── VMware PowerCLI Overview ───────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                VMware PowerCLI — PowerShell module suite for vSphere automation               │   │
-│   │             Built on top of the vSphere SOAP/REST APIs — same calls as vCenter UI             │   │
-│   │               Platform: PowerShell 7+ (cross-platform) or Windows PowerShell 5.1              │   │
-│   │            Install: Install-Module VMware.PowerCLI from PSGallery; 40+ sub-modules            │   │
-│   │           Session: Connect-VIServer -> $global:DefaultVIServer -> all cmdlets use it          │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐                                                    │
-│   │                 Core Modules                 │                                                    │
-│   │   VimAutomation.Core  VM + host + cluster    │                                                    │
-│   │     VimAutomation.Vds   vDS + portgroups     │                                                    │
-│   │   VimAutomation.Storage  VMDK + datastores   │                                                    │
-│   │   VimAutomation.Nsxt  NSX-T policy objects   │                                                    │
-│   └──────────────────────────────────────────────┘                                                    │
-│                                                     ┌─────────────────────────────────────────────┐   │
-│                                                     │                Add-on Modules               │   │
-│                                                     │    VimAutomation.Srm   SRM recovery plans   │   │
-│                                                     │      VimAutomation.Hcx   HCX migration      │   │
-│                                                     │      VimAutomation.Horizon  Horizon VDI     │   │
-│                                                     │     VimAutomation.vROps  Aria Operations    │   │
-│                                                     └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐                                                    │
-│   │               Connection Model               │                                                    │
-│   │       Connect-VIServer -Server <FQDN>        │                                                    │
-│   │           -> SSO token from vCenter          │                                                    │
-│   │         -> $global:DefaultVIServer set       │                                                    │
-│   │       -> All cmdlets use this implicitly     │                                                    │
-│   └──────────────────────────────────────────────┘                                                    │
-│                                                     ┌─────────────────────────────────────────────┐   │
-│                                                     │                 API Binding                 │   │
-│                                                     │       High-level: Get-VM -> VI objects      │   │
-│                                                     │    Low-level: Get-View -> raw vSphere API   │   │
-│                                                     │      View objects: faster, no wrappers      │   │
-│                                                     │        ExtensionData: .NET SDK access       │   │
-│                                                     └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure: Windows/Linux jump host with PowerShell 7+ installed                        │
-│  Network: HTTPS/443 to vCenter FQDN  ·  DNS resolution required                                       │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  VI Object    = high-level wrapper (Get-VM, Get-VMHost) with helper properties                        │
-│  View Object  = raw vSphere API object; faster but no helper properties                               │
-│  SOAP API     = vSphere legacy API (port 443 /sdk); used by most cmdlets                              │
-│  REST API     = vSphere modern API; used by newer NSX/vSAN cmdlets                                    │
-│  SSO Token    = session credential; valid 8 h by default; auto-renewed                                │
-│  PSGallery    = PowerShell module repository; source for Install-Module                               │
-│  DefaultVIServer = implicit connection target for all cmdlets in session                              │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 <!-- diagram:powercli -->
 

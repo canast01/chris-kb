@@ -10,6 +10,8 @@ vSphere HA uses slot-based or percentage-based admission control to guarantee ca
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
+![HA Deep Dive](../../../../assets/virtualization-vmware-internals-ha-deep-dive-index.svg)
+
 
 ```mermaid
 graph TD
@@ -44,55 +46,7 @@ A **slot** is the atomic unit of capacity reserved per potential host failure. H
 
 **Slot size formula:**
 
-```text
-┌───────────────────────────── vSphere HA — Admission Control and Failover ─────────────────────────────┐
-│                                                                                                       │
-│  HA uses a master host elected from the cluster; master monitors heartbeats and                       │
-│  restarts VMs on failure; admission control reserves capacity for failover.                           │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Admission Control Policies          │  │              Failover Behaviour             │   │
-│   │        Percentage: % cluster reserved        │  │        Restart priority: High/Med/Low       │   │
-│   │        Slot-based: fixed CPU+mem slot        │  │        Isolation: power-off or leave        │   │
-│   │        Specify hosts: named failover         │  │       APD: all-paths-down (transient)       │   │
-│   │          Default: percentage (25%)           │  │          PDL: permanent device loss         │   │
-│   │       vSphere 7+: percentage preferred       │  │       PDL response: aggressive needed       │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Slot-based under-estimates capacity when VMs have large reservations.                                │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              HA Master Election              │  │             Heartbeat Datastores            │   │
-│   │       Master: most datastores mounted        │  │           2 datastores per cluster          │   │
-│   │         FDM agent on every ESXi host         │  │           Path: /vmfs/volumes/.ha/          │   │
-│   │     Heartbeat: 1s interval, 10s timeout      │  │       Prefer: different storage paths       │   │
-│   │       Isolation ping: cluster IP or GW       │  │         If no ping + DS HB: isolated        │   │
-│   │      Not isolated: master restarts VMs       │  │       Isolated: response policy fires       │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  ESXi host hardware; shared storage for heartbeat datastores; management                              │
-│  network for FDM agent communication; iLO/iDRAC for hardware status.                                  │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  FDM           = Fault Domain Manager; HA agent running on every ESXi host                            │
-│  Master        = elected host; monitors slaves; restarts VMs on slave failure                         │
-│  Admission ctrl= policy reserving cluster capacity for host failover                                  │
-│  Slot size     = largest CPU reservation + largest mem reservation in cluster                         │
-│  Percentage    = % of cluster CPU+mem reserved; default 25%                                           │
-│  Restart prio  = High/Medium/Low/Disabled; determines VM restart order                                │
-│  APD           = All-Paths-Down; storage lost but device still accessible                             │
-│  PDL           = Permanent Device Loss; storage controller rejects all I/O                            │
-│  Isolation response= what HA does when host loses management network                                  │
-│  Heartbeat DS  = shared datastore used for host-alive signalling                                      │
-│  Network partition= subset of hosts isolated from master but not from each other                      │
-│  Proactive HA  = evacuates VMs from host before hardware failure (Aria required)                      │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 Memory overhead is VMkernel-computed per VM based on vCPU count, memory size, and VMX settings — not configurable by the admin but visible in VM advanced settings.
 

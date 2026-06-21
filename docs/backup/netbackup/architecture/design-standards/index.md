@@ -11,51 +11,10 @@ NetBackup Standards reference covering Naming Conventions, Retention Schedule, B
 
 *Applies to: NetBackup 10.x*
 </div>
+![NetBackup Standards](../../../../assets/backup-netbackup-architecture-design-standards-index.svg)
 
-```text
-┌──────────────────────────────────── NetBackup — Design Standards ─────────────────────────────────────┐
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              Sizing Guidelines               │  │               HA Requirements               │   │
-│   │         Deduplicate where supported          │  │           N+1 component redundancy          │   │
-│   │          Bandwidth: 10 GbE minimum           │  │          Heartbeat / health monitor         │   │
-│   │          Storage: 130% of raw data           │  │          Separate mgmt / data VLANs         │   │
-│   │         Latency: < 10 ms to storage          │  │          Out-of-band access (IPMI)          │   │
-│   │           CPU: 8+ vCPU for engine            │  │          Anti-affinity VM placement         │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Ports: 443 (Web UI) · 1556 (vnetd) · 13724 (bprd)                                                  │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                                Standard NetBackup Design Rules                                │   │
-│   │            RPO target drives snapshot/cycle frequency — document in service design            │   │
-│   │            RTO target drives recovery tier: instant, warm standby, or cold restore            │   │
-│   │                  Dedicated backup network VLAN — no shared production traffic                 │   │
-│   │      Encryption: AES-256 backup encryption; KMS key management; TLS 1.2+ on all channels      │   │
-│   │               Service accounts: minimum privilege; rotate credentials quarterly               │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  Linux/Windows rack servers · SAN HBAs for tape · 10 GbE NIC · SCSI tape robot connection             │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Master Server = central controller: scheduler, catalog, job manager, policy engine                   │
-│  Media Server  = data mover between client and storage; can be co-located with master                 │
-│  MSDP          = Media Server Deduplication Pool; inline variable-length block dedup                  │
-│  Storage Unit  = logical target: AdvancedDisk, MSDP pool, cloud LSU, or tape robot                    │
-│  Policy        = defines what, when, and where to back up; contains schedules and clients             │
-│  Schedule      = full / differential-incremental / cumulative-incremental timing within policy        │
-│  Retention     = how long an image is kept; set per schedule, enforced by catalog expiry              │
-│  Catalog       = internal PostgreSQL DB tracking all image metadata, host IDs, and config             │
-│  NBU CA        = auto-issued certificate authority; signs host IDs for secure comms                   │
-│  vnetd         = NetBackup network daemon; multiplexes all client-master-media on port 1556           │
-│  bpdbjobs      = CLI to query job history: status, duration, exit code, errors                        │
-│  bplist        = CLI to list available backup images for a client, policy, or date range              │
-│  KMS           = Key Management Service for encryption keys used in backup data encryption            │
-│  NDMP          = Network Data Management Protocol; direct NAS-to-storage backup path                  │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 ## Naming Conventions
 
 | Object | Convention | Example |

@@ -7,50 +7,15 @@ search:
 ---
 # Ceph — Diagnostics
 
-```text
-┌───────────────────────────────────── Ceph — Diagnostic Overview ──────────────────────────────────────┐
-│                                                                                                       │
-│  Diagnostic Layers                                                                                    │
-│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
-│  ┌─────────────────────────┐  ┌─────────────────────────┐  ┌─────────────────────────┐                │
-│  │  Health Codes           │  │  OSD / PG Analysis      │  │  Network & Latency      │                │
-│  │  ceph health detail     │  │  ceph osd tree          │  │  ceph osd perf          │                │
-│  │  OSD_DOWN, PG_DEGRADED  │  │  ceph pg dump           │  │  iperf3 between nodes   │                │
-│  │  SLOW_OPS, NEARFULL     │  │  osd log analysis       │  │  messenger v2 stats     │                │
-│  └─────────────────────────┘  └─────────────────────────┘  └─────────────────────────┘                │
-│                                                                                                       │
-│  Diagnostic Sequence — Cluster Unhealthy                                                              │
-│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
-│  1. ceph -s — get top-level health, OSD count, PG summary, active I/O rate                            │
-│  2. ceph health detail — enumerate all active health codes with explanations                          │
-│  3. ceph osd tree — identify which OSDs are down/out; cross-reference to host names                   │
-│  4. ceph pg dump_stuck — list inactive/degraded/unclean PGs with primary OSD                          │
-│  5. journalctl -u ceph-osd@<id> — last 100 lines of OSD log for crash or error context                │
-│  6. ceph osd perf — per-OSD commit/apply latency; outliers indicate disk I/O issues                   │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  OSD_DOWN      = OSD not responding; check disk status (smartctl) and OSD daemon journal              │
-│  PG_DEGRADED   = PG has fewer replicas than desired; data still available but unprotected             │
-│  PG_INACTIVE   = PG cannot serve I/O; primary OSD is down; investigate immediately                    │
-│  SLOW_OPS      = Operations queued more than 30s; indicates disk I/O or network saturation            │
-│  OSD_NEARFULL  = OSD disk usage exceeds nearfull ratio; add capacity before OSD_FULL occurs           │
-│  ceph report   = Full cluster state JSON snapshot; attach to all vendor support case submissions      │
-│  sosreport     = Linux system diagnostics bundle; collect on admin node for RHCS support cases        │
-│  ceph crash ls = Lists recent daemon crash reports with IDs for further investigation                 │
-│  journalctl    = systemd journal; use -u ceph-osd@<id> to read OSD daemon logs                        │
-│  ceph osd perf = Per-OSD commit/apply latency; outliers indicate disk I/O issues on specific OSD      │
-│  ceph pg dump_stuck = Lists inactive, degraded, or unclean PGs with their primary OSD                 │
-│  iperf3        = Network bandwidth test; run between Ceph nodes to validate cluster network speed     │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 <div class="kb-summary">
 Diagnostic tools for Ceph: health code reference, OSD log analysis, crash dump review, network and latency diagnostics, PG deep dives, and gathering data for support cases.
 
 *Applies to: Ceph Reef / Squid*
 </div>
+![Ceph — Diagnostics](../../../../assets/storage-ceph-troubleshooting-diagnostics-index.svg)
+
 
 ```mermaid
 graph TD

@@ -8,6 +8,8 @@ tags:
 <div class="kb-summary">
 Recovery testing validates that systems, data, and services can be restored to a defined state within acceptable timeframes. Testing is the only mechanism that converts documented procedures into verified capability. Untested recovery plans are risk documents, not recovery plans.
 </div>
+![Recovery Testing](../../../assets/backup-dr-operations-recovery-testing-index.svg)
+
 
 ---
 
@@ -104,43 +106,7 @@ flowchart TD
     P --> Q[Runbook Updated if Required]
     Q --> R[Report Signed Off\nFiled in GRC System]
 ```
-```text
-┌───────────────────────────────── Data Protection — Recovery Testing ──────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │        Recovery testing validates that backup data is restorable and DR procedures work       │   │
-│   │        Schedule: file restore monthly; VM restore quarterly; full DR exercise annually        │   │
-│   │        Always document: start time, end time, RTO/RPO achieved, issues found, sign-off        │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │          Test Types         │  │          Scheduling         │  │      Evidence Required      │   │
-│   │      ─────────────────      │  │      ─────────────────      │  │      ─────────────────      │   │
-│   │      File restore test      │  │           Monthly           │  │       File hash match       │   │
-│   │       VM restore test       │  │          Quarterly          │  │       VM boots; app OK      │   │
-│   │       DB restore test       │  │          Quarterly          │  │      Row count + query      │   │
-│   │       Full DR failover      │  │           Annually          │  │         RTO/RPO met         │   │
-│   │      Tabletop exercise      │  │           Annually          │  │       Actions recorded      │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│   │    Test type     │       Freq       │  Success criteria │    RTO target    │  Documented by   │   │
-│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
-│   │   File restore   │     Monthly      │File matches source│       < 1h       │     Ops team     │   │
-│   │    VM restore    │    Quarterly     │ VM boots; app runs│       < 4h       │ Ops + app owner  │   │
-│   │   DR failover    │     Annually     │All svcs at DR site│     Per BCP      │  DR lead + mgmt  │   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    Tabletop exercise = Walk through DR scenario verbally; identify gaps without production impact     │
-│    RTO tested        = Actual restore time measured during test; compared to RTO target               │
-│    RPO tested        = Latest recovery point verified; gap between backup and incident time           │
-│    Sign-off          = Manager/owner approval confirming test was successful and documented           │
-│    Restore report    = Formal record of test result; filed for audit evidence                         │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 DataLabs is ideal for:
 - Testing patches before production deployment against a live copy of the environment

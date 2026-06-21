@@ -8,13 +8,10 @@ tags:
 <div class="kb-summary">
 Top-10 Aria Networks (vRNI) REST API calls for network entity queries, path analysis, flow data, and event management.
 </div>
+![Aria Networks Cheat Sheet](../../assets/reference-cheat-sheets-aria-networks.svg)
 
-```text
-┌───────────────────────────────────── Aria Networks Cheat Sheet ───────────────────────────────────────┐
-│  API: https://vrni/api/ni  ·  Auth: API token  ·  No standalone CLI — all operations via REST         │
-│  Categories: Entities · Path Analysis · Flows · Events · Data Sources · Security Groups               │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## REST API
 

@@ -11,37 +11,12 @@ Ansible design standards: directory layout, role naming, variable precedence rul
 
 *Applies to: Ansible 2.x*
 </div>
+![Ansible — Standards](../../../../assets/automation-ansible-architecture-design-standards-index.svg)
+
 
 ## Project Layout
 
-```text
-┌───────────────────────────────────── Ansible — Design Standards ──────────────────────────────────────┐
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │  Ansible design standards enforce consistency, security, and maintainability across playbooks │   │
-│   │      Rules: no bare variables, no hardcoded credentials, roles over monolithic playbooks      │   │
-│   │           Lint with ansible-lint; molecule for role testing; yamllint for formatting          │   │
-│   │           All secrets in Vault or AWX credential store — never in plain text in repo          │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │           Repo and File Structure            │  │               Coding Standards              │   │
-│   │         inventories/prod/, staging/          │  │         Name all tasks descriptively        │   │
-│   │      roles/ at repo root or collection       │  │           Use FQCN for all modules          │   │
-│   │          group_vars/ and host_vars/          │  │       Tag tasks: --tags deploy,config       │   │
-│   │      playbooks/ top-level entry points       │  │        Use become only when required        │   │
-│   │       .ansible-lint, .yamllint configs       │  │        Validate with check mode first       │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    FQCN          = Fully Qualified Collection Name; e.g. ansible.builtin.copy not just copy   │   │
-│   │     ansible-lint  = static analysis for playbooks and roles; enforces best-practice rules     │   │
-│   │    molecule      = role testing framework; creates instances, converges, verifies, destroys   │   │
-│   │      yamllint      = YAML syntax and style linter; catches indentation and quoting errors     │   │
-│   │become        = privilege escalation (sudo); apply at task level, not play level where possible│   │
-│   │          no_log: true  = suppress task output for tasks handling passwords or secrets         │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 ## Module Standards
 
 ### Always Use FQCN

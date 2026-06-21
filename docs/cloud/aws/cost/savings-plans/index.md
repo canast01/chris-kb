@@ -10,54 +10,10 @@ AWS Savings Plans reference covering Overview, Where It Fits, Daily Checks, Heal
 
 *Applies to: AWS*
 </div>
+![AWS Savings Plans](../../../../assets/cloud-aws-cost-savings-plans-index.svg)
 
-```text
-┌────────────────────────────────────── AWS Cost — Savings Plans ───────────────────────────────────────┐
-│                                                                                                       │
-│  Savings Plans commit $/hour across EC2, Lambda, and Fargate for up to 66% savings.                   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                  Plan Types                  │  │              Commitment Options             │   │
-│   │        Compute SP: EC2+Lambda+Fargate        │  │              Term: 1 or 3 years             │   │
-│   │         EC2 Instance SP: per family          │  │        Payment: upfront/partial/none        │   │
-│   │          SageMaker SP: ML workloads          │  │           Commit: $/hour threshold          │   │
-│   │          Compute SP: 66% max saving          │  │         Flexible: any region/AZ/size        │   │
-│   │         EC2 Instance SP: 72% saving          │  │            Org-wide: all accounts           │   │
-│   └──────────────────────────────────────────────┘  ┌─────────────────────────────────────────────┐   │
-│                                                                                                       │
-│  Compute SP most flexible; EC2 Instance SP gives highest discount for locked family                   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                  Management                  │  │                Best Practices               │   │
-│   │        Recommendations: Cost Explorer        │  │           Analyse 3 months history          │   │
-│   │        Utilisation report: coverage %        │  │          Commit to stable baseline          │   │
-│   │         Coverage report: % of spend          │  │         Spiky load: on-demand + spot        │   │
-│   │          Inventory: purchased plans          │  │        Quarterly review: utilisation        │   │
-│   │         No marketplace: non-sellable         │  │         Prefer Compute SP: flexible         │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  AWS billing system · Cost Explorer · EC2/Lambda/Fargate capacity                                     │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Compute SP      = Most flexible; applies to any EC2 family, Lambda, Fargate                          │
-│  EC2 Instance SP = Locked to one instance family in one region; highest discount                      │
-│  SageMaker SP    = Applies to SageMaker ML instance usage                                             │
-│  Commitment $/hr = Hourly spend you agree to pay; usage below = wasted                                │
-│  Utilisation     = % of commitment consumed; target > 80%                                             │
-│  Coverage        = % of eligible spend covered by Savings Plans                                       │
-│  On-demand top-up= Usage above commitment charges at on-demand rate                                   │
-│  Org-wide sharing= SP purchased in management or any account applies org-wide                         │
-│  No Marketplace  = Unlike RIs, Savings Plans cannot be resold; permanent commitment                   │
-│  3-year term     = Longer commitment; higher discount; appropriate for stable services                │
-│  Baseline        = Minimum consistent usage; commit $/hr equal to baseline cost                       │
-│  Cost Explorer rec= Suggests optimal SP type and amount based on usage history                        │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Overview
 

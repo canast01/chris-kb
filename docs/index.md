@@ -1,3 +1,5 @@
+
+![Docs](assets/index.svg)
 <div class="hero">
   <div class="hero-body">
     <p class="section-kicker">Infrastructure Engineering · Technical Reference</p>

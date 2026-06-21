@@ -12,6 +12,8 @@ Ceph day-2 operations: cluster health monitoring, OSD management, pool tuning, C
 
 *Applies to: Ceph Reef / Squid*
 </div>
+![Ceph — Operations](../../../assets/storage-ceph-operations-index.svg)
+
 
 ```text
 ┌─────────────────────────────────────────── Ceph Operations ───────────────────────────────────────────┐

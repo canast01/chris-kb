@@ -9,35 +9,10 @@ oc command reference: resource management, log collection, exec, adm commands, d
 
 *Applies to: OpenShift 4.x*
 </div>
+![OpenShift — CLI Reference](../../../../assets/virtualization-openshift-operations-cli-reference-index.svg)
 
-```text
-┌───────────────────────────────────── OpenShift oc CLI Reference ──────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   oc is a superset of kubectl — all kubectl commands work; oc adds OCP-specific shortcuts     │   │
-│   │   Context: set KUBECONFIG or use oc login; switch projects with oc project <name>             │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │       Core Commands         │  │       Admin Commands         │  │     Debug Commands          │  │
-│   │      ─────────────          │  │      ─────────────           │  │      ─────────────          │  │
-│   │  oc get / describe / edit   │  │  oc adm node-logs            │  │  oc debug node/<name>       │  │
-│   │  oc logs / exec / rsh       │  │  oc adm certificate approve  │  │  oc debug deployment/<name> │  │
-│   │  oc apply / delete / patch  │  │  oc adm drain / cordon       │  │  oc adm inspect             │  │
-│   │  oc project / new-project   │  │  oc adm policy               │  │  must-gather collection     │  │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    Project      = OpenShift namespace with additional metadata; oc project switches context           │
-│    oc adm       = Administrative subcommand; node management, certificate ops, policy                 │
-│    oc debug     = Spawns a debug pod from a node/deployment image for interactive troubleshooting     │
-│    must-gather  = Collects full cluster state (logs, configs, events) into a tarball for Red Hat      │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ```mermaid
 graph LR

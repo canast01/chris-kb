@@ -15,32 +15,10 @@ exact commands and UI paths to isolate and resolve each layer.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
+![NSX Connectivity Broken](../../../../assets/virtualization-vmware-topics-scenarios-nsx-connectivity-brok.svg)
 
-```text
-┌──────────────────────────── NSX Connectivity Broken — Investigation Flow ─────────────────────────────┐
-│                                                                                                       │
-│  OVERVIEW                                                                                             │
-│  A VM loses network connectivity on an NSX-T overlay — scope the problem first before touching config │
-│                                                                                                       │
-│  START: Connectivity complaint — determine scope before touching any config                           │
-│                                                                                                       │
-│  STEP 1 — Determine Scope (scope drives diagnosis)                                                    │
-│  1 VM affected → DFW rule blocking? Use Aria Networks path trace to identify rule                     │
-│  1 segment affected → segment binding / transport node misconfiguration                               │
-│  All east-west across segments → T1 gateway route table / T1→T0 uplink issue                          │
-│  North-south external traffic → T0 gateway / edge BGP neighbor state                                  │
-│  All VMs on one host → TEP VMkernel connectivity / transport node VIB issue                           │
-│                                                                                                       │
-│  STEP 2 — Diagnose by Layer                                                                           │
-│  DFW: NSX Manager → Security → DFW → check rule hit counts for affected VM vNIC                       │
-│  Segment/TEP: check transport node status · vmkping from ESXi to remote TEP IP                        │
-│  T1/T0: NSX Manager → Networking → Tier-1 / Tier-0 → inspect route tables                             │
-│  BGP: NSX Manager → Networking → Tier-0 → BGP → neighbor status                                       │
-│                                                                                                       │
-│  CLOSE: Aria Networks path trace shows clean path · DFW shows Allow · BGP established                 │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Products Involved
 

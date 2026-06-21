@@ -12,42 +12,10 @@ Commvault diagnostic commands: identify job failures with qlist, test component 
 
 *Applies to: Commvault 2024.x / Commvault Cloud*
 </div>
+![Commvault — Diagnostics](../../../../assets/backup-commvault-troubleshooting-diagnostics-index.svg)
 
-```text
-┌──────────────────────────── Commvault Diagnostics — Logs, Tools, Commands ────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   Start here: qlist jobs → get job error code → match to KB → collect CV_DIAG bundle         │    │
-│   │   Client unreachable: cvping -clientName → check firewall TCP 8400; check CvFwd service      │    │
-│   │   DDB issue: qlist ddb → check space on DDB partition; run QS_DDBVerify if inconsistent     │     │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              Log File Locations              │  │               Diagnostic Tools              │   │
-│   │      CS: C:\CV\Log Files\CommServe.log       │  │      CV_DIAG: collect all logs + config     │   │
-│   │      MA: C:\CV\Log Files\MediaAgent.log      │  │        CommVaultDiagnostics.exe on CS       │   │
-│   │         JobMgr: GxJobMgrService.log          │  │     cvping: test component connectivity     │   │
-│   │     Client: C:\CV\Log Files\clBackup.log     │  │      cvdiskperf: benchmark MA disk I/O      │   │
-│   │     Linux: /var/log/commvault/Log_Files/     │  │     cvnetwork: test MA network bandwidth    │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  CommServe (SQL Server) · MediaAgent hosts · Client agents · Disk Library / Cloud storage             │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│  CV_DIAG      = Diagnostic bundle: all component logs, config exports, event logs                     │
-│  cvping       = CommVault connectivity test tool (not ICMP ping; tests CV comms on TCP 8400)          │
-│  cvdiskperf   = Measures sequential read/write performance of MA disk library path                    │
-│  cvnetwork    = Tests throughput and latency between CommVault components                             │
-│  clBackup.log = Client-side backup agent log; shows pre/post scripts, CBT activity                    │
-│  GxJobMgrSvc  = CommServe Job Manager service log; shows job dispatch and errors                      │
-│  MediaAgent.log = MA-side data pipeline log; shows dedup, compress, write operations                  │
-│  CommServe.log = Main CommServe service log; CS startup, DB queries, scheduler                        │
-│  DDB          = Deduplication Database; must be online for all dedup-enabled jobs                     │
-│  Error Code   = 4-5 digit CV error; search on ma.commvault.com for KB resolution                      │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ```mermaid
 graph TD

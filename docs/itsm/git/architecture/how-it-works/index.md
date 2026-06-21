@@ -11,6 +11,8 @@ Git is a distributed version control system where every working copy is a full r
 
 *Applies to: Git 2.x*
 </div>
+![Git — How It Works](../../../../assets/itsm-git-architecture-how-it-works-index.svg)
+
 
 ---
 
@@ -40,51 +42,7 @@ graph TD
     LC -->|git push| FORK
     FORK -->|Pull Request / MR| REMOTE
 ```
-```text
-┌───────────────────────────────────────── Git — How It Works ──────────────────────────────────────────┐
-│                                                                                                       │
-│  Git commit lifecycle: working tree → index → local repo → remote repo.                               │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               Commit Creation                │  │              Branch Operations              │   │
-│   │       git add → writes blob to objects       │  │          Create: git branch <name>          │   │
-│   │      git add → updates index with tree       │  │      Switch: git checkout / git switch      │   │
-│   │       git commit → creates commit obj        │  │         Merge: 3-way or fast-forward        │   │
-│   │         HEAD ref moves to new commit         │  │         Delete: git branch -d <name>        │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Commits chain via parent pointers; branches are just movable pointers                              │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               Merge vs Rebase                │  │                 Remote Sync                 │   │
-│   │        Merge: preserves history fork         │  │        git fetch: update remote refs        │   │
-│   │          Merge commit: two parents           │  │        git pull: fetch + merge/rebase       │   │
-│   │          Rebase: linearises history          │  │     git push: send commits + update ref     │   │
-│   │         Rebase rewrites SHA-1 hashes         │  │       Force push: dangerous on shared       │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  Developer workstation · Git remote server · CI trigger on push event                                 │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  3-way merge  = git identifies common ancestor to resolve two diverged branches                       │
-│  Fast-forward = no merge commit; branch pointer advances along linear history                         │
-│  Rebase       = moves or re-applies commits; produces new SHAs; rewrites history                      │
-│  Force push   = overwrites remote history; use only on personal/feature branches                      │
-│  Reflog       = local recovery log; git reflog finds commits after accidental reset                   │
-│  Detached HEAD= HEAD points to commit, not branch; commits not attached to branch                     │
-│  Conflict     = overlapping changes in same file; must resolve manually                               │
-│  Squash merge = combine PR commits into single commit on target branch                                │
-│  Cherry-pick  = applies diff of specific commit onto current branch                                   │
-│  Bisect       = binary search through history to find commit that introduced bug                      │
-│  Amend        = rewrites last commit; do not amend pushed commits                                     │
-│  Stash        = stores dirty working tree temporarily; git stash pop restores                         │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 ---
 

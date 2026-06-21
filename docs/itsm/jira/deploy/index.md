@@ -12,6 +12,8 @@ Step-by-step guide to installing Jira Data Center, configuring the database conn
 
 *Applies to: Jira 9.x / Cloud*
 </div>
+![Jira — Initial Deployment](../../../assets/itsm-jira-deploy-index.svg)
+
 
 
 ## Before you begin
@@ -23,42 +25,7 @@ Step-by-step guide to installing Jira Data Center, configuring the database conn
 
 ---
 
-```text
-┌────────────────────────────────────── Jira — Initial Deployment ──────────────────────────────────────┐
-│                                                                                                       │
-│   Delivery: Jira Data Center; self-hosted on RHEL 8/9 or Ubuntu 22.04 LTS                             │
-│   Java: Eclipse Temurin (AdoptOpenJDK) 11 or 17; dedicated install — do not use system JDK            │
-│   Database: PostgreSQL 14/15 (recommended) or MySQL 8.0; UTF-8; collation C                           │
-│   Ports: 8080 (HTTP), 8443 (HTTPS), 40001 + 40011 (Data Center cluster communication)                 │
-│                                                                                                       │
-│   Sizing (recommended)                                                                                │
-│   RAM 16 GB; vCPU 8; App disk 100 GB; Home/data disk 500 GB                                           │
-│   ulimit -n ≥ 65536 in /etc/security/limits.conf                                                      │
-│   JVM heap: JVM_MINIMUM_MEMORY=2048m; JVM_MAXIMUM_MEMORY=8192m in setenv.sh                           │
-│                                                                                                       │
-│   Install sequence                                                                                    │
-│   1. Create PostgreSQL database + dedicated jira user (encoding UTF8, collation C)                    │
-│   2. Run installer → Custom type → /opt/atlassian/jira + /var/atlassian/application-data/jira         │
-│   3. Setup wizard: set Base URL → licence key → create admin user                                     │
-│   4. Configure LDAP: User management → Add directory → AD or LDAP; test connection                    │
-│   5. Install recommended plugins: ScriptRunner, JMWE, BigPicture, Assets (Insight)                    │
-│   6. Validate: admin + LDAP login; create test issue; run JQL query                                   │
-│                                                                                                       │
-│   Validation checks                                                                                   │
-│   curl -I http://localhost:8080/status → {"state":"RUNNING"}                                          │
-│   psql -d jira -c "SELECT count(*) FROM app_user;" → confirms schema populated                        │
-│   JQL: project = OPS ORDER BY created DESC → results must return                                      │
-│                                                                                                       │
-│   Key terms:                                                                                          │
-│   Data Center   = Atlassian's enterprise deployment tier; supports clustering and HA                  │
-│   Base URL      = external URL (e.g. https://jira.company.local); must match DNS + proxy config       │
-│   Project Key   = short identifier (e.g. OPS) prepended to all issue numbers in that project          │
-│   ScriptRunner  = Groovy scripting plugin for workflow automation and custom behaviours               │
-│   JQL           = Jira Query Language; used to search issues with field filters and sorting           │
-│   JMWE          = Jira Misc Workflow Extensions; adds validators, conditions, and post-functions      │
-│   ulimit -n     = open file descriptor limit; must be ≥ 65536 for Jira to start reliably              │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 ## Prerequisites
 

@@ -10,39 +10,10 @@ Dell AIOps: AI-Generated Alerts, Anomaly Detection, and Correlation reference co
 
 *Applies to: Dell AIOps*
 </div>
+![Dell AIOps: AI-Generated Alerts, Anomaly Detection, and Correlation](../../../../assets/storage-dell-dell-aiops-alerts-index.svg)
 
-```text
-┌───────────────────────────────────────── Dell AIOps — Alerts ─────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                 Alert Types                  │                Alert Lifecycle                 │   │
-│   │        Threshold: static metric limit        │              Open: condition met               │   │
-│   │        Anomaly: ML baseline deviation        │          Acknowledged: engineer seen           │   │
-│   │         Predictive: failure forecast         │           In Progress: being worked            │   │
-│   │           Capacity: fill date near           │          Resolved: condition cleared           │   │
-│   │          Hardware: component fault           │           Dismissed: false positive            │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  Alerts generated in AIOps engine · delivered via console, email, webhook, and ITSM                   │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Threshold alert = Fires when metric exceeds static limit (e.g., utilisation > 85%)                   │
-│  Anomaly alert = Fires when ML model detects unusual pattern outside learned baseline                 │
-│  Predictive alert = Fires when model forecasts failure or capacity exhaustion within horizon          │
-│  Capacity alert = Fires when forecast horizon drops below threshold (e.g., 90 days)                   │
-│  Hardware alert = Propagated from array firmware; component failure detected                          │
-│  Acknowledge = Engineer marks alert as seen; stops re-notification                                    │
-│  In Progress = Status indicating active remediation in progress                                       │
-│  Resolved = Alert auto-closes when triggering condition no longer detected                            │
-│  Dismissed = Alert closed as false-positive; reason required                                          │
-│  Severity = Critical / Warning / Informational; routes to different notification targets              │
-│  Alert context = Related metrics, affected objects, and recommendation attached to alert              │
-│  Noise reduction = Correlation grouping related alerts into single actionable incident                │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Acknowledging and Dismissing AI Alerts
 

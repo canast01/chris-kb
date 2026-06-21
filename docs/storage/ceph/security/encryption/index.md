@@ -10,48 +10,10 @@ Ceph encryption: OSD-level dmcrypt for data at rest, RBD image encryption per-im
 
 *Applies to: Ceph Reef / Squid*
 </div>
+![Ceph — Encryption](../../../../assets/storage-ceph-security-encryption-index.svg)
 
-```text
-┌───────────────────────────────────── Ceph — Encryption Overview ──────────────────────────────────────┐
-│                                                                                                       │
-│  Encryption Layers                                                                                    │
-│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
-│  ┌─────────────────────────┐  ┌─────────────────────────┐  ┌─────────────────────────┐                │
-│  │  OSD at-rest (dmcrypt)  │  │  RBD per-image encrypt  │  │  RGW SSE (S3-compat)    │                │
-│  │  block device level     │  │  client-side key mgmt   │  │  SSE-KMS or SSE-S3      │                │
-│  │  configured at OSD      │  │  LUKS key in keyring    │  │  Vault or local KMS     │                │
-│  │  creation time only     │  │  transparent to client  │  │  per-object or per-bkt  │                │
-│  └─────────────────────────┘  └─────────────────────────┘  └─────────────────────────┘                │
-│                                                                                                       │
-│  In-Transit Encryption                                                                                │
-│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
-│  Messenger v2 (msgr2): default in Octopus+; encrypts all OSD-to-OSD and client-to-OSD traffic         │
-│  Enable: ceph config set global ms_cluster_mode secure                                                │
-│  Verify: ceph config get osd ms_client_mode — should show secure (not legacy)                         │
-│                                                                                                       │
-│  OSD dmcrypt — Key Points                                                                             │
-│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
-│  Encryption must be set at OSD creation time — cannot encrypt an existing OSD without rebuild         │
-│  cephadm: ceph orch apply osd --all-available-devices --data-encrypt                                  │
-│  Keys stored in Ceph monitor key-value store; no external KMS required for OSD encryption             │
-│  Performance impact: modern CPUs with AES-NI hardware acceleration ~1–3% overhead typical             │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  dmcrypt    = Linux kernel dm-crypt; transparent block device encryption layer for OSD disks          │
-│  LUKS       = Linux Unified Key Setup; key management standard used by dm-crypt                       │
-│  RBD encrypt= Per-image client-side encryption; LUKS key managed via LUKS passphrase in keyring       │
-│  SSE-KMS    = Server-Side Encryption with external KMS (Vault); per-object or per-bucket in RGW       │
-│  SSE-S3     = Server-Side Encryption with Ceph-managed keys (S3-compatible object encryption)         │
-│  SSE-C      = Server-Side Encryption with Client-provided keys; Ceph never stores the key             │
-│  msgr2      = Ceph messenger protocol v2; supports secure (encrypted) and crc (checksummed) modes     │
-│  AES-NI     = Intel/AMD hardware AES instruction set; ~1–3% overhead with modern CPUs                 │
-│  KMS        = Key Management Service; external secret store (e.g. HashiCorp Vault) for SSE-KMS        │
-│  DEK        = Data Encryption Key; per-object key used by RGW SSE; wrapped by KEK from KMS            │
-│  KEK        = Key Encryption Key; master key stored in KMS; wraps DEKs; rotate to re-protect data     │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ```mermaid
 graph TD

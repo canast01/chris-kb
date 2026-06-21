@@ -10,36 +10,10 @@ Incident Response Runbook reference covering Steps, Evidence to Capture.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
+![Incident Response Runbook](../../../../assets/virtualization-vmware-operations-runbooks-incident-response.svg)
 
-```text
-┌────────────────────────────────────── Incident Response Runbook ──────────────────────────────────────┐
-│                                                                                                       │
-│    Use for any active VMware platform issue; follow phases in order                                   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │       Detect + Assess       │  │        Contain + Fix        │  │       Resolve + Close       │   │
-│   │      ─────────────────      │  │      ─────────────────      │  │      ─────────────────      │   │
-│   │     Alert or user report    │  │        Isolate scope        │  │       Verify fix holds      │   │
-│   │    Confirm issue is real    │  │        Prevent spread       │  │        Monitor 30 min       │   │
-│   │     Open incident ticket    │  │    Apply fix / workaround   │  │     Notify stakeholders     │   │
-│   │    Define scope: VM/host    │  │       Collect evidence      │  │         Close ticket        │   │
-│   │    Set severity P1/P2/P3    │  │        Escalate if P1       │  │         Schedule RCA        │   │
-│   │     Notify stakeholders     │  │      Update ticket live     │  │       Post-mortem doc       │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    P1 = Critical; full platform or business service down; immediate escalation required               │
-│    P2 = Major; significant degradation; resolve within business hours                                 │
-│    P3 = Minor; limited impact; resolve within next maintenance window                                 │
-│    Contain   = Stop the issue spreading before applying a fix; e.g. isolate a host                    │
-│    Workaround = Temporary fix to restore service; permanent fix follows in RCA action                 │
-│    Post-mortem = Written RCA document; timeline, root cause, and preventive actions                   │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Before you begin
 

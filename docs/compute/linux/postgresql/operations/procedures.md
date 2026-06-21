@@ -10,6 +10,8 @@ PostgreSQL procedures: VACUUM and ANALYZE scheduling, extension management with 
 
 *Applies to: RHEL / Ubuntu LTS*
 </div>
+![PostgreSQL — Procedures](../../../../assets/compute-linux-postgresql-operations-procedures.svg)
+
 
 ## Before you begin
 
@@ -49,38 +51,7 @@ SELECT indexname, pg_size_pretty(pg_relation_size(indexname::regclass)) AS index
        idx_scan AS scans
 FROM pg_stat_user_indexes ORDER BY pg_relation_size(indexname::regclass) DESC LIMIT 20;
 ```
-```text
-┌────────────────────────────────── Database — Maintenance Procedures ──────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │        Scheduled DB maintenance keeps performance stable and prevents space exhaustion        │   │
-│   │      Index maintenance: rebuild (>30% fragmentation) or reorganise (10-30% fragmentation)     │   │
-│   │       Run during low-traffic maintenance windows; monitor impact on production workloads      │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │      Index Maintenance      │  │      Statistics Update      │  │        Log Management       │   │
-│   │      ─────────────────      │  │      ─────────────────      │  │      ─────────────────      │   │
-│   │      PG: REINDEX TABLE      │  │      PG: ANALYZE / auto     │  │      PG: WAL truncation     │   │
-│   │       PG: VACUUM FULL       │  │     MSSQL: UPDATE STATS     │  │      MSSQL: DBCC SHRINK     │   │
-│   │      MSSQL: ALTER INDEX     │  │     MySQL: ANALYZE TABLE    │  │     MySQL: PURGE BINARY     │   │
-│   │     Check fragmentation     │  │    Stale stats = bad plan   │  │       Log backup first      │   │
-│   │      Online vs offline      │  │   Trigger after bulk load   │  │      Monitor VLF count      │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    VACUUM        = PostgreSQL process; reclaims dead row space; VACUUM FULL rewrites table            │
-│    autovacuum    = PostgreSQL background process; runs VACUUM/ANALYZE automatically                   │
-│    Fragmentation = Index leaf pages out of order; > 30% triggers REBUILD (full rewrite)               │
-│    REORGANIZE    = Online defrag (SQL Server); moves leaf pages in-place; low-impact                  │
-│    Statistics    = Histogram of data distribution; query planner uses them for plan selection         │
-│    VLF           = Virtual Log File (SQL Server); many small VLFs slow log operations                 │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 ```text
 
 ## SQL Server Maintenance
@@ -140,45 +111,7 @@ psql -U postgres -c "SELECT now() AS current_time;"
 
 # Update application connection string / DNS to point at new primary
 ```
-```text
-┌──────────────────────────────────── Database — Failover Procedure ────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │     Promote standby to primary when primary becomes unavailable or for planned maintenance    │   │
-│   │    Pre-check: confirm failure (not network partition); check replication lag; notify teams    │   │
-│   │     Post-failover: update DNS/VIP; rebuild old primary as new standby; monitor replication    │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │         Pre-Failover        │  │       Promote Standby       │  │        Post-Failover        │   │
-│   │      ─────────────────      │  │      ─────────────────      │  │      ─────────────────      │   │
-│   │     Confirm primary down    │  │      PG: pg_ctl promote     │  │       Update DNS / VIP      │   │
-│   │      Check repl lag/RPO     │  │      MSSQL: AG failover     │  │       Notify app teams      │   │
-│   │      Notify: DBA + app      │  │     MySQL: STOP REPLICA     │  │      Validate app login     │   │
-│   │   Identify failover method  │  │      CHANGE REPL SOURCE     │  │      Rebuild as standby     │   │
-│   │      Open change ticket     │  │    Oracle: DG switchover    │  │     Monitor replication     │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│   │     Platform     │   Promote cmd    │     DNS update    │   Rebuild cmd    │   RTO estimate   │   │
-│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
-│   │    PostgreSQL    │  pg_ctl promote  │  pg_hba + reload  │    pg_rewind     │     5-15 min     │   │
-│   │    SQL Server    │ AG failover wiz  │   Listener auto   │  Resync replica  │  < 30s auto AG   │   │
-│   │      MySQL       │   STOP REPLICA   │   Update app DSN  │  CHANGE SOURCE   │     5-30 min     │   │
-│   │      Oracle      │  DG switchover   │  TNS alias update │    reinstate     │   DG: < 1 min    │   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    pg_ctl promote = Promotes PostgreSQL standby to primary; creates recovery.signal removal           │
-│    pg_rewind      = Resync old primary to new primary using WAL; avoids full re-base copy             │
-│    Always On AG   = SQL Server availability group; listener DNS auto-redirects after failover         │
-│    GTID           = MySQL Global Transaction Identifier; simplifies replica reconnect after failover  │
-│    Data Guard     = Oracle HA/DR product; synchronous/async standby; switchover/failover modes        │
-│    Split-brain    = Two nodes both believe they are primary; never promote without fencing            │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 ```bash
 # Automatic failover — check MHA status
 masterha_check_repl --conf=/etc/mha/app.conf

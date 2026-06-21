@@ -14,31 +14,10 @@ pre-check failures, handling mid-upgrade node failures, and safely retrying afte
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
+![VxRail LCM Upgrade Failure](../../../../assets/virtualization-vmware-topics-scenarios-vxrail-lcm-upgrade-fa.svg)
 
-```text
-┌───────────────────────────── VxRail LCM Upgrade — Failure Decision Flow ──────────────────────────────┐
-│                                                                                                       │
-│   ┌─────────────────────────────────────────────────────────────────────────────────────────────────┐ │
-│   │  START: VxRail Manager → LCM → Upgrade shows failure; identify phase from Upgrade History      │  │
-│   └──────────────────────────────────────────┬──────────────────────────────────────────────────────┘ │
-│                                              │                                                        │
-│   ┌──────────────────────────────────────────▼──────────────────────────────────────────────────────┐ │
-│   │   What phase failed?                                                                            │ │
-│   └───────────┬─────────────────────┬────────────────────────┬───────────────────────────┬─────────┘  │
-│               │                     │                        │                           │            │
-│               ▼                     ▼                        ▼                           ▼            │
-│   ┌───────────────────┐  ┌──────────────────┐   ┌───────────────────────┐  ┌──────────────────────┐   │
-│   │   Pre-check       │  │   Download       │   │   ESXi / firmware     │  │   Post-upgrade       │   │
-│   │   Fix underlying  │  │   Proxy / net    │   │   upgrade on node     │  │   validation         │   │
-│   │   health issue    │  │   issue; re-dl   │   │   Check iDRAC + logs  │  │   Check cluster      │   │
-│   │   then retry      │  │                  │   │                       │  │   health; resync     │   │
-│   └───────────────────┘  └──────────────────┘   └───────────────────────┘  └──────────────────────┘   │
-│                                                                                                       │
-│   ┌─────────────────────────────────────────────────────────────────────────────────────────────────┐ │
-│   │  Root cause fixed → VxRail Manager → LCM → Retry Upgrade (continues from failed node)         │   │
-│   └─────────────────────────────────────────────────────────────────────────────────────────────────┘ │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Products Involved
 

@@ -8,6 +8,8 @@ tags:
 <div class="kb-summary">
 The Isolated Recovery Environment (IRE) is a network-isolated, air-gapped environment used for recovering from ransomware and other destructive attacks. Network isolation must be established before any backup retrieval or restore operations; confirm daily that all air-gap controls are active when the IRE is in standby.
 </div>
+![IRE — Isolation](../../../../assets/backup-dr-operations-ire-isolation-index.svg)
+
 
  Isolation is the foundational control: the IRE must never share network paths, credentials, or management planes with the production environment.
 
@@ -36,37 +38,7 @@ graph TB
     STORE --> IRE
     IRE -.->|No route back to PROD| PROD
 ```
-```text
-┌──────────────────────────────────────── IRE Network Isolation ────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      IRE Network Isolation — air-gap switch config, VLAN separation, no production routes     │   │
-│   │                   See product-specific sub-sections for detailed procedures                   │   │
-│   │          DR success depends on: documented runbooks · tested failover · validated RTO         │   │
-│   │          Minimum DR posture: defined RPO/RTO · tested backups · known escalation path         │   │
-│   │        Test DR procedures quarterly; document results; update runbooks after each test        │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  Production site · DR site · Replication link · Management network · Vault network                    │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  RPO           = Recovery Point Objective; max acceptable data loss window                            │
-│  RTO           = Recovery Time Objective; max acceptable downtime before restore                      │
-│  Failover      = activating the DR site; redirecting hosts to replica resources                       │
-│  Failback      = returning operations to production site after DR resolved                            │
-│  Runbook       = step-by-step documented procedure for a specific DR scenario                         │
-│  IRE           = Isolated Recovery Environment; air-gapped clean-room for recovery                    │
-│  Clean Room    = isolated vCenter + workstations for cyber recovery validation                        │
-│  Air Gap       = network isolation preventing attacker lateral movement to vault                      │
-│  DR Test       = planned failover test; validates RTO without real disaster                           │
-│  Replication   = continuous or periodic data copy to secondary site or vault                          │
-│  Recovery Tier = classification: hot/warm/cold based on RTO requirement                               │
-│  BIA           = Business Impact Analysis; drives RPO/RTO targets per system                          │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 ## Isolation Verification Checklist
 

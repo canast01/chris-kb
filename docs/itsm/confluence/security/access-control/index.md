@@ -4,51 +4,10 @@ tags:
   - security
 ---
 # Confluence — Access Control
+![Confluence — Access Control](../../../../assets/itsm-confluence-security-access-control-index.svg)
 
-```text
-┌───────────────────────────────────── Confluence — Access Control ─────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                              Confluence Access Control Hierarchy                              │   │
-│   │        Global permissions → Space permissions → Page restrictions (most specific wins)        │   │
-│   │        Groups managed in LDAP/AD; sync to Confluence; assign to spaces not individuals        │   │
-│   │         Page restrictions override space-level view/edit rights for sensitive content         │   │
-│   │            Admin role: Confluence Administrators group; limit to 2-3 named accounts           │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Access control layers from global to page; most restrictive setting wins                           │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │      Global Permissions     │  │      Space Permissions      │  │      Page Restrictions      │   │
-│   │      Can use Confluence     │  │          View space         │  │          View only          │   │
-│   │        Create spaces        │  │        Add/edit pages       │  │          Edit only          │   │
-│   │         Manage users        │  │       Add attachments       │  │       View+Edit combo       │   │
-│   │         System admin        │  │         Space admin         │  │         Inheritable         │   │
-│   │       Confluence admin      │  │        Export/import        │  │      Child pages apply      │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  LDAP/AD for group source · Confluence DB stores permission ACLs · IdP for auth                       │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Global permission = instance-wide rights; set via Admin > Global Permissions                         │
-│  Space permission  = per-space ACL; View/AddPages/AddComments/Admin; assign to groups                 │
-│  Page restriction  = per-page ACL; overrides space for that page and optionally children              │
-│  Inheritance       = page restrictions can cascade to child pages if set during creation              │
-│  Group assignment  = best practice is to assign permissions to LDAP groups, not individuals           │
-│  Space admin       = can manage space members and page tree; cannot change global settings            │
-│  System admin      = full Confluence access including server config and mail settings                 │
-│  Confluence admin  = application-level admin; can manage users, plugins, and permissions              │
-│  Anonymous access  = global toggle for unauthenticated users; default OFF in enterprise               │
-│  Can use Confluence = base permission; must be granted for any user to log in                         │
-│  LDAP group sync   = groups from AD mapped to Confluence groups; updated on each poll                 │
-│  Audit trail       = Admin > Audit Log records all permission changes with timestamp                  │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 ```text
 
 ### Removing Default "All Logged-In Users" Access

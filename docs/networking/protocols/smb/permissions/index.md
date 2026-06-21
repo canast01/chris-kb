@@ -8,31 +8,10 @@ tags:
 <div class="kb-summary">
 SMB Share Permissions reference covering Overview, Viewing and Setting Share Permissions, Creating Shares with net share, Combining NTFS and Share Permissions, PowerShell Share Creation and 1 more sections.
 </div>
+![SMB Share Permissions](../../../../assets/networking-protocols-smb-permissions-index.svg)
 
-```text
-┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
-│  Network client accesses \\server\Finance                                                             │
-│                    │                                                                                  │
-│                    ▼ Layer 1                                                                          │
-│  ┌────────────────────────────────────────────────────────┐                                           │
-│  │  SHARE PERMISSIONS (network access gate)               │                                           │
-│  │  Everyone: Full Control  ◄── best practice setting     │                                           │
-│  │  or specific group: Read / Change / Full               │                                           │
-│  └────────────────────────┬───────────────────────────────┘                                           │
-│                           │ permitted                                                                 │
-│                           ▼ Layer 2                                                                   │
-│  ┌────────────────────────────────────────────────────────┐                                           │
-│  │  NTFS ACL (filesystem-level, local + network)          │                                           │
-│  │  DOMAIN\Finance_Users: Modify (Allow)                  │                                           │
-│  │  DOMAIN\Auditors: Read (Allow)                         │                                           │
-│  │  Everyone: (no entry)                                  │                                           │
-│  └────────────────────────┬───────────────────────────────┘                                           │
-│                           │                                                                           │
-│   Effective = most restrictive of share AND NTFS perms                                                │
-│   Share:Full + NTFS:Read = Read                                                                       │
-│   Share:Read + NTFS:Full = Read                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Overview
 

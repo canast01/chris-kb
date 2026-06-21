@@ -8,29 +8,10 @@ tags:
 <div class="kb-summary">
 NTP Drift reference covering Drift Concepts, Reading Drift Values, Drift File, Interpreting Drift History, Drift After VM Operations and 1 more sections.
 </div>
+![NTP Drift](../../../../assets/networking-protocols-ntp-drift-index.svg)
 
-```text
-┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
-│  Without NTP:                                                                                         │
-│  Real time  ─────────────────────────────────────────────►                                            │
-│  System clk ──────────────────────────────────────────────►                                           │
-│             └──── drift (+12 ppm = +1.04s/day)────────────                                            │
-│                                                                                                       │
-│  With NTP (slewing — gradual correction):                                                             │
-│  System clk ─────── NTP adjusts freq slowly ────────────────►                                         │
-│              ▲ offset detected    ▲ slew complete                                                     │
-│              └──────────────────  └─── freq correction saved                                          │
-│              max slew: ~500 ppm                                                                       │
-│                                                                                                       │
-│  Stepping (abrupt jump — large offset only):                                                          │
-│  System clk ──────────────►  STEP ──────────────────────────►                                         │
-│              offset > 1s detected  clock jumps to correct                                             │
-│                                                                                                       │
-│  Drift file (/var/lib/chrony/drift):                                                                  │
-│  Stores frequency correction so daemon starts pre-calibrated                                          │
-│  Content: single float, e.g.  12.345678  (ppm)                                                        │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 Clock drift is the natural tendency of a system clock to run fast or slow relative to real time. NTP continuously corrects drift by applying small frequency adjustments (slewing) to keep the clock accurate.
 

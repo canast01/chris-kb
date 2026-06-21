@@ -8,28 +8,10 @@ tags:
 <div class="kb-summary">
 DNS Forwarders reference covering Overview, Configuring Global Forwarders, Conditional Forwarders, Root Hints vs Forwarders, Split-Brain DNS and 2 more sections.
 </div>
+![DNS Forwarders](../../../../assets/networking-protocols-dns-forwarders-index.svg)
 
-```text
-┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
-│  Internal DNS (DC)            External / Upstream                                                     │
-│  ┌──────────────────┐         ┌──────────────────────────┐                                            │
-│  │ corp.local zone  │         │  Forwarder: 8.8.8.8      │                                            │
-│  │ (authoritative)  │         │  (for unknown names)     │                                            │
-│  └────────┬─────────┘         └──────────────────────────┘                                            │
-│           │                                                                                           │
-│  Query: web01.example.local  ──► answered from local zone                                             │
-│  Query: google.com        ──► forwarded to 8.8.8.8 ─► answer                                          │
-│                                                                                                       │
-│  CONDITIONAL FORWARDER:                                                                               │
-│  ┌────────────────────────────────────────────────────────┐                                           │
-│  │ partner.example.com ──► forward to 172.16.1.10         │                                           │
-│  │ (specific domain sent to designated server)            │                                           │
-│  └────────────────────────────────────────────────────────┘                                           │
-│                                                                                                       │
-│  Forwarder unreachable? ──► fallback to root hints                                                    │
-│  (if UseRootHint = $true — recommended for resilience)                                                │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Overview
 

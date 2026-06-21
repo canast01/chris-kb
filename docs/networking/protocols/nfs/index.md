@@ -9,25 +9,10 @@ tags:
 <div class="kb-summary">
 Network File System (NFS) allows hosts to mount remote directories over TCP. Coverage includes version selection (NFSv3/4/4.1), export configuration, UID/GID permission mapping, mount option tuning (hard/soft, sync/async, rsize/wsize), and troubleshooting stale handles and mount failures.
 </div>
+![NFS](../../../assets/networking-protocols-nfs-index.svg)
 
-```text
-┌───────────────────────────────────── ┐        TCP 2049        ┌ ──────────────────────────────────────┐
-│   NFS CLIENT    │                        │    NFS SERVER                                              │
-│                 │                        │                                                            │
-│  mount -t nfs   │  ─────────────────────►│  /etc/exports                                              │
-│  server:/export │                        │  /data 10.0.0.0/24                                         │
-│  /mnt/data      │  NFS MOUNT REQUEST     │  (rw,sync,root_squash)                                     │
-│                 │ ◄──────────────────────│                                                            │
-│  ┌───────────┐  │  mount OK              │  ┌────────────────┐                                        │
-│  │ /mnt/data │  │                        │  │  /data         │                                        │
-│  │  (remote  │  │  READ / WRITE ops      │  │  (filesystem)  │                                        │
-│  │   files)  │◄═╪════════════════════════╪═►│                │                                        │
-│  └───────────┘  │                        │  └────────────────┘                                        │
-│                 │                        │                                                            │
-│  UID/GID check  │  NFSv3: stateless      │  exportfs -ra                                              │
-│  (POSIX perms)  │  NFSv4: stateful/Krb5  │  applies changes                                           │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## NFSv4.1 Session and pNFS Data Path
 

@@ -4,6 +4,8 @@ tags:
   - security
 ---
 # Jira — Hardening
+![Jira — Hardening](../../../../assets/itsm-jira-security-hardening-index.svg)
+
 
 ```bash
 # Audit current Jira administrators
@@ -16,51 +18,7 @@ curl -u "user@corp.example.com:API_TOKEN" \
   "https://your-org.atlassian.net/rest/api/3/group/member?groupname=jira-administrators" \
   | jq -r '.values[] | "\(.displayName) - \(.emailAddress)"'
 ```
-```text
-┌────────────────────────────────────────── Jira — Hardening ───────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                                      Jira Hardening Guide                                     │   │
-│   │               Disable public sign-up and anonymous access in global permissions               │   │
-│   │              Restrict /secure/admin to corporate IP ranges via reverse proxy/WAF              │   │
-│   │                  Apply Atlassian security advisories; stay within n-1 version                 │   │
-│   │               Remove default admin account; named accounts with MFA via SAML IdP              │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Hardening reduces attack surface at network, application, and OS layers                            │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │            Application Hardening             │  │             OS/Network Hardening            │   │
-│   │             Disable anon access              │  │              Firewall: 443 only             │   │
-│   │             Remove default admin             │  │              SSH key auth only              │   │
-│   │            Disable public signup             │  │              SELinux enforcing              │   │
-│   │               Enable audit log               │  │             Minimal OS packages             │   │
-│   │              Plugin allow-list               │  │              OS patch schedule              │   │
-│   │               Security headers               │  │             WAF for /admin path             │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  WAF/reverse proxy · Jira VMs with SELinux · DB VM · firewall segmentation                            │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Public sign-up   = Admin > Global Permissions; remove Anyone can sign up                             │
-│  Anonymous access = Admin > Global Permissions; remove Browse Projects for Anyone                     │
-│  Security headers = CSP, X-Frame-Options, X-Content-Type-Options at proxy                             │
-│  Plugin allow-list = Admin > Manage Apps; disable unsigned / unapproved plugins                       │
-│  Audit log        = Admin > Audit Log; enable for all admin and config changes                        │
-│  WAF              = Web Application Firewall; restrict /secure/admin to corp IPs                      │
-│  SELinux          = enforcing mode on RHEL/CentOS; confines Tomcat process                            │
-│  SSH key auth     = disable password SSH login on Jira server OS                                      │
-│  n-1 version      = stay one version behind latest max; patch critical CVEs                           │
-│  Default admin    = rename or delete; create named admin accounts                                     │
-│  CSP              = Content-Security-Policy header; prevents cross-site scripting                     │
-│  MFA              = multi-factor auth enforced at IdP; Jira trusts SAML assertion                     │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 ```bash
 # List all installed plugins
 curl -u "admin:TOKEN" \

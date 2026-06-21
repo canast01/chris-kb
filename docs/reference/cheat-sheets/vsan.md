@@ -8,13 +8,10 @@ tags:
 <div class="kb-summary">
 Top-10 vSAN commands for cluster health, disk groups, object status, and policy via <code>esxcli vsan</code> and PowerCLI.
 </div>
+![vSAN Cheat Sheet](../../assets/reference-cheat-sheets-vsan.svg)
 
-```text
-┌──────────────────────────────────────── vSAN Cheat Sheet ─────────────────────────────────────────────┐
-│  CLI: esxcli vsan (per-host)  ·  PowerCLI Get-VsanView  ·  vSAN Health UI                             │
-│  Categories: Cluster · Disk Groups · Objects · Health · Policy                                        │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Common commands
 

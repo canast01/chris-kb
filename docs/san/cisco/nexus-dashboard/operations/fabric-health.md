@@ -11,39 +11,10 @@ Nexus Dashboard: Fabric Health Score, Endpoint Reachability, and Flow Telemetry 
 
 *Applies to: Cisco MDS · Nexus*
 </div>
+![Nexus Dashboard: Fabric Health Score, Endpoint Reachability, and Flow Telemetry](../../../../assets/san-cisco-nexus-dashboard-operations-fabric-health.svg)
 
-```text
-┌─────────────────────────────────── Nexus Dashboard — Fabric Health ───────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      NDI Fabric Health Score: 0-100 composite per site from telemetry and event analysis      │   │
-│   │          Input categories: endpoints, nodes, interfaces, tunnels, services, resources         │   │
-│   │                    Score 91-100: Healthy · 81-90: Warning · 0-80: Critical                    │   │
-│   │                  Trend: improving/steady/degrading over last collection epoch                 │   │
-│   │          Anomaly drill-down: click score to see contributing issues ranked by impact          │   │
-│   │             Historical view: 30-day score trend per site and per fabric component             │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  Health computed in NDI from MDT/APIC data · updated every 15 minutes · stored in ND DB               │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Site = Single ACI or DCNM/NDFC fabric registered in ND; health score per site                        │
-│  Epoch = NDI analysis time window (15-minute snapshot); health computed per epoch                     │
-│  Endpoint = VM, bare-metal, or container connected to fabric leaf switch                              │
-│  Node = Spine or leaf switch; node health input covers CPU, memory, and error counters                │
-│  Interface = Physical or logical port; errors and drops contribute to interface health                │
-│  Tunnel = VXLAN or GRE overlay; tunnel health reflects underlay reachability                          │
-│  Resources = ACI fabric resources: EPG, BD, contract counts approaching capacity                      │
-│  Services = Layer-4 to -7 services: load balancers, firewalls inserted in fabric                      │
-│  Anomaly impact = NDI score for each anomaly showing how much it reduces site health                  │
-│  Critical score = Below 81; immediate investigation required; page on-call network team               │
-│  Healthy score = 91-100; normal operation; review weekly for trend changes                            │
-│  Drill-down = NDI UI allows clicking from site score to node to interface level                       │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 Flow telemetry fields:
 

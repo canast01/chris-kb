@@ -15,35 +15,10 @@ replication to within RPO before verifying with an SRM test recovery.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
+![SRM Replication Lag / RPO Violation](../../../../assets/virtualization-vmware-topics-scenarios-srm-replication-lag-r.svg)
 
-```text
-┌────────────────────── SRM Replication Lag / RPO Violation — Investigation Flow ───────────────────────┐
-│                                                                                                       │
-│  OVERVIEW                                                                                             │
-│  RPO violation: the DR copy is more than X minutes behind production — data loss risk                 │
-│  If production fails during a violation, more data will be lost than the SLA allows                   │
-│                                                                                                       │
-│  START: SRM alert — RPO Exceeded on one or more VMs, or Aria Operations fires RPO warning             │
-│                                                                                                       │
-│  STEP 1 — Identify Scope                                                                              │
-│  One or a few VMs lagging → high change rate on specific VMs                                          │
-│  Many VMs lagging across multiple hosts → inter-site link bandwidth issue                             │
-│  Replication stopped entirely on some VMs → vSR appliance health issue                                │
-│                                                                                                       │
-│  STEP 2 — Diagnose Root Cause                                                                         │
-│  Check vSR appliance health on both production and DR sites                                           │
-│  Check inter-site bandwidth: NIC stats on ESXi vSphere Replication VMkernel                           │
-│  Check VM change rate: SRM → Replication → Details → Current vs Average replication rate              │
-│                                                                                                       │
-│  STEP 3 — Resolution Branch                                                                           │
-│  Appliance fault → redeploy or restart the vSR appliance                                              │
-│  Bandwidth exhausted → throttle low-priority VMs, enable compression, or expand inter-site link       │
-│  VM change rate too high → enable compression per VM or increase RPO target (requires SLA review)     │
-│                                                                                                       │
-│  CLOSE: Force Sync Now → monitor until RPO status returns to Met · validate with SRM test recovery    │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Products Involved
 

@@ -13,46 +13,10 @@ End-to-end deployment guide for VMware Site Recovery Manager DR orchestration. P
 
 *Applies to: SRM 8.x / 9.x*
 </div>
+![SRM — Deploy](../../../../assets/virtualization-vmware-srm-deploy-index.svg)
 
-```text
-┌─────────────────────────────────────── SRM — Deployment Phases ───────────────────────────────────────┐
-│                                                                                                       │
-│  Six phases from infrastructure prerequisites to a tested and validated recovery plan. Both sites     │
-│  must be deployed before pairing; test failover is mandatory before sign-off.                         │
-│                                                                                                       │
-│   ┌────────────────────────────┐  ┌────────────────────────────┐  ┌──────────────────────────────┐    │
-│   │  Phase 1: Prerequisites    │  │  Phase 2: SRM Appliance    │  │  Phase 3: Site Pairing       │    │
-│   │  Two vCenters operational  │  │  Deployment                │  │  & Inventory Mappings        │    │
-│   │  Ports 443, 8095, 9086     │  │  Deploy OVA: protected     │  │  Site Pair wizard            │    │
-│   │  DNS for SRM FQDNs         │  │  Deploy OVA: recovery      │  │  Network + folder mappings   │    │
-│   │  Replication mechanism     │  │  Register with vCenter     │  │  Resource + storage mappings │    │
-│   └────────────────────────────┘  └────────────────────────────┘  └──────────────────────────────┘    │
-│                                                                                                       │
-│                ▼                               ▼                               ▼                      │
-│                                                                                                       │
-│   ┌────────────────────────────┐  ┌────────────────────────────┐  ┌──────────────────────────────┐    │
-│   │  Phase 4: Replication      │  │  Phase 5: Protection       │  │  Phase 6: Recovery Plans     │    │
-│   │  Configuration             │  │  Groups                    │  │  & Test Failover             │    │
-│   │  vSphere Replication VRA   │  │  vSR groups: VMs + RPO     │  │  Create recovery plan        │    │
-│   │  or SRA for array-based    │  │  ABR groups: array sets     │  │  IP customisation rules      │   │
-│   │  Replication health: no lag│  │  All VMs: Protected status  │  │  Test failover + cleanup     │   │
-│   │  Placeholder VMs created   │  │  Placeholders at DR site   │  │  RTO measurement + sign-off  │    │
-│   └────────────────────────────┘  └────────────────────────────┘  └──────────────────────────────┘    │
-│                                                                                                       │
-│  Physical Infrastructure: SRM OVA VMs at each site; SQL Server (Windows-based installs);              │
-│  replication network between sites; WAN/MPLS/dark fibre; vCenter at both sites.                       │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Site pair      = bidirectional trust between two SRM Servers; TCP 443 + 9086                         │
-│  Protection group= set of VMs replicated together; maps to one or more recovery plans                 │
-│  Recovery plan  = ordered failover runbook: priority groups, IP mappings, custom scripts              │
-│  vSR            = vSphere Replication; host-based async replication; RPO 5 min–24 h                   │
-│  SRA            = Storage Replication Adapter; integrates array-based replication with SRM            │
-│  Test bubble    = isolated network for test failover; no production routing                           │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ---
 

@@ -12,46 +12,10 @@ Step-by-step guide to installing Ansible, configuring inventory and SSH authenti
 
 *Applies to: Ansible 2.14+*
 </div>
+![Ansible — Environment Setup](../../../assets/automation-ansible-deploy-index.svg)
 
-```text
-┌───────────────────────────────────── Ansible — Environment Setup ─────────────────────────────────────┐
-│                                                                                                       │
-│   Agentless automation: controller pushes tasks over SSH (Linux) or WinRM (Windows)                   │
-│   Control node: Linux/macOS with Python 3.8+; managed nodes need no additional agent                  │
-│   Install: pip3 install ansible  OR  dnf install ansible  OR  apt install ansible                     │
-│   Verify: ansible --version; check Python interpreter and core collection versions                    │
-│                                                                                                       │
-│   Inventory setup                                                                                     │
-│   Create /etc/ansible/hosts or project-local inventory.ini / inventory.yml                            │
-│   Group hosts: [webservers], [dbservers], [prod], [dev]; nest groups with :children                   │
-│   Define variables: ansible_host, ansible_user, ansible_port, ansible_become=true                     │
-│   Test: ansible all -m ping -i inventory.ini  (all hosts should return pong)                          │
-│                                                                                                       │
-│   SSH authentication                                                                                  │
-│   Generate key: ssh-keygen -t ed25519 -C ansible-ctrl; push with ssh-copy-id                          │
-│   Config: ansible_ssh_private_key_file in inventory or ssh_config Host block                          │
-│   Disable password auth on managed nodes: PasswordAuthentication no in sshd_config                    │
-│                                                                                                       │
-│   First playbook                                                                                      │
-│   Structure: hosts → vars → tasks; each task has name + module + arguments                            │
-│   Dry run first: ansible-playbook site.yml -i inventory.ini --check --diff                            │
-│   Run subsets: --tags deploy  /  --skip-tags debug  /  --limit webservers                             │
-│                                                                                                       │
-│   Physical infrastructure                                                                             │
-│   Controller: any Linux VM or jump host; TCP 22 open to all managed nodes                             │
-│   Windows targets require WinRM (5985 HTTP / 5986 HTTPS) and PS remoting enabled                      │
-│                                                                                                       │
-│   Key terms:                                                                                          │
-│   playbook     = YAML automation definition; lists hosts, vars, and tasks in order                    │
-│   inventory    = host file (INI/YAML); groups, host vars, connection params                           │
-│   module       = reusable Ansible task unit (package, file, service, template)                        │
-│   role         = structured directory: tasks/, handlers/, templates/, vars/                           │
-│   become       = sudo/runas privilege escalation; configured per task or play                         │
-│   handler      = task triggered by notify; runs once at end of play regardless of count               │
-│   vault        = ansible-vault encryption for secrets inside playbooks and var files                  │
-│   idempotent   = same playbook applied twice leaves system in identical desired state                 │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Before you begin
 

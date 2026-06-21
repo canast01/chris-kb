@@ -4,6 +4,8 @@ tags:
   - operations
 ---
 # Git — Install and Upgrade
+![Git — Install and Upgrade](../../../../assets/itsm-git-operations-install-upgrade-index.svg)
+
 
 ```bash
 # Install from distro repo
@@ -20,51 +22,7 @@ sudo apt-get install -y git
 # Upgrade only
 sudo apt-get install --only-upgrade git
 ```
-```text
-┌────────────────────────────────────── Git — Install and Upgrade ──────────────────────────────────────┐
-│                                                                                                       │
-│  Git client and server installation, upgrade paths, and self-hosted platform setup.                   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              Git Client Install              │  │            GitHub / GitLab Server           │   │
-│   │          Linux: apt/yum install git          │  │       GitHub Enterprise: VM appliance       │   │
-│   │           macOS: brew install git            │  │       GitLab: omnibus package + config      │   │
-│   │        Windows: git-scm.com installer        │  │      Gitea: single binary; lightweight      │   │
-│   │            Verify: git --version             │  │            Backup before upgrade            │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Client upgrade is non-breaking; server upgrade requires maintenance window                         │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              Git Configuration               │  │              Post-Install Steps             │   │
-│   │        git config --global user.name         │  │         Generate SSH key: ssh-keygen        │   │
-│   │        git config --global user.email        │  │         Add pub key to GitHub/GitLab        │   │
-│   │       git config --global core.editor        │  │          Test: git clone <ssh-url>          │   │
-│   │       git config --global pull.rebase        │  │           Set default branch: main          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  Developer workstations · self-hosted Git server VM · package repositories                            │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  git-scm.com    = official Git download site for Windows installer                                    │
-│  omnibus        = GitLab all-in-one package including Nginx, Postgres, Redis                          │
-│  Gitea          = lightweight self-hosted Git service; single Go binary                               │
-│  GHE            = GitHub Enterprise Server; VM-based on-prem deployment                               │
-│  ssh-keygen     = generates RSA/Ed25519 key pair for SSH authentication                               │
-│  pull.rebase    = config to rebase instead of merge on git pull                                       │
-│  core.editor    = sets preferred text editor for commit messages                                      │
-│  Maintenance window= server upgrade downtime; plan for hook + webhook reconnect                       │
-│  Default branch = initialises as main; change default in server settings                              │
-│  Ed25519        = modern elliptic-curve SSH key type; preferred over RSA                              │
-│  git config     = reads/writes ~/.gitconfig (global) or .git/config (repo)                            │
-│  Appliance      = GitHub Enterprise is a VM image (OVA/AMI); managed internally                       │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 ```powershell
 # Upgrade via winget
 winget upgrade --id Git.Git -e --include-unknown

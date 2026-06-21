@@ -13,6 +13,8 @@ High CPU Troubleshooting reference covering Overview, CPU Threshold Reference, D
 
 *Applies to: RHEL / Ubuntu LTS*
 </div>
+![High CPU Troubleshooting](../../../../assets/compute-linux-troubleshooting-high-cpu-index.svg)
+
 
 ## Before you begin
 
@@ -72,42 +74,7 @@ flowchart TD
     U -- Yes --> V[jstat -gcutil PID 1000\nAnalyze heap usage]
     U -- No --> W[Find CPU-burning thread\nCorrelate thread ID hex to jstack output]
 ```
-```text
-┌────────────────────────────────────── High CPU Troubleshooting ───────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      High CPU: identify top consumers, check for CPU ready, investigate runaway processes     │   │
-│   │           ESXi: CPU ready > 5% indicates overcommit; vCPU wait for physical CPU time          │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Linux            │  │           Windows           │  │        ESXi / VMware        │   │
-│   │      ─────────────────      │  │      ─────────────────      │  │      ─────────────────      │   │
-│   │          top / htop         │  │         Task Manager        │  │         esxtop: CPU         │   │
-│   │     ps aux --sort=-%cpu     │  │       Get-Process sort      │  │         CPU ready %         │   │
-│   │           perf top          │  │        Perfmon: % CPU       │  │          Co-stop %          │   │
-│   │         sar -u 1 10         │  │         WPA profiler        │  │         VM CPU limit        │   │
-│   │       strace / ftrace       │  │         Process dump        │  │        NUMA topology        │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│   │     Symptom      │       Tool       │     Indicator     │       Fix        │      Verify      │   │
-│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
-│   │   Runaway proc   │  top / Task Mgr  │   High PID CPU%   │  Kill/restrain   │  CPU normalises  │   │
-│   │    CPU ready     │   esxtop %RDY    │        > 5%       │   Reduce vCPU    │   Ready drops    │   │
-│   │    Steal time    │     top %st      │    > 0 in cloud   │ Upgrade VM type  │    Steal = 0     │   │
-│   │     IRQ load     │  cat /proc/intr  │   One CPU pinned  │    irqbalance    │    IRQ spread    │   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    CPU ready  = ESXi: time vCPU waits for physical CPU; > 5% impacts VM performance                   │
-│    Co-stop    = ESXi SMP VMs wait for all vCPUs to be scheduled simultaneously                        │
-│    Steal time = In VMs: hypervisor withholding CPU from guest; indicates host overcommit              │
-│    irqbalance = Linux daemon; distributes hardware interrupts across CPUs for load balance            │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 ### perf — Deeper Kernel Analysis
 

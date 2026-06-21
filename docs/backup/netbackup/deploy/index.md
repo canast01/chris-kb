@@ -16,55 +16,14 @@ search:
 ---
 
 # NetBackup — Initial Deployment
+![NetBackup — Initial Deployment](../../../assets/backup-netbackup-deploy-index.svg)
+
 
 This guide covers deploying Veritas NetBackup from bare metal through a fully
 operational backup environment — Primary Server, Media Servers, storage units,
 deduplication pool, client onboarding, and policy creation.
 
-```text
-┌─────────────────────────────────── NetBackup — Initial Deployment ────────────────────────────────────┐
-│                                                                                                       │
-│   NetBackup: Primary Server + Media Server(s) + clients + MSDP dedup pool                             │
-│   Primary Server: RHEL 8/9 or Windows 2019/2022; min 32 GB RAM; 500 GB+ catalog volume                │
-│   Media Servers handle data streams; one per backup domain, LAN segment, or tape library              │
-│   MSDP: deduplication pool on Media Server SSD/NVMe volumes; reduces storage consumption              │
-│                                                                                                       │
-│   Primary Server installation                                                                         │
-│   Run NetBackup installer as root (Linux) or local admin (Windows)                                    │
-│   Set primary server hostname during install — must match DNS A record permanently                    │
-│   Activate license key: nbactls -AddKey -Key <key>  or  Admin Console → Help → Licenses               │
-│   Apply latest EEB (Emergency Engineering Binary) patches post-install                                │
-│                                                                                                       │
-│   Media Server installation                                                                           │
-│   Install media server package; provide Primary Server hostname during setup                          │
-│   Define storage units: Disk STU (MSDP pool path), BasicDisk STU, or tape device                      │
-│   MSDP pool creation: nbdevconfig command or Admin Console → Storage → New Storage Unit               │
-│   Verify Media Server reachability: bptestnetconn -h mediaserver -verbose                             │
-│                                                                                                       │
-│   Client onboarding                                                                                   │
-│   Push install: bpinst -MASTER_SERVER primary.fqdn -VERBOSE -UNIX_CLIENT client.fqdn                  │
-│   Manual: install client package; set server list to point to Primary Server                          │
-│   Verify: bpclntcmd -self on client; check client in Admin Console → Hosts                            │
-│                                                                                                       │
-│   Policy creation                                                                                     │
-│   Create policy: bppolicynew policyname -pt Standard; assign client, schedule, storage                │
-│   Schedule types: Full (weekly), Differential Incremental (daily), Cumulative Incremental             │
-│   Test: bpbackup -p policyname -s sched_name; monitor with bpdbjobs -all_columns                      │
-│                                                                                                       │
-│   Physical infrastructure                                                                             │
-│   Primary Server: dedicated VM or physical; isolated catalog volume; SSD storage                      │
-│   Media Servers: per site or subnet; high-throughput network to MSDP/tape storage                     │
-│                                                                                                       │
-│   Key terms:                                                                                          │
-│   Primary Server = NBU master; manages catalog, job scheduling, policy engine                         │
-│   Media Server = data mover; streams backup data from clients to storage units                        │
-│   MSDP         = Media Server Deduplication Pool; SHA-based dedup on Media Server disk                │
-│   catalog      = NBU database of all backup images, schedules, and client records                     │
-│   STU          = Storage Unit; logical pointer from NBU policy to a physical storage device           │
-│   EEB          = Emergency Engineering Binary; targeted patch for a specific NBU bug                  │
-│   bptestnetconn = diagnostic tool to verify network connectivity between NBU components               │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 ---
 

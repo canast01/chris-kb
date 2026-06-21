@@ -9,36 +9,10 @@ etcd encryption at rest, Kubernetes secret encryption, TLS configuration, certif
 
 *Applies to: OpenShift 4.x*
 </div>
+![OpenShift — Encryption](../../../../assets/virtualization-openshift-security-encryption-index.svg)
 
-```text
-┌──────────────────────────────────────── OpenShift Encryption ─────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   etcd encryption: enable on APIServer CR; AES-GCM or AES-CBC; applies to secrets/configmaps  │   │
-│   │   All control plane TLS: auto-managed by cluster-operators; certs rotate automatically        │   │
-│   │   Custom ingress cert: replace default wildcard *.apps cert with signed cert from enterprise CA│  │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │    etcd Encryption at Rest  │  │     TLS Certificates         │  │     Secret Management       │  │
-│   │      ─────────────          │  │      ─────────────           │  │      ─────────────          │  │
-│   │  APIServer.spec.encryption  │  │  Ingress: custom wildcard    │  │  External: Vault / AWS KMS  │  │
-│   │  AES-GCM (recommended)      │  │  API server: custom SAN cert │  │  Sealed Secrets operator    │  │
-│   │  Keys auto-rotated          │  │  CA trust bundle per cluster │  │  OCP Secrets encrypted post │  │
-│   │  Applies to secrets, CMs    │  │  cert-manager operator avail │  │  etcd encryption enable     │  │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    AES-GCM      = Authenticated encryption; recommended over AES-CBC for etcd at-rest encryption      │
-│    IngressController= OCP resource managing the router; references TLS secret for wildcard cert       │
-│    APIServer CR = cluster.config.openshift.io/v1 APIServer; controls encryption and API TLS           │
-│    cert-manager = Kubernetes operator that automates cert issuance and renewal via Let's Encrypt etc. │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ```mermaid
 graph TD

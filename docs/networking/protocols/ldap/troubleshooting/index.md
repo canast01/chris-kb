@@ -11,32 +11,10 @@ search:
 <div class="kb-summary">
 LDAP Troubleshooting reference covering Overview, Bind Failure Diagnostics, Certificate Errors, Using ldp.exe (Windows GUI Tool), LDAP Referrals and 1 more sections.
 </div>
+![LDAP Troubleshooting](../../../../assets/networking-protocols-ldap-troubleshooting-index.svg)
 
-```text
-┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
-│  1. Resolve DC name                                                                                   │
-│     nslookup dc01.example.local ─── fail ──► fix DNS                                                  │
-│          │ ok                                                                                         │
-│          ▼                                                                                            │
-│  2. Port reachable?                                                                                   │
-│     nc -zv dc01 389 ─────────── fail ──► firewall / DC down                                           │
-│     nc -zv dc01 636            (636 = LDAPS)                                                          │
-│          │ ok                                                                                         │
-│          ▼                                                                                            │
-│  3. Simple bind (test creds)                                                                          │
-│     ldapsearch -x -D svc@corp -w pass ─ fail ──► check DN,                                            │
-│          │ ok                                   password, lock                                        │
-│          ▼                                                                                            │
-│  4. Check network: nc -zv dc01 636 (port reachable)                                                   │
-│          ▼                                                                                            │
-│  5. TLS error? openssl s_client -connect dc01:636                                                     │
-│     cert untrusted ──────────────────────► install root CA                                            │
-│     cert expired ────────────────────────► renew DC cert                                              │
-│          │ ok                                                                                         │
-│          ▼                                                                                            │
-│  6. Query returns no results? ──► check base DN, filter                                               │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Before you begin
 

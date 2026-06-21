@@ -10,54 +10,10 @@ AWS Instance Recovery reference covering Overview, Where It Fits, Daily Checks, 
 
 *Applies to: AWS*
 </div>
+![AWS Instance Recovery](../../../../assets/cloud-aws-compute-instance-recovery-index.svg)
 
-```text
-┌─────────────────────────────────── AWS Compute — Instance Recovery ───────────────────────────────────┐
-│                                                                                                       │
-│  EC2 recovery mechanisms: CloudWatch alarm recovery, reboot, restore from AMI/snapshot.               │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              Automatic Recovery              │  │              Health Check Types             │   │
-│   │         CW alarm: StatusCheckFailed          │  │         System check: host hardware         │   │
-│   │           Action: recover instance           │  │            Instance check: OS/NIC           │   │
-│   │          Retains: IP, EBS, EIP, SG           │  │         ELB health: app-level check         │   │
-│   │            Moves to healthy host             │  │          Custom: CloudWatch metric          │   │
-│   │           Notification: SNS topic            │  │         ASG: replaces failed member         │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  CW alarm triggers automatic recovery; ASG replaces terminated instances automatically                │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │            Manual Recovery Steps             │  │                 DR Scenarios                │   │
-│   │            Console: stop → start             │  │         Corrupt OS: restore from AMI        │   │
-│   │          Reboot: keeps EBS + config          │  │       Lost data: EBS snapshot restore       │   │
-│   │         Detach root vol: chroot fix          │  │        AZ failure: relaunch in new AZ       │   │
-│   │        Serial console: no-network fix        │  │       Region failure: cross-region AMI      │   │
-│   │         SSM run-command: fix config          │  │         RTO target: define per tier         │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  EC2 host · Nitro hypervisor · EBS · CloudWatch · SNS · multiple AZs                                  │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  StatusCheckFailed_System= Host hardware or network issue; triggers auto-recovery                     │
-│  StatusCheckFailed_Instance= OS-level failure; requires reboot or manual fix                          │
-│  recover action  = CloudWatch alarm action moving instance to healthy host                            │
-│  Retains EIP     = Elastic IP stays associated after automatic recovery                               │
-│  Detach root vol = Mount root EBS on rescue instance to repair offline OS                             │
-│  Serial console  = Out-of-band access for instances without network connectivity                      │
-│  chroot          = Linux technique to access and fix a mounted OS root filesystem                     │
-│  Cross-region AMI= AMI copied to DR region; launch instances there on region failure                  │
-│  ASG replacement = ASG terminates failed instance and launches new one automatically                  │
-│  Stop → Start    = Moves instance to new host; clears most transient failures                         │
-│  RTO             = Recovery Time Objective; maximum acceptable downtime per tier                      │
-│  ELB health check= Removes unhealthy instance from load balancer target group                         │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 ## Overview
 
 AWS Instance Recovery notes for day-to-day infrastructure operations.

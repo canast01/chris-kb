@@ -11,6 +11,8 @@ Integrations reference covering Integration Landscape, GitHub Integration, Bitbu
 
 *Applies to: Jira Cloud / Data Center*
 </div>
+![Jira — Integrations](../../../../assets/itsm-jira-architecture-integrations-index.svg)
+
 
 ## Integration Landscape
 
@@ -61,50 +63,7 @@ graph LR
     J <-->|REST API| SCRIPTS
     J <-->|REST API| EXT
 ```
-```text
-┌────────────────────────────────── Jira — Architecture Integrations ───────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                                   Jira Integration Landscape                                  │   │
-│   │           Atlassian: Confluence app link, Bitbucket branch/PR linking, Bamboo builds          │   │
-│   │              Auth: LDAP user/group sync + SAML SSO via Okta/ADFS + Crowd optional             │   │
-│   │             REST API v3: issues, projects, boards, sprints, comments, attachments             │   │
-│   │             Webhooks: HTTP POST on issue created/updated/deleted to CI/CD and ITSM            │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Jira acts as the integration hub connecting dev tools, auth, and ticketing systems                 │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │       Directory & Auth      │  │        Dev Toolchain        │  │       External Systems      │   │
-│   │         LDAP/AD sync        │  │     Confluence app link     │  │           REST API          │   │
-│   │     SAML SSO: Okta/ADFS     │  │      Bitbucket branches     │  │           Webhooks          │   │
-│   │     Crowd SSO (optional)    │  │      Bamboo CI results      │  │       ServiceNow link       │   │
-│   │       MFA at IdP layer      │  │       Jenkins webhooks      │  │         Slack notifs        │   │
-│   │     Local fallback accts    │  │       GitHub PR links       │  │          Email SMTP         │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  LDAP/AD DCs · IdP (Okta/ADFS) · Bitbucket/GitHub servers · SMTP relay                                │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  App link     = Atlassian trusted relationship; enables cross-product OAuth and macros                │
-│  Bitbucket link = Jira shows branch and PR status from linked Bitbucket/GitHub repos                  │
-│  Bamboo link  = Jira shows CI build results on issues linked to Bamboo build plans                    │
-│  LDAP sync    = Jira polls LDAP/AD on schedule; imports users and group memberships                   │
-│  Webhook      = Jira POST to external URL on issue event; configure in Admin > Webhooks               │
-│  REST API v3  = Jira REST API; /rest/api/3/ prefix; JSON; PAT or OAuth2 auth                          │
-│  ServiceNow   = Jira-to-SNOW integration via webhook or REST for incident/change sync                 │
-│  Slack        = Jira for Slack app; posts issue updates to channels via webhook                       │
-│  SMTP         = outbound email for notifications; configure in Admin > Outgoing Mail                  │
-│  OAuth        = app link OAuth 1.0a/2.0 for trusted cross-product API requests                        │
-│  PAT          = Personal Access Token; preferred for REST API scripting                               │
-│  Crowd        = optional Atlassian SSO server; centralized auth if not using SAML                     │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 ### Commit Message Convention
 

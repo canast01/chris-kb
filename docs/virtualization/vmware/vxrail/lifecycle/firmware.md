@@ -10,27 +10,11 @@ VxRail Firmware reference covering Overview, Where It Fits, Daily Checks, Health
 
 *Applies to: VxRail 7.x · 8.x*
 </div>
+![VxRail Firmware](../../../../assets/virtualization-vmware-vxrail-lifecycle-firmware.svg)
+
 
 VxRail Firmware Stack (bottom to top)
-```text
-┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
-│  Hardware Layer                                                                                       │
-│  ┌────────────┐  ┌────────────┐  ┌────────────────────────┐                                           │
-│  │  BIOS/UEFI │  │  iDRAC FW  │  │  Storage Controller FW │                                           │
-│  │  (CPU/mem) │  │  (BMC/OOB) │  │  (RAID/HBA)            │                                           │
-│  └─────┬──────┘  └─────┬──────┘  └──────────┬─────────────┘                                           │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-         │               │                     │  all bundled in ↓
-┌────────────────────────────────────────────────── ▼ ──────────────────────────────────────────────────┐
-│  VxRail Composite Bundle                                                                              │
-│  (certified combination of all firmware + vSphere versions)                                           │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-                                   │  applied via ↓
-┌────────────────────────────────────────────────── ▼ ──────────────────────────────────────────────────┐
-│  VxRail Manager LCM                                                                                   │
-│  validates compatibility → applies rolling across nodes                                               │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 ## Overview
 

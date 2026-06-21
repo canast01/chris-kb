@@ -8,46 +8,10 @@ tags:
 <div class="kb-summary">
 Step-by-step procedures for connecting, configuring, and troubleshooting LDAP identity sources across vCenter, Aria Operations, and other enterprise platforms.
 </div>
+![LDAP Integration — Procedures](../../../assets/security-ldap-integration-operations-index.svg)
 
-```text
-┌──────────────────────────────────── LDAP Integration — Operations ────────────────────────────────────┐
-│                                                                                                       │
-│   Protocols: LDAP on port 389 (plain); LDAPS on port 636 (TLS) — always use LDAPS in production       │
-│   Bind account: dedicated read-only service account; deny interactive logon; 90-180 day rotation      │
-│   Platforms: vCenter SSO (Active Directory over LDAP); VMware Aria Operations (LDAP source)           │
-│   Validation: ldapsearch bind test + test login as AD user before marking integration complete        │
-│                                                                                                       │
-│   Connectivity check                                                                                  │
-│   TCP test: Test-NetConnection -ComputerName dc01 -Port 636                                           │
-│   TLS cert: openssl s_client -connect dc01:636 -showcerts | openssl x509 -noout -dates                │
-│   Bind test: ldapsearch -H ldaps://dc01:636 -D "CN=svc-ldap,..." -w pass -b "DC=corp,DC=local"        │
-│                                                                                                       │
-│   Bind account configuration                                                                          │
-│   Create in OU=Service Accounts; PasswordNeverExpires $true; read delegation on target OU             │
-│   dsacls "OU=Users,DC=corp,DC=local" /G "corp\svc-ldap:GR" — grant read on users OU                   │
-│   Deny interactive logon: GPO > Local Policies > User Rights > Deny log on locally                    │
-│   Store password in CyberArk / HashiCorp Vault; set annual review reminder                            │
-│                                                                                                       │
-│   Platform integration                                                                                │
-│   vCenter SSO  Administration > SSO > Configuration > Identity Provider > Add AD over LDAP            │
-│   Aria Ops     Administration > Access Control > Authentication Sources > Add LDAP                    │
-│   Test button  Use built-in test in each platform before saving; confirm numEntries: 1                │
-│                                                                                                       │
-│   Troubleshooting                                                                                     │
-│   Error 49 / 52e: bind account locked or password expired — check with Get-ADUser -Properties         │
-│   Certificate expired (LDAPS): re-enrol cert via CA; re-import to app trust store                     │
-│   Group sync: check /var/log/vmware/sso/ldap-cache.log for vCenter sync errors                        │
-│                                                                                                       │
-│   Key terms:                                                                                          │
-│   LDAPS         = LDAP over TLS; port 636; encrypts directory traffic                                 │
-│   bind account  = service account used by apps to query directory; read-only scope                    │
-│   base DN       = Distinguished Name of starting point for directory searches                         │
-│   ldapsearch    = CLI tool for testing LDAP bind and search queries against a directory server        │
-│   numEntries: 1 = ldapsearch success indicator; confirms user found in directory                      │
-│   dsacls        = Windows tool for setting Access Control entries on AD objects                       │
-│   svc-ldap      = conventional name for the LDAP bind service account                                 │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Before you begin
 

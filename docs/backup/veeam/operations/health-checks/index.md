@@ -11,6 +11,8 @@ The primary review surface is the **Home** view in the VBR console, which shows 
 
 *Applies to: Veeam 12.x*
 </div>
+![Veeam — Health Checks](../../../../assets/backup-veeam-operations-health-checks-index.svg)
+
 
 ## Before you begin
 
@@ -47,45 +49,7 @@ sequenceDiagram
     VBR-->>VBR: Record verification result in job session
     note over VBR: Failure = backup not confirmed restorable\nEscalate immediately
 ```
-```text
-┌──────────────────────────────────────── Veeam — Health Checks ────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                                Veeam — Health Check Procedures                                │   │
-│   │                 Run these checks daily/weekly to confirm protection is working                │   │
-│   │                                    Start-VBRInstantVMRecovery                                 │   │
-│   │                  Review job completion rate — target 100%; investigate failures               │   │
-│   │                         Check replication/backup lag against RPO target                       │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   │      Check       │  What to verify  │      Expected     │    Frequency     │  Action if bad   │   │
-│   │    Job status    │All jobs complete │    100% success   │      Daily       │ Triage failures  │   │
-│   │    Lag / RPO     │ Replication lag  │    < RPO target   │      Daily       │  Tune bandwidth  │   │
-│   │     Capacity     │ Repo space used  │     < 80% full    │      Weekly      │ Expand or expire │   │
-│   │   Restore test   │  Random restore  │    Data intact    │     Monthly      │ Fix backup chain │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  Windows Server (Backup Server) · Proxy VMs on ESXi · Backup storage (NAS/SAN) · Management LAN       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Backup Server = central Veeam component: scheduler, job engine, catalog, REST API                    │
-│  Backup Proxy  = data mover between vSphere and repository; runs in virtual-appliance mode or H       │
-│  CBT           = Changed Block Tracking; VMware VADP mechanism to track changed disk sectors          │
-│  VADP          = VMware vSphere APIs for Data Protection; enables agentless VM backup                 │
-│  SOBR          = Scale-Out Backup Repository; tiers extents; moves cold data to object storage        │
-│  Instant Recovery= mounts VM disks from backup directly to ESXi; VM live in seconds                   │
-│  SureBackup    = automated backup verification; test-restores VM in isolated virtual lab              │
-│  Replication   = creates VM replica at DR site; enables failover without full restore time            │
-│  GFS Retention = Grandfather-Father-Son retention: daily, weekly, monthly, yearly restore points      │
-│  Immutable Repo= object storage (S3 WORM) or Linux XFS (immutable flag) repo; ransomware protec       │
-│  Mount Server  = Windows host presenting backup as iSCSI/NFS datastore for instant recovery           │
-│  VeeamZIP      = ad-hoc compressed portable backup of a single VM; no job required                    │
-│  Health Check  = periodic backup integrity scan; verifies restore points are readable                 │
-│  Forward Incremental= default mode; one full + daily incrementals; synthetic full created perio       │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 ## Run This Routine
 

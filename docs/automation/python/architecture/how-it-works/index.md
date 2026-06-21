@@ -11,6 +11,8 @@ Python is the dominant language for infrastructure automation, data pipelines, a
 
 *Applies to: Python 3.x*
 </div>
+![Python Automation — How It Works](../../../../assets/automation-python-architecture-how-it-works-index.svg)
+
 
 ---
 
@@ -32,29 +34,7 @@ flowchart TD
     style B fill:#1565c0,color:#fff
     style C fill:#2e7d32,color:#fff
 ```
-```text
-┌──────────────────────────────────────── Python — How It Works ────────────────────────────────────────┐
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │       CPython: source → bytecode (.pyc) → interpreted by CPython VM; no AOT compilation       │   │
-│   │     Import system: finds modules via sys.path; .pth files extend path; namespace packages     │   │
-│   │    async/await: coroutines on asyncio event loop; use for I/O-bound concurrency (HTTP, SSH)   │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │          Execution          │  │         Concurrency         │  │          Packaging          │   │
-│   │   Source → bytecode (.pyc)  │  │    threading (GIL bound)    │  │        pyproject.toml       │   │
-│   │    CPython VM interprets    │  │   multiprocessing (true //  │  │    pip install -e . (dev)   │   │
-│   │    sys.path import search   │  │     asyncio (I/O bound)     │  │    build + twine publish    │   │
-│   │   PYTHONDONTWRITEBYTECODE   │  │      concurrent.futures     │  │        wheel + sdist        │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │     GIL         = Global Interpreter Lock; no true thread parallelism; use multiprocessing    │   │
-│   │   asyncio     = stdlib event loop; use await with async-native libraries (aiohttp, aioboto3)  │   │
-│   │     concurrent.futures = ThreadPoolExecutor / ProcessPoolExecutor; simpler parallelism API    │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 ---
 

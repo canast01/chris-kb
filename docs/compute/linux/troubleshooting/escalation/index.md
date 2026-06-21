@@ -12,50 +12,10 @@ How to escalate Linux OS issues to Red Hat or Canonical support: what data to co
 
 *Applies to: RHEL 8/9 · Ubuntu 22.04 / 24.04 LTS*
 </div>
+![Linux — Escalation](../../../../assets/compute-linux-troubleshooting-escalation-index.svg)
 
-```text
-┌──────────────────────────────────── Linux — Escalation Procedures ────────────────────────────────────┐
-│                                                                                                       │
-│  Escalate Linux issues to Red Hat or Canonical when a kernel panic is recurring,                      │
-│  data corruption is suspected, a security incident is active, or a critical service                   │
-│  cannot be restored by internal troubleshooting. Collect sosreport FIRST.                             │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Step 1 — Collect Data               │  │          Step 2 — Open the SR               │   │
-│   │  Run sosreport on the affected host          │  │  RHEL: access.redhat.com/support            │   │
-│   │  Collect kdump crash dump (if kernel panic)  │  │  Ubuntu: ubuntu.com/advantage               │   │
-│   │  Note OS version + kernel + hardware         │  │  Priority: Sev1 down / Sev2 major / Sev3    │   │
-│   │  Capture recent journalctl + dmesg output    │  │  Attach sosreport + kdump + dmesg           │   │
-│   │  Write timeline: last good → first failure   │  │  Include subscription/contract ID           │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  For Sev1: open portal case AND call the vendor immediately after submission.                         │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Step 3 — Escalation Path            │  │         What NOT to Do                      │   │
-│   │  T1: triage + confirm sosreport received     │  │  Do not run fsck on a live mounted volume   │   │
-│   │  T2: senior engineer assigned + session      │  │  Do not reboot if kdump not yet captured    │   │
-│   │  T3: engineering review for kernel bug       │  │  Do not apply kernel updates mid-incident   │   │
-│   │  Request TAM if P1 running > 4 hours         │  │  Do not clear journal logs during case      │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  sosreport    = diagnostic bundle for RHEL; equivalent apport-collect for Ubuntu                      │
-│  kdump        = kernel crash dump; saved to /var/crash/ on panic; required for kernel SRs             │
-│  journalctl   = systemd journal query tool; primary log source since RHEL 7 / Ubuntu 16+              │
-│  SELinux      = RHEL mandatory access control; AVC denials visible in audit.log                       │
-│  OOB          = Out-of-Band management; iDRAC/iLO/IPMI for host access when OS is down                │
-│  subscription = RHEL/Ubuntu Pro entitlement; required for vendor support                              │
-│  TAM          = Technical Account Manager; escalation contact for premium contracts                   │
-│  KCS          = Knowledge-Centered Service; Red Hat knowledge base; search before escalating          │
-│  Sev1         = highest severity; production host down; no workaround; 24×7 response                  │
-│  CEE          = Customer Engagement Engineer; Red Hat term for the support engineer assigned          │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ---
 

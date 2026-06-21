@@ -8,30 +8,10 @@ tags:
 <div class="kb-summary">
 NTFS Permissions reference covering Overview, NTFS Permission Types, icacls Reference, Inheritance, Effective Permissions and 1 more sections.
 </div>
+![NTFS Permissions](../../../../assets/networking-protocols-smb-ntfs-index.svg)
 
-```text
-┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
-│  C:\Shares\Finance  (folder object)                                                                   │
-│  ┌──────────────────────────────────────────────────────┐                                             │
-│  │  Security Descriptor                                 │                                             │
-│  │  ┌────────────────┐  Owner: DOMAIN\admin             │                                             │
-│  │  │ DACL           │                                  │                                             │
-│  │  │ (access control│  ACEs (Access Control Entries):  │                                             │
-│  │  │  list)         │  ├─ Allow: DOMAIN\Finance_Users  │                                             │
-│  │  │                │  │         Modify (OI)(CI)       │                                             │
-│  │  │                │  ├─ Allow: DOMAIN\Domain Admins  │                                             │
-│  │  │                │  │         Full Control (OI)(CI) │                                             │
-│  │  │                │  └─ Deny:  DOMAIN\Interns        │                                             │
-│  │  │                │            Write (OI)(CI)        │                                             │
-│  │  └────────────────┘                                  │                                             │
-│  │  ┌────────────────┐                                  │                                             │
-│  │  │ SACL           │  Audit: Everyone FullControl     │                                             │
-│  │  │ (audit list)   │  → Event ID 4663 in Security log │                                             │
-│  │  └────────────────┘                                  │                                             │
-│  └──────────────────────────────────────────────────────┘                                             │
-│  (I) = inherited from parent   explicit = set directly here                                           │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Overview
 

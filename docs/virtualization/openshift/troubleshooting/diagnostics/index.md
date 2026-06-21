@@ -11,35 +11,10 @@ Diagnostic tools and techniques: must-gather collection, oc adm inspect, Prometh
 
 *Applies to: OpenShift 4.x*
 </div>
+![OpenShift — Diagnostics](../../../../assets/virtualization-openshift-troubleshooting-diagnostics-index.svg)
 
-```text
-┌──────────────────────────────────────── OpenShift Diagnostics ────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   must-gather: full cluster state in one command; attach to every Red Hat support case        │   │
-│   │   oc adm inspect: targeted collection for one operator/namespace; faster than must-gather    │    │
-│   │   etcd: health endpoints + Prometheus metrics; latency > 10ms P99 = disk IOPS problem        │    │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │      must-gather            │  │      etcd Diagnostics        │  │     Network Diagnostics     │  │
-│   │      ─────────────          │  │      ─────────────           │  │      ─────────────          │  │
-│   │  Full cluster state         │  │  endpoint health/status      │  │  oc exec curl between pods  │  │
-│   │  Pod logs, events, configs  │  │  member list + latency       │  │  OVN-K pod status           │  │
-│   │  ~10-20 min to collect      │  │  db size, compaction         │  │  DNS resolution test        │  │
-│   │  Attach to support case     │  │  Prometheus metrics          │  │  NetworkPolicy debug        │  │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    must-gather  = Runs image that collects logs, configs, CRDs, and events from all namespaces        │
-│    oc adm inspect= Collects resources from a specific operator or namespace; faster/targeted          │
-│    etcdctl     = etcd CLI; available inside etcd pods via oc rsh or oc debug node                     │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ```mermaid
 graph TD

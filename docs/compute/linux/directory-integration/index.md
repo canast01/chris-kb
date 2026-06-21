@@ -3,6 +3,8 @@ tags:
   - linux
 ---
 # Integration — Directory Integration (LDAP / Active Directory)
+![Integration — Directory Integration (LDAP / Active Directory)](../../../assets/compute-linux-directory-integration-index.svg)
+
 
 ```bash
 # Install required packages (RHEL/Rocky)
@@ -21,38 +23,7 @@ realm join -U administrator corp.example.com
 realm list
 id administrator@corp.example.com
 ```
-```text
-┌──────────────────── Integration — Directory Integration (LDAP / Active Directory) ────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Integrate infrastructure services with Active Directory via LDAPS for authentication     │   │
-│   │      Service account: dedicated bind account; read-only to OU; password rotation tracked      │   │
-│   │        Required: LDAPS (port 636) only; import AD CA cert; test bind before production        │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                 LDAP Config                  │  │               Troubleshooting               │   │
-│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
-│   │            Server: DC IP or FQDN             │  │             ldapsearch bind test            │   │
-│   │              Port: 636 (LDAPS)               │  │           Check CA in trust store           │   │
-│   │           Bind DN: svc-ldap@domain           │  │        Verify service acct not locked       │   │
-│   │          Base DN: DC=corp,DC=local           │  │         Check OU search permissions         │   │
-│   │            Group filter: memberOf            │  │           AD event log: 4771/4776           │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    Bind DN      = Distinguished Name of service account used to authenticate to LDAP                  │
-│    Base DN      = Search root in directory tree; e.g. DC=corp,DC=local for full domain                │
-│    LDAPS        = LDAP over TLS port 636; required; plain LDAP (389) transmits creds in clear         │
-│    memberOf     = AD attribute listing group DNs; used for group-based role mapping                   │
-│    ldapsearch   = CLI tool to test LDAP queries; confirm bind and attribute retrieval                 │
-│    Event 4776   = AD credential validation attempt; logged on DC; useful for bind failures            │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 ```bash
 # Allow only members of 'linux-admins' AD group to log in
 realm permit -g linux-admins@corp.example.com

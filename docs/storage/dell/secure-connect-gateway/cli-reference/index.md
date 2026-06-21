@@ -10,58 +10,9 @@ SCG CLI reference: `dcicli` command usage for connectivity verification, `suppor
 
 *Applies to: Secure Connect Gateway*
 </div>
-```text
-┌────────────────────────────────────── Dell SCG — CLI Reference ───────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │            SCG CLI: command-line interface for all management and operational tasks           │   │
-│   │            Access: SSH or REST client to management IP; authenticate as admin role            │   │
-│   │        Commands: status, list, create, modify, delete, show, and diagnostic operations        │   │
-│   │          Scripting: use REST API or CLI in automation for provisioning and reporting          │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    SSH → authenticate → show status → configure → verify → log output                                 │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │          Collection         │  │        Array adapters       │  │         Per product         │   │
-│   │          Transport          │  │        HTTPS outbound       │  │          No inbound         │   │
-│   │         CloudIQ feed        │  │       Telemetry relay       │  │        Near real-time       │   │
-│   │        Support tunnel       │  │        Remote assist        │  │        On-demand only       │   │
-│   │           Alerting          │  │         Email/syslog        │  │       Threshold rules       │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │     Category     │     Command      │      Purpose      │      Output      │      Notes       │   │
-│   │      Status      │   show status    │    Health check   │   State/alerts   │    Daily run     │   │
-│   │       List       │     list all     │     Inventory     │   Name/ID/size   │    Read-only     │   │
-│   │      Create      │  create volume   │     Provision     │    New object    │    Change req    │   │
-│   │      Delete      │ delete resource  │    Decommission   │   Confirmation   │   Irreversible   │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: SCG VM or appliance on-prem · outbound HTTPS to Dell · connected storage arrays          │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    SCG                = Secure Connect Gateway; replaces ESRS as Dell remote support relay platform   │
-│    ESRS               = EMC Secure Remote Services; predecessor to SCG; still supported on older ar...│
-│    Adapter            = SCG component connecting to a specific array type: Unity, PowerStore, PowerMax│
-│    CloudIQ relay      = SCG forwards array health telemetry to CloudIQ SaaS for analytics             │
-│    Support tunnel     = Dell TAC can open an encrypted on-demand remote session via SCG               │
-│    Device registration = arrays registered in SCG; SCG authenticates to Dell support portal           │
-│    Site               = SCG logical grouping of arrays at a physical location within the organisation │
-│    Policy             = SCG alert policy; defines which events trigger email or syslog notifications  │
-│    SCG bundle         = log/diagnostic collection submitted to Dell support via SCG upload            │
-│    Gateway HA         = two SCG instances in active-active; both relay telemetry independently        │
-│    Port 9443          = SCG local management UI port; REST API also served on port 9443               │
-│    Outbound only      = SCG connections are outbound HTTPS; no inbound firewall rules required        │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+![Secure Connect Gateway (SCG) — CLI Reference](../../../../assets/storage-dell-secure-connect-gateway-cli-reference-index.svg)
+
+
 
 
 ---

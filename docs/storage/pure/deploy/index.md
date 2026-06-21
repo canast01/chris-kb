@@ -6,50 +6,10 @@ search:
   boost: 1.5
 ---
 # Pure Storage — Getting Started
+![Pure Storage — Getting Started](../../../assets/storage-pure-deploy-index.svg)
 
-```text
-┌──────────────────────────────── Pure Storage — First-Day Orientation ─────────────────────────────────┐
-│                                                                                                       │
-│  FlashArray (block) — First-Day Steps                                                                 │
-│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
-│  1. Connect array to management VLAN; identify DHCP IP or connect directly to management port         │
-│  2. Browse to https://<array-IP>; log in with credentials from Quick Start guide (inside box)         │
-│  3. Complete Initial Setup Wizard: array name, static management IP, DNS, NTP, admin password         │
-│  4. Verify hardware health: Storage → Array → all controllers, shelves, drives green                  │
-│  5. Create networks: Settings → Network → add data interfaces (iSCSI/FC/NVMe-oF VIFs)                 │
-│  6. Provision volumes; register hosts; run first I/O test; register with Pure1 monitoring             │
-│                                                                                                       │
-│                              │                                 │                                      │
-│           FlashArray //X series                       FlashBlade //S or //E series                    │
-│           block: iSCSI, FC, NVMe-oF                   NAS: NFS v3/v4.1; object: S3                    │
-│                                                                                                       │
-│  FlashBlade (NAS/object) — First-Day Steps                                                            │
-│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
-│  1. Rack 4U chassis; connect OOB management switch to chassis management module (dual ports)          │
-│  2. Browse to chassis management IP; complete setup wizard: array name, IP, NTP, DNS                  │
-│  3. Create data VIFs: System → Network → VIFs; assign 100GbE data port IPs per blade                  │
-│  4. Create file systems (NFS) or object store buckets (S3); assign capacity and protocols             │
-│  5. Mount NFS export or configure S3 endpoint on clients; run first read/write test                   │
-│  6. Enable replication if DR is required (ActiveDR for block, native replication for NAS/object)      │
-│                                                                                                       │
-│  Shared Operational Baseline                                                                          │
-│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
-│  Register both arrays in Pure1 (pure1.purestorage.com) for cloud-based health monitoring              │
-│  Enable PhoneHome/SupportAssist: Settings → Support → Enable Remote Assistance                        │
-│  Record: array serials, management VIPs, data VIF IPs, Pure1 organisation name                        │
-│  Set capacity alert thresholds; schedule quarterly firmware review against Pure1 recommendations      │
-│                                                                                                       │
-│  GLOSSARY                                                                                             │
-│  Purity//FA  — firmware running on FlashArray controllers (block array OS)                            │
-│  Purity//FB  — firmware running on FlashBlade chassis (NAS/object array OS)                           │
-│  VIF         — Virtual Interface; a floating data IP bound to a physical network port                 │
-│  Pure1       — cloud-based monitoring and support portal for all Pure arrays                          │
-│  ActiveCluster— synchronous replication between two FlashArrays (zero RPO, zero RTO)                  │
-│  ActiveDR    — asynchronous replication for FlashArray to a remote site                               │
-│  DirectFlash — Pure's NVMe flash modules; proprietary form factor, not commodity SSDs                 │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 This guide provides an orientation to deploying Pure Storage infrastructure, covering FlashArray block storage and FlashBlade NAS/object storage. Each product has its own dedicated deployment guide; this page summarizes the key first-day steps for each.
 

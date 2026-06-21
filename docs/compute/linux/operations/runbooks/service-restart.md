@@ -11,6 +11,8 @@ tags:
 
 *Applies to: RHEL / Ubuntu LTS*
 </div>
+![Service Restart Runbook](../../../../assets/compute-linux-operations-runbooks-service-restart.svg)
+
 
 | Field | Value |
 |---|---|
@@ -30,42 +32,7 @@ tags:
 
 ## Process Flow
 
-```text
-┌────────────────────────────────────── Runbook — Service Restart ──────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │           Restart services in dependency order; verify each layer before proceeding           │   │
-│   │           Always stop dependants first; start dependencies first on the way back up           │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              Linux (systemctl)               │  │             Windows (PowerShell)            │   │
-│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
-│   │            systemctl status <svc>            │  │              Get-Service <svc>              │   │
-│   │             systemctl stop <svc>             │  │              Stop-Service <svc>             │   │
-│   │            systemctl start <svc>             │  │             Start-Service <svc>             │   │
-│   │           systemctl restart <svc>            │  │            Restart-Service <svc>            │   │
-│   │            journalctl -u <svc> -f            │  │          Get-EventLog -LogName App          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                               Order for dependent stack restart:                              │   │
-│   │                     STOP:  app-tier → middleware → database → storage-mount                   │   │
-│   │                     START: storage-mount → database → middleware → app-tier                   │   │
-│   │                  Verify each layer healthy before starting the next layer up                  │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    Dependency order= Services depend on each other; wrong stop/start order causes cascading fails     │
-│    Graceful stop   = SIGTERM before SIGKILL; lets service flush buffers and close connections         │
-│    journalctl -f   = Follow live service log; monitor for errors during restart                       │
-│    Health check    = HTTP endpoint or service-level test confirming service is accepting traffic      │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 **Stop here if** logs show a configuration error or missing dependency — fix the root cause before restarting, otherwise the service will fail again immediately.
 
 ## Step 2 — Attempt Config Reload (preferred — no downtime)

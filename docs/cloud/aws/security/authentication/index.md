@@ -4,6 +4,8 @@ tags:
   - security
 ---
 # AWS Authentication — SSO, MFA & Credentials
+![AWS Authentication — SSO, MFA & Credentials](../../../../assets/cloud-aws-security-authentication-index.svg)
+
 
 ```bash
 # List permission sets
@@ -15,53 +17,7 @@ aws sso-admin list-permission-sets \
 aws sso login --profile prod
 # Or configure SSO profile in ~/.aws/config:
 ```
-```text
-┌───────────────────────────── AWS Authentication — SSO, MFA & Credentials ─────────────────────────────┐
-│                                                                                                       │
-│  Authentication to AWS via IAM Identity Center SSO, MFA enforcement, and access keys.                 │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          IAM Identity Center (SSO)           │  │               MFA Enforcement               │   │
-│   │       IdP: Azure AD / Okta SAML source       │  │        Root account: hardware MFA key       │   │
-│   │     Permission sets → IAM roles in accts     │  │       IAM users: TOTP or hardware MFA       │   │
-│   │       Browser: AWS access portal login       │  │       SCP: deny without MFA condition       │   │
-│   │         CLI: aws sso login --profile         │  │     Identity Center: MFA at portal level    │   │
-│   │      Token: short-lived; no static keys      │  │    Condition: aws:MultiFactorAuthPresent    │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  SSO issues short-lived tokens; no long-lived access keys needed for human users.                     │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │        Access Keys (Machine Identity)        │  │          Credential Best Practices          │   │
-│   │      Use only for machine/CI workloads       │  │         No root account access keys         │   │
-│   │      Prefer IAM roles over access keys       │  │          Rotate keys every 90 days          │   │
-│   │      Store in Secrets Manager not code       │  │         Audit with credential report        │   │
-│   │       OIDC for GitHub Actions (no key)       │  │          Deactivate before deleting         │   │
-│   │       KMS for signing; not static keys       │  │        Alert on root usage via CT/CW        │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  AWS IAM global service · Identity Center regional portal · STS regional endpoints                    │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  IAM Identity Center= AWS SSO service managing human user access across accounts                      │
-│  Permission set  = IAM policy definition assigned to users/groups in member accounts                  │
-│  SAML federation = Protocol connecting corporate IdP (Azure AD/Okta) to AWS SSO                       │
-│  TOTP            = Time-based One-Time Password; TOTP app (e.g. Authenticator) for MFA                │
-│  Hardware MFA    = Physical YubiKey or similar device; recommended for root account                   │
-│  STS             = Security Token Service; issues temporary credentials via AssumeRole                │
-│  Access key      = Long-lived AKID+secret pair; avoid for human users; use SSO instead                │
-│  OIDC            = OpenID Connect; allows GitHub Actions to assume roles without keys                 │
-│  aws:MultiFactorAuthPresent= Condition key requiring MFA in the session                               │
-│  Credential report= IAM CSV report listing users and their last key/password usage                    │
-│  Root account    = AWS account root user; cannot be restricted by SCP; use sparingly                  │
-│  Short-lived token= Temporary STS credential; expires after max 12h; no rotation needed               │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 ```bash
 # Attach policy that denies all actions unless MFA is present
 # Apply this to IAM groups used for human console access:

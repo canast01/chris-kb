@@ -12,49 +12,10 @@ How to escalate Windows Server issues to Microsoft support: what data to collect
 
 *Applies to: Windows Server 2019 / 2022*
 </div>
+![Windows Server — Escalation](../../../../assets/compute-windows-server-troubleshooting-escalation-index.svg)
 
-```text
-┌───────────────────────────── Windows Server — Troubleshooting Escalation ─────────────────────────────┐
-│                                                                                                       │
-│  Escalate Windows Server issues to Microsoft when a BSOD is recurring, a service                      │
-│  cannot be restored, or data loss is suspected. Collect the diagnostic package FIRST.                 │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Step 1 — Collect Data               │  │          Step 2 — Open the SR               │   │
-│   │  Export Windows Event Logs (evtx)            │  │  Go to support.microsoft.com → sign in      │   │
-│   │  Run msinfo32 /nfo to capture system info    │  │  Product: Windows Server; pick version      │   │
-│   │  Note Windows version + build + hotfixes     │  │  Severity: A critical / B major / C minor   │   │
-│   │  Get crash dump from %SystemRoot%\Minidump   │  │  Attach event logs + dump + msinfo32 file   │   │
-│   │  Write timeline: last good → first failure   │  │  Include the exact error text and event ID  │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  For Sev A: open portal case AND call Microsoft Premier/Unified support immediately.                  │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Step 3 — Escalation Path            │  │         What NOT to Do                      │   │
-│   │  CSS: triage + review diagnostic package     │  │  Do not run chkdsk /f on a live volume      │   │
-│   │  DSE: dedicated engineer for Premier cases   │  │  Do not apply Windows Updates mid-incident  │   │
-│   │  Engineering: for code-level investigation   │  │  Do not clear Event Viewer logs             │   │
-│   │  TAM: engage for prolonged Sev A cases       │  │  Do not reboot before capturing crash dump  │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  CSS          = Customer Support Services; Microsoft front-line support team                          │
-│  DSE          = Delivery Service Engineer; Microsoft Premier dedicated engineer                       │
-│  SDP          = Support Diagnostic Package; Microsoft data collection scripts                         │
-│  Sev A        = Severity A; production server down; 24×7 response; fastest SLA                        │
-│  memory.dmp   = full kernel crash dump written on BSOD to %SystemRoot%\                               │
-│  Minidump     = small crash dump; %SystemRoot%\Minidump\; collected more quickly                      │
-│  msinfo32     = System Information utility; exports full HW/SW snapshot to .nfo file                  │
-│  Premier      = Microsoft Premier Support contract; dedicated TAM and DSE                             │
-│  WPR          = Windows Performance Recorder; captures ETW traces for CPU/memory issues               │
-│  TAM          = Technical Account Manager; escalation contact for Premier contracts                   │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ---
 

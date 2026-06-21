@@ -10,6 +10,8 @@ Validates that infrastructure is prepared to receive a new workload, application
 
 *Applies to: ServiceNow*
 </div>
+![Environment Readiness Checklist](../../../../assets/itsm-servicenow-lifecycle-environment-readiness-index.svg)
+
 
 ## Readiness Assessment Flow
 
@@ -24,41 +26,7 @@ flowchart TD
     G -->|Yes| H[Ready — proceed\nwith onboarding]
     G -->|No| I[Remediate blockers\nbefore proceeding]
 ```
-```text
-┌──────────────────────────────────────── Environment Readiness ────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Environment readiness: verify capacity, connectivity, dependencies, and credentials      │   │
-│   │           Complete readiness checklist before any deployment or major change starts           │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │           Infrastructure Readiness           │  │             Dependency Readiness            │   │
-│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
-│   │         Storage: capacity available          │  │            DNS resolves correctly           │   │
-│   │          Compute: CPU/RAM headroom           │  │            Network paths verified           │   │
-│   │          No active alarms on target          │  │            Auth/credentials ready           │   │
-│   │         Backup current before deploy         │  │           Downstream deps notified          │   │
-│   │            Monitoring configured             │  │           Firewall rules in place           │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   │      Check       │      Method      │        Pass       │   Fail action    │      Owner       │   │
-│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
-│   │   Storage cap    │    Array GUI     │     > 20% free    │   Expand first   │      Infra       │   │
-│   │   Compute cap    │  vCenter/Hyp-V   │     > 20% free    │   Resize first   │      Infra       │   │
-│   │   Network conn   │   Ping + trace   │    All paths OK   │   Fix network    │   Network team   │   │
-│   │       Auth       │    Test login    │      Success      │    Fix creds     │      Infra       │   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    Headroom      = Free compute/storage capacity above the deployment requirement; 20% minimum        │
-│    Downstream deps= Services or systems that depend on the environment being deployed to              │
-│    Pre-deploy backup= Snapshot/config backup taken immediately before any change starts               │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 ## 2. Network Readiness
 

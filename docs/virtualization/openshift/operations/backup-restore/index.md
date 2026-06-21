@@ -9,36 +9,10 @@ etcd backup and restore procedure, OADP (OpenShift API for Data Protection) for 
 
 *Applies to: OpenShift 4.x*
 </div>
+![OpenShift — Backup & Restore](../../../../assets/virtualization-openshift-operations-backup-restore-index.svg)
 
-```text
-┌───────────────────────────────────── OpenShift Backup & Restore ──────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   etcd backup = cluster state snapshot; restore recovers from catastrophic control plane loss  │  │
-│   │   OADP = application-level backup (PVCs, resources, namespace); uses Velero under the hood    │   │
-│   │   Run etcd backup: before every upgrade, weekly minimum, after large config changes            │  │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │       etcd Backup           │  │       OADP / Velero          │  │     Restore Scenarios       │  │
-│   │      ─────────────          │  │      ─────────────           │  │      ─────────────          │  │
-│   │  Script on master node      │  │  Operator from OperatorHub   │  │  Single member lost: replace│  │
-│   │  Saves snapshot + static PK │  │  BackupStorageLocation (S3)  │  │  Quorum lost: full restore  │  │
-│   │  Copy off-cluster (S3/NFS)  │  │  Schedule: CronJob-style     │  │  OADP: restore namespace   │   │
-│   │  Verify: check file size    │  │  Include/exclude namespaces  │  │  Partial: selective restore │  │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    etcd snapshot= Point-in-time copy of all cluster state (secrets, configs, deployments, etc.)       │
-│    OADP         = OpenShift API for Data Protection; Velero-based operator for app-level backup       │
-│    BackupStorageLocation= S3-compatible endpoint for storing OADP backup tarballs                     │
-│    Static pods  = Control plane pods managed by kubelet directly (not via API); backed up with etcd   │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ```mermaid
 graph TD

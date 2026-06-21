@@ -10,39 +10,10 @@ Dell AIOps: Workload Insights, Performance Predictions, and Bottleneck Detection
 
 *Applies to: Dell AIOps*
 </div>
+![Dell AIOps: Workload Insights, Performance Predictions, and Bottleneck Detection](../../../../assets/storage-dell-dell-aiops-insights-index.svg)
 
-```text
-┌──────────────────────────────────────── Dell AIOps — Insights ────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │             AIOps Insights: AI-generated summaries of infrastructure health trends            │   │
-│   │                 Categories: Efficiency, Risk, Capacity, Performance, Security                 │   │
-│   │         Insight = aggregated pattern observed across multiple objects and time windows        │   │
-│   │                    Includes estimated business impact and priority ranking                    │   │
-│   │                    Updated daily from ML analysis of all ingested telemetry                   │   │
-│   │             Actionable: each insight links to recommendations and affected systems            │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  Insights computed in AIOps ML engine · stored in AIOps DB · displayed in UI and API                  │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Insight = Aggregated finding from ML analysis covering multiple systems or time windows              │
-│  Efficiency insight = Identifying over-provisioned or under-utilised resources                        │
-│  Risk insight = Patterns suggesting increased failure probability across a group of systems           │
-│  Capacity insight = Fleet-wide capacity outlook; systems at risk within 90 days                       │
-│  Performance insight = Workload patterns causing latency degradation across multiple arrays           │
-│  Security insight = Configuration gaps or unusual access patterns detected by ML                      │
-│  Business impact = Estimated operational risk or cost of not acting on insight                        │
-│  Priority ranking = Insights ordered by estimated impact and urgency                                  │
-│  Affected systems = List of infrastructure objects contributing to the insight                        │
-│  Linked recommendations = Specific actions to address the identified pattern                          │
-│  Daily refresh = Insight model runs nightly on new telemetry; UI updated each morning                 │
-│  Pattern = Recurring behaviour observed across objects over time; basis for insight generation        │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 Common bottleneck types and remediation:
 

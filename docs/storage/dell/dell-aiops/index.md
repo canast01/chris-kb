@@ -9,50 +9,10 @@ Dell AIOps monitoring platform — architecture, anomaly detection, recommendati
 
 *Applies to: Dell AIOps*
 </div>
+![Dell AIOps](../../../assets/storage-dell-dell-aiops-index.svg)
 
-```text
-┌───────────────────────── Dell AIOps — AI-Driven Infrastructure Observability ─────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Dell AIOps: AI/ML platform ingesting metrics from Dell storage, compute, and networking    │   │
-│   │         Detects anomalies, predicts failures, and surfaces prioritised recommendations        │   │
-│   │     Deployed on-premises as VMs or containers; integrates with CloudIQ and APEX telemetry     │   │
-│   │          Dashboards, alert routing, and capacity insights from a single pane of glass         │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Data flows from infrastructure → AIOps engine → dashboards, alerts, and ITSM                       │
-│                                                                                                       │
-│                ▼                                 ▼                                 ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │         Data Sources        │  │          AI Engine          │  │           Outputs           │   │
-│   │          PowerStore         │  │        Anomaly detect       │  │        Alert console        │   │
-│   │          PowerScale         │  │       Failure predict       │  │          Dashboards         │   │
-│   │          PowerFlex          │  │      Capacity forecast      │  │       Recommendations       │   │
-│   │        APEX platform        │  │          Root cause         │  │         ITSM webhook        │   │
-│   │         VxRail / VCF        │  │       Workload insight      │  │       API for tooling       │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  AIOps VMs on-prem or cloud · infrastructure arrays/servers on-prem · TCP 443 between components      │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  AIOps = AI for IT Operations; applying ML to operational telemetry for proactive management          │
-│  Anomaly detection = ML model identifying statistical outliers in metric streams                      │
-│  Failure prediction = Model forecasting component or system failure before it occurs                  │
-│  Root cause analysis = Automated correlation of events and metrics to identify failure source         │
-│  Capacity forecast = ML prediction of when capacity threshold will be reached                         │
-│  Workload insight = Analysis of IO patterns, queue depth, and latency per workload                    │
-│  Recommendation = AI-generated action to prevent or resolve a detected issue                          │
-│  ITSM webhook = Outbound notification to ServiceNow, Jira, or PagerDuty                               │
-│  Telemetry = Metrics, events, and logs forwarded from infrastructure to AIOps engine                  │
-│  APEX = Dell as-a-Service platform; telemetry included in AIOps data ingestion                        │
-│  VxRail = Dell hyperconverged infrastructure; AIOps monitors HCI cluster health                       │
-│  Single pane = Unified UI showing health, alerts, and capacity across all Dell infrastructure         │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 <div class="kb-grid kb-grid-5">
 <a class="kb-card" href="architecture/"><strong>Architecture</strong><span>Deployment topology, SCG integration, and data ingestion pipeline from Dell arrays.</span></a>

@@ -8,13 +8,10 @@ tags:
 <div class="kb-summary">
 Top-10 Aria Operations (vROps) commands for alerts, metrics, policy management, and adapter status via REST API.
 </div>
+![Aria Operations Cheat Sheet](../../assets/reference-cheat-sheets-aria-operations.svg)
 
-```text
-┌─────────────────────────────────── Aria Operations Cheat Sheet ───────────────────────────────────────┐
-│  API: https://vrops/suite-api/api  ·  Auth: Basic or token  ·  Also: vrops-cli (limited)              │
-│  Categories: Alerts · Resources · Metrics · Policies · Adapters · Reports                             │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## REST API (curl examples)
 

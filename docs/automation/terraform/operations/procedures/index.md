@@ -11,6 +11,8 @@ Terraform operational procedures — standard apply workflow, plan and apply str
 
 *Applies to: Terraform 1.x*
 </div>
+![Terraform — Procedures](../../../../assets/automation-terraform-operations-procedures-index.svg)
+
 
 ## Before you begin
 
@@ -43,30 +45,7 @@ graph LR
     apply --> postPlan
     apply --> stateBackup
 ```
-```text
-┌─────────────────────────────────────── Terraform — Procedures ────────────────────────────────────────┐
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │     TF procedures: new module creation, import existing infra, state migration, workspaces    │   │
-│   │  New module: write main.tf, variables.tf, outputs.tf, versions.tf; add examples/; add tests/  │   │
-│   │    Import: terraform import resource.type.name <resource-id>; then terraform plan to verify   │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │           Import Existing Resource           │  │               State Migration               │   │
-│   │        1. Write resource block in .tf        │  │    1. terraform state pull > old.tfstate    │   │
-│   │         2. terraform import addr id          │  │        2. Modify state JSON if needed       │   │
-│   │       3. terraform plan (expect empty)       │  │     3. terraform state push new.tfstate     │   │
-│   │       4. Adjust config to match state        │  │          4. terraform plan (verify)         │   │
-│   │               5. Commit to git               │  │          5. Run apply to reconcile          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │         terraform import = adds existing resource to state; does not generate .tf code        │   │
-│   │         Config generation = terraform plan -generate-config-out=generated.tf (TF 1.5+)        │   │
-│   │        state migration   = moving state between backends; terraform init -migrate-state       │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 Use `-target` sparingly — it creates drift between the plan and real state if overused.
 

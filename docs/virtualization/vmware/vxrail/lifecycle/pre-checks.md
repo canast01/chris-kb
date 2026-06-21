@@ -10,6 +10,8 @@ VxRail Pre-Change Health Validation reference covering VxRail Manager, vCenter H
 
 *Applies to: VxRail 7.x · 8.x*
 </div>
+![VxRail Pre-Change Health Validation](../../../../assets/virtualization-vmware-vxrail-lifecycle-pre-checks.svg)
+
 
 Pre-Upgrade Checklist Flow
 ```text

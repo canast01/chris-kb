@@ -12,39 +12,10 @@ Python diagnostic commands: read the full traceback, trace imports with python3 
 
 *Applies to: Python 3.x*
 </div>
+![Python Automation — Diagnostics](../../../../assets/automation-python-troubleshooting-diagnostics-index.svg)
 
-```text
-┌──────────────────────────────────────── Python — Diagnostics ─────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   Start here: read full traceback (last frame first) → pdb debug → add DEBUG logging         │    │
-│   │   Import errors: python3 -v to trace imports; check sys.path and venv activation              │   │
-│   │   Performance: py-spy top --pid <pid> for CPU profiling without code changes                  │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                Error Analysis                │  │                 Debug Tools                 │   │
-│   │   Read full traceback (last line first)      │  │   python3 -m pdb script.py                  │   │
-│   │   traceback.print_exc() in except block      │  │   breakpoint() in code (3.7+)               │   │
-│   │   logging.exception("msg") logs traceback    │  │   py-spy top --pid <pid> (CPU profiler)     │   │
-│   │   pip check (detect dependency conflicts)    │  │   python3 -X dev (extra warnings)           │   │
-│   │   python3 -W error to promote warnings       │  │   python3 -v (verbose import trace)         │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  Python interpreter · venv / conda env · pip packages · OS environment variables                      │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│  breakpoint()      = built-in (3.7+); drops into pdb at that line; n=next, c=continue, p=print var    │
-│  py-spy            = sampling profiler; attaches to a running Python process with no code changes     │
-│  python3 -X dev    = development mode; enables ResourceWarning, asyncio debug, fault handler          │
-│  -W error          = treat all warnings as errors; catches deprecation before it becomes a break      │
-│  venv              = isolated Python environment; each project should have its own venv               │
-│  sys.path          = ordered list of directories Python searches for modules when importing           │
-│  pdb               = Python Debugger; step-through interactive debugging from the command line        │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ```mermaid
 graph TD

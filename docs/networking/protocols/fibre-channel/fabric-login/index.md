@@ -3,13 +3,10 @@ tags:
   - networking
 ---
 # Fibre Channel — Fabric Login
+![Fibre Channel — Fabric Login](../../../../assets/networking-protocols-fibre-channel-fabric-login-index.svg)
 
-```text
-┌─────────────────────────────────── ┐        ┌───────────┐        ┌ ───────────────────────────────────┐
-│ Host HBA │        │ FC Switch │        │  Storage                                                     │
-│          │        │(Name Svr) │        │  Target                                                      │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 ```sql
 Login failures prevent hosts from seeing storage.
 

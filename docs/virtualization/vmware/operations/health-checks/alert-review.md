@@ -10,37 +10,10 @@ Alert Health Check reference covering Active Alerts Review, Aria Operations Aler
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
+![Alert Health Check](../../../../assets/virtualization-vmware-operations-health-checks-alert-review.svg)
 
-```text
-┌────────────────────────────────── Alert Health Check — Review Flow ───────────────────────────────────┐
-│                                                                                                       │
-│    Review all active alerts every morning; triage by priority; assign or suppress                     │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │        Alert Sources        │  │       Priority Triage       │  │       Response Actions      │   │
-│   │      ─────────────────      │  │      ─────────────────      │  │      ─────────────────      │   │
-│   │        vCenter alarms       │  │      P1 = red critical      │  │        P1 → immediate       │   │
-│   │       Aria Operations       │  │       P2 = yellow warn      │  │      P2 → assign owner      │   │
-│   │        Pure1 / iDRAC        │  │        P3 = blue info       │  │      P3 → log + weekly      │   │
-│   │       Monitoring tools      │  │                             │  │       False pos → tune      │   │
-│   │        Manual reports       │  │                             │  │       Repeat → RCA req      │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    P1           = Critical; immediate action; escalate if not resolved within 30 min                  │
-│    P2           = Warning; assign an owner; resolve within business hours                             │
-│    P3           = Informational; log and review weekly; no immediate action required                  │
-│    False positive = Alert fires incorrectly; tune threshold or suppress after RCA                     │
-│    Repeat alert  = Same alert fires repeatedly; trigger RCA to find root cause                        │
-│    Aria Ops      = VMware Aria Operations; collects metrics and fires perf alerts                     │
-│    Pure1         = Pure Storage cloud portal; array health, capacity, and alerts                      │
-│    iDRAC         = Dell integrated remote access; hardware alerts: temp, disk, PSU                    │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Before you begin
 

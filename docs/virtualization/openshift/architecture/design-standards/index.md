@@ -9,37 +9,10 @@ Node sizing guidelines, MachineSet design, storage class standards, network CIDR
 
 *Applies to: OpenShift 4.x*
 </div>
+![OpenShift — Design Standards](../../../../assets/virtualization-openshift-architecture-design-standards-index.svg)
 
-```text
-┌───────────────────────────────────── OpenShift Design Standards ──────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   Master nodes: 3× fixed, never scale; size for etcd (IOPS-sensitive); dedicated infra nodes  │   │
-│   │   Worker nodes: MachineSets; autoscale or manual; separate compute/infra/storage roles         │  │
-│   │   Storage: define StorageClasses before workloads; default SC must exist for PVC binding       │  │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │      Masters (3 fixed)      │  │    Workers / MachineSets     │  │    Infra Nodes (3+)         │  │
-│   │      ─────────────          │  │      ─────────────           │  │      ─────────────          │  │
-│   │  8 vCPU / 32 GB RAM min     │  │  4–16 vCPU depending on WL  │  │  4 vCPU / 16 GB RAM min     │   │
-│   │  120 GB etcd disk (SSD)     │  │  Separate MachineSet / AZ   │  │  Router, monitoring, reg    │   │
-│   │  Low latency to etcd        │  │  Labels + taints for roles   │  │  Taint: infra=reserved      │  │
-│   │  Never schedule workloads   │  │  Autoscaler: min/max/target  │  │  Separate from worker WL    │  │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    MachineSet     = Template for a group of worker nodes; edit replicas to scale horizontally         │
-│    StorageClass   = Defines how PVCs are provisioned (provisioner, reclaim policy, binding mode)      │
-│    Infra node     = Worker with infra role; runs platform components, not user workloads              │
-│    ClusterAutoscaler= Scales MachineSets based on pending pods; configures min/max per MachineSet     │
-│    CIDR           = Classless Inter-Domain Routing; set clusterNetwork + serviceNetwork at install    │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ```mermaid
 graph TB

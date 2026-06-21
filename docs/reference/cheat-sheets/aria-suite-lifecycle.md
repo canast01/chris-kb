@@ -8,13 +8,10 @@ tags:
 <div class="kb-summary">
 Top-10 Aria Suite Lifecycle (LCM) REST API calls for product installation, upgrades, locker management, and certificate operations.
 </div>
+![Aria Suite Lifecycle Cheat Sheet](../../assets/reference-cheat-sheets-aria-suite-lifecycle.svg)
 
-```text
-┌──────────────────────────────── Aria Suite Lifecycle Cheat Sheet ─────────────────────────────────────┐
-│  API: https://lcm/lcm/api  ·  Auth: Basic or token  ·  UI: https://lcm:8080                           │
-│  Categories: Environments · Products · Locker · Certificates · Upgrades · Requests                    │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## REST API
 

@@ -10,38 +10,10 @@ Ceph's RADOS layer stores all data as objects. Clients calculate data placement 
 
 *Applies to: Red Hat Ceph Storage · Upstream Ceph*
 </div>
+![Ceph — How It Works](../../../../assets/storage-ceph-architecture-how-it-works-index.svg)
 
-```text
-┌───────────────────────────────────────── Ceph — How It Works ─────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   CRUSH: clients compute OSD placement locally; no central metadata lookup required            │  │
-│   │   OSDs self-heal: when an OSD fails, peers detect it and begin replicating lost copies        │   │
-│   │   PG (Placement Group): unit of replication; each PG maps to a set of OSDs via CRUSH          │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   Client I/O path (block/file/object all converge here):                                      │   │
-│   │                                                                                               │   │
-│   │   Client → CRUSH(object, pool, CRUSH map) → PG ID → OSD set                                  │    │
-│   │        → Primary OSD (accepts write)                                                          │   │
-│   │        → Replicates to secondary OSDs (if replicated pool)                                    │   │
-│   │        → Returns ACK to client when all replicas confirm                                      │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    RADOS   = Reliable Autonomic Distributed Object Store; the storage engine underlying all Ceph      │
-│    OSD     = Object Storage Daemon; one per disk; stores objects, handles replication + recovery      │
-│    MON     = Monitor; maintains cluster maps (CRUSH, OSD, PG maps); 3 or 5 per cluster for quorum     │
-│    MGR     = Manager; metrics, orchestration, dashboard; at least 2 per cluster (active/standby)      │
-│    MDS     = Metadata Server; required for CephFS only; manages file system namespace                 │
-│    PG      = Placement Group; unit of data distribution; typically 128-256 per OSD                    │
-│    CRUSH   = Controlled Replication Under Scalable Hashing; placement algorithm; no metadata needed   │
-│    BlueStore= Default OSD backend (since Nautilus); raw block device; no filesystem underneath        │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ```mermaid
 graph TD

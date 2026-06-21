@@ -15,13 +15,10 @@ tags:
 <div class="kb-summary">
 155+ terms covering VMware products, virtualization, networking, storage, security, Kubernetes, and observability. Use browser search (Ctrl+F) or site search to find any term quickly.
 </div>
+![VMware Infrastructure Glossary](../../assets/reference-glossary-index.svg)
 
-```text
-┌──────────────────────────────── VMware Infrastructure Glossary ───────────────────────────────────────┐
-│  155+ terms: VMware products · networking · storage · security · Kubernetes · observability           │
-│  Use Ctrl+F or site search to jump to any term                                                        │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 Jump: [A](#a) [B](#b) [C](#c) [D](#d) [E](#e) [F](#f) [G](#g) [H](#h) [I](#i) [J](#j) [K](#k) [L](#l) [M](#m) [N](#n) [O](#o) [P](#p) [Q](#q) [R](#r) [S](#s) [T](#t) [U](#u) [V](#v) [W](#w)
 

@@ -12,31 +12,10 @@ Terraform escalation: when to open a HashiCorp support case, how to file a provi
 
 *Applies to: Terraform 1.x / Terraform Cloud / HCP Terraform*
 </div>
+![Terraform — Escalation](../../../../assets/automation-terraform-troubleshooting-escalation-index.svg)
 
-```text
-┌─────────────────────────────────────── Terraform — Escalation ────────────────────────────────────────┐
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Escalate Terraform issues: provider bugs → GitHub, state corruption → HashiCorp support    │   │
-│   │  Provider bugs: github.com/hashicorp/terraform-provider-<name>; include TF + provider version │   │
-│   │        Terraform Cloud: support.hashicorp.com; TF Enterprise: emergency contact per SLA       │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             Escalation Triggers              │  │                Info to Gather               │   │
-│   │             State file corrupted             │  │           terraform version output          │   │
-│   │            Provider panic / crash            │  │               Provider version              │   │
-│   │           Lock cannot be released            │  │            TF_LOG=TRACE full log            │   │
-│   │               TF Cloud outage                │  │            State file (sanitised)           │   │
-│   │        Sentinel policy blocking apply        │  │               Plan JSON output              │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │  State corruption   = restore from versioned backend backup; terraform state push prev.json   │   │
-│   │  Provider GitHub    = github.com/hashicorp/terraform-provider-aws (replace aws with provider) │   │
-│   │         HashiCorp support  = support.hashicorp.com; severity 1 for production outages         │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Before you begin
 

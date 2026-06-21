@@ -12,37 +12,10 @@ AWS diagnostic commands: confirm account and role identity with aws sts, query C
 
 *Applies to: AWS CLI v2 · all regions*
 </div>
+![AWS — Diagnostics](../../../../assets/cloud-aws-troubleshooting-diagnostics-index.svg)
 
-```text
-┌─────────────────────────────── AWS — Diagnostics Investigation Toolset ───────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   Start here: aws sts get-caller-identity → CloudTrail lookup → VPC Flow Logs REJECT entries │    │
-│   │   IAM denied: aws iam simulate-principal-policy to find which policy blocked the action      │    │
-│   │   Service unreachable: VPC Reachability Analyzer; check SG, NACL, route table               │     │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                 Log Sources                  │  │               Metrics and Traces            │   │
-│   │   CloudTrail: management API events          │  │   CloudWatch: EC2, RDS, Lambda metrics     │    │
-│   │   VPC Flow Logs: accepted and rejected flows │  │   X-Ray: distributed service latency map   │    │
-│   │   CloudWatch Logs: app logs per service      │  │   Performance Insights: RDS SQL analysis    │   │
-│   │   ELB access logs: per-request timing        │  │   CloudWatch Logs Insights: KQL queries     │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (all managed by AWS):                                                        │
-│  EC2 instances / ECS tasks / Lambda functions · VPC / ENI / SG / NACL · RDS / EKS cluster nodes       │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│  CloudTrail        = management event log; records every API call with caller identity                │
-│  Flow Log          = VPC network traffic log; ACCEPT or REJECT per 5-minute window                    │
-│  simulate-principal-policy= IAM CLI that evaluates whether a policy allows or denies an action        │
-│  Reachability Analyzer= VPC tool tracing the network path between two resources                       │
-│  Performance Insights= RDS SQL analysis dashboard; shows wait events and top queries                  │
-│  SSM Session Manager= browser/CLI shell to EC2 without SSH key or open port 22                        │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ```mermaid
 graph TD

@@ -10,6 +10,8 @@ search:
 <div class="kb-summary">
 Replication Failures Troubleshooting reference covering Overview, Replication Technology Classification, Diagnostic Flowchart, ONTAP SnapMirror Troubleshooting, RecoverPoint Troubleshooting and 5 more sections.
 </div>
+![Replication Failures Troubleshooting](../../../assets/storage-troubleshooting-replication-failures-index.svg)
+
 
 ## Before you begin
 
@@ -71,42 +73,7 @@ flowchart TD
     B -- Veeam Rep --> Z[Get-VBRJob type Replica\nCheck last session result]
     Z --> AA[Review session log\nCheck network path to replica host]
 ```
-```text
-┌───────────────────────────────── Replication Failure Troubleshooting ─────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │       Replication failures: WAN link loss, auth error, lag exceeds RPO, pair state error      │   │
-│   │           First check: WAN connectivity → replication link state → pair state → lag           │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │       SRDF (PowerMax)       │  │      SnapMirror (ONTAP)     │  │         vSphere Rep         │   │
-│   │      ─────────────────      │  │      ─────────────────      │  │      ─────────────────      │   │
-│   │         symrdf query        │  │       snapmirror show       │  │       VR appliance UI       │   │
-│   │        RDF link state       │  │        SM state field       │  │          VR status          │   │
-│   │         R1/R2 state         │  │           Lag time          │  │          RPO status         │   │
-│   │       symrdf failover       │  │      snapmirror resync      │  │        Re-register VM       │   │
-│   │          RDF group          │  │       Peering cluster       │  │      VRS configuration      │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│   │     Symptom      │   First check    │        Fix        │      Verify      │   Escalate if    │   │
-│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
-│   │    Link down     │  WAN ping/test   │      Fix WAN      │   Rep resumes    │ Persistent down  │   │
-│   │     High lag     │  WAN bandwidth   │  Throttle or fix  │  Lag decreases   │    RPO breach    │   │
-│   │    Pair error    │    Auth/cert     │  Re-authenticate  │   State normal   │   Data diverge   │   │
-│   │    Suspended     │  Manual suspend  │     Resume rep    │     In-sync      │ If not resuming  │   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    RDF link    = Fibre Channel or IP link between PowerMax pairs; GigE or dedicated FC                │
-│    Peering     = ONTAP cluster peer relationship; required for SnapMirror cross-cluster               │
-│    VRS         = vSphere Replication Server; collects replication data on target site                 │
-│    RPO breach  = Lag exceeds configured RPO target; escalate immediately as DR goal at risk           │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 ### SRDF Error Codes
 

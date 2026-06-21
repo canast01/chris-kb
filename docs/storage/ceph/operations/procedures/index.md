@@ -5,50 +5,15 @@ tags:
 ---
 # Ceph — Procedures
 
-```text
-┌─────────────────────────────── Ceph — Operational Procedures Overview ────────────────────────────────┐
-│                                                                                                       │
-│  Procedure Categories                                                                                 │
-│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
-│  ┌─────────────────────────┐  ┌─────────────────────────┐  ┌─────────────────────────┐                │
-│  │  OSD Lifecycle          │  │  Cluster Maintenance    │  │  Capacity Management    │                │
-│  │  add new OSD            │  │  noout / norebalance    │  │  reweight by util       │                │
-│  │  replace failed OSD     │  │  scrub scheduling       │  │  add nodes via cephadm  │                │
-│  │  decommission host      │  │  PG repair              │  │  crush reweight-all     │                │
-│  │  osd out → wait → purge │  │  inconsistent PG fix    │  │  monitor data migration │                │
-│  └─────────────────────────┘  └─────────────────────────┘  └─────────────────────────┘                │
-│                                                                                                       │
-│  OSD Replacement — Safe Sequence                                                                      │
-│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
-│  1. Confirm OSD down: ceph osd tree | grep down                                                       │
-│  2. Mark out: ceph osd out osd.<id>  — triggers data migration away from failed OSD                   │
-│  3. Wait: watch ceph -s  — BytesToResync reaches 0 before physically replacing disk                   │
-│  4. Stop daemon: systemctl stop ceph-osd@<id>  ·  replace disk  ·  re-run ceph-volume                 │
-│  5. Verify: ceph osd tree — new OSD shows up/in; ceph -s — HEALTH_OK                                  │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  OSD          = Object Storage Daemon; one per disk; stores, replicates, and recovers data            │
-│  PG           = Placement Group; logical shard unit; PGs map to OSD sets via CRUSH algorithm          │
-│  cephadm      = Ceph's orchestrator; deploys and manages cluster daemons via containers               │
-│  CRUSH        = Controlled Replication Under Scalable Hashing; Ceph's data distribution algorithm     │
-│  reweight     = Adjusting an OSD's relative capacity share in the CRUSH map                           │
-│  scrub        = Data integrity scan; deep-scrub adds checksum verification of stored objects          │
-│  ceph osd out = Marks OSD as out of the cluster; triggers data migration to remaining OSDs            │
-│  ceph osd in  = Marks OSD back in; triggers data rebalancing back onto the OSD                        │
-│  BytesToResync= Remaining bytes to replicate after OSD change; wait for 0 before physical swap        │
-│  noout flag   = Prevents OSDs being marked out automatically during planned maintenance               │
-│  CRUSH rule   = Policy defining fault domain (host, rack) for data placement in a pool                │
-│  ceph orch    = Orchestration commands: apply osds, add hosts, remove daemons via cephadm             │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 <div class="kb-summary">
 Ceph operational procedures: add/replace/decommission OSDs, reweight for capacity balance, scrub management, PG repair, and controlled cluster maintenance with noout/norebalance flags.
 
 *Applies to: Ceph Reef / Squid*
 </div>
+![Ceph — Procedures](../../../../assets/storage-ceph-operations-procedures-index.svg)
+
 
 ```mermaid
 graph TD

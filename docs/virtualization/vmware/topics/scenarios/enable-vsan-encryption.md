@@ -16,35 +16,10 @@ ensure the cluster has at least 30% free space before enabling.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
+![Enable vSAN Encryption](../../../../assets/virtualization-vmware-topics-scenarios-enable-vsan-encryptio.svg)
 
-```text
-┌─────────────────────────────── Enable vSAN Encryption — Procedure Flow ───────────────────────────────┐
-│                                                                                                       │
-│  OVERVIEW                                                                                             │
-│  Enabling vSAN data-at-rest encryption triggers a full rebuild of the entire vSAN datastore           │
-│  All objects on all disks re-encrypted — takes hours to days on large clusters                        │
-│  Plan for a dedicated maintenance window · cluster must have ≥ 30% free space                         │
-│                                                                                                       │
-│  STEP 1 — Choose Key Provider                                                                         │
-│  Option A: Native Key Provider (NKP) — simpler, keys stored in vCenter DB · back up NKP offline       │
-│  Option B: External KMS — required for FIPS/compliance · address + port 5696 + cert import            │
-│                                                                                                       │
-│  STEP 2 — Pre-Encryption Checks                                                                       │
-│  vSAN 100% healthy (Skyline Health all green) · ≥ 30% free space on vSAN datastore                    │
-│  No resync queue outstanding · all hosts reachable                                                    │
-│                                                                                                       │
-│  STEP 3 — Enable Encryption                                                                           │
-│  vCenter → Cluster → Configure → vSAN → Services → Data-At-Rest Encryption → Enable                   │
-│                                                                                                       │
-│  STEP 4 — Monitor Full Rebuild                                                                        │
-│  Resyncing objects queue counts down — do NOT put any host in maintenance mode during rebuild         │
-│  Monitor: vCenter → Cluster → Monitor → vSAN → Resyncing Objects                                      │
-│                                                                                                       │
-│  STEP 5 — Post-Rebuild Validation                                                                     │
-│  Verify encryption status · re-export NKP backup · validate vSAN Skyline Health all green             │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 
 !!! warning "Full data rebuild required"

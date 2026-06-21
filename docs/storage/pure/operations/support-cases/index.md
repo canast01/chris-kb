@@ -11,6 +11,8 @@ Pure Storage Support Cases reference covering Opening a Support Case, Case Sever
 
 *Applies to: FlashArray Purity 6.x*
 </div>
+![Pure Storage Support Cases](../../../../assets/storage-pure-operations-support-cases-index.svg)
+
 
 ```text
   Pure Support Case Flow

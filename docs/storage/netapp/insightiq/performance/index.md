@@ -10,38 +10,10 @@ InsightIQ: Throughput, Latency, IOPS, and Protocol Performance Dashboards refere
 
 *Applies to: InsightIQ*
 </div>
+![InsightIQ: Throughput, Latency, IOPS, and Protocol Performance Dashboards](../../../../assets/storage-netapp-insightiq-performance-index.svg)
 
-```text
-┌────────────────────────────────── InsightIQ — Performance Analysis ───────────────────────────────────┐
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │        IOPS Analysis        │  │       Latency Analysis      │  │          Throughput         │   │
-│   │        Per-node IOPS        │  │       Per-protocol lat      │  │        MB/s per node        │   │
-│   │      Per-protocol IOPS      │  │         p50/p95/p99         │  │       Network vs disk       │   │
-│   │        Read vs write        │  │       Backend vs front      │  │         Peak vs avg         │   │
-│   │       Peak vs average       │  │        Trend baseline       │  │       Saturation point      │   │
-│   │       Client breakdown      │  │         Cache impact        │  │         Protocol mix        │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  Metrics from PowerScale nodes · InsightIQ aggregates to cluster and node level                       │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  p50 latency = Median latency; 50% of operations complete faster than this value                      │
-│  p95 latency = 95th percentile latency; 5% of operations are slower; good SLA metric                  │
-│  p99 latency = 99th percentile; shows tail latency impacting worst-case user experience               │
-│  Frontend latency = Client-to-cluster latency including network and protocol overhead                 │
-│  Backend latency = Cluster-to-disk latency; excludes network; shows storage device health             │
-│  Cache impact = Reduction in backend IOPS due to read cache (L1 RAM, L2 SSD hits)                     │
-│  Saturation point = Throughput level at which latency begins degrading non-linearly                   │
-│  Protocol mix = Ratio of NFS/SMB/S3/HDFS IO; different protocols have different overheads             │
-│  Trend baseline = Historical average used to identify current deviations                              │
-│  Network vs disk = Comparing frontend and backend throughput to find bottleneck tier                  │
-│  Read vs write = IO breakdown critical for cache effectiveness and drive wear planning                │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Common Performance Issues
 

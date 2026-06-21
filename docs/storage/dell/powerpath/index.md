@@ -9,61 +9,10 @@ Host-based multipath I/O software — automatic path failover, dynamic load bala
 
 *Applies to: PowerPath*
 </div>
+![Dell PowerPath](../../../assets/storage-dell-powerpath-index.svg)
 
-```text
-┌──────────────────────────────────── Dell PowerPath Multipath I/O ─────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │       PowerPath: Dell host-side multipath driver; load balancing and automatic failover       │   │
-│   │         Policies: CLAROpt (adaptive LB), Adaptive (round-robin), Basic (failover-only)        │   │
-│   │            Supports: PowerMax, Unity, VNX, XtremIO, ECS; FC, iSCSI, FCoE transports           │   │
-│   │              Managed via powermt CLI; PowerPath/VE edition for VMware ESXi hosts              │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Host HBAs → multiple FC/iSCSI paths → PowerPath load-balances I/O → array FA ports                 │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │        Path Policies        │  │          Operations         │  │       Platform Support      │   │
-│   │      ─────────────────      │  │      ─────────────────      │  │      ─────────────────      │   │
-│   │      CLAROpt (default)      │  │       powermt display       │  │         RHEL / SLES         │   │
-│   │         Adaptive LB         │  │       powermt restore       │  │        Windows Server       │   │
-│   │        Basic failover       │  │         powermt save        │  │       VMware ESXi /VE       │   │
-│   │          Optimized          │  │         powermt set         │  │        AIX / Solaris        │   │
-│   │        Per-LUN policy       │  │        powermt check        │  │          Ubuntu LTS         │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│    Path failure detected → I/O rerouted to live paths → dead path polled → re-enabled on recovery     │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   │      Policy      │   Description    │      Best for     │    Array type    │      Notes       │   │
-│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
-│   │     CLAROpt      │  Array-aware LB  │    Unity / VNX    │  CLARiiON-class  │  Default policy  │   │
-│   │     Adaptive     │  Round-robin LB  │   Mixed workload  │    All arrays    │ Per-I/O balance  │   │
-│   │      Basic       │  Failover only   │    Low I/O apps   │    All arrays    │ One active path  │   │
-│   │    Optimized     │  Perf-aware LB   │      PowerMax     │ Symmetrix-class  │ Preferred paths  │   │
-│                                                                                                       │
-│    Physical: HBA ports in host → FC fabric or iSCSI network → array FA director ports                 │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    CLAROpt        = CLARiiON Optimized; array-aware load balancing for Unity/VNX arrays               │
-│    powermt        = PowerPath management CLI; primary tool for all path and policy operations         │
-│    powermt display= Show all multipath devices, paths, and states on the host                         │
-│    powermt restore= Re-apply saved PowerPath configuration after host reboot                          │
-│    powermt save   = Persist current path policy and config to disk for restore after reboot           │
-│    powermt set    = Set path policy or other parameter: powermt set policy=adaptive dev=all           │
-│    Dead path      = Path that failed I/O; PowerPath polls it for recovery every few seconds           │
-│    Emulation      = Array class identifier in PowerPath config (emc_symm, emc_clariion, etc.)         │
-│    PowerPath/VE   = PowerPath Virtual Edition for VMware ESXi; replaces native NMP PSP                │
-│    Registration   = License key bound to host system; verified via powermt check_registration         │
-│    Trespass       = Ownership transfer of LUN between array SPs in active/passive arrays              │
-│    ALUA           = Asymmetric Logical Unit Access; standard for preferred/non-preferred paths        │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 <div class="kb-grid kb-grid-3">
 

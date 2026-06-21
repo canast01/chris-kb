@@ -4,6 +4,8 @@ tags:
   - security
 ---
 # Linux — Access Control
+![Linux — Access Control](../../../../assets/compute-linux-security-access-control-index.svg)
+
 
 ```bash
 # View permissions
@@ -26,49 +28,7 @@ chmod 1775 /opt/shared
 # SGID on a directory — new files inherit group
 chmod 2775 /opt/projects
 ```
-```text
-┌─────────────────────────────────────── Linux — Access Control ────────────────────────────────────────┐
-│                                                                                                       │
-│  Access control on Linux: DAC permissions, SELinux MAC, ACLs, and sudo delegation.                    │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │            DAC — File Permissions            │  │                MAC — SELinux                │   │
-│   │          rwx per owner/group/other           │  │          Labels: user:role:type:lvl         │   │
-│   │           chmod: numeric/symbolic            │  │            enforcing / permissive           │   │
-│   │           chown: owner, chgrp: grp           │  │            restorecon: fix labels           │   │
-│   │           umask: default new perms           │  │            semanage: policy mgmt            │   │
-│   │            SUID/SGID/sticky bits             │  │          audit2allow: custom rules          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │            ACLs — Extended Perms             │  │         sudo — Privilege Delegation         │   │
-│   │            setfacl -m u:user:rwx             │  │            /etc/sudoers + visudo            │   │
-│   │              getfacl: view ACL               │  │              User/Group aliases             │   │
-│   │            mask: effective limit             │  │            NOPASSWD: passwordless           │   │
-│   │             default ACL on dirs              │  │            Cmnd_Alias: cmd groups           │   │
-│   │              inheritance rules               │  │            sudo -l: list allowed            │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  x86-64 servers · filesystem with ACL support (ext4/xfs) · LDAP/AD for group info                     │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  DAC         = Discretionary AC; owner discretion controls who accesses a file                        │
-│  MAC         = Mandatory AC; kernel-enforced policy independent of owner wishes                       │
-│  umask       = Default permission mask applied when creating new files/directories                    │
-│  SUID        = Set-UID: run executable as its owner (e.g. passwd runs as root)                        │
-│  SGID        = Set-GID: run as group, or inherit group on new files in directory                      │
-│  sticky bit  = Only owner can delete their files in shared dir (e.g. /tmp)                            │
-│  ACL mask    = Maximum effective permission for named users/groups in ACL                             │
-│  setfacl     = Set file ACL entries beyond standard rwx triplet                                       │
-│  SELinux ctx = Security context: user:role:type:sensitivity label on every object                     │
-│  restorecon  = Restore default SELinux file context from policy database                              │
-│  audit2allow = Generate SELinux allow rule from audit denial log entries                              │
-│  visudo      = Safe editor for sudoers; validates syntax before saving                                │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 ```mermaid
 flowchart TD
     subject["Subject\nProcess with SELinux label\ne.g. httpd_t"]

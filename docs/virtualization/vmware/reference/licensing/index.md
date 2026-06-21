@@ -3,47 +3,12 @@ tags:
   - reference
 ---
 # VMware / Broadcom Licensing Reference
+![VMware / Broadcom Licensing Reference](../../../../assets/virtualization-vmware-reference-licensing-index.svg)
+
 
 Quick reference for determining which licence tier is required to enable a specific capability. Use this page to answer "do I need to buy more licences to enable X?" before raising a change or procurement request.
 
-```text
-┌───────────────────────────── VMware / Broadcom Licence Bundle Comparison ─────────────────────────────┐
-│                                                                                                       │
-│   Post-2024 model: subscription only; per-core pricing; two main bundles: VCF and VVF                 │
-│   VCF = full SDDC stack (vSphere + vSAN Ent + NSX Ent+ + Aria Suite + SDDC Manager)                   │
-│   Perpetual licences valid under active support but cannot be renewed — migrate on expiry             │
-│                                                                                                       │
-│   vSphere Standard                                                                                    │
-│   Includes: HA, DRS, FT, VM Encryption, vSphere Replication, vLCM                                     │
-│   No VDS — vSS only; no NIOC; no LACP; no Host Profiles; no Auto Deploy                               │
-│                                                                                                       │
-│   vSphere Enterprise Plus                                                                             │
-│   Everything in Standard + VDS, NIOC, Host Profiles, Auto Deploy                                      │
-│   vSAN and NSX are NOT included — purchase as standalone add-ons                                      │
-│                                                                                                       │
-│   VVF — vSphere Foundation                                                                            │
-│   Everything in Enterprise Plus + vSAN Standard + basic Tanzu                                         │
-│   NSX NOT included; SDDC Manager NOT included; advanced vSAN (stretch/dedup/enc) NOT included         │
-│                                                                                                       │
-│   VCF — VMware Cloud Foundation                                                                       │
-│   Everything in Enterprise Plus + vSAN Enterprise + NSX Ent+ + full Aria Suite + SDDC Manager         │
-│   Only tier where NSX and full Aria are included; no separate licence purchase needed                 │
-│                                                                                                       │
-│   Feature unlock quick-ref                                                                            │
-│   LACP / NIOC / Host Profiles / Auto Deploy     → Enterprise Plus or higher (requires VDS)            │
-│   vSAN Stretched Cluster / Encryption / Dedup   → vSAN Enterprise add-on or VCF                       │
-│   NSX DFW + routing + NAT                       → NSX Standard (DFW included at all tiers)            │
-│   NSX load balancer / VPN                       → NSX Professional or higher                          │
-│   NSX IDS/IPS (east-west threat detection)      → NSX Enterprise Plus or VCF                          │
-│   Full Aria Suite                               → VCF (included) or standalone licences per product   │
-│                                                                                                       │
-│   Key terms:                                                                                          │
-│   VCF = VMware Cloud Foundation; full SDDC bundle; SDDC Manager manages platform lifecycle            │
-│   VVF = vSphere Foundation; mid-tier bundle; vSphere + vSAN Standard; NSX not included                │
-│   VDS = vSphere Distributed Switch; required for NIOC, LACP, Host Profiles, Auto Deploy               │
-│   SnS = Support and Subscription; perpetual contract type; no longer sold on new purchases            │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 ---
 

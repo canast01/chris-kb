@@ -11,6 +11,8 @@ Alerts reference covering Viewing Alerts, Alert Severity Levels, Common Alert Ty
 
 *Applies to: FlashArray Purity 6.x*
 </div>
+![Pure Storage Operations — Alerts](../../../../assets/storage-pure-operations-alerts-index.svg)
+
 
 ```text
   Pure Alert Flow

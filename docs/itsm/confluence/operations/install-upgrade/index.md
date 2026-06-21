@@ -4,6 +4,8 @@ tags:
   - operations
 ---
 # Confluence — Install and Upgrade
+![Confluence — Install and Upgrade](../../../../assets/itsm-confluence-operations-install-upgrade-index.svg)
+
 
 ```bash
 # Record current version
@@ -16,51 +18,7 @@ curl -s -H "Authorization: Bearer $CF_TOKEN" \
   "https://confluence.example.com/rest/api/plugins/1.0/" \
   | jq '.plugins[] | {key: .key, version: .version, enabled: .enabled}'
 ```
-```text
-┌────────────────────────────────── Confluence — Install and Upgrade ───────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                         Confluence Installation and Upgrade Procedure                         │   │
-│   │        Install: JDK 11/17 → download installer → set CONFLUENCE_HOME → run setup wizard       │   │
-│   │          DB: create PostgreSQL DB and role → set in setup wizard → apply license key          │   │
-│   │          Upgrade: backup DB + home → stop → run new installer → start → verify → test         │   │
-│   │          DC node add: install on new VM → point to same DB + NFS → join cluster auto          │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Always test upgrade in staging environment before production; keep snapshot for rollback           │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             Fresh Install Steps              │  │                Upgrade Steps                │   │
-│   │              Install JDK 11/17               │  │               Snapshot VM + DB              │   │
-│   │              Download installer              │  │                pg_dump backup               │   │
-│   │             Set CONFLUENCE_HOME              │  │                Stop all nodes               │   │
-│   │             Create PostgreSQL DB             │  │              Run new installer              │   │
-│   │               Run setup wizard               │  │               Start and verify              │   │
-│   │              Apply license key               │  │              Test key functions             │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  Fresh VM (RHEL/CentOS) · PostgreSQL VM · NFS datastore · load balancer for DC                        │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  CONFLUENCE_HOME = data directory; set as env var or in confluence-init.properties                    │
-│  JDK 11/17    = Confluence 8.x supports JDK 11 and 17; JDK 21 for Confluence 9.x                      │
-│  Setup wizard = browser-based initial config: DB, license, admin account, space                       │
-│  License key  = Atlassian data center or server license; apply in setup or Admin panel                │
-│  pg_dump      = PostgreSQL backup utility; always backup before any upgrade                           │
-│  Installer    = Atlassian-provided .bin file for Linux; chmod +x and run as root                      │
-│  DC cluster   = second node auto-joins when pointed at same DB and NFS home                           │
-│  Snapshot     = VM snapshot before upgrade; revert if upgrade fails                                   │
-│  Version check = Confluence upgrade path; some versions require intermediate upgrade steps            │
-│  setenv.sh    = JVM argument config; in CONFLUENCE_INSTALL/bin/; set -Xmx here                        │
-│  Plugin compat = check app compatibility on upgrade; UPM shows incompatible plugins                   │
-│  Rollback     = revert VM snapshot or restore DB dump; re-run previous installer                      │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 ```bash
 # Back up the install directory
 TIMESTAMP=$(date +%Y%m%d_%H%M%S)

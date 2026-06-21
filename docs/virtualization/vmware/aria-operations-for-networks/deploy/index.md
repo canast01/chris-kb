@@ -13,46 +13,10 @@ End-to-end deployment guide for Aria Operations for Networks (AON). Covers pre-f
 
 *Applies to: Aria Networks 6.x*
 </div>
+![Aria Operations for Networks — Deploy](../../../../assets/virtualization-vmware-aria-operations-for-networks-deploy-in.svg)
 
-```text
-┌────────────────────────── Aria Operations for Networks — Deployment Phases ───────────────────────────┐
-│                                                                                                       │
-│  Six phases from bare metal to operational flow-collection and topology mapping.                      │
-│  Complete each phase validation check before proceeding to the next phase.                            │
-│                                                                                                       │
-│  ┌──────────────────────────┐  ┌──────────────────────────┐  ┌──────────────────────────────────┐     │
-│  │  Phase 1: Pre-Flight     │  │  Phase 2: Platform OVA   │  │   Phase 3: Proxy/Collector OVA   │     │
-│  │  DNS A + PTR records     │  │  Deploy Platform OVA     │  │   Deploy Collector OVA           │     │
-│  │  NTP reachable           │  │  Set IP/FQDN/NTP         │  │   Enter platform FQDN + key      │     │
-│  │  vCenter svc account     │  │  Initial setup wizard    │  │   Proxy registers to platform    │     │
-│  │  NSX credentials ready   │  │  Accept EULA + licence   │  │   Verify green status in UI      │     │
-│  │  Datastore ≥ 200 GB      │  │  Platform Running state  │  │   Deploy more proxies if needed  │     │
-│  └──────────────────────────┘  └──────────────────────────┘  └──────────────────────────────────┘     │
-│                                                                                                       │
-│               ▼                             ▼                                ▼                        │
-│                                                                                                       │
-│  ┌──────────────────────────┐  ┌──────────────────────────┐  ┌──────────────────────────────────┐     │
-│  │  Phase 4: Data Sources   │  │  Phase 5: Flow (IPFIX)   │  │     Phase 6: Validation          │     │
-│  │  Add vCenter + thumbprt  │  │  NSX IPFIX → proxy IP    │  │   Services: nginx, cassandra     │     │
-│  │  Add NSX Manager creds   │  │  VDS: collector UDP 2055 │  │   All data sources green         │     │
-│  │  Add physical switches   │  │  Physical switch NetFlow │  │   Flows arriving on flow map     │     │
-│  │  SNMP community/v3 creds │  │  Verify flows in UI      │  │   Topology visible (VM→phys)     │     │
-│  │  Topology sync begins    │  │  Application discovery   │  │   Path analysis functional       │     │
-│  └──────────────────────────┘  └──────────────────────────┘  └──────────────────────────────────┘     │
-│                                                                                                       │
-│  Physical Infrastructure: Platform VM (≥200 GB datastore, static IP) + Collector VMs per site;        │
-│  SNMP access to physical switches; IPFIX/NetFlow export from ESXi hosts and NSX.                      │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Platform VM    = Central AON node: UI, analytics engine, cassandra/kafka/elasticsearch data store    │
-│  Collector VM   = Remote proxy VM: receives IPFIX/NetFlow; connects outbound to platform TCP 443      │
-│  IPFIX          = IP Flow Information Export; standard flow telemetry from NSX-T and VDS              │
-│  Data source    = vCenter, NSX Manager, physical switch, or firewall added to AON for collection      │
-│  PAK file       = Product upgrade bundle; uploaded via VAMI on port 5480 for in-place upgrade         │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ---
 

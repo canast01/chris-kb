@@ -10,42 +10,10 @@ Ceph cluster design: node and disk sizing, OSD-to-MON-to-MGR ratios, network sep
 
 *Applies to: Red Hat Ceph Storage · Upstream Ceph*
 </div>
+![Ceph — Design Standards](../../../../assets/storage-ceph-architecture-design-standards-index.svg)
 
-```text
-┌─────────────────────────────────────── Ceph — Design Standards ───────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   Minimum production: 3 nodes × 4 OSDs; use 5 MONs for large clusters; 2 MGRs always         │    │
-│   │   Network: public network (client I/O) and cluster network (replication) must be separate     │   │
-│   │   CRUSH: define host-level failure domain; upgrade to rack if > 3 nodes per rack              │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │       Node Sizing           │  │      Network Design          │  │      Daemon Counts          │  │
-│   │      ─────────────          │  │      ─────────────           │  │      ─────────────          │  │
-│   │  Min: 3 OSD nodes           │  │  Public: client ↔ OSD       │  │  MON: 3 (up to 5+ nodes)   │    │
-│   │  1 OSD per disk             │  │  Cluster: OSD ↔ OSD repl.   │  │  MGR: 2 (active/standby)   │    │
-│   │  1 SSD/NVMe for WAL/DB      │  │  10 GbE public minimum      │  │  MDS: 1+ if CephFS          │   │
-│   │  RAM: 4-6 GB per OSD        │  │  25 GbE+ cluster recommended│  │  RGW: 2+ if object storage  │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  OSD          = Object Storage Daemon; one per physical disk; minimum 3 OSD nodes for production      │
-│  MON          = Monitor daemon; maintains cluster maps; 3 MONs required (5 for large clusters)        │
-│  MGR          = Manager daemon; runs metrics, dashboard, orchestrator; always deploy 2 (active/standby)│
-│  MDS          = Metadata Server; required only if using CephFS; deploy 1+ per CephFS filesystem       │
-│  RGW          = RADOS Gateway; deploy 2+ for object storage HA; requires separate pool config         │
-│  CRUSH        = Controlled Replication Under Scalable Hashing; data placement algorithm               │
-│  Failure domain = CRUSH hierarchy level for fault isolation; host (default), rack, AZ                 │
-│  WAL/DB SSD   = NVMe device used as BlueStore WAL and RocksDB metadata store; boosts OSD performance  │
-│  Public network = Client-facing network; minimum 10 GbE; 25 GbE+ recommended for production           │
-│  Cluster network= OSD-to-OSD replication network; separate from public network; no client access      │
-│  FTT          = Failure To Tolerate; replication size 3 = FTT 1; requires min 3 OSD nodes             │
-│  BlueStore    = Default Ceph OSD storage backend; stores data directly on block device via RocksDB    │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ```mermaid
 graph TB

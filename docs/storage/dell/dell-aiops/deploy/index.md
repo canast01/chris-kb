@@ -7,61 +7,15 @@ search:
 ---
 # Dell APEX AIOps — Initial Setup
 
-```text
-┌────────────────────────────────── Dell APEX AIOps — Setup Sequence ───────────────────────────────────┐
-│                                                                                                       │
-│  Step 1 · Prerequisites                                                                               │
-│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
-│  Active Dell Technologies account with access to apex.dell.com; valid support contract per array      │
-│  Arrays already connected to CloudIQ via Secure Connect Gateway (SCG) — AIOps uses same telemetry     │
-│  If CloudIQ not configured: complete CloudIQ setup first (../cloudiq/deploy/)                         │
-│  Outbound HTTPS 443/TCP from SCG to apex.dell.com and cloudiq.dell.com                                │
-│  Minimum 90 days of telemetry data for AI recommendation accuracy                                     │
-│                                                                                                       │
-│                                        │  access and activate AIOps                                   │
-│                                        ▼                                                              │
-│  Step 2 · Access Dell APEX AIOps Portal                                                               │
-│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
-│  Log in to apex.dell.com with Dell Technologies account credentials                                   │
-│  Navigate to AIOps → Overview; portal is cloud-native SaaS — no on-premises install needed            │
-│  Verify arrays appear under Managed Systems: they auto-populate from CloudIQ telemetry                │
-│  Accept any pending entitlement or service activation prompts for new arrays                          │
-│                                                                                                       │
-│                                        │  configure dashboards and insights                           │
-│                                        ▼                                                              │
-│  Step 3 · Dashboards and Recommendations                                                              │
-│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
-│  Review AI-generated recommendations: Performance, Capacity, and Efficiency tabs per array            │
-│  Customise dashboards: add widgets for capacity trend, IOPS/throughput, and latency per system        │
-│  Set capacity forecast horizon (default 90 days): Capacity → Forecast Settings                        │
-│  Review rightsizing recommendations — AIOps identifies over-provisioned or under-used volumes         │
-│                                                                                                       │
-│                                        │  configure alerts and notifications                          │
-│                                        ▼                                                              │
-│  Step 4 · Alerts and Notification Configuration                                                       │
-│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
-│  Settings → Notifications: add email recipients; choose severity thresholds (Info/Warning/Critical)   │
-│  Enable capacity runout alerts: trigger when forecast indicates capacity exhaustion within N days     │
-│  Enable performance anomaly alerts: AIOps ML baseline detects IOPS/latency deviations                 │
-│  Review alert history to confirm notifications are delivering to correct recipients                   │
-│                                                                                                       │
-│                                        │  validate and baseline                                       │
-│                                        ▼                                                              │
-│  Step 5 · Validate and Baseline                                                                       │
-│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
-│  Confirm all registered arrays show active telemetry (last seen < 30 min)                             │
-│  Review initial AI recommendations list; triage and schedule any critical actions in ITSM             │
-│  Record: APEX account email, arrays under management, notification recipients configured              │
-│  Schedule monthly review of AIOps recommendations with storage team                                   │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 <div class="kb-summary">
 Step-by-step guide to setting up Dell APEX AIOps, connecting storage arrays, enabling AI-driven recommendations, and configuring dashboards and capacity alerts.
 
 *Applies to: Dell AIOps*
 </div>
+![Dell APEX AIOps — Initial Setup](../../../../assets/storage-dell-dell-aiops-deploy-index.svg)
+
 
 
 ## Before you begin

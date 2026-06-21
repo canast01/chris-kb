@@ -8,43 +8,10 @@ tags:
 <div class="kb-summary">
 Step-by-step procedures for generating patch compliance reports, deploying patches, handling exceptions, and responding to zero-day vulnerabilities.
 </div>
+![Patch Compliance — Procedures](../../../assets/security-patch-compliance-operations-index.svg)
 
-```text
-┌──────────────────────────────────── Patch Compliance — Operations ────────────────────────────────────┐
-│                                                                                                       │
-│   Tools: WSUS / SCCM / Intune for deployment; Tenable / Qualys for vulnerability context              │
-│   SLA tiers: Critical (CVSS ≥9.0) 72h; High 14d; Medium 30d; Low 90d                                  │
-│   Target: ≥95% on-time patch rate for Critical and High; monthly compliance report to ops team leads  │
-│   Zero-day: vendor mitigation within hours; emergency patch treated as Critical (72h SLA)             │
-│                                                                                                       │
-│   Monthly compliance workflow                                                                         │
-│   Report      WSUS: Computer Compliance report; SCCM: Software Update Compliance report               │
-│   Identify    Filter: Approval=Approved + Status=Failed/Needed; cross-ref CMDB for criticality        │
-│   Approve     Review KB article + test on test group 48-72h; extend to Production in change window    │
-│   Deploy      WSUS: Approve-WsusUpdate with deadline; SCCM: deploy Software Update Group              │
-│   Monitor     Check deployment status; collect WindowsUpdate.log for failures; reboot in window       │
-│                                                                                                       │
-│   Patch exception process                                                                             │
-│   Raise exception in GRC: affected systems, CVE, CVSS, business justification, compensating controls  │
-│   Max exception duration: 90d for High; 30d for Critical                                              │
-│   Approval path: Patch Owner → Security Manager → CISO (for Critical severity exceptions)             │
-│   Expiry reminder: 1 week before expiry; if no renewal → emergency network isolation                  │
-│                                                                                                       │
-│   Zero-day response                                                                                   │
-│   Inventory affected systems; apply vendor mitigation (registry, firewall block, feature disable)     │
-│   Isolate internet-facing systems if exploit confirmed in wild; enable enhanced log capture           │
-│   Monitor CISA KEV and vendor advisories; expedite patch through approval on release                  │
-│                                                                                                       │
-│   Key terms:                                                                                          │
-│   WSUS         = Windows Server Update Services; on-premises Windows patch management                 │
-│   SCCM         = System Center Configuration Manager; enterprise endpoint management platform         │
-│   CVSS         = Common Vulnerability Scoring System; 0-10 severity score for CVEs                    │
-│   CISA KEV     = Known Exploited Vulnerabilities catalogue; higher-priority remediation required      │
-│   SLA breach   = patch not deployed within the severity tier's deadline; triggers escalation          │
-│   change window= scheduled maintenance period when patches and reboots are allowed in production      │
-│   compensating = alternative control applied when patch cannot be deployed within SLA                 │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Before you begin
 

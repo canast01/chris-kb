@@ -10,6 +10,8 @@ vSphere resource management controls how CPU and memory are allocated to VMs com
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
+![vSphere Resource Management — Scheduling, Reservations, Pools, and NUMA](../../../../assets/virtualization-vmware-internals-vsphere-resource-management-.svg)
+
 
 ---
 

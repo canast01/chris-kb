@@ -4,6 +4,8 @@ tags:
   - vmware
 ---
 # vSphere Cluster Services — DRS, HA, FT, and vCLS
+![vSphere Cluster Services — DRS, HA, FT, and vCLS](../../../../assets/virtualization-vmware-internals-cluster-services-index.svg)
+
 
 vSphere cluster services are the group of features that collectively make a cluster of ESXi hosts behave as a resilient, self-managing compute platform. vSphere High Availability (HA), Distributed Resource Scheduler (DRS), Fault Tolerance (FT), and vSphere Cluster Services (vCLS) are complementary — each addresses a different failure scenario or resource management goal. Understanding how they interact is essential for both day-to-day administration and for the VCP-DCV 8 exam.
 
@@ -11,23 +13,7 @@ vSphere cluster services are the group of features that collectively make a clus
 
 ## Overview — How the Services Relate
 
-```text
-┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
-│                        vSphere Cluster Services                                                       │
-│                                                                                                       │
-│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐  ┌───────────┐                                  │
-│  │   vSphere HA │  │  vSphere DRS │  │ Fault Toler. │  │   vCLS    │                                  │
-│  │              │  │              │  │              │  │           │                                  │
-│  │ Restart VMs  │  │ Balance load │  │ Zero-downtime│  │ Agent VMs │                                  │
-│  │ after host   │  │ across hosts │  │ host failure │  │ that keep │                                  │
-│  │ failure      │  │ via vMotion  │  │ via vLockstep│  │ HA/DRS up │                                  │
-│  └──────┬───────┘  └──────┬───────┘  └──────┬───────┘  └─────┬─────┘                                  │
-│         │                 │                  │                │                                       │
-│         └─────────────────┴──────────────────┴────────────────┘                                       │
-│                        All require vCenter for config                                                 │
-│                   vCLS keeps HA/DRS running if vCenter fails                                          │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 | Feature | What it solves | Recovery time | Workload impact |
 |---|---|---|---|

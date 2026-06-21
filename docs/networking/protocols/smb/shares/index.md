@@ -8,26 +8,10 @@ tags:
 <div class="kb-summary">
 SMB Shares reference covering Overview, Creating Shares with PowerShell, Creating Shares with net share, DFS Namespace Configuration, Share Enumeration and Auditing and 1 more sections.
 </div>
+![SMB Shares](../../../../assets/networking-protocols-smb-shares-index.svg)
 
-```text
-┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
-│  \\server\Finance          ◄── standard share (visible)                                               │
-│  \\server\Finance$         ◄── hidden share ($ suffix)                                                │
-│  \\domain\Finance          ◄── DFS namespace share                                                    │
-│  \\server\C$               ◄── administrative share (built-in)                                        │
-│                                                                                                       │
-│  DFS NAMESPACE RESOLUTION:                                                                            │
-│  \\corp.example.com\Files\Finance                                                                     │
-│            │                                                                                          │
-│            ▼  DFS referral                                                                            │
-│  \\fileserver01\Finance  (actual share, transparent to user)                                          │
-│            or                                                                                         │
-│  \\fileserver02\Finance  (redundant target, failover)                                                 │
-│                                                                                                       │
-│  Share permissions apply to NETWORK access only;                                                      │
-│  NTFS ACLs apply to both local and network access.                                                    │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Overview
 

@@ -14,6 +14,8 @@ EVS troubleshooting: host failures, vSAN degraded health, HCX connectivity issue
 
 *Applies to: Amazon EVS*
 </div>
+![Amazon EVS — Troubleshooting](../../../../assets/cloud-aws-evs-troubleshooting-index.svg)
+
 
 ```text
 ┌───────────────────────────────────── Amazon EVS Troubleshooting ──────────────────────────────────────┐

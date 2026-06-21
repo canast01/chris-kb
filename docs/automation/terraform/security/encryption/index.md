@@ -11,6 +11,8 @@ Encryption reference covering Secrets and Encryption Architecture, Secrets Manag
 
 *Applies to: Terraform 1.x*
 </div>
+![Terraform — Encryption](../../../../assets/automation-terraform-security-encryption-index.svg)
+
 
 ## Before you begin
 
@@ -43,29 +45,7 @@ graph TD
     tfApply --> stateFile
     stateFile --> s3Encrypted
 ```
-```text
-┌─────────────────────────────────────── Terraform — Encryption ────────────────────────────────────────┐
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   TF encryption: state at rest (S3 SSE-KMS), transit TLS, mark secrets as sensitive outputs   │   │
-│   │   State encryption: server-side via S3 SSE-KMS; TF 1.7+ client-side: terraform encryption{}   │   │
-│   │      Sensitive outputs: never stored as plaintext in state; mark outputs sensitive = true     │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               State Encryption               │  │             Sensitive Variables             │   │
-│   │          S3 SSE-KMS on state bucket          │  │      variable "x" { sensitive = true }      │   │
-│   │         Terraform 1.7+ encryption{}          │  │       output "x" { sensitive = true }       │   │
-│   │        AES-GCM key from KMS or Vault         │  │        Redacted in plan and apply log       │   │
-│   │          All TF API calls: TLS 1.2+          │  │      Still stored in state (encrypted)      │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    encryption block= TF 1.7+: encrypt state at Terraform level before S3; defence-in-depth    │   │
-│   │ SSE-KMS        = S3 server-side encryption with AWS KMS managed key; transparent to Terraform │   │
-│   │  sensitive = true= prevents value from appearing in output; value still exists in state file  │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 ```hcl
 # Read a parameter from AWS SSM Parameter Store

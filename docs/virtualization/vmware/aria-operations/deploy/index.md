@@ -13,47 +13,10 @@ End-to-end deployment guide for VMware Aria Operations (vROps). Covers prerequis
 
 *Applies to: Aria Ops 8.x*
 </div>
+![Aria Operations — Deploy](../../../../assets/virtualization-vmware-aria-operations-deploy-index.svg)
 
-```text
-┌───────────────────────────────── Aria Operations — Deployment Phases ─────────────────────────────────┐
-│                                                                                                       │
-│  Six phases from prerequisites to a fully operational Aria Operations monitoring cluster. Each phase  │
-│  has a clear exit criterion. Do not proceed until the current phase validates clean.                  │
-│                                                                                                       │
-│   ┌───────────────────────────┐  ┌────────────────────────────┐  ┌────────────────────────────────┐   │
-│   │   Phase 1: Pre-Deploy     │  │   Phase 2: Master Node     │  │  Phase 3: Cluster Expansion    │   │
-│   │  DNS: A + PTR for VIP     │  │  Deploy OVA in vCenter     │  │  Deploy replica/data OVAs      │   │
-│   │  NTP: time sync confirmed │  │  VAMI first-boot wizard    │  │  Join nodes to master cluster  │   │
-│   │  Datastore: ≥500 GB       │  │  Role: Primary (master)    │  │  Remote collectors (per site)  │   │
-│   │  vCenter svc account      │  │  Accept EULA + licence     │  │  Collector group assignment    │   │
-│   │  Ports: 443, 4505-4506    │  │  Master node: Running      │  │  Cluster health: all Online    │   │
-│   └───────────────────────────┘  └────────────────────────────┘  └────────────────────────────────┘   │
-│                                                                                                       │
-│                ▼                              ▼                                ▼                      │
-│                                                                                                       │
-│   ┌───────────────────────────┐  ┌────────────────────────────┐  ┌────────────────────────────────┐   │
-│   │  Phase 4: vCenter Adapter │  │  Phase 5: Management Packs │  │  Phase 6: Validation           │   │
-│   │                           │  │  & Alert Notifications     │  │                                │   │
-│   │  Add vCenter data source  │  │  NSX adapter: add manager  │  │  vcops-cli cluster-status      │   │
-│   │  Accept thumbprint        │  │  vSAN: from vSphere pack   │  │  All adapters Collecting       │   │
-│   │  Collection: 5 min cycle  │  │  OS agents on Linux/Win    │  │  Dashboards populated          │   │
-│   │  Verify hosts/VMs visible │  │  SNMP for physical devices │  │  Alert test notification sent  │   │
-│   │  Continuous discovery on  │  │  Notification: SMTP/webhook│  │  CaSA backup completed         │   │
-│   └───────────────────────────┘  └────────────────────────────┘  └────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure: Aria Operations VMs (master/replica/data/RC) on vSphere                     │
-│  SSD-backed datastore for /storage/db · Cassandra metric store · SMTP server · DNS/NTP                │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Master node      = Primary Aria Operations VM; hosts UI, analytics, and cluster coordination         │
-│  Replica node     = Hot standby for master; promoted automatically on master failure                  │
-│  Data node        = Scale-out analytics node; each adds ~200 GB metric storage capacity               │
-│  Remote Collector = Lightweight OVA at remote sites; forwards metrics without firewall holes back     │
-│  CaSA backup      = Config + analytics backup; required before every upgrade                          │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ---
 

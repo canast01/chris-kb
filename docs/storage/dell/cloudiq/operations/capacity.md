@@ -11,38 +11,10 @@ CloudIQ: Capacity Forecasting and Pool Utilisation reference covering Capacity F
 
 *Applies to: CloudIQ*
 </div>
+![CloudIQ: Capacity Forecasting and Pool Utilisation](../../../../assets/storage-dell-cloudiq-operations-capacity.svg)
 
-```text
-┌──────────────────────────────────── CloudIQ — Capacity Management ────────────────────────────────────┐
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              Capacity Overview               │  │                 Forecasting                 │   │
-│   │              Total raw capacity              │  │            30/60/90 day forecast            │   │
-│   │                 Used vs free                 │  │               ML growth model               │   │
-│   │                Tier breakdown                │  │             Projected full date             │   │
-│   │               Thin provision %               │  │               Confidence band               │   │
-│   │              Snapshot overhead               │  │              Add-capacity alert             │   │
-│   │              Reclaim candidates              │  │               Seasonal adjust               │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  Capacity data from array firmware · Dell cloud processes and stores trend for forecast model         │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Raw capacity = Total physical storage before RAID/parity overhead                                    │
-│  Usable capacity = Raw minus RAID overhead; available for data                                        │
-│  Thin provisioning = More logical capacity than physical; dedup + compression expand ratio            │
-│  Forecast = ML regression on historical consumption predicting when capacity will be exhausted        │
-│  Confidence band = Upper/lower bound on forecast based on variance in historical data                 │
-│  Add-capacity alert = CloudIQ alert when forecast horizon drops below threshold (e.g., 90 days)       │
-│  Reclaim candidate = Volume with zero or near-zero utilisation; flagged for decommission review       │
-│  Snapshot overhead = Capacity consumed by snapshots; tracked separately from primary data             │
-│  Tier = Storage class within an array (e.g., NVMe, SAS, SSD) each with separate capacity              │
-│  Seasonal adjustment = ML model accounting for cyclical usage spikes in forecast                      │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Before you begin
 

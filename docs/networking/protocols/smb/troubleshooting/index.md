@@ -11,28 +11,10 @@ search:
 <div class="kb-summary">
 SMB Troubleshooting reference covering Overview, Access Denied Diagnostics, SMB1 Disabled Issues, Kerberos vs NTLM Authentication, Signing Mismatch and 1 more sections.
 </div>
+![SMB Troubleshooting](../../../../assets/networking-protocols-smb-troubleshooting-index.svg)
 
-```text
-┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
-│  1. ping / Test-NetConnection -Port 445 ── fail ─► firewall                                           │
-│          │ ok                                                                                         │
-│          ▼                                                                                            │
-│  2. Share exists? (Get-SmbShare) ───── no ──► create share                                            │
-│          │ yes                                                                                        │
-│          ▼                                                                                            │
-│  3. Share permission (Get-SmbShareAccess) ─ deny ► fix perms                                          │
-│          │ permit                                                                                     │
-│          ▼                                                                                            │
-│  4. NTFS ACL (icacls path) ─── deny / no entry ──► fix ACL                                            │
-│          │ permit                                                                                     │
-│          ▼                                                                                            │
-│  5. Auth issue? (klist / Event ID 4625) ─ yes ──► Kerberos                                            │
-│          │                                        SPN / creds                                         │
-│          ▼                                                                                            │
-│  6. SMB dialect (Get-SmbSession | Select Dialect)                                                     │
-│     SMB1 negotiated ──────────────────────────► disable SMB1                                          │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Before you begin
 

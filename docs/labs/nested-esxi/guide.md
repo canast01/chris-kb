@@ -9,14 +9,10 @@ tags:
 <div class="kb-summary">
 Complete procedure for Lab 1: configure the physical host, create nested ESXi VMs, install ESXi, deploy vCenter, and build a basic cluster.
 </div>
+![Lab 1 Guide — Nested ESXi Step-by-Step](../../assets/labs-nested-esxi-guide.svg)
 
-```text
-┌──────────────────────────────────── Lab 1 — Phase Overview ───────────────────────────────────────────┐
-│  Phase 1: Prepare physical host (Promiscuous Mode, Forged Transmits on portgroup)                     │
-│  Phase 2: Create nested ESXi VMs (vhv.enable=TRUE, disk.EnableUUID=TRUE, PVSCSI, VMXNET3)             │
-│  Phase 3: Install ESXi (DCUI: set IP, DNS, hostname)  →  Phase 4: Deploy VCSA  →  Phase 5: Cluster    │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ---
 

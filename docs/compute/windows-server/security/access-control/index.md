@@ -4,6 +4,8 @@ tags:
   - windows
 ---
 # Windows Server — Access Control
+![Windows Server — Access Control](../../../../assets/compute-windows-server-security-access-control-index.svg)
+
 
 ```powershell
 # Create a Global group for a role
@@ -23,54 +25,7 @@ Add-ADGroupMember -Identity "GG-ServerAdmins" -Members "jsmith"
 # View group members
 Get-ADGroupMember -Identity "GG-ServerAdmins" | Select-Object Name, SamAccountName, objectClass
 ```
-```text
-┌─────────────────────────────────── Windows Server — Access Control ───────────────────────────────────┐
-│                                                                                                       │
-│  Access control enforced through AD groups, NTFS ACLs, share permissions, and privileged access.      │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             AD Group-Based RBAC              │  │           NTFS & Share Permissions          │   │
-│   │         Domain groups → resource ACL         │  │         NTFS ACE: Allow/Deny per SID        │   │
-│   │        Domain Local groups for access        │  │        Share perms: max allowed users       │   │
-│   │         Global groups for user sets          │  │          Effective = NTFS AND Share         │   │
-│   │        Universal groups cross-domain         │  │         Inheritance: propagate down         │   │
-│   │          Least privilege by default          │  │         icacls command for scripting        │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  AD groups define who; NTFS ACLs define what access they get to which objects.                        │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Privileged Access Control           │  │          Protected Users & Tiering          │   │
-│   │          PAW for Tier-0 admins only          │  │         Protected Users: no NTLM/DES        │   │
-│   │      Admin accounts separate from user       │  │            Tier-0: DCs + PKI + AD           │   │
-│   │          Time-bound access via PIM           │  │         Tier-1: servers and services        │   │
-│   │         JEA: constrained PS sessions         │  │          Tier-2: workstations only          │   │
-│   │          Local admin via LAPS only           │  │         No cross-tier admin allowed         │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  Physical or virtual server · domain controller · AD database on DC storage                           │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  SID            = Security Identifier; unique identifier for every AD object and account              │
-│  ACL            = Access Control List; ordered list of ACEs on a securable object                     │
-│  ACE            = Access Control Entry; Allow or Deny rule for a specific SID                         │
-│  NTFS ACL       = file/folder permissions enforced by NTFS file system kernel driver                  │
-│  Share permission= network share access level; read/change/full — combined with NTFS                  │
-│  Domain Local   = AD group scope; members from any domain; access in own domain                       │
-│  Global group   = AD group scope; members from same domain; used across domains                       │
-│  Universal group = AD group; members from any domain; replicated to global catalog                    │
-│  PIM            = Privileged Identity Management; just-in-time admin role elevation                   │
-│  PAW            = Privileged Access Workstation; hardened device for admin-only work                  │
-│  Tiering        = AD admin tier model: Tier-0/1/2 separates admin account scope                       │
-│  icacls         = Windows CLI tool to display and modify NTFS file/folder ACLs                        │
-│  Protected Users= AD security group; blocks NTLM, unconstrained delegation, DES                       │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 ```powershell
 # Generate the role capability template
 New-PSRoleCapabilityFile -Path "C:\JEA\RoleCapabilities\WebAdmins.psrc"

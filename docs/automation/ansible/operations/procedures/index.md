@@ -11,6 +11,8 @@ Ansible operational procedures: deploying playbooks, managing inventory sources,
 
 *Applies to: Ansible 2.14+*
 </div>
+![Ansible — Procedures](../../../../assets/automation-ansible-operations-procedures-index.svg)
+
 
 ---
 
@@ -102,30 +104,7 @@ graph LR
     awxExecutor -->|ansible-playbook| managed
     awxExecutor --> jobHistory
 ```
-```text
-┌──────────────────────────────────────── Ansible — Procedures ─────────────────────────────────────────┐
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │        Common Ansible ops: rolling OS patching, credential rotation, inventory cleanup        │   │
-│   │    Pre-run: verify inventory is current, check mode first, confirm Vault password available   │   │
-│   │     Post-run: review output for warnings, verify app health, update runbook with outcomes     │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Rolling OS Patch Procedure          │  │             Credential Rotation             │   │
-│   │          1. Run check mode: --check          │  │         1. Generate new SSH key pair        │   │
-│   │           2. Review changed tasks            │  │         2. Add new pub key to hosts         │   │
-│   │         3. Execute serial:1 (canary)         │  │           3. Update AWX credential          │   │
-│   │        4. Verify app health per host         │  │         4. Remove old key from hosts        │   │
-│   │         5. Increase serial, continue         │  │            5. Verify connectivity           │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │     serial: 1     = run one host at a time; ensures app stays available during rolling ops    │   │
-│   │    max_fail_pct  = max_fail_percentage: 0 → abort if any host fails; safe for prod changes    │   │
-│   │     pre_tasks     = tasks that run before roles in a play; use for health checks and drain    │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 ### Tags
 

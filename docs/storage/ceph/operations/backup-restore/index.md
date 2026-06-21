@@ -5,59 +5,15 @@ tags:
 ---
 # Ceph — Backup & Restore
 
-```text
-┌────────────────────────────────── Ceph — Backup & Restore Overview ───────────────────────────────────┐
-│                                                                                                       │
-│  Ceph Backup Strategies                                                                               │
-│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
-│  ┌─────────────────────────┐  ┌─────────────────────────┐  ┌─────────────────────────┐                │
-│  │  RBD Snapshot Export    │  │  RBD Mirroring (DR)     │  │  Config Backup          │                │
-│  │  rbd snap create        │  │  rbd mirror pool enable │  │  ceph config-key dump   │                │
-│  │  rbd export (full)      │  │  async replication      │  │  ceph auth export       │                │
-│  │  rbd export-diff (incr) │  │  rbd mirror pool status │  │  crush map export       │                │
-│  │  rbd import to restore  │  │  failover: rbd promote  │  │  pool + pg config dump  │                │
-│  └─────────────────────────┘  └─────────────────────────┘  └─────────────────────────┘                │
-│                                                                                                       │
-│  Restore Flow — RBD Image                                                                             │
-│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
-│  1. Snapshot created before operation: rbd snap create rbd/<vol>@backup-<date>                        │
-│  2. Export to file for off-cluster backup: rbd export rbd/<vol>@snap /backup/<vol>.img                │
-│  3. Incremental export (faster): rbd export-diff ... /backup/<vol>-incr.img                           │
-│  4. Restore: rbd import /backup/<vol>.img rbd/<new-vol>  ·  rbd snap rollback for in-place            │
-│                                                                                                       │
-│  RBD Mirroring (Cross-Site DR)                                                                        │
-│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
-│  Primary site: rbd mirror pool enable <pool> image  ·  mark images for mirroring                      │
-│  Secondary site: bootstrap token exchange  ·  rbd mirror pool peer add <pool> ...                     │
-│  Mirroring daemon (rbd-mirror) handles async replication between sites                                │
-│  Failover: rbd mirror image promote <pool>/<image> on secondary site                                  │
-│  Failback: demote on secondary  ·  resync  ·  promote on primary                                      │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  RBD           = RADOS Block Device; Ceph's block storage interface for VM disks and containers       │
-│  rbd snap      = RBD snapshot; point-in-time consistent copy of an image (copy-on-write)              │
-│  rbd export    = Full image export to a file; rbd export-diff for incremental exports                 │
-│  rbd import    = Restores exported image back into Ceph pool from a file                              │
-│  rbd mirror    = Asynchronous image replication between two Ceph clusters for DR                      │
-│  rbd-mirror    = Daemon handling mirroring replication; must run on both primary and secondary sites  │
-│  CRUSH         = Ceph's data placement algorithm; export crush map separately for DR recovery         │
-│  ceph auth     = Authentication keyring; export all keys as part of cluster config backup             │
-│  ceph config-key dump = Exports monitor key-value store; includes cluster config and flags            │
-│  rbd promote   = Promotes a secondary mirrored image to primary during DR failover                    │
-│  RPO           = Recovery Point Objective; how much data loss is acceptable; depends on mirror lag    │
-│  RTO           = Recovery Time Objective; how quickly failover must complete for service restoration  │
-│  CephFS snap   = CephFS snapshot in .snap/ directory; restored by copying from snapshot subtree       │
-│  RGW zone sync = Multi-site RGW replication; objects sync between zones asynchronously                │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 <div class="kb-summary">
 Ceph backup: RBD snapshot export for VM disks, CephFS snapshots for file data, RGW bucket replication for objects, cluster configuration backup, and MON data recovery.
 
 *Applies to: Ceph Reef / Squid*
 </div>
+![Ceph — Backup & Restore](../../../../assets/storage-ceph-operations-backup-restore-index.svg)
+
 
 ```mermaid
 graph TD

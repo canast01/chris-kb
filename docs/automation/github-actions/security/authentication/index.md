@@ -4,6 +4,8 @@ tags:
   - security
 ---
 # GitHub Actions — Authentication
+![GitHub Actions — Authentication](../../../../assets/automation-github-actions-security-authentication-index.svg)
+
 
 ```yaml
 # Default token usage
@@ -20,29 +22,7 @@ jobs:
           curl -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
                https://api.github.com/repos/${{ github.repository }}
 ```
-```text
-┌─────────────────────────────────── GitHub Actions — Authentication ───────────────────────────────────┐
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │ GitHub Actions authentication: GITHUB_TOKEN for GitHub API; OIDC for cloud; secrets for others│   │
-│   │    OIDC preferred for AWS/Azure/GCP — no stored secrets; short-lived token per workflow run   │   │
-│   │      Service accounts: use GitHub Apps (fine-grained token) over PATs for org-wide access     │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                 GitHub Auth                  │  │              Cloud Auth (OIDC)              │   │
-│   │          GITHUB_TOKEN: auto per job          │  │       aws-actions/configure-aws-creds       │   │
-│   │        GitHub App: installation token        │  │       role-to-assume: arn:aws:iam::...      │   │
-│   │          PAT: scoped personal token          │  │           Azure: azure/login@<sha>          │   │
-│   │        Deploy key: repo-level SSH key        │  │        GCP: auth.yml with workload id       │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │ GitHub App      = machine identity; fine-grained permissions; short-lived installation tokens │   │
-│   │        PAT           = Personal Access Token; scoped to user; avoid for org automation        │   │
-│   │      OIDC token    = JWT issued by GitHub; cloud trusts issuer; exchanged for cloud cred      │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 ```bash
 # Create a fine-grained PAT at:
 # GitHub → Settings → Developer settings → Personal access tokens → Fine-grained tokens

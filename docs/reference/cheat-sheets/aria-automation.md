@@ -8,13 +8,10 @@ tags:
 <div class="kb-summary">
 Top-10 Aria Automation (vRA) commands for deployment lifecycle, ABX actions, and catalog management via REST API and vra-cli.
 </div>
+![Aria Automation Cheat Sheet](../../assets/reference-cheat-sheets-aria-automation.svg)
 
-```text
-┌────────────────────────────────── Aria Automation Cheat Sheet ────────────────────────────────────────┐
-│  CLI: vra-cli  ·  REST API: https://vra/iaas/api  ·  ABX: action-based extensibility                  │
-│  Categories: Deployments · Catalog · Cloud Accounts · ABX · Blueprints · Projects                     │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## vra-cli
 

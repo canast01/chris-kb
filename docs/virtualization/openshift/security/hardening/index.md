@@ -9,36 +9,10 @@ OpenShift hardening: Security Context Constraints (SCC), Pod Security Admission,
 
 *Applies to: OpenShift 4.x*
 </div>
+![OpenShift — Hardening](../../../../assets/virtualization-openshift-security-hardening-index.svg)
 
-```text
-┌──────────────────────────────────── OpenShift Hardening Controls ─────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   SCCs: OpenShift's admission controller for pod security (superset of K8s PSA)               │   │
-│   │   PSA: Kubernetes Pod Security Admission (warn/audit/enforce); use restricted profile         │   │
-│   │   NetworkPolicy: default deny + explicit allow; isolate namespaces by default                 │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │       SCCs                  │  │    Pod Security Admission     │  │    Audit & Network          │ │
-│   │      ─────────────          │  │      ─────────────           │  │      ─────────────          │  │
-│   │  restricted-v2 (default)    │  │  Labels on namespace         │  │  Audit log via APIServer    │  │
-│   │  anyuid: run as any UID     │  │  privileged/baseline/restrict│  │  Default network isolation  │  │
-│   │  privileged: full access    │  │  enforce/warn/audit modes    │  │  Egress firewall (NP)       │  │
-│   │  Grant per SA not user      │  │  OCP 4.12+: PSA enforced     │  │  No default deny in OCP    │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    SCC         = Security Context Constraint; OCP admission controller for pod security configuration │
-│    PSA         = Pod Security Admission; Kubernetes built-in; enforces profiles at namespace level    │
-│    restricted-v2= Least-privilege SCC; no root, read-only root FS, drop all capabilities              │
-│    anyuid      = Allows pod to run as any UID; needed for legacy images; avoid where possible         │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ```mermaid
 graph TD

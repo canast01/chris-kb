@@ -14,36 +14,10 @@ recover the workflow.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
+![VCF SDDC Manager Upgrade Stalled](../../../../assets/virtualization-vmware-topics-scenarios-vcf-sddc-manager-upgr.svg)
 
-```text
-┌──────────────────────── VCF SDDC Manager Upgrade Stalled — Investigation Flow ────────────────────────┐
-│                                                                                                       │
-│  OVERVIEW                                                                                             │
-│  SDDC Manager LCM runs upgrade workflows as a series of tasks; a failed precheck or                   │
-│  unreachable component pauses the entire workflow and requires manual intervention                    │
-│                                                                                                       │
-│  START: SDDC Manager upgrade task showing FAILED or IN_PROGRESS with no progress for >30 min          │
-│                                                                                                       │
-│  STEP 1 — Identify the Failed Task                                                                    │
-│  SDDC Manager UI → Inventory → Workload Domains → Upgrade History                                     │
-│  Note the exact task name and failure message shown in the workflow timeline                          │
-│                                                                                                       │
-│  STEP 2 — Check SDDC Manager Logs                                                                     │
-│  SSH to SDDC Manager; check lcm-debug.log and sddc-manager.log for the error                          │
-│  Look for: precheck failure, unreachable host, certificate error, SOS validation failure              │
-│                                                                                                       │
-│  STEP 3 — Fix the Underlying Issue                                                                    │
-│  Resolve the specific error: host reachable? certificate valid? SOS check passing?                    │
-│  Do not retry the workflow until the root cause is fixed                                              │
-│                                                                                                       │
-│  STEP 4 — Retry or Resume                                                                             │
-│  Some tasks support retry from SDDC Manager UI; others require manual API call                        │
-│  For partial upgrades, check if a rollback is needed or if resume-from-task is safe                   │
-│                                                                                                       │
-│  CLOSE: Upgrade workflow completes · component versions match bundle target · SOS green               │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 
 !!! warning "Full SDDC management plane downtime"

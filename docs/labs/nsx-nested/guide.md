@@ -9,14 +9,10 @@ tags:
 <div class="kb-summary">
 Deploy NSX Manager, register vCenter as a compute manager, prepare ESXi transport nodes, create overlay segments, and write a basic DFW allow/deny rule.
 </div>
+![Lab 3 Guide — NSX-T in Nested ESXi Step-by-Step](../../assets/labs-nsx-nested-guide.svg)
 
-```text
-┌─────────────────────────────────── Lab 3 — Phase Overview ────────────────────────────────────────────┐
-│  Phase 1: Deploy NSX Manager OVA (Small: 4 vCPU, 16 GB RAM)  →  Phase 2: Add vCenter as Comp Mgr      │
-│  Phase 3: Prepare transport nodes (uplink profile, TEP IP pool, transport zones, VIB install)         │
-│  Phase 4: Create overlay segment  →  Phase 5: DFW policy — security groups + allow/deny rules         │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ---
 

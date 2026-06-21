@@ -11,6 +11,8 @@ Pure1 Cloud Management reference covering Accessing Pure1, Key Navigation Areas,
 
 *Applies to: FlashArray Purity 6.x*
 </div>
+![Pure1 Cloud Management](../../../../assets/storage-pure-operations-pure1-index.svg)
+
 
 ```text
   Pure1 — Phone-Home to Cloud Analytics

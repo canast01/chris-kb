@@ -10,6 +10,8 @@ Dell AIOps Security reference covering Access Control (RBAC), SSO Integration, A
 
 *Applies to: Dell AIOps*
 </div>
+![Dell AIOps Security](../../../../assets/storage-dell-dell-aiops-security-index.svg)
+
 
 ## Before you begin
 
@@ -37,38 +39,7 @@ Apply the principle of least privilege. Operations staff reviewing dashboards an
 
 Dell AIOps authentication is handled through CloudIQ SSO, which supports SAML 2.0 integration with enterprise IdPs.
 
-```text
-┌──────────────────────────────────────── Dell AIOps — Security ────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                Access Control                │  │           Network & Data Security           │   │
-│   │              Local admin + LDAP              │  │              TLS 1.2 all comms              │   │
-│   │             RBAC: role per team              │  │                Mgmt VLAN only               │   │
-│   │               Service accounts               │  │             Custom cert replace             │   │
-│   │               MFA on admin UI                │  │              Audit log retained             │   │
-│   │             Annual access review             │  │                Syslog to SIEM               │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  AIOps VMs on management cluster · data encrypted at rest · outbound only TCP 443                     │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  RBAC = Role-Based Access Control; Admin/Operator/Viewer roles with different permissions             │
-│  Service account = Non-personal credential for adapter authentication to infrastructure               │
-│  MFA = Multi-factor authentication on AIOps admin UI; reduces credential theft risk                   │
-│  Custom cert = CA-signed certificate replacing self-signed; applied to AIOps HTTPS                    │
-│  Audit log = Record of logins, config changes, and alert actions in AIOps                             │
-│  Syslog = Forwarding AIOps audit events to SIEM (Splunk, Elastic) for correlation                     │
-│  Mgmt VLAN = AIOps on isolated management network; no direct access from user VLANs                   │
-│  Data at rest = AIOps time-series DB and config encrypted on disk                                     │
-│  Annual review = Yearly audit of AIOps user list; remove departed staff accounts                      │
-│  Credential rotation = Changing adapter service account passwords per security policy                 │
-│  TLS 1.2 = Minimum transport encryption for all AIOps connections                                     │
-│  Least privilege = Adapter accounts have read-only access to infrastructure APIs                      │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 Key events to review in audit log:
 - User login/logout (especially failed logins or logins from unexpected locations)
 - API client creation, modification, and secret rotation

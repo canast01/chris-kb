@@ -12,52 +12,10 @@ Jira diagnostic commands: check instance health via the /status endpoint and RES
 
 *Applies to: Jira 9.x / Data Center*
 </div>
+![Jira — Diagnostics](../../../../assets/itsm-jira-troubleshooting-diagnostics-index.svg)
 
-```text
-┌───────────────────────────────────────── Jira — Diagnostics ──────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                                    Jira Diagnostic Runbook                                    │   │
-│   │            Step 1: curl -s http://localhost:8080/status — confirm state is RUNNING            │   │
-│   │                 Step 2: grep -i "ERROR|OOM|Exception" catalina.out | tail -100                │   │
-│   │              Step 3: psql -U jira -c "SELECT count(*) FROM jiraissue;" — DB alive             │   │
-│   │             Step 4: df -h $JIRA_HOME — check disk; ls $JIRA_HOME/data/attachments             │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Stop at first anomaly and remediate before continuing to next diagnostic step                      │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │           Application Diagnostics            │  │             Infrastructure Diag             │   │
-│   │            curl /status endpoint             │  │               df -h JIRA_HOME               │   │
-│   │              grep catalina.out               │  │               mount | grep nfs              │   │
-│   │             Thread dump: kill -3             │  │               pg_stat_activity              │   │
-│   │              Heap: jmap -histo               │  │              netstat open ports             │   │
-│   │             Admin > System Info              │  │                top / free -h                │   │
-│   │              support-zip export              │  │              journalctl -u jira             │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  SSH to Jira VMs (as root or jira user) · PostgreSQL server (psql admin) · NFS mount for JIRA_HOME    │
-│  Jira node count: check Admin > System > Cluster Nodes for Data Center deployments                    │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│  kill -3 PID    = sends SIGQUIT to JVM; thread dump printed to catalina.out                           │
-│  jmap -histo    = histogram of JVM heap; lists top objects by class name and retained size            │
-│  pg_stat_activity = PostgreSQL running queries; find blocking and long-running SQL                    │
-│  catalina.out   = Tomcat stdout log; JIRA_INSTALL/logs/catalina.out                                   │
-│  atlassian-jira.log = Jira application log; JIRA_HOME/log/atlassian-jira.log                          │
-│  support-zip    = Admin > System > Troubleshooting; bundles logs and thread dumps                     │
-│  top            = real-time process monitor; watch java process CPU and memory                        │
-│  netstat        = open port check; confirm 8080 (Jira) and 5432 (PG) listening                        │
-│  mount          = list mounted filesystems; verify NFS home mount present                             │
-│  journalctl     = systemd log reader; use if Jira runs as systemd service                             │
-│  free -h        = system memory; check if OS is swapping under memory pressure                        │
-│  df -h          = disk usage; alert if JIRA_HOME volume exceeds 80% full                              │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ```mermaid
 graph TD

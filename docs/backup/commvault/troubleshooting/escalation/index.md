@@ -12,50 +12,10 @@ How to escalate Commvault backup issues to Commvault support: what data to colle
 
 *Applies to: Commvault 2024.x / CS 11.x*
 </div>
+![Commvault — Escalation](../../../../assets/backup-commvault-troubleshooting-escalation-index.svg)
 
-```text
-┌────────────────────── Commvault Escalation — Support and Case Handling ───────────────────────────────┐
-│                                                                                                       │
-│  Escalate Commvault issues to vendor support when CommServe is down, all backup                       │
-│  jobs are failing, a restore is failing in an active DR scenario, or DDB is corrupt.                  │
-│  Collect the CV_DIAG bundle BEFORE opening the case.                                                  │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Step 1 — Collect Data               │  │          Step 2 — Open the Case             │   │
-│   │  CommCell Console: Help → Diagnostics        │  │  Go to ma.commvault.com → sign in           │   │
-│   │  Run CV_DIAG collection wizard               │  │  Product: Commvault Complete; pick version  │   │
-│   │  Note CS version + SP level (Help → About)   │  │  Severity: Sev1 down / Sev2 major / Sev3   │    │
-│   │  Copy exact error text + Job ID from logs    │  │  Attach CV_DIAG bundle + error text         │   │
-│   │  Write timeline: last success → first fail   │  │  Include CommCell ID + SP level             │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  For Sev1: open portal case AND call Commvault support hotline immediately.                           │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Step 3 — Escalation Path            │  │         What NOT to Do                      │   │
-│   │  T1: triage + confirm CV_DIAG received       │  │  Do not run DDB repair without guidance     │   │
-│   │  T2: senior engineer assigned + session      │  │  Do not delete failed jobs from Job History │   │
-│   │  T3: engineering review for code-level fix   │  │  Do not upgrade CommServe mid-incident      │   │
-│   │  Escalate if no progress within SLA          │  │  Do not restart all GxCVD services at once  │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  CommServe    = Commvault control-plane server; scheduler, job engine, audit, license                 │
-│  CV_DIAG      = Commvault diagnostic bundle; logs, config, DB state; required for all cases           │
-│  GxCVD        = Commvault agent service running on CommServe and MediaAgents                          │
-│  DDB          = Deduplication Database; corruption here blocks all deduplication backups              │
-│  SP level     = Service Pack version; visible in CommCell Console → Help → About                      │
-│  CommCell ID  = unique installation identifier; required for Commvault case entitlement               │
-│  Job ID       = unique identifier of a specific backup or restore operation                           │
-│  ma.commvault.com = Commvault Support Portal; case creation and KB articles                           │
-│  Sev1         = CommServe down or all backups failing; no workaround; 24×7 response                   │
-│  MediaAgent   = server that moves data between source and backup media/library                        │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ---
 

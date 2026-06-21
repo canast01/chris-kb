@@ -3,6 +3,8 @@
 <div class="kb-summary">
 Full KB site index: links to all infrastructure, resilience, security, automation, and cloud sections. Use Ctrl+F to locate any product or topic quickly.
 </div>
+![Site Map](assets/site-map.svg)
+
 
 ## Infrastructure
 

@@ -11,6 +11,8 @@ How It Works reference covering Overview, Kernel Subsystem Architecture, LVM Sta
 
 *Applies to: RHEL 8.x / 9.x · Ubuntu 22.04 / 24.04*
 </div>
+![Linux — How It Works](../../../../assets/compute-linux-architecture-how-it-works-index.svg)
+
 
 ## Overview
 
@@ -38,50 +40,7 @@ graph TB
   class NIC,NET net
   class ADMIN host
 ```
-```text
-┌──────────────────────────────────────── Linux — How It Works ─────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                                         Boot Sequence                                         │   │
-│   │      UEFI/BIOS → GRUB2 bootloader → kernel decompresses into RAM → initramfs mounts root      │   │
-│   │       kernel init: detects hardware, loads drivers, mounts real rootfs, exec /sbin/init       │   │
-│   │        systemd: reads default.target, activates units in dependency order, starts getty       │   │
-│   │      Login: PAM stack authenticates user; bash/zsh shell launched as child of sshd/getty      │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Every process originates from PID 1 through fork(); exec() loads new program images                │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              Syscall & I/O Path              │  │             Scheduling & Memory             │   │
-│   │          app calls read() via glibc          │  │       CFS picks next task by vruntime       │   │
-│   │         SYSCALL instruction → ring 0         │  │        context switch saves registers       │   │
-│   │        VFS dispatches to block layer         │  │       page fault → alloc physical page      │   │
-│   │         I/O scheduler (mq-deadline)          │  │        mmap: maps file into VA space        │   │
-│   │          NVMe/SCSI driver sends cmd          │  │        OOM: score + kill on pressure        │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  x86-64 CPUs (rings 0/3) · RAM · NVMe/SAS · PCIe bus · iDRAC BMC · Power & Cooling                    │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  GRUB2       = GRand Unified Bootloader v2; presents boot menu and loads kernel + initramfs           │
-│  initramfs   = Temporary RAM root used during boot to mount the real root filesystem                  │
-│  fork        = Syscall that clones the calling process; child inherits FDs and memory                 │
-│  exec        = Syscall family that replaces process image with a new program binary                   │
-│  vruntime    = Virtual runtime; CFS metric tracking how much CPU time a task has used                 │
-│  context switch= CPU saves registers of running task and loads state of next scheduled task           │
-│  page fault  = MMU exception when a virtual address has no mapped physical page yet                   │
-│  mmap        = Memory-map syscall; maps files or anonymous memory into a process VAS                  │
-│  mq-deadline = Multi-queue deadline I/O scheduler; prioritises read latency over throughput           │
-│  ring 0      = CPU privilege level for kernel code; ring 3 is unprivileged userspace                  │
-│  PAM         = Pluggable Authentication Modules; configures how login and sudo authenticate           │
-│  getty       = Terminal program that presents the login prompt on a virtual console                   │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 ## Storage Stack
 

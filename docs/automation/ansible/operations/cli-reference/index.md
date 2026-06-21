@@ -11,6 +11,8 @@ Ansible CLI reference: `ansible`, `ansible-playbook`, `ansible-vault`, `ansible-
 
 *Applies to: Ansible 2.14+*
 </div>
+![Ansible — CLI Reference](../../../../assets/automation-ansible-operations-cli-reference-index.svg)
+
 
 > Part of the [Ansible Operations](../index.md) reference.
 
@@ -50,38 +52,7 @@ graph TD
     groupDB -->|SSH| db02["db02"]
     groupNet -->|SSH| router01["router01"]
 ```
-```text
-┌─────────────────────────────────────── Ansible — CLI Reference ───────────────────────────────────────┐
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │ Ansible CLI tools: ansible, ansible-playbook, ansible-inventory, ansible-vault, ansible-galaxy│   │
-│   │            ansible-playbook: primary command; runs a playbook against an inventory            │   │
-│   │     Common flags: -i (inventory), -l (limit), --tags, --check, --diff, -v/-vvv (verbosity)    │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               ansible-playbook               │  │               ansible (ad-hoc)              │   │
-│   │          ansible-playbook site.yml           │  │             ansible all -m ping             │   │
-│   │              -i inventories/prod/            │  │        ansible web -m shell -a uptime       │   │
-│   │          -l webservers --tags deploy         │  │             ansible db -m setup             │   │
-│   │                 --check --diff               │  │           ansible all -m reboot -b          │   │
-│   │               -e "version=1.2.3"             │  │               -b = become (sudo)            │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                ansible-vault                 │  │                ansible-galaxy               │   │
-│   │        ansible-vault encrypt vars.yml        │  │        ansible-galaxy install <role>        │   │
-│   │        ansible-vault decrypt vars.yml        │  │      ansible-galaxy collection install      │   │
-│   │         ansible-vault rekey vars.yml         │  │             ansible-galaxy list             │   │
-│   │         ansible-vault view vars.yml          │  │       requirements.yml for pinned deps      │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │     -v / -vvv   = verbosity levels; -vvv shows module args and return values for debugging    │   │
-│   │      --limit / -l= restrict to matching hosts or groups; supports patterns: web[1:3], !db     │   │
-│   │    --extra-vars = -e "key=value"; highest precedence; override any inventory/role variable    │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 ---
 

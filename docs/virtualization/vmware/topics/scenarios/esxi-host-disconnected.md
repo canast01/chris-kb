@@ -14,41 +14,10 @@ diagnosing NTP and DNS as silent causes, and identifying the impact on NSX trans
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
+![ESXi Host Disconnected from vCenter](../../../../assets/virtualization-vmware-topics-scenarios-esxi-host-disconnecte.svg)
 
-```text
-┌───────────────────────────── ESXi Host Disconnected — Investigation Flow ─────────────────────────────┐
-│                                                                                                       │
-│   ┌─────────────────────────────────────────────────────────────────────────────────────────────────┐ │
-│   │  START: vCenter shows host as "Disconnected" or "Not Responding"                                │ │
-│   └──────────────────────────────────────────┬──────────────────────────────────────────────────────┘ │
-│                                              │                                                        │
-│                         ┌────────────────────┼─────────────────────┐                                  │
-│                         ▼                    ▼                     ▼                                  │
-│              ┌─────────────────┐  ┌─────────────────────┐  ┌──────────────────┐                       │
-│              │ VMs still       │  │ Try vCenter         │  │ Check Recent     │                       │
-│              │ running?        │  │ Reconnect action    │  │ Tasks — HA event │                       │
-│              │ (check console) │  │ (right-click host)  │  │ triggered?       │                       │
-│              └────────┬────────┘  └────────┬────────────┘  └──────────────────┘                       │
-│                       │                    │                                                          │
-│              ┌────────▼────────┐  ┌────────▼────────────┐                                             │
-│              │ Yes → only mgmt │  │ Reconnects → blip   │                                             │
-│              │ network lost;   │  │ No → dig deeper     │                                             │
-│              │ no VM impact    │  └─────────────────────┘                                             │
-│              └────────┬────────┘                                                                      │
-│                       │                                                                               │
-│         ┌─────────────┴──────────────────────────────────────┐                                        │
-│         ▼                                                     ▼                                       │
-│  ┌─────────────────────────┐                    ┌─────────────────────────┐                           │
-│  │ Ping vmk0 from jumphost │                    │ Unreachable → network   │                           │
-│  │ Reachable → agent issue │                    │ issue or host crashed   │                           │
-│  └────────────┬────────────┘                    │ → iDRAC/iLO console     │                           │
-│               │                                 └─────────────────────────┘                           │
-│    ┌──────────▼──────────────────────────────────────────┐                                            │
-│    │ SSH → check vpxa/hostd → check NTP → check DNS      │                                            │
-│    │ Read /var/log/vpxa.log + /var/log/hostd.log          │                                           │
-│    └─────────────────────────────────────────────────────┘                                            │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Products Involved
 

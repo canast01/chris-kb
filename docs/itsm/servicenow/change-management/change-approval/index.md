@@ -10,44 +10,10 @@ Change Approval Process reference covering Change Types and Approval Requirement
 
 *Applies to: ServiceNow*
 </div>
+![Change Approval Process](../../../../assets/itsm-servicenow-change-management-change-approval-index.svg)
 
-```text
-┌─────────────────────────────────────────── Change Approval ───────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │        Change approval: RFC submitted to CAB with risk matrix, impact, and backout plan       │   │
-│   │           CAB reviews risk, impact, and readiness; approves, defers, or rejects RFC           │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │         RFC Submission Requirements          │  │             CAB Review Criteria             │   │
-│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
-│   │          Change description + scope          │  │         Risk: Low/Med/High/Critical         │   │
-│   │            Business justification            │  │          Impact: services affected          │   │
-│   │          Risk and impact assessment          │  │            Backout plan complete?           │   │
-│   │             Implementation steps             │  │              Testing completed?             │   │
-│   │                 Backout plan                 │  │            Maintenance window OK?           │   │
-│   │                Test evidence                 │  │            Stakeholders notified?           │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   │    Risk level    │  Approval path   │   Notice period   │      Window      │   PIR required   │   │
-│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
-│   │       Low        │    Change mgr    │  3 business days  │  Business hours  │     Optional     │   │
-│   │      Medium      │       CAB        │  5 business days  │   Maintenance    │     Required     │   │
-│   │       High       │  CAB + sponsor   │  7 business days  │   Maintenance    │     Required     │   │
-│   │    Emergency     │       ECAB       │     < 4 hours     │       ASAP       │     Required     │   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    Risk matrix  = Likelihood × impact grid; determines required approval path                         │
-│    Business sponsor= Senior stakeholder sign-off required for high-risk changes                       │
-│    Deferred     = CAB sends RFC back with questions; requestor must resubmit after addressing         │
-│    Notice period= Minimum lead time between RFC submission and earliest implementation date           │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Risk Classification Matrix
 

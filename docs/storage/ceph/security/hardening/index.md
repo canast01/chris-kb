@@ -10,32 +10,10 @@ Ceph security hardening: network isolation, msgr2 encryption, cephx least-privil
 
 *Applies to: Ceph Reef / Squid*
 </div>
+![Ceph — Hardening](../../../../assets/storage-ceph-security-hardening-index.svg)
 
-```text
-┌────────────────────────────────────────── Ceph — Hardening ───────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   Network: firewall the cluster network; only Ceph nodes should reach OSD ports              │    │
-│   │   Dashboard: change default admin password; enable TLS; restrict source IPs                  │    │
-│   │   Modules: disable pg_autoscaler, telemetry, crash if not needed to reduce attack surface    │    │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Cluster network = Separate network for OSD-to-OSD replication; block from client-facing hosts        │
-│  Public network  = Client-facing network; OSDs listen here for client I/O requests                    │
-│  firewalld      = Linux firewall service; restrict cluster network ports to Ceph OSD nodes only       │
-│  Dashboard TLS  = Ceph Dashboard HTTPS cert; ceph dashboard create-self-signed-cert for internal use  │
-│  telemetry module = MGR module sending anonymous usage data to Ceph project; disable if not desired   │
-│  pg_autoscaler  = MGR module auto-adjusting PG counts; disable for production cluster stability       │
-│  crash module   = Captures daemon crash dumps; keep enabled for diagnostic visibility                 │
-│  admin socket   = Unix socket for per-daemon runtime info; restrict file permissions on all hosts     │
-│  msgr2 secure   = Ceph messenger v2 encryption mode; encrypts all OSD-to-OSD and client traffic       │
-│  nomonmap       = Prevents unauthenticated MON map enumeration; enforced by CephX by default          │
-│  CIS benchmark  = Center for Internet Security hardening guide; reference for Ceph compliance audits  │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ```mermaid
 graph TD

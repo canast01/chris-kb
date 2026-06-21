@@ -11,28 +11,11 @@ VxRail Maintenance Window reference covering Overview, Where It Fits, Daily Chec
 
 *Applies to: VxRail 7.x / 8.x*
 </div>
+![VxRail Maintenance Window](../../../../assets/virtualization-vmware-vxrail-operations-maintenance-window.svg)
+
 
 Maintenance Window Flow
-```text
-┌──────────────────────────────────── ┐   ┌──────────────────┐   ┌ ─────────────────────────────────────┐
-│  Pre-Maintenance │   │    Execute       │   │  Post-Validate                                          │
-│                  │   │                  │   │                                                         │
-│ health checks    │ → │ scope of work    │ → │ services up?                                            │
-│ comms sent       │   │ iDRAC access     │   │ no new alerts?                                          │
-│ backups current  │   │ confirmed        │   │ vSAN healthy?                                           │
-│ rollback ready   │   │ follow runbook   │   │ VMs running?                                            │
-│ change ticket    │   │ do not extend    │   │ update ticket                                           │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-         │                      │                      │
-         └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-                                │
-                   ┌────────────────────────────────────────────────── ▼ ──────────────────────────────────────────────────┐
-                   │  Issues during window?  │
-                   │  → do not guess         │
-                   │  → escalate with logs   │
-                   │  → contact Dell support │
-                   └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 ## Before you begin
 

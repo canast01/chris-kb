@@ -8,13 +8,10 @@ tags:
 <div class="kb-summary">
 Top-10 SRM commands for protection groups, recovery plans, test failover, and failover operations via PowerCLI and REST API.
 </div>
+![SRM Cheat Sheet](../../assets/reference-cheat-sheets-srm.svg)
 
-```text
-┌───────────────────────────────────────── SRM Cheat Sheet ─────────────────────────────────────────────┐
-│  PowerCLI: Connect-SrmServer  ·  REST API: https://srm/api  ·  Requires: VMware.VimAutomation.Srm     │
-│  Categories: Protection Groups · Recovery Plans · Test Failover · Reprotect · Failback                │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## PowerCLI
 

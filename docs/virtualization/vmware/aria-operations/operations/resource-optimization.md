@@ -5,6 +5,8 @@ tags:
   - vmware
 ---
 # Performance — Resource Optimisation
+![Performance — Resource Optimisation](../../../../assets/virtualization-vmware-aria-operations-operations-resource-op.svg)
+
 
 ```bash
 # List processes consuming > 1% CPU
@@ -16,37 +18,7 @@ sar -u -f /var/log/sa/sa$(date +%d) | awk '/Average/ {print $3}'
 # Memory available
 free -h | awk '/Mem/ {print "Available:", $7}'
 ```
-```text
-┌───────────────────────────────── Performance — Resource Optimisation ─────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │           Optimisation: identify over-provisioned or idle resources and reduce waste          │   │
-│   │       Right-size VMs using 30-day p95 CPU/RAM; reclaim unused storage and old snapshots       │   │
-│   │    Test right-sizing in non-prod first; communicate with app owner before production change   │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                Identify Waste                │  │               Reclaim Actions               │   │
-│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
-│   │           CPU < 10% avg: oversized           │  │              Reduce vCPU count              │   │
-│   │          RAM < 20% used: oversized           │  │            Reduce vRAM allocation           │   │
-│   │            Snapshots > 7 days old            │  │             Delete old snapshots            │   │
-│   │          Powered-off VMs > 30 days           │  │           Decommission or archive           │   │
-│   │            Unused datastores/LUNs            │  │            Reclaim after confirm            │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    Right-sizing = Match vCPU/vRAM to actual workload demand; reduces host overcommit ratio            │
-│    vCPU ratio   = Total vCPUs assigned / physical cores; > 4:1 can cause CPU ready contention         │
-│    Balloon      = VMware memory reclaim driver; active balloon means host is under memory pressure    │
-│    Thin-prov    = Disk allocated lazily; reclaim by deleting data and running a reclaim task          │
-│    Snapshot chain= Each snapshot added to chain; long chains slow reads; delete after use             │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 ```bash
 # Unattached managed disks
 az disk list \

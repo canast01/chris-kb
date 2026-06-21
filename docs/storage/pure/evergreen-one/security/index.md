@@ -11,6 +11,8 @@ Pure Storage Evergreen//One Security reference covering Hardening Checklist, RBA
 
 *Applies to: Evergreen//One*
 </div>
+![Pure Storage Evergreen//One Security](../../../../assets/storage-pure-evergreen-one-security-index.svg)
+
 
 ```text
   Pure Security Architecture

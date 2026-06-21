@@ -12,37 +12,10 @@ GitHub Actions diagnostic commands: enable step-level debug logging, inspect run
 
 *Applies to: GitHub Actions (Cloud and self-hosted runners)*
 </div>
+![GitHub Actions — Diagnostics](../../../../assets/automation-github-actions-troubleshooting-diagnostics-index.svg)
 
-```text
-┌──────────────────────────────────── GitHub Actions — Diagnostics ─────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   Start here: gh run view → enable ACTIONS_STEP_DEBUG → check runner logs → verify secrets   │    │
-│   │   Workflow failing silently: enable ACTIONS_STEP_DEBUG=true (secret) and re-run              │    │
-│   │   Self-hosted runner offline: check _diag/ logs; verify network to github.com:443            │    │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                Debug Logging                 │  │                  Log Access                 │   │
-│   │         Set ACTIONS_STEP_DEBUG=true          │  │            gh run view --log <id>           │   │
-│   │        Set ACTIONS_RUNNER_DEBUG=true         │  │        gh run view --log-failed <id>        │   │
-│   │        Re-run with debug enabled (UI)        │  │           gh run download <id>              │   │
-│   │        Add: run: env (print env vars)        │  │        API: /repos/.../runs/{id}/logs       │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   Self-hosted runner diag files: actions-runner/_diag/Runner_<date>-*.log                             │
-│   OIDC token debug: add a step with aws sts get-caller-identity or equivalent to verify identity      │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│  ACTIONS_STEP_DEBUG = secret flag enabling verbose step-level output in any workflow step             │
-│  ACTIONS_RUNNER_DEBUG = secret flag enabling verbose runner host-level diagnostic output              │
-│  _diag/           = runner log directory on self-hosted runners; persists across workflow runs        │
-│  OIDC             = OpenID Connect; used by Actions to get short-lived tokens for AWS/Azure/GCP       │
-│  Runner group     = logical grouping of self-hosted runners; controls which repos can use them        │
-│  Environment      = GitHub named environment; has protection rules and its own secrets                │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ```mermaid
 graph TD

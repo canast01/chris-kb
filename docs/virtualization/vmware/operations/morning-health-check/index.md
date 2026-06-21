@@ -17,27 +17,10 @@ Start-of-shift health check sequence for a VMware SDDC environment. Run these ch
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
+![VMware — Morning Health Check](../../../../assets/virtualization-vmware-operations-morning-health-check-index.svg)
 
-```text
-┌────────────────────────────────── VMware Morning Health Check ────────────────────────────────────────┐
-│                                                                                                       │
-│  Run order (each check feeds the next):                                                               │
-│                                                                                                       │
-│  1. vCenter ──► 2. ESXi Cluster ──► 3. vSAN ──► 4. NSX ──► 5. Aria Ops ──► Done / Escalate            │
-│                                                                                                       │
-│  vCenter: services running, no critical alarms, recent backup successful                              │
-│  ESXi: all hosts connected, no warnings, HA/DRS active, NTP in sync                                   │
-│  vSAN: health green, no degraded objects, capacity < 70%, no resync stuck                             │
-│  NSX: managers healthy, edges up, BGP established, DFW rules unchanged                                │
-│  Aria: alert count normal, no capacity threshold breaches, no log spikes                              │
-│                                                                                                       │
-│  Escalate immediately if:                                                                             │
-│  ■ Any vSAN object in ABSENT/DEGRADED state          ■ NSX Edge BGP session down                      │
-│  ■ ESXi host disconnected or in error state          ■ vCenter backup missed >24 h                    │
-│  ■ vSAN capacity > 80%                               ■ Aria alert storm (>50 new in 1 h)              │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ---
 

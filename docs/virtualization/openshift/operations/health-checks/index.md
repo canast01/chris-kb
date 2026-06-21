@@ -9,48 +9,10 @@ Daily cluster health routine: cluster operators, node status, etcd health, monit
 
 *Applies to: OpenShift 4.x*
 </div>
+![OpenShift — Health Checks](../../../../assets/virtualization-openshift-operations-health-checks-index.svg)
 
-```text
-┌──────────────────────────────────── OpenShift Daily Health Check ─────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   Run each morning; any DEGRADED operator or NotReady node = investigate before changes       │   │
-│   │   etcd: check latency and member count; cert expiry: alert > 30 days warning                  │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │    Cluster Operators        │  │      Nodes & Workloads       │  │   etcd & Certificates       │  │
-│   │      ─────────────          │  │      ─────────────           │  │      ─────────────          │  │
-│   │  All Available=True         │  │  All nodes Ready             │  │  3 members healthy          │  │
-│   │  None Degraded=True         │  │  No pods CrashLoopBackOff    │  │  db size < 8 GB             │  │
-│   │  None Progressing long      │  │  Resource pressure checked   │  │  Certs > 30 days remaining  │  │
-│   │  Version matches expected   │  │  Pending PVCs = 0            │  │  etcd latency < 10ms P99    │  │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│    Alert thresholds:                                                                                  │
-│    DEGRADED operator → investigate immediately; any NotReady node > 5 min → page on-call              │
-│    etcd P99 commit latency > 10ms → investigate disk IOPS; db > 8 GB → compact immediately            │
-│    Certificate < 30 days → schedule rotation; < 7 days → emergency rotation                           │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Cluster Operator  = OCP component controller; Available=True + Degraded=False = healthy              │
-│  DEGRADED          = Cluster Operator condition: component has a configuration or runtime error       │
-│  NotReady node     = Node not accepting workloads; check kubelet, disk, and network on that node      │
-│  CrashLoopBackOff  = Pod restart loop; check logs with oc logs <pod> --previous for root cause        │
-│  etcd              = Distributed KV store; OCP control plane database; must have 3 healthy members    │
-│  etcd db size      = etcd on-disk database size; compact and defrag if exceeds 8 GB                   │
-│  P99 commit latency= 99th percentile etcd write latency; above 10ms indicates storage I/O issue       │
-│  certificate expiry= TLS cert validity; OCP auto-rotates most; monitor for < 30 days remaining        │
-│  MachineConfigPool = Groups nodes by config profile; Degraded MCP means a node failed to apply        │
-│  PVC               = PersistentVolumeClaim; Pending PVCs indicate storage provisioner failure         │
-│  oc adm top nodes  = Shows per-node CPU and memory usage; identify resource pressure early            │
-│  Prometheus        = OCP built-in monitoring stack; verify its pods are Running before trusting alerts│
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Before you begin
 

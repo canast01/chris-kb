@@ -9,28 +9,10 @@ tags:
 <div class="kb-summary">
 Simple Network Management Protocol (SNMP) polls device metrics and receives asynchronous fault notifications (traps) over UDP — port 161 for polling, 162 for traps. SNMPv1/v2c use plaintext community strings; SNMPv3 adds authentication and encryption via the User Security Model (USM). Coverage includes OID polling, trap handling, and monitoring integration.
 </div>
+![SNMP](../../../assets/networking-protocols-snmp-index.svg)
 
-```text
-┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌─────────────────┐          ┌────────────────────────┐                                             │
-│   │   NMS (Manager) │          │  Device (Agent)        │                                             │
-│   │  Prometheus /   │          │  Switch, Router,       │                                             │
-│   │  Zabbix /       │          │  Storage, Server       │                                             │
-│   │  LibreNMS       │          │                        │                                             │
-│   │                 │          │  ┌──────────────────┐  │                                             │
-│   │  POLLING ───────┼─UDP 161──┼─►│  SNMP Agent      │  │                                             │
-│   │  GET/GETBULK    │          │  │  ┌────────────┐  │  │                                             │
-│   │  OID values ◄───┼──────────┼──│  │   MIB      │  │  │                                             │
-│   │                 │          │  │  │ (OID tree) │  │  │                                             │
-│   │  TRAPS ◄────────┼─UDP 162──┼──│  └────────────┘  │  │                                             │
-│   │  (async events) │          │  └──────────────────┘  │                                             │
-│   └─────────────────┘          └────────────────────────┘                                             │
-│                                                                                                       │
-│   v1/v2c: community string (plaintext)                                                                │
-│   v3:     USM user + SHA auth + AES encryption                                                        │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 <div class="kb-grid kb-grid-5">
 

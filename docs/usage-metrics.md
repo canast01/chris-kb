@@ -3,49 +3,10 @@
 <div class="kb-summary">
 Knowledge base statistics: page counts, section distribution, and content type coverage.
 </div>
+![Usage Metrics](assets/usage-metrics.svg)
 
-```text
-┌────────────────────────────────────────── KB Usage Metrics ───────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Knowledge base statistics: page counts, section distribution, and content type coverage  │   │
-│   │              Run python3 scripts/site_audit.py to regenerate; reflects last audit             │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │       Content Totals        │  │      Top 3 Sections          │  │      Content Types          │  │
-│   │       ─────────────         │  │      ─────────────           │  │      ─────────────          │  │
-│   │  Total pages:       2,639   │  │  Storage:          709       │  │  ASCII diagrams:     1,682  │  │
-│   │  Sections:             13   │  │  Virtualization:   685       │  │  SVG diagrams:         1,131  │  │
-│   │  Avg pages/section:   236   │  │  Cloud:            295       │  │  Mermaid diagrams:     680  │  │
-│   │  Updated 2026-06-21         │  │                              │  │  kb-summary divs:    2,359  │  │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   Section          │  Pages  │  Section            │  Pages  │  Section          │  Pages     │   │
-│   │   Storage          │   709   │  SAN                │   136   │  Backup           │   103      │   │
-│   │   Virtualization   │   685   │  ITSM               │   153   │  Networking       │    83      │   │
-│   │   Cloud            │   295   │  Security           │   113   │  Certifications   │    14      │   │
-│   │   Compute          │   175   │  Automation         │   126   │                   │            │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Audit: python3 scripts/site_audit.py (37 checks) · Score: 36/37 clean                              │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    Section         = Top-level KB area (Storage, Virtualization, Cloud, etc.)                         │
-│    CLI reference   = Page with CLI commands, flags, and usage examples                                │
-│    Mermaid         = Flowchart or sequence diagram embedded in a fenced mermaid block                 │
-│    ASCII diagram   = Full-width box-drawing architecture diagram (105 chars wide)                     │
-│    SVG diagram     = Vector diagram in docs/assets/; injected via markdown image reference            │
-│    site_audit.py   = 37-check automated audit; covers structure, content, links, and quality          │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 Generated: 2026-06-21
 
@@ -55,8 +16,8 @@ Generated: 2026-06-21
 |---|---:|
 | Total markdown pages | 2,639 |
 | Sections | 11 |
-| Pages with full-width ASCII diagrams | 1,682 |
-| Pages with SVG diagrams | 1,131 |
+| Pages with full-width ASCII diagrams | 266 |
+| Pages with SVG diagrams | 2,639 |
 | Pages with Mermaid diagrams | 680 |
 | Pages with kb-summary | 2,359 |
 | Pages with tags | 2,612 |

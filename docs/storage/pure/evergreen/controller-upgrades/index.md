@@ -10,6 +10,8 @@ Pure Storage Controller Upgrades reference covering How Controller Upgrades Work
 
 *Applies to: Evergreen*
 </div>
+![Pure Storage Controller Upgrades](../../../../assets/storage-pure-evergreen-controller-upgrades-index.svg)
+
 
 ```text
 Ever Modern Controller Upgrade — Step by Step

@@ -10,6 +10,8 @@ Pure Storage Evergreen//One Lifecycle reference covering Overview, Service Agree
 
 *Applies to: Evergreen//One*
 </div>
+![Pure Storage Evergreen//One Lifecycle](../../../../assets/storage-pure-evergreen-one-lifecycle-index.svg)
+
 
 ```text
   Contract Lifecycle

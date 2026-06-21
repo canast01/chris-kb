@@ -16,45 +16,10 @@ search:
 ---
 
 # Brocade FabricOS — Initial Deployment
+![Brocade FabricOS — Initial Deployment](../../../../assets/san-brocade-fabric-os-deploy-index.svg)
 
-```text
-┌─────────────────────────────── Brocade FabricOS — Deployment Overview ────────────────────────────────┐
-│                                                                                                       │
-│   Physical-first deployment: rack, cable, and power-on before any configuration begins                │
-│   All fabric parameters (Domain ID, BB credits, E_D_TOV, R_A_TOV) must match across switches          │
-│   Zone plan must be prepared before cabling: single-initiator/single-target zones                     │
-│                                                                                                       │
-│   Prerequisites                                                                                       │
-│   Hardware: G620/G630/X7 director with SFP+ transceivers, FC cables, OOB management                   │
-│   Fabric design: domain IDs assigned, fabric parameters documented, zone plan ready                   │
-│   Access: serial console cable or DHCP-discovered IP, SSH client, SANnav server                       │
-│                                                                                                       │
-│   Initial switch configuration                                                                        │
-│   Change default passwords immediately (admin and root)                                               │
-│   Set: switch name, management IP (if static), NTP, DNS, SSH enabled                                  │
-│   switchDisable before changing domain ID or fabric parameters; switchEnable after                    │
-│                                                                                                       │
-│   Zoning                                                                                              │
-│   zoneCreate: one zone per initiator-target pair (host HBA WWN + storage port WWN)                    │
-│   cfgCreate: add all zones to one active zone configuration (cfg)                                     │
-│   cfgEnable + cfgSave: activate and persist zone config across reboots                                │
-│   Verify with: nsAllShow (name server) and zoneShow (active zones)                                    │
-│                                                                                                       │
-│   ISL and validation                                                                                  │
-│   ISL ports show as type "E"; trunked ports show as type "T" in switchShow                            │
-│   portCfgTrunkPort: group adjacent ports into an ISL trunk for higher aggregate bandwidth             │
-│   Validate: portErrShow (all zeros), nsAllShow, fabricShow (no segmented switches)                    │
-│                                                                                                       │
-│   Key terms:                                                                                          │
-│   Domain ID    = unique switch identifier within the fabric; must be set before joining               │
-│   Zone         = access control list pairing one initiator WWN with one target WWN                    │
-│   WWN          = World Wide Name; 8-byte unique address for HBA and storage array ports               │
-│   ISL          = Inter-Switch Link; E_Port to E_Port connection between fabric switches               │
-│   Principal    = switch elected as fabric coordinator; shown with asterisk in fabricShow              │
-│   BB credits   = buffer-to-buffer credits; controls frames in flight between two ports                │
-│   cfgSave      = persists active zone config to flash; survives reboot                                │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 This guide covers deploying a Brocade SAN switch (running Fabric OS) from physical installation through a validated, production-ready FC fabric. Applies to Brocade G620, G630, and X7 directors running Fabric OS 9.x.
 

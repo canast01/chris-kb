@@ -11,36 +11,10 @@ Red Hat support escalation process: severity levels, required data for support c
 
 *Applies to: OpenShift 4.x*
 </div>
+![OpenShift — Escalation](../../../../assets/virtualization-openshift-troubleshooting-escalation-index.svg)
 
-```text
-┌──────────────────────────────────── OpenShift Support Escalation ─────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   Always attach must-gather to every support case; it is required for Red Hat to assist        │  │
-│   │   Severity 1: production down — call Red Hat support immediately after opening case online        │
-│   │   If stuck in a loop, request case escalation or a Technical Account Manager (TAM) review      │  │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │       Severity Levels        │  │      Required Data           │  │      Escalation Path        │ │
-│   │      ─────────────          │  │      ─────────────           │  │      ─────────────          │  │
-│   │  Sev 1: production down     │  │  must-gather bundle          │  │  Open case online           │  │
-│   │  Sev 2: major function lost │  │  SOS report from each node   │  │  Sev 1: call immediately   │   │
-│   │  Sev 3: non-critical issues │  │  oc get clusterversion -o y  │  │  Escalate if no progress   │   │
-│   │  Sev 4: general questions   │  │  Steps to reproduce timeline │  │  Request TAM for critical  │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    must-gather  = Required cluster state bundle; run before opening any support case                  │
-│    SOS report   = Node-level diagnostic (sosreport via toolbox); separate per affected node           │
-│    TAM          = Technical Account Manager; assigned Red Hat contact for premium subscriptions       │
-│    CEE          = Customer Engagement Engineer; the Red Hat support engineer assigned to your case    │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ```mermaid
 graph TD

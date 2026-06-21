@@ -16,57 +16,10 @@ search:
 ---
 
 # FlashArray — Initial Deployment
+![FlashArray — Initial Deployment](../../../../assets/storage-pure-flasharray-deploy-index.svg)
 
-```text
-┌──────────────────────────────── Pure FlashArray — Deployment Sequence ────────────────────────────────┐
-│                                                                                                       │
-│  Step 1 · Prerequisites                                                                               │
-│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
-│  FlashArray chassis with dual controllers and DirectFlash NVMe modules (Pre-installed by Pure)        │
-│  25GbE or 100GbE switches for iSCSI/NVMe-oF; FC switches if Fibre Channel connectivity planned        │
-│  OOB management switch with DHCP for initial discovery, or pre-configured static management IP        │
-│  IP plan: Management VIP, CT0 mgmt, CT1 mgmt, data VIFs per controller per protocol                   │
-│  Pure1 account at pure1.purestorage.com; Pure Storage Host Utilities for each host OS                 │
-│                                                                                                       │
-│                                        │  initial setup                                               │
-│                                        ▼                                                              │
-│  Step 2 · Initial Setup Wizard                                                                        │
-│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
-│  Connect array to management VLAN; DHCP assigns initial IP; browse to https://<dhcp-ip>               │
-│  Log in with credentials from Quick Start guide (inside shipping box); accept EULA                    │
-│  Setup Wizard: array name, static management VIP, CT0/CT1 IPs, DNS, NTP, admin password               │
-│  Array reboots to apply network config; log back in at static management VIP                          │
-│                                                                                                       │
-│                                        │  configure data networks                                     │
-│                                        ▼                                                              │
-│  Step 3 · Data Network and Protocol Configuration                                                     │
-│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
-│  Settings → Network → Interfaces: configure iSCSI VIFs (one per controller per subnet)                │
-│  iSCSI: assign data IPs to eth4 (CT0) and eth4 (CT1); bind to correct VLAN/subnet                     │
-│  FC: confirm HBA WWPNs visible under Settings → Network → FC; submit zoning requests                  │
-│  NVMe-oF: configure NVMe/TCP or NVMe/FC interfaces; enable NVMe on target ports                       │
-│                                                                                                       │
-│                                        │  provision hosts and volumes                                 │
-│                                        ▼                                                              │
-│  Step 4 · Host and Volume Provisioning                                                                │
-│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
-│  Create hosts: Storage → Hosts → Create Host; add initiator IQNs (iSCSI) or WWPNs (FC)                │
-│  Create volumes: Storage → Volumes → Create Volume; set name, size, QoS limits (optional)             │
-│  Connect volumes to hosts: Volumes → Connect Host; select host; repeat for all volumes                │
-│  Install Pure Host Utilities on each host; rescan storage adapters; format and label volumes          │
-│                                                                                                       │
-│                                        │  enable protection and monitoring                            │
-│                                        ▼                                                              │
-│  Step 5 · Protection Groups, Pure1, and Baseline                                                      │
-│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
-│  Create Protection Group: add volumes; set snapshot schedule (e.g. hourly, retain 24)                 │
-│  Configure ActiveDR or ActiveCluster if replication to a remote FlashArray is required                │
-│  Register in Pure1: Settings → Support → Enable Remote Assistance; link Pure1 organisation            │
-│  Record: array serial, management VIP, CT IPs, data VIF IPs, host list, Protection Group names        │
-│  Set capacity alerts (default 80%); schedule quarterly firmware review via Pure1                      │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 This guide covers deploying a Pure Storage FlashArray (//X, //C, or //XL series) from physical installation through validated host connectivity. All steps apply to Purity//FA 6.x.
 

@@ -4,6 +4,8 @@ tags:
   - vmware
 ---
 # vSphere Storage Architecture — Datastores, Policies, and Advanced Features
+![vSphere Storage Architecture — Datastores, Policies, and Advanced Features](../../../../assets/virtualization-vmware-internals-vsphere-storage-index.svg)
+
 
 vSphere supports a broad set of storage protocols and datastore types. Choosing the right combination depends on performance requirements, existing hardware, budget, and operational complexity. This page covers the full vSphere storage stack from protocols through SPBM policies, multipathing, and advanced features such as NVMe-oF and PMem — all areas covered on the VCP-DCV 8 exam.
 
@@ -114,23 +116,7 @@ Storage Policy-Based Management (SPBM) is a framework that decouples storage cap
 
 ### How SPBM Works
 
-```text
-┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
-│                  SPBM Architecture                                                                    │
-│                                                                                                       │
-│  1. Array/vSAN advertises capabilities via VASA                                                       │
-│     (e.g., "I support RAID-5, dedup, replication")                                                    │
-│                                                                                                       │
-│  2. Admin creates Storage Policy                                                                      │
-│     (e.g., "Need RAID-5, 99.99% availability")                                                        │
-│                                                                                                       │
-│  3. VM assigned policy at provisioning                                                                │
-│     vCenter places VMDK on compliant datastore                                                        │
-│                                                                                                       │
-│  4. vCenter continuously checks compliance                                                            │
-│     Non-compliant VMs flagged in vCenter UI                                                           │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 ### Policy Components
 
@@ -371,32 +357,7 @@ ESXi 7.0+ supports NVMe/FC and NVMe/TCP. NVMe/TCP requires no special hardware b
 
 ## Storage Architecture Decision Reference
 
-```text
-┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
-│               Storage Architecture Selection Guide                                                    │
-│                                                                                                       │
-│  New deployment with no existing SAN?                                                                 │
-│    └── Consider vSAN (HCI) or NVMe-oF all-flash array                                                 │
-│                                                                                                       │
-│  Existing FC SAN?                                                                                     │
-│    └── VMFS6 on FC with VAAI; evaluate NVMe/FC for new arrays                                         │
-│                                                                                                       │
-│  Budget-constrained, IP network only?                                                                 │
-│    └── iSCSI (VMFS6) or NFS 4.1 depending on block vs file needs                                      │
-│                                                                                                       │
-│  Need per-VM storage policies backed by array features?                                               │
-│    └── vVols with VASA-capable array                                                                  │
-│                                                                                                       │
-│  Need ultra-low latency for in-memory DB?                                                             │
-│    └── PMem datastore or NVMe-oF (NVMe/FC or NVMe/TCP)                                                │
-│                                                                                                       │
-│  Need VM-level QoS and I/O fairness?                                                                  │
-│    └── Enable SIOC on VMFS/NFS datastores; use SPBM IOPS limit                                        │
-│                                                                                                       │
-│  Need raw LUN access for guest clustering?                                                            │
-│    └── Physical RDM (pRDM) on FC or iSCSI                                                             │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 ---
 

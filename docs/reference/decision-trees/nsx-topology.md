@@ -9,15 +9,10 @@ tags:
 <div class="kb-summary">
 Design your NSX topology: overlay vs VLAN transport, T0/T1 gateway placement, Edge cluster sizing, HA model, and north-south routing type.
 </div>
+![NSX Topology Decision Tree](../../assets/reference-decision-trees-nsx-topology.svg)
 
-```text
-┌──────────────────────────────────── NSX Topology Decision Tree ───────────────────────────────────────┐
-│  Tenant model: VRF-Lite on shared T0 (logical) vs dedicated T0 per tenant (strict isolation)          │
-│  Routing: static routes (lab) vs eBGP to ToR switches (production — required for ECMP)                │
-│  Edge sizing: VM Small/Large (under 25 Gbps) vs bare-metal DPDK + SR-IOV (over 25 Gbps)               │
-│  T0 HA: Active/Standby (stateful services) vs ECMP Active/Active (BGP required, no per-flow state)    │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ```mermaid
 flowchart TD

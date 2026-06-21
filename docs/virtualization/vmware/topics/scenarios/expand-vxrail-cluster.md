@@ -15,33 +15,10 @@ LCM upgrades and voids the support configuration.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
+![Expand VxRail Cluster (Add Node)](../../../../assets/virtualization-vmware-topics-scenarios-expand-vxrail-cluster.svg)
 
-```text
-┌─────────────────────────────── Expand VxRail Cluster — Procedure Flow ────────────────────────────────┐
-│                                                                                                       │
-│  OVERVIEW                                                                                             │
-│  Node expansion done exclusively through VxRail Manager — never manually through vCenter              │
-│  VxRail Manager validates firmware, enforces bundle version, orchestrates full join sequence          │
-│                                                                                                       │
-│  START: Rack and cable new node                                                                       │
-│  Assign iDRAC IP via DCUI · confirm iDRAC reachable on management network                             │
-│                                                                                                       │
-│  STEP 1 — Network Pre-checks                                                                          │
-│  Verify mgmt, vMotion, vSAN VLANs reachable · DNS A+PTR records pre-created for new node              │
-│                                                                                                       │
-│  STEP 2 — Discover Node in VxRail Manager                                                             │
-│  VxRail Manager → Cluster Expansion → Discover Nodes: new node appears on management network          │
-│                                                                                                       │
-│  STEP 3 — Run Expansion Wizard                                                                        │
-│  Supply mgmt IP, vMotion IP, vSAN IP, FQDN hostname                                                   │
-│  Parallel: firmware update if bundle mismatch · vCenter join + VMkernel config · NSX transport node   │
-│                                                                                                       │
-│  STEP 4 — vSAN Rebalance                                                                              │
-│  Monitor resyncing objects until 0 bytes remain                                                       │
-│  Validate in OMIVV · confirm new node visible in Aria Operations                                      │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Products Involved
 

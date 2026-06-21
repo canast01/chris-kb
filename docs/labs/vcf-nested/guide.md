@@ -10,14 +10,10 @@ tags:
 <div class="kb-summary">
 Complete procedure: prepare nested ESXi hosts, fill in the VCF configuration workbook, deploy Cloud Builder, run pre-deployment validation, and deploy the VCF management domain.
 </div>
+![Lab 4 Guide — VCF on Nested ESXi Step-by-Step](../../assets/labs-vcf-nested-guide.svg)
 
-```text
-┌─────────────────────────────────── Lab 4 — Phase Overview ────────────────────────────────────────────┐
-│  Phase 1: Prepare 4 nested ESXi hosts (vhv, UUID, SSD tags, DNS, NTP)                                 │
-│  Phase 2: Fill VCF workbook (IPs, hostnames, VLANs, passwords, license keys)                          │
-│  Phase 3: Deploy Cloud Builder  →  Phase 4: Run validation  →  Phase 5: Deploy management domain      │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ---
 

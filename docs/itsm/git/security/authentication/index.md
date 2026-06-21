@@ -4,6 +4,8 @@ tags:
   - security
 ---
 # Git — Authentication
+![Git — Authentication](../../../../assets/itsm-git-security-authentication-index.svg)
+
 
 ```bash
 # Generate Ed25519 key (preferred)
@@ -15,51 +17,7 @@ ssh-keygen -t rsa -b 4096 -C "user@corp.example.com" -f ~/.ssh/id_rsa_git
 # Verify key fingerprint before uploading
 ssh-keygen -lf ~/.ssh/id_ed25519_git.pub
 ```
-```text
-┌──────────────────────────────────────── Git — Authentication ─────────────────────────────────────────┐
-│                                                                                                       │
-│  Git authentication: SSH keys, PATs, OIDC for CI, and MFA enforcement.                                │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              SSH Authentication              │  │          HTTPS / PAT Authentication         │   │
-│   │       Generate: ssh-keygen -t ed25519        │  │          PAT as password over HTTPS         │   │
-│   │         Add pub key to GitHub/GitLab         │  │        Scope: repo + workflow minimum       │   │
-│   │         Test: ssh -T git@github.com          │  │            Expiry: 90-day maximum           │   │
-│   │        ssh-agent: keyring management         │  │      Credential helper: keychain store      │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    SSH preferred for humans; PAT for HTTPS scripts; OIDC for CI pipelines                             │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                OIDC for CI/CD                │  │               MFA Enforcement               │   │
-│   │         No long-lived secrets in CI          │  │           Org setting: require MFA          │   │
-│   │       GitHub Actions: id-token: write        │  │           TOTP app or hardware key          │   │
-│   │      Cloud provider: OIDC trust policy       │  │        Recovery codes: store offline        │   │
-│   │       Short-lived token: < 1 hour TTL        │  │        Enforce SAML SSO in enterprise       │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  GitHub/GitLab · CI runner · cloud OIDC provider · MFA authenticator app                              │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  ed25519      = modern elliptic-curve SSH key; shorter and more secure than RSA                       │
-│  ssh-agent    = daemon holding decrypted private keys in memory during session                        │
-│  PAT scope    = granular permissions (repo, read:org, workflow) on access token                       │
-│  Credential helper= caches HTTPS credentials in OS keychain (keychain/libsecret)                      │
-│  OIDC         = CI workload requests short-lived token from IdP; no stored secret                     │
-│  id-token perm= GitHub Actions permission granting OIDC JWT to the workflow                           │
-│  Trust policy = cloud IAM policy allowing GitHub OIDC issuer to assume role                           │
-│  TOTP         = time-based one-time password; 6-digit code from authenticator app                     │
-│  Recovery codes= backup codes for MFA bypass; store in password manager offline                       │
-│  SAML SSO     = enforce org login through enterprise IdP; unlinked users lose access                  │
-│  SSH config   = ~/.ssh/config; maps Host to IdentityFile, User, Port                                  │
-│  Keychain     = macOS keychain / Windows Credential Manager stores SSH passphrase                     │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 ```bash
 # Display public key for upload to GitHub/GitLab/Bitbucket
 cat ~/.ssh/id_ed25519_git.pub

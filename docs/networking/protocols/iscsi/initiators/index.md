@@ -8,32 +8,10 @@ tags:
 <div class="kb-summary">
 An iSCSI initiator is the client-side component — typically software on a server OS or a hardware iSCSI HBA — that sends SCSI commands over an IP network to iSCSI targets.
 </div>
+![iSCSI Initiators](../../../../assets/networking-protocols-iscsi-initiators-index.svg)
 
-```text
-┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
-│  SOFTWARE INITIATOR (OS built-in)                                                                     │
-│  ┌──────────────────────────────────────────┐                                                         │
-│  │  OS (Linux open-iscsi / Windows MSiSCSI) │                                                         │
-│  │  IQN: iqn.2024-01.com.example:server01  │                                                          │
-│  │             │  TCP/IP stack              │                                                         │
-│  │             ▼                            │                                                         │
-│  │  ┌──────────────────┐                   │                                                          │
-│  │  │  Standard NIC    │  ◄─ uses host CPU  │                                                         │
-│  │  └──────────────────┘                   │                                                          │
-│  └──────────────────────────────────────────┘                                                         │
-│                                                                                                       │
-│  HARDWARE iSCSI HBA (offload)                                                                         │
-│  ┌──────────────────────────────────────────┐                                                         │
-│  │  OS sees SCSI device directly            │                                                         │
-│  │  IQN burned into HBA firmware           │                                                          │
-│  │             │  TCP/IP offloaded to HBA   │                                                         │
-│  │             ▼                            │                                                         │
-│  │  ┌──────────────────┐                   │                                                          │
-│  │  │  iSCSI HBA (TOE) │  ◄─ hardware CPU  │                                                          │
-│  │  └──────────────────┘                   │                                                          │
-│  └──────────────────────────────────────────┘                                                         │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## IQN Format
 

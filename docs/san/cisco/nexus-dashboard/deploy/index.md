@@ -16,43 +16,10 @@ search:
 ---
 
 # Nexus Dashboard — Initial Deployment
+![Nexus Dashboard — Initial Deployment](../../../../assets/san-cisco-nexus-dashboard-deploy-index.svg)
 
-```text
-┌───────────────────────────── Cisco Nexus Dashboard — Deployment Overview ─────────────────────────────┐
-│                                                                                                       │
-│   Nexus Dashboard is a 3-node cluster hosting NDFC (fabric management) and NDI (telemetry) services   │
-│   Minimum production deployment: 3 nodes; single-node is lab-only                                     │
-│   Two networks required: management (eth0) for switch MGMT0 reach, data (eth1) for fabric programming │
-│                                                                                                       │
-│   Node requirements                                                                                   │
-│   16 vCPU, 64 GB RAM, 500 GB thick-provisioned disk per node; ESXi 7.0 U2+ or bare-metal RHEL         │
-│   Node latency: <10ms round-trip between all three nodes (required for cluster consensus)             │
-│   IPs needed: 3× management, 1× management VIP, 3× data, 1× data VIP                                  │
-│                                                                                                       │
-│   Deployment sequence                                                                                 │
-│   Step 1: deploy OVA three times (one per node); set management IP, data IP, admin password per node  │
-│   Step 2: browse to Node 1 management IP; run Initial Setup wizard to form the cluster                │
-│   Step 3: add nodes 2 and 3 via wizard; enter management IPs; cluster formation takes 10-20 minutes   │
-│   Step 4: redirect to cluster management VIP; verify all three nodes show Healthy                     │
-│                                                                                                       │
-│   Service installation                                                                                │
-│   Install NDFC: Admin > Services > Service Catalog > Nexus Dashboard Fabric Controller > Install      │
-│   Install NDI (optional): same catalog; provides telemetry, flow analytics, and anomaly detection     │
-│   Verify: SSH to any node; run acs services status — all services should show Running                 │
-│                                                                                                       │
-│   Site onboarding                                                                                     │
-│   Admin > Sites > Add Site: select NDFC or ACI as site type; enter controller URL and credentials     │
-│   Or: create fabric directly in NDFC service — it auto-registers as a Nexus Dashboard site            │
-│   Validate: Sites view shows Connectivity: Reachable; NDFC Switches shows Config Status: In Sync      │
-│                                                                                                       │
-│   Key terms:                                                                                          │
-│   NDFC       = Nexus Dashboard Fabric Controller; manages Nexus and MDS fabrics (formerly DCNM)       │
-│   NDI        = Nexus Dashboard Insights; telemetry, flow data, and advisory analysis                  │
-│   Cluster VIP = virtual IP address shared across all three nodes; used for browser and switch access  │
-│   acs        = Nexus Dashboard CLI tool; acs health checks cluster, acs services status checks apps   │
-│   Site       = a managed fabric registered in Nexus Dashboard (NDFC, ACI, or standalone)              │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 This guide covers deploying Cisco Nexus Dashboard (ND) from OVA to a validated 3-node cluster with NDFC and/or NDI services installed and a first site connected. Nexus Dashboard is the unified platform that hosts Cisco's NDFC (formerly DCNM), NDI (Network Insights), and other data center management services.
 

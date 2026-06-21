@@ -9,38 +9,10 @@ OCP upgrade channels, EUS (Extended Update Support) path, version lifecycle, upg
 
 *Applies to: OpenShift 4.x*
 </div>
+![OpenShift — Install & Upgrade](../../../../assets/virtualization-openshift-operations-install-upgrade-index.svg)
 
-```text
-┌─────────────────────────────────────── OpenShift Upgrade Path ────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   CVO manages upgrades: downloads release image, updates operators, drains+reboots nodes      │   │
-│   │   EUS path: 4.10 → 4.12 → 4.14 (skip minor); requires pause at intermediate EUS version      │    │
-│   │   Always: check upgrade paths at access.redhat.com/labs/ocpupgradegraph before proceeding    │    │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Stable channel → patch → minor version; EUS channel → even minor versions only (4.10, 4.12, 4.14)  │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │        Channels             │  │      Upgrade Steps           │  │       EUS Path              │  │
-│   │      ─────────────          │  │      ─────────────           │  │      ─────────────          │  │
-│   │  stable-4.x: production     │  │  1. Set channel + version    │  │  4.y.z → 4.y+2.z upgrade    │  │
-│   │  fast-4.x: early access     │  │  2. Drain workers (MCO)      │  │  Pause workers at 4.y+1.z  │   │
-│   │  candidate-4.x: pre-release │  │  3. Upgrade control plane    │  │  EUS: skip intervening vers │  │
-│   │  eus-4.x: even versions     │  │  4. Upgrade workers          │  │  Use eus-4.x channel        │  │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    CVO          = Cluster Version Operator; manages OCP version and drives upgrades                   │
-│    EUS          = Extended Update Support; even minor versions (4.10, 4.12) with longer support       │
-│    MachineConfigPool= Groups nodes by role; workers upgrade node by node within their pool            │
-│    Channel      = Release stream; set in ClusterVersion; determines available upgrades                │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Before you begin
 

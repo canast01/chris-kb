@@ -10,54 +10,10 @@ AWS Systems Manager reference covering Overview, Where It Fits, Daily Checks, He
 
 *Applies to: AWS*
 </div>
+![AWS Systems Manager](../../../../assets/cloud-aws-compute-systems-manager-index.svg)
 
-```text
-┌──────────────────────────────────── AWS Compute — Systems Manager ────────────────────────────────────┐
-│                                                                                                       │
-│  SSM provides fleet management: session access, patch, run-command, and parameter store.              │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              Core Capabilities               │  │                Fleet Manager                │   │
-│   │          Session Manager: SSH-free           │  │         Inventory: software + config        │   │
-│   │          Run Command: fleet scripts          │  │          Compliance: patch + assoc          │   │
-│   │          Patch Manager: OS updates           │  │          Node Management: overview          │   │
-│   │       Parameter Store: config/secrets        │  │          Explorer: org-wide health          │   │
-│   │        Automation: runbook playbooks         │  │         OpsCenter: incident tickets         │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  SSM Agent on each instance connects outbound to SSM endpoints; no inbound ports                      │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                  Automation                  │  │              Setup Requirements             │   │
-│   │           Runbooks: SSM documents            │  │         SSM Agent: pre-installed AMI        │   │
-│   │         Trigger: EventBridge/console         │  │    IAM role: AmazonSSMManagedInstanceCore   │   │
-│   │          Approval step: human gate           │  │           VPC endpoint or internet          │   │
-│   │          Multi-account: change mgr           │  │         Hybrid: on-prem registration        │   │
-│   │          Rollback: stop on failure           │  │         Tag: managed instance label         │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  SSM service endpoints · SSM Agent · EC2/on-prem nodes · VPC endpoints · KMS                          │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  SSM Agent       = Lightweight daemon on EC2 or on-prem; polls SSM for commands                       │
-│  Session Manager = Secure interactive shell via SSM; no SSH port or key pair                          │
-│  Run Command     = Execute SSM documents on target instances; returns output                          │
-│  Parameter Store = Hierarchical config store; String, StringList, SecureString                        │
-│  Automation      = Multi-step runbook; can approve, branch, loop, call APIs                           │
-│  OpsCenter       = Operational issues (OpsItems) linked to AWS resources                              │
-│  Explorer        = Aggregated ops dashboard across accounts in an org                                 │
-│  Inventory       = Collects installed software, network config, Windows registry                      │
-│  AmazonSSMManagedInstanceCore= Minimum IAM policy required for SSM management                         │
-│  VPC endpoint    = Allows SSM Agent to communicate without internet access                            │
-│  Hybrid activation= Registers on-prem servers as managed instances in SSM                             │
-│  Change Manager  = Approval workflow for SSM Automation across multiple accounts                      │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 ## Overview
 
 AWS Systems Manager notes for day-to-day infrastructure operations.

@@ -13,36 +13,10 @@ restoring paths, and recovering VMs that were force-powered-off by VMCP.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
+![Storage APD — Datastore Inaccessible](../../../../assets/virtualization-vmware-topics-scenarios-storage-apd-datastore.svg)
 
-```text
-┌────────────────────────────────── Storage APD — Investigation Flow ───────────────────────────────────┐
-│                                                                                                       │
-│  OVERVIEW                                                                                             │
-│  APD (All Paths Down): all storage paths to a datastore are lost; VMs freeze and become inaccessible  │
-│  APD is recoverable (paths may return); PDL (Permanent Device Loss) is not recoverable                │
-│                                                                                                       │
-│  START: Datastore shows grey/unavailable in vCenter · VMs freeze · Aria Ops storage alert             │
-│                                                                                                       │
-│  STEP 1 — Determine Scope                                                                             │
-│  All hosts affected → fabric / SAN / NFS server failure                                               │
-│  Subset of hosts only → per-host HBA/NIC, zoning, or cable issue                                      │
-│                                                                                                       │
-│  STEP 2 — Check Path State                                                                            │
-│  esxcli storage core device list · check path state: APD vs PDL                                       │
-│                                                                                                       │
-│  STEP 3 — Resolution Branch                                                                           │
-│  APD: paths recoverable — restore fabric / NFS paths → VMs resume automatically                       │
-│  PDL: device permanently gone — VMCP triggers power-off → HA restarts VMs on surviving storage        │
-│                                                                                                       │
-│  CLOSE: Paths restored · all VMs running · datastore green · VMCP policy reviewed                     │
-│                                                                                                       │
-│  KEY TERMS                                                                                            │
-│  APD — All Paths Down: temporary path loss; VMware waits for path recovery before taking action       │
-│  PDL — Permanent Device Loss: device signals it will not return; VMCP responds immediately            │
-│  VMCP — VM Component Protection: vSphere HA extension that responds to APD/PDL conditions             │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Products Involved
 

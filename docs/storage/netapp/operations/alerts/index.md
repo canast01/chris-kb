@@ -10,58 +10,9 @@ Alerts reference covering ONTAP EMS Alerts, AutoSupport Notifications, SNMP Aler
 
 *Applies to: ONTAP 9.x*
 </div>
-```text
-┌────────────────────────────────────────── NetApp Operations ──────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │     NetApp Ops: NetApp storage platform operational support and administration procedures     │   │
-│   │                     Protocols: HTTPS · SSH · SNMP · AutoSupport · REST API                    │   │
-│   │                          Management: ActiveIQ / mysupport.netapp.com                          │   │
-│   │                Sections: Architecture · Operations · Security · Troubleshooting               │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Architecture → Operations → Security → Troubleshooting → Escalation                                │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │          Monitoring         │  │           ActiveIQ          │  │       Risk assessment       │   │
-│   │          Telemetry          │  │         AutoSupport         │  │       Call-home relay       │   │
-│   │         Health check        │  │        Config Advisor       │  │        Best practice        │   │
-│   │           Support           │  │     mysupport.netapp.com    │  │        SR management        │   │
-│   │           Upgrade           │  │         NDO rolling         │  │        Non-disruptive       │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Component     │     Purpose      │       Access      │       Auth       │      Notes       │   │
-│   │     ActiveIQ     │  Health portal   │       HTTPS       │    NetApp SSO    │       SaaS       │   │
-│   │   AutoSupport    │    Call-home     │    HTTPS/email    │   Certificate    │  Daily reports   │   │
-│   │  Config Advisor  │  Best practice   │     Local tool    │   Local admin    │  Point-in-time   │   │
-│   │  ONTAP Upgrade   │   Version mgmt   │   System Manager  │    Admin role    │   Rolling NDO    │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: NetApp AFF/FAS clusters · ActiveIQ SaaS · mysupport.netapp.com support portal            │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    ActiveIQ           = NetApp SaaS health portal; risk assessment, upgrade advisor, capacity planning│
-│    AutoSupport        = ONTAP telemetry; sends daily health reports and call-home bundles to NetApp   │
-│    Config Advisor     = NetApp best-practice checker; validates cabling, config, and firmware         │
-│    NDO                = Non-Disruptive Operations; rolling upgrades without host I/O service disrup...│
-│    Takeover           = HA failover; one node takes over partner storage on node failure event        │
-│    Giveback           = return storage to original node after failover; completes HA pair recovery    │
-│    Aggregate relocation = move aggregate between HA pair nodes without service disruption             │
-│    LIF migration      = move logical interface to different node port during planned maintenance      │
-│    System Manager     = ONTAP web GUI; unified management for cluster, SVMs, volumes, policies        │
-│    ONTAP CLI          = SSH to cluster management IP; diag privilege required for low-level commands  │
-│    mysupport          = mysupport.netapp.com; open SRs, download firmware, and access knowledge base  │
-│    ASUP bundle        = AutoSupport bundle with logs, config, and core files for TAC case analysis    │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+![NetApp Operations — Alerts](../../../../assets/storage-netapp-operations-alerts-index.svg)
+
+
 
 
 ## Before you begin

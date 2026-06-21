@@ -8,13 +8,10 @@ tags:
 <div class="kb-summary">
 Top-10 PowerCLI one-liners for VM, host, storage, network, and cluster operations across vSphere environments.
 </div>
+![PowerCLI Cheat Sheet](../../assets/reference-cheat-sheets-powercli.svg)
 
-```text
-┌──────────────────────────────────── PowerCLI Cheat Sheet ─────────────────────────────────────────────┐
-│  Module: VMware.PowerCLI  ·  Install: Install-Module VMware.PowerCLI -Scope CurrentUser               │
-│  Categories: Connection · VMs · Hosts · Datastores · Networks · Snapshots · Bulk ops                  │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Connection and session
 

@@ -8,18 +8,10 @@ tags:
 <div class="kb-summary">
 Top-10 CLI and PowerCLI commands for each VMware product — one screenful per product, printable.
 </div>
+![Cheat Sheets](../../assets/reference-cheat-sheets-index.svg)
 
-```text
-┌──────────────────────────────────── VMware CLI Cheat Sheets ──────────────────────────────────────────┐
-│                                                                                                       │
-│   ESXi · vCenter · vSAN · NSX · VCF · Tanzu · Horizon                                                 │
-│   Aria Operations · Aria Logs · Aria Automation · Aria Networks · Aria Suite Lifecycle                │
-│   SRM · vSphere Replication · PowerCLI                                                                │
-│                                                                                                       │
-│   Format: top-10 commands · inline comments · copy-paste ready                                        │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 <div class="kb-grid">
 <a class="kb-card" href="esxi/">

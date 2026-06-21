@@ -9,38 +9,10 @@ OpenShift OAuth server, identity providers (LDAP, HTPasswd, OIDC/GitHub), token 
 
 *Applies to: OpenShift 4.x*
 </div>
+![OpenShift — Authentication](../../../../assets/virtualization-openshift-security-authentication-index.svg)
 
-```text
-┌──────────────────────────────────── OpenShift Authentication Flow ────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   oc login / browser → OAuth server (openshift-authentication namespace)                      │   │
-│   │   OAuth server delegates to configured IdentityProvider (LDAP, HTPasswd, OIDC)               │    │
-│   │   On success: OAuth token issued; used as Bearer token for API calls                          │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    User → oc login → OAuth server → LDAP bind → success → token → kube-apiserver (Bearer token)       │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │      HTPasswd (local)       │  │     LDAP / Active Directory  │  │     OpenID Connect          │  │
-│   │      ─────────────          │  │      ─────────────           │  │      ─────────────          │  │
-│   │  File-based user store      │  │  Binds against AD/LDAP        │  │  Okta, Azure AD, Keycloak  │  │
-│   │  For break-glass / lab      │  │  Group sync via oc adm        │  │  PKCE flow supported        │ │
-│   │  Store as OCP Secret        │  │  Bind DN required for search  │  │  claims mapped to identity │  │
-│   │  No MFA support             │  │  TLS recommended              │  │  MFA via IdP               │  │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    OAuth server  = Built-in OCP OAuth2 server in openshift-authentication namespace                   │
-│    IdentityProvider= Configuration mapping login method → user identity in OCP                        │
-│    kubeadmin    = Default bootstrap admin; delete after configuring production identity provider      │
-│    Bearer token  = OAuth access token passed as Authorization: Bearer header to API                   │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ```mermaid
 graph LR

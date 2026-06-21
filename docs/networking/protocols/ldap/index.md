@@ -10,30 +10,10 @@ tags:
 <div class="kb-summary">
 Lightweight Directory Access Protocol — directory service query and authentication for infrastructure and applications.
 </div>
+![LDAP](../../../assets/networking-protocols-ldap-index.svg)
 
-```text
-┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
-│  dc=company,dc=com           (domain root)                                                            │
-│  │                                                                                                    │
-│  ├── ou=Users                                                                                         │
-│  │   ├── cn=jsmith           (DN: cn=jsmith,ou=Users,                                                 │
-│  │   │   mail: jsmith@...          dc=company,dc=com)                                                 │
-│  │   │   memberOf: cn=Finance,...                                                                     │
-│  │   └── cn=ajonas                                                                                    │
-│  │                                                                                                    │
-│  ├── ou=Groups                                                                                        │
-│  │   ├── cn=Finance           member: cn=jsmith,...                                                   │
-│  │   └── cn=Domain Admins                                                                             │
-│  │                                                                                                    │
-│  ├── ou=ServiceAccounts                                                                               │
-│  │   └── cn=svc-ldap          (bind account for apps)                                                 │
-│  │                                                                                                    │
-│  └── ou=Computers                                                                                     │
-│      └── cn=WS-001                                                                                    │
-│                                                                                                       │
-│  LDAP query: base DN + scope + filter → matching entries                                              │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 
 <div class="kb-grid kb-grid-1">

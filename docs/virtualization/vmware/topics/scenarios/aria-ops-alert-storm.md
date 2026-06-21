@@ -13,36 +13,10 @@ source — then tuning alert definitions to prevent recurrence.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
+![Aria Ops Alert Storm](../../../../assets/virtualization-vmware-topics-scenarios-aria-ops-alert-storm.svg)
 
-```text
-┌────────────────────────────── Aria Ops Alert Storm — Investigation Flow ──────────────────────────────┐
-│                                                                                                       │
-│  OVERVIEW                                                                                             │
-│  An alert storm fires dozens of alerts in a short window, driven by a single cascading root cause     │
-│  Treating each alert individually misses the real cause                                               │
-│                                                                                                       │
-│  START: Aria Operations shows a spike in active critical/warning alerts                               │
-│                                                                                                       │
-│  STEP 1 — Determine Scope                                                                             │
-│  All alerts on hosts in one cluster? → host-level event                                               │
-│  Alerts on VMs only? → storage or compute contention                                                  │
-│  Mixed VM + host alerts? → cascading failure from a host or network event                             │
-│                                                                                                       │
-│  STEP 2 — Find the Root Cause                                                                         │
-│  Sort alerts by Triggered Time → identify incident start timestamp                                    │
-│  Use Relationship view on earliest-alerting object to find the root parent                            │
-│                                                                                                       │
-│  STEP 3 — Resolution Branch                                                                           │
-│  Root cause found + fix in progress → Cancel storm alerts to reduce noise                             │
-│  Root cause found + fix complete → Tune alert definitions to prevent recurrence                       │
-│  Root cause unknown → Correlate Aria Ops for Logs against the alert timestamp                         │
-│                                                                                                       │
-│  KEY TERMS                                                                                            │
-│  Relationship view — Aria Ops view showing parent-child object dependencies for root cause triage     │
-│  Alert storm — cascade of secondary alerts triggered by one root event (host or network failure)      │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Products Involved
 

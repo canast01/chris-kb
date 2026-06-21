@@ -11,6 +11,8 @@ How It Works reference covering Deployment Models, Data Center Reference Archite
 
 *Applies to: Jira Cloud / Data Center*
 </div>
+![Jira — How It Works](../../../../assets/itsm-jira-architecture-how-it-works-index.svg)
+
 
 ## Deployment Models
 
@@ -83,51 +85,7 @@ graph TB
     N2 --> NFS
     N3 --> NFS
 ```
-```text
-┌───────────────────────────────────────── Jira — How It Works ─────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                                   Jira Request and Data Flow                                  │   │
-│   │             Browser → LB → Tomcat (Jira app) → DB read/write; attachments via NFS             │   │
-│   │          Issue create: HTTP POST → workflow engine → DB insert → Lucene index update          │   │
-│   │          JQL search: parse query → Lucene search → fetch issue data from DB → render          │   │
-│   │            Notifications: issue event → notification scheme → email via SMTP relay            │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Jira processes issue events synchronously; indexing and notifications are async                    │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │          HTTP Flow          │  │       Workflow Engine       │  │         Search Flow         │   │
-│   │         Browser → LB        │  │      Transition trigger     │  │          JQL parse          │   │
-│   │         LB → Tomcat         │  │       Condition check       │  │         Lucene query        │   │
-│   │          Auth check         │  │        Validator run        │  │        Fetch from DB        │   │
-│   │        DB query/write       │  │        Post function        │  │      Permission filter      │   │
-│   │         Lucene index        │  │        Status update        │  │       Response render       │   │
-│   │       Notify via SMTP       │  │       Assign / comment      │  │          Pagination         │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  Tomcat JVM VMs · PostgreSQL VM · NFS home · SMTP relay for notifications                             │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Workflow engine = Jira state machine; processes transitions, conditions, validators, post functions  │
-│  Transition      = workflow step moving issue from one status to another                              │
-│  Condition       = rule checked before transition is allowed (e.g. user must be assignee)             │
-│  Validator       = checks field values before transition executes                                     │
-│  Post function   = action executed after transition (e.g. assign to role, fire webhook)               │
-│  JQL             = Jira Query Language; parsed to Lucene query for issue search                       │
-│  Lucene index    = inverted index of issue fields; stored on NFS shared home                          │
-│  Permission filter = search results filtered by current user project/issue permissions                │
-│  Notification scheme = defines which events trigger email and to which recipients                     │
-│  SMTP relay      = outgoing mail server; Jira sends notifications via configured relay                │
-│  Ehcache         = distributed cache; stores resolved permissions and issue data                      │
-│  Attachment      = file stored on NFS under JIRA_HOME/data/attachments                                │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 NFS mount options:
 

@@ -15,36 +15,10 @@ opening broad exceptions — using Traceflow, hit count analysis, and packet cap
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
+![NSX DFW Blocking Application Traffic](../../../../assets/virtualization-vmware-topics-scenarios-nsx-dfw-blocking-appl.svg)
 
-```text
-┌────────────────────── NSX DFW Blocking Application Traffic — Investigation Flow ──────────────────────┐
-│                                                                                                       │
-│  OVERVIEW                                                                                             │
-│  DFW rules are applied at the vNIC of every VM — a misconfigured rule silently drops traffic          │
-│  Common triggers: new rule pushed too broadly, group membership change, new VM not in group           │
-│                                                                                                       │
-│  START: Application team reports connectivity failure — app cannot reach DB or service                │
-│                                                                                                       │
-│  STEP 1 — Confirm the Path: Is DFW the Issue?                                                         │
-│  Run Traceflow from source VM vNIC to destination IP/port                                             │
-│  If Traceflow shows "Dropped by DFW" — DFW is confirmed as the blocker                                │
-│                                                                                                       │
-│  STEP 2 — Identify the Rule                                                                           │
-│  NSX Manager → Security → Distributed Firewall → hit counts                                           │
-│  Find the rule ID shown in Traceflow output; locate it in the policy table                            │
-│                                                                                                       │
-│  STEP 3 — Check Group Membership                                                                      │
-│  Verify source and destination VMs are in the correct NSX groups                                      │
-│  Check group criteria — static members, dynamic tag, VM name pattern, IP set                          │
-│                                                                                                       │
-│  STEP 4 — Fix: Rule, Group, or Tag                                                                    │
-│  Option A: add a specific allow rule above the blocking deny rule                                     │
-│  Option B: correct the group membership so the existing allow rule applies                            │
-│                                                                                                       │
-│  CLOSE: Traceflow shows Delivered · application connectivity confirmed · change documented            │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Products Involved
 

@@ -8,13 +8,10 @@ tags:
 <div class="kb-summary">
 Top-10 Horizon commands for desktop pool management, agent control, and session operations via <code>vdmadmin</code> and PowerShell.
 </div>
+![Horizon Cheat Sheet](../../assets/reference-cheat-sheets-horizon.svg)
 
-```text
-┌──────────────────────────────────────── Horizon Cheat Sheet ──────────────────────────────────────────┐
-│  CLI: vdmadmin (Connection Server)  ·  hznCliAdmin  ·  PowerShell VMware.Hv.Helper module             │
-│  Categories: Pools · Sessions · Agents · Users · Connections · Health                                 │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## vdmadmin (Connection Server command line)
 

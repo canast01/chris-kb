@@ -8,29 +8,10 @@ tags:
 <div class="kb-summary">
 DNS Zones reference covering Overview, Zone Types Reference, Creating Zones, Zone Transfer, Zone Delegation and 2 more sections.
 </div>
+![DNS Zones](../../../../assets/networking-protocols-dns-zones-index.svg)
 
-```text
-┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
-│  Forward zone: corp.local  (primary / AD-integrated)                                                  │
-│  ┌──────────────────────────────────────────────────────┐                                             │
-│  │  SOA   dc01.example.local (serial 2026051801)           │                                          │
-│  │  NS    dc01.example.local                               │                                          │
-│  │  NS    dc02.example.local                               │                                          │
-│  │  A     dc01  →  10.0.0.53                            │                                             │
-│  │  A     web01 →  192.168.10.100                       │                                             │
-│  │  ...   (all forward records)                         │                                             │
-│  └──────────────────────────────────────────────────────┘                                             │
-│                         │ zone transfer (AXFR/IXFR)                                                   │
-│                         ▼                                                                             │
-│  Secondary zone: dc02.example.local  (read-only replica)                                              │
-│                                                                                                       │
-│  Reverse zone: 10.168.192.in-addr.arpa  (primary)                                                     │
-│  ┌──────────────────────────────────────────────────────┐                                             │
-│  │  PTR   100  →  web01.example.local                      │                                          │
-│  │  PTR   101  →  web02.example.local                      │                                          │
-│  └──────────────────────────────────────────────────────┘                                             │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Overview
 

@@ -10,6 +10,8 @@ VM slow decision tree: branching logic covering CPU ready, memory balloon, stora
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
+![VM Slow Decision Tree](../../../../assets/virtualization-vmware-reference-quick-reference-decision-tre.svg)
+
 
 ```text
                          VM reported slow

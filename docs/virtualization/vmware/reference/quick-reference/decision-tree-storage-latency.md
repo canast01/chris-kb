@@ -10,6 +10,8 @@ Use this when VMs are slow, I/O latency is elevated in monitoring, or vSAN laten
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
+![Decision Tree: Storage Latency](../../../../assets/virtualization-vmware-reference-quick-reference-decision-tre.svg)
+
 
 ```text
                Latency alert / VM storage slow

@@ -16,56 +16,10 @@ search:
 ---
 
 # SnapMirror — Initial Configuration
+![SnapMirror — Initial Configuration](../../../../assets/storage-netapp-snapmirror-deploy-index.svg)
 
-```text
-┌───────────────────────────── NetApp SnapMirror — Configuration Sequence ──────────────────────────────┐
-│                                                                                                       │
-│  Step 1 · Prerequisites                                                                               │
-│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
-│  Source and destination ONTAP clusters on compatible versions (destination must be same or newer)     │
-│  Intercluster LIFs: dedicated NICs per node, routable to each other; MTU 9000 recommended             │
-│  IPs planned: one intercluster LIF per node on each cluster; dedicated replication VLAN or WAN        │
-│  Licences: SnapMirror licence active on both clusters; check: license show -package SnapMirror        │
-│  Destination volume: must be DP (data protection) type, equal or larger capacity than source          │
-│                                                                                                       │
-│                                        │  peer clusters                                               │
-│                                        ▼                                                              │
-│  Step 2 · Cluster and SVM Peering                                                                     │
-│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
-│  Create intercluster LIFs on each node: network interface create -role intercluster ...               │
-│  Peer clusters: cluster peer create -peer-addrs <dest-intercluster-LIF-IPs> on source cluster         │
-│  Accept on destination: cluster peer create -peer-addrs <source-intercluster-LIF-IPs>                 │
-│  Peer SVMs: vserver peer create -vserver <src-svm> -peer-vserver <dst-svm> -applications snapmirror   │
-│  Accept SVM peer on destination: vserver peer accept -vserver <dest-svm> -peer-vserver <source-svm>   │
-│                                                                                                       │
-│                                        │  create destination volume                                   │
-│                                        ▼                                                              │
-│  Step 3 · Create Destination DP Volume                                                                │
-│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
-│  On destination SVM: volume create -vserver <dest-svm> -volume <vol> -type DP -size <n>g -aggregate   │
-│  DP volumes are read-only on destination — no data can be written directly; only via SnapMirror       │
-│  Confirm volume exists: volume show -vserver <dest-svm> -volume <vol>                                 │
-│                                                                                                       │
-│                                        │  create relationship and initialise                          │
-│                                        ▼                                                              │
-│  Step 4 · Create SnapMirror Relationship and Initialise                                               │
-│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
-│  snapmirror create -source-path <src-svm>:<vol> -destination-path <dst-svm>:<vol> -type DP            │
-│  Set schedule: -schedule <cron-name> (e.g. hourly); set policy: -policy MirrorAllSnapshots            │
-│  Initialise: snapmirror initialize -destination-path <dst-svm>:<vol> — triggers full baseline copy    │
-│  Monitor: snapmirror show -destination-path <dst-svm>:<vol> — wait for Snapmirrored state             │
-│                                                                                                       │
-│                                        │  validate and monitor                                        │
-│                                        ▼                                                              │
-│  Step 5 · Validate and Baseline                                                                       │
-│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
-│  Confirm snapmirror show: Relationship Status = Idle, Mirror State = Snapmirrored                     │
-│  Verify lag time: SnapMirror Lag Time should be ≤ scheduled RPO interval                              │
-│  Test break/resync on a non-production relationship: snapmirror break / snapmirror resync             │
-│  Record: relationship paths, policy name, schedule name, RPO target, initial baseline timestamp       │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 This guide covers configuring NetApp SnapMirror replication from initial cluster prerequisites through a validated first relationship with a scheduled RPO. Applies to ONTAP 9.10 and later.
 

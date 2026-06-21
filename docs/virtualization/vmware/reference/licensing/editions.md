@@ -13,25 +13,10 @@ covers the current edition structure — vSphere Foundation (VVF) and VMware Clo
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
+![VMware Editions](../../../../assets/virtualization-vmware-reference-licensing-editions.svg)
 
-```text
-┌──────────────────────────────────── VMware Editions — Reference ──────────────────────────────────────┐
-│                                                                                                       │
-│  OVERVIEW                                                                                             │
-│  Post-Broadcom (2024): subscription only · per-core · minimum 16 cores per CPU socket                 │
-│  Perpetual licences (vSphere Standard, Enterprise Plus, vSAN licences) no longer sold                 │
-│  Existing perpetual licences: support ends 2025 (Ent Plus); upgrade path to VVF or VCF                │
-│                                                                                                       │
-│  EDITION HIERARCHY                                                                                    │
-│  vSphere Foundation (VVF)         — baseline; vSphere + vSAN + Aria essentials                        │
-│  VMware Cloud Foundation (VCF)    — full SDDC; VVF + NSX + SDDC Manager + Tanzu                       │
-│  VCF+  / VVF+                     — cloud-connected variants; adds SaaS management features           │
-│                                                                                                       │
-│  ADD-ON PRODUCTS (licensed separately)                                                                │
-│  HCX · Horizon (VDI) · SRM + vSphere Replication · Advanced Security · Aria Universal                 │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ---
 

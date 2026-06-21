@@ -11,6 +11,8 @@ PowerShell is Microsoft's cross-platform command shell and scripting language. U
 
 *Applies to: PowerShell 7.x*
 </div>
+![PowerShell — CLI Reference](../../../../assets/automation-powershell-operations-cli-reference-index.svg)
+
 
  The `VMware.PowerCLI` module extends PowerShell with hundreds of cmdlets for managing vSphere, making it the primary automation tool for VMware infrastructure.
 
@@ -40,36 +42,7 @@ graph LR
     exportCsv --> sendEmail
     processLogic --> logResult
 ```
-```text
-┌───────────────────────────────────── PowerShell — CLI Reference ──────────────────────────────────────┐
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │               Essential PowerShell commands for daily infrastructure operations               │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                Core Commands                 │  │               Utility Commands              │   │
-│   │          Get-Command -Module <name>          │  │             Measure-Object -Sum             │   │
-│   │             Get-Help <cmd> -Full             │  │         Where-Object { $_.X -eq Y }         │   │
-│   │            Get-Member (alias: gm)            │  │           Select-Object -First 10           │   │
-│   │          Get-Module -ListAvailable           │  │          Sort-Object -Property Name         │   │
-│   │             Import-Module <name>             │  │         Group-Object -Property Type         │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                File and Data                 │  │               Remote Execution              │   │
-│   │           Get-Content, Set-Content           │  │         Invoke-Command -ScriptBlock         │   │
-│   │            Import-Csv, Export-Csv            │  │            Enter-PSSession <host>           │   │
-│   │       ConvertTo-Json, ConvertFrom-Json       │  │          Copy-Item -ToSession $sess         │   │
-│   │        Invoke-RestMethod (API calls)         │  │             Disconnect-PSSession            │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Get-Member     = inspect object properties and methods; essential for pipeline debugging   │   │
-│   │  ForEach-Object = pipeline loop; alias: %; $_  is current object; use for per-item processing │   │
-│   │              Where-Object   = filter pipeline; alias: ?; $_.Property -eq "value"              │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 ---
 

@@ -3,12 +3,10 @@ tags:
   - networking
 ---
 # SMB — Sessions
+![SMB — Sessions](../../../../assets/networking-protocols-smb-sessions-index.svg)
 
-```text
-┌────────────────────────────────── ┐                              ┌ ───────────────────────────────────┐
-│  Client    │                              │   SMB Server                                              │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 ```powershell
 
 ## Overview

@@ -11,24 +11,11 @@ FlashArray — Operations reference: Health Checks, Procedures, CLI Reference, I
 
 *Applies to: FlashArray Purity 6.x*
 </div>
+![FlashArray — Operations](../../../../assets/storage-pure-flasharray-operations-index.svg)
+
 
 FlashArray Day-to-Day Operations Flow
-```text
-┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
-│  Pure1 Cloud                                                                                          │
-│  ├── Fleet health dashboard + AI anomaly alerts                                                       │
-│  └── Capacity forecasting + upgrade scheduling                                                        │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-                        │  phone-home telemetry
-┌────────────────────────────────────────────────── ▼ ──────────────────────────────────────────────────┐
-│  FlashArray (Purity GUI / CLI / REST)                                                                 │
-│  ├── purealert list  ─── active alerts                                                                │
-│  ├── puredrive list  ─── drive health                                                                 │
-│  ├── purearray monitor── latency / IOPS / bandwidth                                                   │
-│  ├── purepod list    ─── ActiveCluster pod status                                                     │
-│  └── purepgroup list ─── snapshot + replication sched                                                 │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="health-checks/"><strong>Health Checks</strong><span>Routine checks, service validation, and status verification.</span></a>

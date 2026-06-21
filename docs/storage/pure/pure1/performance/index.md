@@ -10,39 +10,10 @@ Performance reference covering Performance via Pure1 API, Latency Investigation,
 
 *Applies to: Pure1*
 </div>
+![Pure1 — Performance](../../../../assets/storage-pure-pure1-performance-index.svg)
 
-```text
-┌──────────────────────────────────── Pure1 — Performance Analysis ─────────────────────────────────────┐
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             Performance Metrics              │  │            Workload Intelligence            │   │
-│   │               IOPS read/write                │  │               Workload ID (AI)              │   │
-│   │               Latency p50/p99                │  │               IO size profile               │   │
-│   │                Bandwidth MB/s                │  │               Read/write ratio              │   │
-│   │                 Queue depth                  │  │               Fleet benchmark               │   │
-│   │               Per-volume stats               │  │              Custom time range              │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  Metrics from Purity OS via phonehome · Pure1 aggregates and visualises                               │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  IOPS = Input/Output Operations per Second; primary performance metric                                │
-│  p50 latency = Median latency; 50% of operations faster than this value                               │
-│  p99 latency = 99th percentile; 1% of operations slower; shows tail latency                           │
-│  Bandwidth = Throughput in MB/s; saturates at network limit before IOPS typically                     │
-│  Queue depth = Outstanding IO requests; high queue depth may indicate saturation                      │
-│  Per-volume = Pure1 showing IOPS/latency per volume for workload isolation                            │
-│  Workload ID = Pure1 AI classifying application type from IO signature                                │
-│  IO size = Average IO request size in KB; small random vs large sequential                            │
-│  Read/write ratio = Proportion of reads vs writes; impacts cache effectiveness                        │
-│  Fleet benchmark = Pure1 comparing array performance to anonymised peer group                         │
-│  Custom range = Pure1 UI allows selecting arbitrary time window for analysis                          │
-│  Anomaly = Pure1 ML detecting performance deviation from established baseline                         │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Latency Investigation
 

@@ -11,6 +11,8 @@ Known Issues reference covering Quick Reference, Incident Triage, Performance Is
 
 *Applies to: FlashArray Purity 6.x*
 </div>
+![FlashArray — Known Issues](../../../../assets/storage-pure-flasharray-operations-common-issues.svg)
+
 
 ```text
 FlashArray Triage Flow

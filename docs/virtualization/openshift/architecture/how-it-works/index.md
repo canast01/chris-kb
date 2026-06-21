@@ -9,40 +9,10 @@ Control plane components, etcd quorum, API server request flow, scheduler decisi
 
 *Applies to: OpenShift 4.x*
 </div>
+![OpenShift — How It Works](../../../../assets/virtualization-openshift-architecture-how-it-works-index.svg)
 
-```text
-┌────────────────────────────── OpenShift — Control Plane & Request Flow ───────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   All cluster changes go through kube-apiserver → etcd; controllers reconcile desired state   │   │
-│   │   Operators extend this loop: watch CRDs, reconcile managed resources, report Conditions       │  │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    kubectl/oc → kube-apiserver → etcd (persist) → controllers (reconcile) → kubelet (execute)         │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │      kube-apiserver         │  │           etcd              │  │       Scheduler             │   │
-│   │      ─────────────          │  │      ─────────────          │  │      ─────────────          │   │
-│   │  REST gateway for all ops   │  │  Distributed KV store       │  │  Assigns pods to nodes      │   │
-│   │  AuthN + AuthZ (RBAC)       │  │  Raft consensus (3 or 5)    │  │  Taints, tolerations        │   │
-│   │  Admission webhooks         │  │  TLS mutual auth            │  │  Resource requests/limits   │   │
-│   │  Resource validation        │  │  Snapshot + compaction      │  │  Affinity / anti-affinity   │   │
-│   │  Watch/notify subscribers   │  │  Full cluster state here    │  │  Pod priority classes       │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    etcd         = Key-value store holding ALL cluster state; losing quorum = cluster non-functional   │
-│    Raft         = Consensus algorithm; requires majority (2/3 or 3/5) for writes; odd node count      │
-│    Operator     = Kubernetes controller that manages a specific application via CRD watch-reconcile   │
-│    CRO          = Cluster-scoped resource; ClusterOperator tracks built-in component health           │
-│    MachineConfig= OS-level config (files, units, kernel args) applied by MCO to RHCOS nodes           │
-│    OVN-Kubernetes= Default CNI in OCP 4.x; SDN deprecated; uses OVN/OVS for pod networking            │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ```mermaid
 graph TD

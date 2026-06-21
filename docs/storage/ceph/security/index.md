@@ -12,6 +12,8 @@ Ceph security: CephX authentication for all daemon and client communication, RBA
 
 *Applies to: Ceph Reef / Squid*
 </div>
+![Ceph — Security](../../../assets/storage-ceph-security-index.svg)
+
 
 ```text
 ┌──────────────────────────────────────────── Ceph Security ────────────────────────────────────────────┐

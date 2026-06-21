@@ -11,6 +11,8 @@ CLI Reference reference covering Python Script Execution Pipeline, Package Manag
 
 *Applies to: Python 3.x*
 </div>
+![Python Automation — CLI Reference](../../../../assets/automation-python-operations-cli-reference-index.svg)
+
 
 ## Before you begin
 
@@ -39,36 +41,7 @@ graph LR
     exportOutput --> sendReport
     runScript --> logResult
 ```
-```text
-┌─────────────────────────────────────── Python — CLI Reference ────────────────────────────────────────┐
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │         Essential Python CLI commands for development, testing, and package management        │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               Python and venv                │  │                     pip                     │   │
-│   │              python3 --version               │  │            pip install <package>            │   │
-│   │            python3 -m venv .venv             │  │       pip install -r requirements.txt       │   │
-│   │              python3 script.py               │  │             pip list --outdated             │   │
-│   │          python3 -c "import boto3"           │  │              pip show <package>             │   │
-│   │           python3 -m pdb script.py           │  │        pip freeze > requirements.txt        │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                    pytest                    │  │                 Code Quality                │   │
-│   │                pytest tests/                 │  │              ruff check . --fix             │   │
-│   │            pytest -v -k test_name            │  │                ruff format .                │   │
-│   │           pytest --cov=src tests/            │  │              mypy src/ --strict             │   │
-│   │        pytest -x (stop on first fail)        │  │                bandit -r src/               │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │        pdb          = Python Debugger; breakpoint() in code or python3 -m pdb script.py       │   │
-│   │  --cov        = pytest-cov plugin; generates coverage report; set threshold in pyproject.toml │   │
-│   │  ruff         = replaces flake8 + black + isort; configured in [tool.ruff] in pyproject.toml  │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 ---
 

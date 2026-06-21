@@ -11,40 +11,11 @@ VxRail Cluster Expansion reference covering Overview, Where It Fits, Daily Check
 
 *Applies to: VxRail 7.x / 8.x*
 </div>
+![VxRail Cluster Expansion](../../../../assets/virtualization-vmware-vxrail-operations-cluster-expansion.svg)
+
 
 Add Node Flow
-```text
-┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
-│  Planning                                                                                             │
-│  same SKU as cluster · compatible firmware · IP/DNS ready                                             │
-│  network cabling plan · iDRAC IP assigned                                                             │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-                               │
-              ┌────────────────────────────────────────────────── ▼ ──────────────────────────────────────────────────┐
-              │  Physical Installation           │
-              │  rack → cable (data + iDRAC)     │
-              │  power on → iDRAC reachable      │
-              └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-                               │
-              ┌────────────────────────────────────────────────── ▼ ──────────────────────────────────────────────────┐
-              │  VxRail Manager Discovery        │
-              │  System → Cluster Expansion      │
-              │  new node appears → validate     │
-              └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-                               │
-              ┌────────────────────────────────────────────────── ▼ ──────────────────────────────────────────────────┐
-              │  LCM Integration                 │
-              │  VxRail Manager upgrades node    │
-              │  firmware to cluster baseline    │
-              │  ESXi deployed + vSAN joins      │
-              └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-                               │
-              ┌────────────────────────────────────────────────── ▼ ──────────────────────────────────────────────────┐
-              │  Post-Expansion Validation       │
-              │  node Connected · vSAN rebalance │
-              │  health green · capacity updated │
-              └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 ## Before you begin
 

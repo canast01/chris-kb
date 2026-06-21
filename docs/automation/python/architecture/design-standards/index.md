@@ -4,6 +4,8 @@ tags:
   - python
 ---
 # Python — Design Standards
+![Python — Design Standards](../../../../assets/automation-python-architecture-design-standards-index.svg)
+
 
 ```python
 from __future__ import annotations  # enables forward references in Python 3.9
@@ -36,30 +38,7 @@ def process_widgets(
 
     return len(results)
 ```
-```text
-┌────────────────────────────────────── Python — Design Standards ──────────────────────────────────────┐
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │ Python design standards: PEP 8 style, type hints, docstrings, testing, and dependency pinning │   │
-│   │        Use ruff for linting and formatting (replaces flake8 + black + isort); run in CI       │   │
-│   │      All secrets via environment variables or secret manager — never hardcoded in source      │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                  Code Style                  │  │              Project Standards              │   │
-│   │         PEP 8 / ruff enforced in CI          │  │         pyproject.toml at repo root         │   │
-│   │        Type hints on all public funcs        │  │    Lock file: poetry.lock or pip compile    │   │
-│   │           Google-style docstrings            │  │            pytest coverage >= 80%           │   │
-│   │     Max line length: 88 (black default)      │  │             bandit -r src/ in CI            │   │
-│   │          if __name__ == "__main__":          │  │          CHANGELOG.md for releases          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    ruff         = Rust-based linter; ruff check . --fix; ruff format .; replaces many tools   │   │
-│   │       mypy         = type checker; mypy src/ --strict; catches bugs without running code      │   │
-│   │   pip compile  = pip-tools; pip-compile requirements.in → requirements.txt with pinned deps   │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 ```python
 import structlog
 

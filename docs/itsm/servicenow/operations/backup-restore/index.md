@@ -11,6 +11,8 @@ ServiceNow cloud instances do not expose direct database backup access. The prim
 
 *Applies to: ServiceNow (Washington / Xanadu)*
 </div>
+![ServiceNow — Backup & Restore](../../../../assets/itsm-servicenow-operations-backup-restore-index.svg)
+
 
  This page covers both in detail.
 
@@ -38,51 +40,7 @@ flowchart LR
     PROD -- "Scheduled Clone\n(weekly)" --> UAT
     PROD -- "On-demand Clone\n(before major release)" --> DEV
 ```
-```text
-┌─────────────────────────────────── ServiceNow — Backup and Restore ───────────────────────────────────┐
-│                                                                                                       │
-│  ServiceNow SaaS backup model: ServiceNow manages infrastructure backups; tenant manages exports.     │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          ServiceNow Managed Backups          │  │            Tenant-Managed Exports           │   │
-│   │      Full DB backup: nightly automated       │  │     Data export: XML/CSV via sys_export     │   │
-│   │      Retention: 7 days rolling snapshot      │  │      Scheduled export jobs → SFTP/email     │   │
-│   │        Restore: raise P1 case with SN        │  │       Update Set export → XML archive       │   │
-│   │        Clone: prod → sub-prod refresh        │  │     Table rotation: archive old records     │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Restore request via ServiceNow support; tenant exports supplement for self-service recovery        │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               Clone Procedures               │  │                Data Archival                │   │
-│   │         Request clone from HI portal         │  │       Archive rule: age + record count      │   │
-│   │        Pre-clone: export update sets         │  │        Destination: ar_ shadow tables       │   │
-│   │       Post-clone: disable prod integr.       │  │       Destroy rule: purge after N days      │   │
-│   │       Post-clone: reset user passwords       │  │       Compliance: audit log preserved       │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  ServiceNow data centres · HI portal · SFTP export destination · sub-prod instances                   │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  HI portal    = ServiceNow internal support portal for instance management requests                   │
-│  sys_export   = platform mechanism for scheduled or on-demand table data export                       │
-│  Update Set   = container of customisations; exported as XML for promotion/backup                     │
-│  Clone        = copy of production instance pushed to sub-prod; refreshes dev/test                    │
-│  ar_ tables   = archive shadow tables; records moved here by archive rules                            │
-│  Destroy rule = deletes archived records after configured retention period                            │
-│  Table rotation= periodic job moves old closed records to archive to trim live DB                     │
-│  P1 case      = priority 1 support case; required to trigger SN-managed restore                       │
-│  Post-clone   = steps run after clone: disable integrations, reset passwords, notify                  │
-│  SFTP export  = file transfer to tenant-owned server for off-platform data retention                  │
-│  7-day window = SN retention period; restore only possible within this window                         │
-│  Audit log    = sys_audit table; preserved through archival for compliance evidence                   │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 Typical schedule options: daily, weekly, bi-weekly, monthly.
 

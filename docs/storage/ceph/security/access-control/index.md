@@ -10,33 +10,10 @@ CephX user accounts, capability syntax for granular permissions, per-pool access
 
 *Applies to: Ceph Reef / Squid*
 </div>
+![Ceph — Access Control](../../../../assets/storage-ceph-security-access-control-index.svg)
 
-```text
-┌──────────────────────────────────────── Ceph — Access Control ────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   CephX: every client authenticates with a shared secret key; no anonymous access            │    │
-│   │   Capabilities: per-service (mon, osd, mds); per-pool; least-privilege by default            │    │
-│   │   Admin key: client.admin has full access; protect it; use service-specific keys in prod     │    │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  CephX         = Ceph's native shared-secret mutual authentication protocol for all daemon access     │
-│  capability    = Permission string granting access: mon, osd, mds per pool or service                 │
-│  allow rw      = Read-write capability on a pool; use allow r for read-only service accounts          │
-│  allow *       = Full access capability; reserved for client.admin and cephadm keys only              │
-│  client.admin  = Superuser key; full cluster access; store securely; rotate on team changes           │
-│  profile rbd   = Pre-defined capability set for RBD clients; grants pool-level rbd access             │
-│  keyring       = File holding CephX key and capability: /etc/ceph/ceph.client.<name>.keyring          │
-│  ceph auth add = Creates a new CephX user with specified capabilities                                 │
-│  ceph auth get-or-create = Idempotent user creation; used by cephadm and automation scripts           │
-│  caps osd      = OSD capability string; example: allow rw pool=rbd profile rbd                        │
-│  least privilege = Grant only required capabilities; separate key per application/workload            │
-│  bootstrap-osd = Bootstrap keyring used only during OSD initialization; limited lifespan              │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ```mermaid
 graph TD

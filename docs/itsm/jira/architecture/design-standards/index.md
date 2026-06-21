@@ -11,6 +11,8 @@ Architecture Standards reference covering Project Naming Conventions, Workflow S
 
 *Applies to: Jira Cloud / Data Center*
 </div>
+![Jira — Architecture Standards](../../../../assets/itsm-jira-architecture-design-standards-index.svg)
+
 
 ## Project Naming Conventions
 
@@ -39,51 +41,7 @@ Consistent project keys and names reduce confusion, simplify JQL queries, and en
 
 ### Project Name Format
 
-```text
-┌─────────────────────────────────────── Jira — Design Standards ───────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                                Jira Design and Sizing Standards                               │   │
-│   │               App node: min 8 vCPU / 16 GB RAM; JVM heap 4-8 GB set in setenv.sh              │   │
-│   │                DB: 4 vCPU / 8 GB RAM; SSD storage; tune autovacuum and work_mem               │   │
-│   │              NFS: shared home for index/attachments; 10 GbE, low latency (<1 ms)              │   │
-│   │           Project naming: PROJ-KEY in CAPS (max 10 chars); descriptive display name           │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Standards enforce consistent sizing, naming, and topology across environments                      │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │           Infrastructure Standards           │  │           Configuration Standards           │   │
-│   │              App: 8 vCPU/16 GB               │  │              JVM: -Xms2g -Xmx8g             │   │
-│   │             DB: 4 vCPU/8 GB SSD              │  │               DB pool: max 60               │   │
-│   │           NFS: 10 Gbps low latency           │  │             Tomcat: 150 threads             │   │
-│   │             LB: sticky sessions              │  │           Scheduler: cluster-aware          │   │
-│   │           Replica: streaming repl            │  │           Backup: nightly pg_dump           │   │
-│   │            DR: off-site NFS copy             │  │              Retention: 30-day              │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  vSphere HA cluster · SSD datastores · 10 GbE NFS segment · dedicated DB VLAN                         │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  -Xmx         = JVM max heap; set in JIRA_INSTALL/bin/setenv.sh                                       │
-│  autovacuum   = PostgreSQL background vacuum; critical for Jira schema with high write rate           │
-│  work_mem     = PostgreSQL per-sort memory; increase for complex JQL aggregation queries              │
-│  Project key  = 2-10 uppercase chars; unique ID prefix for all issues (e.g. OPS-1234)                 │
-│  DB pool      = HikariCP in Jira; maxPoolSize in dbconfig.xml; match DB max_connections               │
-│  NFS latency  = shared home I/O latency directly affects Lucene indexing performance                  │
-│  Retention    = 30-day backup minimum; adjust per compliance requirement                              │
-│  Streaming repl = PostgreSQL WAL replica for HA failover and read offloading                          │
-│  Sticky session = LB routes same user to same node; minimizes cache miss overhead                     │
-│  DC-aware sched = only one Jira node runs each scheduled task at a time                               │
-│  JIRA_HOME    = data directory; set in jira-application.properties; NFS mount path                    │
-│  Tomcat threads = max concurrent HTTP handlers; set connector maxThreads in server.xml                │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 | Status | Category | Description |
 |---|---|---|
 | `Backlog` | To Do | Not yet scheduled for a sprint |

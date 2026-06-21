@@ -4,6 +4,8 @@ tags:
   - vmware
 ---
 # vSphere Security — Encryption, Identity, and VM Hardening
+![vSphere Security — Encryption, Identity, and VM Hardening](../../../../assets/virtualization-vmware-internals-vsphere-security-index.svg)
+
 
 vSphere security covers a wide range of features from encrypting VM data at rest and in flight, to attestation of ESXi host integrity, to locking down administrative access. This page covers the security features tested on the VCP-DCV 8 exam — including VM Encryption, vSphere Trust Authority, vTPM, VBS, identity federation, lockdown mode, and Secure Boot.
 
@@ -86,22 +88,7 @@ vSphere Trust Authority (introduced in vSphere 7.0) provides a way to attest the
 
 vTA uses two separate clusters:
 
-```text
-┌────────────────────────────────────────────── ┐      ┌ ───────────────────────────────────────────────┐
-│  Trust Authority Cluster│      │      Trusted Cluster                                                 │
-│  (TA hosts)             │      │  (workload hosts)                                                    │
-│                         │      │                                                                      │
-│  Runs:                  │      │  ESXi hosts that want keys                                           │
-│  - Attestation service  │      │  must prove their identity                                           │
-│  - Key Provider service │      │                                                                      │
-│                         │      │  Host presents:                                                      │
-│  Holds trusted          │◄─────│  - TPM 2.0 attestation quote                                         │
-│  inventory:             │      │  - Boot measurements (PCR vals)                                      │
-│  - Approved ESXi images │      │                                                                      │
-│  - Approved TPM certs   │      │  TA verifies against inventory                                       │
-│                         │      │  and releases keys if trusted                                        │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 ### When to Use vTA
 
@@ -409,30 +396,7 @@ esxcli software vib list --rebooting-image | awk '{print $1, $5}'
 
 ## Security Architecture Summary
 
-```text
-┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
-│                  vSphere Security Layers                                                              │
-│                                                                                                       │
-│  Layer 1: Infrastructure Access Control                                                               │
-│    Lockdown mode → blocks direct ESXi access                                                          │
-│    Identity Federation → centralised IdP, no password at vCenter                                      │
-│    RBAC roles → least-privilege access in vCenter                                                     │
-│                                                                                                       │
-│  Layer 2: Host Integrity                                                                              │
-│    UEFI Secure Boot → boot chain signature verification                                               │
-│    vSphere Trust Authority → TPM attestation before key release                                       │
-│                                                                                                       │
-│  Layer 3: VM Data Protection                                                                          │
-│    VM Encryption → VMDK + VMX + swap encrypted at rest                                                │
-│    Encrypted vMotion → data encrypted in transit                                                      │
-│    vTPM → VM-level TPM for guest OS security features                                                 │
-│                                                                                                       │
-│  Layer 4: Guest OS Hardening                                                                          │
-│    VBS → Credential Guard, HVCI inside Windows guests                                                 │
-│    VM Secure Boot → UEFI + vTPM enforces signed guest bootchain                                       │
-│    VMXNET3 + pvSCSI → paravirtual drivers (smaller attack surface)                                    │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 ---
 

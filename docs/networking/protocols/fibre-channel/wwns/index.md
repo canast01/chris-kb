@@ -8,27 +8,11 @@ tags:
 <div class="kb-summary">
 A World Wide Name (WWN) is a 64-bit globally unique identifier assigned to every Fibre Channel device.
 </div>
+![WWNs — World Wide Names](../../../../assets/networking-protocols-fibre-channel-wwns-index.svg)
+
 
         WWNN vs WWPN STRUCTURE
-```text
-┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
-│  HBA Card (Node)                                                                                      │
-│  ┌──────────────────────────────────────────────────────┐                                             │
-│  │  WWNN (Node Name) — identifies the HBA card itself   │                                             │
-│  │  50:00:d3:10:00:5e:c8:00  ◄── 8-byte hex, one per card│                                            │
-│  │                                                       │                                            │
-│  │  ┌─────────────────┐  ┌─────────────────┐            │                                             │
-│  │  │  Port 0 (WWPN)  │  │  Port 1 (WWPN)  │            │                                             │
-│  │  │50:00:d3:10:00:  │  │50:00:d3:10:00:  │            │                                             │
-│  │  │   5e:c8:a1      │  │   5e:c8:a2      │            │                                             │
-│  │  │  ► used for     │  │  ► used for     │            │                                             │
-│  │  │    zoning &     │  │    zoning &     │            │                                             │
-│  │  │    masking      │  │    masking      │            │                                             │
-│  │  └─────────────────┘  └─────────────────┘            │                                             │
-│  └──────────────────────────────────────────────────────┘                                             │
-│   NAA(5) + OUI + vendor-assigned bits = 64-bit unique ID                                              │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 WWNs are used for zoning, host masking, and fabric registration.
 
 ## WWN Types

@@ -8,13 +8,10 @@ tags:
 <div class="kb-summary">
 Top-10 NSX commands for transport nodes, segments, T0/T1 gateways, and DFW via the NSX Manager CLI and REST API.
 </div>
+![NSX Cheat Sheet](../../assets/reference-cheat-sheets-nsx.svg)
 
-```text
-┌───────────────────────────────────────── NSX Cheat Sheet ─────────────────────────────────────────────┐
-│  CLI: nsxcli (NSX Manager SSH)  ·  REST API: https://nsx-mgr/api/v1  ·  Policy API: /policy/api/v1    │
-│  Categories: Transport Nodes · Segments · T0/T1 · DFW · BGP · Health                                  │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## NSX Manager CLI (SSH to NSX Manager)
 

@@ -11,61 +11,10 @@ Procedures reference covering Change Readiness, Maintenance Window, Post-Change 
 
 *Applies to: PowerPath*
 </div>
+![PowerPath — Procedures](../../../../assets/storage-dell-powerpath-operations-procedures.svg)
 
-```text
-┌──────────────────────────────── Dell PowerPath Operational Procedures ────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │     Standard procedures: install, upgrade, policy change, decommission, path failover test    │   │
-│   │      Install: kernel driver + powermt registration key; reboot required on Linux/Windows      │   │
-│   │     Upgrade: uninstall old version → install new → re-register → powermt restore → verify     │   │
-│   │       Decommission: powermt remove dev=X → unmap LUN from array → verify no ghost paths       │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Pre-check path count → execute procedure → powermt display → powermt save → sign-off               │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │        Install Steps        │  │        Policy Change        │  │         Decommission        │   │
-│   │      ─────────────────      │  │      ─────────────────      │  │      ─────────────────      │   │
-│   │       Install package       │  │        Check current        │  │          Drain I/O          │   │
-│   │       Register license      │  │        Set new policy       │  │        powermt remove       │   │
-│   │         Reboot host         │  │         powermt save        │  │        Unmap at array       │   │
-│   │       powermt restore       │  │        Verify balance       │  │        Verify ghost=0       │   │
-│   │      Verify path count      │  │        Failover test        │  │         Update CMDB         │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│    Procedure complete → powermt display dev=all → confirm all paths alive → save and document         │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   │    Procedure     │     Duration     │   Reboot needed   │     Rollback     │       Risk       │   │
-│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
-│   │     Install      │      30 min      │  Yes (Linux/Win)  │  Uninstall pkg   │    I/O pause     │   │
-│   │     Upgrade      │      45 min      │        Yes        │  Re-install old  │  I/O disruption  │   │
-│   │  Policy change   │      5 min       │         No        │ powermt set old  │  Rebalance lag   │   │
-│   │   Decommission   │      15 min      │         No        │    Re-map LUN    │   Ghost paths    │   │
-│                                                                                                       │
-│    Physical: package installed on host OS; kernel module loaded; no network required for config       │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    powermt remove = Remove a device from PowerPath management; stops multipath tracking for LUN       │
-│    Ghost path     = Stale path entry after LUN unmapped; appears as Dead in powermt output            │
-│    powermt restore= Re-apply /etc/powermt.custom after reboot; part of standard boot sequence         │
-│    Drain I/O      = Gracefully stop application I/O before decommissioning a path or LUN              │
-│    CMDB           = Configuration Management Database; record device removal for asset tracking       │
-│    Kernel module  = PowerPath loads as a kernel driver; requires compatible kernel version            │
-│    Rebalance lag  = Brief period after policy change while I/O re-distributes to new path order       │
-│    Failover test  = Manually disable a path and verify I/O continues on remaining paths               │
-│    Sign-off       = Post-procedure verification step; document path count and policy in record        │
-│    Uninstall pkg  = Remove PowerPath package (rpm -e / dpkg -r / msiexec /x) then reinstall old       │
-│    Re-register    = After upgrade, re-run powermt check_registration with existing license key        │
-│    Ghost=0        = Confirmation that no stale path entries remain after LUN decommission             │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Before you begin
 

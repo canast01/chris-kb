@@ -12,62 +12,10 @@ Git diagnostic techniques: enable GIT_TRACE environment variables for protocol-l
 
 *Applies to: Git 2.x*
 </div>
+![Git — Diagnostics](../../../../assets/itsm-git-troubleshooting-diagnostics-index.svg)
 
-```text
-┌────────────────────────────────────────── Git — Diagnostics ──────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   Start here: check the error message category — auth, network, object, or config            │    │
-│   │   Auth (SSH): ssh -vvvT git@host → check key offered, server response, known_hosts           │    │
-│   │   Auth (HTTPS): GIT_TRACE_CURL=1 git fetch → check HTTP status code and response             │    │
-│   │   Network: git ls-remote origin → confirms remote reachability and ref list                  │    │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │            Verbose / Trace Flags             │  │             Object Store Checks             │   │
-│   │            GIT_TRACE=1 git <cmd>             │  │              git fsck [--full]              │   │
-│   │       GIT_TRACE_PACKET=1: proto debug        │  │            git count-objects -vH            │   │
-│   │        GIT_CURL_VERBOSE=1: HTTP trace        │  │  git verify-pack -v .git/objects/pack/*.idx │   │
-│   │       GIT_SSH_COMMAND: custom SSH opts       │  │   git cat-file -t/-p sha: inspect object    │   │
-│   │     GIT_TRACE_PERFORMANCE=1: perf profiling  │  │   git fsck --lost-found: recover blobs      │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Trace env vars show protocol-level detail; fsck validates object integrity                         │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               History Analysis               │  │            Performance Profiling            │   │
-│   │       git log --all --oneline --graph        │  │         git clone --depth 1: measure        │   │
-│   │          git blame -L 10,20 <file>           │  │        git maintenance run --task gc        │   │
-│   │       git bisect: find regression SHA        │  │      Large file finder: git lfs migrate     │   │
-│   │     git shortlog -sn: contributor count      │  │         git-sizer: repo stats report        │   │
-│   │     git reflog: recover lost commits         │  │     git count-objects -vH: pack size        │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  Developer workstation · SSH agent (ssh-add) · ~/.ssh/known_hosts and ~/.gitconfig                    │
-│  Git remote server (GitHub / GitLab / Bitbucket / Gitea) · HTTPS proxy (if applicable)                │
-│  pack file storage in .git/objects/ · credential helper (keychain / git-credential-manager)           │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│  GIT_TRACE         = env var enabling debug trace output for git commands to stderr                   │
-│  GIT_TRACE_PACKET  = logs pack protocol negotiation; useful for clone/fetch issues                    │
-│  GIT_CURL_VERBOSE  = logs HTTP request/response headers for HTTPS debugging                           │
-│  GIT_TRACE_CURL    = logs curl requests including URL, headers, and response code                     │
-│  git fsck          = file system check; verifies object store consistency                             │
-│  cat-file -t/-p    = -t shows object type, -p pretty-prints content                                   │
-│  verify-pack       = lists all objects in a pack file with their types and sizes                      │
-│  git bisect        = binary search commits; mark good/bad to isolate regression                       │
-│  git blame         = shows last commit touching each line; -L limits to line range                    │
-│  git reflog        = local record of all ref movements; used to recover lost commits                  │
-│  git-sizer         = GitHub tool generating report on repo blob/tree/commit sizes                     │
-│  lfs migrate       = moves large files from history to LFS; rewrites commits                          │
-│  git maintenance   = modern replacement for git gc; safe background maintenance                       │
-│  shortlog -sn      = summary of commits per author sorted by count                                    │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ```mermaid
 graph TD

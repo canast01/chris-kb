@@ -8,6 +8,8 @@ tags:
 <div class="kb-summary">
 A path is a complete end-to-end connection from an HBA port through the fabric to a storage target port.
 </div>
+![FC Paths](../../../../assets/networking-protocols-fibre-channel-paths-index.svg)
+
 
 ```text
         DUAL-FABRIC MULTIPATH TOPOLOGY (4 paths to 1 LUN)

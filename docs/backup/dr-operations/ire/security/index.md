@@ -10,6 +10,8 @@ IRE security controls: enforce two-person integrity for all vault access, use IR
 
 *Applies to: IRE (Isolated Recovery Environment)*
 </div>
+![IRE Security](../../../../assets/backup-dr-operations-ire-security-index.svg)
+
 
 ```powershell
 # Verify IRE local admin accounts are not shared with production
@@ -18,37 +20,7 @@ $ireAdmins  = (Invoke-Command -ComputerName ire-dc01  { Get-ADGroupMember Admini
 Compare-Object $prodAdmins $ireAdmins -IncludeEqual | Where-Object {$_.SideIndicator -eq "=="}
 # Should return empty — no overlapping accounts
 ```
-```text
-┌──────────────────────────────────────────── IRE Security ─────────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │        IRE Security — access control, two-person integrity, audit logging in the vault        │   │
-│   │                   See product-specific sub-sections for detailed procedures                   │   │
-│   │          DR success depends on: documented runbooks · tested failover · validated RTO         │   │
-│   │          Minimum DR posture: defined RPO/RTO · tested backups · known escalation path         │   │
-│   │        Test DR procedures quarterly; document results; update runbooks after each test        │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  Production site · DR site · Replication link · Management network · Vault network                    │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  RPO           = Recovery Point Objective; max acceptable data loss window                            │
-│  RTO           = Recovery Time Objective; max acceptable downtime before restore                      │
-│  Failover      = activating the DR site; redirecting hosts to replica resources                       │
-│  Failback      = returning operations to production site after DR resolved                            │
-│  Runbook       = step-by-step documented procedure for a specific DR scenario                         │
-│  IRE           = Isolated Recovery Environment; air-gapped clean-room for recovery                    │
-│  Clean Room    = isolated vCenter + workstations for cyber recovery validation                        │
-│  Air Gap       = network isolation preventing attacker lateral movement to vault                      │
-│  DR Test       = planned failover test; validates RTO without real disaster                           │
-│  Replication   = continuous or periodic data copy to secondary site or vault                          │
-│  Recovery Tier = classification: hot/warm/cold based on RTO requirement                               │
-│  BIA           = Business Impact Analysis; drives RPO/RTO targets per system                          │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 ```bash
 # Syslog forwarding to isolated log server (IRE-internal only)
 # /etc/rsyslog.d/ire-audit.conf

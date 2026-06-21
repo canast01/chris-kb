@@ -13,6 +13,8 @@ Pure Storage Evergreen//One Troubleshooting reference covering Common Issues, Di
 
 *Applies to: Evergreen//One*
 </div>
+![Pure Storage Evergreen//One Troubleshooting](../../../../assets/storage-pure-evergreen-one-troubleshooting-index.svg)
+
 
 ```text
   Pure Triage Decision Tree

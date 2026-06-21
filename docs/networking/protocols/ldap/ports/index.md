@@ -8,33 +8,10 @@ tags:
 <div class="kb-summary">
 LDAP Ports reference covering Overview, Port 389 and 636, Global Catalog Ports (3268 and 3269), Firewall Rules, StartTLS vs LDAPS and 1 more sections.
 </div>
+![LDAP Ports](../../../../assets/networking-protocols-ldap-ports-index.svg)
 
-```text
-┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
-│  Port 389 (LDAP)                                                                                      │
-│  ┌────────────────────────────────────────────────────────┐                                           │
-│  │ App ──────────────────────── cleartext (or StartTLS)──►│                                           │
-│  │     plain query or -ZZ upgrade to TLS (STARTTLS)       │                                           │
-│  └────────────────────────────────────────────────────────┘                                           │
-│                                                                                                       │
-│  Port 636 (LDAPS)                                                                                     │
-│  ┌────────────────────────────────────────────────────────┐                                           │
-│  │ App ──── TLS from first byte ────────────────────────►│                                            │
-│  │     Always encrypted; cert check on connect            │                                           │
-│  └────────────────────────────────────────────────────────┘                                           │
-│                                                                                                       │
-│  Port 3268 (Global Catalog)                                                                           │
-│  ┌────────────────────────────────────────────────────────┐                                           │
-│  │ App ──── forest-wide query (partial replica) ────────►│                                            │
-│  │     Use when querying across multiple AD domains       │                                           │
-│  └────────────────────────────────────────────────────────┘                                           │
-│                                                                                                       │
-│  Port 3269 (Global Catalog over TLS)                                                                  │
-│  ┌────────────────────────────────────────────────────────┐                                           │
-│  │ App ──── 3268 + TLS ─────────────────────────────────►│                                            │
-│  └────────────────────────────────────────────────────────┘                                           │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Overview
 

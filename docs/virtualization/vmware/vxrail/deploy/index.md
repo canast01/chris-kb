@@ -13,38 +13,10 @@ End-to-end deployment guide for a new VxRail cluster. Covers pre-deployment read
 
 *Applies to: VxRail 7.x / 8.x*
 </div>
+![VxRail — Deploy](../../../../assets/virtualization-vmware-vxrail-deploy-index.svg)
 
-```text
-┌─────────────────────────────────── VxRail Cluster Deployment Flow ────────────────────────────────────┐
-│                                                                                                       │
-│  Phase 1: Physical Readiness                                                                          │
-│  Rack + cable nodes  ·  iDRAC IP on each node  ·  DNS A+PTR for all FQDNs  ·  NTP reachable           │
-│  Switch VLANs (mgmt/vMotion/vSAN/VM)  ·  MTU 9000 on vSAN + vMotion ports                             │
-│                                        │                                                              │
-│                                        ▼                                                              │
-│  Phase 2: First Run Wizard                                                                            │
-│  Browser to node1 mgmt IP  ·  enter network config  ·  choose vCenter type                            │
-│  VxRail Manager VM deploys automatically on node 1  ·  embedded vCenter deploys                       │
-│                                        │                                                              │
-│                                        ▼                                                              │
-│  Phase 3: vSAN Configuration                                                                          │
-│  VxRail Manager claims disks  ·  assigns cache+capacity tiers  ·  health checks green                 │
-│  Create SPBM policy RAID-1 FTT=1  ·  verify ESA vs OSA architecture                                   │
-│                                        │                                                              │
-│                                        ▼                                                              │
-│  Phase 4: Network Validation                                                                          │
-│  Verify vmk0/vmk1/vmk2 on all nodes  ·  MTU vmkping test  ·  OMIVV plugin visible                     │
-│                                        │                                                              │
-│                                        ▼                                                              │
-│  Phase 5: SupportAssist and OMIVV                                                                     │
-│  Install OMIVV plugin  ·  enable SupportAssist in VxRail Plugin  ·  configure Dell Connect            │
-│                                        │                                                              │
-│                                        ▼                                                              │
-│  Phase 6: Post-Deploy Hardening and Baseline                                                          │
-│  Change mystic + iDRAC passwords  ·  lockdown mode on  ·  VAMI backup  ·  LCM baseline                │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ---
 

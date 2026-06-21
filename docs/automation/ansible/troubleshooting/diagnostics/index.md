@@ -12,39 +12,10 @@ Ansible diagnostic commands: progressively increase verbosity with -v to -vvvv, 
 
 *Applies to: Ansible 2.14+; AWX / Ansible Automation Platform 2.x*
 </div>
+![Ansible — Diagnostics](../../../../assets/automation-ansible-troubleshooting-diagnostics-index.svg)
 
-```text
-┌──────────────────────────────────────── Ansible — Diagnostics ────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   Start here: --list-hosts → --syntax-check → ansible -m ping → -vvv to trace the failure   │     │
-│   │   Wrong output: ansible.builtin.debug var=varname; then ansible -m setup for full facts      │    │
-│   │   AWX job failed: Job → Event Log in UI; or GET /api/v2/jobs/ID/job_events/ via API          │    │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               CLI Diagnostics                │  │               AWX Diagnostics               │   │
-│   │   ansible host -m ping -vvv                  │  │   GET /api/v2/jobs/ID/stdout/?format=txt   │    │
-│   │   ansible-playbook --syntax-check            │  │   GET /api/v2/jobs/ID/job_events/          │    │
-│   │   ansible -m debug -a "var=x"               │  │   kubectl logs -n awx pod-name             │     │
-│   │   ANSIBLE_DEBUG=1 ansible-playbook           │  │   GET /api/v2/jobs/?status=failed          │    │
-│   │   ansible-inventory --list --yaml            │  │   AWX UI: Job → Event Log tab              │    │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  Ansible control node (or AWX/AAP pod) · SSH to managed hosts · inventory (static file / dynamic)     │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│  -vvv              = show full SSH connection negotiation and task module details; use for conn errors│
-│  -vvvv             = adds Python module transfer trace; rarely needed; very verbose                   │
-│  ANSIBLE_DEBUG=1   = env var enabling maximum debug from Ansible internals                            │
-│  --syntax-check    = parse playbook YAML without executing; fastest way to find syntax errors         │
-│  --check --diff    = dry-run mode; shows what would change without applying it                        │
-│  hostvars          = Ansible magic variable containing facts for all hosts in the play                │
-│  ansible.builtin.setup = module that gathers all OS facts; use -m setup ad-hoc for inspection         │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ```mermaid
 graph TD

@@ -12,51 +12,10 @@ PowerShell diagnostic techniques: inspect the $Error automatic variable for exce
 
 *Applies to: PowerShell 7.x / Windows PowerShell 5.1*
 </div>
+![PowerShell — Diagnostics](../../../../assets/automation-powershell-troubleshooting-diagnostics-index.svg)
 
-```text
-┌────────────────────────────────────── PowerShell — Diagnostics ───────────────────────────────────────┐
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │  PowerShell diagnostic sequence: check $Error[0] → enable verbose trace → transcript         │    │
-│   │  WinRM issue: Test-WSMan -ComputerName srv → winrm enumerate winrm/config/listener           │    │
-│   │  Module not found: Import-Module -Verbose → check $env:PSModulePath for search paths         │    │
-│   │  Script blocked: Get-ExecutionPolicy -List → Unblock-File -Path .\Script.ps1                 │    │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               Error Inspection               │  │               Trace and Debug               │   │
-│   │          $Error[0] | Format-List *           │  │             Set-PSDebug -Trace 2            │   │
-│   │           $Error[0].InnerException           │  │        $VerbosePreference = Continue        │   │
-│   │          $Error[0].ScriptStackTrace          │  │        Set-StrictMode -Version Latest       │   │
-│   │         Resolve-Error function (ISE)         │  │        Start-Transcript for full log        │   │
-│   │        Get-PSCallStack (in debugger)         │  │        Test-Path, Test-NetConnection        │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   Set-PSDebug -Trace 2 = traces every line executed with variable assignments; very verbose   │   │
-│   │    Set-StrictMode       = raises errors on undefined vars and bad index; catches bugs early   │   │
-│   │   ScriptStackTrace     = call stack at the point of error; shows which function called what   │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  Developer workstation or automation server · WinRM listeners (HTTP 5985 / HTTPS 5986)                │
-│  Active Directory (Kerberos for remoting) · PowerShell module paths (PSModulePath)                    │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│  $Error           = automatic array of recent errors; $Error[0] is the most recent                    │
-│  Set-PSDebug      = -Trace 1 traces calls, -Trace 2 adds variable assignments                         │
-│  Trace-Command    = targeted tracing of a specific PowerShell subsystem                               │
-│  Start-Transcript = captures all session I/O to a file; most complete debug record                    │
-│  Set-StrictMode   = fails on undefined variables and invalid properties                               │
-│  Test-WSMan       = tests WinRM connectivity without authentication                                   │
-│  winrm enumerate  = lists WinRM listener configuration (port, transport, cert)                        │
-│  TrustedHosts     = WinRM setting required when Kerberos is not available                             │
-│  ExecutionPolicy  = controls which scripts are allowed to run at each scope                           │
-│  Zone.Identifier  = NTFS alternate data stream marking downloaded files as untrusted                  │
-│  Unblock-File     = removes Zone.Identifier ADS; allows downloaded scripts to run                     │
-│  PSModulePath     = semicolon-separated list of directories PowerShell searches for modules           │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ```mermaid
 graph TD

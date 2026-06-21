@@ -4,6 +4,8 @@ tags:
   - servicenow
 ---
 # ServiceNow — Operations Procedures
+![ServiceNow — Operations Procedures](../../../../assets/itsm-servicenow-operations-procedures-index.svg)
+
 
 ```yaml
 New → In Progress → On Hold → Resolved → Closed
@@ -14,51 +16,7 @@ On Hold:     Waiting for external input (vendor, customer info)
 Resolved:    Fix applied; awaiting confirmation from caller
 Closed:      Caller confirmed resolution or auto-closed after N days
 ```
-```text
-┌───────────────────────────────── ServiceNow — Operations Procedures ──────────────────────────────────┐
-│                                                                                                       │
-│  Standard operating procedures for day-to-day ServiceNow instance management.                         │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              User Provisioning               │  │               Group Management              │   │
-│   │        Create user → set role + group        │  │        Create group → assign members        │   │
-│   │       Assign role via group membership       │  │        Group roles inherit to members       │   │
-│   │    Disable user → revoke active sessions     │  │        Manager sets delegation rules        │   │
-│   │         LDAP import → auto-provision         │  │       On-call rotation via rota tables      │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    User and group changes → verify role inheritance and session cleanup                               │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              Catalog Management              │  │              Change Procedures              │   │
-│   │       New item → variables + workflow        │  │      Change type: normal/standard/emrg      │   │
-│   │        Publish after UAT in sub-prod         │  │       CAB approval for normal changes       │   │
-│   │       Retire item → hide + close tasks       │  │         Post-impl review within 48 h        │   │
-│   │       Variable sets reuse across items       │  │      Conflict detection via CI rel. map     │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  ServiceNow SaaS · sub-prod instance · CAB meeting cadence · LDAP/AD                                  │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  LDAP import  = scheduled job pulls AD users into sys_user table                                      │
-│  Variable set = reusable group of catalog variables shared across items                               │
-│  Sub-prod     = non-production instance (dev/test) for safe UAT                                       │
-│  Rota tables  = on-call schedule; drives escalation in incident rules                                 │
-│  Delegation   = user sets absence delegate for approvals during leave                                 │
-│  CAB          = Change Advisory Board; approves normal change records                                 │
-│  Conflict det = system checks scheduled maintenance windows for overlaps                              │
-│  Post-impl    = post-implementation review; closes PIR task within 48 h                               │
-│  CI rel. map  = CMDB relationship map; shows impact of CIs for change                                 │
-│  Emrg change  = emergency change; faster approval path for critical fixes                             │
-│  Revoke sess  = user.invalidateSessions() clears active login tokens                                  │
-│  Role inherit = group role automatically applies to all group members                                 │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 ```bash
 # Manually reassign an incident
 curl -u user:token -X PATCH \

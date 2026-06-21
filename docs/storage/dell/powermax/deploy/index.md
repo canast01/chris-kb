@@ -16,65 +16,10 @@ search:
 ---
 
 # Dell PowerMax — Initial Deployment
+![Dell PowerMax — Initial Deployment](../../../../assets/storage-dell-powermax-deploy-index.svg)
 
-```text
-┌───────────────────────────────── Dell PowerMax — Deployment Sequence ─────────────────────────────────┐
-│                                                                                                       │
-│  Step 1 · Prerequisites                                                                               │
-│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
-│  FC SAN: Brocade or Cisco fabric with 32Gb/64Gb ports; single-initiator/single-target zone plan       │
-│  Software: Unisphere for PowerMax, Solutions Enabler (SYMCLI) on management host                      │
-│  Network: OOB management IPs for SP-A, SP-B; DNS entries; NTP server reachable                        │
-│  Personnel: Dell field engineer or certified admin; data centre rack space (10U+)                     │
-│  Licenses: SRDF and/or TimeFinder if replication features are required                                │
-│                                                                                                       │
-│                                        │  rack and cable array                                        │
-│                                        ▼                                                              │
-│  Step 2 · Rack, Cable, and Power On                                                                   │
-│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
-│  Slide engine into rack; secure rail kit; connect dual PDU feeds to separate circuits                 │
-│  Cable FA director ports to fabric A and fabric B — at minimum two ports per director                 │
-│  Connect SP-A and SP-B management ports (LAN0) to OOB management switch                               │
-│  Power on; allow 15–25 min for boot; confirm SP-A/SP-B LEDs go green; check service port logs         │
-│                                                                                                       │
-│                                        │  initial network config                                      │
-│                                        ▼                                                              │
-│  Step 3 · Initial Network and Unisphere Access                                                        │
-│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
-│  Connect to service port (USB/serial); set SP-A and SP-B management IPs via service menu              │
-│  Open Unisphere for PowerMax in browser; complete initial setup wizard; set NTP, syslog               │
-│  Register array with Solutions Enabler: symcfg list — confirm array SID appears                       │
-│  Upload and activate license keys via Unisphere → System → Licensing                                  │
-│                                                                                                       │
-│                                        │  configure storage pools                                     │
-│                                        ▼                                                              │
-│  Step 4 · Storage Groups and RAID Provisioning                                                        │
-│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
-│  Create Storage Resource Pools (SRP) — all drives auto-added to default SRP on PowerMax 2000          │
-│  Create Storage Groups for each workload tier; assign Service Level (Diamond, Platinum, Gold)         │
-│  Create Masking Views: Storage Group + Port Group + Initiator Group → maps LUNs to hosts              │
-│  SYMCLI alternative: symconfigure, symsg, symaccess for scripted provisioning                         │
-│                                                                                                       │
-│                                        │  connect and zone hosts                                      │
-│                                        ▼                                                              │
-│  Step 5 · Host Connectivity and FC Zoning                                                             │
-│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
-│  Register host HBA WWPNs in Unisphere → Hosts → Create Host; add WWPNs to Initiator Group             │
-│  Submit FC zoning change requests for fabric A and B; one initiator per zone per target port          │
-│  Rescan HBAs on the host (Linux: lpfc/qla2xxx rescan; Windows: Device Manager/Disk Management)        │
-│  Confirm LUNs appear on host; format and label volumes per runbook                                    │
-│                                                                                                       │
-│                                        │  validate and baseline                                       │
-│                                        ▼                                                              │
-│  Step 6 · Validation and Baseline                                                                     │
-│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
-│  Run Unisphere health check; confirm no capacity alerts, fan/PSU/director warnings                    │
-│  Record baseline: array SID, SRP names, masking view names, LUN IDs per host                          │
-│  If SRDF: verify SRDF group created, initial sync complete, pairs show Synchronized state             │
-│  Schedule first Unisphere health report; enrol array in Dell SupportAssist / CloudIQ                  │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 This guide walks through deploying a Dell PowerMax array from physical installation through validated host connectivity. Steps apply to PowerMax 2000 and 8000 series running Enginuity/PowerMaxOS.
 

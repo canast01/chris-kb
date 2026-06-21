@@ -12,33 +12,10 @@ cause and apply the correct fix — CPU, memory, storage, or network.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
+![VM Performance Degraded](../../../../assets/virtualization-vmware-topics-scenarios-vm-performance-degrad.svg)
 
-```text
-┌──────────────────────────── VM Performance Degraded — Investigation Flow ─────────────────────────────┐
-│                                                                                                       │
-│  OVERVIEW                                                                                             │
-│  Layered investigation: Aria Ops triage → ESXi host metrics → vSAN storage → NSX DFW overhead         │
-│                                                                                                       │
-│  START: Alert in Aria Operations — VM latency / CPU ready / dropped packets anomaly detected          │
-│                                                                                                       │
-│  STEP 1 — CPU Check                                                                                   │
-│  CPU Ready > 5%? Check ESXi PCPU %RDY via esxtop                                                      │
-│  Fix: DRS migration to less-loaded host or resource pool adjustment                                   │
-│                                                                                                       │
-│  STEP 2 — Memory Check                                                                                │
-│  Memory Balloon or Swap Active? Check MEM via esxtop (MCTL%, SWPD%)                                   │
-│  Fix: increase RAM reservation; remove balloon if host is not overcommitted                           │
-│                                                                                                       │
-│  STEP 3 — Storage Check                                                                               │
-│  Disk DAVG > 20 ms? Check vSAN IOPS / throughput / latency per VM                                     │
-│  Fix: vSAN component health check — check if disk rebuild or resync is pending                        │
-│                                                                                                       │
-│  STEP 4 — Network Check                                                                               │
-│  Network issue? Use Aria Networks path trace to identify affected path                                │
-│  Check NSX DFW rule hit count on VM vNIC — high rule count adds latency                               │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Products Involved
 

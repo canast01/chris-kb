@@ -10,36 +10,10 @@ Linux operational runbooks — routine maintenance, service recovery, backup val
 
 *Applies to: RHEL / Ubuntu LTS*
 </div>
+![Linux — Operational Runbooks](../../../../assets/compute-linux-operations-runbooks-index.svg)
 
-```text
-┌──────────────────────────────────── Linux — Operational Runbooks ─────────────────────────────────────┐
-│                                                                                                       │
-│   Standard runbooks for routine Linux server operations — all require change-window approval          │
-│   Three sub-sections: service restart, disk space cleanup, and planned server reboot                  │
-│   Follow pre-checks → action → post-validation sequence; sign off before closing the change           │
-│                                                                                                       │
-│   Service restart                                                                                     │
-│   Pre-checks: confirm service is degraded (not planned); notify dependent teams; snapshot VM          │
-│   Restart: systemctl restart <service>; capture exit code; check systemctl status output              │
-│   Post-validation: verify service is active; check application health endpoint; review logs           │
-│                                                                                                       │
-│   Disk space cleanup                                                                                  │
-│   Identify: df -h to find full volumes; du -sh /var/log/* to find largest directories                 │
-│   Clean: journalctl --vacuum-time=7d; logrotate -f; rm stale tmp files in /tmp                        │
-│   Expand (if needed): lvextend + resize2fs/xfs_growfs for LVM volumes                                 │
-│                                                                                                       │
-│   Planned server reboot                                                                               │
-│   Pre-checks: notify users; stop non-critical services gracefully; flush application queues           │
-│   Reboot: shutdown -r +5 "Planned maintenance"; monitor console for successful boot                   │
-│   Post-reboot: verify all services auto-started; check logs for errors; confirm with app team         │
-│                                                                                                       │
-│   Key terms:                                                                                          │
-│   lvextend     = LVM command to grow a logical volume; requires resize2fs/xfs_growfs after            │
-│   journalctl --vacuum = trims systemd journal to reduce disk usage                                    │
-│   systemctl status = shows service state, recent log lines, and PID                                   │
-│   change window = approved time slot for production changes; required before any restart              │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="service-restart/"><strong>Service Restart</strong><span>Safe service restart runbook — pre-checks, restart sequence, and post-restart validation.</span></a>

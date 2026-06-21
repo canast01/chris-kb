@@ -10,23 +10,11 @@ Pure Storage Evergreen Standards reference covering Naming Conventions, Build Ba
 
 *Applies to: Evergreen*
 </div>
+![Pure Storage Evergreen Standards](../../../../assets/storage-pure-evergreen-standards-index.svg)
+
 
 Evergreen Standards — Object Naming and Design
-```text
-┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
-│  Array    │  <site>-fa-<nn>   e.g. lon-fa-01                                                          │
-├──────────────────────────────────────────────────────────┤
-│  Volume   │  <env>-<app>-<vol##>                                                                      │
-├──────────────────────────────────────────────────────────┤
-│  Host     │  matches OS hostname exactly                                                              │
-├──────────────────────────────────────────────────────────┤
-│  HGroup   │  <env>-<cluster>                                                                          │
-├──────────────────────────────────────────────────────────┤
-│  PGroup   │  <env>-<app>-pg                                                                           │
-├──────────────────────────────────────────────────────────┤
-│  Snapshot │  <volname>.<YYYY-MM-DD>                                                                   │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 ## Naming Conventions
 
 Consistent naming across all FlashArray objects reduces operational confusion and enables automation.

@@ -14,6 +14,8 @@ EVS cluster deployment: prerequisites, VPC setup, cluster creation via AWS conso
 
 *Applies to: Amazon EVS*
 </div>
+![Amazon EVS — Deploy](../../../../assets/cloud-aws-evs-deploy-index.svg)
+
 
 
 ## Before you begin

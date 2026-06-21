@@ -12,16 +12,10 @@ tags:
 <div class="kb-summary">
 Choose the right Aria product for your need: performance monitoring, log management, infrastructure automation, network visibility, or lifecycle management of the Aria Suite itself.
 </div>
+![Aria Product Selection Decision Tree](../../assets/reference-decision-trees-aria-selection.svg)
 
-```text
-┌─────────────────────────────── Aria Product Selection Decision Tree ──────────────────────────────────┐
-│  Monitor performance / alerts / capacity → Aria Operations (formerly vROps)                           │
-│  Log search / syslog / structured events → Aria Logs (formerly Log Insight)                           │
-│  Self-service catalog / IaaS automation  → Aria Automation (formerly vRA)                             │
-│  Network flows / path analysis / micro-seg→ Aria Networks (formerly vRNI)                             │
-│  Install or upgrade Aria products        → Aria Suite Lifecycle (formerly LCM)                        │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ```mermaid
 flowchart TD

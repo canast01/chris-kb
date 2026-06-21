@@ -9,63 +9,10 @@ Azure Identity articles, operational checks, troubleshooting notes, and referenc
 
 *Applies to: Azure*
 </div>
+![Azure Identity](../../../assets/cloud-azure-identity-index.svg)
 
-```text
-┌─────────────────────────────────────── Azure Identity Overview ───────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                  Azure Identity — Entra ID, RBAC, Managed Identities, and PIM                 │   │
-│   │      Entra ID: cloud identity directory; users, groups, B2B guests, and app registrations     │   │
-│   │    RBAC: Owner / Contributor / Reader built-in roles + custom; scope: MG, sub, RG, resource   │   │
-│   │Managed Identities: system or user-assigned; auto-managed SP for Azure services to authenticate│   │
-│   │      PIM: just-in-time role activation; approval workflow; time-limited privileged access     │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Entra ID is the identity source · RBAC grants access · Managed Identities remove secrets           │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │           Entra ID          │  │             RBAC            │  │      Privileged Access      │   │
-│   │       Users: UPN + MFA      │  │     Owner: full control     │  │      PIM: JIT activate      │   │
-│   │    Groups: security+M365    │  │     Contributor: no RBAC    │  │      Approval: manager      │   │
-│   │    App registrations: SPN   │  │      Reader: read-only      │  │     Time-limit: 8 hours     │   │
-│   │   Conditional Access: MFA   │  │    Custom roles: JSON def   │  │      Audit: PIM history     │   │
-│   │    Managed identities: MI   │  │    Scope: sub/RG/resource   │  │   Access review: quarterly  │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│    Entra ID manages identities · RBAC controls access at scope                                        │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │     Entra ID     │     App Reg.     │        RBAC       │    Managed ID    │       PIM        │   │
-│   │   User: create   │   Register app   │    Assign: sub    │  System-assign   │  Activate: JIT   │   │
-│   │  Group: add mem  │  Client secret   │     Assign: RG    │   User-assign    │   Approve: MFA   │   │
-│   │   MFA: enforce   │  API permission  │    Custom role    │    RBAC to MI    │    Expiry: 8h    │   │
-│   │   Cond. Access   │  Enterprise app  │    Review: list   │    No secrets    │  Access review   │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  Entra ID global service · Azure RBAC control plane · PIM service · ARM token endpoint                │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Entra ID         = Microsoft cloud identity directory (formerly Azure AD); users, groups, apps,      │
-│  App registration = Entra ID object representing an application; has client ID, secret or certificate │
-│  Service principal= Instance of an app registration in a tenant; has identity and can be assigned     │
-│  Managed Identity = Azure-managed service principal; no secrets; system (tied to resource) or         │
-│  System-assigned MI= Identity tied to one resource; deleted when resource is deleted; most common     │
-│  User-assigned MI = Standalone identity; assigned to multiple resources; survives resource deletion   │
-│  RBAC             = Role-Based Access Control; assigns built-in or custom roles at a defined scope    │
-│  RBAC scope       = Hierarchy: Management Group > Subscription > Resource Group > Resource            │
-│  PIM              = Privileged Identity Management; manages just-in-time access to sensitive roles    │
-│  Conditional Access= Policy evaluating sign-in signals (location, device, risk) to grant, block, or   │
-│  Access review    = Periodic review of group membership or role assignments; remove stale access      │
-│  B2B              = Business-to-business; inviting external users (guests) to your Entra ID tenant    │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Articles
 

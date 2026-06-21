@@ -16,36 +16,10 @@ are difficult to diagnose after the fact.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
+![Add ESXi Host to Cluster](../../../../assets/virtualization-vmware-topics-scenarios-add-esxi-host-to-clus.svg)
 
-```text
-┌────────────────────────────── Add ESXi Host to Cluster — Procedure Flow ──────────────────────────────┐
-│                                                                                                       │
-│  OVERVIEW                                                                                             │
-│  Adding a host spans: firmware, ESXi install, vCenter, vSAN, NSX, LCM, Aria Ops                       │
-│  Steps must be in order — skipping causes network, storage, or security gaps                          │
-│                                                                                                       │
-│  START: Rack and cable new host                                                                       │
-│  Update BIOS, HBA, and NIC firmware to vendor-minimum before starting ESXi install                    │
-│                                                                                                       │
-│  STEP 1 — Install ESXi                                                                                │
-│  Install via vendor ISO · configure mgmt IP, FQDN hostname, DNS via DCUI (F2)                         │
-│                                                                                                       │
-│  STEP 2 — DNS Pre-check                                                                               │
-│  Verify A record and PTR record resolve correctly from jump host                                      │
-│                                                                                                       │
-│  STEP 3 — VMkernel and NTP Configuration                                                              │
-│  SSH to host · configure NTP · configure vMotion and vSAN VMkernel ports · test vSAN MTU              │
-│                                                                                                       │
-│  STEP 4 — Join vCenter Cluster                                                                        │
-│  Add host to vCenter cluster via PowerCLI · assign ESXi licence                                       │
-│  Parallel: vSAN disk claim · NSX transport node + VIBs + TEP · LCM patch baseline                     │
-│                                                                                                       │
-│  STEP 5 — Post-Join Validation                                                                        │
-│  Disable SSH · validate in Aria Operations                                                            │
-│  Confirm HA agent, NTP, vSAN health, and NSX transport node all green                                 │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Products Involved
 

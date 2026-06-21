@@ -11,6 +11,8 @@ How It Works reference covering Overview, Editions and Installation Types, Role 
 
 *Applies to: Windows Server 2019 / 2022*
 </div>
+![Windows Server — How It Works](../../../../assets/compute-windows-server-architecture-how-it-works-index.svg)
+
 
 ## Overview
 
@@ -44,51 +46,7 @@ graph TB
   class AD,DNS_R,FS,IIS,WSUS,SEC mgmt
   class ADMIN host
 ```
-```text
-┌──────────────────────────────────── Windows Server — How It Works ────────────────────────────────────┐
-│                                                                                                       │
-│  Windows Server boot process, service management, and AD authentication flow.                         │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                Boot Sequence                 │  │              Kerberos Auth Flow             │   │
-│   │             UEFI/BIOS → bootmgr              │  │           User → AS request → TGT           │   │
-│   │          winload.exe → kernel load           │  │          TGT → TGS request → ticket         │   │
-│   │         Kernel init → HAL → drivers          │  │          Service ticket → resource          │   │
-│   │          Session 0: services start           │  │          PAC: user groups in ticket         │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Boot completes before user logon; Kerberos tickets cached for session                              │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │           Group Policy Processing            │  │            File System Operations           │   │
-│   │            Machine GPO at startup            │  │          NTFS: journalled metadata          │   │
-│   │              User GPO at logon               │  │          Shadow Copy: VSS snapshots         │   │
-│   │           gpupdate /force: reapply           │  │          DFS: distributed namespace         │   │
-│   │        Loopback: machine applies user        │  │          BranchCache: WAN optimise          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  Physical server · Domain Controllers · NTP source · storage                                          │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  bootmgr      = Windows Boot Manager; reads BCD store to select OS                                    │
-│  winload.exe  = OS loader; loads kernel, HAL, and boot drivers                                        │
-│  Session 0    = isolated service session; no interactive user access                                  │
-│  TGT          = Ticket Granting Ticket; obtained from KDC at logon                                    │
-│  TGS          = Ticket Granting Service; issues service-specific tickets                              │
-│  PAC          = Privilege Attribute Certificate; encodes group memberships                            │
-│  GPO          = Group Policy Object; settings applied at OU/domain level                              │
-│  Loopback     = GPO mode applying machine-linked user policy at logon                                 │
-│  VSS          = Volume Shadow Copy Service; creates consistent snapshots                              │
-│  DFS          = Distributed File System; namespace + replication for shares                           │
-│  BranchCache  = caches remote content at branch office; reduces WAN traffic                           │
-│  gpupdate     = triggers immediate GP refresh; /force reapplies all settings                          │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 ---
 

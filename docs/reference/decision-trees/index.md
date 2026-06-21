@@ -9,13 +9,10 @@ tags:
 <div class="kb-summary">
 Flowcharts for common VMware infrastructure design decisions — storage policy, NSX topology, DR tool selection, and Aria product selection.
 </div>
+![Decision Trees](../../assets/reference-decision-trees-index.svg)
 
-```text
-┌─────────────────────────────────────── Decision Trees ────────────────────────────────────────────────┐
-│  Interactive flowcharts for design and tool selection decisions                                       │
-│  vSAN Policy · NSX Topology · DR Tool · Aria Product Selection                                        │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 <div class="kb-grid">
 <a class="kb-card" href="vsan-policy/">

@@ -7,39 +7,10 @@ tags:
 <div class="kb-summary">
 Network services reference for load balancer VIP management, pool health monitoring, and IPAM. For DNS and DHCP protocol coverage, see <a href="../protocols/dns/">Protocols → DNS</a> and <a href="../protocols/dhcp/">Protocols → DHCP</a>.
 </div>
+![Networking — Load Balancer & Services](../../assets/networking-services-index.svg)
 
-```text
-┌──────────────────────────────────── Networking — Network Services ────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Network services: DNS (name resolution), DHCP (IP assignment), load balancers, IPAM      │   │
-│   │      DNS: every server needs forward + reverse records; split-horizon for internal names      │   │
-│   │       Load balancer: health checks must match app check; monitor pool member state daily      │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                     DNS                      │  │             Load Balancer & DHCP            │   │
-│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
-│   │             A record: name → IP              │  │           VIP: virtual IP for pool          │   │
-│   │            PTR record: IP → name             │  │            Pool: backend servers            │   │
-│   │             CNAME: alias record              │  │            Health check: HTTP/TCP           │   │
-│   │             Test: nslookup / dig             │  │           DHCP: scope + exclusions          │   │
-│   │        TTL: lower for planned changes        │  │           IPAM: track allocations           │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    A record     = DNS forward lookup; hostname → IPv4 address                                         │
-│    PTR record   = DNS reverse lookup; IP → hostname; needed for SMTP and some auth                    │
-│    TTL          = Time To Live; how long resolvers cache the record; lower before cutover             │
-│    Split-horizon= Different DNS answers for internal vs external queries for same name                │
-│    VIP          = Virtual IP; load balancer frontend; clients connect here, not to backend            │
-│    SNAT         = Source NAT on load balancer; ensures response traffic returns via LB                │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Test the VIP Endpoint
 

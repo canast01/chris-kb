@@ -10,47 +10,10 @@ tags:
 <div class="kb-summary">
 Maps VCP-DCV 8 exam objectives (exam code 2V0-21.23) to KB content pages. Use this page to navigate from each exam section to the relevant technical reference. Includes a sample question analysis section that explains correct answers and the reasoning behind them.
 </div>
+![VCP-DCV 8 — Exam Reference (2V0-21.23)](../../../../assets/virtualization-vmware-certifications-vcp-dcv-index.svg)
 
-```text
-┌───────────────────────────── VCP-DCV 8 (2V0-21.23) — Exam Blueprint Map ──────────────────────────────┐
-│                                                                                                       │
-│   70 questions / 135 min / pass 300 of 500 / Pearson VUE / 2-year recertification required            │
-│   Section 1 (Architecture) is the largest — weight study time there first                             │
-│   Prerequisite: VMware vSphere Install Configure Manage course or equivalent                          │
-│                                                                                                       │
-│   Section 1 — Architecture & Technologies (largest section)                                           │
-│   ESXi + vCenter architecture; vSAN disk groups and FTT; storage (VAAI/VASA/SPBM/vVOLs)               │
-│   Networking: VSS vs VDS, NIOC, PVLAN modes; Security: vTA, vTPM, VM Encryption, VBS                  │
-│                                                                                                       │
-│   Section 2 — Products & Solutions                                                                    │
-│   vSphere in the SDDC context; SRM + vSphere Replication (RTO/RPO); DPU/Distributed Services          │
-│   Tanzu: Supervisor cluster, Namespaces, vSphere Pods, TKG integration with vSphere                   │
-│                                                                                                       │
-│   Section 4 — Installing, Configuring, and Setup                                                      │
-│   SSO + identity sources (AD LDAP, ADFS federation); VDS/VSS configuration; HA and DRS config         │
-│   vLCM + Host Profiles; VCSA deployment sizing; vCenter HA (VCHA) active/passive/witness              │
-│                                                                                                       │
-│   Section 5 — Performance & Upgrades                                                                  │
-│   Resource pools: shares, reservations, limits; NIOC/SIOC thresholds; snapshot disk impact            │
-│   vLCM staged remediation and compliance; Skyline Advisor Pro; Update Planner for vCenter             │
-│                                                                                                       │
-│   Section 6 — Troubleshooting                                                                         │
-│   vCLS retreat mode: DRS goes manual, HA Optimal Placement disabled (HA restarts still work)          │
-│   Log files: vmkernel.log, vpxd.log, fdm.log, hostd.log, vpxa.log; vm-support bundle collection       │
-│   ESXTOP counters: %RDY (CPU contention), DAVG (storage latency), balloon/swap (memory)               │
-│                                                                                                       │
-│   Section 7 — Administrative Tasks                                                                    │
-│   Snapshot management: create/revert/delete/consolidate; vMotion + Storage vMotion                    │
-│   DRS affinity/anti-affinity rules; SPBM storage policy assignment and compliance checks              │
-│                                                                                                       │
-│   Key terms:                                                                                          │
-│   VAAI  = vStorage APIs for Array Integration; offloads full-copy, block-zero, locking to array       │
-│   VASA  = vSphere APIs for Storage Awareness; array reports capabilities to vCenter for SPBM          │
-│   vTA   = vSphere Trust Authority; hardware-rooted trust chain for encrypted VMs                      │
-│   VBS   = Virtualization-Based Security; Windows feature requiring vTPM and UEFI VM firmware          │
-│   vCLS  = vSphere Cluster Services; retreat mode stops DRS automation and HA optimal placement        │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ---
 

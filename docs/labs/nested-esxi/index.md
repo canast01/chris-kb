@@ -9,15 +9,10 @@ tags:
 <div class="kb-summary">
 Deploy two nested ESXi VMs and a vCenter appliance on a single physical host. This is the foundation for Labs 2, 3, and 4. Estimated time: 2–3 hours.
 </div>
+![Lab 1 — Nested ESXi Homelab](../../assets/labs-nested-esxi-index.svg)
 
-```text
-┌─────────────────────── Nested ESXi Homelab — Architecture ────────────────────────────────────────────┐
-│  Physical Host (ESXi 7.0+) ─── Management portgroup (Promisc + Forged Transmits enabled)              │
-│  ├── Nested ESXi-01  (4 vCPU · 12 GB RAM · vmk0: 192.168.1.11)                                        │
-│  ├── Nested ESXi-02  (4 vCPU · 12 GB RAM · vmk0: 192.168.1.12)                                        │
-│  └── vCenter VCSA    (4 vCPU · 19 GB RAM · IP: 192.168.1.10)                                          │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Prerequisites
 

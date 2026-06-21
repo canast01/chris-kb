@@ -13,46 +13,10 @@ End-to-end deployment guide for VMware Tanzu Kubernetes Grid on vSphere. Covers 
 
 *Applies to: Tanzu 3.x*
 </div>
+![Tanzu — Deploy](../../../../assets/virtualization-vmware-tanzu-deploy-index.svg)
 
-```text
-┌────────────────────────────────────── Tanzu — Deployment Phases ──────────────────────────────────────┐
-│                                                                                                       │
-│  Six phases from licensed vSphere cluster to operational TKG environment. Each phase has a clear      │
-│  exit criterion. Do not proceed until the current phase validates clean.                              │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌──────────────────────────────┐  ┌──────────────────────────────┐ │
-│   │  Phase 1: Prerequisites     │  │  Phase 2: Workload Mgmt      │  │  Phase 3: vSphere Namespace  │ │
-│   │  vSphere 7.0 U2+ / 8.x      │  │  vCenter → Workload Mgmt     │  │  Create namespace per team   │ │
-│   │  NSX-T or VDS+HAProxy        │  │  Control plane size select   │  │  CPU/RAM/storage quotas      ││
-│   │  DNS for Supervisor VIP      │  │  Pod/service CIDR config     │  │  Storage policy assign       ││
-│   │  Content library planned     │  │  Wait for Supervisor Ready   │  │  AD user/group permissions   ││
-│   └─────────────────────────────┘  └──────────────────────────────┘  └──────────────────────────────┘ │
-│                                                                                                       │
-│                ▼                                 ▼                                 ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌──────────────────────────────┐  ┌──────────────────────────────┐ │
-│   │  Phase 4: TKG Cluster       │  │  Phase 5: Harbor Registry    │  │  Phase 6: Validation         │ │
-│   │  kubectl vsphere login      │  │  Deploy Harbor OVA           │  │  All cluster nodes Ready     │ │
-│   │  Apply TanzuK8sCluster YAML │  │  Configure LDAP/OIDC + TLS   │  │  Harbor: images push/pull    │ │
-│   │  Choose TKR release         │  │  Create projects per team    │  │  PVC: CSI provisioning       │ │
-│   │  Wait for cluster Ready     │  │  Robot accounts for CI/CD    │  │  Network policy enforced     │ │
-│   └─────────────────────────────┘  └──────────────────────────────┘  └──────────────────────────────┘ │
-│                                                                                                       │
-│  Physical Infrastructure: vSphere cluster (ESXi hosts) · vSAN or NFS datastore · NSX-T fabric         │
-│  (or VDS+HAProxy) · management network · DNS/NTP infrastructure · content library datastore.          │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Supervisor       = vSphere-integrated Kubernetes control plane running as ESXi kernel components     │
-│  TKR              = Tanzu Kubernetes Release; versioned OS+K8s image from content library             │
-│  vSphere Namespace= resource boundary with CPU/RAM/storage quotas; maps to K8s namespace              │
-│  CAPI/CAPV        = Cluster API / vSphere provider; reconciles TanzuKubernetesCluster CRDs            │
-│  Spherelet        = kubelet equivalent running in the ESXi VMkernel; registers host as K8s node       │
-│  NCP              = NSX Container Plugin; syncs K8s network objects to NSX-T                          │
-│  vSphere CSI      = Container Storage Interface driver; provisions FCD-backed PVCs from vSAN          │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ---
 

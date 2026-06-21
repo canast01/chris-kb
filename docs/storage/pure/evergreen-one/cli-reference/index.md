@@ -10,6 +10,8 @@ Pure Evergreen//One CLI reference: `purearray list`, `purevolume list`, `purejob
 
 *Applies to: Evergreen//One*
 </div>
+![Pure Evergreen//One CLI Reference](../../../../assets/storage-pure-evergreen-one-cli-reference-index.svg)
+
 
 ---
 

@@ -3,12 +3,10 @@ tags:
   - networking
 ---
 # iSCSI — Sessions
+![iSCSI — Sessions](../../../../assets/networking-protocols-iscsi-sessions-index.svg)
 
-```text
-┌───────────────────────────────────── ┐                         ┌ ─────────────────────────────────────┐
-│  Initiator   │                         │     Target                                                   │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 ```text
 Each session can carry multiple connections (TCP streams) for performance.
 

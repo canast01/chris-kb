@@ -16,32 +16,10 @@ ESXi hosts and running VMs are unaffected during a vCenter upgrade — only mana
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
+![vCenter Upgrade Failure / Rollback](../../../../assets/virtualization-vmware-topics-scenarios-vcenter-upgrade-failu.svg)
 
-```text
-┌──────────────────────────── vCenter Upgrade Failure — Investigation Flow ─────────────────────────────┐
-│                                                                                                       │
-│  OVERVIEW                                                                                             │
-│  ESXi hosts and running VMs are unaffected during a vCenter upgrade — only management is disrupted    │
-│  VCSA upgrade is two-stage; failure at each stage has a different recovery path                       │
-│                                                                                                       │
-│  START: VCSA upgrade fails — installer error · appliance won't boot · UI unreachable post-upgrade     │
-│                                                                                                       │
-│  STAGE 1 FAILURE — Deploy appliance did not complete                                                  │
-│  Source VCSA still running — no management impact                                                     │
-│  Resolution: fix the install error and simply re-run Stage 1                                          │
-│                                                                                                       │
-│  STAGE 2 FAILURE — Migrate data / configure new VCSA                                                  │
-│  Rollback snapshot available? Apply it on the new VCSA appliance                                      │
-│  No snapshot: revert to source VCSA if it is still intact                                             │
-│                                                                                                       │
-│  POST-UPGRADE FAILURE — UI down or services failing                                                   │
-│  Check services via SSH: service-control --status --all                                               │
-│  Check disk space on new VCSA · check certificate dates · check SSO token validity                    │
-│                                                                                                       │
-│  CLOSE: vCenter accessible · all hosts connected · services healthy · upgrade log clean               │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Products Involved
 

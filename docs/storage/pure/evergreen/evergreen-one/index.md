@@ -10,6 +10,8 @@ Evergreen//One (Evergreen Sub-Service) reference covering How Evergreen//One Wor
 
 *Applies to: Evergreen*
 </div>
+![Evergreen//One (Evergreen Sub-Service)](../../../../assets/storage-pure-evergreen-evergreen-one-index.svg)
+
 
 ```text
   Evergreen//One Subscription Model

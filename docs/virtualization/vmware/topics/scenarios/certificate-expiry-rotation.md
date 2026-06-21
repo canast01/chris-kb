@@ -14,36 +14,10 @@ again. This scenario covers identification, rotation order, and validation acros
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
+![Certificate Expiry and Rotation](../../../../assets/virtualization-vmware-topics-scenarios-certificate-expiry-ro.svg)
 
-```text
-┌───────────────────────────────── Certificate Expiry — Rotation Flow ──────────────────────────────────┐
-│                                                                                                       │
-│  OVERVIEW                                                                                             │
-│  Certificate expiry causes cascading failures: SSO breaks, API calls fail, browser trust warnings     │
-│  Rotation must follow a strict order — replace root CA before leaf certs or all products break        │
-│                                                                                                       │
-│  START: Expiry detected via Aria SuiteLC alert, browser warning, or scheduled audit                   │
-│                                                                                                       │
-│  STEP 1 — Identify All Expiry Dates                                                                   │
-│  Run openssl against vCenter, ESXi, NSX, and Aria Ops — record all notAfter dates                     │
-│                                                                                                       │
-│  STEP 2 — Rotate in Strict Order (top to bottom — NEVER reverse this sequence)                        │
-│  1: Internal CA / Aria SuiteLC trust store — root of all trust                                        │
-│  2: vCenter VMCA (Machine SSL + solution certs) — signed by internal CA or self-signed                │
-│  3: ESXi host certs via vCenter certificate manager — provisioned by vCenter VMCA                     │
-│  4: NSX Manager certificate — independent from VMCA                                                   │
-│  5: Aria Suite products via Aria SuiteLC — trust vCenter VMCA as CA                                   │
-│                                                                                                       │
-│  STEP 3 — Post-Rotation Validation                                                                    │
-│  Run openssl against all products · confirm notAfter dates updated                                    │
-│  Verify SSO login, vCenter connectivity, NSX Manager API, Aria Suite UI                               │
-│                                                                                                       │
-│  KEY TERMS                                                                                            │
-│  VMCA — vCenter Certificate Authority embedded in vCenter; signs ESXi and solution user certs         │
-│  notAfter — the expiry timestamp in the certificate; use openssl to read current value                │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Products Involved
 

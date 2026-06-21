@@ -7,14 +7,10 @@ tags:
 <div class="kb-summary">
 Fibre Channel reference — WWPN/WWNN addressing, zoning, fabric login (FLOGI), multipathing, and SAN fabric health.
 </div>
+![Fibre Channel](../../../assets/networking-protocols-fibre-channel-index.svg)
 
-```text
-┌─────────────────── ┐    ┌─────┐    ┌──────────────┐    ┌─────┐    ┌─────────┐    ┌ ───────────────────┐
-│  Host  │    │ HBA │    │  FC Switch A │    │ ISL │    │FC Switch│    │Array                           │
-│        ├───►│(SFP)├───►│  port  ──────┼───►│─────┼───►│port     ├───►│ LUN                            │
-│        │    │WWPN │    │   (F_port)   │    │     │    │(F_port) │    │                                │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 ```xml
 
 

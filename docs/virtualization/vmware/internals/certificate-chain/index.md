@@ -10,56 +10,10 @@ VMware Certificate Authority (VMCA) issues all vCenter machine SSL and solution 
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
+![Certificate Chain](../../../../assets/virtualization-vmware-internals-certificate-chain-index.svg)
 
-```text
-┌─────────────────────────────── VMware Certificate Chain — VMCA and STS ───────────────────────────────┐
-│                                                                                                       │
-│  VMCA issues Machine SSL and Solution User certs; STS token-signing cert is                           │
-│  separate and not issued by VMCA — expired STS causes total SSO failure.                              │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          VMCA Certificate Hierarchy          │  │              STS Token Signing              │   │
-│   │          Root CA: VMCA self-signed           │  │              Not issued by VMCA             │   │
-│   │        Machine SSL: vCenter+ESXi+NSX         │  │           Stored in VECS KeyStore           │   │
-│   │     Solution user certs: SSO registered      │  │           Expired STS: SSO failure          │   │
-│   │       Subordinate CA mode: custom root       │  │          Renewal: cert-manager CLI          │   │
-│   │      Hybrid mode: 3rd-party Machine SSL      │  │          STS key: separate renewal          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  VMCA auto-renews approaching-expiry certs; STS renewal is always manual.                             │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             Machine SSL Renewal              │  │             Solution User Certs             │   │
-│   │          cert-manager: renew --all           │  │          vpxd: vCenter core service         │   │
-│   │         VMCA auto-renews at 80% TTL          │  │        vsphere-webclient: UI service        │   │
-│   │       Subordinate: sign with custom CA       │  │          machine: vpxd machine cert         │   │
-│   │       ESXi: push new cert via vCenter        │  │      Renew: cert-manager --solutionuser     │   │
-│   │     Check: VECS-CLI list --store MACHINE     │  │         Mismatch: service reg fails         │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  VCSA appliance hosts VMCA, VECS, and STS; NTP sync required for cert validity;                       │
-│  AD domain controllers for identity source validation.                                                │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  VMCA          = VMware Certificate Authority; built-in CA in VCSA                                    │
-│  VECS          = VMware Endpoint Certificate Store; in-memory cert store                              │
-│  STS           = Security Token Service; issues SAML tokens for SSO                                   │
-│  Machine SSL   = SSL cert on HTTPS endpoints (vCenter, ESXi, NSX)                                     │
-│  Solution user = service accounts registered with SSO (vpxd, extensions)                              │
-│  Subordinate CA= VMCA signed by external CA; chain includes corporate root                            │
-│  Hybrid mode   = 3rd-party Machine SSL + VMCA solution user certs                                     │
-│  cert-manager  = /usr/lib/vmware-vmafd/bin/dir-cli; cert renewal CLI                                  │
-│  SAML token    = signed by STS cert; used across all SSO-aware services                               │
-│  TTL           = cert validity period; VMCA default 2 years                                           │
-│  Lookup token  = SAML token for internal service calls; STS-issued                                    │
-│  vpxd          = core vCenter daemon; requires valid machine SSL + solution user                      │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ```mermaid
 graph TB

@@ -16,36 +16,10 @@ capacity additions.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
+![vSAN Capacity Alarm](../../../../assets/virtualization-vmware-topics-scenarios-vsan-capacity-alarm.svg)
 
-```text
-┌────────────────────────────── vSAN Capacity Alarm — Investigation Flow ───────────────────────────────┐
-│                                                                                                       │
-│  OVERVIEW                                                                                             │
-│  vSAN raises a capacity alarm when used space exceeds the configured threshold (default 75%)          │
-│  Above 80%, vSAN may stop allowing new objects and snapshot creation                                  │
-│                                                                                                       │
-│  START: vCenter alarm — vSAN datastore above capacity threshold                                       │
-│                                                                                                       │
-│  STEP 1 — Confirm Severity and Headroom                                                               │
-│  Skyline Health → Capacity → check overall % used and projected depletion                             │
-│  Identify: warning (75%) vs critical (80%+) — critical requires immediate action                      │
-│                                                                                                       │
-│  STEP 2 — Break Down Usage                                                                            │
-│  vSAN → Monitor → Capacity → Usage Breakdown: VM objects vs snapshots vs swap                         │
-│  Sort VMs by space used; identify largest VMDKs and any VM with long snapshot chains                  │
-│                                                                                                       │
-│  STEP 3 — Remove Snapshot Waste                                                                       │
-│  Find VMs with snapshot chains older than 72 hours; consolidate or delete                             │
-│  Monitor snapshot delta size shrinking; confirm Objects view shows compliant state                    │
-│                                                                                                       │
-│  STEP 4 — Move or Reclaim Data                                                                        │
-│  Storage vMotion large VMDKs to a different datastore if available                                    │
-│  Or add capacity: add new disk to existing disk group, or add a new disk group / host                 │
-│                                                                                                       │
-│  CLOSE: Skyline Health capacity green · no new alarms · snapshot creation succeeds                    │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Products Involved
 

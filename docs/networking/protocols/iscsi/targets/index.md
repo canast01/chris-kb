@@ -8,32 +8,11 @@ tags:
 <div class="kb-summary">
 An iSCSI target is the storage-side endpoint — a port on an array, NAS gateway, or software target — that presents LUNs to initiators.
 </div>
+![iSCSI Targets](../../../../assets/networking-protocols-iscsi-targets-index.svg)
+
 
         iSCSI TARGET STRUCTURE
-```text
-┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
-│  Storage Array / Target                                                                               │
-│                                                                                                       │
-│  Target IQN: iqn.2020-01.com.purestorage:flasharray-ct0                                               │
-│                                                                                                       │
-│  ┌───────────────────────────────────────────────────┐                                                │
-│  │  Target Portal Group (TPG)                        │                                                │
-│  │  ┌─────────────────┐  ┌─────────────────┐         │                                                │
-│  │  │ Portal A        │  │ Portal B        │         │                                                │
-│  │  │ 192.168.10.10   │  │ 192.168.20.10   │         │                                                │
-│  │  │ :3260           │  │ :3260           │         │                                                │
-│  │  └────────┬────────┘  └────────┬────────┘         │                                                │
-│  └───────────┼────────────────────┼───────────────────┘                                               │
-│              │   CHAP auth        │                                                                   │
-│              └────────┬───────────┘                                                                   │
-│                       │                                                                               │
-│  ┌────────────────────▼──────────────────────────────┐                                                │
-│  │  LUN Mapping (initiator IQN → LUN)                │                                                │
-│  │  iqn.2024-01.com.example:server01 ──► LUN 0 (50G) │                                                │
-│  │  iqn.2024-01.com.example:server02 ──► LUN 1 (100G)│                                                │
-│  └───────────────────────────────────────────────────┘                                                │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 ## Target Address Format
 

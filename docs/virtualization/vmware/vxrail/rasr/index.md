@@ -11,47 +11,10 @@ unrecoverable by normal means and must be rebuilt from scratch before rejoining 
 
 *Applies to: VxRail 7.x · 8.x*
 </div>
+![VxRail — Rapid Appliance Self Recovery (RASR)](../../../../assets/virtualization-vmware-vxrail-rasr-index.svg)
 
-```text
-┌──────────────────────────── VxRail — RASR (Rapid Appliance Self Recovery) ────────────────────────────┐
-│                                                                                                       │
-│   RASR rebuilds a VxRail node that is unrecoverable by normal means                                   │
-│   Boot from RASR USB/ISO → wipe local disks → re-image ESXi + VxRail Manager → rejoin cluster         │
-│   Cluster must tolerate the absent node for the full rebuild duration (vSAN FTT ≥ 1)                  │
-│   Verify vSAN FTT compliance and object rebuild health before and after the procedure                 │
-│                                                                                                       │
-│   When to use RASR                                                                                    │
-│   ESXi corrupt or unbootable; VxRail Manager DB broken; node stuck post-upgrade; hardware swap        │
-│   Prerequisite: RASR USB prepared; ISO version matches cluster build; Dell GSS case open              │
-│                                                                                                       │
-│   Phase 1 — Pre-RASR checks                                                                           │
-│   Confirm vSAN FTT compliance; check cluster degraded health; back up node config                     │
-│   Verify RASR ISO version matches current cluster LCM baseline                                        │
-│   Open Dell GSS support case before starting; note iDRAC IP and vConsole access                       │
-│                                                                                                       │
-│   Phase 2 — RASR execution                                                                            │
-│   Boot node from USB or iDRAC virtual media (vMedia); follow RASR wizard prompts                      │
-│   Full disk wipe + re-image: ESXi boot bank, cache partition, all local storage cleared               │
-│   VxRail Manager re-installs and re-registers the node with the cluster                               │
-│                                                                                                       │
-│   Phase 3 — Post-RASR validation                                                                      │
-│   Node rejoins cluster; vSAN object rebuild begins; monitor until health restored                     │
-│   Verify: alarms cleared; iDRAC FW matches; health check passes; vSAN compliance confirmed            │
-│                                                                                                       │
-│   Physical infrastructure                                                                             │
-│   Dell PowerEdge node; iDRAC vConsole/vMedia; USB 3.0 drive ≥16 GB; ToR switch port stays cabled      │
-│                                                                                                       │
-│   Key terms:                                                                                          │
-│   RASR ISO     = Dell bootable image; ESXi installer + VxRail Manager baseline build                  │
-│   RASR USB     = USB drive with RASR ISO; inserted locally or mounted via iDRAC vMedia                │
-│   re-image     = full wipe and reinstall of ESXi boot bank, cache partition, and local disks          │
-│   Cluster FTT  = Failures To Tolerate; vSAN policy; ≥1 required so cluster survives node rebuild      │
-│   re-register  = VxRail Manager re-adds rebuilt node; re-provisions vSAN disk groups                  │
-│   vMedia       = iDRAC virtual media; mounts remote ISO as USB without physical media                 │
-│   LCM baseline = exact ESXi + VxRail Manager build version the RASR ISO must match                    │
-│   object rebuild= vSAN re-replicates data components onto the node after it rejoins cluster           │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ---
 

@@ -8,6 +8,8 @@ tags:
 <div class="kb-summary">
 This policy defines mandatory retention periods, storage tier assignments, and deletion procedures for all data types across the enterprise. Retention decisions are driven by business need, legal obligation, and regulatory requirement — not storage cost alone.
 </div>
+![Data Retention Policy](../../../assets/security-data-protection-data-retention-policy-index.svg)
+
 
 ---
 
@@ -39,45 +41,7 @@ flowchart LR
     D -- Long-term archive --> J[Cold / Archive Storage\nTape / Object Storage]
     J --> G
 ```
-```text
-┌─────────────────────────────── Data Protection — Data Retention Policy ───────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │     Retention policy: minimum time data must be kept; maximum time before secure deletion     │   │
-│   │     Legal hold suspends all deletion for data subject to litigation or regulatory inquiry     │   │
-│   │        Verify deletions: cryptographic erasure or physical destruction with certificate       │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             Retention Schedules              │  │             Deletion Procedures             │   │
-│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
-│   │         Financial records: 7+ years          │  │          Check no active legal hold         │   │
-│   │         HR records: varies by region         │  │         Confirm retention period met        │   │
-│   │         Audit/security logs: 1-3 yr          │  │         Cryptographic erasure or DoD        │   │
-│   │          Email: 3-7 years (policy)           │  │          Certificate of destruction         │   │
-│   │            Backups: per RPO tier             │  │           Remove from all systems           │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   │    Data type     │    Min retain    │     Max retain    │    Regulation    │  Delete method   │   │
-│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
-│   │    Financial     │     7 years      │      10 years     │    SOX/local     │   Secure erase   │   │
-│   │  Security logs   │      1 year      │      3 years      │    PCI / ISO     │    Log purge     │   │
-│   │   PII/personal   │     2 years      │      5 years      │       GDPR       │   Crypto erase   │   │
-│   │     Backups      │     Per RPO      │      90 days      │      Policy      │   Tape destroy   │   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    Legal hold       = Suspend all deletion for data subject to litigation; placed by legal team       │
-│    Crypto erasure   = Delete encryption key so data is permanently unreadable without destruction     │
-│    DoD 5220.22-M    = US DoD secure wipe standard; multiple overwrite passes on magnetic media        │
-│    Retention period = Minimum time data must exist before deletion can be authorised                  │
-│    eDiscovery       = Search and collection of electronic data for legal proceedings                  │
-│    Disposition      = Final action on data: delete, archive, or transfer at end of retention          │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 ---
 

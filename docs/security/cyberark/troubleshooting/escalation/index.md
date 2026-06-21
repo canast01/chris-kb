@@ -12,36 +12,10 @@ CyberArk PAM support escalation: how to run the DiagnosticTool, collect componen
 
 *Applies to: CyberArk PAM (Self-Hosted) 12.x / 13.x*
 </div>
+![CyberArk — Escalation](../../../../assets/security-cyberark-troubleshooting-escalation-index.svg)
 
-```text
-┌─────────────────────────── Security — CyberArk Escalation ────────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Cyberark escalation: severity triage, vendor support contact, and required artifacts     │   │
-│   │         L1: basic checks, restart services; L2: log analysis, config review, vendor SR        │   │
-│   │        Severity: P1 production down → immediate SR + on-call page; P2/P3 business hours       │   │
-│   │         Before escalating: collect DiagnosticTool bundle, event timeline, change history      │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Escalation Triggers (P1/P2)         │  │           Required Artifacts                │   │
-│   │       Vault service not responding           │  │        DiagnosticTool output (Vault)        │   │
-│   │       PVWA login page returning 503          │  │        PVWA event log (last 48h)            │   │
-│   │       CPM failing all password changes       │  │        CPM log: PMConsole.log               │   │
-│   │       PSM sessions refusing connections      │  │        PSM log: PSMConsole.log              │   │
-│   │       PrivateArk DB inaccessible             │  │        System Health from PVWA UI           │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Vault      = PrivateArk Server (Windows service); stores credentials in encrypted Vault    │   │
-│   │    CPM        = Central Policy Manager; rotates passwords on managed accounts                 │   │
-│   │    PSM        = Privileged Session Manager; proxy for RDP/SSH sessions to target systems      │   │
-│   │    PVWA       = Password Vault Web Access; the web UI for end users and admins                │   │
-│   │    DR Vault   = Passive replication target; becomes primary on Vault failover                 │   │
-│   │    DiagTool   = CyberArk DiagnosticTool; run on Vault server to collect support bundle       │    │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Before you begin
 

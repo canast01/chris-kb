@@ -16,29 +16,10 @@ tags:
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
+![vCenter Certificate Rotation Runbook](../../../../assets/virtualization-vmware-operations-runbooks-certificate-rotati.svg)
 
-```text
-┌──────────────────────────── vCenter Certificate Rotation — Runbook ───────────────────────────────────┐
-│                                                                                                       │
-│  OVERVIEW                                                                                             │
-│  vCenter manages 4 certificate types: Machine SSL, Solution User, VMCA root, and STS signing          │
-│  Rotation trigger: 90 days to expiry, or a compromise, or a CA root change                            │
-│  Tool: vSphere Certificate Manager (certificate-manager CLI on VCSA)                                  │
-│                                                                                                       │
-│  CERTIFICATE TYPES                                                                                    │
-│  Machine SSL   = serves HTTPS on port 443; what browsers and API clients see                          │
-│  Solution User = machine-to-machine certs for vCenter services (vpxd, vsphere-webclient, etc.)        │
-│  VMCA root     = built-in VMware CA that signs all machine SSL and solution user certs                │
-│  STS signing   = token signing cert for SSO; rotation most disruptive — all sessions invalidated      │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│  VMCA      = VMware Certificate Authority; built-in CA on the VCSA                                    │
-│  STS       = Security Token Service; SSO component that issues and validates tokens                   │
-│  VECS      = VMware Endpoint Certificate Store; holds active certs used by vCenter services           │
-│  vmafd     = vSphere Authentication Framework Daemon; manages cert distribution                       │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Before you begin
 

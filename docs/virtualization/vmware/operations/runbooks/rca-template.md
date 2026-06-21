@@ -12,37 +12,10 @@ RCA Template reference covering Summary, Impact, Timeline, Root Cause, Resolutio
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
+![RCA Template](../../../../assets/virtualization-vmware-operations-runbooks-rca-template.svg)
 
-```text
-┌───────────────────────────────── RCA Template — Root Cause Analysis ──────────────────────────────────┐
-│                                                                                                       │
-│    Complete after every P1/P2 incident; attach to change record and share with team                   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              Document Sections               │  │                 Action Items                │   │
-│   │        ──────────────────────────────        │  │        ─────────────────────────────        │   │
-│   │            Summary: what happened            │  │           Immediate: already done           │   │
-│   │           Impact: systems + users            │  │          Short-term: within 7 days          │   │
-│   │           Timeline: ordered events           │  │        Long-term: prevent recurrence        │   │
-│   │          Root cause: why it failed           │  │           Owner assigned per item           │   │
-│   │             Contributing factors             │  │                Due dates set                │   │
-│   │                What went well                │  │               Tracked in ITSM               │   │
-│   │               Lessons learned                │  │           Reviewed at team meeting          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    Root cause      = The single underlying reason the incident occurred; not a symptom                │
-│    Contributing    = Factors that made the failure worse or harder to detect                          │
-│    Timeline        = Chronological event log from first detection to resolution                       │
-│    5 Whys          = Ask "why" five times to drill from symptom to root cause                         │
-│    Action item     = Specific task with owner and due date to prevent recurrence                      │
-│    Blameless RCA   = Focus on system/process failures, not individual mistakes                        │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

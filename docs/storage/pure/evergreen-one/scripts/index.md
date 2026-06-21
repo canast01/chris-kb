@@ -10,6 +10,8 @@ Evergreen//One automation scripts: Python examples for subscription consumption 
 
 *Applies to: Evergreen//One*
 </div>
+![Evergreen//One — Scripts](../../../../assets/storage-pure-evergreen-one-scripts-index.svg)
+
 
 ---
 

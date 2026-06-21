@@ -8,6 +8,8 @@ tags:
 <div class="kb-summary">
 Restoration in the IRE follows a staged process: identify the latest clean backup within the retention window that predates the compromise event, retrieve and mount it in isolation, restore to isolated staging, validate in the clean room, then reintroduce to production only after sign-off. Retention windows of 30–90 days are typical for ransomware scenarios.
 </div>
+![IRE — Restore](../../../../assets/backup-dr-operations-ire-restore-index.svg)
+
 
 ## Restore Workflow
 
@@ -28,37 +30,7 @@ flowchart TD
     K --> L[Reintroduce to production\nIRE isolation maintained until complete]
     L --> M([IRE stand-down])
 ```
-```text
-┌───────────────────────────────────────────── IRE Restore ─────────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │         IRE Restore — step-by-step clean restore from vault to clean-room environment         │   │
-│   │                   See product-specific sub-sections for detailed procedures                   │   │
-│   │          DR success depends on: documented runbooks · tested failover · validated RTO         │   │
-│   │          Minimum DR posture: defined RPO/RTO · tested backups · known escalation path         │   │
-│   │        Test DR procedures quarterly; document results; update runbooks after each test        │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  Production site · DR site · Replication link · Management network · Vault network                    │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  RPO           = Recovery Point Objective; max acceptable data loss window                            │
-│  RTO           = Recovery Time Objective; max acceptable downtime before restore                      │
-│  Failover      = activating the DR site; redirecting hosts to replica resources                       │
-│  Failback      = returning operations to production site after DR resolved                            │
-│  Runbook       = step-by-step documented procedure for a specific DR scenario                         │
-│  IRE           = Isolated Recovery Environment; air-gapped clean-room for recovery                    │
-│  Clean Room    = isolated vCenter + workstations for cyber recovery validation                        │
-│  Air Gap       = network isolation preventing attacker lateral movement to vault                      │
-│  DR Test       = planned failover test; validates RTO without real disaster                           │
-│  Replication   = continuous or periodic data copy to secondary site or vault                          │
-│  Recovery Tier = classification: hot/warm/cold based on RTO requirement                               │
-│  BIA           = Business Impact Analysis; drives RPO/RTO targets per system                          │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 ### Database Restore
 

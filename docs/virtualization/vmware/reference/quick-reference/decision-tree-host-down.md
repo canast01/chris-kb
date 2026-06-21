@@ -10,6 +10,8 @@ Use this when a vSphere host shows `Not Responding` or `Disconnected` in vCenter
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
+![Decision Tree: Host Down](../../../../assets/virtualization-vmware-reference-quick-reference-decision-tre.svg)
+
 
 ```text
                     Host: Not Responding / Disconnected

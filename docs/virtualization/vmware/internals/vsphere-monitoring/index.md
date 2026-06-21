@@ -12,26 +12,10 @@ Reference for vSphere observability. Covers performance chart metrics (CPU Ready
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
+![vSphere Monitoring — Performance, Logs, and Skyline](../../../../assets/virtualization-vmware-internals-vsphere-monitoring-index.svg)
 
-```text
-┌────────────────────────────────────── vSphere Monitoring Stack ───────────────────────────────────────┐
-│                                                                                                       │
-│  ┌──────────────────────────────────────────────────────────────────────────┐                         │
-│  │  Skyline / Aria Operations (external telemetry → proactive advisories)  │                          │
-│  └──────────────────────────────────┬─────────────────────────────────────┘                           │
-│                                     │                                                                 │
-│  ┌──────────────────────────────────▼─────────────────────────────────────┐                           │
-│  │  vCenter Performance Charts  │  vCenter Event/Alarm Engine             │                           │
-│  │  Real-time: 20s intervals    │  Triggered alerts → email / SNMP trap   │                           │
-│  │  Historical: 5m / 1h / 1d   │  Tasks + Events log in vCenter DB       │                            │
-│  └────────────────┬─────────────────────────────────────────────────────┘                             │
-│                   │                                                                                   │
-│  ┌────────────────▼─────────────────────────────────────────────────────┐                             │
-│  │  ESXi Host: ESXTOP / RESXTOP (real-time)  │  /var/log/* (persistent) │                             │
-│  │  vmkernel.log · vobd.log · fdm.log         │  storagerm.log           │                            │
-│  └──────────────────────────────────────────────────────────────────────┘                             │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ---
 

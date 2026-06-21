@@ -8,31 +8,10 @@ tags:
 <div class="kb-summary">
 SNMP is the primary protocol for collecting metrics from network devices, storage arrays, and infrastructure components that do not expose native Prometheus endpoints. This page covers integrating SNMP with the main monitoring platforms.
 </div>
+![SNMP in Monitoring](../../../../assets/networking-protocols-snmp-monitoring-index.svg)
 
-```text
-┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
-│  Infrastructure                                                                                       │
-│  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐                                                  │
-│  │ Switches │ │ Routers  │ │ Storage  │ │   UPS    │                                                  │
-│  └────┬─────┘ └────┬─────┘ └────┬─────┘ └────┬─────┘                                                  │
-│       │ SNMP Poll  │ UDP/161     │             │                                                      │
-│       └────────────┴────────────┴─────────────┘                                                       │
-│                            │  UDP 162 TRAPs                                                           │
-│             ┌──────────────▼──────────────────┐                                                       │
-│             │  SNMP Exporter / NMS Collector  │                                                       │
-│             │  (Prometheus snmp_exporter,     │                                                       │
-│             │   Zabbix proxy, LibreNMS)        │                                                      │
-│             └──────────────┬──────────────────┘                                                       │
-│                            │                                                                          │
-│             ┌──────────────▼──────────────────┐                                                       │
-│             │  Prometheus / Zabbix / LibreNMS │                                                       │
-│             └──────────────┬──────────────────┘                                                       │
-│                            │                                                                          │
-│             ┌──────────────▼──────────────────┐                                                       │
-│             │  Grafana dashboards + Alertmanager│                                                     │
-│             └─────────────────────────────────┘                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Architecture
 

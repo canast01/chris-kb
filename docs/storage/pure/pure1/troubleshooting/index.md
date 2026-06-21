@@ -6,6 +6,8 @@ search:
   boost: 1.5
 ---
 # Pure1 — Troubleshooting
+![Pure1 — Troubleshooting](../../../../assets/storage-pure-pure1-troubleshooting-index.svg)
+
 
 ```bash
 # Step 1: Check array connectivity from Purity CLI
@@ -29,38 +31,7 @@ purearray set --proxy https://<proxy-host>:<port>
 # Array management IP must have outbound TCP 443 to pure1.purestorage.com
 # Verify with network team if connectivity test fails
 ```
-```text
-┌─────────────────────────────────────── Pure1 — Troubleshooting ───────────────────────────────────────┐
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               Phonehome Issues               │  │             Alert / Data Issues             │   │
-│   │            Check TCP 443 outbound            │  │             Verify array status             │   │
-│   │            Verify DNS resolution             │  │                Check data age               │   │
-│   │            purearray setattr show            │  │              Check alert config             │   │
-│   │             Re-enable phonehome              │  │            Test webhook delivery            │   │
-│   │             Check proxy settings             │  │                Open TAC case                │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  Troubleshoot from array CLI (purearray) and pure1.purestorage.com UI                                 │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Disconnected = Array shows Disconnected in Pure1; phonehome not received > 5 min                     │
-│  TCP 443 test = From array: curl -s https://pure1.purestorage.com >/dev/null; check rc                │
-│  DNS resolution = Array must resolve pure1.purestorage.com; check array DNS settings                  │
-│  purearray setattr show = View phonehome enabled/disabled state on FlashArray                         │
-│  Re-enable phonehome = purearray setattr --phonehome true on FlashArray CLI                           │
-│  Proxy settings = purearray setattr --proxy http://proxy:port if array uses proxy                     │
-│  Data age = Time since last phonehome; check in Pure1 > array detail                                  │
-│  Alert config = Verify email and webhook targets in Pure1 > Admin > Notifications                     │
-│  Webhook test = Pure1 UI has a test button; verify delivery to endpoint                               │
-│  TAC case = support.purestorage.com; include array serial and phonehome status                        │
-│  FlashBlade phonehome = pureauthapp setattr --phonehome true on FlashBlade CLI                        │
-│  Firewall rule = Allow outbound TCP 443 from array mgmt IP to pure1.purestorage.com                   │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 ```text
 1. Pure1 > Administration > Notifications > [Rule]
    - Verify the rule is enabled

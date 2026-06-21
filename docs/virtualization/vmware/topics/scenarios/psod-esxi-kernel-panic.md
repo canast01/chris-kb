@@ -15,37 +15,10 @@ and identifying driver/firmware mismatch as the most common production cause.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
+![PSOD — ESXi Kernel Panic (Purple Screen of Death)](../../../../assets/virtualization-vmware-topics-scenarios-psod-esxi-kernel-pani.svg)
 
-```text
-┌─────────────────────────────── ESXi PSOD — Response and Diagnosis Flow ───────────────────────────────┐
-│                                                                                                       │
-│   ┌─────────────────────────────────────────────────────────────────────────────────────────────────┐ │
-│   │  START: Host goes offline; vCenter shows "Not Responding"; VMs show "Disconnected"              │ │
-│   └──────────────────────────────────────────┬──────────────────────────────────────────────────────┘ │
-│                                              │                                                        │
-│              ┌───────────────────────────────┼───────────────────────────────┐                        │
-│              ▼                               ▼                               ▼                        │
-│   ┌─────────────────────┐        ┌─────────────────────┐        ┌─────────────────────┐               │
-│   │ vCenter HA Monitor  │        │ iDRAC / iLO console │        │ Photograph / capture│               │
-│   │ VM Restarts tab →   │        │ confirm purple screen│        │ PSOD backtrace text │              │
-│   │ are VMs coming back │        │ vs other crash state │        │ before host reboots │              │
-│   └────────┬────────────┘        └────────┬────────────┘        └─────────┬───────────┘               │
-│            │                              │                               │                           │
-│            ▼                              ▼                               ▼                           │
-│   ┌─────────────────────┐        ┌─────────────────────┐        ┌─────────────────────┐               │
-│   │ HA restarting VMs   │        │ iDRAC SEL → hardware│        │ Note: panic module  │               │
-│   │ on other hosts      │        │ events (DIMM/NIC/HBA│        │ name (#PF/#GP/vmw_*) │              │
-│   └─────────────────────┘        └─────────────────────┘        └─────────┬───────────┘               │
-│                                                                            │                          │
-│   ┌────────────────────────────────────────────────────────────────────────▼────────────────────────┐ │
-│   │  Host reboots → SSH in → retrieve vmkernel.log, vmksummary.log → generate vm-support bundle    │  │
-│   └─────────────────────────────────────────────────────────────────────────────────────────────────┘ │
-│                                                                                                       │
-│   ┌─────────────────────────────────────────────────────────────────────────────────────────────────┐ │
-│   │  Match module name to VMware KB → check HCL for driver+firmware combination → LCM if VxRail    │  │
-│   └─────────────────────────────────────────────────────────────────────────────────────────────────┘ │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Products Involved
 

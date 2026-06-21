@@ -8,13 +8,10 @@ tags:
 <div class="kb-summary">
 Top-10 VCF commands for SDDC Manager operations, workload domains, LCM upgrades, and password management via REST API and CLI.
 </div>
+![VCF Cheat Sheet](../../assets/reference-cheat-sheets-vcf.svg)
 
-```text
-┌──────────────────────────────────────── VCF Cheat Sheet ──────────────────────────────────────────────┐
-│  CLI: vcf-password-ops  ·  REST API: https://sddc-mgr/v1  ·  LCM: lifecycle management                │
-│  Categories: Domains · Hosts · LCM · Passwords · Bundles · Health                                     │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## SDDC Manager REST API
 

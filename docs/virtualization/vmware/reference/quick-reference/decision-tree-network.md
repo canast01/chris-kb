@@ -10,6 +10,8 @@ Use this when a VM cannot communicate on the network — applies to both NSX-T o
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
+![Decision Tree: VM Network Issue](../../../../assets/virtualization-vmware-reference-quick-reference-decision-tre.svg)
+
 
 ```text
                      VM: Cannot communicate

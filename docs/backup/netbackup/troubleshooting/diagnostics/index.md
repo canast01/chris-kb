@@ -12,39 +12,10 @@ NetBackup diagnostic commands: query failed jobs with bpdbjobs, check storage un
 
 *Applies to: NetBackup 10.x on Linux master/media servers*
 </div>
+![NetBackup — Diagnostics](../../../../assets/backup-netbackup-troubleshooting-diagnostics-index.svg)
 
-```text
-┌─────────────────────────────────────── NetBackup — Diagnostics ───────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   Start here: bpdbjobs (failed jobs) → bpstulist (storage) → bppllist (policy) → VxUL logs  │     │
-│   │   Exit code 196: connectivity; exit code 58: media server; exit code 13: client              │    │
-│   │   VxUL logs in /usr/openv/logs/ — query with vxlogview -o <OID> -d 24h                      │     │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                Log Collection                │  │               Live Diagnostics              │   │
-│   │   vxlogview -o 117 -d 24h (nbpem)           │  │   bpdbjobs -jobid <id> -report              │    │
-│   │   vxlogview -o 118 -d 24h (nbjm)            │  │   nbemmcmd -listhosts -machinetype media    │    │
-│   │   /usr/openv/netbackup/logs/ (legacy)        │  │   tpconfig -d (tape drives)                 │   │
-│   │   nbsupport bundle for Veritas case          │  │   bpstulist -U (storage units)              │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  Master server (catalog + scheduler) · media server(s) (data movers) · storage units (MSDP / tape)    │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│  vnetd       = network daemon on port 1556; multiplexes all client-master-media communications        │
-│  bpdbjobs    = CLI to query job history: status, duration, exit code, and detailed error text         │
-│  nbpem       = policy execution manager (OID 117); generates and dispatches jobs                      │
-│  nbjm        = job manager (OID 118); sends jobs to media server, tracks job state                    │
-│  MSDP        = Media Server Deduplication Pool; inline variable-length block deduplication            │
-│  bplist      = lists available backup images for a client, policy, or date range                      │
-│  vxlogview   = VxUL (Unified Logging) viewer; query logs by OID, date range, severity                 │
-│  nbsupport   = generates a compressed diagnostic bundle with all logs and configuration               │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ```mermaid
 graph TD

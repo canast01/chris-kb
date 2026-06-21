@@ -16,6 +16,8 @@ search:
 ---
 
 # AWS — Account and Landing Zone Setup
+![AWS — Account and Landing Zone Setup](../../../assets/cloud-aws-deploy-index.svg)
+
 
 This guide covers building a multi-account AWS Landing Zone from scratch: AWS Organizations, IAM Identity Center, CloudTrail, AWS Config, VPC networking, IAM roles, GuardDuty, and Security Hub.
 

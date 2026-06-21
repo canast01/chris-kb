@@ -4,6 +4,8 @@ tags:
   - operations
 ---
 # Confluence — Operations Scripts
+![Confluence — Operations Scripts](../../../../assets/itsm-confluence-operations-scripts-index.svg)
+
 
 ```bash
 # Common variables — set these in your shell or CI/CD environment
@@ -17,37 +19,7 @@ export PGPASSWORD="<db-password>"
 export SHARED_HOME="/mnt/confluence-shared"
 export BACKUP_DIR="/backup/confluence"
 ```
-```text
-┌─────────────────────────────────── Confluence — Operations Scripts ───────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                            Confluence Operational Script Reference                            │   │
-│   │        backup.sh: pg_dump → tar CONFLUENCE_HOME/attachments → gpg encrypt → push to S3        │   │
-│   │               reindex.sh: curl REST API to trigger reindex; poll until complete               │   │
-│   │             health-check.sh: curl /status; check disk, heap via JMX, DB conn test             │   │
-│   │             space-export.sh: REST API POST to /export-space; download exported ZIP            │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  Confluence app VMs · PostgreSQL DB · NFS home · S3 or NFS backup target                              │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  backup.sh      = shell script: pg_dump + tar home + gpg + s3 copy; run via cron                      │
-│  reindex.sh     = REST call to trigger reindex: POST /rest/api/index/reindexAll                       │
-│  health-check.sh = curl /status + df + JMX heap query + psql connection check                         │
-│  space-export.sh = Confluence REST space export; useful for archival or migration                     │
-│  pg_dump        = PostgreSQL utility; creates database backup file                                    │
-│  gpg encrypt    = GPG symmetric or asymmetric encryption of backup archives                           │
-│  s3 copy        = aws s3 cp to push backup to S3 bucket with lifecycle policy                         │
-│  JMX            = Java Management Extensions; expose heap/thread metrics for scripts                  │
-│  cron           = schedule backup.sh and health-check.sh at required intervals                        │
-│  REST auth      = scripts use PAT in Authorization: Bearer header for API calls                       │
-│  Space export   = produces a ZIP archive; importable to another Confluence instance                   │
-│  Poll loop      = reindex.sh polls /rest/api/index/reindexAll until status=DONE                       │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 ```bash
 #!/bin/bash
 # stale-page-cleanup.sh

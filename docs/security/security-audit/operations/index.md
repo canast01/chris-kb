@@ -8,44 +8,10 @@ tags:
 <div class="kb-summary">
 Step-by-step procedures for conducting infrastructure security audits, reviewing firewall rules, auditing privileged accounts, checking certificates, and tracking findings to closure.
 </div>
+![Security Audit — Procedures](../../../assets/security-security-audit-operations-index.svg)
 
-```text
-┌───────────────────────────────────── Security Audit — Operations ─────────────────────────────────────┐
-│                                                                                                       │
-│   Scope: servers, network devices, hypervisors, storage — defined from CMDB; agreed with asset owners │
-│   Tools: CIS-CAT Pro (benchmark), nmap (port scan), Venafi/ADCS (cert expiry), Wazuh/Tripwire (FIM)   │
-│   Severity ratings: Critical / High / Medium / Low / Informational                                    │
-│   Report cadence: draft → owners review (5 days factual check) → CISO sign-off → distribute           │
-│                                                                                                       │
-│   Infrastructure audit checks                                                                         │
-│   CIS benchmark  CIS-CAT Pro against each OS/platform; prioritise Level 1 failures                    │
-│   Port scan      nmap -sV -p 1-65535; flag unexpected open services                                   │
-│   vSphere       vSphere Security Guide compliance; ESXi SSH disabled on all production hosts          │
-│   Privileged accts Export DA/BA/Schema Admins; compare to register; confirm MFA; verify PAM coverage  │
-│   Cert expiry    Scan all HTTPS endpoints; 60d = medium; 30d = high; 7d = critical finding            │
-│   FIM            Wazuh on-demand scan; flag unapproved changes in /etc/, C:\Windows\System32\         │
-│                                                                                                       │
-│   Firewall rule review                                                                                │
-│   Export rule set from each firewall (Palo Alto / Fortinet / NSX-T)                                   │
-│   Flag rules with no change ticket; flag any/any rules; flag zero-hit rules (90 days)                 │
-│   Raise CR to restrict or remove; re-scan after changes to confirm effectiveness                      │
-│                                                                                                       │
-│   Remediation tracking                                                                                │
-│   Log each finding in GRC: ID, severity, control ref, owner, SLA date                                 │
-│   Critical/High: dedicated remediation meeting within 5 business days                                 │
-│   Monthly status: total findings, closed, in-progress, overdue, avg days to close                     │
-│   Target: 90% of Critical findings closed within SLA                                                  │
-│                                                                                                       │
-│   Key terms:                                                                                          │
-│   CIS-CAT Pro    = CIS Configuration Assessment Tool; scores host against CIS Benchmark profile       │
-│   FIM           = File Integrity Monitoring; detects unexpected changes to critical system files      │
-│   nmap -sV       = version detection scan; identifies service type and version on open ports          │
-│   ADCS           = Active Directory Certificate Services; Windows PKI for internal certificate signing│
-│   Palo Alto CLI  = show rule-hit-count vsys1 security rules to find zero-hit firewall rules           │
-│   suspect DB     = SQL Server state after corruption; do not restart or restore without DBA review    │
-│   working paper  = audit evidence document per finding: observation, evidence, risk, recommendation   │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Before you begin
 

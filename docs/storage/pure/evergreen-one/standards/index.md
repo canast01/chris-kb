@@ -10,6 +10,8 @@ Pure Storage Evergreen//One Standards reference covering Naming Conventions, Bui
 
 *Applies to: Evergreen//One*
 </div>
+![Pure Storage Evergreen//One Standards](../../../../assets/storage-pure-evergreen-one-standards-index.svg)
+
 
 ```text
   Naming & Configuration Standards

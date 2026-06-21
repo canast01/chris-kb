@@ -8,13 +8,10 @@ tags:
 <div class="kb-summary">
 Top-10 ESXi shell commands for host management, networking, storage, and VM control via <code>esxcli</code>.
 </div>
+![ESXi Cheat Sheet](../../assets/reference-cheat-sheets-esxi.svg)
 
-```text
-┌─────────────────────────────────────── ESXi Cheat Sheet ──────────────────────────────────────────────┐
-│  CLI: esxcli (local shell or remote with --server)  ·  Also: vim-cmd, esxcfg-*                        │
-│  Categories: Network · Storage · VMs · System · NIC · Maintenance                                     │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Common commands
 

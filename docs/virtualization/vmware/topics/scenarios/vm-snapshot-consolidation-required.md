@@ -14,36 +14,10 @@ preventing snapshot sprawl through SPBM policy and backup integration.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
+![VM Snapshot Consolidation Required](../../../../assets/virtualization-vmware-topics-scenarios-vm-snapshot-consolida.svg)
 
-```text
-┌─────────────────────── VM Snapshot Consolidation Required — Investigation Flow ───────────────────────┐
-│                                                                                                       │
-│  OVERVIEW                                                                                             │
-│  Delta files exist on disk but are no longer tracked in the VM's snapshot descriptor                  │
-│  Caused by failed snapshot deletions, backup agent errors, or abrupt ESXi shutdowns                   │
-│                                                                                                       │
-│  START: vCenter warning "Virtual machine disks consolidation is needed" on one or more VMs            │
-│                                                                                                       │
-│  STEP 1 — Assess Before Acting                                                                        │
-│  Check Snapshot Manager: are tracked snapshots still present?                                         │
-│  Check datastore disk space: delta files may have grown large                                         │
-│                                                                                                       │
-│  STEP 2 — Attempt vCenter Consolidation                                                               │
-│  Right-click VM → Snapshots → Consolidate                                                             │
-│                                                                                                       │
-│  STEP 3 — Resolution Branch                                                                           │
-│  Consolidation succeeds: verify disk chain is flat · warning clears                                   │
-│  Consolidation fails (locked file / insufficient space / stale snapshot.vmsd):                        │
-│    Manual resolution: stun VM · vmkfstools -i · rename descriptor · VMware Support                    │
-│                                                                                                       │
-│  CLOSE: Warning cleared · vmx log shows flat disk chain · no orphaned -delta.vmdk files               │
-│                                                                                                       │
-│  KEY TERMS                                                                                            │
-│  Delta file (-delta.vmdk) — changed-block tracking file created when a snapshot is taken              │
-│  snapshot.vmsd — descriptor file tracking all snapshot chains; becomes stale after failed deletes     │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Products Involved
 

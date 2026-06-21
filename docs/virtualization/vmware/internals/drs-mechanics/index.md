@@ -10,56 +10,10 @@ DRS evaluates cluster imbalance every 5 minutes using a per-host demand score ag
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
+![DRS Mechanics](../../../../assets/virtualization-vmware-internals-drs-mechanics-index.svg)
 
-```text
-┌──────────────────────────── DRS Mechanics — Imbalance Score and Migration ────────────────────────────┐
-│                                                                                                       │
-│  DRS calculates cluster imbalance every 5 min using per-host demand vs fair-share                     │
-│  entitlement; migration priority bands 1-5 control which vMotions are triggered.                      │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │         Imbalance Score Calculation          │  │           Migration Priority Bands          │   │
-│   │      Every 5 min: demand vs entitlement      │  │         Band 1: benefit > threshold         │   │
-│   │        Demand: actual resource usage         │  │           Band 5: minimal benefit           │   │
-│   │      Entitlement: fair share allocation      │  │         Default: trigger band 1 only        │   │
-│   │        Score 1-5: migration threshold        │  │          Conservative: band 1 only          │   │
-│   │       Memory: normalized consumed used       │  │            Aggressive: bands 1-5            │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Imbalance score is cluster-level aggregate; DRS moves VMs to reduce it below band.                   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                Predictive DRS                │  │          Reservation vs Entitlement         │   │
-│   │       Requires Aria Operations plugin        │  │         Reservation: guaranteed min         │   │
-│   │         Predicts demand 60 min ahead         │  │         Entitlement: DRS fair share         │   │
-│   │       Pre-emptive vMotion before peak        │  │          Shares: weight for excess          │   │
-│   │         Threshold: user configurable         │  │           Limit: hard cap on usage          │   │
-│   │         Reduces peak-time imbalance          │  │        DRS uses entitlement not limit       │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  ESXi hosts with physical CPU and RAM; DRS reads per-host performance counters                        │
-│  via vmkernel; vCenter must be connected to all hosts for DRS to operate.                             │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Imbalance score  = cluster-level metric; 1=balanced, 5=highly imbalanced                             │
-│  Entitlement      = fair share of cluster resources allocated by DRS                                  │
-│  Demand           = actual resource consumption by VMs on a host                                      │
-│  Migration band   = 1-5 priority; DRS triggers when score > band threshold                            │
-│  Normalized consumed= memory metric: active + ballooned + swapped                                     │
-│  Reservation      = guaranteed minimum resource; DRS must honour it                                   │
-│  Shares           = relative weight; used when cluster is in contention                               │
-│  Limit            = hard cap; DRS does not use for imbalance calculation                              │
-│  Predictive DRS   = Aria Operations plugin; sends demand forecast to DRS                              │
-│  Conservative     = only most-needed vMotions (band 1 threshold)                                      │
-│  Aggressive       = all beneficial vMotions (bands 1-5 triggered)                                     │
-│  vMotion          = live migration of VM between hosts; zero downtime                                 │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ```mermaid
 graph TD

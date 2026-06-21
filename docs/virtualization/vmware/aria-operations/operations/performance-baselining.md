@@ -5,6 +5,8 @@ tags:
   - vmware
 ---
 # Performance — Baselining
+![Performance — Baselining](../../../../assets/virtualization-vmware-aria-operations-operations-performance.svg)
+
 
 ```bash
 # CPU — 30 days from sar
@@ -22,37 +24,7 @@ iostat -x 5 12 > /tmp/iostat-baseline.txt
 free -m
 vmstat -S M 5 12
 ```
-```text
-┌────────────────────────────────────── Performance — Baselining ───────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │       Baseline: capture normal performance before a change so deviations are detectable       │   │
-│   │         Capture during representative load: peak business hours over 5-7 days minimum         │   │
-│   │         Store baselines in monitoring platform; compare post-change and post-incident         │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             Metrics to Baseline              │  │               Baseline Process              │   │
-│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
-│   │             CPU: avg, peak, p95              │  │             Collect 7-day window            │   │
-│   │         Memory: used, swap, balloon          │  │          Include peak business hrs          │   │
-│   │         Storage: IOPS, latency, tput         │  │          Export to spreadsheet/TSDB         │   │
-│   │          Network: bps, pps, errors           │  │            Tag with date + event            │   │
-│   │           App: response time, TPS            │  │             Compare after change            │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    p95 / p99    = 95th/99th percentile; shows tail latency; better than average for SLOs              │
-│    IOPS         = Input/Output Operations Per Second; key storage performance metric                  │
-│    Throughput   = Data volume per second (MB/s); different from IOPS; both matter                     │
-│    TSDB         = Time Series Database (e.g. Prometheus, InfluxDB); stores metric history             │
-│    Deviation    = Metric outside normal range; signals regression or capacity issue                   │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 ```yaml
 System:         web-prod-01
 Date:           2026-05-06

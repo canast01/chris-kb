@@ -9,40 +9,10 @@ PowerShell automation knowledge base covering execution engine internals, pipeli
 
 *Applies to: PowerShell 7.x*
 </div>
+![PowerShell](../../assets/automation-powershell-index.svg)
 
-```text
-┌───────────────────────────── PowerShell — Shell and Scripting Automation ─────────────────────────────┐
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │  PowerShell: Microsoft shell and scripting language; cross-platform since PowerShell 7 (Core) │   │
-│   │  Object pipeline: commands pass .NET objects, not text — enables structured data manipulation │   │
-│   │  Modules: PSGallery ecosystem; key infra modules: Az, ActiveDirectory, VMware.PowerCLI, Dell  │   │
-│   │  PowerShell 5.1 = Windows-only (built-in); PowerShell 7+ = cross-platform (separate install)  │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │         Architecture        │  │          Operations         │  │           Security          │   │
-│   │       Object pipeline       │  │      Script management      │  │       Execution policy      │   │
-│   │     Modules + PSGallery     │  │       Remoting (WinRM)      │  │       Constrained lang      │   │
-│   │      DSC configuration      │  │       Scheduled tasks       │  │        JEA endpoints        │   │
-│   │      PS7 cross-platform     │  │        Error handling       │  │       AMSI integration      │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │  PowerShell 5.1  = ships with Windows; cannot be updated separately; for Windows-only scripts │   │
-│   │       PowerShell 7    = .NET Core-based; install separately; recommended for new scripts      │   │
-│   │   PSGallery       = Microsoft-hosted module repository; Install-Module / Install-PSResource   │   │
-│   │   DSC             = Desired State Configuration; declarative resource model for node config   │   │
-│   │      WinRM           = Windows Remote Management; enables Invoke-Command to remote hosts      │   │
-│   │     JEA             = Just Enough Administration; constrained endpoint for delegated admin    │   │
-│   │    AMSI            = Antimalware Scan Interface; Windows scans PS scripts before execution    │   │
-│   │           PowerCLI        = VMware PowerShell module for vSphere/vSAN/NSX management          │   │
-│   │          Az module       = Microsoft Azure PowerShell module; replacement for AzureRM         │   │
-│   │          CmdLet          = compiled command implementing Verb-Noun naming convention          │   │
-│   │          Pipeline        = | character passes output objects as input to next command         │   │
-│   │      ExecutionPolicy = Restricted/AllSigned/RemoteSigned/Unrestricted; per-scope setting      │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 <div class="kb-grid kb-grid-3">
 
 <a class="kb-card" href="architecture/">

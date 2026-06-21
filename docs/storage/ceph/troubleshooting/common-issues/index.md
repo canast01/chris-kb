@@ -12,33 +12,10 @@ Troubleshooting guide for frequent Ceph problems: OSD down/out, PG degraded and 
 
 *Applies to: Ceph Reef / Squid*
 </div>
+![Ceph — Common Issues](../../../../assets/storage-ceph-troubleshooting-common-issues-index.svg)
 
-```text
-┌──────────────────────────────────────── Ceph — Common Issues ─────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   First: ceph health detail — every health warning has a code (e.g. OSD_DOWN, SLOW_OPS)      │    │
-│   │   OSD down: check disk health (smartctl), network, and OSD log before concluding hardware     │   │
-│   │   Nearfull/Full: add capacity or delete data; full cluster stops ALL writes including repair  │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  HEALTH_ERR    = Critical cluster condition requiring immediate action; may block all writes          │
-│  OSD_DOWN      = Health code: one or more OSDs not responding; check disk and network first           │
-│  PG_DEGRADED   = Health code: PGs have fewer replicas than required; data still accessible            │
-│  PG_INACTIVE   = Health code: PG cannot serve I/O; primary OSD down; investigate immediately          │
-│  SLOW_OPS      = Health code: operations queued more than 30s; indicates disk or network saturation   │
-│  OSD_NEARFULL  = Health code: OSD disk usage approaching full ratio; add capacity soon                │
-│  OSD_FULL      = All I/O including recovery halted; must free space or add capacity immediately       │
-│  clock skew    = NTP drift exceeding 0.05s between MON nodes; triggers HEALTH_WARN                    │
-│  ceph health detail = Lists all active health codes with per-OSD/PG explanation and context           │
-│  BytesToResync = Remaining bytes to replicate after OSD change; wait for 0 before disk replacement    │
-│  CRUSH         = Data placement algorithm; incorrect CRUSH map causes PG stuck states                 │
-│  noout flag    = Prevents OSDs being marked out during maintenance; set before host reboot            │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ```mermaid
 graph TD

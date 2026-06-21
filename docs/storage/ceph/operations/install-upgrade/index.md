@@ -10,6 +10,8 @@ Ceph cluster upgrades with cephadm: version compatibility, upgrade sequence (MON
 
 *Applies to: Ceph Reef / Squid*
 </div>
+![Ceph — Lifecycle & Upgrades](../../../../assets/storage-ceph-operations-install-upgrade-index.svg)
+
 
 ```mermaid
 graph TD
@@ -30,32 +32,7 @@ graph TD
     class I verify
 ```
 
-```text
-┌───────────────────────────────────── Ceph — Lifecycle & Upgrades ─────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   cephadm handles upgrade orchestration; upgrades one daemon at a time with health checks     │   │
-│   │   Sequence: MGR → MON → OSD → MDS → RGW → RBD mirror; never skip major versions              │    │
-│   │   Pre-upgrade: ensure HEALTH_OK + all OSDs up+in + no active recovery                         │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  cephadm      = Container-based Ceph orchestrator; manages daemon lifecycle across nodes              │
-│  MON          = Monitor daemon; maintains cluster maps and quorum; upgraded first in sequence         │
-│  MGR          = Manager daemon; metrics, dashboard, orchestrator APIs; upgraded second                │
-│  OSD          = Object Storage Daemon; upgraded third; cephadm upgrades one OSD at a time             │
-│  MDS          = Metadata Server; manages CephFS namespace; upgraded after OSD upgrade completes       │
-│  RGW          = RADOS Gateway; object storage frontend; upgraded last in standard sequence            │
-│  HEALTH_OK    = Required pre-upgrade cluster state; do not start upgrade while cluster degraded       │
-│  major version= Named release (Reef, Squid, etc.); never skip a major version during upgrades         │
-│  noout flag   = Prevents OSDs being marked out during upgrade; cephadm sets this automatically        │
-│  ceph versions= Shows daemon versions currently running; all should match after upgrade completes     │
-│  upgrade start= ceph orch upgrade start --ceph-version x.y.z; orchestrates rolling container upgrade  │
-│  rollback     = Not automatic; requires re-running old container image; complex for major version     │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 ## Before you begin
 

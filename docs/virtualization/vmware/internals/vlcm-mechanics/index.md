@@ -10,6 +10,8 @@ vSphere Lifecycle Manager (vLCM) introduces image-based management as the replac
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
+![vLCM Mechanics](../../../../assets/virtualization-vmware-internals-vlcm-mechanics-index.svg)
+
 
 ```mermaid
 graph TD
@@ -119,55 +121,7 @@ If DRS cannot evacuate all VMs (e.g., anti-affinity prevents it, admission contr
 
 By default, vLCM remediates one host at a time (sequential). Parallelism is configurable:
 
-```text
-┌─────────────────────────────── vLCM — Image-Based Lifecycle Management ───────────────────────────────┐
-│                                                                                                       │
-│  vLCM replaces VUM baselines with image-based management; a cluster image                             │
-│  defines the complete ESXi software bill of materials; DRS coordinates patching.                      │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                Cluster Image                 │  │        Drift Detection and Compliance       │   │
-│   │       Single desired-state definition        │  │           Per-host compliance scan          │   │
-│   │         Replaces VUM host baselines          │  │        Diff: running vs desired image       │   │
-│   │       Components: ESXi base + add-ons        │  │        Non-compliant: blocked motion        │   │
-│   │           Firmware: via HSM plugin           │  │        Pre-check: storage + HA check        │   │
-│   │         Declare state; vLCM enforces         │  │         Compliance report: per host         │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Rolling remediation evacuates one host at a time; VMs stay running via vMotion.                      │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             Rolling Remediation              │  │             Image Depot Sources             │   │
-│   │           DRS evacuates host first           │  │          VMUG Advantage / MyVMware          │   │
-│   │            Enter maintenance mode            │  │           Vendor depot: OEM images          │   │
-│   │         Apply image; reboot; exit MM         │  │        Offline bundle: air-gap import       │   │
-│   │        Next host: serial or parallel         │  │          Security patch: depot sync         │   │
-│   │          Zero-downtime: VMs migrate          │  │          Custom VIB: manual import          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  ESXi host hardware; HSM requires vendor management agent (iDRAC/iLO);                                │
-│  depot sync requires outbound HTTPS to VMware depot or internal UMDS.                                 │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  vLCM         = vSphere Lifecycle Manager; image-based cluster management                             │
-│  VUM          = vSphere Update Manager; superseded by vLCM in vSphere 7                               │
-│  Cluster image= desired state: ESXi base + add-ons + firmware components                              │
-│  HSM          = Hardware Support Manager; OEM plugin for firmware lifecycle                           │
-│  Compliance   = per-host diff of running state vs cluster image                                       │
-│  Depot        = online or offline source of ESXi patches and add-ons                                  │
-│  UMDS         = Update Manager Download Service; local depot mirror                                   │
-│  Remediation  = vLCM applying image to non-compliant hosts; rolling                                   │
-│  Maintenance mode= host state where no VMs run; required for update                                   │
-│  Rolling      = one host at a time; DRS evacuates before each maintenance                             │
-│  VIB          = VMware Installation Bundle; ESXi software package                                     │
-│  BOM          = Bill of Materials; complete component list for cluster image                          │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 | Setting | Behavior | Risk |
 |---------|----------|------|

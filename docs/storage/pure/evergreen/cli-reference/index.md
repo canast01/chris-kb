@@ -10,6 +10,8 @@ Pure Evergreen CLI Reference reference covering Overview, Pure1 REST API, FlashA
 
 *Applies to: Evergreen*
 </div>
+![Pure Evergreen CLI Reference](../../../../assets/storage-pure-evergreen-cli-reference-index.svg)
+
 
 ```text
 Evergreen Management Interfaces

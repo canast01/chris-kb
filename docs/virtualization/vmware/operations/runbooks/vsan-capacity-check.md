@@ -18,35 +18,10 @@ tags:
 
 *Applies to: vSAN 7.x / 8.x*
 </div>
+![vSAN Capacity Review Runbook](../../../../assets/virtualization-vmware-operations-runbooks-vsan-capacity-chec.svg)
 
-```text
-┌──────────────────────────────── vSAN Capacity Review — Runbook ───────────────────────────────────────┐
-│                                                                                                       │
-│  OVERVIEW                                                                                             │
-│  vSAN capacity review: assess current usage, growth trend, and forecast time-to-full                  │
-│  Trigger: weekly scheduled review, or when a capacity alarm fires (>70% used)                         │
-│  Output: capacity report with growth rate and recommended action (no action / order disks / add host) │
-│                                                                                                       │
-│  THRESHOLDS                                                                                           │
-│  Green:  < 60% used — healthy; monitor                                                                │
-│  Amber:  60–80% used — investigate growth rate; plan expansion within next quarter                    │
-│  Red:    > 80% used — immediate expansion or workload migration required                              │
-│                                                                                                       │
-│  ACTION LADDER                                                                                        │
-│  1. Reclaim wasted space: delete orphaned VMs, old snapshots, stale ISOs                              │
-│  2. Enable deduplication/compression if not already active (requires all-flash cluster)               │
-│  3. Add capacity disks to existing disk groups                                                        │
-│  4. Add new hosts to the cluster                                                                      │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│  Raw capacity     = total physical disk capacity contributed by all hosts                             │
-│  Usable capacity  = raw capacity minus overhead for FTT, RAID, and vSAN metadata                      │
-│  Slack space      = 30% of usable capacity reserved; vSAN requires slack to rebuild                   │
-│  FTT              = Failures to Tolerate; FTT=1 halves usable capacity vs. raw                        │
-│  Resync           = component rebuild after a failure; requires available slack space                 │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Before you begin
 

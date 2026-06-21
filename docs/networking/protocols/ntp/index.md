@@ -9,30 +9,10 @@ tags:
 <div class="kb-summary">
 Network Time Protocol (NTP) synchronises system clocks over UDP port 123 using a hierarchical stratum model. Clock skew breaks Kerberos auth, TLS validity, and log correlation. Coverage includes chrony/ntpd/w32tm configuration, stratum selection, sync health metrics, and VMware time sync rules.
 </div>
+![NTP](../../../assets/networking-protocols-ntp-index.svg)
 
-```text
-┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
-│  Stratum 0  ┌──────────────────────────────────┐                                                      │
-│             │ GPS receiver / Atomic clock       │                                                     │
-│             │ (not on network — hardware ref)   │                                                     │
-│             └──────────────┬───────────────────┘                                                      │
-│                            │ direct signal                                                            │
-│  Stratum 1  ┌──────────────▼───────────────────┐                                                      │
-│             │ Public NTP server (pool.ntp.org)  │                                                     │
-│             │ (directly connected to stratum 0) │                                                     │
-│             └──────────────┬───────────────────┘                                                      │
-│                            │ UDP 123                                                                  │
-│  Stratum 2  ┌──────────────▼───────────────────┐                                                      │
-│             │ Enterprise NTP server (internal)  │                                                     │
-│             │ ntp1.example.local, ntp2.example.local  │                                               │
-│             └──────────────┬───────────────────┘                                                      │
-│                            │ UDP 123                                                                  │
-│  Stratum 3  ┌──────────────▼───────────────────┐                                                      │
-│             │ Your servers, switches, VMs       │                                                     │
-│             │ (clients syncing from stratum 2)  │                                                     │
-│             └──────────────────────────────────┘                                                      │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 <div class="kb-grid kb-grid-5">
 

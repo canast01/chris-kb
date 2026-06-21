@@ -8,6 +8,8 @@ tags:
 <div class="kb-summary">
 SLOs define quantitative targets for service reliability and performance. They form the basis for alerting thresholds, capacity decisions, and on-call escalation.
 </div>
+![Service Level Objectives (SLO)](../../../assets/backup-dr-operations-service-level-objectives-index.svg)
+
 
 ## SLO vs SLA vs SLI
 
@@ -33,38 +35,7 @@ Set SLOs internally; only publish SLAs externally when commercially required.
 
 ## Error Budget
 
-```text
-┌──────────────────────────── Performance — Service Level Objectives (SLOs) ────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      SLOs: agree what "good" looks like; measure it with SLIs; budget for error allowance     │   │
-│   │      SLI → SLO → Error budget: define metric → set target → calculate allowable failures      │   │
-│   │          Report SLO status monthly; burn rate alerts when budget is consumed too fast         │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                SLO Definition                │  │                  Reporting                  │   │
-│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
-│   │            SLI: request success %            │  │              Monthly SLO report             │   │
-│   │           SLO: 99.9% success rate            │  │           Error budget remaining %          │   │
-│   │            Window: 30-day rolling            │  │            Burn rate alert (fast)           │   │
-│   │              Error budget: 0.1%              │  │          Freeze changes if depleted         │   │
-│   │           Latency SLO: p99 < 500ms           │  │           Review with stakeholders          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    SLI     = Service Level Indicator; the measured metric (e.g. % requests returning 2xx)             │
-│    SLO     = Service Level Objective; target value for the SLI (e.g. 99.9% success rate)              │
-│    SLA     = Service Level Agreement; contractual SLO with financial/legal consequences               │
-│    Error budget= 1 - SLO; how much unreliability is acceptable; zero budget = freeze changes          │
-│    Burn rate   = Speed at which error budget is consumed; fast burn = alert immediately               │
-│    Rolling window= SLO measured over last 30 days; older incidents age out of calculation             │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 **Azure Monitor — availability metric:**
 ```bash
 az monitor metrics list \

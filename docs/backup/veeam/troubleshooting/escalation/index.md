@@ -12,50 +12,10 @@ How to escalate Veeam backup issues to Veeam support: what data to collect, how 
 
 *Applies to: Veeam 12.x*
 </div>
+![Veeam — Escalation](../../../../assets/backup-veeam-troubleshooting-escalation-index.svg)
 
-```text
-┌───────────────────────────────────────── Veeam — Escalation ──────────────────────────────────────────┐
-│                                                                                                       │
-│  Escalate Veeam issues to vendor support when a job fails consistently with no                        │
-│  workaround, backup data is suspected corrupt, or a restore is failing in an                          │
-│  active DR scenario. Export the log bundle BEFORE opening the case.                                   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Step 1 — Collect Data               │  │          Step 2 — Open the Case             │   │
-│   │  VBR Console: Help → Support Information     │  │  Go to my.veeam.com → sign in               │   │
-│   │  Export logs for the failing job session     │  │  Product: Veeam Backup & Replication        │   │
-│   │  Note Veeam version + build (Help → About)   │  │  Severity: S1 data loss / S2 major / S3     │   │
-│   │  Copy full error text from job statistics    │  │  Attach log ZIP + error text + timeline      │  │
-│   │  Write timeline: last success → first fail   │  │  Note job name + session ID in description  │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  For Sev1: open the portal case AND call Veeam support immediately after.                             │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Step 3 — Escalation Path            │  │         What NOT to Do                      │   │
-│   │  T1: triage + confirm logs received          │  │  Do not delete failed restore points        │   │
-│   │  T2: senior engineer assigned + session      │  │  Do not run Health Check mid-incident       │   │
-│   │  T3: engineering review for code-level fix   │  │  Do not re-run the failing job repeatedly   │   │
-│   │  Escalate if no progress within SLA          │  │  Do not clear the job history logs          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  VBR            = Veeam Backup & Replication; the core product                                        │
-│  Backup Server  = Windows host running the VBR service; central coordinator                           │
-│  Backup Proxy   = data mover VM or host; moves data between source and repository                     │
-│  Log bundle     = Help → Support Information → Export Logs; required for all cases                    │
-│  Session ID     = unique ID of the job run (session); visible in job stats view                       │
-│  CBT            = Changed Block Tracking; VMware VADP mechanism for incremental backup                │
-│  SOBR           = Scale-Out Backup Repository; tiered extents; cloud offload                          │
-│  my.veeam.com   = Veeam Customer Support Portal; case creation and log upload                         │
-│  Sev1           = business-critical severity; active data loss or restore failure                     │
-│  ProSupport     = premium Veeam support tier; 1-hour Sev1 SLA; designated engineer                    │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ---
 

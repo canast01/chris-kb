@@ -12,38 +12,10 @@ SQL Server initial deployment — installation checklist, post-install configura
 
 *Applies to: Windows Server 2019 / 2022*
 </div>
+![SQL Server — Initial Deployment](../../../../assets/compute-windows-server-sql-server-deploy-index.svg)
 
-```text
-┌─────────────────────────────────── SQL Server — Initial Deployment ───────────────────────────────────┐
-│                                                                                                       │
-│   Separate volumes required for data, log, tempdb, and backup before running setup                    │
-│   Post-install: set max server memory, MAXDOP, cost threshold, and configure tempdb files             │
-│   SQL Agent must be enabled and started; validate with SELECT @@VERSION after installation            │
-│                                                                                                       │
-│   Pre-install checklist                                                                               │
-│   Windows Server 2019/2022 with all Windows Updates applied                                           │
-│   Dedicated domain service account (svc_sqlserver); .NET Framework 4.7+ installed                     │
-│   Separate disk volumes: data (.mdf), log (.ldf), tempdb, backup                                      │
-│   SQL Server ISO mounted; instance name decided (MSSQLSERVER default or named)                        │
-│                                                                                                       │
-│   Installation (GUI setup.exe)                                                                        │
-│   Features: Database Engine, SQL Server Agent, Management Tools                                       │
-│   Auth: Windows Authentication (preferred) or Mixed Mode                                              │
-│   Directories: point data/log/backup to dedicated volumes during setup                                │
-│                                                                                                       │
-│   Post-install configuration (T-SQL)                                                                  │
-│   max server memory: sp_configure 'max server memory (MB)'; RECONFIGURE WITH OVERRIDE                 │
-│   MAXDOP: sp_configure 'max degree of parallelism'; cost threshold: 50 (raise from default 5)         │
-│   SQL Agent: sp_set_sqlagent_properties @auto_start = 1                                               │
-│   Firewall: allow TCP 1433 from application subnets only                                              │
-│                                                                                                       │
-│   Key terms:                                                                                          │
-│   MSSQLSERVER   = default SQL Server instance name; named instances use .\INSTANCENAME                │
-│   max server memory = caps SQL Server Buffer Pool; must be set to prevent OS memory starvation        │
-│   MAXDOP        = max degree of parallelism; set to number of physical cores (max 8 for OLTP)         │
-│   cost threshold = query cost threshold for parallelism; raise from 5 to 50 for OLTP workloads        │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Before you begin
 

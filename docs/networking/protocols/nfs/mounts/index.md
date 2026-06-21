@@ -8,27 +8,10 @@ tags:
 <div class="kb-summary">
 NFS Mounts reference covering Overview, Manual Mounts, /etc/fstab Options, Mount Option Reference, Automount with autofs and 1 more sections.
 </div>
+![NFS Mounts](../../../../assets/networking-protocols-nfs-mounts-index.svg)
 
-```text
-┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
-│  mount -t nfs -o vers=4.1,hard,rsize=1048576 \                                                        │
-│         server:/export /mnt/data                                                                      │
-│                    │                                                                                  │
-│                    ▼                                                                                  │
-│  ┌──────────────────────────────────────────────────────┐                                             │
-│  │  NFS client negotiates version & options with server │                                             │
-│  │  server:/export  ──────────────────►  /mnt/data      │                                             │
-│  │  (remote path)     TCP 2049 mount    (local mountpoint)│                                           │
-│  └──────────────────────────────────────────────────────┘                                             │
-│                    │                                                                                  │
-│  Option effects:   │                                                                                  │
-│  hard    ──► retry indefinitely if server unreachable                                                 │
-│  soft    ──► return error after timeout (risk of corruption)                                          │
-│  rsize=  ──► read buffer size (tune for throughput)                                                   │
-│  _netdev ──► wait for network at boot (required in fstab)                                             │
-│  vers=   ──► force NFS version (4.1 preferred)                                                        │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Overview
 

@@ -12,42 +12,10 @@ NetBackup support escalation: how to collect the nbsu log bundle, open a Veritas
 
 *Applies to: NetBackup 10.x*
 </div>
+![NetBackup — Escalation](../../../../assets/backup-netbackup-troubleshooting-escalation-index.svg)
 
-```text
-┌─────────────────────────────────────── NetBackup — Escalation ────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                                  NetBackup — Escalation Path                                  │   │
-│   │              L1 Triage: review logs, match to known issues in runbook (0–30 min)              │   │
-│   │         L2 Engineering: deep analysis, config review, lab reproduction (30 min – 4 h)         │   │
-│   │             Vendor Support: open case with log bundle if unresolved at L2 (> 4 h)             │   │
-│   │            Sev1 (data loss / production impact): page on-call + open critical case            │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                            Information to Collect Before Escalating                           │   │
-│   │              Product version: NetBackup version string from About / version command           │   │
-│   │                                 Full log bundle: nbsu collection                              │   │
-│   │                     Symptom timeline: when first occurred; any changes made                   │   │
-│   │                Scope: single job / all jobs / all components — narrows root cause             │   │
-│   │                    Error codes: exact error messages and exit codes from logs                 │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  Linux/Windows rack servers · SAN HBAs for tape · 10 GbE NIC · SCSI tape robot connection             │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Master Server = central controller: scheduler, catalog, job manager, policy engine                   │
-│  Media Server  = data mover between client and storage; can be co-located with master                 │
-│  MSDP          = Media Server Deduplication Pool; inline variable-length block dedup                  │
-│  Storage Unit  = logical target: AdvancedDisk, MSDP pool, cloud LSU, or tape robot                    │
-│  Policy        = defines what, when, and where to back up; contains schedules and clients             │
-│  nbsu          = NetBackup Support Utility; generates diagnostic log bundle for Veritas support       │
-│  bpdbjobs      = CLI to query job history: status, duration, exit code, errors                        │
-│  vxlogview     = unified log viewer; reads nblogmgmt-managed log files by originator ID               │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Before you begin
 

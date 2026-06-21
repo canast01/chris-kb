@@ -12,51 +12,10 @@ Infrastructure Health Monitoring reference covering Server Health (Windows), Sto
 
 *Applies to: Aria Ops 8.x*
 </div>
+![Infrastructure Health Monitoring](../../../../assets/virtualization-vmware-aria-operations-operations-health-moni.svg)
 
-```text
-┌─────────────────────────────────── Monitoring — Health Monitoring ────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │             Health Monitoring — Composite Health Scores and Component-Level Checks            │   │
-│   │     Domains: vSphere (Aria) · Dell storage (CloudIQ) · Fabric (NDI) · Pure storage (Pure1)    │   │
-│   │     Check types: availability · performance · capacity · configuration · security posture     │   │
-│   │         Health score: 0-100 composite; weighted by criticality; drives alert priority         │   │
-│   │       Cadence: real-time streaming (NDI/Pure1) · 5-min polling (Aria) · hourly (CloudIQ)      │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    A degraded health score is a leading indicator — act before a component fails fully                │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │       Check Categories      │  │        Scoring Method       │  │       Response Actions      │   │
-│   │      Availability check     │  │       0-100 composite       │  │      Alert auto-trigger     │   │
-│   │      Performance check      │  │       Weighted by role      │  │      Ticket auto-create     │   │
-│   │        Capacity check       │  │       Trend adjustment      │  │     Runbook link attach     │   │
-│   │      Config compliance      │  │       Anomaly penalty       │  │       Escalation fire       │   │
-│   │       Security posture      │  │     Historical baseline     │  │       Dashboard update      │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  Health checks run in: Aria Analytics node · CloudIQ SaaS · NDI Insights app · Pure1 SaaS             │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Health score      = 0-100 composite aggregating availability, performance, and capacity metrics      │
-│  Availability check= Ping/API test confirming a component is reachable and responding                 │
-│  Performance check = Metric comparison against baseline thresholds (e.g. CPU/latency/IOPS)            │
-│  Capacity check    = Remaining headroom evaluation; flags when approaching configured limits          │
-│  Config compliance = Verifying running config matches approved baseline or compliance pack            │
-│  Security posture  = Check for open ports, default credentials, missing patches                       │
-│  Anomaly penalty   = Score deduction applied when ML model detects unusual behaviour                  │
-│  Trend adjustment  = Score modifier based on trajectory; degrading trend lowers score faster          │
-│  Runbook link      = URL to remediation steps automatically attached to a health alert                │
-│  Weighted scoring  = Higher-criticality checks contribute proportionally more to overall score        │
-│  Leading indicator = Metric that degrades before an outage; enables proactive response                │
-│  Historical baseline= Learned normal behaviour used to calibrate anomaly detection                    │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 **Pure FlashArray:**
 ```bash

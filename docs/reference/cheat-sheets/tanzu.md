@@ -8,13 +8,10 @@ tags:
 <div class="kb-summary">
 Top-10 Tanzu commands for cluster lifecycle, package management, and Kubernetes operations in TKG environments.
 </div>
+![Tanzu Cheat Sheet](../../assets/reference-cheat-sheets-tanzu.svg)
 
-```text
-┌──────────────────────────────────────── Tanzu Cheat Sheet ────────────────────────────────────────────┐
-│  CLI: tanzu (TKG management CLI)  ·  kubectl  ·  TKGs: kubectl vsphere                                │
-│  Categories: Clusters · Packages · Namespaces · Kubeconfig · Troubleshooting                          │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Tanzu CLI
 

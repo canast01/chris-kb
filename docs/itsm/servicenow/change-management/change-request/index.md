@@ -3,6 +3,8 @@ tags:
   - servicenow
 ---
 # Change Request (RFC)
+![Change Request (RFC)](../../../../assets/itsm-servicenow-change-management-change-request-index.svg)
+
 
 ```markdown
 Title:          [INFRA] Upgrade PostgreSQL 14 → 15 on db-prod-01
@@ -35,41 +37,4 @@ Rollback Steps:
   3. Start postgresql-14
   4. Notify stakeholders
 ```
-```text
-┌──────────────────────────────────────── Change Request (RFC) ─────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │        RFC: formal document capturing all change details for CAB review and audit trail       │   │
-│   │        Incomplete RFCs returned by CAB; complete all mandatory fields before submission       │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               Mandatory Fields               │  │            Optional / Supporting            │   │
-│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
-│   │          Title (short, descriptive)          │  │             Architecture diagram            │   │
-│   │              Change type: S/N/E              │  │                Test evidence                │   │
-│   │            Description and scope             │  │              Vendor runbook ref             │   │
-│   │            Business justification            │  │          Config backup confirmation         │   │
-│   │           Risk / impact assessment           │  │           Approval from app owner           │   │
-│   │             Implementation steps             │  │            Change dependency list           │   │
-│   │            Backout plan + trigger            │  │               Monitoring plan               │   │
-│   │              Maintenance window              │  │              Communication plan             │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   │      Field       │       Type       │      Example      │    Mandatory     │      Notes       │   │
-│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
-│   │   Change type    │     Dropdown     │       Normal      │       Yes        │      S/N/E       │   │
-│   │       Risk       │     Dropdown     │       Medium      │       Yes        │     L/M/H/C      │   │
-│   │      Window      │     Datetime     │   Sat 02:00 UTC   │       Yes        │   Duration too   │   │
-│   │   Backout plan   │       Text       │    Step-by-step   │       Yes        │   With trigger   │   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    S/N/E     = Standard / Normal / Emergency change type                                              │
-│    Backout trigger= Defined condition that automatically initiates rollback (e.g., service fails test)│
-│    Scope     = Exact systems, services, or components affected; used to notify correct teams          │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+

@@ -9,36 +9,10 @@ Kubernetes RBAC in OpenShift: roles, cluster roles, role bindings, service accou
 
 *Applies to: OpenShift 4.x*
 </div>
+![OpenShift — Access Control](../../../../assets/virtualization-openshift-security-access-control-index.svg)
 
-```text
-┌──────────────────────────────────────── OpenShift RBAC Model ─────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   Role (namespace) + RoleBinding → namespace-scoped permissions                               │   │
-│   │   ClusterRole + ClusterRoleBinding → cluster-wide permissions                                 │   │
-│   │   ClusterRole + RoleBinding → cluster role applied to specific namespace                      │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │      Built-in Roles         │  │      Service Accounts        │  │      Group Sync             │  │
-│   │      ─────────────          │  │      ─────────────           │  │      ─────────────          │  │
-│   │  cluster-admin: full access │  │  Per-namespace identity       │  │  oc adm groups sync         │ │
-│   │  admin: namespace admin     │  │  Token auto-mounted in pod   │  │  LDAP groups → OCP groups   │  │
-│   │  edit: create/edit objects  │  │  Bind to roles for API calls │  │  CronJob for periodic sync  │  │
-│   │  view: read-only namespace  │  │  IRSA on AWS (OIDC)          │  │  group → ClusterRoleBinding │  │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    Subject      = User, group, or service account being granted permissions                           │
-│    Verb          = API action: get, list, create, update, patch, delete, watch                        │
-│    Resource     = API object type: pods, services, deployments, secrets, etc.                         │
-│    Aggregated role= ClusterRole that auto-aggregates rules from labelled ClusterRoles                 │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ```mermaid
 graph TD

@@ -11,6 +11,8 @@ Evergreen//One operations: subscription usage monitoring, controller upgrade sch
 
 *Applies to: Evergreen//One*
 </div>
+![Evergreen//One — Operations](../../../../assets/storage-pure-evergreen-one-operations-index.svg)
+
 
 ---
 

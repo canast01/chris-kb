@@ -11,63 +11,10 @@ Operations reference covering Change Readiness, Incident Triage, Maintenance Win
 
 *Applies to: Azure*
 </div>
+![Azure — Operations](../../../assets/cloud-azure-operations-index.svg)
 
-```text
-┌────────────────────────────────────── Azure Operations Overview ──────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │             Azure Operations — Health Checks, Procedures, Patching, and Automation            │   │
-│   │ Health Checks: VM status · Load Balancer health probes · Monitor alert state · Service Health │   │
-│   │  Procedures: VM lifecycle, disk expansion, scale set refresh, RG cleanup, ASR failover tests  │   │
-│   │    Patching: Azure Update Manager; scheduled patch runs; compliance reporting per VM fleet    │   │
-│   │  Backup/Restore: Azure Backup jobs · RSV restore · disk snapshot restore · ASR test failover  │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Health checks detect issues · Procedures resolve them · Automation prevents recurrence             │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │        Health Checks        │  │          Procedures         │  │          Automation         │   │
-│   │     VM: running + health    │  │    Start/stop/restart VM    │  │     az CLI: scripted ops    │   │
-│   │    LB health probe: pass    │  │        Resize VM SKU        │  │     Logic App: workflow     │   │
-│   │     Monitor alerts: OK?     │  │    Disk: expand + extend    │  │       ARM / Bicep: IaC      │   │
-│   │    Service Health: events   │  │    VMSS: instance refresh   │  │   Event Grid: auto-trigger  │   │
-│   │    Backup jobs: success?    │  │      ASR: test failover     │  │    Azure Automation: run    │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│    Health checks prevent failures · Procedures execute changes                                        │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │  Health Checks   │    Procedures    │      Patching     │  Backup/Restore  │     Scripts      │   │
-│   │   VM: running?   │  Start/stop VM   │   Update Manager  │  Backup: enable  │    az vm list    │   │
-│   │  LB probe: pass  │  Resize: dealoc  │   Patch schedule  │   RSV: restore   │  az disk create  │   │
-│   │    Alerts: OK    │   Disk: expand   │     Compliance    │  Snap: restore   │  Bicep: deploy   │   │
-│   │ Svc Health: evt  │   VMSS refresh   │   Reboot: sched   │  ASR: test fail  │  Automation RB   │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  Azure VM host fabric · Managed Disk storage · Load Balancer health infrastructure · VNet networking  │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Azure Update Manager = Replaces Automation Update Management; patches OS at scale per schedule       │
-│  Service Health      = Azure health dashboard for your subscriptions; planned and unplanned events    │
-│  LB health probe     = TCP or HTTP check sent to backend pool members; failure removes VM from        │
-│  VM resize           = Change VM SKU; requires deallocation first (downtime); no data loss            │
-│  Disk expansion      = Increase managed disk size in portal/CLI; then extend partition inside OS      │
-│  VMSS instance refresh= Rolling replacement of scale set instances with updated image or config       │
-│  ASR test failover   = Spins up replica VM in isolated VNet; validates recovery without affecting prod│
-│  Azure Automation    = Runbooks (PowerShell/Python) executed on schedule or on demand at scale        │
-│  Logic App           = Low-code workflow automation; triggered by events, HTTP, or schedule           │
-│  Event Grid          = Event routing service; triggers Logic Apps, Functions, or webhooks on resource │
-│  Bicep              = ARM template DSL; cleaner syntax for deploying Azure resources as IaC           │
-│  az vm run-command   = Execute script inside VM via agent; works when RDP/SSH is blocked              │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 <div class="kb-grid kb-grid-3">
 

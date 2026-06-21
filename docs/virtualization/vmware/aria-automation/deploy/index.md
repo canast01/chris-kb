@@ -13,46 +13,10 @@ End-to-end deployment guide for VMware Aria Automation (on-premises). Covers pre
 
 *Applies to: Aria Automation 8.x*
 </div>
+![Aria Automation — Deploy](../../../../assets/virtualization-vmware-aria-automation-deploy-index.svg)
 
-```text
-┌───────────────────────────────── Aria Automation — Deployment Phases ─────────────────────────────────┐
-│                                                                                                       │
-│  Six phases from prerequisites to a fully validated Aria Automation environment. Each phase has a     │
-│  clear exit criterion. Do not proceed until the current phase validates clean.                        │
-│                                                                                                       │
-│   ┌───────────────────────────┐  ┌────────────────────────────┐  ┌────────────────────────────────┐   │
-│   │   Phase 1: Pre-Deploy     │  │   Phase 2: LCM Deployment  │  │  Phase 3: Cloud Accounts       │   │
-│   │  DNS: FQDNs for all svcs  │  │  Easy Installer or LCM UI  │  │  Add vCenter cloud account     │   │
-│   │  TLS: SAN cert from CA    │  │  Select version from depot │  │  Accept thumbprint, sync data  │   │
-│   │  vIDM: deployed + AD sync │  │  Map vCenter/datastore/net │  │  Verify hosts/VMs discovered   │   │
-│   │  Datastore: ≥250 GB free  │  │  LCM pre-checks: all green │  │  Add AWS/Azure if multi-cloud  │   │
-│   │  Ports: 443, 5480 open    │  │  Deploy takes 60–90 min    │  │  Cloud zones: define per clstr │   │
-│   └───────────────────────────┘  └────────────────────────────┘  └────────────────────────────────┘   │
-│                                                                                                       │
-│                ▼                              ▼                                ▼                      │
-│                                                                                                       │
-│   ┌───────────────────────────┐  ┌────────────────────────────┐  ┌────────────────────────────────┐   │
-│   │  Phase 4: Projects &      │  │  Phase 5: Blueprints &     │  │  Phase 6: Validation           │   │
-│   │  Flavour/Image Mappings   │  │  Service Catalogue         │  │                                │   │
-│   │  Create projects per team │  │  Blueprint YAML authoring  │  │  vracli status --all green     │   │
-│   │  Assign cloud zones       │  │  Inputs and cloud config   │  │  Cloud accounts: sync OK       │   │
-│   │  Flavour/image mappings   │  │  Publish to Service Broker │  │  Test deployment end-to-end    │   │
-│   │  Network profiles + IPs   │  │  ABX actions (if needed)   │  │  Approval policy fires         │   │
-│   │  Approval policies: RBAC  │  │  Approval + lease policies │  │  Lease policy applied          │   │
-│   └───────────────────────────┘  └────────────────────────────┘  └────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure: Aria Automation VMs on vSphere · vPostgres DB (internal)                    │
-│  NSX network segments · Workspace ONE Access (vIDM) · Aria Suite LCM · DNS/NTP/CA                     │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  LCM        = Aria Suite Lifecycle Manager; orchestrates all Aria product deployments                 │
-│  vIDM       = Workspace ONE Access; SSO provider for all Aria products                                │
-│  Cloud Zone = Subset of a cloud account (cluster + datastore + network) available to a project        │
-│  ABX action = Serverless Python/JS function triggered on deployment lifecycle events                  │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ---
 

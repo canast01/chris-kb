@@ -13,6 +13,8 @@ Diagnostics reference covering Windows Event Log Pipeline, Key Security Event ID
 
 *Applies to: Windows Server 2019 / 2022*
 </div>
+![Windows Server — Diagnostics](../../../../assets/compute-windows-server-troubleshooting-diagnostics-index.svg)
+
 
 Diagnostic procedures and log analysis.
 
@@ -53,54 +55,7 @@ flowchart LR
     psLog --> wef
     wef --> siem
 ```
-```text
-┌──────────────────────────────────── Windows Server — Diagnostics ─────────────────────────────────────┐
-│                                                                                                       │
-│  Diagnostics: event log analysis, performance data collection, network traces, memory dumps.          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              Event Log Analysis              │  │         Performance Data Collection         │   │
-│   │         wevtutil qe System /count:50         │  │         Perfmon: data collector sets        │   │
-│   │        Get-WinEvent filter hash table        │  │           typeperf: counter to CSV          │   │
-│   │        Subscriptions: WEF centralise         │  │          PAL: Perf Analysis of Logs         │   │
-│   │         Custom views: by error level         │  │         Resource Monitor: real-time         │   │
-│   │           Export: evtx for offline           │  │        Process Monitor: file+reg+net        │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Event logs show what happened; Perfmon and procmon show how the system behaved.                      │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             Network Diagnostics              │  │          Memory & Crash Diagnostics         │   │
-│   │          netsh trace start capture           │  │         Task Manager: commit charge         │   │
-│   │           Wireshark: .etl to .pcap           │  │         Poolmon: tag leak detection         │   │
-│   │         netstat -anob: PID per port          │  │          WinDbg: !analyze -v crash          │   │
-│   │          tracert + pathping latency          │  │           procdump -ma <PID> dump           │   │
-│   │          PortQry: remote port scan           │  │          MDSN for WER online search         │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  Physical or virtual server · NIC for packet capture · dump storage disk · OOB console                │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  wevtutil       = Windows Event Utility; CLI query, export, and clear event logs                      │
-│  Get-WinEvent   = PowerShell cmdlet; powerful filter-hash queries across event logs                   │
-│  WEF            = Windows Event Forwarding; aggregates events to a central collector                  │
-│  Perfmon        = Performance Monitor; records counters to BLG/CSV/SQL data sets                      │
-│  typeperf       = CLI perfmon; writes counter data to CSV for offline analysis                        │
-│  PAL            = Performance Analysis of Logs; analyses BLG files against thresholds                 │
-│  Resource Monitor= real-time view of CPU/RAM/disk/network per process                                 │
-│  procmon        = SysInternals Process Monitor; captures file, registry, network events               │
-│  netsh trace    = built-in packet capture; outputs ETL for Message Analyser / Wireshark               │
-│  poolmon        = kernel pool monitor; detects memory tag leaks in driver pool                        │
-│  WinDbg         = Windows Debugger; analyses crash dumps; !analyze -v auto-diagnoses                  │
-│  procdump       = SysInternals; captures process memory dump for hang/crash analysis                  │
-│  PortQry        = Microsoft port connectivity scanner; tests TCP/UDP port accessibility               │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 ## Exporting Logs
 

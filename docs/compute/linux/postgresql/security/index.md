@@ -10,28 +10,10 @@ PostgreSQL security: `pg_hba.conf` authentication rules, role-based access, SSL 
 
 *Applies to: RHEL / Ubuntu LTS*
 </div>
+![PostgreSQL — Security](../../../../assets/compute-linux-postgresql-security-index.svg)
 
-```text
-┌──────────────────────────────────────── PostgreSQL — Security ────────────────────────────────────────┐
-│                                                                                                       │
-│   Four security pillars: access control, authentication, encryption, and hardening                    │
-│   pg_hba.conf controls client authentication; evaluated top-to-bottom, first match wins               │
-│   scram-sha-256 is the recommended authentication method for all production deployments               │
-│                                                                                                       │
-│   Sub-sections                                                                                        │
-│   Access Control: role-based permissions, GRANT/REVOKE, row-level security (RLS)                      │
-│   Authentication: pg_hba.conf rules, scram-sha-256, LDAP/AD integration, SSL certificates             │
-│   Encryption: TLS in transit, pgcrypto for column-level encryption, WAL encryption                    │
-│   Hardening: minimal superuser use, firewall rules, audit logging, pg_audit extension                 │
-│                                                                                                       │
-│   Key terms:                                                                                          │
-│   pg_hba.conf   = host-based authentication config; controls who can connect and how                  │
-│   scram-sha-256 = salted challenge-response auth; replaces md5; required for PCI/SOC2                 │
-│   RLS           = Row-Level Security; restricts row visibility per role within a table                │
-│   pg_audit      = extension for detailed SQL audit logging; records DDL and object access             │
-│   superuser     = PostgreSQL superuser bypasses all access controls; must be restricted               │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 <div class="kb-grid kb-grid-4">
   <a class="kb-card" href="access-control/">Access Control</a>

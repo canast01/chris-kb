@@ -13,47 +13,10 @@ End-to-end deployment guide for VMware Aria Operations for Logs (vRLI). Covers p
 
 *Applies to: Aria Logs 8.x*
 </div>
+![Aria Operations for Logs — Deploy](../../../../assets/virtualization-vmware-aria-operations-for-logs-deploy-index.svg)
 
-```text
-┌──────────────────────────── Aria Operations for Logs — Deployment Phases ─────────────────────────────┐
-│                                                                                                       │
-│  Six phases from prerequisites to a fully operational log analytics cluster. Each phase has a clear   │
-│  exit criterion. Do not proceed until the current phase validates clean.                              │
-│                                                                                                       │
-│   ┌───────────────────────────┐  ┌────────────────────────────┐  ┌────────────────────────────────┐   │
-│   │   Phase 1: Pre-Deploy     │  │   Phase 2: Master Node     │  │  Phase 3: Worker Nodes         │   │
-│   │  DNS: A + PTR for nodes   │  │  Deploy OVA in vCenter     │  │  Deploy worker OVAs            │   │
-│   │  NTP: confirmed on net    │  │  VAMI first-boot wizard    │  │  Join Cluster via setup wizard │   │
-│   │  Firewall: 514/6514 open  │  │  Role: New Deployment      │  │  Active-active cluster mode    │   │
-│   │  Datastore: ≥530 GB/node  │  │  Accept EULA + licence     │  │  Verify all nodes: Active      │   │
-│   │  Ingest rate estimated    │  │  Master node: Running      │  │  No missing shards             │   │
-│   └───────────────────────────┘  └────────────────────────────┘  └────────────────────────────────┘   │
-│                                                                                                       │
-│                ▼                              ▼                                ▼                      │
-│                                                                                                       │
-│   ┌───────────────────────────┐  ┌────────────────────────────┐  ┌────────────────────────────────┐   │
-│   │  Phase 4: Log Sources     │  │  Phase 5: Content Packs    │  │  Phase 6: Validation           │   │
-│   │  & Agent Install          │  │  Alerts & Forwarding       │  │                                │   │
-│   │  vSphere integration      │  │  Install vSphere/NSX packs │  │  li-admin cluster status       │   │
-│   │  ESXi syslog auto-config  │  │  Configure alert queries   │  │  Ingest rate: non-zero         │   │
-│   │  CFAPI agents on VMs      │  │  Set notification channels │  │  Explore Logs shows data       │   │
-│   │  Syslog: switches/FWs     │  │  Log forwarding to SIEM    │  │  Alert test notification sent  │   │
-│   │  TLS syslog on port 6514  │  │  Retention policy set      │  │  Retention policy confirmed    │   │
-│   └───────────────────────────┘  └────────────────────────────┘  └────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure: Aria Logs VMs (master + workers) · large /storage/core disk                 │
-│  Syslog network paths from all sources · vCenter for agent auto-deploy · DNS/NTP                      │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  CFAPI agent  = Log agent on VMs; forwards structured logs to master on TCP 9543                      │
-│  Content pack = Pre-built dashboards, queries, and alerts for a specific product                      │
-│  li-admin     = Aria Logs admin CLI on master; cluster status, disk usage, configuration              │
-│  VIP          = Virtual IP; single ingestion endpoint shared across all cluster nodes                 │
-│  OSI          = Operationally Significant Instance; licensed unit (one OSI = one log-sending host)    │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ---
 

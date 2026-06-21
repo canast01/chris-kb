@@ -16,56 +16,10 @@ search:
 ---
 
 # RecoverPoint — Initial Deployment
+![RecoverPoint — Initial Deployment](../../../../assets/storage-dell-recoverpoint-deploy-index.svg)
 
-```text
-┌─────────────────────────────── Dell RecoverPoint — Deployment Sequence ───────────────────────────────┐
-│                                                                                                       │
-│  Step 1 · Prerequisites                                                                               │
-│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
-│  RPAs: physical RPA hardware (Gen 6+) or vRPA OVA (vSphere 7.0/8.0); minimum 2 per site for HA        │
-│  Each RPA needs 3 NICs: Management, WAN (inter-site replication traffic), SAN/Data                    │
-│  FC zoning plan: each RPA at both sites zones to source array and target array                        │
-│  Network: WAN link with sufficient bandwidth for replication; management IP per RPA                   │
-│  Storage: source (production) array and target (DR) array at each site identified and accessible      │
-│                                                                                                       │
-│                                        │  deploy and configure RPAs                                   │
-│                                        ▼                                                              │
-│  Step 2 · Deploy and Configure RPAs                                                                   │
-│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
-│  Physical: rack RPA appliances; connect management, WAN, and SAN interfaces per cabling plan          │
-│  Virtual: deploy vRPA OVA via vCenter; configure 3 vNICs (management, WAN, iSCSI/FC data)             │
-│  Power on; connect via serial/console to assign management IP; confirm RPA boots to green state       │
-│  Access RecoverPoint Management Application (RPMA) UI via browser (port 443 on management IP)         │
-│                                                                                                       │
-│                                        │  form RPA clusters                                           │
-│                                        ▼                                                              │
-│  Step 3 · Create RPA Clusters                                                                         │
-│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
-│  RPMA: Clusters → Add RPA Cluster; add local site RPAs; set cluster name, WAN IP, data port           │
-│  Repeat for remote site RPA cluster; establish connectivity between local and remote cluster          │
-│  Add array connections: attach source and target arrays to corresponding RPA clusters                 │
-│  Verify array visibility: RPAs must see source LUNs for read, target LUNs for write journal           │
-│                                                                                                       │
-│                                        │  create consistency groups                                   │
-│                                        ▼                                                              │
-│  Step 4 · Consistency Groups and Replication Links                                                    │
-│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
-│  Create Consistency Group (CG): define production copy (source LUNs) and remote copy (target LUNs)    │
-│  Set replication mode: Synchronous (zero RPO) or Asynchronous (configurable RPO interval)             │
-│  Configure journals: allocate journal LUNs on each site (10% of production capacity is baseline)      │
-│  Enable the CG: initial full synchronisation begins; monitor transfer progress in RPMA                │
-│                                                                                                       │
-│                                        │  validate replication                                        │
-│                                        ▼                                                              │
-│  Step 5 · Validation and Baseline                                                                     │
-│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
-│  Confirm all CGs show Active status; verify RPO is within configured target                           │
-│  Run test image access (bookmarked point-in-time) to confirm recovery points are accessible           │
-│  Record: site topology, CG names, LUN mappings, RPO targets, WAN bandwidth allocation                 │
-│  Schedule monthly RPO report; document DR runbook with step-by-step failover procedure                │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 This guide covers deploying Dell EMC RecoverPoint from bare metal appliance
 installation through RPA cluster formation, storage array attachment, consistency

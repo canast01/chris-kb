@@ -12,38 +12,10 @@ CyberArk PAM diagnostic commands: check Vault, PVWA, CPM, and PSM Windows servic
 
 *Applies to: CyberArk PAM (Privilege Access Manager) — Vault, PVWA, CPM, PSM*
 </div>
+![CyberArk — Diagnostics](../../../../assets/security-cyberark-troubleshooting-diagnostics-index.svg)
 
-```text
-┌───────────────────────────────────────── CyberArk — Diagnostics ──────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   Start here: check Vault service → PVWA IIS → CPM pm.log → PSM PSMConsole.log               │    │
-│   │   All PVWA/CPM/PSM components connect to Vault on TCP 1858 — test this first                  │   │
-│   │   Password rotation failures: CPM logs show exact error code from the target platform         │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │           Vault and PVWA                     │  │            CPM and PSM                      │   │
-│   │   Get-Service 'PrivilegeVault'               │  │   Get-Service 'CyberArk Central Policy Mgr' │   │
-│   │   Test-NetConnection vault01 -Port 1858      │  │   Get-Service 'Cyber-Ark Priv Session Mgr'  │   │
-│   │   IIS: Get-WebApplication PasswordVault      │  │   CPM log: C:\...\Password Manager\Logs\    │   │
-│   │   PVWA log: C:\inetpub\...\PasswordVault\Logs│  │   PSM log: C:\...\PSM\Logs\PSMConsole.log   │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  PrivateArk Vault server · PVWA (IIS on Windows) · CPM server · PSM server · LDAP / RADIUS            │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│  Vault          = PrivateArk Vault; the encrypted credential store; all components connect to :1858   │
-│  PVWA           = Password Vault Web Access; the web UI; runs on IIS                                  │
-│  CPM            = Central Policy Manager; performs automatic password rotation on target systems      │
-│  PSM            = Privileged Session Manager; records and proxies privileged sessions                 │
-│  Port 1858      = Vault communication port; all CyberArk components require this to be open           │
-│  pm.log         = CPM activity log; records each rotation attempt and the result code                 │
-│  PSMConsole.log = PSM connection log; records session launch attempts and errors                      │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ```mermaid
 flowchart TD

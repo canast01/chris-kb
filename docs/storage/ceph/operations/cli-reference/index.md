@@ -10,37 +10,10 @@ Essential Ceph CLI commands: ceph status and health, OSD management, pool operat
 
 *Applies to: Ceph Reef / Squid*
 </div>
+![Ceph — CLI Reference](../../../../assets/storage-ceph-operations-cli-reference-index.svg)
 
-```text
-┌──────────────────────────────────────── Ceph — CLI Reference ─────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   ceph: admin CLI for cluster status, OSD, pool, PG, and auth management                     │    │
-│   │   rados: object-level operations on any pool; benchmarking                                    │   │
-│   │   rbd: RBD image create/list/snap/map/resize; required for block storage operations           │   │
-│   │   radosgw-admin: S3 user, bucket, quota, and zone management for RGW                          │   │
-│   │   ceph-volume: OSD provisioning (lvm/raw); device prepare and activate                        │   │
-│   │   cephadm: cluster orchestration; add hosts, deploy daemons, run upgrades                     │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  ceph -s      = Cluster status: health state, OSD up/in counts, PG summary, I/O rate                  │
-│  ceph health detail = Lists all active health codes with per-item explanation and affected OSDs       │
-│  ceph osd tree= Hierarchical view of hosts, buckets, OSDs, weights, and up/in state                   │
-│  rados        = Object-level CLI; put/get/ls/bench against any pool                                   │
-│  rbd          = RADOS Block Device CLI; create/list/snap/map/resize/export images                     │
-│  radosgw-admin= RGW admin CLI; manage S3 users, buckets, quotas, and zones                            │
-│  ceph auth    = Key management: create/list/delete CephX user keys and capabilities                   │
-│  ceph pg stat = Aggregate PG count by state (active+clean, degraded, recovering, etc.)                │
-│  ceph osd pool= Pool management: create, set PG count, set replication size, set quotas               │
-│  ceph df      = Per-pool capacity: stored objects, data used, available, and quota usage              │
-│  cephadm      = Cluster orchestration CLI: add hosts, deploy daemons, run upgrades                    │
-│  ceph config  = Runtime configuration: get/set per-daemon options without daemon restart              │
-│  ceph crash   = Crash report management: list, inspect, and archive daemon crash reports              │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ```mermaid
 graph LR

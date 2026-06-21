@@ -10,36 +10,10 @@ VM Lifecycle Runbook reference covering Overview, Pre-Checks, Steps, Validation,
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
+![VM Lifecycle Runbook](../../../../assets/virtualization-vmware-operations-runbooks-vm-lifecycle.svg)
 
-```text
-┌──────────────────────────────────────── VM Lifecycle Runbook ─────────────────────────────────────────┐
-│                                                                                                       │
-│    Standard steps for VM deploy, reconfigure, ownership review, and decommission                      │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Build            │  │       Operate + Review      │  │         Decommission        │   │
-│   │      ─────────────────      │  │      ─────────────────      │  │      ─────────────────      │   │
-│   │       Validate request      │  │        Confirm owner        │  │        Owner approval       │   │
-│   │        Confirm sizing       │  │        Review sizing        │  │         Final backup        │   │
-│   │     Deploy from template    │  │         Check backup        │  │         Power off VM        │   │
-│   │    Apply naming standard    │  │       Check monitoring      │  │     Delete from vCenter     │   │
-│   │     Assign backup policy    │  │       Patch compliance      │  │      Remove from backup     │   │
-│   │      Add to monitoring      │  │        Annual review        │  │         Update CMDB         │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    Template     = Golden image VM used as the base for new deployments; keep patched                  │
-│    Naming std   = Consistent VM name format; e.g. SITE-ROLE-NN; critical for CMDB                     │
-│    Backup policy = Defines schedule, retention, and target for the VM backup job                      │
-│    CMDB         = Configuration Management Database; tracks all VMs and their owners                  │
-│    Annual review = Yearly check that VM is still needed and owner is still valid                      │
-│    Decommission  = Remove VM, backup exclusions, monitoring, DNS, and CMDB in that order              │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

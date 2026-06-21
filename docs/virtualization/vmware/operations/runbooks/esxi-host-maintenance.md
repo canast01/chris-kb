@@ -18,31 +18,10 @@ tags:
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
+![ESXi Host Maintenance Mode Runbook](../../../../assets/virtualization-vmware-operations-runbooks-esxi-host-maintena.svg)
 
-```text
-┌──────────────────────────── ESXi Host Maintenance Mode — Runbook ─────────────────────────────────────┐
-│                                                                                                       │
-│  OVERVIEW                                                                                             │
-│  Maintenance mode evacuates all running VMs before any patching, hardware work, or host removal       │
-│  DRS must be enabled (at least partially automated) for automatic migration                           │
-│  Pre-check: confirm cluster has capacity to absorb the host's VMs before entering maintenance         │
-│                                                                                                       │
-│  FLOW                                                                                                 │
-│  Pre-checks → Enter maintenance mode → Wait for DRS evacuation → Perform work                         │
-│  → Verify host is ready → Exit maintenance mode → Confirm VMs re-balanced                             │
-│                                                                                                       │
-│  ROLLBACK                                                                                             │
-│  Exit maintenance mode at any point before patching                                                   │
-│  After patching: rollback requires re-running original firmware/patch via vLCM                        │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│  Maintenance mode  = ESXi state where vSphere migrates all VMs off the host                           │
-│  DRS drain         = DRS auto-migrates VMs via vMotion before maintenance completes                   │
-│  Remediation       = vLCM applying a patch baseline or cluster image to the host                      │
-│  Admission control = HA policy that reserves failover capacity; check before removing a host          │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Before you begin
 

@@ -8,24 +8,11 @@ tags:
 <div class="kb-summary">
 NFS Versions reference covering Version Comparison, Recommended Version, Checking NFS Version in Use, Configuring NFS Version, NFSv4 ID Mapping and 1 more sections.
 </div>
+![NFS Versions](../../../../assets/networking-protocols-nfs-versions-index.svg)
+
 
         NFSv3 vs NFSv4 vs NFSv4.1 COMPARISON
-```text
-┌─────────────────────────────────── ┬──────────────┬──────────────┬ ───────────────────────────────────┐
-│ Feature             │   NFSv3      │   NFSv4      │  NFSv4.1                                          │
-├─────────────────────┼──────────────┼──────────────┼──────────────┤
-│ Transport           │ UDP or TCP   │ TCP only     │ TCP only                                          │
-│ Port                │ 2049+111     │ 2049 only    │ 2049 only                                         │
-│ Stateful            │ No           │ Yes          │ Yes                                               │
-│ Locking             │ NLM (extra)  │ Built-in     │ Built-in                                          │
-│ Kerberos auth       │ Optional     │ Supported    │ Supported                                         │
-│ pNFS (parallel)     │ No           │ No           │ Yes                                               │
-│ ACLs                │ No native    │ NFSv4 ACLs   │ NFSv4 ACLs                                        │
-│ ID mapping          │ UID/GID nums │ user@domain  │ user@domain                                       │
-├─────────────────────┼──────────────┼──────────────┼──────────────┤
-│ Recommended for     │ Legacy only  │ General use  │ Modern/perf                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 ## NFSv4.1 Session Model and pNFS Data Path
 

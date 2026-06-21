@@ -12,56 +12,10 @@ Interoperability reference for VMware product combinations. Use this page before
 
 *Applies to: vSphere 7.x / 8.x, NSX 4.x, VCF 5.x, Aria Suite 8.x*
 </div>
+![VMware Interoperability and Compatibility Matrix](../../../../assets/virtualization-vmware-reference-interoperability-index.svg)
 
-```text
-┌────────────────────────── VMware Interoperability — Component Compatibility ──────────────────────────┐
-│                                                                                                       │
-│  Check interopmatrix.vmware.com before every upgrade; ordering matters — upgrade                      │
-│  vCenter before ESXi; NSX must be supported by the target vCenter version.                            │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │            vSphere Compatibility             │  │              NSX Compatibility              │   │
-│   │       vCenter must be >= ESXi version        │  │         NSX 4.x: requires vSphere 7+        │   │
-│   │          ESXi N-2 back from vCenter          │  │            NSX 3.x: vSphere 6.7+            │   │
-│   │       Hardware version: compat matrix        │  │          NSX + VCF: locked versions         │   │
-│   │       HCL: CPU, NIC, storage per ESXi        │  │         NSX edge: ESXi version match        │   │
-│   │       VxRail: interop matrix separate        │  │         Upgrade: NSX before vCenter         │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  VCF locks all component versions together; do not upgrade components standalone.                     │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │           Aria Suite Compatibility           │  │            Horizon Compatibility            │   │
-│   │          LCM manages Aria versions           │  │          Horizon: locked to vSphere         │   │
-│   │        Aria 8.x: vSphere 7+ required         │  │        Agent: match Connection Server       │   │
-│   │          IDM: upgrade first in Aria          │  │         Composer: must match Horizon        │   │
-│   │       Ops -> Logs -> Automation order        │  │          HV: guest OS compat matrix         │   │
-│   │        Guest OS: VMware compat guide         │  │        VCF + Horizon: verified combos       │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  All components run as VMs on ESXi; hardware HCL governs physical compatibility;                      │
-│  verify CPU microcode and NIC firmware against VMware HCL before upgrade.                             │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Interop Matrix   = interopmatrix.vmware.com; authoritative compat check                              │
-│  HCL              = Hardware Compatibility List; CPU/NIC/storage per ESXi                             │
-│  N-2 support      = ESXi can be up to 2 major versions below vCenter                                  │
-│  VCF version lock = all VCF components pinned to BOM; no standalone upgrade                           │
-│  BOM              = Bill of Materials; VCF release defines exact versions                             │
-│  IDM              = Identity Manager; must be upgraded first in Aria Suite                            │
-│  Hardware version = VM hardware version; caps features; raise before upgrade                          │
-│  VxRail matrix    = separate interop matrix on Dell support site                                      │
-│  NSX edge compat  = NSX Edge VM must match NSX Manager version                                        │
-│  Horizon agent    = must match Connection Server within N-1                                           │
-│  Guest OS compat  = VMware guest OS guide; OS versions per ESXi/tools                                 │
-│  EOGS             = End of General Support; no new patches after this date                            │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 ## Before you begin
 
 - **Always verify on the official tool:** [interopmatrix.vmware.com](https://interopmatrix.vmware.com/) — the matrix below is a reference snapshot and may not reflect latest patches.

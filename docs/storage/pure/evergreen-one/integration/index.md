@@ -10,6 +10,8 @@ Pure Storage Evergreen//One Integration reference covering Pure1 Integration, Ca
 
 *Applies to: Evergreen//One*
 </div>
+![Pure Storage Evergreen//One Integration](../../../../assets/storage-pure-evergreen-one-integration-index.svg)
+
 
 ```text
   Evergreen//One Integration Landscape

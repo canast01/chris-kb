@@ -12,6 +12,8 @@ Step-by-step guide to installing Confluence Data Center, configuring the databas
 
 *Applies to: Confluence Cloud / Data Center*
 </div>
+![Confluence — Initial Deployment](../../../assets/itsm-confluence-deploy-index.svg)
+
 
 
 ## Before you begin
@@ -23,42 +25,7 @@ Step-by-step guide to installing Confluence Data Center, configuring the databas
 
 ---
 
-```text
-┌─────────────────────────────────── Confluence — Initial Deployment ───────────────────────────────────┐
-│                                                                                                       │
-│   Delivery: Confluence Data Center; self-hosted on RHEL 8/9 or Ubuntu 22.04 LTS                       │
-│   Java: Eclipse Temurin 11 or 17; set JAVA_HOME before running installer                              │
-│   Database: PostgreSQL 14/15 (recommended) or MySQL 8.0; UTF-8; collation C                           │
-│   Ports: 8090 (HTTP), 8091 (Synchrony collaborative editing), 25/587 outbound SMTP                    │
-│                                                                                                       │
-│   Sizing (recommended)                                                                                │
-│   RAM 16 GB; vCPU 8; App disk 100 GB; Home/attachments disk 1 TB                                      │
-│   ulimit -n ≥ 65536 — set in /etc/security/limits.conf                                                │
-│   JVM heap: -Xms2g -Xmx8g in /opt/atlassian/confluence/bin/setenv.sh                                  │
-│                                                                                                       │
-│   Install sequence                                                                                    │
-│   1. Create PostgreSQL database + user (encoding UTF8, collation C)                                   │
-│   2. Run installer → Custom type → paths /opt/atlassian/confluence + /var/atlassian/...               │
-│   3. Setup wizard: skip apps → licence key → Production installation → DB config                      │
-│   4. Configure LDAP: User management → Add directory → Microsoft Active Directory                     │
-│   5. Install recommended add-ons: Draw.io, Table Filter, Refined for Confluence                       │
-│   6. Configure backup: daily 02:00; retention 7 days; separate volume                                 │
-│                                                                                                       │
-│   Validation checks                                                                                   │
-│   systemctl status confluence; curl -I http://localhost:8090 → HTTP 200                               │
-│   Log in as admin + LDAP user; create page in first space; verify Synchrony toolbar                   │
-│   grep -i "out of memory" catalina.out → must return 0 results                                        │
-│                                                                                                       │
-│   Key terms:                                                                                          │
-│   Data Center   = Atlassian's enterprise deployment tier; supports clustering and HA                  │
-│   Synchrony     = real-time collaborative editing service; port 8091; separate process                │
-│   JAVA_HOME     = environment variable pointing to the JDK used by Confluence                         │
-│   Space key     = short identifier (e.g. ITOPS) used in page URLs; set at space creation              │
-│   setup wizard  = browser-based first-run configuration at http://<host>:8090                         │
-│   XML backup    = built-in backup format; not suitable for >1 GB home dirs; use rsync + pg_dump       │
-│   ulimit -n     = open file descriptor limit; must be ≥ 65536 for Confluence to start reliably        │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 ## Prerequisites
 

@@ -13,47 +13,10 @@ End-to-end deployment guide for Aria Suite Lifecycle Manager (LCM). Covers OVA d
 
 *Applies to: Aria LCM 8.x*
 </div>
+![Aria Suite Lifecycle — Deploy](../../../../assets/virtualization-vmware-aria-suite-lifecycle-deploy-index.svg)
 
-```text
-┌────────────────────────── Aria Suite Lifecycle Manager — Deployment Phases ───────────────────────────┐
-│                                                                                                       │
-│  Six phases from bare metal to LCM managing its first product environment.                            │
-│  LCM must be stable and depot-synced before deploying any Aria product through it.                    │
-│                                                                                                       │
-│  ┌──────────────────────────┐  ┌──────────────────────────┐  ┌──────────────────────────────────┐     │
-│  │  Phase 1: Pre-Flight     │  │  Phase 2: LCM OVA Deploy │  │     Phase 3: VAMI & Locker       │     │
-│  │  DNS A + PTR for LCM     │  │  Deploy LCM OVA          │  │   Complete VAMI setup wizard     │     │
-│  │  NTP sources confirmed   │  │  Set IP, FQDN, NTP, DNS  │  │   Upload CA root + intermediates │     │
-│  │  vCenter svc account     │  │  Set admin password       │  │   Configure Locker passwords     │    │
-│  │  Datastore ≥ 50 GB free  │  │  Power on → access UI    │  │   Assign cert to LCM itself      │     │
-│  │  Product FQDNs in DNS    │  │  Accept EULA + licence   │  │   Verify UI trusted cert         │     │
-│  └──────────────────────────┘  └──────────────────────────┘  └──────────────────────────────────┘     │
-│                                                                                                       │
-│               ▼                             ▼                                ▼                        │
-│                                                                                                       │
-│  ┌──────────────────────────┐  ┌──────────────────────────┐  ┌──────────────────────────────────┐     │
-│  │  Phase 4: Depot + vCenter│  │  Phase 5: Environment    │  │      Phase 6: Validation         │     │
-│  │  Configure depot (online │  │  Create product env      │  │   LCM UI accessible HTTPS 443    │     │
-│  │  or NFS local)           │  │  Add vIDM first          │  │   Locker: certs + passwords OK   │     │
-│  │  Sync product binaries   │  │  Add Aria products       │  │   Depot: PAKs downloaded         │     │
-│  │  Add vCenter infra acct  │  │  LCM runs pre-checks     │  │   Environment health: green      │     │
-│  │  Test inventory browse   │  │  Monitor deploy tasks    │  │   Product UIs reachable          │     │
-│  └──────────────────────────┘  └──────────────────────────┘  └──────────────────────────────────┘     │
-│                                                                                                       │
-│  Physical Infrastructure: LCM VM on vSphere (≥50 GB datastore, static IP);                            │
-│  vCenter service account; NFS or internet access for depot; product FQDN DNS entries.                 │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Locker          = LCM internal vault; stores passwords, TLS certificates, and licence keys           │
-│  Depot           = Binary source for product PAK files; online (Broadcom) or local NFS                │
-│  Environment     = Named grouping of Aria products sharing a vCenter account and cert authority       │
-│  Infrastructure  = LCM term for the vCenter account used to deploy product VMs                        │
-│  PAK file        = Product Activation Key; binary bundle used to deploy or upgrade an Aria product    │
-│  Pre-check       = LCM automated validation run before each deploy or upgrade operation               │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ---
 

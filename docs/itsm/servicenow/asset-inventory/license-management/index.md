@@ -3,6 +3,8 @@ tags:
   - servicenow
 ---
 # Inventory — License Management
+![Inventory — License Management](../../../../assets/itsm-servicenow-asset-inventory-license-management-index.svg)
+
 
 ```bash
 # Debian / Ubuntu — list installed packages
@@ -15,38 +17,7 @@ rpm -qa --qf "%{NAME} %{VERSION}-%{RELEASE}\n" | sort
 # Running processes (for unlicensed software audit)
 ps aux --sort=-%cpu | awk '{print $11}' | sort -u | head -30
 ```
-```text
-┌─────────────────────────────────── Inventory — License Management ────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │           Track software licence entitlements vs actual usage to maintain compliance          │   │
-│   │   Types: per-socket, per-core, per-user, subscription, concurrent; each has different count   │   │
-│   │      Audit: compare entitlements to discovered installations; renew 60 days before expiry     │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               Licence Register               │  │              Compliance Checks              │   │
-│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
-│   │              Product + version               │  │             Entitlement vs usage            │   │
-│   │             Licence type + count             │  │            Discovery scan (SCCM)            │   │
-│   │            Expiry + renewal date             │  │            Alert: < 20% headroom            │   │
-│   │              Purchase order ref              │  │            Quarterly audit cycle            │   │
-│   │               Vendor + contact               │  │           Reclaim unused licences           │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    Entitlement  = Number or type of licences purchased; documented by purchase order + cert           │
-│    Per-socket   = Licence per physical CPU socket; common for server OS and hypervisors               │
-│    Per-core     = Licence per CPU core; Microsoft SQL Server uses this model                          │
-│    Subscription = Time-limited licence; expires on date; must renew or lose access                    │
-│    Compliance gap= Installed instances exceed entitlements; vendor audit risk                         │
-│    SCCM         = Microsoft System Center; discovers installed software for licence counting          │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 ```powershell
 # Connect to Microsoft Graph (requires MgGraph module)
 Connect-MgGraph -Scopes "Directory.Read.All"

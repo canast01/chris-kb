@@ -16,32 +16,10 @@ is restored.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
+![vSAN Stretched Cluster Split-Brain](../../../../assets/virtualization-vmware-topics-scenarios-vsan-stretched-cluste.svg)
 
-```text
-┌─────────────────────── vSAN Stretched Cluster Split-Brain — Investigation Flow ───────────────────────┐
-│                                                                                                       │
-│  OVERVIEW                                                                                             │
-│  vSAN stretched cluster spans two sites + witness at a third — split-brain when inter-site link fails │
-│  Witness appliance decides which site retains quorum; other site's VMs are stopped by HA              │
-│                                                                                                       │
-│  START: vCenter shows hosts at one site disconnected OR vSAN health shows cluster partition           │
-│                                                                                                       │
-│  STEP 1 — Identify Failure Type                                                                       │
-│  Witness reachable from one site only → quorum on that site; other site VMs stopped by HA             │
-│  Witness unreachable from both sites → full isolation; all VMs stopped                                │
-│  Both sites reachable but vSAN partition detected → unicast agent / network issue                     │
-│                                                                                                       │
-│  STEP 2 — Resolution by Type                                                                          │
-│  Normal split-brain: preferred site retains quorum; secondary site VMs stopped by HA                  │
-│  Restore inter-site connectivity → secondary VMs restart as quorum is re-established                  │
-│  Full isolation (witness unreachable from both): do NOT force quorum — contact GSS first              │
-│                                                                                                       │
-│  STEP 3 — After Connectivity Restored                                                                 │
-│  Monitor resync queue: do NOT perform maintenance on any host until resync completes                  │
-│  Check vSAN Skyline Health for residual partition or degraded component issues                        │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Products Involved
 

@@ -4,6 +4,8 @@ tags:
   - operations
 ---
 # Linux Operations — Procedures
+![Linux Operations — Procedures](../../../../assets/compute-linux-operations-procedures-index.svg)
+
 
 ```bash
 # Confirm system is healthy before making changes
@@ -18,50 +20,7 @@ dpkg -l | awk 'NR>5' > /tmp/pre-change-packages.txt   # Ubuntu
 # Capture running kernel
 uname -r
 ```
-```text
-┌──────────────────────────────────── Linux Operations — Procedures ────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                                 Standard Operating Procedures                                 │   │
-│   │           User provisioning: adduser → set password → add to groups → configure sudo          │   │
-│   │            Disk expansion: pvcreate → vgextend → lvextend → xfs_growfs / resize2fs            │   │
-│   │           Service deployment: create unit file → systemctl enable → start → validate          │   │
-│   │        Kernel update: dnf update kernel → grub2-set-default → reboot → verify uname -r        │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Documented procedures reduce errors and ensure consistent repeatable outcomes                      │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              Network & Firewall              │  │              Certificate & SSH              │   │
-│   │         ip addr add: add IP address          │  │            ssh-keygen -t ed25519            │   │
-│   │         nmcli: NetworkManager config         │  │          ssh-copy-id to target host         │   │
-│   │         firewall-cmd --permanent add         │  │          openssl req: generate CSR          │   │
-│   │         ss -tlnp: verify open ports          │  │          certbot: ACME cert renewal         │   │
-│   │           ip route: add/del routes           │  │           known_hosts maintenance           │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  x86-64 servers · LVM volumes · NIC · iDRAC/iLO BMC · NTP · Power & Cooling                           │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  pvcreate    = Initialise a block device as an LVM Physical Volume                                    │
-│  vgextend    = Add a new Physical Volume to an existing Volume Group                                  │
-│  lvextend    = Grow a Logical Volume; must be followed by filesystem resize                           │
-│  xfs_growfs  = Online-resize an XFS filesystem to fill available LV space                             │
-│  resize2fs   = Online or offline-resize an ext4 filesystem after lvextend                             │
-│  grub2-set-default= Select which kernel entry GRUB2 boots by default                                  │
-│  nmcli       = NetworkManager CLI; manages connections, devices, and profiles                         │
-│  firewall-cmd= CLI for firewalld; adds/removes services, ports, and rich rules                        │
-│  ss          = Socket statistics; replaces netstat for viewing open ports/connections                 │
-│  ssh-keygen  = Generates RSA/Ed25519 key pairs for SSH public-key authentication                      │
-│  openssl req = Generates a Certificate Signing Request from a private key                             │
-│  certbot     = ACME client for Let's Encrypt; automates TLS cert issuance and renewal                 │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 ```bash
 # Detailed memory breakdown
 cat /proc/meminfo

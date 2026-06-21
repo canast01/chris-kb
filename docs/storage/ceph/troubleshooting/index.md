@@ -14,6 +14,8 @@ Ceph troubleshooting: OSD down/out recovery, PG degraded and stuck states, slow 
 
 *Applies to: Ceph Reef / Squid*
 </div>
+![Ceph — Troubleshooting](../../../assets/storage-ceph-troubleshooting-index.svg)
+
 
 ```text
 ┌──────────────────────────────────────── Ceph Troubleshooting ─────────────────────────────────────────┐

@@ -8,13 +8,10 @@ tags:
 <div class="kb-summary">
 Top-10 Aria Logs (Log Insight) commands for agent control, syslog configuration, and log queries via CLI and REST API.
 </div>
+![Aria Logs Cheat Sheet](../../assets/reference-cheat-sheets-aria-logs.svg)
 
-```text
-┌──────────────────────────────────── Aria Logs Cheat Sheet ────────────────────────────────────────────┐
-│  Agent: liagent (Linux/Windows)  ·  REST API: https://loginsight/api/v1  ·  cfapi (config)            │
-│  Categories: Agent · Ingestion · Queries · Alerts · Archives · Cluster                                │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Log Insight Agent (liagent)
 

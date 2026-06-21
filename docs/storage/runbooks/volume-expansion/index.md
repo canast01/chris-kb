@@ -9,6 +9,8 @@ tags:
 <div class="kb-summary">
 | Field | Value | |---|---| | Risk | Medium | | Approval | Change ticket required; confirm array pool capacity before expanding | | Estimated time | 20–40 minutes | | Impact | No downtime for online expansion; brief I/O pause during partition resize on some platforms |
 </div>
+![Storage Volume Expansion Runbook](../../../assets/storage-runbooks-volume-expansion-index.svg)
+
 
 | Field | Value |
 |---|---|
@@ -19,42 +21,7 @@ tags:
 
 ## Process Flow
 
-```text
-┌───────────────────────────────── Runbook — Storage Volume Expansion ──────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │          Expand storage: grow array LUN → OS rescans → extend filesystem — all online         │   │
-│   │           Pre-check: snapshot before expansion; confirm free pool capacity on array           │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │           1. Array          │  │         2. OS rescan        │  │         3. FS extend        │   │
-│   │      ─────────────────      │  │      ─────────────────      │  │      ─────────────────      │   │
-│   │        Expand LUN/vol       │  │      Linux: rescan-scsi     │  │       Linux: resize2fs      │   │
-│   │       Verify pool free      │  │      Windows: DiskMgmt      │  │       Windows: Extend       │   │
-│   │       Confirm new size      │  │       lsblk / diskpart      │  │     pvresize + lvextend     │   │
-│   │        Array CLI/GUI        │  │      ESXi: rescan HBAs      │  │         df -h verify        │   │
-│   │        Snapshot first       │  │       Multipath update      │  │      xfs_growfs for XFS     │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│   │     FS type      │   Grow command   │  Partition needed │     Online?      │      Verify      │   │
-│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
-│   │       ext4       │ resize2fs /dev/X │   growpart first  │       Yes        │      df -h       │   │
-│   │       XFS        │ xfs_growfs /mnt  │   growpart first  │       Yes        │      df -h       │   │
-│   │       LVM        │lvextend + resize │  PV extend first  │       Yes        │    lvdisplay     │   │
-│   │       NTFS       │  Extend Volume   │      DiskMgmt     │       Yes        │     Explorer     │   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    rescan-scsi-bus= Script to trigger OS rescan after LUN resize; alternative: echo 1 > /sys/...      │
-│    growpart       = Extends a partition within a disk; required before online FS extend               │
-│    pvresize       = LVM: expands physical volume to use new LUN capacity                              │
-│    lvextend -r    = LVM: extends logical volume and resizes filesystem in one step                    │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 **Dell PowerMax (Solutions Enabler):**
 ```bash
 symconfigure -sid <SID> -cmd "modify dev <DEV_ID>, size=<cylinders>;" commit -noprompt

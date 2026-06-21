@@ -4,6 +4,8 @@ tags:
   - security
 ---
 # Linux — Encryption
+![Linux — Encryption](../../../../assets/compute-linux-security-encryption-index.svg)
+
 
 ```bash
 # Install cryptsetup
@@ -23,49 +25,7 @@ mkfs.xfs /dev/mapper/secure-data
 mkdir /mnt/secure-data
 mount /dev/mapper/secure-data /mnt/secure-data
 ```
-```text
-┌───────────────────────────────────────── Linux — Encryption ──────────────────────────────────────────┐
-│                                                                                                       │
-│  Encryption at rest (LUKS) and in transit (TLS/SSH) for Linux systems.                                │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │            Disk Encryption — LUKS            │  │            Transport — TLS / SSH            │   │
-│   │            cryptsetup luksFormat             │  │              OpenSSL: cert mgmt             │   │
-│   │            dm-crypt: kernel layer            │  │               TLS 1.2/1.3 only              │   │
-│   │           /etc/crypttab: auto open           │  │            SSH: ed25519 preferred           │   │
-│   │            TPM2: key seal/unseal             │  │             stunnel: TLS wrapper            │   │
-│   │            Clevis + Tang: network            │  │            WireGuard: modern VPN            │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │           File / Secret Encryption           │  │                Key Management               │   │
-│   │             GPG: file encryption             │  │            PKCS#11: HSM interface           │   │
-│   │             age: modern enc tool             │  │            TPM2-tools: seal keys            │   │
-│   │            ansible-vault encrypt             │  │            HashiCorp Vault agent            │   │
-│   │            /dev/urandom: entropy             │  │             Clevis: auto-unseal             │   │
-│   │             shred: secure delete             │  │            Tang: network key srv            │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  x86-64 servers · TPM 2.0 chip · hardware HSM · encrypted SSDs · NIC                                  │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  LUKS        = Linux Unified Key Setup; block device encryption standard                              │
-│  dm-crypt    = Kernel device-mapper target providing transparent encryption                           │
-│  cryptsetup  = CLI for managing LUKS containers and dm-crypt mappings                                 │
-│  TPM         = Trusted Platform Module; stores keys in hardware, survives reboot                      │
-│  Clevis      = Automated LUKS unlock framework supporting TPM and Tang backends                       │
-│  Tang        = Network-bound disk encryption server; key released only on LAN                         │
-│  GPG         = GNU Privacy Guard; OpenPGP for file/email encryption and signing                       │
-│  age         = Modern file encryption tool; simpler than GPG, X25519/SSH keys                         │
-│  TLS         = Transport Layer Security; cryptographic protocol for secure channels                   │
-│  WireGuard   = Modern VPN protocol; kernel module, fast, simple configuration                         │
-│  HSM         = Hardware Security Module; tamper-resistant key storage device                          │
-│  PKCS#11     = Standard API for interacting with HSMs and smart cards                                 │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 ```bash
 # Get the UUID of the LUKS device
 blkid /dev/sdb

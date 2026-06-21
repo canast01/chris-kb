@@ -12,45 +12,10 @@ Step-by-step guide to requesting a ServiceNow developer instance, configuring ad
 
 *Applies to: ServiceNow (Washington / Xanadu)*
 </div>
+![ServiceNow — Initial Instance Setup](../../../assets/itsm-servicenow-deploy-index.svg)
 
-```text
-┌───────────────────────────────────────── ServiceNow — Deploy ─────────────────────────────────────────┐
-│                                                                                                       │
-│   Delivery: SaaS — no on-premises app tier; instances provisioned by ServiceNow                       │
-│   Instance URL: https://<instance-name>.service-now.com                                               │
-│   PDI (developer): free from developer.servicenow.com; provisioned in 10-30 min                       │
-│   Enterprise: ordered via ServiceNow account team; delivered through hi.service-now.com               │
-│                                                                                                       │
-│   Initial configuration sequence                                                                      │
-│   1. First login → change admin password immediately; store in team password manager                  │
-│   2. System Properties: set instance name, timezone, SMTP server, company logo                        │
-│   3. Enable MFA for admin and security_admin roles (System Properties → MFA)                          │
-│   4. LDAP: System LDAP → Servers → New; configure LDAPS (port 636); test connection                   │
-│   5. Import users + groups: LDAP Listeners → Load All Records; schedule sync (every 4h)               │
-│   6. Configure SMTP (port 587 STARTTLS or 25); test email delivery                                    │
-│   7. Activate plugins: ITSM, CMDB, Discovery, Service Portal, Flow Designer, Integrations Hub         │
-│   8. Deploy MID Server for on-premises network reach (LDAP, Discovery, JDBC)                          │
-│                                                                                                       │
-│   MID Server                                                                                          │
-│   Agent runs on Windows or Linux VM with outbound HTTPS to the ServiceNow instance                    │
-│   Config: config.xml — instance URL, mid.server.svc credentials, server name                          │
-│   Validate: MID Server → Servers → click record → Validate; status changes to Up                      │
-│                                                                                                       │
-│   Validation checks                                                                                   │
-│   Admin + LDAP user login; LDAP users visible under User Administration → Users                       │
-│   Create incident → assign → resolve → confirm email notification sent                                │
-│   MID Server status = Up; no critical errors in MID Server logs (last 30 min)                         │
-│                                                                                                       │
-│   Key terms:                                                                                          │
-│   PDI          = Personal Developer Instance; free sandbox at developer.servicenow.com                │
-│   MID Server   = Management, Instrumentation, Discovery agent; runs on-prem, proxies to cloud         │
-│   config.xml   = MID Server configuration file; contains instance URL and service account creds       │
-│   LDAP Listener= ServiceNow component that maps AD attributes to ServiceNow user fields               │
-│   Flow Designer= no-code/low-code workflow automation tool within ServiceNow                          │
-│   hi.service-now.com = ServiceNow Customer Success Portal for enterprise instance management          │
-│   Import Set   = staging table used during LDAP or CSV data import into ServiceNow                    │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Before you begin
 

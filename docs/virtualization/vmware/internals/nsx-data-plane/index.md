@@ -12,56 +12,10 @@ NSX-T data plane consists of per-host kernel modules — N-VDS, Distributed Rout
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
+![NSX Data Plane](../../../../assets/virtualization-vmware-internals-nsx-data-plane-index.svg)
 
-```text
-┌──────────────────────────── NSX Data Plane — N-VDS, DFW, Geneve, and Edge ────────────────────────────┐
-│                                                                                                       │
-│  NSX data plane runs as ESXi kernel modules; DFW and Distributed Router operate                       │
-│  per vNIC with zero bypass; overlay uses Geneve on UDP 6081 between TEPs.                             │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              NSX Kernel Modules              │  │           Overlay Network (Geneve)          │   │
-│   │      N-VDS: replaces vSwitch in kernel       │  │            Geneve: UDP port 6081            │   │
-│   │      Distributed Router: kernel routing      │  │        TEP: per-host tunnel endpoint        │   │
-│   │       DFW: per-vNIC stateful firewall        │  │            Segment ID: 24-bit VNI           │   │
-│   │          Applied on vNIC: no bypass          │  │        VTEP table: synced by NSX Mgr        │   │
-│   │       Data plane survives NSX Mgr loss       │  │         MTU: underlay >= 1600 bytes         │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  E-W traffic: kernel path only — no L3 gateway hop needed for same-subnet VMs.                        │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │           Edge Nodes (N-S Traffic)           │  │             Fast Path Forwarding            │   │
-│   │       N-S traffic exits via Edge nodes       │  │        E-W: kernel, no vCenter needed       │   │
-│   │      Edge VM or bare-metal form factor       │  │         DFW: stateful 5-tuple match         │   │
-│   │        SR lives on Edge: NAT, LB, VPN        │  │         IDPS and NAT: also in kernel        │   │
-│   │         T0 uplinks: BGP/OSPF to TOR          │  │         Control plane: NSX Mgr only         │   │
-│   │          ECMP: up to 8 paths N-S LB          │  │      Forwarding table: TEP-distributed      │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  ESXi host pNICs carry Geneve-encapsulated overlay traffic on underlay VLAN;                          │
-│  Edge nodes require dedicated pNIC or DPDK uplinks for N-S forwarding.                                │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  N-VDS        = NSX Virtual Distributed Switch; ESXi kernel data-plane                                │
-│  DFW          = Distributed Firewall; kernel-resident per-vNIC stateful FW                            │
-│  DR           = Distributed Router; per-host kernel L3 forwarding                                     │
-│  SR           = Services Router; lives on Edge nodes; NAT/LB/VPN                                      │
-│  TEP          = Tunnel End Point; per-host IP for Geneve encapsulation                                │
-│  Geneve       = Generic Network Virtualization Encapsulation; UDP 6081                                │
-│  VNI          = Virtual Network Identifier; 24-bit segment ID                                         │
-│  VTEP table   = mapping of segment VNI to remote TEP IPs                                              │
-│  TOR          = Top-of-Rack switch; Edge T0 peers via BGP/OSPF                                        │
-│  ECMP         = Equal-Cost Multi-Path; up to 8 uplinks for N-S load balancing                         │
-│  E-W traffic  = east-west; VM-to-VM same site; kernel path only                                       │
-│  N-S traffic  = north-south; VM to external network; via Edge node                                    │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ```mermaid
 graph LR

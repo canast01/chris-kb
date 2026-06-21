@@ -11,31 +11,10 @@ search:
 <div class="kb-summary">
 DNS Troubleshooting reference covering Overview, Resolution Failure Triage, dcdiag /test:dns, Cache Poisoning Checks, Replication Issues and 2 more sections.
 </div>
+![DNS Troubleshooting](../../../../assets/networking-protocols-dns-troubleshooting-index.svg)
 
-```text
-┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
-│  1. nslookup host.example.local ── no answer ──► continue                                             │
-│          │                                                                                            │
-│          ▼                                                                                            │
-│  2. Check resolver (which server answered?)                                                           │
-│     nslookup host.example.local 10.0.0.53 ── ok ──► client conf                                       │
-│          │ still fails                                                                                │
-│          ▼                                                                                            │
-│  3. Record exists? dig @10.0.0.53 host.example.local                                                  │
-│          │ NXDOMAIN ──────────────────────────► add record                                            │
-│          │ answer returned                                                                            │
-│          ▼                                                                                            │
-│  4. Zone delegation correct?                                                                          │
-│     dig NS corp.local ──── wrong NS ────► fix delegation                                              │
-│          │ ok                                                                                         │
-│          ▼                                                                                            │
-│  5. AD replication? repadmin /showrepl ─► sync if needed                                              │
-│          │ ok                                                                                         │
-│          ▼                                                                                            │
-│  6. Flush client cache: ipconfig /flushdns (Windows)                                                  │
-│                         resolvectl flush-caches (Linux)                                               │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Before you begin
 

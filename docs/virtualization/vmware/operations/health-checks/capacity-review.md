@@ -10,33 +10,10 @@ Run this check weekly or after any significant workload addition.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
+![Capacity Review](../../../../assets/virtualization-vmware-operations-health-checks-capacity-revi.svg)
 
-```text
-┌─────────────────────────────── Capacity Review — Weekly Resource Check ───────────────────────────────┐
-│                                                                                                       │
-│    Run weekly and after any significant workload addition; forecast 90 days ahead                     │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │     Resource     │      Green       │   Amber — action  │  Red — escalate  │    Frequency     │   │
-│   │  ──────────────  │  ──────────────  │  ───────────────  │  ──────────────  │  ──────────────  │   │
-│   │   CPU cluster    │    < 70% avg     │   70-85% → plan   │  85%+ → P1 now   │  Daily + weekly  │   │
-│   │   RAM balloon    │    0 balloon     │  Any → investig.  │  > 0 swap → P1   │      Daily       │   │
-│   │    Datastore     │    < 75% used    │   75-85% → free   │  85%+ → expand   │      Daily       │   │
-│   │  vSAN capacity   │    < 70% used    │   70-80% → plan   │  80%+ → P1 now   │      Weekly      │   │
-│   │    Licensing     │   All covered    │   Expiry < 60 d   │  Expiry < 30 d   │     Monthly      │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    Balloon    = Memory reclaim driver inflates inside the VM; signals host memory pressure            │
-│    Swap       = Host swaps VM memory to disk; severe performance impact; treat as P1                  │
-│    Headroom   = Spare capacity after HA failover reservation is accounted for                         │
-│    Thin prov. = Allocating more virtual disk than physical; monitor actual used, not alloc            │
-│    Forecast   = Project current growth rate 90 days; order hardware before hitting amber              │
-│    vSAN slack = vSAN requires ~25% free space for rebuild operations; do not fill beyond 70%          │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 Alert thresholds:
 - > 75% used: review and plan expansion
 - > 85% used: immediate action — thin provisioned disks may fail to inflate

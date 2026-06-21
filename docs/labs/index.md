@@ -10,13 +10,10 @@ tags:
 <div class="kb-summary">
 Hands-on walkthroughs for building a VMware nested homelab from bare metal through vSAN, NSX-T, and VCF. Each lab builds on the previous one — start with Lab 1 if you are new to nested virtualisation.
 </div>
+![Lab Guides](../assets/labs-index.svg)
 
-```text
-┌─────────────────────────────────────────── Lab Guides ────────────────────────────────────────────────┐
-│  Four progressive labs using nested ESXi on a single physical host                                    │
-│  Lab 1: Nested ESXi → Lab 2: vSAN 2-node → Lab 3: NSX-T → Lab 4: VCF                                  │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 <div class="kb-grid">
 <a class="kb-card" href="nested-esxi/">

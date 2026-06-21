@@ -8,25 +8,11 @@ tags:
 <div class="kb-summary">
 iSCSI multipathing uses multiple network paths between initiator and target for redundancy and load distribution.
 </div>
+![iSCSI Multipathing](../../../../assets/networking-protocols-iscsi-multipathing-index.svg)
+
 
         iSCSI MULTIPATH TOPOLOGY
-```text
-┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
-│   HOST                                                                                                │
-│   ┌──────────┐   path 1    ┌──────────┐        ┌─────────────┐                                        │
-│   │  NIC 0   ├────────────►│ Switch A ├───────►│ Portal A    │                                        │
-│   │10.10.1.x │             │(VLAN A)  │        │10.10.1.100  │                                        │
-│   └──────────┘             └──────────┘        │  :3260      │                                        │
-│                                                │             ├─┼──► LUN
-│   ┌──────────┐   path 2    ┌──────────┐        │             │                                        │
-│   │  NIC 1   ├────────────►│ Switch B ├───────►│ Portal B    │                                        │
-│   │10.10.2.x │             │(VLAN B)  │        │10.10.2.100  │                                        │
-│   └──────────┘             └──────────┘        │  :3260      │                                        │
-│                                                └─────────────┘                                        │
-│   MPIO (dm-multipath / Windows MPIO / ESXi NMP)                                                       │
-│   distributes I/O across path 1 and path 2                                                            │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 On Linux, DM-Multipath handles this; on Windows, MPIO; on ESXi, NMP with PSP.
 
 ## Recommended Network Layout

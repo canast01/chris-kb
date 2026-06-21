@@ -11,6 +11,8 @@ This page covers all backup and restore methods for Confluence Data Center: buil
 
 *Applies to: Confluence Cloud / Data Center*
 </div>
+![Confluence — Backup & Restore](../../../../assets/itsm-confluence-operations-backup-restore-index.svg)
+
 
 ---
 
@@ -41,36 +43,7 @@ flowchart TD
     D --> D2[Index]
     D --> D3[Plugins / Avatars]
 ```
-```text
-┌─────────────────────────────────── Confluence — Backup and Restore ───────────────────────────────────┐
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               Backup Strategy                │  │              Restore Procedure              │   │
-│   │               DB dump nightly                │  │               Stop Confluence               │   │
-│   │              Home dir snapshot               │  │               Restore DB first              │   │
-│   │             XML backup (weekly)              │  │               Restore home dir              │   │
-│   │                 Verify daily                 │  │               Start Confluence              │   │
-│   │                Off-site copy                 │  │                Verify via UI                │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  Confluence server · PostgreSQL DB · CONFLUENCE_HOME on NFS or SAN · backup to NFS                    │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  XML backup = Confluence built-in export; content only; portable but slow for large instances         │
-│  DB dump = pg_dump for PostgreSQL; fastest and most reliable backup method                            │
-│  CONFLUENCE_HOME = File system directory containing attachments, config, and indexes                  │
-│  Home dir snapshot = Filesystem or VM snapshot of CONFLUENCE_HOME for quick restore                   │
-│  Restore order = Always restore DB before restoring home directory                                    │
-│  Verify restore = Log in, check recent pages and attachments exist after restore                      │
-│  Off-site copy = Backup archive copied to secondary location or object store                          │
-│  Quarterly test = Full restore to test environment quarterly to verify recoverability                 │
-│  RTO = Recovery Time Objective; target time from failure to restored service                          │
-│  RPO = Recovery Point Objective; maximum acceptable data loss in time                                 │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 Naming convention: `backup-<YYYY-MM-DD-HH-MM-SS>.zip`
 

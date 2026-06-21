@@ -11,6 +11,8 @@ Windows Server design standards: domain join requirements, WSUS patch cadence, s
 
 *Applies to: Windows Server 2019 / 2022*
 </div>
+![Windows Server — Standards](../../../../assets/compute-windows-server-architecture-design-standards-index.svg)
+
 
 ## Group Policy Processing Order
 
@@ -25,51 +27,7 @@ flowchart LR
 
     localGPO --> siteGPO --> domainGPO --> ouParentGPO --> ouChildGPO --> applied
 ```
-```text
-┌────────────────────────────────── Windows Server — Design Standards ──────────────────────────────────┐
-│                                                                                                       │
-│  Design standards: naming conventions, OU structure, GPO hierarchy, and server hardening baseline.    │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              Naming Conventions              │  │               AD OU Structure               │   │
-│   │            Server: SITE-ROLE-NNN             │  │         Domain → Servers → Role OUs         │   │
-│   │           Domain: corp.example.com           │  │       Tier: T0 DC / T1 server / T2 WS       │   │
-│   │         GPO: ROLE-SETTING-POL format         │  │        Admin Groups: per tier + role        │   │
-│   │        Service accounts: svc-appname         │  │          LAPS: local admin pwd mgmt         │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Tiered admin model prevents lateral movement; LAPS eliminates shared local passwords               │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                  GPO Design                  │  │               Server Baseline               │   │
-│   │       Default Domain Policy: password        │  │        Server Core preferred over GUI       │   │
-│   │        Workstation / Server baselines        │  │         SMB signing: required on all        │   │
-│   │        Role-specific: IIS / SQL / DC         │  │       Audit: logon, object, privilege       │   │
-│   │       Link order: lower = higher prio        │  │          Windows Defender: AV + EDR         │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  Physical or virtual server · Domain Controllers · AD replication · PKI                               │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Tiered admin = Tier 0 (DCs), Tier 1 (servers), Tier 2 (workstations); no cross-tier                  │
-│  LAPS         = Local Administrator Password Solution; unique pwd per machine                         │
-│  OU           = Organisational Unit; container for GPO linking and delegation                         │
-│  GPO link order= lowest link order number = highest priority in OU                                    │
-│  SMB signing  = cryptographic signing of SMB packets; prevents relay attacks                          │
-│  Server Core  = no GUI; managed via PowerShell/WAC; reduced attack surface                            │
-│  svc- prefix  = service account naming prefix; helps identify in audit logs                           │
-│  Default Domain Policy= must only contain password and account lockout settings                       │
-│  EDR          = Endpoint Detection and Response; Microsoft Defender for Endpoint                      │
-│  Privilege audit= logs use of user rights assignments; required for compliance                        │
-│  Object audit  = logs file/folder access; apply selectively to avoid log flood                        │
-│  Logon audit   = logs interactive, network, and Kerberos logons                                       │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 WinRM listener configuration:
 

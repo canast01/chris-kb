@@ -11,6 +11,8 @@ Encryption reference covering Secrets and Encryption Architecture, Encrypting Lo
 
 *Applies to: Python 3.x*
 </div>
+![Python Automation — Encryption](../../../../assets/automation-python-security-encryption-index.svg)
+
 
 ## Before you begin
 
@@ -46,29 +48,7 @@ graph TD
     script --> tlsVerify
     tlsVerify --> apiCall
 ```
-```text
-┌───────────────────────────────────────── Python — Encryption ─────────────────────────────────────────┐
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   Python encryption: cryptography library for AES/RSA; TLS via ssl/requests; key management   │   │
-│   │     Use: cryptography library (PyCA); avoid: pycrypto (unmaintained), roll-your-own crypto    │   │
-│   │     Transport: requests library uses SSL by default; verify=True (default) validates certs    │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             Encryption Patterns              │  │                Key Management               │   │
-│   │        Fernet: symmetric AES-128-CBC         │  │        AWS KMS: boto3 encrypt/decrypt       │   │
-│   │        RSA: asymmetric (sign/verify)         │  │             Azure Key Vault: SDK            │   │
-│   │           PBKDF2: password hashing           │  │        HashiCorp Vault: hvac library        │   │
-│   │        hashlib: sha256/sha512 digests        │  │        Never store key in code or git       │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │        Fernet       = symmetric auth encryption; from cryptography.fernet import Fernet       │   │
-│   │        hvac         = HashiCorp Vault Python client; read secrets, write, authenticate        │   │
-│   │           verify=False = requests flag to skip TLS verification; NEVER in production          │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 ## Encrypting Local Files with cryptography
 

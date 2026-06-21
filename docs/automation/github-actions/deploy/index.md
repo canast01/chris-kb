@@ -6,50 +6,14 @@ search:
   boost: 1.5
 ---
 # GitHub Actions — Environment Setup
+![GitHub Actions — Environment Setup](../../../assets/automation-github-actions-deploy-index.svg)
+
 
 This guide walks through the initial setup of GitHub Actions for a repository: enabling
 the feature, creating your first workflow, managing secrets and environments, adding
 self-hosted runners, and enforcing status checks on protected branches.
 
-```text
-┌───────────────────────────────── GitHub Actions — Environment Setup ──────────────────────────────────┐
-│                                                                                                       │
-│   GitHub Actions: CI/CD automation built into GitHub; no external CI server needed                    │
-│   Workflows triggered by events: push, pull_request, schedule, workflow_dispatch                      │
-│   Each workflow has jobs; each job runs on a runner and has a sequence of steps                       │
-│   Config lives in .github/workflows/*.yml; multiple workflows per repo allowed                        │
-│                                                                                                       │
-│   Repository setup                                                                                    │
-│   Enable: Settings → Actions → General → Allow all actions and reusable workflows                     │
-│   Create .github/workflows/ directory at repo root; add workflow YAML files there                     │
-│   First workflow: name, on (trigger), jobs, runs-on, steps with uses or run keys                      │
-│                                                                                                       │
-│   Secrets and environments                                                                            │
-│   Repository secrets: Settings → Secrets and variables → Actions → New repository secret              │
-│   Access in workflow: ${{ secrets.MY_SECRET_NAME }} — never echoed in logs                            │
-│   Environments: add protection rules (manual approval, deployment branch restrictions)                │
-│   Environment secrets override repository secrets when deploying to that environment                  │
-│                                                                                                       │
-│   Self-hosted runners                                                                                 │
-│   Register: Settings → Actions → Runners → New self-hosted runner; follow install script              │
-│   Runner labels: assign custom labels; target with runs-on: [self-hosted, linux, prod]                │
-│   Runners need outbound TCP 443 to github.com; no inbound ports required                              │
-│                                                                                                       │
-│   Physical infrastructure                                                                             │
-│   GitHub-hosted runners: Ubuntu/Windows/macOS VMs provisioned by GitHub per job                       │
-│   Self-hosted runners: on-prem VM or container; persistent; accesses internal networks                │
-│                                                                                                       │
-│   Key terms:                                                                                          │
-│   workflow     = YAML file in .github/workflows/; top-level unit of automation                        │
-│   job          = a set of steps running on one runner; jobs run in parallel by default                │
-│   step         = single task in a job: a shell command (run:) or an Action (uses:)                    │
-│   Action       = reusable workflow component; from GitHub Marketplace or local path                   │
-│   runner       = VM or container that executes jobs; GitHub-hosted or self-hosted                     │
-│   event        = trigger that starts a workflow (push, PR, schedule, manual dispatch)                 │
-│   environment  = named deployment target with protection rules and scoped secrets                     │
-│   artifact     = file output of a job; passed between jobs via upload-artifact action                 │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 ---
 

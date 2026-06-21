@@ -12,26 +12,10 @@ Reference for managing ESXi host lifecycle at scale. Covers vSphere Lifecycle Ma
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
+![vSphere Lifecycle Management — vLCM, Host Profiles, and Upgrades](../../../../assets/virtualization-vmware-internals-vsphere-lifecycle-index.svg)
 
-```text
-┌────────────────────────────── vSphere Lifecycle Manager — Desired State ──────────────────────────────┐
-│                                                                                                       │
-│  ┌──────────────────────────────────────────────────────────────────────────────────────────┐         │
-│  │  Cluster Image (Desired State)                                                           │         │
-│  │  ESXi base version · Vendor add-ons (HPE, Dell, Lenovo) · Firmware packages             │          │
-│  │  Components: VIBs, drivers, management agents — locked to specific versions              │         │
-│  └────────────────────────────────────┬─────────────────────────────────────────────────────┘         │
-│                                       │ Remediation                                                   │
-│              ┌────────────────────────▼────────────────────────┐                                      │
-│              │  ESXi Host 1   │  ESXi Host 2   │  ESXi Host 3  │                                      │
-│              │  Compliant     │  Non-Compliant  │  Compliant    │                                     │
-│              │                │  → Auto-patch   │               │                                     │
-│              └────────────────────────────────────────────────┘                                       │
-│                                                                                                       │
-│  vLCM pulls updates from VMware Depot or custom depot (HTTPS/local)                                   │
-│  Remediation: Enter maintenance mode → update → Quick Boot (if eligible) → exit maintenance           │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ---
 

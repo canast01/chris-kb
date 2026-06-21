@@ -10,6 +10,8 @@ Safely removes a server, VM, or cloud instance from production — preventing or
 
 *Applies to: ServiceNow*
 </div>
+![System Decommission Procedure](../../../../assets/itsm-servicenow-lifecycle-system-decommission-index.svg)
+
 
 ## Decommission Workflow
 
@@ -24,42 +26,7 @@ flowchart TD
     G --> H[Reclaim resources\nor delete VM]
     H --> I[CMDB and\ndocumentation update]
 ```
-```text
-┌───────────────────────────────────────── System Decommission ─────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Decommission: retire system safely — migrate data, preserve backups, recover assets      │   │
-│   │          No system retired without sign-off from business owner and storage/data team         │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │       Pre-Decommission      │  │          Execution          │  │          Close-out          │   │
-│   │      ─────────────────      │  │      ─────────────────      │  │      ─────────────────      │   │
-│   │   Business owner sign-off   │  │         Migrate data        │  │     CMDB retired status     │   │
-│   │     Confirm no consumers    │  │         Final backup        │  │        Asset returned       │   │
-│   │   Identify data retention   │  │        DNS/IP removed       │  │      License recovered      │   │
-│   │  Data classification review │  │      Monitoring removed     │  │        Creds deleted        │   │
-│   │    Backup retention check   │  │          Power off          │  │      Secure erase data      │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│   │       Step       │      Owner       │        Gate       │     Artefact     │      Notes       │   │
-│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
-│   │   Biz sign-off   │    Biz owner     │   Email approval  │  Approval email  │    Mandatory     │   │
-│   │   Data migrate   │    Infra team    │ Transfer verified │  Migration log   │ Integrity check  │   │
-│   │   Secure erase   │    Infra team    │    Erasure cert   │   Certificate    │  Regulatory req  │   │
-│   │   CMDB retire    │    Infra team    │   Status updated  │   CMDB record    │  End of process  │   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    Secure erase   = DoD 7-pass or crypto erase of data before disposal; required by policy            │
-│    Erasure cert   = Certificate from erase tool documenting that secure wipe completed                │
-│    Consumer check = Confirm no active services, users, or applications depend on the system           │
-│    Asset recovery = Return hardware to vendor, send to spare pool, or dispose per WEEE                │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 | Data Category | Decision | Signed Off |
 |---|---|---|

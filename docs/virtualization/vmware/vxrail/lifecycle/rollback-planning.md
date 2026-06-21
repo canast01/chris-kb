@@ -10,37 +10,11 @@ VxRail Node Replacement Checklist reference covering Confirm the Issue, Capture 
 
 *Applies to: VxRail 7.x · 8.x*
 </div>
+![VxRail Node Replacement Checklist](../../../../assets/virtualization-vmware-vxrail-lifecycle-rollback-planning.svg)
+
 
 Rollback Decision Tree
-```text
-┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
-│  LCM upgrade started                                                                                  │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-                               │
-                    ┌────────────────────────────────────────────────── ▼ ──────────────────────────────────────────────────┐
-                    │  Upgrade completes  │
-                    │  successfully?      │
-                    └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-                        YES│      │NO
-                           │      │
-              ┌────────────────────────────────────────────── ▼┐    ┌▼ ───────────────────────────────────────────────┐
-              │  Validate   │    │  Upgrade failed/stuck     │
-              │  health     │    │  ─────────────────────    │
-              │  close CHNGE│    │  capture error + bundle   │
-              └─────────────┘    │  open Dell support case   │
-                                 │  follow Dell guidance      │
-                                 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-                                                │
-                                   ┌────────────────────────────────────────────────── ▼ ──────────────────────────────────────────────────┐
-                                   │  Rollback possible?     │
-                                   │  ─────────────────────  │
-                                   │  VxRail: no auto-rb     │
-                                   │  depends on node state  │
-                                   │  Dell must guide rollback│
-                                   │  vCenter snapshot (if   │
-                                   │  taken pre-upgrade)     │
-                                   └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 ## Confirm the Issue
 

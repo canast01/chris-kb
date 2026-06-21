@@ -10,54 +10,10 @@ Lambda reference covering Environment Variables, Event Source Mappings (SQS / Ki
 
 *Applies to: AWS*
 </div>
+![Lambda](../../../../assets/cloud-aws-cli-reference-lambda-index.svg)
 
-```text
-┌────────────────────────────────────────── AWS CLI — Lambda ───────────────────────────────────────────┐
-│                                                                                                       │
-│  Lambda CLI commands for function deploy, invoke, configuration, and log retrieval.                   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             Function Management              │  │                  Invocation                 │   │
-│   │           create-function: deploy            │  │           invoke: synchronous call          │   │
-│   │        update-function-code: redeploy        │  │        invoke --invocation-type Event       │   │
-│   │        update-function-configuration         │  │            invoke --log-type Tail           │   │
-│   │           delete-function: remove            │  │          list-event-source-mappings         │   │
-│   │          list-functions: all funcs           │  │         create-event-source-mapping         │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  update-function-code deploys new zip/ECR; invoke tests synchronously or async                        │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             Versions and Aliases             │  │                Configuration                │   │
-│   │          publish-version: snapshot           │  │          get-function-configuration         │   │
-│   │         create-alias: named pointer          │  │           put-function-concurrency          │   │
-│   │         update-alias: shift traffic          │  │       put-function-event-invoke-config      │   │
-│   │          list-versions-by-function           │  │       add-permission: resource policy       │   │
-│   │        delete-function (--qualifier)         │  │         get-policy: show permissions        │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  Lambda execution environment · VPC (if configured) · CloudWatch Logs · SQS/SNS/S3                    │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  invoke          = Executes function synchronously; response returned in CLI output                   │
-│  --invocation-type Event= Asynchronous invocation; no response body returned                          │
-│  --log-type Tail = Returns last 4KB of execution log in Base64 in response                            │
-│  publish-version = Creates immutable numbered version from current $LATEST code                       │
-│  Alias           = Named pointer to specific version; used for blue/green traffic split               │
-│  Event source mapping= Connects Lambda to SQS/Kinesis/DynamoDB stream as trigger                      │
-│  Concurrency     = Max simultaneous Lambda executions; reserved or unreserved                         │
-│  add-permission  = Grants another service (S3, SNS) permission to invoke function                     │
-│  put-function-event-invoke-config= Sets max retries and DLQ for async invocations                     │
-│  DLQ             = Dead Letter Queue; receives failed async events after retries                      │
-│  $LATEST         = Mutable latest version; always updated by update-function-code                     │
-│  ECR             = Elastic Container Registry; source for Lambda container image                      │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 ## Event Source Mappings (SQS / Kinesis triggers)
 
 ```bash

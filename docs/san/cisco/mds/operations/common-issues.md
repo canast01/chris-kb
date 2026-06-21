@@ -4,6 +4,8 @@ tags:
   - san
 ---
 # Cisco MDS 9000 — Common Operational Issues
+![Cisco MDS 9000 — Common Operational Issues](../../../../assets/san-cisco-mds-operations-common-issues.svg)
+
 
 ```bash
 # Identify the port and check detailed status
@@ -18,53 +20,7 @@ show interface fc1/3 | include reason
 # Check recent log events for this interface
 show logging last 100 | grep fc1/3
 ```
-```text
-┌───────────────────────────── Cisco MDS 9000 — Common Operational Issues ──────────────────────────────┐
-│                                                                                                       │
-│  Common MDS issues: HBA not logging in, ISL bounce, zone conflict, CRC errors, credits.               │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              HBA & Login Issues              │  │             ISL & Fabric Issues             │   │
-│   │          No FLOGI: check port state          │  │           ISL bounce: SFP or cable          │   │
-│   │           Zone not allowing PLOGI            │  │           ISL down: speed mismatch          │   │
-│   │           Wrong VSAN: check trunk            │  │           VSAN isolated: check ISL          │   │
-│   │           Alias not in zone member           │  │          Domain conflict: renumber          │   │
-│   │          Port disabled: no shut fc           │  │          CFS merge fail: zone conf          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Zone and VSAN are first checks for HBA login issues; ISL = SFP and cable check.                      │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              Performance Issues              │  │           Firmware & Config Issues          │   │
-│   │           CRC errors: replace SFP            │  │           NX-OS mismatch on fabric          │   │
-│   │         BB credit starvation: check          │  │          Config not saved: copy run         │   │
-│   │           ISL util > 70%: add ISLs           │  │          License missing: show lic          │   │
-│   │         Latency spike: SAN analytics         │  │           ISSU fail: check compat           │   │
-│   │          Queue depth: host HBA tune          │  │          Rollback: prior bootflash          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  MDS switch chassis · SFP transceivers · FC cables · host HBAs · storage arrays                       │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  FLOGI           = Fabric Login; HBA must FLOGI before data I/O is possible                           │
-│  PLOGI           = Port Login; blocked by zone policy if HBA not in same zone                         │
-│  VSAN trunk      = ISL must allow VSAN for HBA to appear in correct segment                           │
-│  CFS merge fail  = zone database conflict between two switches; must resolve                          │
-│  Domain conflict = two switches with same FC domain ID; isolate and renumber                          │
-│  CRC errors      = Cyclic Redundancy Check; indicates bad SFP or dirty fiber                          │
-│  BB credits      = Buffer-to-Buffer; zero credits = port paused; check starvation                     │
-│  SAN analytics   = MDS 9700 per-ITL latency histogram; identify slow target                           │
-│  show lic        = show license; verify ENTERPRISE_PKG or SAN_ANALYTICS_PKG                           │
-│  ISSU compat     = ISSU requires NX-OS version compatibility check                                    │
-│  bootflash       = switch flash; previous NX-OS image kept for rollback                               │
-│  copy run start  = saves running config; loss of unsaved changes on reload                            │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 ```bash
 # Find the reason for errDisabled
 show interface fc1/4 | include err

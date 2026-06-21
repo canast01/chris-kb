@@ -10,31 +10,10 @@ Cross-product VMware scenarios: reactive troubleshooting and planned operational
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
+![Scenarios](../../../../assets/virtualization-vmware-topics-scenarios-index.svg)
 
-```text
-┌───────────────────────────────────────── VMware — Scenarios ──────────────────────────────────────────┐
-│                                                                                                       │
-│  OVERVIEW                                                                                             │
-│  Cross-product VMware scenarios: reactive troubleshooting and planned operational workflows           │
-│  Products: vCenter · ESXi · vSAN · NSX · Aria Suite (Ops / Logs / Networks) · VxRail · SRM            │
-│                                                                                                       │
-│  ISSUES (Reactive) — something broke, trace it across layers                                          │
-│  VM Performance Degraded · VM Inaccessible / HA Failover · vSAN Disk / Component Failure              │
-│  vMotion Failing · NSX Connectivity Broken · NSX Edge Failure / BGP Down                              │
-│  Storage APD / Datastore Inaccessible · NTP Drift / SSO Certificate Errors                            │
-│  SRM RPO Violation · HA Admission Control Breach · VM Snapshot Consolidation                          │
-│  vCenter Upgrade Failure · vSAN Stretched Cluster Split-Brain · Aria Ops Alert Storm                  │
-│  vSAN Capacity Alarm · NSX DFW Blocking Application Traffic                                           │
-│  VCF SDDC Manager Upgrade Stalled · Host Profile Compliance Drift                                     │
-│                                                                                                       │
-│  TASKS (Planned) — operational workflow, execute across products                                      │
-│  Host Maintenance and Patching · Capacity Planning · Provision New Workload                           │
-│  Certificate Expiry and Rotation · DR Test / Planned Failover                                         │
-│  NSX Microsegmentation Rollout · Enable vSAN Encryption · Expand VxRail Cluster                       │
-│  Storage vMotion / Datastore Migration · Add ESXi Host to Cluster                                     │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Issues
 

@@ -4,44 +4,15 @@ tags:
   - security
 ---
 # Networking — Network Security
+![Networking — Network Security](../../assets/networking-security-index.svg)
+
 
 ```bash
 nc -zv destination-host port
 telnet destination-host port
 ss -tulnp
 ```
-```text
-┌──────────────────────────────────── Networking — Network Security ────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │        Network security: validate FW rules, confirm VPN tunnels, audit ACLs, review NAT       │   │
-│   │       FW validation: test required traffic with packet tracer; review deny logs for gaps      │   │
-│   │     VPN: check tunnel state, phase 1/2, SA lifetime, interesting traffic; test end-to-end     │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               Firewall Checks                │  │                  VPN & ACL                  │   │
-│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
-│   │              Packet tracer test              │  │            show crypto isakmp sa            │   │
-│   │             Review deny log hits             │  │             show crypto ipsec sa            │   │
-│   │              Rule order matters              │  │            ACL: show access-list            │   │
-│   │            Check NAT translation             │  │            NAT: show ip nat trans           │   │
-│   │         Unused rules: review/remove          │  │             Test from both sides            │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    Packet tracer  = Cisco tool; simulates traffic through FW to determine permit/deny outcome         │
-│    IKE phase 1    = VPN control plane; authenticates peers; establishes management SA                 │
-│    IKE phase 2    = VPN data plane; negotiates IPsec SA for encrypting user traffic                   │
-│    Interesting traffic= VPN traffic selector; defines what source/dest pairs trigger the tunnel       │
-│    ACL            = Access Control List; permits or denies traffic by src/dst/port/protocol           │
-│    PAT            = Port Address Translation; maps multiple private IPs to one public IP+port         │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 ```bash
 # From a host behind the firewall
 ping <destination>

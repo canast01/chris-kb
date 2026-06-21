@@ -11,6 +11,8 @@ PowerShell authentication: credential objects, `Get-Credential`, service account
 
 *Applies to: PowerShell 7.x*
 </div>
+![PowerShell — Authentication](../../../../assets/automation-powershell-security-authentication-index.svg)
+
 
 ---
 
@@ -52,29 +54,7 @@ graph TD
     azKeyVault --> psCred
     psCred --> cmdlet
 ```
-```text
-┌───────────────────────────────────── PowerShell — Authentication ─────────────────────────────────────┐
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │ PowerShell authentication: Kerberos (domain), NTLM (fallback), certificate-based for remoting │   │
-│   │     Service principal: use certificate auth for Azure/cloud (no password rotation needed)     │   │
-│   │  Secrets in scripts: use SecretManagement module; back-ends: KeyVault, SecretStore, CyberArk  │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                Remoting Auth                 │  │              Secret Management              │   │
-│   │       Kerberos: domain joined default        │  │       Install-Module SecretManagement       │   │
-│   │       NTLM: workgroup or cross-domain        │  │        Register-SecretVault -Name AKV       │   │
-│   │        Certificate: mutual TLS WinRM         │  │         Get-Secret -Name MyPassword         │   │
-│   │       CredSSP: avoid (double-hop only)       │  │        No ConvertTo-SecureString -Key       │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      SecretManagement = PS module; abstraction layer for secret retrieval; vault-agnostic     │   │
-│   │  CredSSP          = delegates credentials to remote host; security risk; use Kerberos or JEA  │   │
-│   │  Managed Identity = Azure-side auth; PS running in Azure VM can get token without credentials │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 ## Authentication Reference
 

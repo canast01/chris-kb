@@ -7,61 +7,15 @@ search:
 ---
 # InsightIQ — Initial Deployment
 
-```text
-┌──────────────────────────────── Dell InsightIQ — Deployment Sequence ─────────────────────────────────┐
-│                                                                                                       │
-│  Step 1 · Prerequisites                                                                               │
-│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
-│  PowerScale clusters: OneFS 8.0+ (9.x recommended); PAPI credentials per cluster                      │
-│  Required privileges on each cluster: ISI_PRIV_LOGIN_PAPI and ISI_PRIV_STATISTICS                     │
-│  InsightIQ VM: 4–8 vCPU, 8–16 GB RAM, 50 GB OS disk, 200 GB+ data disk; static IP                     │
-│  Deploy via OVA (recommended) or RHEL/CentOS 7; DNS A+PTR records; NTP synchronised                   │
-│  Ports open: 8080/TCP for browser access, 8083/TCP outbound to PowerScale PAPI                        │
-│                                                                                                       │
-│                                        │  deploy InsightIQ VM                                         │
-│                                        ▼                                                              │
-│  Step 2 · Deploy InsightIQ OVA                                                                        │
-│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
-│  Download InsightIQ OVA from Dell Support Portal; deploy via vCenter Deploy OVF Template              │
-│  Complete wizard: set network, IP, gateway, DNS, NTP; power on VM                                     │
-│  Access InsightIQ UI: https://<InsightIQ-IP>:8080; accept EULA; set admin password                    │
-│  Upload licence: Administration → Licensing → Upload; licence is node-locked to VM MAC                │
-│                                                                                                       │
-│                                        │  add PowerScale clusters                                     │
-│                                        ▼                                                              │
-│  Step 3 · Connect PowerScale Clusters                                                                 │
-│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
-│  InsightIQ UI → Clusters → Add Cluster; enter management IP or SmartConnect FQDN                      │
-│  Enter PAPI credentials (dedicated read-only account preferred); test connectivity → Save             │
-│  InsightIQ initiates first data collection pass; status shows Active when collection succeeds         │
-│  Repeat for each PowerScale cluster to be monitored                                                   │
-│                                                                                                       │
-│                                        │  configure schedules and reports                             │
-│                                        ▼                                                              │
-│  Step 4 · Data Collection and Reporting                                                               │
-│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
-│  Set collection interval: default every 5 minutes for performance data; daily for capacity data       │
-│  Configure scheduled reports: Reports → Schedules → Add; choose frequency, format (PDF/CSV)           │
-│  Add email recipients for scheduled reports: Administration → Email → SMTP settings                   │
-│  Set data retention period: Administration → Settings → Retention (default 1 year)                    │
-│                                                                                                       │
-│                                        │  validate and baseline                                       │
-│                                        ▼                                                              │
-│  Step 5 · Validate and Baseline                                                                       │
-│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
-│  Confirm all clusters show Active status and recent collection timestamps                             │
-│  Run a performance report for yesterday's data; confirm IOPS, throughput, latency are populating      │
-│  Run a capacity report; verify per-tier capacity data matches OneFS UI values                         │
-│  Record: InsightIQ VM IP, version, cluster list, report schedule, retention period                    │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 <div class="kb-summary">
 Step-by-step guide to deploying Dell EMC InsightIQ, connecting PowerScale clusters, configuring data collection schedules, and validating reporting.
 
 *Applies to: InsightIQ*
 </div>
+![InsightIQ — Initial Deployment](../../../../assets/storage-netapp-insightiq-deploy-index.svg)
+
 
 
 ## Before you begin

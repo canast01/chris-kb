@@ -3,6 +3,8 @@
 <div class="kb-summary">
 Quality gates and content standards for the chrisanastasiadis.com knowledge base.
 </div>
+![Site Quality Dashboard](assets/site-quality.svg)
+
 
 ```text
 ┌────────────────────────────────────── KB Site Quality Dashboard ──────────────────────────────────────┐
@@ -56,8 +58,8 @@ Generated: 2026-06-21
 | Total markdown pages | 2,639 |
 | Sections | 11 |
 | Pages with kb-summary | 2,359 |
-| Pages with full-width ASCII diagram | 1,682 |
-| Pages with SVG diagrams | 1,131 |
+| Pages with full-width ASCII diagram | 266 |
+| Pages with SVG diagrams | 2,639 |
 | Pages with Mermaid diagrams | 680 |
 | Pages with tags | 2,612 |
 | Audit score | 36 / 37 |

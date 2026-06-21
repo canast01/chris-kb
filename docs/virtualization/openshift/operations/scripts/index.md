@@ -9,33 +9,10 @@ Operational scripts: daily health snapshot, CSR auto-approval, node drain wrappe
 
 *Applies to: OpenShift 4.x*
 </div>
+![OpenShift — Scripts](../../../../assets/virtualization-openshift-operations-scripts-index.svg)
 
-```text
-┌──────────────────────────────────── OpenShift Operational Scripts ────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   Scripts collect state, automate repetitive tasks, and provide consistent health output      │   │
-│   │   Run health-check.sh daily; etcd-backup.sh pre-upgrade; csr-approve.sh during scale-out     │    │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │     Health & Monitoring     │  │     Node Operations          │  │     Backup & Recovery       │  │
-│   │      ─────────────          │  │      ─────────────           │  │      ─────────────          │  │
-│   │  cluster-health-check.sh    │  │  node-drain.sh               │  │  etcd-backup.sh             │  │
-│   │  co-watch.sh                │  │  auto-approve-csrs.sh        │  │  verify-backup.sh           │  │
-│   │  pod-restart-detector.sh    │  │  ns-resource-summary.sh      │  │  copy-backup-to-s3.sh       │  │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    KUBECONFIG   = Path to kubeconfig file; scripts should accept as env var or parameter              │
-│    jq           = JSON processor; used to parse oc -o json output                                     │
-│    CSR          = Certificate Signing Request; new worker nodes submit these to join cluster          │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ```mermaid
 graph LR

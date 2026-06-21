@@ -16,56 +16,10 @@ search:
 ---
 
 # SnapCenter — Initial Deployment
+![SnapCenter — Initial Deployment](../../../../assets/storage-netapp-snapcenter-deploy-index.svg)
 
-```text
-┌─────────────────────────────── NetApp SnapCenter — Deployment Sequence ───────────────────────────────┐
-│                                                                                                       │
-│  Step 1 · Prerequisites                                                                               │
-│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
-│  Windows Server 2019/2022 (Desktop Experience); 4 vCPU, 16 GB RAM, 150 GB disk; domain-joined         │
-│  .NET Framework 4.8+; SQL Server (Express or Standard) installed locally for SnapCenter repository    │
-│  Ports: 8146/TCP (HTTPS UI), 8043/TCP (agent), 9090/TCP (SMCore); ONTAP SVM 443 reachable             │
-│  ONTAP: SVM management LIF IP and credentials (vsadmin role minimum); Snapshot+SnapMirror licences    │
-│  All hosts to be protected must be FQDN-resolvable from SnapCenter Server                             │
-│                                                                                                       │
-│                                        │  install SnapCenter Server                                   │
-│                                        ▼                                                              │
-│  Step 2 · Install SnapCenter Server                                                                   │
-│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
-│  Download SnapCenter installer from NetApp Support Site; run as Domain Admin                          │
-│  Installer: choose installation path; enter SQL Server instance name; set HTTPS port (8146)           │
-│  Complete install; open browser to https://<SnapCenter-IP>:8146; log in with AD credentials           │
-│  Settings → Licence: add SnapCenter licence file or per-plugin licences (Standard or NAS File)        │
-│                                                                                                       │
-│                                        │  add storage systems                                         │
-│                                        ▼                                                              │
-│  Step 3 · Add ONTAP Storage Systems                                                                   │
-│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
-│  Storage → Storage Systems → New; enter SVM management LIF IP and vsadmin credentials                 │
-│  Test connection; confirm SVM name, protocol (NFS/iSCSI/FC/NVMe), and volume list visible             │
-│  Repeat for each SVM to be managed; add cluster-admin connection if SnapMirror replication needed     │
-│                                                                                                       │
-│                                        │  install plugins and add hosts                               │
-│                                        ▼                                                              │
-│  Step 4 · Add Hosts and Install Plug-ins                                                              │
-│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
-│  Hosts → Add Host; enter FQDN, OS type; select plug-in(s): SQL, Oracle, SAP HANA, File System         │
-│  SnapCenter pushes plug-in installer to host via SMB/WinRM (Windows) or SSH (Linux)                   │
-│  Confirm plug-in status shows Running on each host after installation                                 │
-│  Discover application resources: Hosts → Refresh Resources — databases and instances populate         │
-│                                                                                                       │
-│                                        │  configure policies and run first backup                     │
-│                                        ▼                                                              │
-│  Step 5 · Policies, Resource Groups, and First Backup                                                 │
-│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
-│  Create backup policy: Settings → Policies → New; set snapshot type, retention count, SnapMirror      │
-│  Create resource group: attach databases/VMs to the group; assign policy; set schedule                │
-│  Run on-demand backup to validate: right-click resource group → Back Up Now                           │
-│  Verify snapshot on ONTAP SVM: vol snapshot show -vserver <svm> -volume <vol>                         │
-│  Record: SnapCenter version, hostname, ONTAP SVMs registered, plug-ins deployed, policy names         │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 This guide covers deploying NetApp SnapCenter Server from prerequisites through running and validating a first backup. SnapCenter centralizes application-consistent backup and restore for SQL Server, Oracle, SAP HANA, VMware VMs, and file systems backed by ONTAP.
 

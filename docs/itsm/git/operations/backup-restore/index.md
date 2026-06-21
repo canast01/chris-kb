@@ -4,6 +4,8 @@ tags:
   - operations
 ---
 # Git — Backup and Restore
+![Git — Backup and Restore](../../../../assets/itsm-git-operations-backup-restore-index.svg)
+
 
 ```bash
 # Initial mirror clone
@@ -17,51 +19,7 @@ git remote update --prune
 git fsck --full
 git count-objects -vH
 ```
-```text
-┌────────────────────────────────────── Git — Backup and Restore ───────────────────────────────────────┐
-│                                                                                                       │
-│  Git backup strategies: mirror clones, bundle exports, and recovery from history.                     │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             Mirror Clone Backup              │  │                Bundle Export                │   │
-│   │           git clone --mirror <url>           │  │     git bundle create repo.bundle --all     │   │
-│   │         Includes all refs + objects          │  │        Single file; portable offline        │   │
-│   │          Update: git remote update           │  │        Restore: git clone repo.bundle       │   │
-│   │         Schedule via cron to NAS/S3          │  │          Use for air-gap or DR copy         │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Mirror backup preserves all refs; bundle is portable for offline/air-gap use                       │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              Restore / Recovery              │  │               History Recovery              │   │
-│   │      Restore from mirror: push --mirror      │  │        git reflog: find lost commits        │   │
-│   │        Restore from bundle: git clone        │  │       git fsck: find dangling objects       │   │
-│   │        Verify: git fsck after restore        │  │        git cherry-pick <sha>: recover       │   │
-│   │       Point DNS/webhook to new remote        │  │        git reset --hard <sha>: rewind       │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  GitHub/GitLab server · backup NAS or S3 bucket · DR Git server · cron jobs                           │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  git clone --mirror= clones bare repo with all refs; differs from --bare (no refspec)                 │
-│  git remote update = re-fetches all remotes; updates mirror without re-cloning                        │
-│  git bundle        = exports all commits/refs into portable binary file                               │
-│  Air-gap           = isolated network; bundle is only transfer mechanism                              │
-│  push --mirror     = pushes all refs from local mirror to new remote; used in restore                 │
-│  git reflog        = per-ref log of all pointer movements; survives reset                             │
-│  git fsck          = verifies object store integrity; finds dangling commits                          │
-│  Dangling object   = commit/blob not reachable from any ref; recoverable via fsck                     │
-│  Cherry-pick       = applies diff of specific commit to current branch                                │
-│  reset --hard      = moves HEAD and index to commit; discards working tree                            │
-│  DR server         = disaster-recovery Git host; receives nightly mirror push                         │
-│  Webhook           = must be updated to point to restored remote URL                                  │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 ```bash
 # Create a full backup (stops writes briefly for consistency)
 sudo gitlab-backup create

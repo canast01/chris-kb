@@ -8,41 +8,10 @@ tags:
 <div class="kb-summary">
 Step-by-step procedures for reviewing SIEM alerts, investigating security events, tuning detection rules, and generating monitoring reports.
 </div>
+![Security Monitoring — Procedures](../../../assets/security-security-monitoring-operations-index.svg)
 
-```text
-┌────────────────────────────────── Security Monitoring — Operations ───────────────────────────────────┐
-│                                                                                                       │
-│   SIEM platforms: Splunk, Microsoft Sentinel (KQL), Elastic SIEM, IBM QRadar                          │
-│   Daily triage: sort Critical first; classify TP / FP / Needs Tuning; escalate TPs to IR              │
-│   Detection source: MITRE ATT&CK technique mapping; alert-only mode before enabling auto-response     │
-│   Reporting metrics: MTTD, MTTR, true positive rate, top 5 rules by volume                            │
-│                                                                                                       │
-│   Alert investigation workflow                                                                        │
-│   Triage   Filter last 24h; sort by severity; open Critical/High events for context                   │
-│   Investigate  Pull auth history (AD / Entra ID); check endpoint telemetry (Defender / CrowdStrike)   │
-│   Contain   Revoke sessions (Revoke-MgUserSignInSession); reset AD password; network isolation        │
-│   ATT&CK    Map observed indicators to technique IDs (e.g., T1078 Valid Accounts, T1110 Brute Force)  │
-│                                                                                                       │
-│   Detection engineering                                                                               │
-│   Tune noisy rule  Identify FP pattern (30d data); add exclusion (NOT src_ip / AccountName !in)       │
-│   New rule         Write KQL/SPL query on historical data; tune FPs; set severity + MITRE tags        │
-│   Deploy           Alert-only mode 7d; verify on historical data before enabling automated response   │
-│                                                                                                       │
-│   Suspicious login response                                                                           │
-│   Check source IP, geo, device, time; verify with user via phone if unusual location                  │
-│   If unverified or denied: revoke sessions + reset password + enable risk-based CA                    │
-│   Review all actions taken in the session window: mail forwarding, file access, lateral movement      │
-│                                                                                                       │
-│   Key terms:                                                                                          │
-│   MTTD          = Mean Time to Detect; time from attack start to first SIEM alert                     │
-│   MTTR          = Mean Time to Respond; time from alert to containment action                         │
-│   KQL           = Kusto Query Language; used by Microsoft Sentinel for log queries                    │
-│   SPL           = Splunk Processing Language; search and reporting language for Splunk                │
-│   MITRE ATT&CK  = framework of adversary tactics, techniques, and procedures (TTPs)                   │
-│   T1078         = Valid Accounts; adversary uses legitimate credentials to gain access                │
-│   blast radius  = all systems the compromised account or host communicated with in the incident window│
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Before you begin
 

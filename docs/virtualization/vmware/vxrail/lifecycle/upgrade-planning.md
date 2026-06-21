@@ -3,25 +3,11 @@ tags:
   - vxrail
 ---
 # VxRail — Upgrade Planning
+![VxRail — Upgrade Planning](../../../../assets/virtualization-vmware-vxrail-lifecycle-upgrade-planning.svg)
 
-```text
-┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
-│  Phase 1: Plan          Phase 2: Pre-checks                                                           │
-│  ─────────────          ────────────────────                                                          │
-│  Current version    →   VxRail Mgr health                                                             │
-│  Target version     →   vCenter health                                                                │
-│  Release notes      →   vSAN Skyline Health                                                           │
-│  Bundle download    →   hardware (iDRAC)                                                              │
-│                         DNS · NTP · backups                                                           │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-```text
-┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
-│  Phase 3–4: Bundle + Pre-check                                                                        │
-│  Upload Composite Bundle → VxRail Manager validates                                                   │
-│  Run LCM Pre-Check → all green before proceeding                                                      │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
+
 ```bash
 
 ---

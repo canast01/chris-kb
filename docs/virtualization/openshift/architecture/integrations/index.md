@@ -9,37 +9,10 @@ vSphere IPI and UPI installation modes, LDAP/Active Directory identity, Quay ima
 
 *Applies to: OpenShift 4.x*
 </div>
+![OpenShift — Integrations](../../../../assets/virtualization-openshift-architecture-integrations-index.svg)
 
-```text
-┌─────────────────────────────────────── OpenShift Integrations ────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   vSphere IPI: installer creates VMs via vCenter API; CCM manages node lifecycle              │   │
-│   │   Identity: OAuth server front-ends all auth; LDAP/AD provider maps groups to RBAC            │   │
-│   │   Quay: enterprise image registry; integrated via ImageContentSourcePolicy for air-gap        │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │    Infrastructure (IPI)     │  │       Identity (LDAP)        │  │     Registry (Quay)         │  │
-│   │      ─────────────          │  │      ─────────────           │  │      ─────────────          │  │
-│   │  vCenter creds in secret    │  │  OAuth → LDAPIdentityProvider│  │  ImageContentSourcePolicy  │   │
-│   │  VM folder + datastore      │  │  Group sync via CronJob      │  │  Pull-through cache         │  │
-│   │  Cloud Controller Manager   │  │  serviceAccountIssuer TLS   │  │  Robot accounts for CI      │   │
-│   │  CSI driver for PVCs        │  │  kubeadmin disabled post-day1│  │  Cosign image signing       │  │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    CCM          = Cloud Controller Manager; integrates OCP with vSphere/AWS/Azure node lifecycle      │
-│    ICSP         = ImageContentSourcePolicy; redirects registry pulls (e.g. quay.io → mirror.local)    │
-│    OAuth server = OpenShift's built-in OAuth2 server; IdentityProviders add login methods             │
-│    ACM          = Advanced Cluster Management; fleet-level policy, placement, and observability       │
-│    ODF          = OpenShift Data Foundation (Rook-Ceph); provides RBD and CephFS StorageClasses       │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ```mermaid
 graph LR

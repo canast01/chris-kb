@@ -13,6 +13,8 @@ Pure Storage Evergreen Troubleshooting reference covering Common Issues, Diagnos
 
 *Applies to: Evergreen*
 </div>
+![Pure Storage Evergreen Troubleshooting](../../../../assets/storage-pure-evergreen-troubleshooting-index.svg)
+
 
 ```text
 Evergreen Troubleshooting Flow

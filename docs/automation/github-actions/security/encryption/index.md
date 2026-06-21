@@ -11,6 +11,8 @@ GitHub Actions encryption: encrypted secrets storage, environment-level secret s
 
 *Applies to: GitHub Actions*
 </div>
+![GitHub Actions — Encryption](../../../../assets/automation-github-actions-security-encryption-index.svg)
+
 
 ---
 
@@ -38,30 +40,7 @@ flowchart LR
     ghEncrypted -->|"injected at runtime\nnot stored on disk"| wfRun
     wfRun --> step --> logs
 ```
-```text
-┌───────────────────────────────────── GitHub Actions — Encryption ─────────────────────────────────────┐
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    GitHub Actions encrypts secrets at rest and in transit; secrets masked in all log output   │   │
-│   │       Secrets: stored encrypted in GitHub; decrypted only during job execution on runner      │   │
-│   │                Transport: all API calls and runner communication over TLS 1.2+                │   │
-│   │     Avoid: do not base64-encode secrets to work around masking — GitHub masks decoded too     │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               Secret Handling                │  │          Encryption Best Practices          │   │
-│   │         AES-256-GCM at rest (GitHub)         │  │        OIDC eliminates stored secrets       │   │
-│   │           Masked in all log output           │  │           Rotate secrets quarterly          │   │
-│   │          ${{ secrets.X }} injection          │  │           Env scope: job not step           │   │
-│   │         Never printed: echo $SECRET          │  │         Audit secret access in logs         │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │       Secret masking  = GitHub scans all log output and replaces secret values with ***       │   │
-│   │    add-mask        = ::add-mask::<value> step command; register dynamic values for masking    │   │
-│   │    Env scope       = set secret as env var at job level; available to all steps in that job   │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 ## Masking Dynamic Values
 

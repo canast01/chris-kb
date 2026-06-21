@@ -13,6 +13,8 @@ Common Issues reference covering Python Error Triage Flow, API and Network Timeo
 
 *Applies to: Python 3.x*
 </div>
+![Python Automation — Common Issues](../../../../assets/automation-python-troubleshooting-common-issues-index.svg)
+
 
 ## Diagnostic Flow
 
@@ -72,33 +74,7 @@ flowchart TD
     errType -->|PermissionError| checkPath["ls -la on output\ndirectory"]
     checkPath --> fixPerms["chmod / chown\noutput directory"]
 ```
-```text
-┌─────────────────────────────────────── Python — Common Issues ────────────────────────────────────────┐
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                    Most frequent Python automation failures and their fixes                   │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                        Issue: ModuleNotFoundError: No module named <x>                        │   │
-│   │                  Cause A: venv not activated → fix: source .venv/bin/activate                 │   │
-│   │                  Cause B: package not installed → fix: pip install <package>                  │   │
-│   │             Cause C: wrong interpreter → fix: which python3 (must show .venv path)            │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                                Issue: boto3 NoCredentialsError                                │   │
-│   │            Cause A: AWS env vars not set → fix: export AWS_ACCESS_KEY_ID and SECRET           │   │
-│   │        Cause B: profile name wrong → fix: boto3.Session(profile_name="correct-profile")       │   │
-│   │        Cause C: IAM role not attached → fix: check EC2 instance profile in AWS console        │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                             Issue: SSL: CERTIFICATE_VERIFY_FAILED                             │   │
-│   │           Fix (corp proxy): requests.get(url, verify="/path/to/corp-ca-bundle.pem")           │   │
-│   │           Fix: export REQUESTS_CA_BUNDLE=/etc/ssl/certs/corp-ca.pem in shell profile          │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 ## API and Network Timeouts
 

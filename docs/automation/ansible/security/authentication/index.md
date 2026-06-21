@@ -4,6 +4,8 @@ tags:
   - security
 ---
 # Ansible — Authentication
+![Ansible — Authentication](../../../../assets/automation-ansible-security-authentication-index.svg)
+
 
 ```bash
 # ED25519 — preferred (faster, smaller, equally secure)
@@ -12,30 +14,7 @@ ssh-keygen -t ed25519 -C "ansible-control@prod" -f ~/.ssh/ansible_ed25519 -N ""
 # RSA 4096 — for legacy systems that don't support Ed25519
 ssh-keygen -t rsa -b 4096 -C "ansible-control@prod" -f ~/.ssh/ansible_rsa -N ""
 ```
-```text
-┌────────────────────────────────────── Ansible — Authentication ───────────────────────────────────────┐
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │  Ansible uses SSH key authentication for Linux targets and WinRM/Kerberos for Windows targets │   │
-│   │  Service account per environment: ansible-prod, ansible-dev — no shared personal credentials  │   │
-│   │AWX stores credentials encrypted (AES-256); injected at runtime — never written to disk on host│   │
-│   │         AWX login: LDAP/AD or SAML SSO; local accounts only for break-glass scenarios         │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                 Linux (SSH)                  │  │               Windows (WinRM)               │   │
-│   │         SSH private key in AWX cred          │  │        Kerberos (domain-joined hosts)       │   │
-│   │         Service account on each host         │  │         NTLM fallback for workgroup         │   │
-│   │         Strict host key checking on          │  │           WinRM HTTPS (port 5986)           │   │
-│   │      Rotate annually or on staff change      │  │      ansible_winrm_transport: kerberos      │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │ WinRM          = Windows Remote Management; Microsoft implementation of WS-Management protocol│   │
-│   │      Kerberos    = network auth protocol; Windows domain auth; requires domain membership     │   │
-│   │   SSH agent      = key agent; AWX injects private key into SSH agent process at job runtime   │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 ```bash
 pip install pywinrm[kerberos]   # domain-joined hosts
 pip install pywinrm              # NTLM / basic

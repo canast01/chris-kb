@@ -10,6 +10,8 @@ Commonly used Azure CLI (`az`) commands for managing compute, storage, networkin
 
 *Applies to: Azure*
 </div>
+![Azure CLI Reference](../../../assets/cloud-azure-cli-reference-index.svg)
+
 
 > Requires `az login` or service principal credentials. Use `az account set --subscription <id>` to target a specific subscription.
 

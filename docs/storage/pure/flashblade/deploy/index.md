@@ -16,6 +16,8 @@ search:
 ---
 
 # FlashBlade — Initial Deployment
+![FlashBlade — Initial Deployment](../../../../assets/storage-pure-flashblade-deploy-index.svg)
+
 
 ```text
 ┌──────────────────────────────── Pure FlashBlade — Deployment Sequence ────────────────────────────────┐

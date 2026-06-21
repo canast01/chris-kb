@@ -9,6 +9,8 @@ Day-2 operations: oc CLI, health checks, node management, upgrade procedures, et
 
 *Applies to: OpenShift 4.x*
 </div>
+![OpenShift — Operations](../../../assets/virtualization-openshift-operations-index.svg)
+
 
 ```text
 ┌──────────────────────────────────────── OpenShift Operations ─────────────────────────────────────────┐

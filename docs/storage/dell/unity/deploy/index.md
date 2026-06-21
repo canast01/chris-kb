@@ -16,65 +16,10 @@ search:
 ---
 
 # Dell Unity XT — Initial Deployment
+![Dell Unity XT — Initial Deployment](../../../../assets/storage-dell-unity-deploy-index.svg)
 
-```text
-┌───────────────────────────────── Dell Unity XT — Deployment Sequence ─────────────────────────────────┐
-│                                                                                                       │
-│  Step 1 · Prerequisites                                                                               │
-│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
-│  Hardware: 2U rack space (base chassis) + DAE shelves if capacity expansion ordered                   │
-│  Network: 10GbE/25GbE for iSCSI/NFS; FC switches if FC planned; OOB management network                │
-│  IPs reserved: SP-A mgmt, SP-B mgmt, iSCSI data ports per SP; DNS and NTP details noted               │
-│  Licenses: Dell capacity-based licence key files; LDAP/AD details for directory authentication        │
-│  Unisphere for Unity (embedded HTML5) — accessible from management IP once powered on                 │
-│                                                                                                       │
-│                                        │  rack and cable                                              │
-│                                        ▼                                                              │
-│  Step 2 · Rack, Cable, and Power On                                                                   │
-│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
-│  Mount Unity chassis using rail kit; attach DAE shelves if ordered via SAS cables                     │
-│  Connect SP-A and SP-B management ports to OOB management switch                                      │
-│  Connect data ports (iSCSI or FC) to data switches / SAN fabric A and B                               │
-│  Connect dual PSU cables to separate PDU circuits; power on; allow 15 min for initialisation          │
-│                                                                                                       │
-│                                        │  run setup wizard                                            │
-│                                        ▼                                                              │
-│  Step 3 · Unisphere Initial Setup                                                                     │
-│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
-│  Browse to SP-A management IP (Unisphere for Unity); complete Setup Wizard                            │
-│  Set array name, management IPs, NTP, DNS, SMTP/syslog alert destinations                             │
-│  Upload licence key: System → Settings → Licenses → Import Licence File                               │
-│  Join Active Directory or LDAP if NAS or directory-based auth is required                             │
-│                                                                                                       │
-│                                        │  configure pools and volumes                                 │
-│                                        ▼                                                              │
-│  Step 4 · Storage Pools and Volume Provisioning                                                       │
-│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
-│  Auto-configure pool: Unity recommends pool layout based on available drives — accept or customise    │
-│  Create LUNs for block workloads: specify size, pool, host access, optional thin provisioning         │
-│  Create NAS server and file systems for NFS/SMB; assign to a storage pool                             │
-│  Create VMware datastores (NFS or iSCSI LUNs) if vSphere integration is planned                       │
-│                                                                                                       │
-│                                        │  connect hosts                                               │
-│                                        ▼                                                              │
-│  Step 5 · Host Connectivity                                                                           │
-│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
-│  Register hosts: Hosts → Create; provide host name, OS, and initiators (iQN or FC WWPNs)              │
-│  Assign LUNs to hosts: LUN → Access → Hosts; select host and access mode                              │
-│  Configure FC zoning if applicable: submit zone changes for each initiator/target pair                │
-│  Rescan host storage adapters; confirm LUNs visible; format and label per OS runbook                  │
-│                                                                                                       │
-│                                        │  validate and baseline                                       │
-│                                        ▼                                                              │
-│  Step 6 · Validation and Baseline                                                                     │
-│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
-│  Run Unisphere health check: System → Health → all SPs, drives, ports, fans green                     │
-│  Record: array serial, SP serials, pool names, LUN IDs, host-to-LUN mapping table                     │
-│  Enable SupportAssist/CloudIQ telemetry for proactive monitoring                                      │
-│  Set capacity alert thresholds; schedule quarterly health review task in ITSM                         │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 This guide covers the initial deployment of a Dell Unity XT array from physical installation through validated host access. Applies to Unity XT 380, 480, 680, and 880 models running OE 5.x.
 

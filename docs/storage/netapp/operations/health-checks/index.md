@@ -10,58 +10,9 @@ Health Checks reference covering Daily Health Check Workflow, AutoSupport Valida
 
 *Applies to: ONTAP 9.x*
 </div>
-```text
-┌────────────────────────────────── NetApp Operations — Health Checks ──────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      NetApp Ops health checks: routine verification of operational status and performance     │   │
-│   │         Checks include: controller status, drive health, replication lag, and capacity        │   │
-│   │         Frequency: daily quick checks; weekly detailed review; monthly capacity report        │   │
-│   │        Configure threshold-based alerts for proactive incident prevention and awareness       │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Check status → review alerts → verify replication → capacity → log                                 │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │          Monitoring         │  │           ActiveIQ          │  │       Risk assessment       │   │
-│   │          Telemetry          │  │         AutoSupport         │  │       Call-home relay       │   │
-│   │         Health check        │  │        Config Advisor       │  │        Best practice        │   │
-│   │           Support           │  │     mysupport.netapp.com    │  │        SR management        │   │
-│   │           Upgrade           │  │         NDO rolling         │  │        Non-disruptive       │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Check area    │  How to verify   │   Pass criteria   │    Frequency     │       Tool       │   │
-│   │   Controllers    │   show status    │    All healthy    │      Daily       │     CLI/GUI      │   │
-│   │      Drives      │   show drives    │  No failed/pred.  │      Daily       │     CLI/GUI      │   │
-│   │   Replication    │ show replication │  Lag < threshold  │      Daily       │     CLI/GUI      │   │
-│   │     Capacity     │  show capacity   │     < 80% used    │      Daily       │     CLI/GUI      │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: NetApp AFF/FAS clusters · ActiveIQ SaaS · mysupport.netapp.com support portal            │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    ActiveIQ           = NetApp SaaS health portal; risk assessment, upgrade advisor, capacity planning│
-│    AutoSupport        = ONTAP telemetry; sends daily health reports and call-home bundles to NetApp   │
-│    Config Advisor     = NetApp best-practice checker; validates cabling, config, and firmware         │
-│    NDO                = Non-Disruptive Operations; rolling upgrades without host I/O service disrup...│
-│    Takeover           = HA failover; one node takes over partner storage on node failure event        │
-│    Giveback           = return storage to original node after failover; completes HA pair recovery    │
-│    Aggregate relocation = move aggregate between HA pair nodes without service disruption             │
-│    LIF migration      = move logical interface to different node port during planned maintenance      │
-│    System Manager     = ONTAP web GUI; unified management for cluster, SVMs, volumes, policies        │
-│    ONTAP CLI          = SSH to cluster management IP; diag privilege required for low-level commands  │
-│    mysupport          = mysupport.netapp.com; open SRs, download firmware, and access knowledge base  │
-│    ASUP bundle        = AutoSupport bundle with logs, config, and core files for TAC case analysis    │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+![NetApp Operations — Health Checks](../../../../assets/storage-netapp-operations-health-checks-index.svg)
+
+
 
 ## Before you begin
 

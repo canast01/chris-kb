@@ -9,6 +9,8 @@ Dell AIOps Lifecycle reference covering Platform Update Model, Customer Lifecycl
 
 *Applies to: Dell AIOps*
 </div>
+![Dell AIOps Lifecycle](../../../../assets/storage-dell-dell-aiops-lifecycle-index.svg)
+
 
 ## Platform Update Model
 
@@ -38,35 +40,7 @@ The SCG is the only customer-managed component in the Dell AIOps stack. Keeping 
 
 ### Check Current SCG Version
 
-```text
-┌────────────────────────────────── Dell AIOps — Lifecycle Management ──────────────────────────────────┐
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               Deploy / Install               │  │                   Upgrade                   │   │
-│   │               OVA or container               │  │             Check release notes             │   │
-│   │              Configure adapters              │  │               Snapshot before               │   │
-│   │             Connect data sources             │  │               Rolling upgrade               │   │
-│   │              Set alert policies              │  │                 Verify after                │   │
-│   │              Configure ITSM out              │  │               Rollback if fail              │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  AIOps on management cluster VMs · upgrade via admin CLI or UI · snapshot enables rollback            │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  OVA deployment = VM image for vSphere; alternative container deployment for Kubernetes               │
-│  Adapter = Per-product data source connector configured after initial platform deployment             │
-│  Rolling upgrade = Upgrading nodes one at a time to maintain availability during upgrade              │
-│  Snapshot = VM snapshot taken before upgrade; enables fast rollback if upgrade fails                  │
-│  Release notes = Per-version document; check for breaking changes before upgrade                      │
-│  Verify after = Post-upgrade checks: adapters collecting, alerts firing, UI accessible                │
-│  Rollback = Revert to snapshot if upgrade causes data loss or service disruption                      │
-│  Alert policy = Named ruleset defining thresholds and notification targets; survives upgrade          │
-│  Admin CLI = aiops-admin command-line tool for backup, upgrade, and service management                │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 ## API Lifecycle
 
 The CloudIQ REST API used by AIOps scripts is versioned. Deprecated endpoints are published in CloudIQ release notes.

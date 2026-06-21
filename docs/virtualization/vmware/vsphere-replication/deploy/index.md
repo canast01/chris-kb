@@ -13,45 +13,10 @@ End-to-end deployment guide for vSphere Replication. Covers VRA OVA deployment a
 
 *Applies to: vSphere Replication 8.x*
 </div>
+![vSphere Replication — Deploy](../../../../assets/virtualization-vmware-vsphere-replication-deploy-index.svg)
 
-```text
-┌─────────────────────────────── vSphere Replication — Deployment Phases ───────────────────────────────┐
-│                                                                                                       │
-│  Six phases from pre-deployment network checks to validated replication with confirmed RPO. Each      │
-│  phase has a clear exit criterion. Do not proceed until current phase validates clean.                │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌──────────────────────────────┐  ┌──────────────────────────────┐ │
-│   │  Phase 1: Pre-Deploy        │  │  Phase 2: Source VRA         │  │  Phase 3: Target VRA         │ │
-│   │  Ports 31031/44046/443 open │  │  Deploy VRA OVA at site A    │  │  Deploy VRA OVA at site B    │ │
-│   │  DNS/NTP for VRA appliances │  │  Register with source vCenter│  │  Register with target vCenter│ │
-│   │  Target datastore capacity  │  │  VR plugin visible in UI     │  │  Pair target to source VRA   │ │
-│   │  Network latency < 200 ms   │  │  VAMI accessible at :5480    │  │  Certificate exchange done   │ │
-│   └─────────────────────────────┘  └──────────────────────────────┘  └──────────────────────────────┘ │
-│                                                                                                       │
-│                ▼                                 ▼                                 ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌──────────────────────────────┐  ┌──────────────────────────────┐ │
-│   │  Phase 4: VM Replication    │  │  Phase 5: Monitor RPO        │  │  Phase 6: Validation         │ │
-│   │  Configure replication/VM   │  │  Check RPO status per VM     │  │  RPO met for all VMs         │ │
-│   │  Set RPO (min 5 minutes)    │  │  Investigate violations      │  │  MPIT snapshots captured     │ │
-│   │  Enable MPIT snapshots      │  │  Monitor bandwidth usage     │  │  Site pair: Connected        │ │
-│   │  Initial full sync starts   │  │  Alert on replication lag    │  │  HMS/VRMS services healthy   │ │
-│   └─────────────────────────────┘  └──────────────────────────────┘  └──────────────────────────────┘ │
-│                                                                                                       │
-│  Physical Infrastructure: VRMS appliance at each site · ESXi hosts running hbrsvc kernel module ·     │
-│  replication network (TCP 31031 source ESXi → target VRA) · vCenter at each site.                     │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  VRMS   = vSphere Replication Management Server; per-site appliance; manages config and site pair     │
-│  HMS    = Host Management Service; runs on VRA; receives replication data from source ESXi hbrsvc     │
-│  hbrsvc = Host-Based Replication Service; ESXi kernel module; tracks changed blocks per VMDK          │
-│  RPO    = Recovery Point Objective; max data loss window per VM; 5 min to 24 hours                    │
-│  MPIT   = Multiple Point-In-Time; snapshot instances at target; 1–24 recovery points per VM           │
-│  VRS    = vSphere Replication Server; scale-out HMS appliance for >500 concurrent VM streams          │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ---
 

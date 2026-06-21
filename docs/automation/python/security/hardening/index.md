@@ -11,6 +11,8 @@ Hardening reference covering Secure Script Development Checklist Flow, Dependenc
 
 *Applies to: Python 3.x*
 </div>
+![Python Automation — Hardening](../../../../assets/automation-python-security-hardening-index.svg)
+
 
 ## Before you begin
 
@@ -46,30 +48,7 @@ flowchart TD
     filePerms --> noLogs
     noLogs --> ready
 ```
-```text
-┌───────────────────────────────────────── Python — Hardening ──────────────────────────────────────────┐
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │  Harden Python automation: input validation, subprocess safety, dep pinning, pre-commit hooks │   │
-│   │       subprocess: always use list args; never shell=True with user input; capture stderr      │   │
-│   │     YAML: use yaml.safe_load() not yaml.load(); prevents arbitrary Python object execution    │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                Code Hardening                │  │              Pipeline Hardening             │   │
-│   │       subprocess list args (no shell)        │  │      bandit + ruff in CI (block merge)      │   │
-│   │       yaml.safe_load() not yaml.load()       │  │         pre-commit: bandit, gitleaks        │   │
-│   │        Validate + type-cast all input        │  │        Dependabot or Renovate weekly        │   │
-│   │        Use pathlib, not os.path.join         │  │       SBOM: pip-licenses --format=json      │   │
-│   │         No pickle for untrusted data         │  │           pip-audit in CI for CVEs          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   pickle        = Python serialisation; never deserialise untrusted pickle (code exec risk)   │   │
-│   │       gitleaks      = pre-commit hook scanning for secrets in staged code before commit       │   │
-│   │   SBOM          = Software Bill of Materials; list all deps + versions for compliance audit   │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 ## File and Permission Security
 

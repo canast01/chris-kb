@@ -10,42 +10,10 @@ search:
 <div class="kb-summary">
 TLS troubleshooting — certificate chain validation failures, handshake timeouts, cipher negotiation errors, SNI mismatches, and expired certificate diagnosis.
 </div>
+![TLS — Troubleshooting](../../../../assets/networking-protocols-tls-troubleshooting-index.svg)
 
-```text
-┌─────────────────────────────────── TLS — Troubleshooting Reference ───────────────────────────────────┐
-│                                                                                                       │
-│   Start with openssl s_client: shows the certificate chain, verify result, and cipher negotiated      │
-│   Most TLS errors fall into four categories: expired cert, untrusted CA, SNI mismatch, cipher gap     │
-│   mTLS adds client cert presentation; both sides must trust each other's CA                           │
-│                                                                                                       │
-│   Quick diagnosis commands                                                                            │
-│   openssl s_client -connect host:443 -servername host: shows chain, protocol, cipher, verify status   │
-│   openssl x509 -noout -dates: extracts notBefore and notAfter from an x509 certificate                │
-│   Loop over tls1/tls1_1/tls1_2/tls1_3: identifies which TLS versions the server accepts               │
-│                                                                                                       │
-│   Common errors                                                                                       │
-│   CERTIFICATE_VERIFY_FAILED: CA not trusted — install the CA cert in the client trust store           │
-│   ERR_CERT_DATE_INVALID: certificate expired — renew; check notAfter with openssl x509                │
-│   ERR_CERT_COMMON_NAME_INVALID: CN/SAN does not match the requested hostname — verify SAN entries     │
-│   SSL_ERROR_HANDSHAKE_FAILURE_ALERT: no cipher in common — check ssl_ciphers config on server         │
-│   SSL_ERROR_RX_RECORD_TOO_LONG: plain HTTP on a TLS port — server is not speaking TLS                 │
-│                                                                                                       │
-│   Certificate chain validation                                                                        │
-│   Full chain: server cert + intermediate cert(s) must be present in the TLS handshake response        │
-│   openssl verify -CAfile ca.crt chain.pem: verifies chain without a live server connection            │
-│   Missing intermediate: server sends leaf cert only; clients without cached intermediate fail         │
-│                                                                                                       │
-│   SNI and mTLS                                                                                        │
-│   SNI required: virtual hosting and CDNs serve different certs per hostname; always use -servername   │
-│   mTLS: client must present cert (-cert / -key); server must trust the client CA                      │
-│                                                                                                       │
-│   Key terms:                                                                                          │
-│   SNI          = Server Name Indication; TLS extension carrying the target hostname in ClientHello    │
-│   mTLS         = mutual TLS; both client and server present and validate certificates                 │
-│   Certificate chain = ordered list: leaf cert → intermediate(s) → root CA                             │
-│   Cipher suite = negotiated algorithm set: key exchange + bulk encryption + MAC                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Before you begin
 
