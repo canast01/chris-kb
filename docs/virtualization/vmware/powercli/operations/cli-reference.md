@@ -11,59 +11,10 @@ Core PowerCLI cmdlets for VM management, host operations, cluster management, da
 
 *Applies to: PowerCLI 13.x*
 </div>
+![PowerCLI — CLI Reference](../../../../assets/virtualization-vmware-powercli-operations-cli-reference.svg)
 
-```text
-┌────────────────────── PowerCLI — vSphere Object Hierarchy and Cmdlet Categories ──────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                          vSphere Inventory Hierarchy (top to bottom)                          │   │
-│   │              vCenter -> Datacenter -> Cluster -> ESXi Host -> VM / Resource Pool              │   │
-│   │                       vCenter -> Datacenter -> Datastore / Network -> VM                      │   │
-│   │                 Use -Location to scope: Get-VM -Location (Get-Cluster "Prod")                 │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌────────────────────────────┐                                                                      │
-│   │      Compute Cmdlets       │                                                                      │
-│   │      Get-VM / Set-VM       │                                                                      │
-│   │     New-VM / Remove-VM     │                                                                      │
-│   │   Start/Stop/Restart-VM    │                                                                      │
-│   │     Move-VM (vMotion)      │                                                                      │
-│   │  Get-VMHost / Set-VMHost   │                                                                      │
-│   │ Get-Cluster / Set-Cluster  │                                                                      │
-│   └────────────────────────────┘                                                                      │
-│                                   ┌─────────────────────────────┐                                     │
-│                                   │       Storage Cmdlets       │                                     │
-│                                   │        Get-Datastore        │                                     │
-│                                   │ Get-HardDisk / Set-HardDisk │                                     │
-│                                   │ Get-Snapshot / New-Snapshot │                                     │
-│                                   │       Remove-Snapshot       │                                     │
-│                                   │         Get-VsanDisk        │                                     │
-│                                   │ Get-VsanClusterHealthSummary│                                     │
-│                                   └─────────────────────────────┘                                     │
-│                                                                    ┌──────────────────────────────┐   │
-│                                                                    │      Management Cmdlets      │   │
-│                                                                    │       Get-VIPermission       │   │
-│                                                                    │       New-VIPermission       │   │
-│                                                                    │   Get-VIRole / New-VIRole    │   │
-│                                                                    │      Get-Tag / New-Tag       │   │
-│                                                                    │         Get-VIEvent          │   │
-│                                                                    │      Get-View (raw API)      │   │
-│                                                                    └──────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure: management workstation or automation server running PowerShell 7+           │
-│  Network path: jump host -> HTTPS/443 -> vCenter FQDN -> vSphere API endpoint                         │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Pipeline      = PowerShell pipe; Get-VM | Get-Snapshot chains cmdlets                                │
-│  Where-Object  = filter items in a pipeline by property value                                         │
-│  Select-Object = choose which properties to display or export                                         │
-│  ForEach-Object = iterate over each item in the pipeline                                              │
-│  Export-Csv    = write pipeline output to CSV file                                                    │
-│  Format-Table  = render properties as columns in the console                                          │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 <!-- diagram:powercli-operations -->
 

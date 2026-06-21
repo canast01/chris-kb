@@ -14,19 +14,10 @@ Firewall port reference for Brocade SANnav Management Portal. SANnav is the SAN 
 
 *Applies to: SANnav 2.3.x+*
 </div>
+![Brocade SANnav — Ports and Network Requirements](../../../../assets/san-brocade-sannav-architecture-ports.svg)
 
-```text
-┌───────────────────────── Brocade SANnav — Network Traffic Zones ──────────────────────────────────────┐
-│                                                                                                       │
-│  Admin Zone              SANnav Appliance               Managed Switches                              │
-│  ──────────              ────────────────               ─────────────────                             │
-│  Browsers ──443──► SANnav ──22────────────────────────► FC Switch mgmt IPs                            │
-│  API      ──443──►        ──443 (REST)───────────────►                                                │
-│                           ──161 UDP (SNMP poll) ──────►                                               │
-│                           ◄──162 UDP (SNMP traps)───────                                              │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Before you begin
 

@@ -14,6 +14,8 @@ Firewall and NSG port reference for Microsoft Azure infrastructure. Covers manag
 
 *Applies to: Azure IaaS/PaaS — ARM, VMs, VNet, AKS, SQL Database, Entra ID*
 </div>
+![Microsoft Azure — Ports and Network Requirements](../../../assets/cloud-azure-architecture-ports.svg)
+
 
 ## Network Zones
 

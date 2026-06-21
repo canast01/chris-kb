@@ -12,34 +12,10 @@ CLI and API reference for Aria Operations for Networks (vRNI): SSH appliance ser
 
 *Applies to: Aria Operations for Networks 6.x*
 </div>
+![Aria Operations for Networks — CLI Reference](../../../../assets/virtualization-vmware-aria-operations-for-networks-operation.svg)
 
-```text
-┌─────────────────────────────── Aria Operations for Networks — CLI Reference ──────────────────────────┐
-│                                                                                                       │
-│  REST API for config and query; VAMI for appliance mgmt; SSH for service-level ops.                   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │            Key REST API Endpoints            │  │               VAMI Operations               │   │
-│   │           POST /api/ni/auth/token            │  │             https://<vrni>:5480             │   │
-│   │           GET /api/ni/datasources            │  │          Network config + NTP + DNS         │   │
-│   │              GET /api/ni/flows               │  │           SSL cert upload via VAMI          │   │
-│   │           GET /api/ni/entities/vms           │  │         Reboot / shutdown appliance         │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │            SSH Appliance Commands            │  │            Collector SSH Commands           │   │
-│   │   sudo systemctl status vrni-platform        │  │      sudo systemctl status ni-collector     │   │
-│   │   sudo systemctl restart vrni-platform       │  │      sudo systemctl restart ni-collector    │   │
-│   │       tail -f /var/log/app.log               │  │         tail -f /var/log/proxy.log          │   │
-│   │       support-bundle generate                │  │      sudo pairing.sh (re-pair to platform)  │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│  vrni-platform = main AON application service · ni-collector = collector forwarding service           │
-│  Bearer token = from POST /auth/token · proxy.log = collector flow receipt log                        │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Before you begin
 

@@ -13,18 +13,10 @@ Firewall port reference for Ceph. Covers monitor (MON) messaging, OSD data and h
 
 *Applies to: Ceph Reef (18.x) / Squid (19.x)*
 </div>
+![Ceph — Ports and Network Requirements](../../../assets/storage-ceph-architecture-ports.svg)
 
-```text
-┌────────────────────────────── Ceph — Network Traffic Zones ───────────────────────────────────────────┐
-│                                                                                                       │
-│  Client/Application Zone      Cluster (Public Network)       Cluster (Internal/Replication Network)   │
-│  ─────────────────────        ──────────────────────         ─────────────────────────────────────    │
-│  S3/RGW clients ──7480──► RGW  MON ──3300/6789──► Clients   OSD ──6800-7300──► OSD (replication)      │
-│  NFS/CephFS     ──2049──► MDS  OSD ──6800-7300──► Clients   MDS ──6800-7300──► MDS                    │
-│  Admin     ──8443/8080──► Dash Admin  ──22────────► Nodes    (separate NIC/VLAN recommended)          │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Before you begin
 

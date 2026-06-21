@@ -15,18 +15,10 @@ Firewall port reference for VMware Tanzu (vSphere with Tanzu / TKG). Covers the 
 
 *Applies to: vSphere with Tanzu (TKGs) 7.x/8.x / TKG 2.x*
 </div>
+![Tanzu — Ports and Network Requirements](../../../../assets/virtualization-vmware-tanzu-architecture-ports.svg)
 
-```text
-┌──────────────────────────── Tanzu — Network Traffic Zones ────────────────────────────────────────────┐
-│                                                                                                       │
-│  DevOps Zone             Supervisor (vSphere)          Workload Clusters                              │
-│  ─────────────           ──────────────────            ─────────────────                              │
-│  kubectl ──6443──► Supervisor API    ──6443──► TKG API Server                                         │
-│  TMC     ──443──►  Supervisor        ──443──► Harbor, TKG Registry                                    │
-│  Tanzu CLI──443──►                   NSX-T ALB / HA Proxy ──443/80──► Applications                    │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Before you begin
 

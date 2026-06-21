@@ -13,18 +13,10 @@ Firewall port reference for Veritas NetBackup. Covers the Primary Server (former
 
 *Applies to: NetBackup 10.x / NetBackup IT Analytics 10.x*
 </div>
+![NetBackup — Ports and Network Requirements](../../../assets/backup-netbackup-architecture-ports.svg)
 
-```text
-┌──────────────────────────── NetBackup — Network Traffic Zones ────────────────────────────────────────┐
-│                                                                                                       │
-│  Management Zone              NetBackup Infrastructure              Source Zone                       │
-│  ────────────────             ──────────────────────               ─────────────                      │
-│  Admin  ──443──► Web UI       Primary ──1556──► Media Server       Media Server ──443──► vCenter      │
-│  OpsCenter──443──►            Primary ──1556──► Clients            Media Server ──902──► ESXi hosts   │
-│                               Media ──1556──► Client (pull data)   Client ──1556──► Primary/Media     │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Before you begin
 

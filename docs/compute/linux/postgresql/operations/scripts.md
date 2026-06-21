@@ -10,38 +10,10 @@ PostgreSQL automation scripts — base backup, WAL archiving, replication lag mo
 
 *Applies to: RHEL / Ubuntu LTS*
 </div>
+![PostgreSQL — Scripts](../../../../assets/compute-linux-postgresql-operations-scripts.svg)
 
-```text
-┌────────────────────────────────── PostgreSQL — Operational Scripts ───────────────────────────────────┐
-│                                                                                                       │
-│   Automation scripts for routine PostgreSQL operational tasks                                         │
-│   Replication lag monitor alerts when replica falls more than 30 seconds behind primary               │
-│   Bloat report uses pg_stat_user_tables to identify tables with excessive dead tuples                 │
-│                                                                                                       │
-│   Nightly base backup                                                                                 │
-│   pg_basebackup -U replication -D /backup/postgresql/$(date +%F) -Ft -z -P -Xs                        │
-│   Rotation: find /backup/postgresql/ -maxdepth 1 -type d -mtime +14 -exec rm -rf {} +                 │
-│                                                                                                       │
-│   Replication lag monitor                                                                             │
-│   Queries pg_last_xact_replay_timestamp() on replica; alerts if lag exceeds 30 seconds                │
-│   Sends email alert with hostname; adaptable to PagerDuty or Slack webhook                            │
-│                                                                                                       │
-│   Bloat report (SQL)                                                                                  │
-│   Queries pg_stat_user_tables for n_dead_tup / (n_live_tup + n_dead_tup) ratio per table              │
-│   Tables above 20% dead tuple ratio should be scheduled for VACUUM ANALYZE                            │
-│                                                                                                       │
-│   Other scripts                                                                                       │
-│   Long-running transactions: pg_stat_activity WHERE duration > 5 minutes                              │
-│   Unused indexes: pg_stat_user_indexes WHERE idx_scan = 0 (excludes primary keys)                     │
-│   Connection trend: logs timestamp + connection count to CSV for capacity planning                    │
-│                                                                                                       │
-│   Key terms:                                                                                          │
-│   -Ft           = tar format output; -z gzip compression; -Xs stream WAL during backup                │
-│   n_dead_tup    = dead tuple count per table; high values indicate autovacuum falling behind          │
-│   pg_last_xact_replay_timestamp = timestamp of last WAL record applied on standby                     │
-│   idx_scan      = index usage counter; zero means the index has never been used in queries            │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Before you begin
 

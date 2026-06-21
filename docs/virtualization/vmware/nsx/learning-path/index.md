@@ -12,26 +12,10 @@ Recommended reading order for NSX (NSX-T / NSX 4.x). Follow these stages in orde
 
 *Applies to: NSX-T 3.x · NSX 4.x*
 </div>
+![NSX — Learning Path](../../../../assets/virtualization-vmware-nsx-learning-path-index.svg)
 
-```text
-┌───────────────────────────────────────── NSX — Learning Path ─────────────────────────────────────────┐
-│                                                                                                       │
-│    5 stages in order: Architecture → Deploy → Operations → Security → Troubleshoot                    │
-│                                                                                                       │
-│   ┌────────────────┐  ┌────────────────┐  ┌─────────────────┐  ┌────────────────┐  ┌────────────────┐ │
-│   │  Architecture  │  │     Deploy     │  │    Operations   │  │    Security    │  │  Troubleshoot  │ │
-│   │                │  │                │  │                 │  │                │  │                │ │
-│   │  How It Works  │  │ Initial Setup  │  │  Health Checks  │  │ Access Control │  │ Common Issues  │ │
-│   │Design Standards│  │Install/Upgrade │  │  CLI Reference  │  │ Authentication │  │  Diagnostics   │ │
-│   │  Integrations  │  │                │  │    Procedures   │  │   Encryption   │  │   Escalation   │ │
-│   │                │  │                │  │ Backup & Restore│  │   Hardening    │  │                │ │
-│   │                │  │                │  │     Scripts     │  │                │  │                │ │
-│   └────────────────┘  └────────────────┘  └─────────────────┘  └────────────────┘  └────────────────┘ │
-│                                                                                                       │
-│    Stage 1 (Architecture) builds understanding. Stage 3 (Operations) is daily work. Troubleshoot last.│
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ```mermaid
 graph LR

@@ -11,58 +11,9 @@ Dell FoD automation scripts: PowerShell and Python examples for capacity consump
 
 *Applies to: Dell FOD*
 </div>
-```text
-┌────────────────────────────────── Dell FoD — Scripts and Automation ──────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │           FoD scripts: automation for reporting, health monitoring, and provisioning          │   │
-│   │         REST API available for all operations; PowerShell and Python modules supported        │   │
-│   │          Scripts must run from dedicated service accounts with least-privilege roles          │   │
-│   │        Store credentials in vault; rotate service account passwords on defined schedule       │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Script → authenticate REST → execute operation → verify → log result                               │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │         License type        │  │        Permanent/Term       │  │       Feature-specific      │   │
-│   │          Activation         │  │         Key → array         │  │        Instant unlock       │   │
-│   │            Scope            │  │         Per-array SN        │  │       Non-transferable      │   │
-│   │           Features          │  │       Replication/Tier      │  │       Product-defined       │   │
-│   │            Audit            │  │        License report       │  │          Compliance         │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Component     │     Purpose      │       Access      │       Auth       │      Notes       │   │
-│   │   FoD license    │  Feature unlock  │  Portal download  │   Entitlement    │   Array-bound    │   │
-│   │  License portal  │  Purchase/track  │       HTTPS       │    SSO login     │ licensing.dell.  │   │
-│   │  Array firmware  │ FoD enforcement  │     Array mgmt    │    Admin role    │  Validates key   │   │
-│   │   Audit report   │ Compliance check │     DDMC/array    │    Read-only     │  Monthly review  │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: Dell array with FoD-capable firmware · Dell licensing portal · array management          │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    FoD                = Feature on Demand; software capabilities locked in firmware, unlocked by li...│
-│    License key        = alphanumeric string generated at purchase; applied via GUI, CLI, or REST API  │
-│    Permanent license  = perpetual feature unlock; tied to specific array serial number                │
-│    Term license       = time-limited feature unlock; expires unless renewed through Dell portal       │
-│    Entitlement        = purchased right to use a feature; tracked in Dell software licensing portal   │
-│    License transfer   = FoD licenses are non-transferable between different array serial numbers      │
-│    Replication FoD    = unlocks synchronous or asynchronous array replication features                │
-│    Tier FoD           = unlocks FAST VP or cloud tiering between performance and capacity tiers       │
-│    License audit      = periodic reconciliation of active features versus licensed entitlements       │
-│    LicenseManager     = Dell tool for bulk license management across multiple array systems           │
-│    Array serial       = unique array identifier; FoD licenses are cryptographically bound to it       │
-│    FoD portal         = licensing.dell.com; purchase, download, and track all FoD license keys        │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+![Dell FoD — Scripts](../../../../assets/storage-dell-fod-operations-scripts.svg)
+
+
 
 
 ---

@@ -14,20 +14,10 @@ Firewall port reference for Cisco MDS 9000 Series SAN switches. Covers managemen
 
 *Applies to: Cisco MDS NX-OS 9.x / MDS 9000*
 </div>
+![Cisco MDS — Ports and Network Requirements](../../../../assets/san-cisco-mds-architecture-ports.svg)
 
-```text
-┌──────────────────────────── Cisco MDS — Network Traffic Zones ────────────────────────────────────────┐
-│                                                                                                       │
-│  Management Zone          Switch Management Port            External Services                         │
-│  ────────────────         ──────────────────────            ─────────────────                         │
-│  Admin  ──22/443──► MDS mgmt IP                            MDS ──123 UDP──► NTP                       │
-│  DCNM   ──22/161──►                                        MDS ──514 UDP──► Syslog                    │
-│  SNMP   ──161 ────►                                        MDS ──49 TCP──► TACACS+                    │
-│                                                                                                       │
-│  FC fabric traffic (ISL, FSPF, FLOGI, zoning) is FC protocol — no IP firewall rules needed            │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Before you begin
 

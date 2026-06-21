@@ -4,6 +4,8 @@ tags:
   - operations
 ---
 # Dell Data Domain CLI Reference
+![Dell Data Domain CLI Reference](../../../../assets/storage-dell-data-domain-operations-cli-reference.svg)
+
 
 ```bash
 # Create a config backup
@@ -18,44 +20,7 @@ config backup show
 # Restore from a named backup
 config backup restore <backup_name>
 ```
-```text
-┌─────────────────────────────────── Dell Data Domain CLI Reference ────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │       DDOS CLI accessed via SSH (admin user); all commands under hierarchical namespaces      │   │
-│   │             Tab completion available; "help <command>" or "<command> ?" for syntax            │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │          Filesystem         │  │         Replication         │  │         System Admin        │   │
-│   │      ─────────────────      │  │      ─────────────────      │  │      ─────────────────      │   │
-│   │      filesys show space     │  │     replication show all    │  │        sysadmin show        │   │
-│   │     filesys show status     │  │      replication resync     │  │     system show version     │   │
-│   │          mtree list         │  │     replication throttle    │  │      net show hostname      │   │
-│   │       mtree show quota      │  │       replication sync      │  │         alerts show         │   │
-│   │     filesys clean start     │  │     replication show lag    │  │     support bundle save     │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │             filesys show space          — show total, used, available, dedup ratio            │   │
-│   │             replication show all        — show all replication contexts and state             │   │
-│   │               mtree list                  — list all MTrees with usage and quota              │   │
-│   │            filesys clean start         — manually start cleaning (garbage collect)            │   │
-│   │              support bundle save <path>  — collect diagnostic bundle for support              │   │
-│   │                   system passphrase change     — change local admin password                  │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    filesys clean  = DDOS cleaning cycle; reclaims space from expired/deleted backup segments          │
-│    replication lag= Time delta between primary last write and replica last received                   │
-│    support bundle = tar.gz of DDOS logs, config, and diagnostics; send to Dell support                │
-│    mtree quota    = Logical soft/hard limit per MTree; shown in filesys show space output             │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 ```bash
 # Show SNMP configuration
 snmp show config

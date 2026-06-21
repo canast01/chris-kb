@@ -15,21 +15,10 @@ Firewall port reference for VMware ESXi hosts. Covers management, VM console, vM
 
 *Applies to: ESXi 7.x / 8.x*
 </div>
+![ESXi — Ports and Network Requirements](../../../../assets/virtualization-vmware-esxi-architecture-ports.svg)
 
-```text
-┌──────────────────────────────── ESXi — Network Traffic Zones ─────────────────────────────────────────┐
-│                                                                                                       │
-│  Management Zone          ESXi Host VMkernels                  Storage / Overlay Zone                 │
-│  ────────────────          ─────────────────────                ─────────────────────                 │
-│  vCenter    ──902/443──► Management vmk0 ──8000──► vMotion vmk  3260──► iSCSI SAN                     │
-│  Admin SSH  ──22───────►                 ──2233──► FT vmk       2049──► NFS                           │
-│  VMRC       ──903───────►                ──6081 UDP─► NSX TEP   4420──► NVMe-oF/TCP                   │
-│  Backup     ──902───────►                                                                             │
-│                                                                                                       │
-│  Each traffic type uses a dedicated VMkernel adapter on its own VLAN — never share vMotion with mgmt  │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Before you begin
 

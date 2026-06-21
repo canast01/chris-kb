@@ -10,34 +10,10 @@ VCF upgrades via SDDC Manager, ESXi patching lifecycle, NSX-T and HCX upgrade se
 
 *Applies to: Amazon EVS*
 </div>
+![Amazon EVS — Lifecycle & Upgrades](../../../../assets/cloud-aws-evs-operations-install-upgrade.svg)
 
-```text
-┌────────────────────────────────── Amazon EVS — Lifecycle & Upgrades ──────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   VCF upgrades: SDDC Manager → Lifecycle Management → Bundle download → Sequential upgrade   │    │
-│   │   Upgrade order: SDDC Manager → vCenter → NSX-T → ESXi (one host at a time)                │      │
-│   │   Each component must be upgraded before the one it manages — skip order = unsupported       │    │
-│   │   Rollback is generally not available for NSX-T or ESXi; snapshot management VMs first      │     │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  VCF LCM      = Lifecycle Manager in VCF; orchestrates all component upgrades via SDDC Manager        │
-│  SDDC Manager = Must be upgraded first in every VCF cycle; before vCenter and NSX-T                   │
-│  Upgrade bundle = VCF update package downloaded from VMware depot; contains all installers            │
-│  Rolling upgrade = ESXi hosts patched one at a time; vSAN evacuates data before each host             │
-│  vLCM         = vSphere Lifecycle Manager in vCenter; manages ESXi image and patch compliance         │
-│  Remediation  = vLCM action applying an image to a host; automatically enters maintenance mode        │
-│  NSX-T upgrade = Manager → Edge nodes → host transport nodes; never skip order                        │
-│  HCX upgrade  = EVS side auto-upgrades; on-prem HCX Manager must be manually upgraded                 │
-│  EUS          = Extended Update Support; allows version jumps between select VCF releases             │
-│  Pre-check    = SDDC Manager automated compatibility validation run before upgrade starts             │
-│  VAMI         = vCenter Appliance Management Interface; used for vCenter backup and OS management     │
-│  Brownfield   = Existing EVS environment being upgraded; follow supported upgrade path matrix         │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Before you begin
 

@@ -5,61 +5,11 @@ tags:
   - vmware
 ---
 # Aria Operations Scripts
+![Aria Operations Scripts](../../../../assets/virtualization-vmware-aria-operations-operations-scripts.svg)
 
-```text
-┌─────────────────────────────────────── Aria Operations Scripts ───────────────────────────────────────┐
-│                                                                                                       │
-│  REST API scripts for alert management, metric queries, and resource ops in vROps.                    │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             Auth & Token Scripts             │  │           Alert Management Scripts          │   │
-│   │        POST /suite-api/api/auth/token        │  │         GET /api/alerts active list         │   │
-│   │         Store token in env variable          │  │          PATCH /api/alerts/{id} ack         │   │
-│   │           Refresh on 401 response            │  │         Filter by severity/resource         │   │
-│   │          vROps Python SDK available          │  │             Export alerts to CSV            │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Auth scripts get tokens; alert scripts manage state; metric scripts extract data.                    │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             Metric Query Scripts             │  │            Resource Mgmt Scripts            │   │
-│   │        GET /api/resources/{id}/stats         │  │           GET /api/resources list           │   │
-│   │         Query by resource+metric key         │  │            Filter by adapter kind           │   │
-│   │           Set begin/end time range           │  │          Tag resources via REST API         │   │
-│   │          Export to InfluxDB/Grafana          │  │             Delete stale objects            │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  vROps cluster; scripts run from jump host or CI/CD with HTTPS access to master node                  │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  suite-api           = vROps REST API base path; all automation uses this prefix                      │
-│  Auth Token          = Bearer token; obtained via POST /auth/token; 24h TTL                           │
-│  GET /alerts         = Returns active alerts; filterable by criticality and resource                  │
-│  PATCH /alerts       = Acknowledge or cancel an alert by ID                                           │
-│  GET /resources      = Lists all monitored objects with adapter kind and ID                           │
-│  GET /stats          = Returns metric time-series for a specific resource ID                          │
-│  Metric Key          = Unique identifier for a metric; e.g. cpu|usage_average                         │
-│  Time Range          = begin/end epoch ms parameters for metric query                                 │
-│  vROps Python SDK    = Broadcom-provided library wrapping REST API calls                              │
-│  InfluxDB Export     = Send vROps metrics to InfluxDB for Grafana dashboards                          │
-│  Stale Object Delete = Remove objects from vROps no longer in source                                  │
-│  Tag                 = Custom label on vROps resource for grouping and filtering                      │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-```text
-┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
-│  Output / Integration                                                                                 │
-│  → CSV export (alerts, capacity, idle VMs)                                                            │
-│  → monitoring dashboard (HTTP POST)                                                                   │
-│  → ITSM integration                                                                                   │
-│  NOTE: re-authenticate every 25 min for long runs                                                     │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
+
 ```powershell
 ## Before you begin
 

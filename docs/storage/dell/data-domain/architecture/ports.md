@@ -15,18 +15,10 @@ Firewall port reference for Dell Data Domain (EMC Data Domain / PowerProtect DD)
 
 *Applies to: DD OS 7.x / 8.x*
 </div>
+![Dell Data Domain — Ports and Network Requirements](../../../../assets/storage-dell-data-domain-architecture-ports.svg)
 
-```text
-┌──────────────────────────── Dell Data Domain — Network Traffic Zones ─────────────────────────────────┐
-│                                                                                                       │
-│  Management Zone         Data Zone                          Replication Zone                          │
-│  ────────────────        ─────────                          ────────────────                          │
-│  Admin  ──443/22──► DD   Veeam/NBU/CV ──2052──► DD (Boost) DD1 ──2051──► DD2 (Replicator)             │
-│  SNMP   ──161 ────►       NFS clients ──2049──► DD          DD1 ──2051──► DD2 (managed file)          │
-│                            NDMP agent ──10000──► DD                                                   │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Before you begin
 

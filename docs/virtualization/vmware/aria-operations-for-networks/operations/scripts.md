@@ -5,6 +5,8 @@ tags:
   - vmware
 ---
 # vRNI Scripts
+![vRNI Scripts](../../../../assets/virtualization-vmware-aria-operations-for-networks-operation.svg)
+
 
 ```python
 #!/usr/bin/env python3
@@ -29,51 +31,7 @@ def get_token():
 TOKEN = get_token()
 HEADERS = {"Authorization": f"NetworkInsight {TOKEN}", "Content-Type": "application/json"}
 ```
-```text
-┌──────────────────────────────────────────── vRNI Scripts ─────────────────────────────────────────────┐
-│                                                                                                       │
-│  REST API scripts for flow querying, data source management, and config export in vRNI.               │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             Auth & Token Scripts             │  │              Flow Query Scripts             │   │
-│   │           POST /auth/token + store           │  │            GET /flows?filter=...            │   │
-│   │             Token refresh on 401             │  │           Filter by src/dst IP/VM           │   │
-│   │         Python requests lib example          │  │           Export flow CSV via API           │   │
-│   │          vRNI Python SDK available           │  │          Paginate with cursor param         │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Auth scripts obtain tokens; flow scripts query and export; mgmt scripts configure sources.           │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │           Data Source Mgmt Scripts           │  │            Config Export Scripts            │   │
-│   │          GET /data-sources list all          │  │         Export all alert-rules JSON         │   │
-│   │          POST /data-sources add new          │  │         Export all applications JSON        │   │
-│   │          DELETE /data-sources/{id}           │  │            Export pinboards JSON            │   │
-│   │         PUT /data-sources/{id} edit          │  │          Automate backup to S3/NFS          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  vRNI platform VM; scripts run from jump host or CI/CD pipeline with network access                   │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  REST API            = HTTP/JSON interface; all vRNI automation goes through this                     │
-│  Bearer Token        = Short-lived auth token; refresh needed every 24 hours                          │
-│  vRNI Python SDK     = VMware-provided library wrapping REST API calls                                │
-│  GET /flows          = Flow query endpoint; supports filter, time-range, pagination                   │
-│  Cursor Pagination   = API pattern returning next_cursor for large result sets                        │
-│  GET /data-sources   = Returns all configured data sources with status and IDs                        │
-│  POST /data-sources  = Adds a new data source from JSON body with type and creds                      │
-│  Alert Rule Export   = JSON dump of all alert threshold rules for backup/restore                      │
-│  Application Export  = JSON dump of application and tier definitions                                  │
-│  Pinboard Export     = JSON dump of custom dashboards for backup and migration                        │
-│  Filter Params       = Query string params: srcIp, dstIp, vmName, port, protocol                      │
-│  CI/CD Integration   = Scripts run in pipelines for automated config drift detection                  │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 ```python
 def get_open_problems():
     url = f"https://{VRNI_HOST}/api/ni/problems"

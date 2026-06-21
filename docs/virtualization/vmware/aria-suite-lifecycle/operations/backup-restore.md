@@ -12,53 +12,11 @@ Backup & Restore reference covering Option 2 — VADP-Compatible Backup (Preferr
 
 *Applies to: Aria LCM 8.x*
 </div>
+![Aria Suite Lifecycle — Backup & Restore](../../../../assets/virtualization-vmware-aria-suite-lifecycle-operations-backup.svg)
+
 
   LCM Backup Strategy
-```text
-┌─────────────────────────────────── Aria Suite LCM Backup & Restore ───────────────────────────────────┐
-│                                                                                                       │
-│  LCM database backup, logscraper archive, and environment product backup steps.                       │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               What to Back Up                │  │                Backup Method                │   │
-│   │         LCM database (appliance DB)          │  │             VAMI: backup to NFS             │   │
-│   │          Cert store and trust certs          │  │           vSphere snapshot LCM VM           │   │
-│   │          Environment configuration           │  │           Export environment JSON           │   │
-│   │         Product: each product backup         │  │           Each product: own backup          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  LCM backup covers its own DB; each managed product must be backed up separately.                     │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              Restore Procedure               │  │           Post-Restore Validation           │   │
-│   │           1. Deploy fresh LCM OVA            │  │              LCM UI accessible?             │   │
-│   │         2. Restore from VAMI backup          │  │            Environments visible?            │   │
-│   │         3. Reconnect vCenter + vIDM          │  │             Products: health OK?            │   │
-│   │          4. Validate product health          │  │             Cert store: intact?             │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  LCM VM on vSphere; NFS for backup target; vCenter and vIDM must be reachable                         │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  LCM Database        = Internal PostgreSQL DB storing environments, products, certs                   │
-│  VAMI Backup         = LCM built-in backup to NFS at port 5480                                        │
-│  vSphere Snapshot    = Full LCM VM checkpoint; use before upgrades                                    │
-│  Environment JSON    = Export of LCM environment definition for reference                             │
-│  Cert Store          = LCM-internal trusted CA and product cert repository                            │
-│  Product Backup      = Each Aria product (vROps, vRLI, vRA) needs own backup                          │
-│  Logscraper          = LCM diagnostic tool; not a backup tool but useful for SR                       │
-│  Restore             = VAMI-driven LCM DB restore from backup file on NFS                             │
-│  Reconnect vCenter   = After restore, re-add vCenter connection in LCM settings                       │
-│  Post-restore Check  = Validate environment, product health, and cert store                           │
-│  NFS Target          = Backup storage; LCM writes backup archive to NFS share                         │
-│  Backup Schedule     = Automate daily LCM backup via VAMI scheduler                                   │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 ## Before you begin
 
 - **Access:** vCenter read-only minimum; Administrator role for remediation steps

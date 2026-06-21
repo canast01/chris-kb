@@ -14,20 +14,10 @@ Firewall port reference for Nutanix AHV clusters. Covers Prism management, CVM-t
 
 *Applies to: AOS 6.x · AHV 20230302+*
 </div>
+![Nutanix — Ports and Network Requirements](../../../assets/virtualization-nutanix-architecture-ports.svg)
 
-```text
-┌───────────────────────── Nutanix — Network Traffic Zones ─────────────────────────────────────────────┐
-│                                                                                                       │
-│  Management Zone              CVM Fabric (L2, no firewall)         Remote / Replication Zone          │
-│  ────────────────             ──────────────────────────            ─────────────────────────         │
-│  Admins   ──9440──► Prism     CVM ──2009/2020──► CVM              CVM ──2009──► Remote CVM            │
-│  Prism C  ──9440──► Element   AHV ──16509/16514─► AHV (migration)            (49152-49200)            │
-│  Backup   ──9440──► REST API  AHV ──8080 ──────► CVM                                                  │
-│                                                                                                       │
-│  Nutanix support / licensing / LCM: outbound 443 to *.nutanix.com                                     │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Before you begin
 

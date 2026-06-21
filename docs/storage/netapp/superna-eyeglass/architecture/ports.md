@@ -14,6 +14,8 @@ Firewall port reference for Superna Eyeglass (PowerScale / Isilon DR orchestrati
 
 *Applies to: Superna Eyeglass 2.x / 3.x for PowerScale (OneFS)*
 </div>
+![Superna Eyeglass — Ports and Network Requirements](../../../../assets/storage-netapp-superna-eyeglass-architecture-ports.svg)
+
 
 ## Network Zones
 

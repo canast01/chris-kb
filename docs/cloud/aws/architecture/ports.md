@@ -14,6 +14,8 @@ Firewall and security-group port reference for AWS infrastructure. Covers manage
 
 *Applies to: AWS VPC, EC2, ELB, RDS, S3, IAM*
 </div>
+![AWS — Ports and Network Requirements](../../../assets/cloud-aws-architecture-ports.svg)
+
 
 ## Network Zones
 

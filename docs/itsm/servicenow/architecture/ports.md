@@ -13,20 +13,10 @@ Firewall port reference for ServiceNow. ServiceNow is a SaaS platform — the pr
 
 *Applies to: ServiceNow Washington DC / Xanadu release*
 </div>
+![ServiceNow — Ports and Network Requirements](../../../assets/itsm-servicenow-architecture-ports.svg)
 
-```text
-┌──────────────────────────── ServiceNow — Network Traffic Zones ───────────────────────────────────────┐
-│                                                                                                       │
-│  Internal Zone           MID Server                     ServiceNow Cloud (SaaS)                       │
-│  ──────────────          ──────────                     ───────────────────────                       │
-│  Managed devices ◄──22── MID Server ──443──► *.service-now.com                                        │
-│  (SNMP/SSH/WinRM)◄──161─              ──443──► *.servicenowservices.com                               │
-│  App servers    ◄──1433─                                                                              │
-│                                                                                                       │
-│  Browsers ──443──► <instance>.service-now.com (direct SaaS — no on-prem ports)                        │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Before you begin
 

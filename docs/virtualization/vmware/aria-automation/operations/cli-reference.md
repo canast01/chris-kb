@@ -14,38 +14,10 @@ Complete CLI reference for Aria Automation: vracli appliance management, kubectl
 
 *Applies to: Aria Automation 8.x*
 </div>
+![Aria Automation — CLI Reference](../../../../assets/virtualization-vmware-aria-automation-operations-cli-referen.svg)
 
-```text
-┌─────────────────────────────────── Aria Automation — CLI Reference ───────────────────────────────────┐
-│                                                                                                       │
-│  vRA is operated via REST API, vracli, and VAMI; no traditional SSH-heavy CLI.                        │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │            vracli (appliance CLI)            │  │         REST API (primary interface)        │   │
-│   │        vracli status: service health         │  │        POST /csp/gateway/am/api/login       │   │
-│   │        vracli certificate: cert mgmt         │  │       GET /deployment/api/deployments       │   │
-│   │           vracli vidm: vIDM config           │  │        POST /blueprint/api/blueprints       │   │
-│   │         vracli proxy: proxy settings         │  │            GET /catalog/api/items           │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Service and log commands run on the vRA appliance via SSH as root.                                   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              Service Management              │  │                Log Locations                │   │
-│   │         systemctl status vra-cluster         │  │             /var/log/vmware/vra/            │   │
-│   │         kubectl get pods -n prelude          │  │          journalctl -u vra-cluster          │   │
-│   │        kubectl logs <pod> -n prelude         │  │         /var/log/vmware/vlcm/ (LCM)         │   │
-│   │       vracli status --all (full check)       │  │        kubectl logs <pod> -n prelude        │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│  vracli = Appliance CLI; manages certs, vIDM, proxy, NTP · prelude = k8s namespace for vRA pods       │
-│  kubectl = k8s CLI on appliance · Bearer token = JWT from /csp/gateway/am/api/login                   │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Before you begin
 

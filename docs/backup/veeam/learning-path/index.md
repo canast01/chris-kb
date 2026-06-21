@@ -10,26 +10,10 @@ Recommended reading order for Veeam Backup & Replication. Follow these stages in
 
 *Applies to: Veeam Backup & Replication 12.x*
 </div>
+![Veeam Backup & Replication — Learning Path](../../../assets/backup-veeam-learning-path-index.svg)
 
-```text
-┌──────────────────────────────────────── Veeam — Learning Path ────────────────────────────────────────┐
-│                                                                                                       │
-│    5 stages in order: Architecture → Deploy → Operations → Security → Troubleshoot                    │
-│                                                                                                       │
-│   ┌────────────────┐  ┌────────────────┐  ┌─────────────────┐  ┌────────────────┐  ┌────────────────┐ │
-│   │  Architecture  │  │     Deploy     │  │    Operations   │  │    Security    │  │  Troubleshoot  │ │
-│   │                │  │                │  │                 │  │                │  │                │ │
-│   │  How It Works  │  │ Initial Setup  │  │  Health Checks  │  │ Access Control │  │ Common Issues  │ │
-│   │Design Standards│  │Install/Upgrade │  │  CLI Reference  │  │ Authentication │  │  Diagnostics   │ │
-│   │  Integrations  │  │                │  │    Procedures   │  │   Encryption   │  │   Escalation   │ │
-│   │                │  │                │  │ Backup & Restore│  │   Hardening    │  │                │ │
-│   │                │  │                │  │     Scripts     │  │                │  │                │ │
-│   └────────────────┘  └────────────────┘  └─────────────────┘  └────────────────┘  └────────────────┘ │
-│                                                                                                       │
-│    Stage 1 (Architecture) builds understanding. Stage 3 (Operations) is daily work. Troubleshoot last.│
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ```mermaid
 graph LR

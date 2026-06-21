@@ -10,26 +10,10 @@ Recommended reading order for PostgreSQL on Linux. Follow these stages in order 
 
 *Applies to: PostgreSQL 15.x / 16.x*
 </div>
+![PostgreSQL — Learning Path](../../../../assets/compute-linux-postgresql-learning-path-index.svg)
 
-```text
-┌───────────────────────────────────── PostgreSQL — Learning Path ──────────────────────────────────────┐
-│                                                                                                       │
-│    5 stages in order: Architecture → Deploy → Operations → Security → Troubleshoot                    │
-│                                                                                                       │
-│   ┌────────────────┐  ┌────────────────┐  ┌─────────────────┐  ┌────────────────┐  ┌────────────────┐ │
-│   │  Architecture  │  │     Deploy     │  │    Operations   │  │    Security    │  │  Troubleshoot  │ │
-│   │                │  │                │  │                 │  │                │  │                │ │
-│   │  How It Works  │  │ Initial Setup  │  │  Health Checks  │  │ Access Control │  │ Common Issues  │ │
-│   │Design Standards│  │Install/Upgrade │  │  CLI Reference  │  │ Authentication │  │  Diagnostics   │ │
-│   │  Integrations  │  │                │  │    Procedures   │  │   Encryption   │  │   Escalation   │ │
-│   │                │  │                │  │ Backup & Restore│  │   Hardening    │  │                │ │
-│   │                │  │                │  │     Scripts     │  │                │  │                │ │
-│   └────────────────┘  └────────────────┘  └─────────────────┘  └────────────────┘  └────────────────┘ │
-│                                                                                                       │
-│    Stage 1 (Architecture) builds understanding. Stage 3 (Operations) is daily work. Troubleshoot last.│
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ```mermaid
 graph LR

@@ -10,26 +10,10 @@ Recommended reading order for Cisco Nexus Dashboard. Follow these stages in orde
 
 *Applies to: Cisco MDS · Nexus*
 </div>
+![Cisco Nexus Dashboard — Learning Path](../../../../assets/san-cisco-nexus-dashboard-learning-path-index.svg)
 
-```text
-┌─────────────────────────────────── Nexus Dashboard — Learning Path ───────────────────────────────────┐
-│                                                                                                       │
-│    5 stages in order: Architecture → Deploy → Operations → Security → Troubleshoot                    │
-│                                                                                                       │
-│   ┌────────────────┐  ┌────────────────┐  ┌─────────────────┐  ┌────────────────┐  ┌────────────────┐ │
-│   │  Architecture  │  │     Deploy     │  │    Operations   │  │    Security    │  │  Troubleshoot  │ │
-│   │                │  │                │  │                 │  │                │  │                │ │
-│   │  How It Works  │  │ Initial Setup  │  │  Health Checks  │  │ Access Control │  │ Common Issues  │ │
-│   │Design Standards│  │Install/Upgrade │  │  CLI Reference  │  │ Authentication │  │  Diagnostics   │ │
-│   │  Integrations  │  │                │  │    Procedures   │  │   Encryption   │  │   Escalation   │ │
-│   │                │  │                │  │ Backup & Restore│  │   Hardening    │  │                │ │
-│   │                │  │                │  │     Scripts     │  │                │  │                │ │
-│   └────────────────┘  └────────────────┘  └─────────────────┘  └────────────────┘  └────────────────┘ │
-│                                                                                                       │
-│    Stage 1 (Architecture) builds understanding. Stage 3 (Operations) is daily work. Troubleshoot last.│
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ```mermaid
 graph LR

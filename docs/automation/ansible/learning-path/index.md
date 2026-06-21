@@ -10,26 +10,10 @@ Recommended reading order for Ansible. Follow these stages in order to build a c
 
 *Applies to: Ansible 2.x*
 </div>
+![Ansible — Learning Path](../../../assets/automation-ansible-learning-path-index.svg)
 
-```text
-┌─────────────────────────────────────── Ansible — Learning Path ───────────────────────────────────────┐
-│                                                                                                       │
-│    5 stages in order: Architecture → Deploy → Operations → Security → Troubleshoot                    │
-│                                                                                                       │
-│   ┌────────────────┐  ┌────────────────┐  ┌─────────────────┐  ┌────────────────┐  ┌────────────────┐ │
-│   │  Architecture  │  │     Deploy     │  │    Operations   │  │    Security    │  │  Troubleshoot  │ │
-│   │                │  │                │  │                 │  │                │  │                │ │
-│   │  How It Works  │  │ Initial Setup  │  │  Health Checks  │  │ Access Control │  │ Common Issues  │ │
-│   │Design Standards│  │Install/Upgrade │  │  CLI Reference  │  │ Authentication │  │  Diagnostics   │ │
-│   │  Integrations  │  │                │  │    Procedures   │  │   Encryption   │  │   Escalation   │ │
-│   │                │  │                │  │ Backup & Restore│  │   Hardening    │  │                │ │
-│   │                │  │                │  │     Scripts     │  │                │  │                │ │
-│   └────────────────┘  └────────────────┘  └─────────────────┘  └────────────────┘  └────────────────┘ │
-│                                                                                                       │
-│    Stage 1 (Architecture) builds understanding. Stage 3 (Operations) is daily work. Troubleshoot last.│
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ```mermaid
 graph LR

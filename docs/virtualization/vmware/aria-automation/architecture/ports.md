@@ -14,18 +14,10 @@ Firewall port reference for VMware Aria Automation (formerly vRealize Automation
 
 *Applies to: Aria Automation 8.x / 2403+*
 </div>
+![Aria Automation — Ports and Network Requirements](../../../../assets/virtualization-vmware-aria-automation-architecture-ports.svg)
 
-```text
-┌─────────────────────── Aria Automation — Network Traffic Zones ───────────────────────────────────────┐
-│                                                                                                       │
-│  Consumer Zone              Management Zone                    Infrastructure Zone                    │
-│  ──────────────             ────────────────                   ────────────────────                   │
-│  Users    ──443──► Aria     Aria Automation ──443──► vCenter   Cloud Accounts: AWS/Azure/GCP ──443    │
-│  API calls──443──► Automation (cluster)    ──443──► NSX Mgr    Git ──443──► Aria (pipelines/GitOps)   │
-│  CI/CD    ──443──►          Aria SaaS      ──443──► vRO        Aria Orchestrator ──443──► targets     │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Before you begin
 

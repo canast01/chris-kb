@@ -10,39 +10,10 @@ SQL Server upgrade procedures — in-place upgrade, side-by-side upgrade, compat
 
 *Applies to: Windows Server 2019 / 2022*
 </div>
+![SQL Server — Install & Upgrade](../../../../assets/compute-windows-server-sql-server-operations-install-upgrade.svg)
 
-```text
-┌─────────────────────────────────── SQL Server — Install & Upgrade ────────────────────────────────────┐
-│                                                                                                       │
-│   Supports in-place upgrade from up to two prior major versions; cannot skip versions                 │
-│   Keep databases on previous compatibility level immediately after upgrade; raise after testing       │
-│   Always backup all databases (master, msdb, user DBs) before starting upgrade                        │
-│                                                                                                       │
-│   Upgrade path                                                                                        │
-│   SQL 2016 → 2019, SQL 2017 → 2019, SQL 2019 → 2022 (one major version at a time)                     │
-│   Cannot skip: SQL 2014 → 2022 is not a supported direct in-place upgrade path                        │
-│                                                                                                       │
-│   Pre-upgrade steps                                                                                   │
-│   Check version: SELECT @@VERSION; check compat levels: SELECT name, compatibility_level              │
-│   Run Database Experimentation Assistant (DEA) to identify compatibility issues                       │
-│   Check deprecated features: sys.dm_os_performance_counters WHERE counter_name = 'Deprecated'         │
-│   Backup all: BACKUP DATABASE [master/msdb/user DBs] WITH COMPRESSION                                 │
-│                                                                                                       │
-│   In-place upgrade                                                                                    │
-│   Mount SQL Server ISO; run setup.exe → Installation → Upgrade from previous version                  │
-│   Select features; point to existing instance; SQL Setup upgrades system DBs and restarts             │
-│                                                                                                       │
-│   Post-upgrade                                                                                        │
-│   Raise compat level after testing: ALTER DATABASE MyDB SET COMPATIBILITY_LEVEL = 160                 │
-│   Update statistics: EXEC sp_updatestats; verify SQL Agent jobs; verify AG health                     │
-│                                                                                                       │
-│   Key terms:                                                                                          │
-│   compatibility_level = database-level setting; controls query optimizer behaviour version            │
-│   DEA            = Database Experimentation Assistant; analyses workload against new version          │
-│   DBCC UPDATEUSAGE = corrects inaccuracies in page and row counts in system catalog tables            │
-│   sp_updatestats = updates statistics for all objects in all user databases                           │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Before you begin
 

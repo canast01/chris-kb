@@ -17,8 +17,8 @@ Knowledge base statistics: page counts, section distribution, and content type c
 │   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
 │   │       Content Totals        │  │      Top 3 Sections          │  │      Content Types          │  │
 │   │       ─────────────         │  │      ─────────────           │  │      ─────────────          │  │
-│   │  Total pages:       2,639   │  │  Storage:          709       │  │  ASCII diagrams:     2,148  │  │
-│   │  Sections:             13   │  │  Virtualization:   685       │  │  SVG diagrams:         621  │  │
+│   │  Total pages:       2,639   │  │  Storage:          709       │  │  ASCII diagrams:     1,822  │  │
+│   │  Sections:             13   │  │  Virtualization:   685       │  │  SVG diagrams:         970  │  │
 │   │  Avg pages/section:   236   │  │  Cloud:            295       │  │  Mermaid diagrams:     680  │  │
 │   │  Updated 2026-06-21         │  │                              │  │  kb-summary divs:    2,359  │  │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
@@ -55,8 +55,8 @@ Generated: 2026-06-21
 |---|---:|
 | Total markdown pages | 2,639 |
 | Sections | 11 |
-| Pages with full-width ASCII diagrams | 2,148 |
-| Pages with SVG diagrams | 621 |
+| Pages with full-width ASCII diagrams | 1,822 |
+| Pages with SVG diagrams | 970 |
 | Pages with Mermaid diagrams | 680 |
 | Pages with kb-summary | 2,359 |
 | Pages with tags | 2,612 |

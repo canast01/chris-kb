@@ -15,22 +15,10 @@ Firewall port reference for vCenter Server Appliance (VCSA). Use this to build f
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
+![vCenter — Ports and Network Requirements](../../../../assets/virtualization-vmware-vcenter-architecture-ports.svg)
 
-```text
-┌───────────────────────────────── vCenter — Network Traffic Zones ─────────────────────────────────────┐
-│                                                                                                       │
-│  Client Zone          Management Zone            Infrastructure Zone                                  │
-│  ─────────────        ────────────────           ────────────────────                                 │
-│  Browsers/API  ──443──► vCenter VCSA ──902/443──► ESXi Hosts                                          │
-│  Admin SSH     ──22───►              ──389/636──► Active Directory                                    │
-│  VAMI          ──5480─►              ──123 UDP──► NTP Servers                                         │
-│                         │                                                                             │
-│                         └──514 UDP──► Syslog    ──5696──► KMS (if encryption)                         │
-│                                                                                                       │
-│  vCenter HA (3 nodes): TCP 2012/2014/2020 between VCSA nodes (same subnet recommended)                │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Before you begin
 

@@ -10,36 +10,10 @@ EVS backup strategy: SDDC Manager configuration backup, vCenter VAMI backup, NSX
 
 *Applies to: Amazon EVS*
 </div>
+![Amazon EVS — Backup & Restore](../../../../assets/cloud-aws-evs-operations-backup-restore.svg)
 
-```text
-┌──────────────────────────────────── Amazon EVS — Backup & Restore ────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   SDDC Manager config backup: SFTP target (S3 via Transfer Family or on-prem SFTP); daily    │    │
-│   │   vCenter config backup: vCenter VAMI → Backup; SFTP/SCP target; excludes VM disk data       │    │
-│   │   NSX-T config backup: NSX Manager → System → Backup; captures all policies and DFW rules    │    │
-│   │   VM workload backup: Veeam (VADP), AWS Backup, or cloud-native app-level backup             │    │
-│   │   AWS manages: bare-metal host hardware; no ESXi OS-level backup required                    │    │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  SDDC Manager backup = VCF configuration backup covering domains, hosts, and topology data            │
-│  VAMI          = vCenter Appliance Management Interface; HTTPS management UI at port 5480             │
-│  vCenter VCSA backup = VCSA file-based backup to SFTP/SCP/FTP; does not include VM disk data          │
-│  NSX-T backup  = Full export of NSX-T configuration: segments, policies, DFW, gateways                │
-│  VADP          = vStorage APIs for Data Protection; enables agentless VM backup via Veeam             │
-│  S3            = AWS object storage; primary backup destination for EVS configuration data            │
-│  Transfer Family = AWS managed SFTP service with S3 backend; acts as SFTP target for VCF              │
-│  RTO           = Recovery Time Objective; max acceptable downtime; drives backup frequency            │
-│  RPO           = Recovery Point Objective; max acceptable data loss; drives retention count           │
-│  Veeam         = Backup software using VADP to quiesce and snapshot VMs inside EVS cluster            │
-│  AWS Backup    = Native AWS backup service; can protect EVS VMs via integration agents                │
-│  Retention     = Number of backup copies kept; minimum 3 for production environments                  │
-│  Encryption token = Password protecting the VCSA backup; required for restore — store in vault        │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Before you begin
 

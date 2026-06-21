@@ -11,6 +11,8 @@ Install & Upgrade reference covering Evergreen Program Tiers, Software Upgrade (
 
 *Applies to: Evergreen*
 </div>
+![Evergreen — Install & Upgrade](../../../../assets/storage-pure-evergreen-operations-install-upgrade.svg)
+
 
 ```text
 Evergreen Upgrade Types

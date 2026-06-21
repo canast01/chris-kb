@@ -13,18 +13,10 @@ Firewall port reference for Windows Server in a managed enterprise environment. 
 
 *Applies to: Windows Server 2019 / 2022*
 </div>
+![Windows Server — Ports and Network Requirements](../../../assets/compute-windows-server-architecture-ports.svg)
 
-```text
-┌───────────────────────── Windows Server — Network Traffic Zones ──────────────────────────────────────┐
-│                                                                                                       │
-│  Management Zone              Windows Server                    Monitoring / Infra Zone               │
-│  ────────────────             ──────────────                    ─────────────────────                 │
-│  Jump hosts ──3389──► RDP     Win ──9100──► Prometheus wmi-exp  Win ──514 UDP──► Syslog               │
-│  Ansible    ──5986──► WinRM   Win ──10050──► Zabbix             Win ──123 UDP──► NTP                  │
-│  SCCM       ──445──►          Win ──445──► AD/WSUS/SCCM        Win ──443──► WU/WSUS                   │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Before you begin
 

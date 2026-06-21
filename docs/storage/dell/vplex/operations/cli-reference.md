@@ -11,58 +11,9 @@ tags:
 
 *Applies to: VPLEX*
 </div>
-```text
-┌───────────────────────────────────── Dell VPLEX — CLI Reference ──────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │           VPLEX CLI: command-line interface for all management and operational tasks          │   │
-│   │            Access: SSH or REST client to management IP; authenticate as admin role            │   │
-│   │        Commands: status, list, create, modify, delete, show, and diagnostic operations        │   │
-│   │          Scripting: use REST API or CLI in automation for provisioning and reporting          │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    SSH → authenticate → show status → configure → verify → log output                                 │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │        Virtualisation       │  │         Backend LUNs        │  │      Abstracted to VVs      │   │
-│   │            Metro            │  │         Sync stretch        │  │        <5ms RTT sites       │   │
-│   │             Geo             │  │      Async replication      │  │         Any distance        │   │
-│   │          Clustering         │  │        Active-active        │  │       Shared namespace      │   │
-│   │            Quorum           │  │          Witness VM         │  │      Split-brain guard      │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │     Category     │     Command      │      Purpose      │      Output      │      Notes       │   │
-│   │      Status      │   show status    │    Health check   │   State/alerts   │    Daily run     │   │
-│   │       List       │     list all     │     Inventory     │   Name/ID/size   │    Read-only     │   │
-│   │      Create      │  create volume   │     Provision     │    New object    │    Change req    │   │
-│   │      Delete      │ delete resource  │    Decommission   │   Confirmation   │   Irreversible   │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: VPLEX VS2/VS6 appliance · FC fabric · backend arrays · WAN link (Metro/Geo)              │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    VPLEX              = Dell storage federation; aggregates arrays into virtual volumes across vendors│
-│    Virtual volume     = VPLEX-abstracted LUN presented to hosts; backend is array LUNs                │
-│    VPLEX Metro        = synchronous active-active stretch cluster; same VV served from two sites      │
-│    VPLEX Geo          = asynchronous active-active replication; higher RPO, no distance constraint    │
-│    Distributed VV     = virtual volume spanning two sites for Metro active-active host access         │
-│    Witness            = third-site quorum arbiter for Metro; prevents split-brain island scenarios    │
-│    WAN-COM            = WAN communication module in VPLEX Geo; manages inter-site replication traffic │
-│    Management Server  = embedded Linux VM in VPLEX engine; serves web UI and vplex CLI                │
-│    Consistency group  = set of virtual volumes that failover together maintaining write order         │
-│    Backend volume     = LUN from underlying array presented to VPLEX engine for virtualisation        │
-│    Local device       = RAID device or extent of backend volumes on a single VPLEX cluster            │
-│    Cluster            = single VPLEX installation; Metro topology requires exactly two clusters       │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+![Dell VPLEX — CLI Reference (vplexcli)](../../../../assets/storage-dell-vplex-operations-cli-reference.svg)
+
+
 
 
  `/clusters/cluster-1/`) and `ll` (list-long) is the standard inspection command.

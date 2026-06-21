@@ -12,53 +12,11 @@ Install & Upgrade reference covering LCM Recovery, Product Decommission via LCM,
 
 *Applies to: Aria LCM 8.x*
 </div>
+![Aria Suite Lifecycle — Install & Upgrade](../../../../assets/virtualization-vmware-aria-suite-lifecycle-operations-instal.svg)
+
 
   LCM Upgrade Sequence (strict order)
-```text
-┌────────────────────────────────── Aria Suite LCM Install & Upgrade ───────────────────────────────────┐
-│                                                                                                       │
-│  LCM OVA deployment, depot synchronisation, and product installation via LCM.                         │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                Pre-Requisites                │  │             LCM OVA Deploy Steps            │   │
-│   │           vSphere 6.7+ environment           │  │             1. Download LCM OVA             │   │
-│   │          DNS FQDNs for all products          │  │         2. Deploy via vSphere client        │   │
-│   │             NTP server reachable             │  │        3. Complete VAMI setup wizard        │   │
-│   │          NFS or internet for depot           │  │           4. Configure depot in UI          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Deploy LCM first; configure depot; then deploy vIDM before any other product.                        │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │           Product Install via LCM            │  │               LCM Self-Upgrade              │   │
-│   │            1. Sync depot binaries            │  │            Snapshot LCM VM first            │   │
-│   │            2. Create environment             │  │            Settings > LCM Update            │   │
-│   │             3. Deploy vIDM first             │  │            Apply LCM PAK upgrade            │   │
-│   │            4. Add products to env            │  │            Validate after upgrade           │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  vSphere cluster; NFS for depot/backup; DNS for all product FQDNs; NTP server                         │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  LCM OVA             = Open Virtualization Appliance; LCM appliance package                           │
-│  Depot Configuration = LCM setting pointing to online or local content source                         │
-│  vIDM First          = Identity Manager must be deployed before any Aria product                      │
-│  Environment         = LCM logical grouping; created before products are added                        │
-│  Depot Sync          = Download of product catalog and PAK binaries from depot                        │
-│  VAMI Setup Wizard   = First-boot LCM config: IP, DNS, NTP, admin password                            │
-│  Pre-check           = LCM automated validation; runs before each deploy/upgrade                      │
-│  LCM Self-Upgrade    = LCM applies PAK to upgrade itself via Settings UI                              │
-│  Snapshot Before     = vSphere checkpoint of LCM VM before self-upgrade                               │
-│  Product Order       = vIDM, then vROps, vRLI, vRA in recommended sequence                            │
-│  DNS Pre-validation  = LCM checks FQDN resolution before deploying each product                       │
-│  NFS Depot Mount     = Local NFS share with PAK files; mounted on LCM VM                              │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 Store backup archives off the LCM appliance (NFS, S3, or external storage).
 
 ## Before you begin

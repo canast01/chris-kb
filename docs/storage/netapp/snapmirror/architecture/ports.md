@@ -14,6 +14,8 @@ Firewall port reference for NetApp SnapMirror. SnapMirror is a replication featu
 
 *Applies to: ONTAP 9.x (SnapMirror and SnapVault)*
 </div>
+![NetApp SnapMirror — Ports and Network Requirements](../../../../assets/storage-netapp-snapmirror-architecture-ports.svg)
+
 
 ## Network Zones
 

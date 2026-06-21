@@ -14,20 +14,10 @@ Firewall port reference for Dell VxRail. VxRail runs the full vSphere stack, so 
 
 *Applies to: VxRail 7.x / 8.x*
 </div>
+![VxRail — Ports and Network Requirements](../../../../assets/virtualization-vmware-vxrail-architecture-ports.svg)
 
-```text
-┌──────────────────────────── VxRail — Network Traffic Zones ───────────────────────────────────────────┐
-│                                                                                                       │
-│  Management Zone              VxRail-Specific                  Infrastructure Zone                    │
-│  ────────────────             ──────────────                    ────────────────────                  │
-│  Admin  ──443/22──► vCenter   vCenter Plugin ──443──► VxRail   vCenter ──902/443──► ESXi hosts        │
-│  Admin  ──443 ────► VxRail Mgr (VM)          ──443──► Dell     vSAN VMkernels (see vSAN ports page)   │
-│  Dell GSS──443────► iDRAC    iDRAC ──623 UDP──► IPMI server    NSX TEPs (see NSX ports page)          │
-│                                                                                                       │
-│  VxRail Manager runs as a VM on the first node — accessed via its own management IP                   │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Before you begin
 

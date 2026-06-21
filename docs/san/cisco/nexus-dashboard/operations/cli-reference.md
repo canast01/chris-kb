@@ -4,6 +4,8 @@ tags:
   - san
 ---
 # Cisco Nexus Dashboard — Operations CLI Reference
+![Cisco Nexus Dashboard — Operations CLI Reference](../../../../assets/san-cisco-nexus-dashboard-operations-cli-reference.svg)
+
 
 ```bash
 # Show cluster health summary
@@ -18,53 +20,7 @@ acs cluster info
 # Show platform version
 acs version
 ```
-```text
-┌────────────────────────── Cisco Nexus Dashboard — Operations CLI Reference ───────────────────────────┐
-│                                                                                                       │
-│  ND CLI accessed via SSH to node IP; used for low-level cluster operations and recovery.              │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │            Cluster Management CLI            │  │            Service Management CLI           │   │
-│   │          acs health: cluster status          │  │           acs pods: list all pods           │   │
-│   │        acs version: software version         │  │           acs logs: container logs          │   │
-│   │         acs cluster node: node info          │  │         acs restart: service restart        │   │
-│   │         acs network: interface info          │  │          kubectl: direct K8s access         │   │
-│   │          acs backup: trigger backup          │  │          systemctl: OS service mgmt         │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  ACS commands are ND-specific wrappers; kubectl gives raw Kubernetes access                           │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                Diagnostic CLI                │  │             REST API Alternative            │   │
-│   │           acs techsupport: bundle            │  │             GET /api/v1/version             │   │
-│   │         ping / traceroute: net test          │  │             GET /api/v1/cluster             │   │
-│   │           netstat: port listeners            │  │             POST /api/v1/backup             │   │
-│   │           df / top: resource usage           │  │            API token: Bearer auth           │   │
-│   │           journalctl: systemd logs           │  │             Swagger UI: /apidocs            │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  ND cluster nodes (SSH access) · management Ethernet · OOB jump host                                  │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  ACS            = Application Centric Stack; ND-native CLI toolset for cluster ops                    │
-│  kubectl        = Kubernetes CLI; direct control of pods, deployments, namespaces                     │
-│  acs health     = Shows cluster quorum, node state, and service health summary                        │
-│  acs techsupport= Generates diagnostic bundle equivalent to GUI tech-support                          │
-│  systemctl      = Linux systemd service manager; controls OS-level ND services                        │
-│  journalctl     = Linux systemd log viewer; queries node-level service logs                           │
-│  Swagger UI     = Interactive REST API documentation hosted at /apidocs on ND                         │
-│  Bearer auth    = HTTP Authorization header with JWT token for REST API calls                         │
-│  netstat        = Network statistics; shows open ports and active connections                         │
-│  Pod            = Kubernetes workload unit; each ND microservice runs in a pod                        │
-│  Namespace      = Kubernetes logical partition isolating app resources                                │
-│  REST API       = Preferred programmatic interface; CLI used for break-glass ops                      │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 ```bash
 # Upload an upgrade image
 acs upgrade upload /tmp/aci-nd-dk9.3.1.1.ova

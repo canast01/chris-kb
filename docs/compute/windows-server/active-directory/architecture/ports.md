@@ -14,19 +14,10 @@ Firewall port reference for Microsoft Active Directory Domain Services. Covers c
 
 *Applies to: Windows Server 2019 / 2022 Active Directory*
 </div>
+![Active Directory — Ports and Network Requirements](../../../../assets/compute-windows-server-active-directory-architecture-ports.svg)
 
-```text
-┌─────────────────────────── Active Directory — Network Traffic Zones ──────────────────────────────────┐
-│                                                                                                       │
-│  Client Zone                 Domain Controller Zone              AD Site B (Replication)              │
-│  ─────────────               ────────────────────               ─────────────────────────             │
-│  Windows clients ──88/389──► DC (Site A) ──135+dynamic──► DC (Site B, SYSVOL/AD replication)          │
-│  Linux clients   ──88/389──► DC           ──53 UDP/TCP──► DC (DNS zone transfer)                      │
-│  Applications    ──636 ────► DC                                                                       │
-│  Admin           ──3389/5985► DC                                                                      │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Before you begin
 

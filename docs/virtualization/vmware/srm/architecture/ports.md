@@ -14,20 +14,10 @@ Firewall port reference for VMware Site Recovery Manager (SRM) and vSphere Repli
 
 *Applies to: SRM 8.x / vSphere Replication 8.x*
 </div>
+![SRM — Ports and Network Requirements](../../../../assets/virtualization-vmware-srm-architecture-ports.svg)
 
-```text
-┌──────────────────────────── SRM — Network Traffic Zones ──────────────────────────────────────────────┐
-│                                                                                                       │
-│  Protected Site                    ◄── Inter-site firewall ──►         Recovery Site                  │
-│  ──────────────                                                         ─────────────                 │
-│  SRM Server ──9086──────────────────────────────────────────────────► SRM Server                      │
-│  VR Appliance ──10443──────────────────────────────────────────────► VR Appliance                     │
-│  ESXi hosts ──31031/44046────────────────────────────────────────► ESXi hosts (replication data)      │
-│                                                                                                       │
-│  Within each site: SRM ──443──► vCenter, VR ──31031──► ESXi, Admin ──443──► SRM                       │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Before you begin
 

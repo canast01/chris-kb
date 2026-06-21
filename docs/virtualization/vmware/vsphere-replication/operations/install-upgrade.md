@@ -12,28 +12,11 @@ Install and Upgrade reference covering Prerequisites, VRA OVA Deployment, Regist
 
 *Applies to: vSphere Replication 8.x*
 </div>
+![vSphere Replication — Install and Upgrade](../../../../assets/virtualization-vmware-vsphere-replication-operations-install.svg)
+
 
   VR Deployment and Upgrade Workflow
-```text
-┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
-│  Deploy VRA OVA ──► Register with vCenter ──► Pair sites                                              │
-│  (both sites)        (VAMI port 5480)         (accept certs)                                          │
-│       │                                            │                                                  │
-│       ▼                                            ▼                                                  │
-│  ┌─────────────────────┐              ┌────────────────────┐                                          │
-│  │ Configure per-VM    │              │ Add VRS if >500    │                                          │
-│  │ replication:        │              │ VMs (same OVA,     │                                          │
-│  │  RPO, target DS,    │              │ deploy as VRS)     │                                          │
-│  │  quiesce, encrypt   │              └────────────────────┘                                          │
-│  └─────────────────────┘                                                                              │
-│                                                                                                       │
-│  Upgrade: redeploy from new OVA with same IP                                                          │
-│  ┌──────────────────────────────────────────────────────┐                                             │
-│  │ Snapshot ──► redeploy ──► re-register ──► verify     │                                             │
-│  │ Replications resume from last sync — no data loss    │                                             │
-│  └──────────────────────────────────────────────────────┘                                             │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 ---
 

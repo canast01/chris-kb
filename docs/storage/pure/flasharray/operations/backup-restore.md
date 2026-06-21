@@ -11,6 +11,8 @@ Backup & Restore reference covering Protection Group Snapshot Configuration, Res
 
 *Applies to: FlashArray Purity 6.x*
 </div>
+![FlashArray — Backup & Restore](../../../../assets/storage-pure-flasharray-operations-backup-restore.svg)
+
 
 ```text
 FlashArray Data Protection Tiers

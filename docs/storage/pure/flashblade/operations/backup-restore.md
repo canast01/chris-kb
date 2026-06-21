@@ -11,6 +11,8 @@ Backup & Restore reference covering Snapshot-Based Backup Overview, Snapshot Man
 
 *Applies to: FlashBlade Purity//FB 4.x*
 </div>
+![FlashBlade — Backup & Restore](../../../../assets/storage-pure-flashblade-operations-backup-restore.svg)
+
 
 ```text
 FlashBlade Data Protection Tiers

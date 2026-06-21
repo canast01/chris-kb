@@ -14,59 +14,10 @@ Firewall port reference for Dell CloudIQ. CloudIQ is Dell's SaaS analytics and h
 
 *Applies to: CloudIQ (SaaS)*
 </div>
+![Dell CloudIQ — Ports and Network Requirements](../../../../assets/storage-dell-cloudiq-architecture-ports.svg)
 
-```text
-┌──────────────────────────────────────────── Dell CloudIQ ─────────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │              CloudIQ: AI-powered cloud storage management and analytics platform              │   │
-│   │                Protocols: HTTPS REST API · SMTP alerts · SCG telemetry protocol               │   │
-│   │                                   Management: CloudIQ portal                                  │   │
-│   │                Sections: Architecture · Operations · Security · Troubleshooting               │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Architecture → Operations → Security → Troubleshooting → Escalation                                │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │           Function          │   │
-│   │          Collection         │  │         SCG adapter         │  │       Array telemetry       │   │
-│   │          Transport          │  │         HTTPS tunnel        │  │       Encrypted relay       │   │
-│   │          Analytics          │  │         AIOps engine        │  │        Health scoring       │   │
-│   │           Alerting          │  │        Email/webhook        │  │       Threshold rules       │   │
-│   │          Reporting          │  │      Capacity forecast      │  │        Trend analysis       │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Component     │     Purpose      │       Config      │       Auth       │      Notes       │   │
-│   │   SCG gateway    │ Telemetry relay  │     On-prem VM    │   Certificate    │   One per site   │   │
-│   │   CloudIQ SaaS   │ Analytics portal │    Managed SaaS   │      OAuth2      │   Dell-hosted    │   │
-│   │     REST API     │    Automation    │    Token-based    │       JWT        │   GraphQL also   │   │
-│   │   Alert engine   │  Notifications   │   Threshold rule  │  Email/webhook   │   Configurable   │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: CloudIQ SaaS (cloud-hosted) · SCG gateways on-prem · connected Dell arrays               │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    CloudIQ            = Dell SaaS AIOps; monitors PowerStore, Unity, PowerMax, PowerScale arrays      │
-│    SCG                = Secure Connect Gateway; on-prem agent that relays telemetry to CloudIQ        │
-│    Health score       = composite 0-100 metric for array wellness; drops when alert conditions fire   │
-│    Proactive rec.     = AI-generated recommendations for firmware, config, and capacity actions       │
-│    Capacity IQ        = CloudIQ module; forecasts when arrays will reach configured capacity thresho  │
-│    Performance IQ     = CloudIQ module; identifies latency anomalies and I/O bottlenecks over time    │
-│    Wellness           = overall system health dashboard; aggregates all monitored arrays in one view  │
-│    API token          = CloudIQ personal access token; use for REST and GraphQL API authentication    │
-│    Webhook alert      = HTTP POST to external SIEM/ticketing endpoint on CloudIQ alert trigger        │
-│    Workload planner   = CloudIQ tool for predicting impact of planned workload migrations             │
-│    Tag                = user-defined key-value label applied to arrays for grouping and portal filte  │
-│    Site               = logical grouping of arrays by physical location within CloudIQ hierarchy      │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 
 ## How It Works

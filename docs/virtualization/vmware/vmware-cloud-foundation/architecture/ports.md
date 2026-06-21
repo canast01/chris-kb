@@ -14,21 +14,10 @@ Firewall port reference for VMware Cloud Foundation (VCF). VCF uses the same por
 
 *Applies to: VCF 5.x*
 </div>
+![VCF — Ports and Network Requirements](../../../../assets/virtualization-vmware-vmware-cloud-foundation-architecture-p.svg)
 
-```text
-┌───────────────────────── VCF — Network Traffic Zones ─────────────────────────────────────────────────┐
-│                                                                                                       │
-│  Management Zone                      VCF Management Domain                                           │
-│  ────────────────                     ─────────────────────                                           │
-│  Admin ──443──► SDDC Manager          SDDC Mgr ──443──► vCenter (management domain)                   │
-│                                       SDDC Mgr ──443──► NSX Manager                                   │
-│                                       SDDC Mgr ──443──► ESXi hosts                                    │
-│                                       SDDC Mgr ──443──► SDDC Mgr (workload domains)                   │
-│                                                                                                       │
-│  All underlying product ports also apply — see vCenter, ESXi, vSAN, NSX port pages                    │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Before you begin
 

@@ -13,53 +13,10 @@ Scripts reference covering Disk Group Capacity Report (PowerShell / PowerCLI), v
 
 *Applies to: vSAN 7.x / 8.x*
 </div>
+![vSAN — Scripts](../../../../assets/virtualization-vmware-vsan-operations-scripts.svg)
 
-```text
-┌───────────────────────────────────── vSAN — Operational Scripts ──────────────────────────────────────┐
-│                                                                                                       │
-│  PowerCLI and esxcli scripts automate vSAN health checks, capacity reporting,                         │
-│  disk status audits, object compliance scans, and resync monitoring.                                  │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Health & Capacity Scripts           │  │            Disk & Object Scripts            │   │
-│   │            Test-VsanClusterHealth            │  │           Get-VsanDisk | Ft Status          │   │
-│   │         Get-VsanClusterConfiguration         │  │           esxcli vsan debug object          │   │
-│   │         Capacity: Get-VsanDatastore          │  │         cmmds-tool find -t DOM_NAME         │   │
-│   │        Export CSV for capacity report        │  │            vsan.resync_dashboard            │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Health scripts run read-only; object debug scripts may need host shell access.                       │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Policy Compliance Scripts           │  │              Resync Monitoring              │   │
-│   │         Get-SpbmEntityConfiguration          │  │            Watch-VsanResync loop            │   │
-│   │            Find non-compliant VMs            │  │           esxcli vsan debug object          │   │
-│   │         Set-SpbmEntityConfiguration          │  │          RVC: vsan.resync_dashboard         │   │
-│   │         Bulk policy re-apply script          │  │           Alert if resync >4h old           │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  Scripts connect via PowerCLI to vCenter; esxcli/cmmds-tool run on ESXi host shell.                   │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Test-VsanClusterHealth= PowerCLI health check trigger                                                │
-│  Get-VsanDisk  = list disk state across all vSAN hosts                                                │
-│  Get-SpbmEntityConfiguration= policy compliance per VM                                                │
-│  Set-SpbmEntityConfiguration= apply storage policy to VM                                              │
-│  cmmds-tool    = Cluster Membership and Metadata Directory Service tool                               │
-│  DOM_NAME      = Distributed Object Manager; each object has a UUID                                   │
-│  vsan.resync_dashboard= RVC command; shows resync progress                                            │
-│  SPBM          = Storage Policy Based Management; VC policy engine                                    │
-│  Non-compliant = VM FTT not met; data at risk                                                         │
-│  Watch loop    = PowerShell while loop; poll resync every 60s                                         │
-│  Alert >4h     = resync older than 4h suggests stuck operation                                        │
-│  Capacity report= UsedCapacity/TotalCapacity per datastore per host                                   │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 **What you should see**
 
 ```text

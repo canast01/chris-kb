@@ -11,39 +11,10 @@ Production-ready PowerCLI scripts for vSphere operations: VM inventory reports, 
 
 *Applies to: PowerCLI 13.x*
 </div>
+![PowerCLI — Scripts](../../../../assets/virtualization-vmware-powercli-operations-scripts.svg)
 
-```text
-┌─────────────────────────────── PowerCLI — Production Script Reference ────────────────────────────────┐
-│                                                                                                       │
-│   All production scripts follow: param block → connect → try/catch → query → export → disconnect      │
-│   Use -vCenter and -OutputPath parameters; avoid hardcoded credentials in script files                │
-│   Store results in CSV for import into Excel, reporting tools, or ITSM systems                        │
-│                                                                                                       │
-│   Available scripts                                                                                   │
-│   VM inventory report: Name, CPU, RAM, OS, IP, Tools version, snapshot count, hosting cluster         │
-│   Snapshot audit: VMs with snapshots; snapshot name, age, size in GB, and created timestamp           │
-│   Host capacity report: physical host CPU/RAM total vs allocated; overcommit ratios per cluster       │
-│   vSAN status: cluster health summary, disk group state, and component rebuild status                 │
-│   Bulk tag assignment: assign tags to VMs by name pattern, folder, or existing tag filter             │
-│   VM health report: CPU ready %, memory balloon MB, datastore IOPS, and tools status per VM           │
-│                                                                                                       │
-│   Script structure standard                                                                           │
-│   Header: script name, description, usage example                                                     │
-│   Param block: -vCenter (mandatory), -Cluster, -OutputPath, -Credential                               │
-│   Error handling: try/catch around Connect-VIServer; finally block with Disconnect-VIServer           │
-│   Output: Write-Host progress lines to console; Export-Csv to -OutputPath                             │
-│                                                                                                       │
-│   Scheduling scripts                                                                                  │
-│   Windows Task Scheduler: use stored credential store item; avoid -Credential prompts                 │
-│   Linux cron: use pwsh -File script.ps1 -vCenter vcenter.example.com                                  │
-│   CI/CD pipelines: store vCenter credentials in pipeline secrets; pass via env var or vault           │
-│                                                                                                       │
-│   Key terms:                                                                                          │
-│   param block    = PowerShell function parameters; defines script inputs with type and mandatory flag │
-│   try/catch      = error handling; catches Connect-VIServer failures and other terminating errors     │
-│   Export-Csv     = exports pipeline objects to CSV; use -NoTypeInformation to suppress header line    │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Before you begin
 

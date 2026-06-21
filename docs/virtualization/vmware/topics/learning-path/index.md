@@ -10,39 +10,10 @@ Recommended reading order for VMware. Start here to build a complete mental mode
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
+![VMware Learning Path](../../../../assets/virtualization-vmware-topics-learning-path-index.svg)
 
-```text
-┌───────────────────────────── VMware Learning Path — Layered Progression ──────────────────────────────┐
-│                                                                                                       │
-│  PROGRESSION — read bottom to top; each stage builds on the one below it                              │
-│  Stage 1: vCenter · Stage 2: ESXi · Stage 3: vSAN · Stage 4: NSX · Stage 5: Aria · Stage 6: VxRail    │
-│                                                                                                       │
-│  STAGE 1 — vCenter                                                                                    │
-│  Management plane: Datacenter > Cluster > Host > VM inventory model                                   │
-│  DRS · HA · Lifecycle Manager · vSphere Client · roles and permissions                                │
-│                                                                                                       │
-│  STAGE 2 — ESXi                                                                                       │
-│  Hypervisor kernel: VMkernel OS · VMkernel ports (vmk0–vmkN) · vSwitches / vDS                        │
-│  Storage adapters · esxcli · esxtop · lockdown mode · host profiles                                   │
-│                                                                                                       │
-│  STAGE 3 — vSAN                                                                                       │
-│  Distributed storage: OSA vs ESA · disk groups · SPBM policies · FTT                                  │
-│  RAID-5/RAID-6 · health checks · rebuild operations · stretched clusters                              │
-│                                                                                                       │
-│  STAGE 4 — NSX                                                                                        │
-│  Software-defined networking: T0/T1 routers · segments · DFW (Distributed Firewall)                   │
-│  NAT · load balancer · edge nodes · microsegmentation · BGP/routing                                   │
-│                                                                                                       │
-│  STAGE 5 — Aria Suite                                                                                 │
-│  Observability: metrics · alerts · capacity forecasting (Aria Ops)                                    │
-│  Log analytics: Aria Ops for Logs · Network visibility: Aria Ops for Networks                         │
-│                                                                                                       │
-│  STAGE 6 — VxRail                                                                                     │
-│  HCI appliance: ESXi + vSAN + vCenter bundled · First Run Wizard · VxRail Manager                     │
-│  LCM bundles (no manual patching) · iDRAC hardware management · OMIVV integration                     │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Stage 1: vCenter Server
 

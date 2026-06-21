@@ -15,21 +15,10 @@ Firewall port reference for VMware Horizon. Covers client-to-Connection Server, 
 
 *Applies to: Horizon 8 (2111+) / Horizon 2312+*
 </div>
+![Horizon — Ports and Network Requirements](../../../../assets/virtualization-vmware-horizon-architecture-ports.svg)
 
-```text
-┌───────────────────────── Horizon — Network Traffic Zones ─────────────────────────────────────────────┐
-│                                                                                                       │
-│  Client Zone                  DMZ (UAG/GSS)              Internal Network                             │
-│  ─────────────               ────────────                ────────────────                             │
-│  Horizon Client ──443───────► Unified Access  ──443─────► Connection Server                           │
-│  (any device)   ──22443 UDP──► Gateway (UAG)  ──22443 UDP──► Horizon Agent (VMs)                      │
-│                  ──4172 UDP──►                ──4172 UDP──► Horizon Agent (VMs)                       │
-│                                                                                                       │
-│  Without UAG (internal clients only):                                                                 │
-│  Horizon Client ──443──► Connection Server ──22443/4172──► Horizon Agent (desktop/RDSH VMs)           │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Before you begin
 

@@ -13,20 +13,10 @@ Firewall port reference for Veeam Backup & Replication. Covers VBR server, backu
 
 *Applies to: Veeam Backup & Replication v12.x*
 </div>
+![Veeam — Ports and Network Requirements](../../../assets/backup-veeam-architecture-ports.svg)
 
-```text
-┌──────────────────────────── Veeam — Network Traffic Zones ────────────────────────────────────────────┐
-│                                                                                                       │
-│  Management Zone             Veeam Infrastructure              VMware Infrastructure                  │
-│  ────────────────            ─────────────────────             ─────────────────────                  │
-│  Admin    ──9392──► VBR      VBR ──9392──► Proxy              Proxy ──443──► vCenter                  │
-│  REST API ──9396──► VBR      VBR ──9392──► Repository         Proxy ──902──► ESXi hosts               │
-│  Veeam ONE─────────►         Proxy ──2500-5000──► Repository                                          │
-│                                                                                                       │
-│  Guest processing (Windows): VBR/Proxy ──6160──► Guest VM     (Linux): VBR ──22──► Guest VM           │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Before you begin
 

@@ -14,20 +14,10 @@ Firewall port reference for VMware Aria Suite Lifecycle Manager (formerly vReali
 
 *Applies to: Aria Suite Lifecycle 8.x / 2403+*
 </div>
+![Aria Suite Lifecycle — Ports and Network Requirements](../../../../assets/virtualization-vmware-aria-suite-lifecycle-architecture-port.svg)
 
-```text
-┌────────────────────── Aria Suite Lifecycle — Network Traffic Zones ───────────────────────────────────┐
-│                                                                                                       │
-│  Management Zone             Aria Suite LC                     Managed Products                       │
-│  ────────────────            ─────────────                     ────────────────                       │
-│  Admin  ──443──► Aria        Aria LC ──443──► vCenter (VM deploy/snapshot)                            │
-│                  Suite LC    Aria LC ──443──► Aria Automation (deploy/upgrade)                        │
-│                              Aria LC ──443──► Aria Operations (deploy/upgrade)                        │
-│                              Aria LC ──5480──► Managed Aria appliances (VAMI)                         │
-│                              Aria LC ──443──► *.broadcom.com (product downloads)                      │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Before you begin
 

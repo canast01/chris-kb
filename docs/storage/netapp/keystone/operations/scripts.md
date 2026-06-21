@@ -11,58 +11,9 @@ Script Reference reference covering Subscription Utilization Report, ONTAP Volum
 
 *Applies to: Keystone STaaS*
 </div>
-```text
-┌────────────────────────────── NetApp Keystone — Scripts and Automation ───────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │        Keystone scripts: automation for reporting, health monitoring, and provisioning        │   │
-│   │         REST API available for all operations; PowerShell and Python modules supported        │   │
-│   │          Scripts must run from dedicated service accounts with least-privilege roles          │   │
-│   │        Store credentials in vault; rotate service account passwords on defined schedule       │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Script → authenticate REST → execute operation → verify → log result                               │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │           Hardware          │  │       AFF/FAS on-prem       │  │         NetApp-owned        │   │
-│   │        Service level        │  │       Extreme/Perf/Std      │  │         Latency SLA         │   │
-│   │          Collector          │  │         Telemetry VM        │  │        ONTAP polling        │   │
-│   │          Dashboard          │  │            BlueXP           │  │       Usage visibility      │   │
-│   │           Billing           │  │       Committed+burst       │  │       Monthly invoice       │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
-│   │Keystone Collecto │  Usage metering  │     ONTAP REST    │ Service account  │    On-prem VM    │   │
-│   │      BlueXP      │   SaaS portal    │       HTTPS       │    OAuth2/SSO    │   NetApp SaaS    │   │
-│   │   AFF Extreme    │  NVMe perf tier  │    FC/iSCSI/NFS   │  Kerberos/CHAP   │  Sub-ms latency  │   │
-│   │   AutoSupport    │ Telemetry relay  │       HTTPS       │   Certificate    │    Call-home     │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: NetApp AFF/FAS arrays on-prem · Keystone Collector VM · BlueXP cloud portal              │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    Keystone           = NetApp STaaS; fixed-term subscription for ONTAP or StorageGRID capacity       │
-│    Service level      = tiered SLA: Extreme (NVMe), Performance (SSD), Standard (HDD)                 │
-│    Committed capacity = minimum contracted TiB; billed monthly even if below threshold                │
-│    Burst capacity     = usage above committed; available without pre-ordering; billed monthly         │
-│    Keystone Collector = on-prem VM that gathers usage metrics and sends to NetApp Keystone            │
-│    BlueXP             = NetApp SaaS control plane; Keystone dashboard, DRaaS, and cloud integrations  │
-│    AFF                = All Flash FAS; ONTAP-based NVMe/SSD array used for Extreme and Performance ...│
-│    FAS                = Fabric Attached Storage; ONTAP hybrid HDD/SSD for Standard service level      │
-│    StorageGRID        = NetApp S3 object storage; Object service level in Keystone subscriptions      │
-│    AutoSupport        = ONTAP telemetry relay; sends call-home data and log bundles to NetApp         │
-│    Service request    = NetApp SR; support ticket opened via mysupport.netapp.com portal              │
-│    SKU                = Keystone service SKU identifies the service level and raw or usable capacity  │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+![NetApp Keystone — Script Reference](../../../../assets/storage-netapp-keystone-operations-scripts.svg)
+
+
 
 
 ## Before you begin

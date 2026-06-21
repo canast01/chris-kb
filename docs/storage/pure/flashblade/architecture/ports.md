@@ -13,6 +13,8 @@ Firewall port reference for Pure Storage FlashBlade. FlashBlade provides unified
 
 *Applies to: FlashBlade//S, FlashBlade//E, Purity//FB 4.x*
 </div>
+![Pure Storage FlashBlade — Ports and Network Requirements](../../../../assets/storage-pure-flashblade-architecture-ports.svg)
+
 
 ## Network Zones
 

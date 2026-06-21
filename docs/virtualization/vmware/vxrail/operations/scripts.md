@@ -11,42 +11,10 @@ PowerCLI and bash scripts for VxRail automation. Includes vSAN health summary, c
 
 *Applies to: VxRail 7.x / 8.x*
 </div>
+![VxRail Appliance — Scripts](../../../../assets/virtualization-vmware-vxrail-operations-scripts.svg)
 
-```text
-┌────────────────────────────────────────── VxRail — Scripts ───────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   All PowerCLI scripts require: Connect-VIServer before running                               │   │
-│   │   Bash scripts run over SSH to an ESXi host or VxRail Manager                                │    │
-│   │   Scripts are parameterised at the top — edit the variable block before running               │   │
-│   │   Pre-upgrade validation script is the recommended gate before any LCM upgrade                │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │      vSAN Health Summary    │  │    Cluster Capacity Report  │  │    Pre-Upgrade Validation   │   │
-│   │   Loop all nodes            │  │   All datastores            │  │   vSAN health green         │   │
-│   │   Output per-check result   │  │   Used% + FreeGB per DS     │  │   Resync = 0                │   │
-│   │   Flag any non-green checks │  │   Alert threshold flag      │  │   DRS Fully Automated       │   │
-│   │   Group by check category   │  │   Sorted by used%           │  │   All nodes connected       │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────────────────────────────────────┐    │
-│   │    Firmware Version Report  │  │           vSAN Capacity Alert Script                        │    │
-│   │   ESXi version + build/host │  │   Configurable threshold (default 70%)                      │    │
-│   │   iDRAC version via RACADM  │  │   Sends console alert or email on breach                    │    │
-│   │   BIOS version per node     │  │   Run on schedule via Task Scheduler / cron                 │    │
-│   └─────────────────────────────┘  └─────────────────────────────────────────────────────────────┘    │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│  Connect-VIServer = PowerCLI cmdlet to authenticate against vCenter before running any cmdlets        │
-│  Get-VsanClusterHealthSummary = returns per-check vSAN health groups and overall state                │
-│  Get-SpbmEntityConfiguration  = returns per-VM storage policy compliance status                       │
-│  RACADM                       = iDRAC CLI; used over SSH to pull firmware version info per node       │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ---
 

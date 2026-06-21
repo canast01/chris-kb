@@ -15,25 +15,10 @@ Firewall port reference for VMware vSAN. Covers intra-cluster data plane, health
 
 *Applies to: vSAN 7.x / 8.x*
 </div>
+![vSAN — Ports and Network Requirements](../../../../assets/virtualization-vmware-vsan-architecture-ports.svg)
 
-```text
-┌───────────────────────────── vSAN — Network Traffic Zones ────────────────────────────────────────────┐
-│                                                                                                       │
-│  Standard Cluster (L2 recommended)                                                                    │
-│  ─────────────────────────────────                                                                    │
-│  ESXi-A vSAN vmk ──UDP 12345/12346──► ESXi-B vSAN vmk   (CMMDS metadata)                              │
-│                   ──TCP 2233───────►                      (RDT data I/O)                              │
-│                                                                                                       │
-│  Stretched Cluster / Witness (L3 crosses firewall)                                                    │
-│  ─────────────────────────────────────────────────                                                    │
-│  Site A ESXi ──UDP 12345/12346 + TCP 2233──► Site B ESXi                                              │
-│  Site A ESXi ──UDP 12345/12346 + TCP 2233──► Witness Appliance (Management IP)                        │
-│                                                                                                       │
-│  vSAN iSCSI (optional)                                                                                │
-│  ESXi vSAN vmk ──TCP 3260──► iSCSI initiators (remote compute nodes)                                  │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Before you begin
 

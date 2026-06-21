@@ -13,18 +13,10 @@ Firewall port reference for Linux servers in a managed enterprise environment. C
 
 *Applies to: RHEL 8+ / Ubuntu 22.04+ and derivatives*
 </div>
+![Linux — Ports and Network Requirements](../../../assets/compute-linux-architecture-ports.svg)
 
-```text
-┌────────────────────────── Linux Server — Network Traffic Zones ───────────────────────────────────────┐
-│                                                                                                       │
-│  Management Zone               Linux Host                       Monitoring / Infra Zone               │
-│  ────────────────              ─────────                        ─────────────────────                 │
-│  Jump hosts   ──22──► SSH      Linux ──9100──► Prometheus       Linux ──514 UDP──► Syslog             │
-│  Ansible      ──22──► SSH      Linux ──162 UDP──► SNMP trap recv Linux ──123 UDP──► NTP               │
-│  Zabbix agent ◄──10050──►      Linux ──443──► yum/apt repos                                           │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Before you begin
 

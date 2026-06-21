@@ -14,18 +14,10 @@ Firewall port reference for Red Hat OpenShift Container Platform (OCP). Covers t
 
 *Applies to: OpenShift Container Platform 4.x*
 </div>
+![OpenShift — Ports and Network Requirements](../../../assets/virtualization-openshift-architecture-ports.svg)
 
-```text
-┌───────────────────────── OpenShift — Network Traffic Zones ───────────────────────────────────────────┐
-│                                                                                                       │
-│  Client Zone              Control Plane              Worker Nodes              Overlay (Pod Network)  │
-│  ─────────────            ─────────────              ────────────              ─────────────────────  │
-│  Users   ──443──► Router  API Server ──6443──► kubelet Kubelet ──10250──► API  Pod ──6081 UDP──► Pod  │
-│  Admin   ──6443──► API    etcd ──2379/2380──►          Worker ──4789 UDP──► OVN (OVN-Kubernetes)      │
-│  Ingress ──80/443──►                                                                                  │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Before you begin
 

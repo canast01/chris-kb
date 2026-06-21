@@ -11,58 +11,9 @@ SnapCenter backup and restore: creating resource groups, on-demand Protect Now, 
 
 *Applies to: SnapCenter 5.x*
 </div>
-```text
-┌─────────────────────────────── NetApp SnapCenter — Backup and Restore ────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │     SnapCenter backup: snapshots, replication, and external backup application integration    │   │
-│   │        Snapshot schedule: hourly for 24 h, daily for 7 days, weekly for 4 weeks minimum       │   │
-│   │            Replication: async or sync to DR site for off-site data protection copy            │   │
-│   │       Restore: volume-level or file-level restore from snapshot; test restore quarterly       │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Snapshot → replicate to DR → verify → document → test restore                                      │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │            Server           │  │          Windows VM         │  │       Central control       │   │
-│   │           Plug-in           │  │          Host agent         │  │        App-consistent       │   │
-│   │            Policy           │  │       Schedule/retain       │  │         Backup rule         │   │
-│   │        Resource group       │  │       Grouped targets       │  │        Shared policy        │   │
-│   │           Recovery          │  │       Volume/LUN/file       │  │       Granular restore      │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │       Type       │     Schedule     │     Retention     │     Offsite?     │    Test cycle    │   │
-│   │     Snapshot     │   Hourly/daily   │    7/30/90 days   │        No        │     Monthly      │   │
-│   │   Replication    │  Policy-driven   │     Per policy    │     Yes (DR)     │    Quarterly     │   │
-│   │    Backup app    │ Daily full+incr  │      90+ days     │ Yes (tape/cloud  │    Quarterly     │   │
-│   │     Archive      │     Monthly      │      7+ years     │   Yes (object)   │      Annual      │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: SnapCenter Server (Windows) · ONTAP clusters · plug-in hosts · application servers       │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    SnapCenter         = NetApp backup orchestration; coordinates app-consistent snapshots via plug-ins│
-│    Plug-in            = host-side agent; quiesces application before snapshot: SQL, Oracle, VMware    │
-│    Resource group     = set of resources sharing a backup policy and schedule in SnapCenter           │
-│    Policy             = SnapCenter object defining snapshot frequency, retention, and replication t...│
-│    App-consistent     = snapshot taken after DB quiesce; guarantees crash-consistent recovery         │
-│    Clone lifecycle    = SnapCenter clone: create from snapshot, provision to host, then delete        │
-│    FlexClone          = underlying ONTAP technology; SnapCenter clone maps to an ONTAP FlexClone      │
-│    Vault policy       = SnapCenter policy that also replicates snapshots to SnapVault destination     │
-│    Mirror policy      = SnapCenter policy that replicates snapshots via SnapMirror to DR cluster      │
-│    RBAC               = SnapCenter role-based access; Admin, Backup Operator, Restore Operator roles  │
-│    SMF                = SnapCenter MySQL database storing job history, policies, and resource configs │
-│    SnapCenter API     = REST API on port 8143; full feature coverage for automation workflows         │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+![SnapCenter — Backup & Restore](../../../../assets/storage-netapp-snapcenter-operations-backup-restore.svg)
+
+
 
 
 ---

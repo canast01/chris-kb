@@ -11,6 +11,8 @@ CLI Reference reference covering Overview, Pure1 REST API, FlashArray CLI (per-a
 
 *Applies to: Evergreen*
 </div>
+![Evergreen — CLI Reference](../../../../assets/storage-pure-evergreen-operations-cli-reference.svg)
+
 
 ```text
 Evergreen Management — CLI/API Access Points

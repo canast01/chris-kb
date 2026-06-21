@@ -10,6 +10,8 @@ MySQL/MariaDB backup: `mysqldump --single-transaction`, `mysqlpump`, xtrabackup 
 
 *Applies to: RHEL / Ubuntu LTS*
 </div>
+![MySQL / MariaDB — Backup Restore](../../../../assets/compute-linux-mysql-operations-backup-restore.svg)
+
 
 ## Before you begin
 
@@ -32,44 +34,7 @@ pgbackrest --stanza=<stanza-name> info --output=json | jq '.[] | .backup[-1]'
 # Check WAL archiving is current
 psql -U postgres -c "SELECT last_archived_wal, last_archived_time, last_failed_wal FROM pg_stat_archiver;"
 ```
-```text
-┌──────────────────────────────────── Database — Backup Validation ─────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Confirm database backups are completing successfully and restores work before needed     │   │
-│   │          PostgreSQL: pgBackRest info + WAL archiving; MySQL: mysqldump + binary logs          │   │
-│   │         SQL Server: RESTORE VERIFYONLY; Oracle: RMAN validate; check agent job history        │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             Backup Status Checks             │  │             Restore Verification            │   │
-│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
-│   │           pgBackRest: stanza info            │  │           Restore to test instance          │   │
-│   │         Check last backup timestamp          │  │         Run row count + key queries         │   │
-│   │         Verify WAL archiving current         │  │          RESTORE VERIFYONLY (MSSQL)         │   │
-│   │            SQL Agent job history             │  │           RMAN validate backupset           │   │
-│   │             Alert on missed jobs             │  │             Document test result            │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   │     Platform     │  Check command   │   Restore verify  │    Frequency     │     Alert on     │   │
-│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
-│   │    PostgreSQL    │ pgbackrest info  │  pg_restore test  │      Daily       │     WAL gap      │   │
-│   │    SQL Server    │Agent job history │    VERIFY ONLY    │      Daily       │   Job failure    │   │
-│   │      MySQL       │    mysqlcheck    │  Restore + query  │      Daily       │    Binlog gap    │   │
-│   │      Oracle      │    RMAN list     │   RMAN validate   │      Daily       │   RMAN failure   │   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    pgBackRest   = PostgreSQL backup tool; stanza = named backup config for a cluster                  │
-│    WAL archiving= PostgreSQL ships WAL segments to archive; gap = missing logs; PITR broken           │
-│    VERIFY ONLY  = SQL Server command; reads backup and validates checksums without restoring          │
-│    RMAN validate= Oracle checks backup set integrity; reports any corrupt blocks found                │
-│    Binary log   = MySQL changelog of every committed transaction; needed for PITR                     │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 ```bash
 # PostgreSQL — verify backup with pgBackRest
 pgbackrest --stanza=<stanza-name> check

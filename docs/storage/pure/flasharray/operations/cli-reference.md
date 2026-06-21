@@ -11,58 +11,9 @@ CLI Reference reference covering Admin Accounts, Alerts & Audit, Array & System 
 
 *Applies to: FlashArray Purity 6.x*
 </div>
-```text
-┌─────────────────────────────────── Pure FlashArray — CLI Reference ───────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │        FlashArray CLI: command-line interface for all management and operational tasks        │   │
-│   │            Access: SSH or REST client to management IP; authenticate as admin role            │   │
-│   │        Commands: status, list, create, modify, delete, show, and diagnostic operations        │   │
-│   │          Scripting: use REST API or CLI in automation for provisioning and reporting          │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    SSH → authenticate → show status → configure → verify → log output                                 │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │         Controllers         │  │        Active-active        │  │           No SPOF           │   │
-│   │            Drives           │  │         DirectFlash         │  │         NVMe native         │   │
-│   │           Volumes           │  │       Thin provisioned      │  │        Instant clone        │   │
-│   │        ActiveCluster        │  │       Sync replication      │  │           Zero RPO          │   │
-│   │           SafeMode          │  │       Immutable snaps       │  │      Ransomware resist      │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │     Category     │     Command      │      Purpose      │      Output      │      Notes       │   │
-│   │      Status      │   show status    │    Health check   │   State/alerts   │    Daily run     │   │
-│   │       List       │     list all     │     Inventory     │   Name/ID/size   │    Read-only     │   │
-│   │      Create      │  create volume   │     Provision     │    New object    │    Change req    │   │
-│   │      Delete      │ delete resource  │    Decommission   │   Confirmation   │   Irreversible   │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: FlashArray//X or //C controllers · DirectFlash NVMe modules · 25/100 GbE / 32Gb FC       │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    FlashArray         = Pure all-NVMe block/file array; inline dedup and compression always enabled   │
-│    DirectFlash        = Pure proprietary NVMe modules; direct flash access without SAS translation    │
-│    ActiveCluster      = synchronous active-active stretch cluster; hosts see a single namespace       │
-│    ActiveDR           = asynchronous replication to DR site; recovery point objective in seconds      │
-│    SafeMode           = admin-locked immutable snapshots; cannot be deleted even by array administr...│
-│    Protection group   = set of volumes and hosts sharing a snapshot and replication schedule          │
-│    purefa CLI         = REST CLI tool for FlashArray; purefa CLI connects via REST API key            │
-│    purearray          = purectl CLI command: purearray list and purearray show monitoring             │
-│    Volume tag         = user-defined key-value label on volumes for policy and reporting purposes     │
-│    Host group         = logical collection of hosts sharing volume access via a host group object     │
-│    Inline dedup       = content-based deduplication performed inline before data is written to flash  │
-│    Evergreen          = Pure architecture; controllers upgrade non-disruptively, shelves remain in ...│
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+![FlashArray — CLI Reference](../../../../assets/storage-pure-flasharray-operations-cli-reference.svg)
+
+
 
 
 ```text

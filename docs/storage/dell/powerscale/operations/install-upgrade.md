@@ -11,61 +11,10 @@ Install & Upgrade reference covering Software Version Matrix, Upgrade Paths, Ref
 
 *Applies to: PowerScale (Isilon) 9.x*
 </div>
+![PowerScale — Install & Upgrade](../../../../assets/storage-dell-powerscale-operations-install-upgrade.svg)
 
-```text
-┌───────────────────────────────── Dell PowerScale Install and Upgrade ─────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      OneFS rolling upgrade: upgrades nodes sequentially; cluster stays online throughout      │   │
-│   │     Node addition: new node joins cluster; FlexProtect restripes data across expanded pool    │   │
-│   │          Pre-upgrade: verify isi upgrade start --verify; review compatibility matrix          │   │
-│   │      Decommission: evacuate node with isi devices node smartfail then remove from cluster     │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Pre-check → upgrade commit → rolling node-by-node reboot → verify cluster → sign-off               │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │        Upgrade Steps        │  │        Node Addition        │  │         Decommission        │   │
-│   │      ─────────────────      │  │      ─────────────────      │  │      ─────────────────      │   │
-│   │       Pre-check verify      │  │        Cable new node       │  │        smartfail node       │   │
-│   │        Download image       │  │        Add to cluster       │  │        Data evacuates       │   │
-│   │        Commit upgrade       │  │       FlexProtect run       │  │         Remove node         │   │
-│   │        Rolling reboot       │  │        Pool restripe        │  │        Pool restripe        │   │
-│   │         Post verify         │  │         Verify join         │  │        Confirm health       │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│    Upgrade duration scales with cluster size; plan maintenance window for FlexProtect restripe        │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   │    Operation     │     Command      │      Duration     │  Cluster impact  │     Rollback     │   │
-│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
-│   │    Pre-check     │   isi upgrade    │      Minutes      │       None       │ N/A — read only  │   │
-│   │     Upgrade      │isi upgrade start │       Hours       │  None (rolling)  │isi upgrade abort │   │
-│   │     Node add     │ isi devices add  │  Hours (restripe) │  I/O continues   │   Remove node    │   │
-│   │   Decommission   │  isi smartfail   │   Hours (drain)   │  I/O continues   │  Abort if early  │   │
-│                                                                                                       │
-│    Physical: new node racked and cabled to back-end switch before isi devices add command             │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    Rolling upgrade= OneFS upgrades one node at a time; node reboots while others serve I/O            │
-│    isi upgrade    = OneFS CLI upgrade tool; --verify checks compatibility before committing           │
-│    smartfail      = Controlled node/drive removal; OneFS evacuates data before marking removed        │
-│    isi devices    = Node and drive management tool; add, remove, smartfail subcommands                │
-│    FlexProtect run= Auto-triggered after node add/remove; restripes data to new protection level      │
-│    Pool restripe  = Data redistribution across updated node count; runs in background                 │
-│    Compatibility  = Check OneFS version matrix; protocol clients, SyncIQ, and hardware support        │
-│    isi upgrade abort= Stops in-progress upgrade; reverts upgraded nodes back to prior version         │
-│    Pre-check verify= isi upgrade start --verify; confirms no blocking conditions before commit        │
-│    Maintenance window= Plan for FlexProtect restripe after node addition; I/O performance impact      │
-│    Data evacuates = smartfail moves all data off the target node before it is removed from pool       │
-│    Add to cluster = isi devices node add; OneFS detects new node on back-end and joins it             │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Before you begin
 

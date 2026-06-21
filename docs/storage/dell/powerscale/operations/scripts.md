@@ -11,58 +11,9 @@ Automation scripts and reusable code for Dell PowerScale operations.
 
 *Applies to: PowerScale (Isilon) 9.x*
 </div>
-```text
-┌────────────────────────────── Dell PowerScale — Scripts and Automation ───────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │       PowerScale scripts: automation for reporting, health monitoring, and provisioning       │   │
-│   │         REST API available for all operations; PowerShell and Python modules supported        │   │
-│   │          Scripts must run from dedicated service accounts with least-privilege roles          │   │
-│   │        Store credentials in vault; rotate service account passwords on defined schedule       │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Script → authenticate REST → execute operation → verify → log result                               │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │           Function          │   │
-│   │              OS             │  │            OneFS            │  │        Distributed FS       │   │
-│   │           Tiering           │  │          SmartPools         │  │        Auto data move       │   │
-│   │         Replication         │  │            SyncIQ           │  │        Async DR copy        │   │
-│   │          Snapshots          │  │          SnapshotIQ         │  │       Space-efficient       │   │
-│   │         Load balance        │  │         SmartConnect        │  │       DNS client dist.      │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
-│   │      OneFS       │ Distributed file │  NFS/SMB/S3/HDFS  │  Kerberos/NTLM   │ Single namespac  │   │
-│   │    SmartPools    │  Tiering policy  │      Internal     │    Admin role    │  Auto data move  │   │
-│   │      SyncIQ      │ Async replicatio │   Encrypted TCP   │   Certificate    │   Policy-based   │   │
-│   │    SnapshotIQ    │    Snapshots     │      Internal     │    Admin role    │  Per directory   │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: PowerScale nodes (All-Flash/Hybrid) · InfiniBand backend · 25/100 GbE frontend           │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    OneFS              = Dell PowerScale distributed filesystem OS; all nodes share a single namespace │
-│    SmartPools         = tiering engine; moves files between All-Flash, Hybrid, and Archive tiers      │
-│    SyncIQ             = async replication to DR cluster; RPO-based schedule; failover in minutes      │
-│    SnapshotIQ         = space-efficient snapshots; accessed via .snapshot directory in each share     │
-│    SmartConnect       = DNS-based load balancing; distributes NFS/SMB client connections across nodes │
-│    Access zone        = logical container with separate authentication and export namespace per tenant│
-│    Quota              = directory or user quota; hard/soft/advisory limits enforced by OneFS QuotaIQ  │
-│    CloudPools         = tiering to cloud object storage (S3/Blob); data remains accessible locally    │
-│    isi CLI            = OneFS command-line interface; all management operations available via isi c...│
-│    Node pool          = group of same-model nodes sharing protection domain for data distribution     │
-│    Protection level   = N+2:1, N+3:1 etc.; defines how many node or drive failures are tolerated      │
-│    File pool policy   = rule-based policy assigning files to specific node pools or storage tiers     │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+![PowerScale — Scripts](../../../../assets/storage-dell-powerscale-operations-scripts.svg)
+
+
 
 
 ## Before you begin

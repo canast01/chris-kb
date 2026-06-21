@@ -15,17 +15,10 @@ Firewall port reference for VMware Aria Operations for Networks (formerly vReali
 
 *Applies to: Aria Operations for Networks 6.x / 23.x+*
 </div>
+![Aria Operations for Networks — Ports and Network Requirements](../../../../assets/virtualization-vmware-aria-operations-for-networks-architect.svg)
 
-```text
-┌─────────────────── Aria Operations for Networks — Network Traffic Zones ──────────────────────────────┐
-│                                                                                                       │
-│  User Zone           Platform Appliance          Collector Appliance           Data Sources           │
-│  ─────────           ──────────────────          ────────────────────          ────────────           │
-│  Admin ──443──► Platform ──443──► Collector      Collector ──443──► vCenter   Collector ──443──► NSX  │
-│  API   ──443──►          ◄──443──                Collector ──161 UDP─► Switches Collector ──22──► Devices│
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Before you begin
 

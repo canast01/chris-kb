@@ -4,6 +4,8 @@ tags:
   - operations
 ---
 # Dell COD Scripts
+![Dell COD Scripts](../../../../assets/storage-dell-cod-operations-scripts.svg)
+
 
 ```bash
 #!/bin/bash
@@ -55,42 +57,7 @@ echo "  Review output above for COD reserve vs. activated capacity."
 echo "  Alert if activated capacity approaches total installed capacity."
 echo "========================================"
 ```
-```text
-┌────────────────────────────────────────── Dell COD Scripts ───────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Scripts to query COD status across products and generate remaining-capacity reports      │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                              # PowerStore — list license capacity                             │   │
-│   │                    curl -sk -u admin:$PASS https://<ps>/api/rest/license \                    │   │
-│   │                    | jq ".[] | {name: .name, is_evaluation: .is_evaluation}"                  │   │
-│   │                                                                                               │   │
-│   │                       # PowerStore — check capacity after COD activation                      │   │
-│   │                    curl -sk -u admin:$PASS https://<ps>/api/rest/cluster \                    │   │
-│   │                     | jq ".[0] | {total_raw_capacity, usable_raw_capacity}"                   │   │
-│   │                                                                                               │   │
-│   │                            # Unity — list license status via uemcli                           │   │
-│   │                 uemcli -d <unity> -u admin -p $PASS /license show -output csv                 │   │
-│   │                                                                                               │   │
-│   │                        # PowerMax Solutions Enabler — list COD licenses                       │   │
-│   │                     symlic -sid <SID> list | grep -i "capacity on demand"                     │   │
-│   │                                                                                               │   │
-│   │                       # Report: all arrays, COD status, capacity summary                      │   │
-│   │                                for ARRAY in "${ARRAYS[@]}"; do                                │   │
-│   │                  echo "=== $ARRAY ==="; curl -sk ... /api/rest/license | jq ...               │   │
-│   │                                              done                                             │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    total_raw_capacity = All physical raw storage including locked COD; in bytes                       │
-│    usable_raw_capacity= Capacity available to create pools; increases after COD activation            │
-│    symlic             = Solutions Enabler license command; requires SYMAPI connectivity               │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 ```powershell
 # cod_license_query.ps1 — COD license query via Unisphere REST API (Windows PowerShell)
 # Requires: PowerShell 5.1+ (built into Windows 10/11)

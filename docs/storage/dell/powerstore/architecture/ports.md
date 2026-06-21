@@ -14,19 +14,10 @@ Firewall port reference for Dell PowerStore. Covers management API and UI, data 
 
 *Applies to: PowerStore 3.x / 4.x (PowerStore OS)*
 </div>
+![Dell PowerStore — Ports and Network Requirements](../../../../assets/storage-dell-powerstore-architecture-ports.svg)
 
-```text
-┌──────────────────────────── Dell PowerStore — Network Traffic Zones ──────────────────────────────────┐
-│                                                                                                       │
-│  Management Zone         Data Zone (per data IP)           Replication Zone                           │
-│  ────────────────        ──────────────────────            ────────────────                           │
-│  Admin ──443/22──► mgmt  NFS clients   ──2049──► data IPs  PS1 ──443──► PS2 (async/metro)             │
-│  SNMP  ──161 ────►        SMB clients  ──445───► data IPs                                             │
-│                           iSCSI hosts  ──3260──► data IPs                                             │
-│                           NVMe hosts   ──4420──► data IPs                                             │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Before you begin
 

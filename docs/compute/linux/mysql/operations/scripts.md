@@ -10,38 +10,10 @@ MySQL automation scripts — nightly backup, slow query report, replication lag 
 
 *Applies to: RHEL / Ubuntu LTS*
 </div>
+![MySQL / MariaDB — Scripts](../../../../assets/compute-linux-mysql-operations-scripts.svg)
 
-```text
-┌───────────────────────────────────── MySQL — Operational Scripts ─────────────────────────────────────┐
-│                                                                                                       │
-│   Five automation scripts: nightly backup, slow query report, replication lag alert, connections      │
-│   All scripts read credentials from /etc/mysql-backup.pass or ~/.my.cnf — no plaintext in scripts     │
-│   Schedule via cron; pipe output to a log file; alert on non-zero exit codes                          │
-│                                                                                                       │
-│   Nightly backup script                                                                               │
-│   mysqldump --single-transaction --routines --triggers per database to dated directory                │
-│   Compresses output with gzip; deletes backups older than 7 days                                      │
-│   Exits non-zero if any database dump fails; integrate with alerting                                  │
-│                                                                                                       │
-│   Slow query report                                                                                   │
-│   Parses /var/log/mysql/slow.log with pt-query-digest; outputs top 10 queries by total time           │
-│   Run daily after backup; redirect output to report file; email to DBA team                           │
-│                                                                                                       │
-│   Replication lag alert                                                                               │
-│   Reads Seconds_Behind_Source from SHOW REPLICA STATUS; alerts if lag exceeds threshold               │
-│   Exits non-zero when lag > N seconds; designed for nagios/check_mk or cron-based alerting            │
-│                                                                                                       │
-│   Connection count monitoring                                                                         │
-│   Compares Threads_connected to max_connections; warns at 80%, criticals at 90%                       │
-│   Table size report: queries information_schema; outputs top 20 tables by size in MB                  │
-│                                                                                                       │
-│   Key terms:                                                                                          │
-│   pt-query-digest = Percona toolkit slow log analyser; ranks queries by total execution time          │
-│   Seconds_Behind_Source = replica lag in seconds; 0 = replica is fully caught up to primary           │
-│   Threads_connected = current open connections; monitored against max_connections threshold           │
-│   information_schema = MySQL internal schema; contains metadata about all databases and tables        │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Before you begin
 

@@ -14,21 +14,10 @@ Firewall port reference for NetApp ONTAP clusters. Covers cluster management, da
 
 *Applies to: ONTAP 9.10+*
 </div>
+![NetApp ONTAP — Ports and Network Requirements](../../../../assets/storage-netapp-ontap-architecture-ports.svg)
 
-```text
-┌──────────────────────────── NetApp ONTAP — Network Traffic Zones ─────────────────────────────────────┐
-│                                                                                                       │
-│  Management Zone          Data Zone (per SVM LIF)              Replication Zone                       │
-│  ────────────────         ──────────────────────               ────────────────                       │
-│  Admin  ──443/22──► Cluster Mgmt LIF    NFS/SMB/iSCSI LIFs    ONTAP ──11104/11105──► Remote ONTAP     │
-│  SNMP   ──161 ────► Node Mgmt LIFs      ──2049──► NFS clients  (SnapMirror)                           │
-│                                          ──445───► SMB clients                                        │
-│                                          ──3260──► iSCSI init                                         │
-│                                                                                                       │
-│  Cluster interconnect (HA pair / cluster network) on dedicated cluster ports — no WAN firewall        │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Before you begin
 

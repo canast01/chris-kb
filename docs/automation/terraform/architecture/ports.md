@@ -14,19 +14,10 @@ Firewall port reference for Terraform and Terraform Enterprise (TFE). Terraform 
 
 *Applies to: Terraform CLI 1.x / Terraform Enterprise / HCP Terraform*
 </div>
+![Terraform — Ports and Network Requirements](../../../assets/automation-terraform-architecture-ports.svg)
 
-```text
-┌──────────────────────────── Terraform — Network Traffic Zones ────────────────────────────────────────┐
-│                                                                                                       │
-│  CI/CD / DevOps Zone          TFE (self-hosted)               Provider APIs                           │
-│  ──────────────────           ────────────────                ─────────────                           │
-│  Operators  ──443──► TFE      TFE ──443──► Provider APIs      vCenter, NSX, NetApp, etc. ──443        │
-│  Pipelines  ──443──► TFE      TFE ──22──► provisioner targets AWS/Azure/GCP ──443                     │
-│                                                                                                       │
-│  Standalone CLI: no inbound ports — all connections are outbound from where terraform is executed     │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Before you begin
 

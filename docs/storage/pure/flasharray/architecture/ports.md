@@ -14,20 +14,10 @@ Firewall port reference for Pure Storage FlashArray. Covers Purity management, i
 
 *Applies to: Purity//FA 6.x*
 </div>
+![Pure FlashArray — Ports and Network Requirements](../../../../assets/storage-pure-flasharray-architecture-ports.svg)
 
-```text
-┌─────────────────────────── Pure FlashArray — Network Traffic Zones ───────────────────────────────────┐
-│                                                                                                       │
-│  Management Zone           Data Zone                           Replication Zone                       │
-│  ────────────────          ─────────                           ────────────────                       │
-│  Admin  ──443/22──► mgmt0  iSCSI ports ──3260──► Hosts        FA1 ──8776──► FA2 (ActiveCluster)       │
-│  SNMP   ──161 ────►        iSCSI ports ──4420──► NVMe hosts   FA1 ──443 ───► FA2 (REST API, ADR)      │
-│  Pure1  ◄──443────►        FC ports ──(FC fabric)──► Hosts                                            │
-│                                                                                                       │
-│  Management uses mgmt0 (dedicated 1G port). Data uses iSCSI/FC ports (10/25/100G ETH or FC HBAs)      │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Before you begin
 

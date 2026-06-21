@@ -11,6 +11,8 @@ Install & Upgrade reference covering Purity Version Matrix, Upgrade Paths, Refre
 
 *Applies to: FlashBlade Purity//FB 4.x*
 </div>
+![FlashBlade — Install & Upgrade](../../../../assets/storage-pure-flashblade-operations-install-upgrade.svg)
+
 
 ```text
 Purity//FB Non-Disruptive Upgrade (NDU)

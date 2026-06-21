@@ -15,19 +15,10 @@ Firewall port reference for VMware Aria Operations for Logs (formerly vRealize L
 
 *Applies to: Aria Operations for Logs 8.x / 2403+*
 </div>
+![Aria Operations for Logs — Ports and Network Requirements](../../../../assets/virtualization-vmware-aria-operations-for-logs-architecture-.svg)
 
-```text
-┌──────────────────── Aria Operations for Logs — Network Traffic Zones ─────────────────────────────────┐
-│                                                                                                       │
-│  Log Sources Zone              Cluster ILB (Virtual IP)           Destinations                        │
-│  ────────────────              ────────────────────────            ────────────                       │
-│  ESXi/vCenter  ──514 UDP──► Aria Logs ILB ──9000──► Workers    Aria Ops ──9000──► Aria Logs (fwd)     │
-│  App servers   ──514 TCP──►                                     Aria Logs ──514──► Remote syslog      │
-│  Agents (CFAPI)──9543 TCP──►                                                                          │
-│  Admin         ──443 TCP───►                                                                          │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Before you begin
 

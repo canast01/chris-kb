@@ -15,18 +15,10 @@ Firewall port reference for Venafi Trust Protection Platform (TPP). Covers the T
 
 *Applies to: Venafi Trust Protection Platform 22.x+*
 </div>
+![Venafi — Ports and Network Requirements](../../../assets/security-venafi-architecture-ports.svg)
 
-```text
-┌──────────────────────────── Venafi TPP — Network Traffic Zones ───────────────────────────────────────┐
-│                                                                                                       │
-│  User / API Zone           TPP Zone                       CA / Endpoint Zone                          │
-│  ─────────────────         ─────────                      ─────────────────                           │
-│  Admin  ──443──► TPP       TPP ──443──► Microsoft CA      TPP / Satellite ──443──► Web servers (push) │
-│  API    ──443──► Aperture  TPP ──135+dyn──► MS CA (DCOM) TPP / Satellite ──22──► Linux web servers    │
-│  Agents ──443──► TPP       TPP ──636 ──► LDAP/AD         TPP / Satellite ──443──► F5, NetScaler, etc. │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Before you begin
 

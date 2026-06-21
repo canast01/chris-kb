@@ -14,59 +14,10 @@ Firewall port reference for Dell APEX Storage as a Service (STaaS). APEX Storage
 
 *Applies to: Dell APEX Block Storage / File Storage / Object Storage*
 </div>
+![Dell APEX Storage as a Service — Ports and Network Requirements](../../../../assets/storage-dell-apex-storage-as-a-service-architecture-ports.svg)
 
-```text
-┌─────────────────────────────────────────── Dell Apex STaaS ───────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                     Apex STaaS: cloud-managed on-prem storage subscription                    │   │
-│   │                               Protocols: iSCSI · FC · NFS · SMB                               │   │
-│   │                                    Management: Apex Console                                   │   │
-│   │                Sections: Architecture · Operations · Security · Troubleshooting               │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Architecture → Operations → Security → Troubleshooting → Escalation                                │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Owner            │   │
-│   │           Hardware          │  │       NVMe/SAS arrays       │  │             Dell            │   │
-│   │          Management         │  │         Apex Console        │  │           Customer          │   │
-│   │          Monitoring         │  │         CloudIQ/SCG         │  │            Shared           │   │
-│   │           Billing           │  │       Committed+burst       │  │         Dell billing        │   │
-│   │           Network           │  │        iSCSI VLAN/FC        │  │           Customer          │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Component     │     Function     │      Protocol     │       Auth       │      Notes       │   │
-│   │      Arrays      │  Block/File/NFS  │    iSCSI/FC/NFS   │  CHAP/Kerberos   │     On-prem      │   │
-│   │   Apex Console   │  Provision/bill  │     HTTPS REST    │     SAML SSO     │   SaaS portal    │   │
-│   │       SCG        │ Telemetry relay  │       HTTPS       │   Certificate    │     Local VM     │   │
-│   │     CloudIQ      │ AIOps analytics  │       HTTPS       │      OAuth2      │       SaaS       │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: Dell array hardware on-premises · customer iSCSI VLAN / FC fabric · Apex Console SaaS    │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    Apex STaaS         = on-prem Dell storage consumed as a cloud service with subscription billing    │
-│    Apex Console       = cloud portal; provision volumes, view usage, and raise support requests       │
-│    Committed base     = minimum contracted capacity tier; billed monthly regardless of actual use     │
-│    Burst capacity     = pre-installed unlocked storage above committed; billed when consumed          │
-│    SCG                = Secure Connect Gateway; relays array telemetry to CloudIQ for analysis        │
-│    CloudIQ            = Dell AIOps SaaS; health scores, capacity forecasts, firmware advisories       │
-│    NVMe tier          = all-flash performance tier; sub-millisecond latency for database workloads    │
-│    Capacity tier      = SAS/NL-SAS lower cost tier; suited to bulk storage and backup targets         │
-│    iSCSI CHAP         = Challenge Handshake Auth Protocol; authenticates iSCSI initiators to array    │
-│    FC port sec.       = FC fabric binding and port security; restricts which HBAs can log in          │
-│    vVols              = Virtual Volumes; per-VM storage objects exposed via VASA provider to vCenter  │
-│    OOB mgmt           = out-of-band management network for direct array controller access             │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 
 ## APEX Cloud Management (Outbound — Required)

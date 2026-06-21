@@ -11,6 +11,8 @@ Script Reference reference covering Subscription Capacity Report, Alert Configur
 
 *Applies to: Evergreen*
 </div>
+![Evergreen — Script Reference](../../../../assets/storage-pure-evergreen-operations-scripts.svg)
+
 
 ```text
   Pure Script Execution Paths

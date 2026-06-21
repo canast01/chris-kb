@@ -10,39 +10,10 @@ SQL Server CLI reference — sqlcmd, PowerShell SqlServer module, BCP, SQLCMD sc
 
 *Applies to: Windows Server 2019 / 2022*
 </div>
+![SQL Server — CLI Reference](../../../../assets/compute-windows-server-sql-server-operations-cli-reference.svg)
 
-```text
-┌───────────────────────────────────── SQL Server — CLI Reference ──────────────────────────────────────┐
-│                                                                                                       │
-│   Three primary CLI tools: sqlcmd (T-SQL), SqlServer PowerShell module, and BCP (bulk data)           │
-│   sqlcmd -E uses Windows authentication; -S for server; -Q runs query and exits                       │
-│   Invoke-Sqlcmd and Backup-SqlDatabase are the PowerShell equivalents for scripted operations         │
-│                                                                                                       │
-│   sqlcmd                                                                                              │
-│   Connect: sqlcmd -S <host> -U <user> -P <pass>; Windows auth: sqlcmd -S localhost -E                 │
-│   Run query: sqlcmd -S localhost -E -Q "SELECT @@VERSION"                                             │
-│   Run script: sqlcmd -S localhost -E -i script.sql -o output.txt                                      │
-│   Suppress headers: -h -1 -W (scripting mode for clean output)                                        │
-│                                                                                                       │
-│   PowerShell SqlServer module                                                                         │
-│   Install: Install-Module -Name SqlServer -Force                                                      │
-│   Query: Invoke-Sqlcmd -ServerInstance localhost -Database master -Query "SELECT @@VERSION"           │
-│   Backup: Backup-SqlDatabase -ServerInstance localhost -Database MyDB -CompressionOption On           │
-│   Restore: Restore-SqlDatabase -ServerInstance localhost -Database MyDB_Restore                       │
-│                                                                                                       │
-│   BCP (bulk copy) / key DMVs                                                                          │
-│   Export: bcp MyDB.dbo.Orders out D:\export\orders.csv -c -t, -S localhost -T                         │
-│   Import: bcp MyDB.dbo.Orders in D:\import\orders.csv -c -t, -S localhost -T -b 10000                 │
-│   Blocking: sys.dm_exec_requests WHERE blocking_session_id > 0                                        │
-│   AG health: sys.dm_hadr_availability_replica_states joined to availability_groups                    │
-│                                                                                                       │
-│   Key terms:                                                                                          │
-│   sqlcmd       = command-line SQL Server client; ships with SQL Server and ODBC tools                 │
-│   BCP          = Bulk Copy Program; fastest bulk import/export method for SQL Server                  │
-│   DMV          = Dynamic Management View; sys.dm_* views expose SQL Server runtime state              │
-│   Invoke-Sqlcmd = PowerShell cmdlet wrapping sqlcmd; supports pipeline and script blocks              │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Before you begin
 

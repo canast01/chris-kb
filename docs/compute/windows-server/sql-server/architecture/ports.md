@@ -15,19 +15,10 @@ Firewall port reference for Microsoft SQL Server. Covers the default instance, n
 
 *Applies to: SQL Server 2019 / 2022*
 </div>
+![SQL Server — Ports and Network Requirements](../../../../assets/compute-windows-server-sql-server-architecture-ports.svg)
 
-```text
-┌─────────────────────────── SQL Server — Network Traffic Zones ────────────────────────────────────────┐
-│                                                                                                       │
-│  Application / Client Zone        SQL Server                    Replication Zone                      │
-│  ─────────────────────────        ──────────                    ────────────────                      │
-│  App servers    ──1433──► SQL      SQL ──5022──► SQL (AG sync)  SQL ──1433──► Linked servers          │
-│  SSMS admin     ──1433──► SQL      SQL ──5022──► SQL (mirror)                                         │
-│  Backup agents  ──1433──► SQL                                                                         │
-│                           SQL ──1434 UDP──► SQL Browser (named instances)                             │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Before you begin
 

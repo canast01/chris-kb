@@ -15,21 +15,10 @@ Firewall port reference for VMware NSX-T / NSX. Covers NSX Manager API, manageme
 
 *Applies to: NSX-T 3.x / NSX 4.x*
 </div>
+![NSX — Ports and Network Requirements](../../../../assets/virtualization-vmware-nsx-architecture-ports.svg)
 
-```text
-┌───────────────────────────── NSX — Network Traffic Zones ─────────────────────────────────────────────┐
-│                                                                                                       │
-│  Management Zone                Control/Transport Zone              Fabric Zone                       │
-│  ────────────────               ──────────────────────              ────────────                      │
-│  Admin clients ──443──► NSX Manager ──443──► ESXi/Edge MPA         ESXi TEP ──6081 UDP──► Edge TEP    │
-│  vCenter       ──443──► (cluster)   ──5671──► ESXi RabbitMQ        Edge TEP ──6081 UDP──► ESXi TEP    │
-│                                     ──1234/1235──► Transport Nodes  BGP:     ──179 TCP──► Physical    │
-│                                                                      BFD:     ──3784/4784 UDP──►      │
-│                                                                                                       │
-│  Federation: NSX Global Manager ──443──► NSX Local Manager                                            │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Before you begin
 

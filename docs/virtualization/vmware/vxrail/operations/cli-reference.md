@@ -11,50 +11,10 @@ Complete command reference for VxRail operations: VxRail Manager REST API, esxcl
 
 *Applies to: VxRail 7.x / 8.x*
 </div>
+![VxRail — CLI Reference](../../../../assets/virtualization-vmware-vxrail-operations-cli-reference.svg)
 
-```text
-┌─────────────────────────────────────── VxRail — CLI Reference ────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   VxRail Manager REST API  ·  base URL: https://<vxm-ip>/rest/vxm/v1/  ·  Basic auth (mystic) │   │
-│   │   esxcli vSAN commands run over SSH to any ESXi host in the cluster                           │   │
-│   │   iDRAC RACADM commands run over SSH to each node's dedicated iDRAC IP                        │   │
-│   │   PowerCLI cmdlets run from a Windows or Linux host with VMware.PowerCLI module installed     │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │      VxRail Manager API     │  │        esxcli vSAN          │  │       iDRAC RACADM          │   │
-│   │   GET /cluster              │  │   vsan health cluster get   │  │   getsysinfo                │   │
-│   │   GET /hosts                │  │   vsan storage list         │  │   getsel                    │   │
-│   │   GET /lcm/upgrade          │  │   vsan debug resync list    │  │   getversion -f bios/idrac  │   │
-│   │   POST /lcm/bundle          │  │   vsan debug network test   │  │   nicstatistics             │   │
-│   │   GET /support/bundle       │  │   vsan cluster get          │  │   serveraction powercycle   │   │
-│   │   GET /system               │  │   hardware sensor list      │  │   storagecontroller get     │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                                          ▼                                                            │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                               PowerCLI vSAN Cmdlets                                           │   │
-│   │   Get-VsanClusterHealthSummary  ·  Get-SpbmStoragePolicy  ·  Get-VM | Get-SpbmEntityConfig    │   │
-│   │   Get-Datastore (vSAN capacity)  ·  Get-VMHostFirmware  ·  Get-VMHost (version/build)         │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  Dell PowerEdge servers · iDRAC OOB port per node · 25GbE NICs · ToR switches                         │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│  VxRail Manager API  = REST API on VxRail Manager VM; base path /rest/vxm/v1/                         │
-│  mystic              = VxRail Manager local admin account; used for API and SSH login                 │
-│  esxcli              = ESXi shell CLI; run over SSH to any cluster node                               │
-│  RACADM              = iDRAC command-line interface; available over SSH to <idrac-ip>                 │
-│  PowerCLI            = VMware PowerShell module; connects to vCenter for cluster automation           │
-│  LCM bundle          = Dell upgrade package; uploaded via API POST /lcm/bundle                        │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ---
 

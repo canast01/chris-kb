@@ -11,58 +11,9 @@ Backup & Restore reference covering Protection Architecture Overview, Native Sna
 
 *Applies to: PowerStore 3.x*
 </div>
-```text
-┌──────────────────────────────── Dell PowerStore — Backup and Restore ─────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │     PowerStore backup: snapshots, replication, and external backup application integration    │   │
-│   │        Snapshot schedule: hourly for 24 h, daily for 7 days, weekly for 4 weeks minimum       │   │
-│   │            Replication: async or sync to DR site for off-site data protection copy            │   │
-│   │       Restore: volume-level or file-level restore from snapshot; test restore quarterly       │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Snapshot → replicate to DR → verify → document → test restore                                      │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │           T-model           │  │          Block only         │  │        iSCSI/FC/NVMe        │   │
-│   │           X-model           │  │         Block + File        │  │       Unified protocol      │   │
-│   │            Metro            │  │       Sync replication      │  │       Zero-RPO stretch      │   │
-│   │          Protection         │  │        Snapshot/Clone       │  │       Immutable snaps       │   │
-│   │             Mgmt            │  │          PSM / REST         │  │         Unified pane        │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │       Type       │     Schedule     │     Retention     │     Offsite?     │    Test cycle    │   │
-│   │     Snapshot     │   Hourly/daily   │    7/30/90 days   │        No        │     Monthly      │   │
-│   │   Replication    │  Policy-driven   │     Per policy    │     Yes (DR)     │    Quarterly     │   │
-│   │    Backup app    │ Daily full+incr  │      90+ days     │ Yes (tape/cloud  │    Quarterly     │   │
-│   │     Archive      │     Monthly      │      7+ years     │   Yes (object)   │      Annual      │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: PowerStore T/X appliance · NVMe drives · SAS expansion shelves · 10/25 GbE               │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    PowerStore         = Dell mid-range NVMe storage; T-model block-only, X-model unified block+file   │
-│    PowerStore Manager = browser GUI and REST API endpoint for all PowerStore operations               │
-│    Volume group       = logical collection of volumes sharing snapshot and replication policies       │
-│    Protection policy  = assigned to volumes; defines snapshot schedule, retention, and replication    │
-│    Metro volume       = synchronously replicated volume across two sites; zero RPO active-active      │
-│    Snapshot           = space-efficient point-in-time copy; crash-consistent or app-consistent        │
-│    Clone              = full writable copy of a volume or file system; independent lifecycle          │
-│    Applied-to         = PowerStore host mapping; volumes are applied-to a host or host group object   │
-│    Capacity license   = PowerStore uses usable-capacity licensing; licensed in TiB increments         │
-│    Storage container  = PowerStore X-model; unified block and file from the same storage pool         │
-│    Appliance          = single PowerStore node pair (dual controllers); scalable to 4 appliances      │
-│    NVMe-oF            = NVMe over Fabrics; FC-NVMe or NVMe/TCP host connectivity on PowerStore        │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+![PowerStore — Backup & Restore](../../../../assets/storage-dell-powerstore-operations-backup-restore.svg)
+
+
 
 
 ## Before you begin

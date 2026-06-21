@@ -10,28 +10,10 @@ Operational scripts for EVS: daily health check, host add/remove workflow, vSAN 
 
 *Applies to: Amazon EVS*
 </div>
+![Amazon EVS — Scripts](../../../../assets/cloud-aws-evs-operations-scripts.svg)
 
-```text
-┌────────────────────────────────── Amazon EVS — Operational Scripts ───────────────────────────────────┐
-│                                                                                                       │
-│   Six operational scripts covering EVS cluster health, host lifecycle, credential management          │
-│   All scripts require environment variables for credentials; no plaintext passwords in script files   │
-│                                                                                                       │
-│   health-check.sh    Daily EVS cluster, host, and NSX-T health check with exit code                   │
-│   vsan-capacity.ps1  PowerCLI vSAN capacity report with WARN/INFO/OK thresholds                       │
-│   hcx-status.sh      HCX service mesh link status and version check                                   │
-│   host-remove.sh     Safe host removal: BytesToSync check, maintenance mode, AWS delete               │
-│   vcf-password-rotate.sh  SDDC Manager credential rotation via REST API with task polling             │
-│   evs-capacity-report.sh  Full capacity report: AWS hosts, vSAN storage, VM count per host            │
-│                                                                                                       │
-│   Key terms:                                                                                          │
-│   EVS environment  = the AWS-managed VMware cluster; environment-id is the unique identifier          │
-│   NSX control cluster = NSX-T management plane; STABLE means all managers are in consensus            │
-│   HCX service mesh = VMware HCX interconnect between on-premises and EVS; links must be UP            │
-│   BytesToSync      = vSAN resync metric; must be 0 before removing a host safely                      │
-│   SDDC Manager     = VCF management appliance; owns all component credentials for rotation            │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Before you begin
 

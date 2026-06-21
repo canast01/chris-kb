@@ -11,6 +11,8 @@ Backup & Restore reference covering Overview, DDBoost Restore (Backup Applicatio
 
 *Applies to: Data Domain DD OS 7.x*
 </div>
+![Data Domain — Backup & Restore](../../../../assets/storage-dell-data-domain-operations-backup-restore.svg)
+
 
 ## Before you begin
 
@@ -46,42 +48,7 @@ graph TD
     ddboostRestore & nfsRestore & cifsRestore & vtlRestore --> ddfs
     ddfs -->|"rehydrate on the fly"| restoreTarget(["Restore Target\nVM / file / database"])
 ```
-```text
-┌───────────────────────────────── Dell Data Domain Backup and Restore ─────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │         DD stores backups from backup applications; restore = backup app reads from DD        │   │
-│   │       DR restore: backup app points to replicated DD at DR site; same restore procedure       │   │
-│   │        DD Boost allows backup apps to read directly; NFS mount for filesystem restores        │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             Primary Site Restore             │  │               DR Site Restore               │   │
-│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
-│   │         Backup app initiates restore         │  │          Point backup app to DR DD          │   │
-│   │         DD serves segments via Boost         │  │         DR DD is read-write replica         │   │
-│   │         Reassembles to original data         │  │           Same Boost/NFS procedure          │   │
-│   │           Verify restore integrity           │  │         Replication paused during DR        │   │
-│   │            Document recovery time            │  │          Resume rep after recovery          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                       # Verify MTree replication state before DR restore                      │   │
-│   │                  replication show all     — show replication contexts and lag                 │   │
-│   │               filesys show space       — confirm DR DD has sufficient free space              │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    DR DD            = Replicated Data Domain at DR site; exact copy of primary MTree data             │
-│    Read-write replica= After failover, DR DD MTree becomes writable for new backups                   │
-│    Replication pause = Stop replication before DR restore to prevent overwriting recovery data        │
-│    Resume rep       = After DR recovery, resume replication and resync from primary                   │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 Resume after the restore completes:
 

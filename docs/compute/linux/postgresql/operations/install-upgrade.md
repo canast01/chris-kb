@@ -10,37 +10,10 @@ PostgreSQL upgrade procedures — minor version (in-place), major version (pg_up
 
 *Applies to: RHEL / Ubuntu LTS*
 </div>
+![PostgreSQL — Install & Upgrade](../../../../assets/compute-linux-postgresql-operations-install-upgrade.svg)
 
-```text
-┌─────────────────────────────────── PostgreSQL — Install & Upgrade ────────────────────────────────────┐
-│                                                                                                       │
-│   Minor versions (15.x → 15.y): in-place package update; no data migration required                   │
-│   Major versions (15 → 16): requires pg_upgrade or logical replication migration                      │
-│   Always upgrade one major version at a time; always run --check dry-run before upgrading             │
-│                                                                                                       │
-│   Minor version upgrade (RHEL)                                                                        │
-│   Stop: systemctl stop postgresql-15                                                                  │
-│   Upgrade: dnf upgrade postgresql15-server                                                            │
-│   Start: systemctl start postgresql-15; verify: psql -c "SELECT version();"                           │
-│                                                                                                       │
-│   Major version upgrade (pg_upgrade)                                                                  │
-│   Install new version: dnf install postgresql16-server; run initdb for new cluster                    │
-│   Copy config files: postgresql.conf and pg_hba.conf from old data directory to new                   │
-│   Stop old instance: systemctl stop postgresql-15                                                     │
-│   Dry-run: pg_upgrade --old-datadir ... --new-datadir ... --check                                     │
-│   Actual upgrade: pg_upgrade --jobs 4; start: systemctl start postgresql-16                           │
-│                                                                                                       │
-│   Post-upgrade                                                                                        │
-│   vacuumdb --all --analyze-in-stages: required; rebuilds planner statistics after pg_upgrade          │
-│   Verify: psql -l (all databases accessible); update any extensions with ALTER EXTENSION              │
-│                                                                                                       │
-│   Key terms:                                                                                          │
-│   pg_upgrade    = migrates data files in-place; preserves data without dump and restore               │
-│   initdb        = initialises a new PostgreSQL data directory for the new version cluster             │
-│   --check       = dry-run mode; validates compatibility without making any changes                    │
-│   analyze-in-stages = rebuilds planner statistics in stages; reduces post-upgrade query risk          │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Before you begin
 

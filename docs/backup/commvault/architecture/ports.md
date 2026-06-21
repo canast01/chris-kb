@@ -13,18 +13,10 @@ Firewall port reference for Commvault Complete Backup & Recovery. Covers CommSer
 
 *Applies to: Commvault 11.x / Commvault Cloud 2024+*
 </div>
+![Commvault — Ports and Network Requirements](../../../assets/backup-commvault-architecture-ports.svg)
 
-```text
-┌──────────────────────────── Commvault — Network Traffic Zones ────────────────────────────────────────┐
-│                                                                                                       │
-│  Management Zone             Commvault Infrastructure              Source / Target Zone               │
-│  ────────────────            ──────────────────────               ──────────────────                  │
-│  Admin  ──443──► Command     CommServe ──8400──► Media Agent      VSA Proxy ──443──► vCenter          │
-│  Center / Web                CommServe ──8400──► Clients (push)   VSA Proxy ──902──► ESXi hosts       │
-│                              Media Agent ──8403──► Client data     Media Agent ──varies──► Repositories│
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Before you begin
 

@@ -11,6 +11,8 @@ RecoverPoint install and upgrade: `rcpcli` upgrade workflow, quiesce consistency
 
 *Applies to: RecoverPoint 5.x*
 </div>
+![RecoverPoint — Install & Upgrade](../../../../assets/storage-dell-recoverpoint-operations-install-upgrade.svg)
+
 
 > Part of the [RecoverPoint](../index.md) > [Operations](index.md) reference.
 
@@ -79,48 +81,7 @@ flowchart TD
     class hA,hB host
     class spA,spB splitter
 ```
-```text
-┌────────────────────────────────── RecoverPoint — Install & Upgrade ───────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │Install order: deploy RPA OVF → configure network → pair sites → install splitter on ESXi hosts│   │
-│   │       Pre-req: vCenter credentials, management VLAN, replication VLAN, journal datastore      │   │
-│   │      Upgrade: rolling RPA upgrade (one node at a time); CGs remain active during upgrade      │   │
-│   │         Splitter upgrade: done via VIB update on ESXi; requires host maintenance mode         │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Deploy RPA OVF ──► network config ──► site pairing ──► install splitter ──► create CGs             │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             Fresh Install Steps              │  │                Upgrade Steps                │   │
-│   │          1. Deploy RPA OVF per site          │  │          1. Download new RPA image          │   │
-│   │          2. Configure mgmt/repl IPs          │  │            2. Upload to Unisphere           │   │
-│   │          3. Pair protected/recovery          │  │           3. Rolling node upgrade           │   │
-│   │         4. Install ESXi splitter VIB         │  │           4. Upgrade splitter VIBs          │   │
-│   │         5. Create consistency groups         │  │          5. Validate all CGs active         │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: RPA VMs need 4 vCPU, 8 GB RAM, 3 vNICs (mgmt, replication, data); use anti-affinity rules│
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    OVF deploy       = Deploy RPA as virtual appliance from OVF template in vCenter                    │
-│    Site pairing     = Connect protected site RPA cluster to recovery site RPA cluster over IP         │
-│    Splitter VIB     = VMware Installation Bundle; installed on ESXi via esxcli software vib install   │
-│    Management IP    = RPA vNIC for Unisphere access and admin CLI; on management VLAN                 │
-│    Replication IP   = RPA vNIC for site-to-site journal replication traffic; on replication VLAN      │
-│    Data IP          = RPA vNIC for write split data from ESXi splitter to RPA; on storage VLAN        │
-│    Rolling upgrade  = Upgrade one RPA node at a time; surviving node handles all CGs during upgrade   │
-│    VIB update       = ESXi host in maintenance mode; esxcli updates splitter kernel module            │
-│    Post-upgrade     = Verify all CGs Active; check lag; confirm splitter version per host             │
-│    License          = Apply RP4VM licence in Unisphere before creating first CG                       │
-│    Compatibility    = Check RP4VM compatibility matrix; ESXi version must match supported list        │
-│    Journal datastore= Dedicated datastore for journal VMDKs; separate from production datastores      │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 ---
 

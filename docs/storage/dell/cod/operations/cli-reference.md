@@ -4,6 +4,8 @@ tags:
   - operations
 ---
 # Dell COD CLI Reference
+![Dell COD CLI Reference](../../../../assets/storage-dell-cod-operations-cli-reference.svg)
+
 
 ```bash
 # --- Discover all arrays reachable from this host ---
@@ -34,46 +36,7 @@ symcfg -sid <sid> list -disk
 # Show only thin/EFD disks with capacity summary
 symcfg -sid <sid> list -disk -thin
 ```
-```text
-┌─────────────────────────────────────── Dell COD CLI Reference ────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │          COD license CLI commands vary by product family: PowerStore, Unity, PowerMax         │   │
-│   │             All products support GUI activation; CLI/REST provides automation path            │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │          PowerStore         │  │           Unity XT          │  │           PowerMax          │   │
-│   │      ─────────────────      │  │      ─────────────────      │  │      ─────────────────      │   │
-│   │     pstore> license list    │  │     uemcli license -list    │  │         symlic list         │   │
-│   │     pstore> license add     │  │    uemcli license -upload   │  │        symlic install       │   │
-│   │     REST: POST /license     │  │     REST: POST /license     │  │      Solutions Enabler      │   │
-│   │     REST: GET /capacity     │  │        GUI: Settings        │  │        Unisphere GUI        │   │
-│   │     GUI: Settings > Lic     │  │         >  Licenses         │  │       Solutions Enblr       │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                               # PowerStore REST — list licenses                               │   │
-│   │              curl -sk -u admin:$PASS https://<ps>/api/rest/license | jq .[].name              │   │
-│   │                                                                                               │   │
-│   │                                 # Unity uemcli — list licenses                                │   │
-│   │                      uemcli -d <unity_ip> -u admin -p $PASS /license show                     │   │
-│   │                                                                                               │   │
-│   │                          # PowerMax Solutions Enabler — list licenses                         │   │
-│   │                                     symlic -sid <SID> list                                    │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    pstore CLI     = PowerStore management CLI; access via SSH or embedded shell                       │
-│    uemcli         = Unisphere for Unity CLI; installed on mgmt workstation or run from Unity          │
-│    symlic         = Solutions Enabler command for PowerMax license management                         │
-│    Solutions Enabler= Dell software toolkit for PowerMax management automation                        │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 ```bash
 UNISPHERE="https://<unisphere_host>:8443"
 SID="<sid>"

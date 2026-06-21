@@ -11,39 +11,10 @@ Backup and restore coverage for VxRail clusters. Covers VxRail Manager VM backup
 
 *Applies to: VxRail 7.x / 8.x*
 </div>
+![VxRail — Backup & Restore](../../../../assets/virtualization-vmware-vxrail-operations-backup-restore.svg)
 
-```text
-┌────────────────────────────────────── VxRail — Backup & Restore ──────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   VxRail Manager VM: back up daily via Veeam or equivalent; retain 14 days                   │    │
-│   │   Pre-LCM snapshot: temporary safety net only — delete within 24h; not a backup              │    │
-│   │   ESXi config export: Get-VMHostFirmware per node; store off-cluster for rebuild              │   │
-│   │   vCenter VAMI backup: SFTP schedule daily; retain 14 copies; required for embedded vCenter  │    │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │      VxRail Manager VM      │  │       vCenter Server        │  │      ESXi Node Config       │   │
-│   │   Veeam daily backup        │  │   VAMI file-based backup    │  │   Get-VMHostFirmware        │   │
-│   │   Retain: 14 days           │  │   SFTP daily schedule       │  │   One bundle per node       │   │
-│   │   Pre-LCM snapshot: temp    │  │   Retain: 14 copies         │  │   Store off-cluster         │   │
-│   │   Delete snapshot < 24h     │  │   Not handled by VxRail Mgr │  │   Run before LCM upgrade    │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  Dell PowerEdge servers · vSAN datastore · iDRAC OOB · external backup target (SFTP/Veeam repo)       │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│  VxRail Manager  = Linux appliance VM; holds cluster config, LCM state, node inventory                │
-│  VAMI            = vCenter Appliance Management Interface; port 5480; provides file-based backup      │
-│  VMHostFirmware  = PowerCLI cmdlet that exports ESXi host config bundle (.tgz) for offline restore    │
-│  Snapshot        = Point-in-time vSphere snapshot; degrades vSAN performance if left active > 24h     │
-│  File-based BK   = VAMI backup method; exports vCenter DB, certificates, and config to SFTP target    │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ---
 

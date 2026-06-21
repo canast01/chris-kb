@@ -15,18 +15,10 @@ Firewall port reference for Dell PowerScale (formerly Isilon). Covers OneFS mana
 
 *Applies to: OneFS 9.x / PowerScale F-series and H-series*
 </div>
+![Dell PowerScale (Isilon) — Ports and Network Requirements](../../../../assets/storage-dell-powerscale-architecture-ports.svg)
 
-```text
-┌──────────────────────── Dell PowerScale — Network Traffic Zones ──────────────────────────────────────┐
-│                                                                                                       │
-│  Management Zone      Data Zone (per Access Zone / SmartConnect)   Replication Zone                   │
-│  ────────────────     ─────────────────────────────────────────   ────────────────                    │
-│  Admin ──443/22──► mgmt IP    NFS clients ──2049──► SmartConnect  PS1 ──11111──► PS2 (SyncIQ)         │
-│  SNMP  ──161 ────►             SMB clients ──445──► SmartConnect                                      │
-│                                S3 clients  ──9020/9021──► SZ IPs                                      │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Inbound — Management
 

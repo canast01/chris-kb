@@ -4,6 +4,8 @@ tags:
   - operations
 ---
 # Dell Data Domain Scripts
+![Dell Data Domain Scripts](../../../../assets/storage-dell-data-domain-operations-scripts.svg)
+
 
 ```bash
 #!/bin/bash
@@ -66,43 +68,7 @@ else
   exit 0
 fi
 ```
-```text
-┌────────────────────────────────────── Dell Data Domain Scripts ───────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │         Automate DD operations via SSH; DDOS CLI scriptable with ssh user@dd "command"        │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                         # Space utilisation report across multiple DDs                        │   │
-│   │                                 for DD in dd-primary dd-dr; do                                │   │
-│   │                      echo "=== $DD ==="; ssh admin@$DD "filesys show space"                   │   │
-│   │                                              done                                             │   │
-│   │                                                                                               │   │
-│   │                                  # Replication health report                                  │   │
-│   │           ssh admin@dd-primary "replication show all" | grep -E "Context|lag|state"           │   │
-│   │                                                                                               │   │
-│   │                                 # Check dedup ratio per MTree                                 │   │
-│   │                ssh admin@dd-primary "mtree list" | awk "{print \$1, \$3, \$4}"                │   │
-│   │                                                                                               │   │
-│   │                                  # Alert if filesystem > 80%                                  │   │
-│   │      PCT=$(ssh admin@dd-primary "filesys show space" | grep "Active" | awk "{print \$5}")     │   │
-│   │                                if [ "${PCT%\%}" -gt 80 ]; then                                │   │
-│   │            echo "ALERT: DD filesystem ${PCT} full" | mail -s "DD Alert" ops@corp.com          │   │
-│   │                                               fi                                              │   │
-│   │                                                                                               │   │
-│   │                                    # Collect support bundle                                   │   │
-│   │    ssh admin@dd-primary "support bundle save /data/col1/support/bundle-$(date +%Y%m%d).tar"   │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    SSH automation = DDOS allows non-interactive SSH commands; use key-based auth for scripts          │
-│    filesys show space= Returns Active tier: total, used, available, compression factor                │
-│    support bundle = DD diagnostic archive; ssh extraction copies to local filesystem                  │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 ```bash
 #!/bin/bash
 # dd_ddboost_check.sh — Check DDBoost client connectivity on a Data Domain appliance

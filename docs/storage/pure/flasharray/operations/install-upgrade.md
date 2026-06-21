@@ -11,6 +11,8 @@ Install & Upgrade reference covering Purity Version Matrix, Upgrade Paths, Refre
 
 *Applies to: FlashArray Purity 6.x*
 </div>
+![FlashArray — Install & Upgrade](../../../../assets/storage-pure-flasharray-operations-install-upgrade.svg)
+
 
 ```text
 Purity NDU Upgrade Sequence (non-disruptive)

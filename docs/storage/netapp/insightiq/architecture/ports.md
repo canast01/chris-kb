@@ -14,6 +14,8 @@ Firewall port reference for NetApp InsightIQ. InsightIQ is a performance analyti
 
 *Applies to: NetApp InsightIQ 4.x (formerly Isilon InsightIQ)*
 </div>
+![NetApp InsightIQ — Ports and Network Requirements](../../../../assets/storage-netapp-insightiq-architecture-ports.svg)
+
 
 ## Network Zones
 

@@ -5,6 +5,8 @@ tags:
   - vmware
 ---
 # Aria Automation — Scripts Reference
+![Aria Automation — Scripts Reference](../../../../assets/virtualization-vmware-aria-automation-operations-scripts.svg)
+
 
 ```powershell
 # Get-FailedDeployments.ps1
@@ -46,51 +48,7 @@ if ($Results) {
     Write-Host "No failed deployments in the last 24 hours."
 }
 ```
-```text
-┌───────────────────────────────── Aria Automation — Scripts Reference ─────────────────────────────────┐
-│                                                                                                       │
-│  vRA scripting uses ABX actions (Python/Node/PS), Orchestrator workflows, and REST API calls.         │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             ABX Action Examples              │  │         Orchestrator Script Examples        │   │
-│   │         Python: tag VM after deploy          │  │         vCenter: snapshot VM via API        │   │
-│   │        Node.js: call ServiceNow REST         │  │         AD: create computer account         │   │
-│   │         PowerShell: run WinRM on VM          │  │          NSX: create security group         │   │
-│   │          Python: update CMDB record          │  │         DNS: add A record via plugin        │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  REST API scripts interact with vRA programmatically for automation and reporting.                    │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │           REST API Script Patterns           │  │               Useful Utilities              │   │
-│   │         GET token → GET deployments          │  │         vracli status --all (health)        │   │
-│   │          POST /request catalog item          │  │         kubectl get pods -n prelude         │   │
-│   │       DELETE /deployment/{id} cleanup        │  │            pg_dump for DB backup            │   │
-│   │       PATCH /blueprint update template       │  │          curl -k for quick API test         │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  vRA appliance · ABX FaaS runtime · Orchestrator embedded · Postgres · vIDM                           │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  ABX action        = Serverless function in Python/Node.js/PowerShell executed by vRA event           │
-│  Action input      = JSON context object passed to ABX action with resource properties                │
-│  Action output     = Key-value pairs returned by ABX to update deployment properties                  │
-│  Orchestrator wf   = Visual workflow in Aria Orchestrator; called from vRA via ABX or event           │
-│  WinRM             = Windows Remote Management; used by PowerShell ABX to run scripts on VMs          │
-│  REST bearer token = JWT from /csp/gateway/am/api/login; header: Authorization: Bearer <tok>          │
-│  CMDB update       = ABX POST to ServiceNow or custom CMDB REST API after resource creation           │
-│  Deployment ID     = UUID assigned to each vRA deployment; used in API paths for operations           │
-│  vracli status     = Appliance CLI health check; useful in shell scripts for monitoring               │
-│  pg_dump           = PostgreSQL backup tool; script to dump vRA DB to NFS before upgrades             │
-│  kubectl           = Kubernetes CLI on vRA appliance; script to check pod health or restart           │
-│  Event subscription= ABX or Orchestrator wf registered to run on specific vRA resource events         │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 ## Before you begin
 

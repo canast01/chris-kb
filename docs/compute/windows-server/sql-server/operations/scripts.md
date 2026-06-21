@@ -10,37 +10,10 @@ SQL Server automation scripts — PowerShell backup rotation, index maintenance,
 
 *Applies to: Windows Server 2019 / 2022*
 </div>
+![SQL Server — Scripts](../../../../assets/compute-windows-server-sql-server-operations-scripts.svg)
 
-```text
-┌────────────────────────────────── SQL Server — Operational Scripts ───────────────────────────────────┐
-│                                                                                                       │
-│   Automation scripts for routine SQL Server DBA tasks                                                 │
-│   Blocking chain alert uses sys.dm_exec_requests; fires SQL Agent dbmail if wait > 5 minutes          │
-│   IndexOptimize (Ola Hallengren) is the industry-standard index maintenance stored procedure          │
-│                                                                                                       │
-│   Nightly backup (PowerShell)                                                                         │
-│   Queries sys.databases WHERE state_desc = ONLINE and name NOT IN (tempdb)                            │
-│   Backup-SqlDatabase with CompressionOption On; rotates backups older than 14 days                    │
-│                                                                                                       │
-│   Index maintenance                                                                                   │
-│   IndexOptimize: REORGANIZE at 5–30% fragmentation; REBUILD_ONLINE above 30%                          │
-│   Includes UpdateStatistics = ALL with OnlyModifiedStatistics = Y                                     │
-│                                                                                                       │
-│   AG health check (SQL)                                                                               │
-│   Joins dm_hadr_availability_replica_states, availability_replicas, availability_groups               │
-│   Reports role, synchronisation state, log send queue, and redo queue per replica                     │
-│                                                                                                       │
-│   Other scripts                                                                                       │
-│   Blocking chain alert: sp_send_dbmail when wait_time > 300000 ms (5 min) in dm_exec_requests         │
-│   Database size report: sys.master_files; reports size_mb, used_mb, free_mb per file                  │
-│                                                                                                       │
-│   Key terms:                                                                                          │
-│   Backup-SqlDatabase = PowerShell cmdlet; supports compression, checksum, and copy-only               │
-│   IndexOptimize = Ola Hallengren SP; rebuilds or reorganises based on fragmentation thresholds        │
-│   send_queue_kb  = bytes of log not yet sent to replica; high value means replica is lagging          │
-│   sp_send_dbmail = sends email from SQL Agent; requires Database Mail to be configured                │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Before you begin
 

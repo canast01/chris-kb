@@ -11,58 +11,9 @@ Commonly used `powermt` commands for managing Dell PowerPath multipathing on Lin
 
 *Applies to: PowerPath*
 </div>
-```text
-┌─────────────────────────────────── Dell PowerPath — CLI Reference ────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │         PowerPath CLI: command-line interface for all management and operational tasks        │   │
-│   │            Access: SSH or REST client to management IP; authenticate as admin role            │   │
-│   │        Commands: status, list, create, modify, delete, show, and diagnostic operations        │   │
-│   │          Scripting: use REST API or CLI in automation for provisioning and reporting          │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    SSH → authenticate → show status → configure → verify → log output                                 │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │            Driver           │  │        powermt daemon       │  │           OS-level          │   │
-│   │            Paths            │  │        Active-active        │  │         ≥4 paths/LUN        │   │
-│   │            Policy           │  │        Adaptive/ALUA        │  │        Array-specific       │   │
-│   │           Failover          │  │         Auto reroute        │  │          <5 sec RTO         │   │
-│   │          Management         │  │           pp_mgmt           │  │         Centralised         │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │     Category     │     Command      │      Purpose      │      Output      │      Notes       │   │
-│   │      Status      │   show status    │    Health check   │   State/alerts   │    Daily run     │   │
-│   │       List       │     list all     │     Inventory     │   Name/ID/size   │    Read-only     │   │
-│   │      Create      │  create volume   │     Provision     │    New object    │    Change req    │   │
-│   │      Delete      │ delete resource  │    Decommission   │   Confirmation   │   Irreversible   │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: Host OS (Windows/Linux) · HBA or iSCSI NIC ports · FC/IP switches · Dell arrays          │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    PowerPath          = Dell multipath driver; manages multiple I/O paths to storage for HA/perform...│
-│    powermt            = CLI utility; powermt display, powermt check, powermt save are core commands   │
-│    Pseudo device      = virtual block device created by PowerPath aggregating physical I/O paths      │
-│    Path health        = alive or dead status per path; dead paths trigger automatic I/O failover      │
-│    Adaptive policy    = load-balancing that distributes I/O across all active paths evenly            │
-│    CLARiiON policy    = active/passive policy for older VNX/CLARiiON arrays (one active path)         │
-│    ALUA               = Asymmetric Logical Unit Access; array signals preferred vs. non-preferred p...│
-│    Trespass           = LUN ownership movement between SP-A and SP-B on Unity or VNX arrays           │
-│    Ghost path         = stale path entry in PowerPath no longer backed by a physical device           │
-│    powermt check      = validates all paths and refreshes device table; run after fabric changes      │
-│    pp_mgmt            = PowerPath Management Appliance; central monitoring for all PowerPath hosts    │
-│    License key        = host-based license required per server; applied via powermt config license    │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+![PowerPath — CLI Reference](../../../../assets/storage-dell-powerpath-operations-cli-reference.svg)
+
+
 
 
 ---

@@ -13,20 +13,10 @@ Firewall port reference for Ansible and Ansible Automation Platform (AAP). Ansib
 
 *Applies to: Ansible Core 2.15+ / Ansible Automation Platform 2.x*
 </div>
+![Ansible — Ports and Network Requirements](../../../assets/automation-ansible-architecture-ports.svg)
 
-```text
-┌──────────────────────────── Ansible — Network Traffic Zones ──────────────────────────────────────────┐
-│                                                                                                       │
-│  Management Zone              AAP / Control Node                  Managed Hosts                       │
-│  ────────────────             ──────────────────                  ─────────────                       │
-│  Admin  ──443──► AAP          Control Node ──22────────────────► Linux managed hosts                  │
-│  API    ──443──►              Control Node ──5985/5986──────────► Windows managed hosts               │
-│                               Control Node ──443──────────────► API targets (vCenter, cloud, etc.)    │
-│                                                                                                       │
-│  No inbound ports needed on control node — Ansible pushes all connections outbound                    │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Before you begin
 

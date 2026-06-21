@@ -11,58 +11,9 @@ Commonly used `uemcli` commands for managing Dell Unity storage systems. Unity i
 
 *Applies to: Unity XT*
 </div>
-```text
-┌──────────────────────────────────── Dell Unity XT — CLI Reference ────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │         Unity XT CLI: command-line interface for all management and operational tasks         │   │
-│   │            Access: SSH or REST client to management IP; authenticate as admin role            │   │
-│   │        Commands: status, list, create, modify, delete, show, and diagnostic operations        │   │
-│   │          Scripting: use REST API or CLI in automation for provisioning and reporting          │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    SSH → authenticate → show status → configure → verify → log output                                 │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │             Ctrl            │  │         SP-A + SP-B         │  │        Cache mirrored       │   │
-│   │             Pool            │  │       Dynamic FAST VP       │  │         Auto-tiering        │   │
-│   │          NAS server         │  │        File protocols       │  │          Per-tenant         │   │
-│   │           Snapshot          │  │        Writable snaps       │  │        Thin PiT copy        │   │
-│   │         Replication         │  │         Async/Metro         │  │       Native or RP4VM       │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │     Category     │     Command      │      Purpose      │      Output      │      Notes       │   │
-│   │      Status      │   show status    │    Health check   │   State/alerts   │    Daily run     │   │
-│   │       List       │     list all     │     Inventory     │   Name/ID/size   │    Read-only     │   │
-│   │      Create      │  create volume   │     Provision     │    New object    │    Change req    │   │
-│   │      Delete      │ delete resource  │    Decommission   │   Confirmation   │   Irreversible   │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: Unity XT 380F/480F/680F/880F · dual SPs · DPE/DAE expansion · 10/25 GbE                  │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    Unity XT           = Dell unified mid-range array; block LUNs, file NAS, and VMware vVols          │
-│    Unisphere          = HTML5 GUI and REST API for Unity XT management; SP-hosted management portal   │
-│    UEMCLI             = CLI for Unity XT; uemcli -d <ip> -u admin -p <pw> /show commands              │
-│    Storage pool       = collection of drives forming a usable pool; FAST VP tiers data automatically  │
-│    FAST VP            = Fully Automated Storage Tiering VP; moves hot and cold data between tiers     │
-│    NAS server         = virtual file server on Unity; each has its own IP, DNS, and CIFS/NFS shares   │
-│    Data Mover         = older EMC term for NAS server; used in VNX and early Unity documentation      │
-│    SP-A / SP-B        = storage processors; active-active HA pair with mirrored cache                 │
-│    Snapshot           = space-efficient PiT copy of LUN or FS; writable snapshots supported           │
-│    RecoverPoint       = RP4VM; journal-based continuous data protection for Unity volumes             │
-│    Metro              = synchronous replication between two Unity XT sites; active-active zero RPO    │
-│    vVols              = Virtual Volumes; VASA provider exposes per-VM storage objects to vCenter      │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+![Unity — CLI Reference](../../../../assets/storage-dell-unity-operations-cli-reference.svg)
+
+
 
 
 > Connect with: `uemcli -d <array_ip> -u <user> -p <password>` — or set a connection profile to avoid retyping credentials.

@@ -14,21 +14,10 @@ Firewall port reference for VMware Aria Operations (formerly vRealize Operations
 
 *Applies to: Aria Operations 8.x / 2403+*
 </div>
+![Aria Operations — Ports and Network Requirements](../../../../assets/virtualization-vmware-aria-operations-architecture-ports.svg)
 
-```text
-┌─────────────────────── Aria Operations — Network Traffic Zones ───────────────────────────────────────┐
-│                                                                                                       │
-│  Consumer Zone          Analytics Cluster            Infrastructure Zone                              │
-│  ──────────────         ──────────────────           ────────────────────                             │
-│  Browsers  ──443──► Aria Operations     ──443──► vCenter (vSphere adapter)                            │
-│  API clients──443──► (cluster VIP)      ──443──► NSX Manager (NSX adapter)                            │
-│                                         ──443/5988──► ESXi hosts (host adapter)                       │
-│                                         ──161 UDP──► SNMP devices                                     │
-│                                         ──22──► Linux hosts (SSH adapter)                             │
-│             Remote Collector ──3331──► Analytics Cluster (remote sites)                               │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Before you begin
 

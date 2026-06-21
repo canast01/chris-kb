@@ -11,42 +11,10 @@ VxRail LCM upgrade workflow from bundle download through post-upgrade validation
 
 *Applies to: VxRail 7.x / 8.x*
 </div>
+![VxRail — Install & Upgrade](../../../../assets/virtualization-vmware-vxrail-operations-install-upgrade.svg)
 
-```text
-┌───────────────────────────────────── VxRail — Install & Upgrade ──────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   VxRail LCM is the only supported upgrade method — never patch ESXi or firmware manually     │   │
-│   │   Bundle contains: ESXi + vCenter + vSAN + BIOS + iDRAC + NIC + HBA firmware versions        │    │
-│   │   LCM upgrades nodes one at a time: maintenance mode → patch → reboot → vSAN resync → next    │   │
-│   │   Pre-check must pass before upgrade starts; LCM blocks on any failing health condition       │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │         Pre-Upgrade         │  │        Upgrade Run          │  │        Post-Upgrade         │   │
-│   │   Download bundle           │  │   Node 1: MM → patch → boot │  │   ESXi version match        │   │
-│   │   Upload to VxRail Mgr      │  │   vSAN resync to 0          │  │   vSAN health green         │   │
-│   │   Run pre-check             │  │   Node 2: MM → patch → boot │  │   iDRAC FW verified         │   │
-│   │   Pre-check must pass       │  │   vSAN resync to 0 again    │  │   VxRail Mgr version check  │   │
-│   │   Backup VxRail Mgr VM      │  │   Repeat for each node      │  │   No new alarms             │   │
-│   │   Backup vCenter VAMI       │  │   vCenter upgraded last      │  │   VMs running normally      │  │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  Dell PowerEdge servers · iDRAC OOB per node · vSAN NVMe/SSD disk groups · 25GbE NICs                 │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│  LCM bundle     = Signed Dell upgrade package; FW + ESXi + vCenter + vSAN versions tested together    │
-│  Pre-check      = Health validation before upgrade; blocks if vSAN, network, or node issues found     │
-│  Maintenance MM = Node state during upgrade; DRS migrates VMs and vSAN evacuates objects              │
-│  Node-by-node   = LCM upgrades one node completely before moving to the next                          │
-│  vSAN resync    = Objects resynced after each node reboot; LCM waits for resync = 0 before continuing │
-│  Post-validation= Version, health, and alarm checks run after all nodes are upgraded                  │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ---
 

@@ -12,6 +12,8 @@ Aria Automation backup uses a built-in tool that exports the platform configurat
 
 *Applies to: Aria Automation 8.x*
 </div>
+![Aria Automation — Backup & Restore](../../../../assets/virtualization-vmware-aria-automation-operations-backup-rest.svg)
+
 
 ---
 
@@ -50,51 +52,7 @@ Aria Automation backup uses a built-in tool that exports the platform configurat
 
 Open `https://<vra-fqdn>:5480` in a browser.
 
-```text
-┌──────────────────────────────── Aria Automation — Backup and Restore ─────────────────────────────────┐
-│                                                                                                       │
-│  Backup covers vRA Postgres DB, Orchestrator, file-based config, and vIDM state.                      │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               What to Back Up                │  │                Backup Methods               │   │
-│   │       Postgres DB (vRA service state)        │  │         VAMI snapshot + export tool         │   │
-│   │       Aria Orchestrator DB + workflows       │  │        pg_dump for Postgres directly        │   │
-│   │       vIDM: tenant config + user data        │  │         VM snapshot before upgrades         │   │
-│   │          TLS certs and private keys          │  │        Offsite: NFS/S3 backup target        │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Restore process replays DB + config in order: vIDM → vRA → Orchestrator → verify.                    │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               Restore Sequence               │  │              Restore Validation             │   │
-│   │         1. Restore vIDM from backup          │  │       Login via SSO after vIDM restore      │   │
-│   │          2. Restore vRA Postgres DB          │  │    Catalog items visible and requestable    │   │
-│   │           3. Restart vRA services            │  │       Orchestrator workflows listed OK      │   │
-│   │        4. Validate cloud account sync        │  │    Cloud accounts: data collection green    │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  vRA Linux appliances · Postgres cluster · vIDM VM · NFS/S3 backup storage · vCenter                  │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  VAMI              = Virtual Appliance Management Interface; web UI for vRA appliance config          │
-│  Postgres DB       = PostgreSQL database holding vRA service state, deployments, and catalog          │
-│  pg_dump           = PostgreSQL native backup utility; exports DB to SQL or custom format file        │
-│  vIDM backup       = Separate process; export vIDM config + tenant DB before vRA backup               │
-│  Orchestrator DB   = Separate Postgres schema holding workflow definitions and run history            │
-│  VM snapshot       = vCenter snapshot of appliance; used as pre-upgrade rollback point                │
-│  Restore order     = vIDM first (SSO dependency), then vRA, then verify Orchestrator connection       │
-│  RPO               = Recovery Point Objective; how much data loss is acceptable (target: ≤24h)        │
-│  RTO               = Recovery Time Objective; how fast must vRA be restored (target: ≤4h)             │
-│  Cert backup       = Private key + cert chain stored in password-protected archive off-appliance      │
-│  Data collection   = vRA process syncing resource inventory from cloud accounts post-restore          │
-│  NFS backup target = Network storage mount where backup archives are written and retained             │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 Recommended:
 - Frequency: Daily
 - Time: 02:00 (off-peak)

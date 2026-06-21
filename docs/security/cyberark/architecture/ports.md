@@ -14,20 +14,10 @@ Firewall port reference for CyberArk Privileged Access Manager (PAM). Covers the
 
 *Applies to: CyberArk PAM 13.x+*
 </div>
+![CyberArk — Ports and Network Requirements](../../../assets/security-cyberark-architecture-ports.svg)
 
-```text
-┌─────────────────────────── CyberArk — Network Traffic Zones ──────────────────────────────────────────┐
-│                                                                                                       │
-│  User Zone          DMZ / App Zone                Vault Zone           Target Zone                    │
-│  ─────────          ──────────────                 ──────────           ───────────                   │
-│  Browser  ──443──► PVWA ──1858──► Vault           Vault (isolated)     PSM ──3389──► Windows targets  │
-│  RDP app  ──3389─► PSM  ──1858──► Vault           DR Vault ──1858──► PSM ──22────► Linux targets      │
-│  SSH app  ──22──── PSM/SSH ─────────────►          Primary Vault        CPM ──varies──► managed hosts │
-│                                                                                                       │
-│  The Vault has NO inbound connections — all connections are initiated FROM PVWA/CPM/PSM TO the Vault  │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Before you begin
 

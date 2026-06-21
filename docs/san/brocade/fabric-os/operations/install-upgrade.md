@@ -11,6 +11,8 @@ FabricOS install and upgrade: `firmwaredownload` from SCP/FTP, firmware commit p
 
 *Applies to: Brocade FOS 9.x*
 </div>
+![FabricOS — Install & Upgrade](../../../../assets/san-brocade-fabric-os-operations-install-upgrade.svg)
+
 
 ---
 
@@ -44,60 +46,7 @@ sequenceDiagram
     Admin->>Admin: version — confirm both CPs on new FOS
     Admin->>Fabric: switchshow, fabricshow — verify fabric intact
 ```
-```text
-┌─────────────────────────────── Brocade Fabric OS — Install and Upgrade ───────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │              FOS firmware upgrade: firmwaredownload command; NDU for HA directors             │   │
-│   │          Pre-checks: switchshow all Online, no MAPS critical alerts, config backed up         │   │
-│   │        Download: firmwaredownload -s <scp-server> <path>; switch reboots automatically        │   │
-│   │          Director NDU: upgrades standby CP first, then failover; no fabric disruption         │   │
-│   │            Post-checks: firmwareshow, switchshow, porterrshow; verify no new errors           │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Pre-checks -> firmware stage -> upgrade trigger -> reboot -> post-verify -> sign-off               │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │          Pre-Checks         │  │           Upgrade           │  │         Post-Checks         │   │
-│   │        switchshow OK        │  │       firmwaredownload      │  │         firmwareshow        │   │
-│   │        No MAPS alerts       │  │        Stage firmware       │  │          switchshow         │   │
-│   │       Config backed up      │  │       CP failover NDU       │  │         porterrshow         │   │
-│   │        Change ticket        │  │         Auto-reboot         │  │          fabricshow         │   │
-│   │        Peer fabric OK       │  │       Rollback option       │  │          MAPS check         │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│    Always upgrade one fabric at a time; never both A and B fabrics simultaneously                     │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │       Step       │      Action      │      Command      │     Expected     │      Notes       │   │
-│   │       Pre        │   Health check   │     switchshow    │    All Online    │    Per switch    │   │
-│   │     Upgrade      │   Download FW    │  firmwaredownload │    Rebooting     │   NDU director   │   │
-│   │       Post       │  Verify version  │    firmwareshow   │   New version    │   Check errors   │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: SCP server with FOS image · switch mgmt Ethernet · console for recovery                  │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    firmwaredownload = Downloads FOS image and reboots switch to activate new version                  │
-│    NDU            = Non-Disruptive Upgrade; director upgrades without disrupting FC traffic           │
-│    firmwareshow   = Displays current and committed FOS version on each blade                          │
-│    Stage firmware = Download to flash before activating; allows verification before commit            │
-│    CP failover    = Standby CP takes over; data plane continues; new standby then upgrades            │
-│    Rollback       = firmwaredownload to prior version if new version has critical defects             │
-│    Pre-checks     = Confirm fabric is healthy before maintenance; document baseline state             │
-│    Change ticket  = All firmware upgrades require approved change management ticket                   │
-│    Peer fabric    = Verify peer fabric (B while upgrading A) is fully healthy first                   │
-│    Post-verify    = Check firmwareshow, switchshow, porterrshow, MAPS after upgrade                   │
-│    SCP image      = FOS firmware .zip downloaded from Broadcom support portal                         │
-│    One fabric     = Upgrade one fabric completely before touching the peer fabric                     │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 3. Connect ISL cables to the edge ports of the core switch.
 4. Verify the new switch joins the fabric:

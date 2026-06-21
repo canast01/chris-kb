@@ -12,55 +12,11 @@ CLI Reference reference covering Session Management, vdmexport / vdmimport, UAG 
 
 *Applies to: Horizon 8.x*
 </div>
+![Horizon — CLI Reference](../../../../assets/virtualization-vmware-horizon-operations-cli-reference.svg)
+
 
   Horizon CLI Tools
-```text
-┌─────────────────────────────────── VMware Horizon — CLI Reference ────────────────────────────────────┐
-│                                                                                                       │
-│  Horizon CLI tools: vdmadmin.exe on Connection Server, PowerCLI Horizon module,                       │
-│  and the Horizon REST API for automation.                                                             │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              vdmadmin Commands               │  │               Horizon REST API              │   │
-│   │         vdmadmin -L (list sessions)          │  │               POST /rest/login              │   │
-│   │           vdmadmin -Q (kiosk mode)           │  │         GET /rest/inventory/v1/farms        │   │
-│   │          vdmadmin -A (agent config)          │  │         GET /rest/inventory/v1/pools        │   │
-│   │            vdmexport / vdmimport             │  │          DELETE /rest/sessions/{id}         │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  vdmadmin runs on Connection Server; REST API requires Horizon admin credentials.                     │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               PowerCLI Horizon               │  │            Desktop & Session Ops            │   │
-│   │         Connect-HVServer -Server cs          │  │             Send-HVDesktopReboot            │   │
-│   │           Get-HVPool (list pools)            │  │             Disconnect-HVSession            │   │
-│   │        Get-HVMachine (list desktops)         │  │              Set-HVPool -Enable             │   │
-│   │        Get-HVLocalSession (sessions)         │  │               Remove-HVMachine              │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  vdmadmin runs locally on Connection Server; PowerCLI connects from jump host;                        │
-│  REST API accessible on Connection Server port 443.                                                   │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  vdmadmin      = Horizon admin CLI; Windows .exe on Connection Server                                 │
-│  vdmexport     = export Horizon LDAP config to backup file                                            │
-│  vdmimport     = import Horizon LDAP config from backup file                                          │
-│  Connect-HVServer= PowerCLI; connect to Horizon Connection Server                                     │
-│  Get-HVPool    = PowerCLI; list all Horizon desktop/app pools                                         │
-│  Get-HVMachine = PowerCLI; list desktop VM status                                                     │
-│  REST API      = Horizon REST API; JSON; bearer token auth                                            │
-│  POST /rest/login= obtain session token for REST API                                                  │
-│  DELETE /rest/sessions= force disconnect a Horizon session                                            │
-│  Kiosk mode    = shared desktop mode; no user AD account needed                                       │
-│  Agent config  = configure Horizon Agent on desktop VM via vdmadmin                                   │
-│  Remove-HVMachine= PowerCLI; remove a desktop VM from pool                                            │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 ## hvconfig CLI
 

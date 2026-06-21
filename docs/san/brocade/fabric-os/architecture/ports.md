@@ -14,20 +14,10 @@ Firewall port reference for Brocade Fabric OS (FOS) SAN switches. Covers managem
 
 *Applies to: Fabric OS 9.x (Brocade / Broadcom)*
 </div>
+![Brocade Fabric OS — Ports and Network Requirements](../../../../assets/san-brocade-fabric-os-architecture-ports.svg)
 
-```text
-┌─────────────────────────── Brocade FOS — Network Traffic Zones ───────────────────────────────────────┐
-│                                                                                                       │
-│  Management Zone          Switch Management Port (eth0)    External Services                          │
-│  ────────────────         ──────────────────────────       ─────────────────                          │
-│  Admin  ──22/443──► Switch management IP                   Switch ──123 UDP──► NTP                    │
-│  SNMP   ──161 ────►                                        Switch ──514 UDP──► Syslog                 │
-│  SANnav ──443 ────►                                        Switch ──162 UDP──► SNMP receiver          │
-│                                                                                                       │
-│  FC fabric traffic (F_port, E_port, N_port) is Fibre Channel protocol — no IP firewall rules needed   │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Before you begin
 

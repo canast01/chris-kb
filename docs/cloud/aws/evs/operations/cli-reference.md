@@ -10,33 +10,10 @@ AWS CLI commands for EVS cluster and host management, PowerCLI for vSphere opera
 
 *Applies to: Amazon EVS*
 </div>
+![Amazon EVS — CLI Reference](../../../../assets/cloud-aws-evs-operations-cli-reference.svg)
 
-```text
-┌───────────────────────────────────── Amazon EVS — CLI Reference ──────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   AWS CLI: cluster/host lifecycle, capacity, and status; requires EVS IAM permissions          │  │
-│   │   PowerCLI: vSphere cluster, vSAN, and VM management; connect to vCenter in EVS VPC           │   │
-│   │   NSX-T REST API: HTTP API on NSX Manager for segment, DFW, and gateway queries               │   │
-│   │   HCX API: migration job status and service mesh health from HCX Cloud Manager                │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  aws evs         = AWS CLI service prefix for all EVS environment and host management commands        │
-│  environment-id  = Unique EVS cluster identifier (env-xxxx format); required for all API calls        │
-│  PowerCLI        = VMware PowerShell module; Connect-VIServer to EVS vCenter from a VPC jump host     │
-│  esxcli          = Command-line tool on ESXi bare-metal; SSH access for host-level diagnostics        │
-│  NSX Manager     = NSX-T control plane; REST API on port 443; accepts Basic or session token auth     │
-│  HCX Cloud       = HCX appliance deployed in EVS; exposes REST API for migration and mesh status      │
-│  Connect-VIServer = PowerCLI cmdlet to authenticate against vCenter inside the EVS VPC                │
-│  Get-VMHost      = PowerCLI cmdlet returning ESXi host objects from vCenter cluster inventory         │
-│  VsanView        = PowerCLI API object for vSAN health, capacity, and resync status queries           │
-│  jq              = JSON command-line processor; commonly piped from AWS CLI or NSX-T API outputs      │
-│  vmkping         = ESXi command to test VMkernel interface reachability and validate MTU settings     │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Before you begin
 

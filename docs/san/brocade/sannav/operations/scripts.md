@@ -4,6 +4,8 @@ tags:
   - san
 ---
 # Brocade SANnav — Operations Scripts
+![Brocade SANnav — Operations Scripts](../../../../assets/san-brocade-sannav-operations-scripts.svg)
+
 
 ```bash
 #!/usr/bin/env bash
@@ -37,53 +39,7 @@ cleanup() {
 }
 trap cleanup EXIT
 ```
-```text
-┌───────────────────────────────── Brocade SANnav — Operations Scripts ─────────────────────────────────┐
-│                                                                                                       │
-│  SANnav scripting: REST API automation, zone management, reporting, Ansible playbooks.                │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              REST API Scripting              │  │           Zone Automation Scripts           │   │
-│   │        Auth: POST /api/v1/login token        │  │         Python: create alias + zone         │   │
-│   │        GET /api/v1/fabric/switch list        │  │           Ansible: broadcom.sannav          │   │
-│   │         GET /api/v1/port/performance         │  │         Validate: cfgshow post-push         │   │
-│   │         POST /api/v1/zone to create          │  │          Batch zone from CSV input          │   │
-│   │         DELETE /api/v1/zone cleanup          │  │           WWN lookup: nsshow parse          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  REST API enables full zone lifecycle automation; Ansible collection wraps API calls.                 │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              Reporting Scripts               │  │             Maintenance Scripts             │   │
-│   │         Port utilisation: weekly CSV         │  │          supportsave: all switches          │   │
-│   │          Zone audit: unused aliases          │  │          Backup trigger: pre-change         │   │
-│   │         SFP inventory: power levels          │  │         Firmware check: ver compare         │   │
-│   │          MAPS: alert summary email           │  │          Stale zone cleanup script          │   │
-│   │         Fabric topology: PDF report          │  │           Port error daily report           │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  SANnav VM · REST API port 443 · Brocade FC switches · automation host (Linux/Windows)                │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  REST API        = SANnav northbound API; JSON over HTTPS port 443                                    │
-│  Token auth      = JWT token issued on login; passed as Bearer in all API requests                    │
-│  broadcom.sannav = Ansible Galaxy collection for SANnav automation modules                            │
-│  Zone alias      = named grouping of WWNs used as zone member; managed via API                        │
-│  cfgshow         = zone config verification; run post-push to confirm zone state                      │
-│  nsshow          = name server parse; maps WWPN to device names and ports                             │
-│  supportsave     = automated collection of diagnostic bundle from all switches                        │
-│  SFP inventory   = REST API retrieves transceiver power levels for predictive alerts                  │
-│  Stale zone      = zone with an alias that has no active device login; safe to remove                 │
-│  MAPS summary    = automated email report of MAPS violations above threshold                          │
-│  WWN             = World Wide Name; 64-bit HBA/port identifier for zone membership                    │
-│  CSV input       = bulk zone creation from spreadsheet; scripted via REST API batch                   │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 ```python
 #!/usr/bin/env python3
 # sannav-offline-ports.py
