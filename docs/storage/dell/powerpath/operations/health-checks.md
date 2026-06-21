@@ -36,6 +36,8 @@ Health Checks reference covering Daily Health Check, Pre-Maintenance Health Chec
 
 ![Daily Health Check](../../../../assets/storage-dell-powerpath-hc-daily-health-check.svg)
 
+![Daily Health Check](../../../../assets/storage-dell-powerpath-hc-daily-health-check.svg)
+
 ```mermaid
 flowchart TD
     A([Daily Health Check]) --> B["powermt display dev=all\nScan for dead paths"]
@@ -73,6 +75,8 @@ powermt display dev=all | grep -E "^Pseudo|Dead|alive"
 ```
 
 ## Pre-Maintenance Health Check
+
+![Pre-Maintenance Health Check](../../../../assets/storage-dell-powerpath-hc-pre-maintenance-health-check.svg)
 
 ![Pre-Maintenance Health Check](../../../../assets/storage-dell-powerpath-hc-pre-maintenance-health-check.svg)
 
@@ -116,6 +120,8 @@ powermt config
 
 ![Path State Verification](../../../../assets/storage-dell-powerpath-hc-path-state-verification.svg)
 
+![Path State Verification](../../../../assets/storage-dell-powerpath-hc-path-state-verification.svg)
+
 All paths should show `alive` under normal conditions:
 
 ```bash
@@ -143,6 +149,8 @@ state=alive; policy=CLAROpt; priority=1; HBA id=fcs0
 
 ![Port / HBA Check](../../../../assets/storage-dell-powerpath-hc-port-hba-check.svg)
 
+![Port / HBA Check](../../../../assets/storage-dell-powerpath-hc-port-hba-check.svg)
+
 ```bash
 # Show HBA port status
 powermt display ports
@@ -152,6 +160,8 @@ powermt display dev=all | grep -c alive
 ```
 
 ## Policy Verification
+
+![Policy Verification](../../../../assets/storage-dell-powerpath-hc-policy-verification.svg)
 
 ![Policy Verification](../../../../assets/storage-dell-powerpath-hc-policy-verification.svg)
 
@@ -177,9 +187,13 @@ Expected: `CLAROpt` (CLARiiON optimized) or `co` for Active/Optimized.
 
 ![Host Validation](../../../../assets/storage-dell-powerpath-hc-host-validation.svg)
 
+![Host Validation](../../../../assets/storage-dell-powerpath-hc-host-validation.svg)
+
 Validate PowerPath installation and path configuration after host provisioning or changes.
 
 ### Check PowerPath Version
+
+![Check PowerPath Version](../../../../assets/storage-dell-powerpath-hc-check-powerpath-version.svg)
 
 ```bash
 # Linux
@@ -190,6 +204,8 @@ powermt version
 ```
 
 ### Verify PowerPath is Running
+
+![Verify PowerPath is Running](../../../../assets/storage-dell-powerpath-hc-verify-powerpath-is-running.svg)
 
 ```bash
 # Linux — check PowerPath daemon
@@ -203,6 +219,8 @@ sc query EMCPower
 
 ### Device Discovery
 
+![Device Discovery](../../../../assets/storage-dell-powerpath-hc-device-discovery.svg)
+
 ```bash
 # Rescan for new devices
 powermt config
@@ -212,6 +230,8 @@ powermt display dev=all
 ```
 
 ### Path Count Validation
+
+![Path Count Validation](../../../../assets/storage-dell-powerpath-hc-path-count-validation.svg)
 
 For each device, confirm expected path count (typically 2 or 4 per LUN):
 
@@ -223,12 +243,16 @@ Count `alive` paths per pseudo device. Compare against expected path count from 
 
 ### Host Registration on Array
 
+![Host Registration on Array](../../../../assets/storage-dell-powerpath-hc-host-registration-on-array.svg)
+
 Ensure the host is registered on the array (PowerMax/VNX/Unity) with the correct initiators:
 
 - Check via array management console that all HBA WWNs/iSCSI IQNs are registered
 - Confirm LUN masking to the correct host or host group
 
 ### After OS Reboot Validation
+
+![After OS Reboot Validation](../../../../assets/storage-dell-powerpath-hc-after-os-reboot-validation.svg)
 
 ```bash
 # Confirm PowerPath loaded and devices are present
@@ -243,6 +267,8 @@ powermt restore
 
 ### Multipath Conflict Check (Linux)
 
+![Multipath Conflict Check (Linux)](../../../../assets/storage-dell-powerpath-hc-multipath-conflict-check-linux.svg)
+
 Ensure `multipathd` is disabled when using PowerPath — running both simultaneously causes conflicts:
 
 ```bash
@@ -251,6 +277,8 @@ systemctl status multipathd
 ```
 
 ### Validation Checklist
+
+![Validation Checklist](../../../../assets/storage-dell-powerpath-hc-validation-checklist.svg)
 
 | Check | Command | Expected |
 |---|---|---|

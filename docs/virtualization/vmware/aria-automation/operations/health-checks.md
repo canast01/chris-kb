@@ -28,6 +28,8 @@ Health Checks reference covering Daily Checks, Weekly Checks, Pre-Maintenance Ch
 
 ### Cloud Account Status
 
+![Cloud Account Status](../../../../assets/virtualization-vmware-aria-automation-hc-cloud-account-status.svg)
+
 All vCenter and NSX cloud accounts must show a green status indicator:
 
 
@@ -47,6 +49,8 @@ Run these 8 checks in order at the start of each shift or before any planned cha
 ---
 
 ### Review Deployment Event Log
+
+![Review Deployment Event Log](../../../../assets/virtualization-vmware-aria-automation-hc-review-deployment-event-log.svg)
 
 ```text
 Deployments → All Deployments → filter by "Failed" status
@@ -69,6 +73,8 @@ curl -sk -H "Authorization: Bearer $TOKEN" \
 
 ### Pending Approval Requests
 
+![Pending Approval Requests](../../../../assets/virtualization-vmware-aria-automation-hc-pending-approval-requests.svg)
+
 Review and action approval requests older than 5 business days:
 
 ```text
@@ -80,6 +86,8 @@ Escalate stale requests (user not responding) or reject if the requester has lef
 ---
 
 ### Quota Utilisation
+
+![Quota Utilisation](../../../../assets/virtualization-vmware-aria-automation-hc-quota-utilisation.svg)
 
 Check whether any projects are approaching their VM or CPU/memory quota limits:
 
@@ -93,6 +101,8 @@ Projects at >80% quota will start failing new deployments without a clear error 
 
 ### Deployment Lease Expiry
 
+![Deployment Lease Expiry](../../../../assets/virtualization-vmware-aria-automation-hc-deployment-lease-expiry.svg)
+
 ```text
 Deployments → All Deployments → filter by lease expiry in next 7 days
 ```
@@ -102,6 +112,8 @@ Contact deployment owners for renewals or confirm expiry is intended. Expired de
 ---
 
 ### Service Certificate Expiry
+
+![Service Certificate Expiry](../../../../assets/virtualization-vmware-aria-automation-hc-service-certificate-expiry.svg)
 
 ```bash
 # Check Aria Automation UI certificate expiry

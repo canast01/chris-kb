@@ -130,6 +130,8 @@ A sustained WAN RTT increase of more than 2 ms above baseline should be reported
 
 ![Configuration Consistency Check](../../../../assets/storage-dell-srdf-s-hc-configuration-consistency-check.svg)
 
+![Configuration Consistency Check](../../../../assets/storage-dell-srdf-s-hc-configuration-consistency-check.svg)
+
 ```bash
 # Confirm RDFG group membership matches expected device list
 symrdf -g 10 list -v
@@ -150,6 +152,8 @@ symcfg list -rdfg all
 
 ![Health Check Summary Table](../../../../assets/storage-dell-srdf-s-hc-health-check-summary-table.svg)
 
+![Health Check Summary Table](../../../../assets/storage-dell-srdf-s-hc-health-check-summary-table.svg)
+
 | Check | Command | Healthy Result | Alert Threshold |
 |---|---|---|---|
 | Pair state | `symrdf -g <rdfg> query` | All Synchronized | Any non-Synchronized |
@@ -164,6 +168,8 @@ symcfg list -rdfg all
 
 ![Known Issues and Field Notes](../../../../assets/storage-dell-srdf-s-hc-known-issues-and-field-notes.svg)
 
+![Known Issues and Field Notes](../../../../assets/storage-dell-srdf-s-hc-known-issues-and-field-notes.svg)
+
 - **Intermittent "Transmit Idle" during off-peak hours**: Normal behaviour when there are no writes to replicate. Does not indicate a problem. Confirm by checking that track count remains 0.
 - **Director shows Online but link shows Partitioned**: Usually a transient WAN interruption. Wait 2 minutes and re-query. If it persists, escalate to network team to check the dark fibre or IP WAN path.
 - **Health check script timeouts on large arrays**: If `symcfg list -rdfg all` takes > 60 seconds, break queries into per-group calls and parallelize across RDFG groups using a shell loop.
@@ -175,9 +181,13 @@ symcfg list -rdfg all
 
 ![Validation](../../../../assets/storage-dell-srdf-s-hc-validation.svg)
 
+![Validation](../../../../assets/storage-dell-srdf-s-hc-validation.svg)
+
 Validation confirms that SRDF/S replication is protecting data as designed, that pair states are correct, and that a failover would succeed if required. Validation runs are performed after configuration changes, after DR tests, after link maintenance, and on a scheduled basis (typically monthly). Validation differs from health checks in that it actively verifies end-to-end data integrity and failover readiness rather than just checking operational status.
 
 ### Pre-Validation Inventory
+
+![Pre-Validation Inventory](../../../../assets/storage-dell-srdf-s-hc-pre-validation-inventory.svg)
 
 Before running validation, capture a baseline state snapshot:
 
@@ -198,6 +208,8 @@ symcfg list -rdfg 10 -detail >> /tmp/rdfg_inventory_$(date +%Y%m%d).txt
 
 ### Pair State and Data Consistency Validation
 
+![Pair State and Data Consistency Validation](../../../../assets/storage-dell-srdf-s-hc-pair-state-and-data-consistency-validation.svg)
+
 ```bash
 # Confirm all pairs are Synchronized (0 invalid tracks)
 symrdf -g 10 query -detail | grep -E "Pair State|Invalid Tracks"
@@ -216,6 +228,8 @@ symrdf -sid 0002 -g 10 list -v | grep -c "R2"
 ```
 
 ### Simulated Failover Validation (Non-Disruptive)
+
+![Simulated Failover Validation (Non-Disruptive)](../../../../assets/storage-dell-srdf-s-hc-simulated-failover-validation-non-disruptive.svg)
 
 A non-disruptive test verifies that the failover command succeeds without actually transferring production I/O. Use `symrdf -testmode` where available, or perform a suspend/resume cycle to confirm link responsiveness:
 
@@ -237,6 +251,8 @@ For a full DR test failover, follow the DR test runbook and use the SRM test fai
 
 ### Post-Change Validation
 
+![Post-Change Validation](../../../../assets/storage-dell-srdf-s-hc-post-change-validation.svg)
+
 After any SRDF configuration change (adding devices, changing RDFG membership, link maintenance):
 
 ```bash
@@ -255,6 +271,8 @@ symrdf -g 10 query -detail | grep OLPAIRS
 
 ### Validation Checklist Table
 
+![Validation Checklist Table](../../../../assets/storage-dell-srdf-s-hc-validation-checklist-table.svg)
+
 | Validation Item | Command | Pass Criteria |
 |---|---|---|
 | All pairs Synchronized | `symrdf -g <rdfg> query` | State = Synchronized |
@@ -266,6 +284,8 @@ symrdf -g 10 query -detail | grep OLPAIRS
 | Resync completes within SLA | Monitor `SyncInProg` duration | < agreed RTO window |
 
 ### Known Issues and Field Notes (Validation)
+
+![Known Issues and Field Notes (Validation)](../../../../assets/storage-dell-srdf-s-hc-known-issues-and-field-notes-validation.svg)
 
 - **Validation script shows false positives during scheduled snapshots**: TimeFinder/SnapVX operations on R1 devices can briefly increase track counts. Schedule validation runs outside snapshot windows.
 - **Device count mismatch between arrays**: If R1 and R2 show different device counts, the RDFG was likely modified on one array without the corresponding change on the other. Open a Dell support case immediately — do not attempt manual corrections.

@@ -36,9 +36,13 @@ Health Checks reference covering Daily Health Check Procedure, Change Readiness 
 
 ![Daily Health Check Procedure](../../../../assets/storage-dell-powerstore-hc-daily-health-check-procedure.svg)
 
+![Daily Health Check Procedure](../../../../assets/storage-dell-powerstore-hc-daily-health-check-procedure.svg)
+
 Run this procedure each morning on all production PowerStore systems. The checks can be automated using the PowerStore REST API — see the scripts in the [Scripts](scripts/index.md) section.
 
 ### 1. Log In and Review the Dashboard
+
+![1. Log In and Review the Dashboard](../../../../assets/storage-dell-powerstore-hc-1-log-in-and-review-the-dashboard.svg)
 
 Access PowerStore Manager at `https://<management-ip>` and review the Dashboard panel:
 
@@ -48,6 +52,8 @@ Access PowerStore Manager at `https://<management-ip>` and review the Dashboard 
 - [ ] No replication sessions shown in Error or Paused state
 
 ### 2. Check Active Alerts
+
+![2. Check Active Alerts](../../../../assets/storage-dell-powerstore-hc-2-check-active-alerts.svg)
 
 ```bash
 # List all active (unresolved) alerts
@@ -70,6 +76,8 @@ Review every active alert:
 
 ### 3. Hardware Health
 
+![3. Hardware Health](../../../../assets/storage-dell-powerstore-hc-3-hardware-health.svg)
+
 ```bash
 # Check all hardware components
 curl -k -X GET "https://<mgmt-ip>/api/rest/hardware" \
@@ -90,6 +98,8 @@ Reconstruction time estimate: approximately 1 hour per TB of data for NVMe SSDs 
 
 ### 4. Capacity Check
 
+![4. Capacity Check](../../../../assets/storage-dell-powerstore-hc-4-capacity-check.svg)
+
 ```bash
 # Get capacity metrics per appliance
 curl -k -X GET "https://<mgmt-ip>/api/rest/storage_resource?select=name,size_used,size_total,data_reduction_ratio" \
@@ -103,6 +113,8 @@ curl -k -X GET "https://<mgmt-ip>/api/rest/pool?select=name,size_free,size_used,
 Flag any pool with `percent_used` above 70 for capacity planning review.
 
 ### 5. Replication Session Health
+
+![5. Replication Session Health](../../../../assets/storage-dell-powerstore-hc-5-replication-session-health.svg)
 
 ```bash
 # List all replication sessions and their state
@@ -121,6 +133,8 @@ Expected states:
 | `system_paused` | Array paused replication automatically | Check for fault condition; resume after fault cleared |
 
 ### 6. Software Version Check
+
+![6. Software Version Check](../../../../assets/storage-dell-powerstore-hc-6-software-version-check.svg)
 
 ```bash
 # Show installed software version
@@ -151,6 +165,8 @@ Complete this checklist before any maintenance window or change on a PowerStore 
 
 ![Post-Change Validation](../../../../assets/storage-dell-powerstore-hc-post-change-validation.svg)
 
+![Post-Change Validation](../../../../assets/storage-dell-powerstore-hc-post-change-validation.svg)
+
 After completing maintenance, verify the following before closing the change:
 
 ```bash
@@ -174,6 +190,8 @@ curl -k -X GET "https://<mgmt-ip>/api/rest/host?select=name,type,health_state" \
 
 ![Quick Reference — Key REST API Health Endpoints](../../../../assets/storage-dell-powerstore-hc-quick-reference-key-rest-api-health-endpoints.svg)
 
+![Quick Reference — Key REST API Health Endpoints](../../../../assets/storage-dell-powerstore-hc-quick-reference-key-rest-api-health-endpoints.svg)
+
 | Check | Endpoint |
 |---|---|
 | Active alerts | `GET /api/rest/alert?state=active` |
@@ -191,6 +209,8 @@ curl -k -X GET "https://<mgmt-ip>/api/rest/host?select=name,type,health_state" \
 
 ![Incident Triage](../../../../assets/storage-dell-powerstore-hc-incident-triage.svg)
 
+![Incident Triage](../../../../assets/storage-dell-powerstore-hc-incident-triage.svg)
+
 When a CRITICAL alert fires on PowerStore:
 
 1. Log into PowerStore Manager; note the exact alert message and affected resource
@@ -202,6 +222,8 @@ When a CRITICAL alert fires on PowerStore:
 7. For unresolved hardware faults, open a Dell support case from PowerStore Manager → **Support → New Case** — the support case is pre-populated with system serial number and log bundles
 
 ### Common Alert Codes
+
+![Common Alert Codes](../../../../assets/storage-dell-powerstore-hc-common-alert-codes.svg)
 
 | Alert Code / Message | Likely Cause | First Response |
 |---|---|---|

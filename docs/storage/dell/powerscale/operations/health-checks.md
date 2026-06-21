@@ -36,6 +36,8 @@ Health Checks reference covering Daily Checks, Health Check, Cluster Health Comm
 
 ![Daily Checks](../../../../assets/storage-dell-powerscale-hc-daily-checks.svg)
 
+![Daily Checks](../../../../assets/storage-dell-powerscale-hc-daily-checks.svg)
+
 ```mermaid
 flowchart TD
     A([Daily Health Check]) --> B["isi status\nAll nodes ONLINE?"]
@@ -66,6 +68,8 @@ flowchart TD
 | [ ] Confirm SyncIQ RPO compliance by checking `isi sync reports list` | `isi sync reports list --limit 5` |  |
 
 ## Health Check
+
+![Health Check](../../../../assets/storage-dell-powerscale-hc-health-check.svg)
 
 ![Health Check](../../../../assets/storage-dell-powerscale-hc-health-check.svg)
 
@@ -113,6 +117,8 @@ isi license list
 
 ![Cluster Health Commands](../../../../assets/storage-dell-powerscale-hc-cluster-health-commands.svg)
 
+![Cluster Health Commands](../../../../assets/storage-dell-powerscale-hc-cluster-health-commands.svg)
+
 ```bash
 # Cluster identity, version, and status
 isi version
@@ -125,6 +131,8 @@ isi status -n all   # Per-node health summary
 ```
 
 ### Node Health
+
+![Node Health](../../../../assets/storage-dell-powerscale-hc-node-health.svg)
 
 ```bash
 # List all nodes with status
@@ -143,6 +151,8 @@ isi node drives list <node_id> | grep -iE "failed|degraded|missing"
 
 ### Active Events and Alerts
 
+![Active Events and Alerts](../../../../assets/storage-dell-powerscale-hc-active-events-and-alerts.svg)
+
 ```bash
 # All unresolved critical events
 isi event events list --severity critical
@@ -159,6 +169,8 @@ isi event channels list
 
 ### Cluster Capacity
 
+![Cluster Capacity](../../../../assets/storage-dell-powerscale-hc-cluster-capacity.svg)
+
 ```bash
 # Overall used vs. free capacity
 isi statistics system list | grep -E "Cluster Capacity|Used|Free"
@@ -173,6 +185,8 @@ isi quota quotas list --type directory | head -20
 
 ### Protocol Services
 
+![Protocol Services](../../../../assets/storage-dell-powerscale-hc-protocol-services.svg)
+
 ```bash
 # NFS service status
 isi services -a | grep nfs
@@ -185,6 +199,8 @@ isi services -a | grep running
 ```
 
 ### SyncIQ Replication
+
+![SyncIQ Replication](../../../../assets/storage-dell-powerscale-hc-synciq-replication.svg)
 
 ```bash
 # Policy status
@@ -201,6 +217,8 @@ isi sync jobs list --state paused
 
 ### Jobs (Background Tasks)
 
+![Jobs (Background Tasks)](../../../../assets/storage-dell-powerscale-hc-jobs-background-tasks.svg)
+
 ```bash
 # Currently running jobs
 isi job status
@@ -213,6 +231,8 @@ isi job jobs list | grep -i "FlexProtect\|Repair"
 ```
 
 ## Health Check Summary
+
+![Health Check Summary](../../../../assets/storage-dell-powerscale-hc-health-check-summary.svg)
 
 ![Health Check Summary](../../../../assets/storage-dell-powerscale-hc-health-check-summary.svg)
 

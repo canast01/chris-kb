@@ -75,6 +75,8 @@ Cisco MDS procedures: `show flogi database`, zone member management with `zone n
 
 ![Zone Provisioning Workflow](../../../../assets/cisco-mds-proc-zone-provisioning-workflow.svg)
 
+![Zone Provisioning Workflow](../../../../assets/cisco-mds-proc-zone-provisioning-workflow.svg)
+
 ```mermaid
 flowchart TD
   A["New host or storage port\nneeds fabric access"] --> B["Get pWWN from host HBA\nor storage port"]
@@ -95,7 +97,11 @@ flowchart TD
 
 
 ### Device Aliases
+
+![Device Aliases](../../../../assets/cisco-mds-proc-device-aliases.svg)
 ### Create and Manage Zones
+
+![Create and Manage Zones](../../../../assets/cisco-mds-proc-create-and-manage-zones.svg)
 
 ![Create and Manage Zones](../../../../assets/cisco-mds-proc-create-and-manage-zones.svg)
 
@@ -114,6 +120,8 @@ switch(config-zone)# exit
 ```
 
 ### Zone Set Management
+
+![Zone Set Management](../../../../assets/cisco-mds-proc-zone-set-management.svg)
 
 ![Zone Set Management](../../../../assets/cisco-mds-proc-zone-set-management.svg)
 
@@ -136,6 +144,8 @@ switch# copy running-config startup-config
 
 ![Enhanced Zoning (recommended)](../../../../assets/cisco-mds-proc-enhanced-zoning-recommended.svg)
 
+![Enhanced Zoning (recommended)](../../../../assets/cisco-mds-proc-enhanced-zoning-recommended.svg)
+
 ```bash
 # Enable enhanced zoning — default-deny for non-zoned devices
 switch# zone mode enhanced vsan 10
@@ -146,6 +156,8 @@ switch# show zone status vsan 10
 ```
 
 ### Example: Zone a New Host to FlashArray
+
+![Example: Zone a New Host to FlashArray](../../../../assets/cisco-mds-proc-example-zone-a-new-host-to-flasharray.svg)
 
 ![Example: Zone a New Host to FlashArray](../../../../assets/cisco-mds-proc-example-zone-a-new-host-to-flasharray.svg)
 
@@ -180,6 +192,8 @@ switch# copy running-config startup-config
 
 ![VSAN Membership](../../../../assets/cisco-mds-proc-vsan-membership.svg)
 
+![VSAN Membership](../../../../assets/cisco-mds-proc-vsan-membership.svg)
+
 ```bash
 # Show which ports are in a VSAN
 switch# show vsan 10 membership
@@ -195,6 +209,8 @@ switch# copy running-config startup-config
 
 ![Zone Troubleshooting](../../../../assets/cisco-mds-proc-zone-troubleshooting.svg)
 
+![Zone Troubleshooting](../../../../assets/cisco-mds-proc-zone-troubleshooting.svg)
+
 | Symptom | Command | Action |
 |---|---|---|
 | Host HBA not logged in | `show flogi database vsan 10` | Check cable, SFP, port state; check VSAN assignment |
@@ -205,6 +221,8 @@ switch# copy running-config startup-config
 | Two hosts in same zone | `show zone vsan 10` | Split into single-initiator zones |
 
 ### Zone Audit
+
+![Zone Audit](../../../../assets/cisco-mds-proc-zone-audit.svg)
 
 ![Zone Audit](../../../../assets/cisco-mds-proc-zone-audit.svg)
 

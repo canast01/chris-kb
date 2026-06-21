@@ -940,6 +940,8 @@ Decommissioning removes a host from the cluster and redistributes all its data. 
 
 ### Prerequisites
 
+![Prerequisites](../../../../assets/vsan-proc-prerequisites.svg)
+
 - Verify remaining cluster meets FTT policy without this host (e.g., FTT=1 RAID-5 requires minimum 4 hosts — removing one from a 4-node cluster breaks compliance).
 - Confirm free capacity on remaining hosts exceeds data volume being moved.
 - Schedule during a maintenance window — full evacuation takes hours for large datasets.
@@ -1087,6 +1089,8 @@ Get-VsanSpaceUsage -Cluster (Get-Cluster "VSAN-LON-01") |
 vSAN Data at Rest Encryption (D@RE) encrypts all data on vSAN capacity disks. It requires an external Key Management Server (KMS).
 
 ### Prerequisites
+
+![Prerequisites](../../../../assets/vsan-proc-prerequisites.svg)
 
 - External KMS configured and reachable from all cluster hosts (e.g., HyTrust KeyControl, Thales, HashiCorp Vault with KMIP).
 - KMS registered in vCenter: vCenter → Administration → Key Providers → Add Standard Key Provider.
@@ -1587,6 +1591,8 @@ A 2-node vSAN cluster uses a witness appliance at a third site to form quorum. T
 - If the witness fails, both data nodes remain available but the cluster cannot tolerate a second failure.
 
 ### Prerequisites
+
+![Prerequisites](../../../../assets/vsan-proc-prerequisites.svg)
 
 - 2 ESXi hosts at the primary site (or across 2 sites).
 - 1 vSAN witness appliance at a separate site or management network.

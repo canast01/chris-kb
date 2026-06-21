@@ -48,6 +48,8 @@ Daily and weekly health check routine for VxRail clusters. Covers VxRail Plugin 
 
 ### 1. VxRail Plugin — Node Status
 
+![1. VxRail Plugin — Node Status](../../../../assets/virtualization-vmware-vxrail-hc-1-vxrail-plugin-node-status.svg)
+
 Open vCenter and navigate to: **Menu → VxRail → Cluster → Summary**
 
 Check:
@@ -71,6 +73,8 @@ for h in hosts:
 ```
 
 ### 2. vSAN Health
+
+![2. vSAN Health](../../../../assets/virtualization-vmware-vxrail-hc-2-vsan-health.svg)
 
 SSH to any ESXi node in the cluster:
 
@@ -98,6 +102,8 @@ Get-VsanClusterHealthSummary -Cluster "VxRail-Cluster" |
 
 ### 3. iDRAC Hardware Health
 
+![3. iDRAC Hardware Health](../../../../assets/virtualization-vmware-vxrail-hc-3-idrac-hardware-health.svg)
+
 Check each node's iDRAC for hardware alarms. SSH to each node's iDRAC IP:
 
 ```bash
@@ -112,6 +118,8 @@ In OMIVV (vCenter plugin): **Menu → OpenManage Integration → Hardware → Al
 
 ### 4. vSAN Capacity
 
+![4. vSAN Capacity](../../../../assets/virtualization-vmware-vxrail-hc-4-vsan-capacity.svg)
+
 ```powershell
 # Check vSAN datastore usage
 Get-Datastore "vsanDatastore" | Select-Object Name,
@@ -123,6 +131,8 @@ Get-Datastore "vsanDatastore" | Select-Object Name,
 Alert if `UsedPct` exceeds **70%**. vSAN performance degrades above 70% as rebalancing becomes more frequent and slack capacity for rebuilds shrinks.
 
 ### 5. LCM Bundle Status
+
+![5. LCM Bundle Status](../../../../assets/virtualization-vmware-vxrail-hc-5-lcm-bundle-status.svg)
 
 In vCenter: **VxRail Plugin → Lifecycle Management → Available Upgrades**
 
@@ -145,6 +155,8 @@ If a bundle is available, record it and plan an upgrade in the next maintenance 
 
 ### ESXi Version Consistency
 
+![ESXi Version Consistency](../../../../assets/virtualization-vmware-vxrail-hc-esxi-version-consistency.svg)
+
 All nodes in a VxRail cluster must run the same ESXi version and build. After any LCM upgrade, confirm consistency:
 
 ```powershell
@@ -159,6 +171,8 @@ A mismatch means a node was skipped during LCM or a node was manually patched (n
 
 ### vSAN Storage Policy Compliance
 
+![vSAN Storage Policy Compliance](../../../../assets/virtualization-vmware-vxrail-hc-vsan-storage-policy-compliance.svg)
+
 ```powershell
 # Check all VMs for policy compliance — flag any non-compliant
 Get-VM | Get-SpbmEntityConfiguration |
@@ -168,6 +182,8 @@ Get-VM | Get-SpbmEntityConfiguration |
 ```
 
 ### Node Hardware Summary
+
+![Node Hardware Summary](../../../../assets/virtualization-vmware-vxrail-hc-node-hardware-summary.svg)
 
 ```bash
 # Run on each node — check BIOS and iDRAC firmware versions
@@ -276,6 +292,8 @@ Write-Host "`n=== Health Check Complete ===" -ForegroundColor Cyan
 ```
 
 ### Companion Bash Snippet (run on any ESXi node)
+
+![Companion Bash Snippet (run on any ESXi node)](../../../../assets/virtualization-vmware-vxrail-hc-companion-bash-snippet-run-on-any-esxi-node.svg)
 
 ```bash
 #!/bin/bash

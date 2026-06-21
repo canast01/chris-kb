@@ -193,6 +193,8 @@ flowchart TD
 
 ### Eyeglass DR Preflight
 
+![Eyeglass DR Preflight](../../../../assets/storage-netapp-superna-eyeglass-hc-eyeglass-dr-preflight.svg)
+
 The preflight check verifies all prerequisites for a failover without making any changes.
 
 ```bash
@@ -215,6 +217,8 @@ egcli drtest preflight --policy <policy_name>
 ```
 
 ### DR Test (Rehearsal)
+
+![DR Test (Rehearsal)](../../../../assets/storage-netapp-superna-eyeglass-hc-dr-test-rehearsal.svg)
 
 A DR test performs all failover steps but rolls back at the end, returning to normal replication.
 
@@ -244,6 +248,8 @@ egcli drtest status --policy <policy_name>
 
 ### Post-Failover Validation
 
+![Post-Failover Validation](../../../../assets/storage-netapp-superna-eyeglass-hc-post-failover-validation.svg)
+
 Run after a declared DR failover to confirm the DR cluster is fully operational.
 
 ```bash
@@ -271,6 +277,8 @@ ssh admin@<production-cluster> "isi sync policies list"
 
 ### Post-Failback Validation
 
+![Post-Failback Validation](../../../../assets/storage-netapp-superna-eyeglass-hc-post-failback-validation.svg)
+
 ```bash
 # Confirm DR policy is back to Replicating state
 egcli drpolicy status --all
@@ -292,6 +300,8 @@ nslookup <production-smartconnect-zone>
 ```
 
 ### Validation Record Template
+
+![Validation Record Template](../../../../assets/storage-netapp-superna-eyeglass-hc-validation-record-template.svg)
 
 | Check | Date | Result | Notes |
 |---|---|---|---|

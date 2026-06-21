@@ -262,7 +262,7 @@ def parse_procedures(text: str) -> list:
     # Split into chunks at each ### boundary
     chunks = re.split(r'\n(?=### )', text)
     for chunk in chunks:
-        m = re.match(r'^### (.+)\n', chunk)
+        m = re.match(r'^### ([^\n]+)', chunk)
         if not m:
             continue
         heading = m.group(1).strip()
@@ -341,12 +341,22 @@ def process_product(slug: str, rel_path: str,
     if not dry_run:
         # Modify the page: remove ASCII block + inject SVG refs
         new_text = _ASCII_RE.sub('', text)
+        # Track occurrence index per heading for duplicate-safe injection
+        heading_seen: dict = {}
         for heading, svg_fname in injections:
-            pattern = re.compile(
-                r'(^### ' + re.escape(heading) + r'[ \t]*\n)', re.MULTILINE
-            )
+            idx = heading_seen.get(heading, 0)
+            heading_seen[heading] = idx + 1
+            pat = re.compile(r'(^### ' + re.escape(heading) + r'[ \t]*\n)', re.MULTILINE)
             img_ref = f'![{heading}]({rel_assets}{svg_fname})'
-            new_text = pattern.sub(r'\1\n' + img_ref + '\n', new_text, count=1)
+            # Find the (idx+1)-th occurrence and inject only there
+            matches = list(pat.finditer(new_text))
+            if idx < len(matches):
+                m = matches[idx]
+                # Only inject if not already present
+                after = new_text[m.end():m.end() + 60]
+                if not re.match(r'\n?!\[', after):
+                    insert = m.end()
+                    new_text = new_text[:insert] + '\n' + img_ref + '\n' + new_text[insert:]
         page.write_text(new_text, encoding='utf-8')
         print(f'  Updated {page.relative_to(REPO)}: removed ASCII, injected {count} SVG refs')
     else:

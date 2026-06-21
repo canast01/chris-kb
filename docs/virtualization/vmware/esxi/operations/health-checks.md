@@ -74,6 +74,8 @@ esxcli software vib list | wc -l
 
 ### Sensor Status
 
+![Sensor Status](../../../../assets/virtualization-vmware-esxi-hc-sensor-status.svg)
+
 ```bash
 # Full hardware health summary (CPU, memory, fan, PSU, temperature)
 esxcli hardware ipmi sdr list | grep -iE "critical|warning|nc"
@@ -97,6 +99,8 @@ esxcli storage core device smart get -d <device-name>
 
 ### Host Connection and Service Health
 
+![Host Connection and Service Health](../../../../assets/virtualization-vmware-esxi-hc-host-connection-and-service-health.svg)
+
 ```bash
 # Check hostd (management daemon) — restart if unresponsive
 /etc/init.d/hostd status
@@ -118,6 +122,8 @@ Get-VMHost | Select-Object Name, ConnectionState, PowerState
 
 ### Uplink and VMkernel
 
+![Uplink and VMkernel](../../../../assets/virtualization-vmware-esxi-hc-uplink-and-vmkernel.svg)
+
 ```bash
 # Check all vmnic uplinks — Speed/Duplex should show link speed, not 0/Half
 esxcli network nic list
@@ -138,6 +144,8 @@ esxcli network vswitch standard list       # standard vSwitch uplinks
 
 ### MTU Validation
 
+![MTU Validation](../../../../assets/virtualization-vmware-esxi-hc-mtu-validation.svg)
+
 ```bash
 # Test MTU end-to-end on vSAN VMkernel (9000 MTU required)
 vmkping -I vmk2 -d -s 8972 <peer-vsan-vmk-ip>
@@ -150,6 +158,8 @@ vmkping -I vmk2 -d -s 8972 <peer-vsan-vmk-ip>
 ![Storage Health](../../../../assets/virtualization-vmware-esxi-hc-storage-health.svg)
 
 ### Path and Datastore Status
+
+![Path and Datastore Status](../../../../assets/virtualization-vmware-esxi-hc-path-and-datastore-status.svg)
 
 ```bash
 # List all storage paths — dead paths require immediate attention
@@ -167,6 +177,8 @@ esxcli storage filesystem list | awk '{print $1, $4, $5}'
 
 ### APD/PDL Detection
 
+![APD/PDL Detection](../../../../assets/virtualization-vmware-esxi-hc-apd-pdl-detection.svg)
+
 ```bash
 # Check vmkernel log for APD/PDL events in last 24 hours
 grep -iE "APD|PDL|LostDevice" /var/log/vmkernel.log | tail -20
@@ -180,6 +192,8 @@ grep -i "H:0x0 D:0x2\|reservation" /var/log/vmkernel.log | tail -20
 ![Capacity and Performance](../../../../assets/virtualization-vmware-esxi-hc-capacity-and-performance.svg)
 
 ### CPU and Memory
+
+![CPU and Memory](../../../../assets/virtualization-vmware-esxi-hc-cpu-and-memory.svg)
 
 ```bash
 # Host CPU and memory usage via esxtop (batch mode, 1 sample)

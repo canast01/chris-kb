@@ -69,6 +69,8 @@ Run from Pure1 UI or CLI. No impact to production.
 
 ### Via Pure1 UI
 
+![Via Pure1 UI](../../../../assets/storage-pure-evergreen-hc-via-pure1-ui.svg)
+
 ```text
 Pure1 → Arrays → select array → Overview tab
 
@@ -81,6 +83,8 @@ Check:
 ```
 
 ### Via CLI
+
+![Via CLI](../../../../assets/storage-pure-evergreen-hc-via-cli.svg)
 
 ```bash
 ssh pureuser@<flasharray-ip>
@@ -114,6 +118,8 @@ Run monthly and before/after Purity upgrades or hardware changes.
 
 ### 1. Hardware Inventory
 
+![1. Hardware Inventory](../../../../assets/storage-pure-evergreen-hc-1-hardware-inventory.svg)
+
 ```bash
 # All hardware components with status
 purehw list
@@ -127,6 +133,8 @@ purehw list --type drive | awk 'NR<=1 || $3 != "Healthy"'
 ```
 
 ### 2. Capacity Deep-Dive
+
+![2. Capacity Deep-Dive](../../../../assets/storage-pure-evergreen-hc-2-capacity-deep-dive.svg)
 
 ```bash
 # Array-level space breakdown
@@ -144,6 +152,8 @@ purearray list --space | awk 'NR==2 {print "Data reduction ratio: " $7}'
 
 ### 3. Performance Baseline
 
+![3. Performance Baseline](../../../../assets/storage-pure-evergreen-hc-3-performance-baseline.svg)
+
 ```bash
 # Current array IOPS, bandwidth, latency
 purearray list --performance
@@ -158,6 +168,8 @@ pureport list --performance
 ```
 
 ### 4. Replication Health
+
+![4. Replication Health](../../../../assets/storage-pure-evergreen-hc-4-replication-health.svg)
 
 ```bash
 # ActiveCluster / async replication status
@@ -174,6 +186,8 @@ purepgroup list --snap | tail -5
 
 ### 5. Network and Connectivity
 
+![5. Network and Connectivity](../../../../assets/storage-pure-evergreen-hc-5-network-and-connectivity.svg)
+
 ```bash
 # Port errors — check for any non-zero error counters
 pureport list --performance | awk 'NR==1 || $NF != "0"'
@@ -188,6 +202,8 @@ puresupport set --list   # show current support configuration
 
 ### 6. Purity Version Check
 
+![6. Purity Version Check](../../../../assets/storage-pure-evergreen-hc-6-purity-version-check.svg)
+
 ```bash
 # Current Purity version
 purearray list | grep -i version
@@ -199,6 +215,8 @@ purearray list | grep -i version
 Compare against [Pure Storage EOL/support matrix](https://support.purestorage.com) to confirm the installed version is within support window.
 
 ### 7. Host Connectivity
+
+![7. Host Connectivity](../../../../assets/storage-pure-evergreen-hc-7-host-connectivity.svg)
 
 ```bash
 # All registered hosts and their volumes

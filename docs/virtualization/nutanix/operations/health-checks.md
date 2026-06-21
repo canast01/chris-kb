@@ -34,6 +34,8 @@ Run this sequence in order. Each step validates the output before proceeding.
 
 ### 1. Cluster Status
 
+![1. Cluster Status](../../../assets/virtualization-nutanix-hc-1-cluster-status.svg)
+
 ```bash
 ssh nutanix@<any-cvm-ip>
 cluster status | head -40
@@ -49,6 +51,8 @@ allssh "genesis status | head -5"
 **Expected:** Each CVM returns `Genesis is running.`
 
 ### 2. NCC Quick Check (Critical Tests Only)
+
+![2. NCC Quick Check (Critical Tests Only)](../../../assets/virtualization-nutanix-hc-2-ncc-quick-check-critical-tests-only.svg)
 
 ```bash
 # Fast — runs only critical checks (~3 min)
@@ -67,6 +71,8 @@ ncc --health_checks run_all 2>&1 | grep -E "FAIL|WARN|ERROR" | grep -v "^#"
 
 ### 3. Cluster Resilience
 
+![3. Cluster Resilience](../../../assets/virtualization-nutanix-hc-3-cluster-resilience.svg)
+
 ```bash
 # Verify cluster can tolerate a node failure
 ncli cluster get-domain-fault-tolerance-status type=node
@@ -77,6 +83,8 @@ ncli cluster get-domain-fault-tolerance-status type=node
 If `CAN_TOLERATE_FAILURE_COUNT=0`, the cluster cannot tolerate any additional failure — investigate immediately (node down, disk missing, degraded objects).
 
 ### 4. Storage Capacity
+
+![4. Storage Capacity](../../../assets/virtualization-nutanix-hc-4-storage-capacity.svg)
 
 ```bash
 # Cluster-level storage summary
@@ -99,6 +107,8 @@ ncli alert list severity=warning
 
 ### 5. CVM Health
 
+![5. CVM Health](../../../assets/virtualization-nutanix-hc-5-cvm-health.svg)
+
 ```bash
 # Verify all CVMs are up (should show all IPs)
 ncli host list | grep -E "name|cvm-ip"
@@ -113,6 +123,8 @@ allssh "nodetool status" | grep -v "^UN"
 ```
 
 ### 6. AHV Host Health
+
+![6. AHV Host Health](../../../assets/virtualization-nutanix-hc-6-ahv-host-health.svg)
 
 ```bash
 # List all AHV hosts and their state
@@ -129,6 +141,8 @@ allssh "free -m | grep Mem"
 
 ### 7. VM Health
 
+![7. VM Health](../../../assets/virtualization-nutanix-hc-7-vm-health.svg)
+
 ```bash
 # Count powered-on vs total VMs
 acli vm.list | grep -c "on$"
@@ -142,6 +156,8 @@ acli vm.list --include_filter=num_nics=0 2>/dev/null
 ```
 
 ### 8. Alert Review
+
+![8. Alert Review](../../../assets/virtualization-nutanix-hc-8-alert-review.svg)
 
 ```bash
 # Check active critical alerts

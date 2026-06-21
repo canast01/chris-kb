@@ -609,6 +609,8 @@ Verify all replacement IPs are reserved in IPAM and DNS is updated to the new ma
 
 ### Step 2 — Enter Maintenance Mode
 
+![Step 2 — Enter Maintenance Mode](../../../../assets/vxrail-proc-step-2-enter-maintenance-mode.svg)
+
 Put the node in maintenance mode with **Ensure accessibility** (not Full data migration — IP changes don't require full evacuation):
 
 ```powershell
@@ -646,6 +648,8 @@ nslookup vxrail-node-02.example.local
 ```
 
 ### Step 5 — Exit Maintenance Mode
+
+![Step 5 — Exit Maintenance Mode](../../../../assets/vxrail-proc-step-5-exit-maintenance-mode.svg)
 
 ```powershell
 Set-VMHost -VMHost (Get-VMHost "vxrail-node-02.example.local") -State Connected -Confirm:$false

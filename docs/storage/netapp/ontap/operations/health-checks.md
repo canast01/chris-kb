@@ -125,6 +125,8 @@ system health status show
 
 ### Node Health
 
+![Node Health](../../../../assets/storage-netapp-ontap-hc-node-health.svg)
+
 ```bash
 system node show
 # All nodes should be: up
@@ -133,6 +135,8 @@ system node show -fields uptime,health
 ```
 
 ### HA Pair Status
+
+![HA Pair Status](../../../../assets/storage-netapp-ontap-hc-ha-pair-status.svg)
 
 ```bash
 storage failover show
@@ -147,6 +151,8 @@ storage failover show
 
 ### Disk Health
 
+![Disk Health](../../../../assets/storage-netapp-ontap-hc-disk-health.svg)
+
 ```bash
 storage disk show -broken
 # Any output here requires investigation
@@ -157,6 +163,8 @@ storage disk show -container-type spare
 
 ### Aggregate Health
 
+![Aggregate Health](../../../../assets/storage-netapp-ontap-hc-aggregate-health.svg)
+
 ```bash
 storage aggregate show -state !online
 # Should return no output if all aggregates are healthy
@@ -165,6 +173,8 @@ storage aggregate show-status | grep -v normal
 ```
 
 ### Volume Health
+
+![Volume Health](../../../../assets/storage-netapp-ontap-hc-volume-health.svg)
 
 ```bash
 volume show -state !online
@@ -175,12 +185,16 @@ volume show -fields state,health | grep -v true
 
 ### Interface Health
 
+![Interface Health](../../../../assets/storage-netapp-ontap-hc-interface-health.svg)
+
 ```bash
 network interface show -status-oper down
 # Any interfaces down should be investigated
 ```
 
 ### EMS Events (Recent Errors)
+
+![EMS Events (Recent Errors)](../../../../assets/storage-netapp-ontap-hc-ems-events-recent-errors.svg)
 
 ```bash
 event log show -severity ERROR -time-range "1h"

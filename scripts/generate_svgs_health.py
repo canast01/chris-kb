@@ -150,7 +150,7 @@ def make_health_svg(check_title: str, product_label: str) -> str:
 
 
 _ASCII_RE  = re.compile(r'```text\n┌[^`]*?┘[ \t]*\n```', re.DOTALL)
-_HEADING_RE = re.compile(r'^## (.+)$', re.MULTILINE)
+_HEADING_RE = re.compile(r'^(#{2,3}) (.+)$', re.MULTILINE)
 
 
 def product_label_from_path(page: Path) -> str:
@@ -168,13 +168,14 @@ def process_page(page: Path, dry_run: bool = False, verbose: bool = True) -> int
     label = product_label_from_path(page)
     rel_assets = _rel_assets(page)
 
-    # Find ## check sections (skip boilerplate)
+    # Find ## and ### check sections (skip boilerplate)
     sections = []
     for m in _HEADING_RE.finditer(text):
-        title = m.group(1).strip()
+        level = m.group(1)  # '##' or '###'
+        title = m.group(2).strip()
         if title.lower() in SKIP_SECTIONS:
             continue
-        sections.append(title)
+        sections.append((level, title))
 
     if not sections:
         if verbose:
@@ -193,23 +194,33 @@ def process_page(page: Path, dry_run: bool = False, verbose: bool = True) -> int
     slug = re.sub(r'[^a-z0-9-]', '-', slug.lower()).strip('-')[:40]
 
     injections = []
-    for title in sections:
+    for level, title in sections:
         svg_fname = _slug(slug, title)
         svg_path  = ASSETS / svg_fname
         if not dry_run:
             svg = make_health_svg(title, label)
             svg_path.write_text(svg, encoding='utf-8')
-        injections.append((title, svg_fname))
+        injections.append((level, title, svg_fname))
 
     if not dry_run:
         new_text = _ASCII_RE.sub('', text)
-        for heading, svg_fname in injections:
-            pattern = re.compile(r'(^## ' + re.escape(heading) + r'[ \t]*\n)', re.MULTILINE)
+        injected = 0
+        for level, heading, svg_fname in injections:
+            hashes = re.escape(level)
+            # Only inject if SVG ref not already present after this heading
+            already = re.search(
+                r'^' + hashes + r' ' + re.escape(heading) + r'[ \t]*\n\n!\[',
+                new_text, re.MULTILINE
+            )
+            if already:
+                continue
+            pattern = re.compile(r'(' + hashes + r' ' + re.escape(heading) + r'[ \t]*\n)', re.MULTILINE)
             img_ref = f'![{heading}]({rel_assets}{svg_fname})'
             new_text = pattern.sub(r'\1\n' + img_ref + '\n', new_text, count=1)
+            injected += 1
         page.write_text(new_text, encoding='utf-8')
         if verbose:
-            print(f'  → injected {len(injections)} SVGs, removed ASCII')
+            print(f'  → injected {injected} SVGs (skipped {len(injections)-injected} already present)')
 
     return len(injections)
 
