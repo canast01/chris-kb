@@ -11,58 +11,7 @@ SnapCenter procedures: adding storage systems, configuring policies and resource
 
 *Applies to: SnapCenter 5.x*
 </div>
-```text
-┌───────────────────────────── NetApp SnapCenter — Operational Procedures ──────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │           SnapCenter operational procedures: standard tasks for day-2 administration          │   │
-│   │           Covers: provisioning, expansion, maintenance, DR testing, and decommission          │   │
-│   │           Pre/post checks required for all maintenance activities affecting storage           │   │
-│   │            All procedures require approved change management tickets in production            │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Open change → pre-check → execute → verify → post-check → close                                    │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │            Server           │  │          Windows VM         │  │       Central control       │   │
-│   │           Plug-in           │  │          Host agent         │  │        App-consistent       │   │
-│   │            Policy           │  │       Schedule/retain       │  │         Backup rule         │   │
-│   │        Resource group       │  │       Grouped targets       │  │        Shared policy        │   │
-│   │           Recovery          │  │       Volume/LUN/file       │  │       Granular restore      │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Procedure     │    Pre-check     │       Steps       │      Verify      │    Post-check    │   │
-│   │    Provision     │  Capacity free?  │   Create volume   │   Host access    │   Monitor I/O    │   │
-│   │      Expand      │   Pool space?    │    Grow volume    │    FS resize     │   Verify size    │   │
-│   │     Snapshot     │   Policy set?    │   Take snapshot   │   Snap listed    │   Consistency    │   │
-│   │     Failover     │  Repl. in sync?  │    Break repl.    │    App online    │    Verify RTO    │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: SnapCenter Server (Windows) · ONTAP clusters · plug-in hosts · application servers       │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    SnapCenter         = NetApp backup orchestration; coordinates app-consistent snapshots via plug-ins│
-│    Plug-in            = host-side agent; quiesces application before snapshot: SQL, Oracle, VMware    │
-│    Resource group     = set of resources sharing a backup policy and schedule in SnapCenter           │
-│    Policy             = SnapCenter object defining snapshot frequency, retention, and replication t...│
-│    App-consistent     = snapshot taken after DB quiesce; guarantees crash-consistent recovery         │
-│    Clone lifecycle    = SnapCenter clone: create from snapshot, provision to host, then delete        │
-│    FlexClone          = underlying ONTAP technology; SnapCenter clone maps to an ONTAP FlexClone      │
-│    Vault policy       = SnapCenter policy that also replicates snapshots to SnapVault destination     │
-│    Mirror policy      = SnapCenter policy that replicates snapshots via SnapMirror to DR cluster      │
-│    RBAC               = SnapCenter role-based access; Admin, Backup Operator, Restore Operator roles  │
-│    SMF                = SnapCenter MySQL database storing job history, policies, and resource configs │
-│    SnapCenter API     = REST API on port 8143; full feature coverage for automation workflows         │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 
 ---
@@ -120,6 +69,8 @@ SnapCenter procedures: adding storage systems, configuring policies and resource
 
 ### Viewing Job History
 
+![Viewing Job History](../../../../assets/snapcenter-proc-viewing-job-history.svg)
+
 In the SnapCenter UI:
 1. Navigate to **Monitor → Jobs**
 2. Filter by resource group, policy, or date range
@@ -135,6 +86,8 @@ Job statuses:
 
 ### Running a Backup On-Demand
 
+![Running a Backup On-Demand](../../../../assets/snapcenter-proc-running-a-backup-on-demand.svg)
+
 1. Navigate to **Resources** → select the resource group or resource
 2. Click **Back Up Now**
 3. Select the policy to apply
@@ -148,6 +101,8 @@ Policies define how SnapCenter performs backups — schedule, retention, SnapMir
 
 ### Key Policy Attributes
 
+![Key Policy Attributes](../../../../assets/snapcenter-proc-key-policy-attributes.svg)
+
 - **Backup type** — Snapshot-based, log backup, full/differential
 - **Schedule frequency** — Hourly, daily, weekly, monthly
 - **Retention** — Number of snapshots to retain on primary
@@ -156,12 +111,16 @@ Policies define how SnapCenter performs backups — schedule, retention, SnapMir
 
 ### Create a Policy
 
+![Create a Policy](../../../../assets/snapcenter-proc-create-a-policy.svg)
+
 1. Navigate to **Settings → Policies → New**
 2. Select the plug-in type (SQL Server, Oracle, Windows, etc.)
 3. Configure backup type, schedule, retention count, and SnapMirror update setting
 4. Save the policy
 
 ### Assign a Policy to a Resource Group
+
+![Assign a Policy to a Resource Group](../../../../assets/snapcenter-proc-assign-a-policy-to-a-resource-group.svg)
 
 1. Navigate to **Resources → Resource Groups**
 2. Select the resource group → **Modify**

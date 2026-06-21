@@ -11,58 +11,7 @@ Procedures reference covering Change Readiness, Maintenance Window, Post-Change 
 
 *Applies to: PowerMax 2500 / 8500*
 </div>
-```text
-┌─────────────────────────────── Dell PowerMax — Operational Procedures ────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │            PowerMax operational procedures: standard tasks for day-2 administration           │   │
-│   │           Covers: provisioning, expansion, maintenance, DR testing, and decommission          │   │
-│   │           Pre/post checks required for all maintenance activities affecting storage           │   │
-│   │            All procedures require approved change management tickets in production            │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Open change → pre-check → execute → verify → post-check → close                                    │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │           Function          │   │
-│   │            Cache            │  │          DRAM 2 TB+         │  │        Sub-ms latency       │   │
-│   │         FE director         │  │        FC/iSCSI ports       │  │         Host facing         │   │
-│   │         BE director         │  │         NVMe drives         │  │        Storage facing       │   │
-│   │             SRDF            │  │         RDF director        │  │       Metro/remote DR       │   │
-│   │          TimeFinder         │  │         SnapVX/Clone        │  │       Local protection      │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Procedure     │    Pre-check     │       Steps       │      Verify      │    Post-check    │   │
-│   │    Provision     │  Capacity free?  │   Create volume   │   Host access    │   Monitor I/O    │   │
-│   │      Expand      │   Pool space?    │    Grow volume    │    FS resize     │   Verify size    │   │
-│   │     Snapshot     │   Policy set?    │   Take snapshot   │   Snap listed    │   Consistency    │   │
-│   │     Failover     │  Repl. in sync?  │    Break repl.    │    App online    │    Verify RTO    │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: PowerMax 2500/8500 engine · FE/BE/RDF directors · DRAM cache · expansion bays            │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    PowerMax           = Dell flagship NVMe all-flash array; millions of IOPS at sub-millisecond lat...│
-│    SRDF               = Symmetrix Remote Data Facility; sync/async metro and remote site replication  │
-│    TimeFinder SnapVX  = space-efficient snapshot technology; up to 256 snapshots per storage group    │
-│    Storage group      = logical container for volumes sharing service level and host access policy    │
-│    Service level      = performance target for a storage group: Diamond, Platinum, Gold, Silver       │
-│    FE director        = front-end director providing FC or iSCSI host-facing ports on the engine      │
-│    BE director        = back-end director connecting engine cache to NVMe flash drive bays            │
-│    RDF director       = SRDF director providing dedicated bandwidth for replication traffic           │
-│    Solutions Enabler  = CLI and API toolkit; symcli commands cover all PowerMax management            │
-│    Unisphere          = web GUI and REST API server for PowerMax; unified management interface        │
-│    DCM                = Dynamic Cache Management; auto-balances workloads across available cache re...│
-│    Service level obj. = workload performance class assigned to storage group; enforced by DPTM        │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 
 ## Before you begin
@@ -166,6 +115,8 @@ flowchart LR
 
 ### List and Inspect
 
+![List and Inspect](../../../../assets/powermax-proc-list-and-inspect.svg)
+
 ```bash
 # List all masking views
 symaccess list -sid <sid> view
@@ -181,6 +132,8 @@ symaccess list -sid <sid> view -sg <sg_name>
 ```
 
 ### Initiator Groups
+
+![Initiator Groups](../../../../assets/powermax-proc-initiator-groups.svg)
 
 ```bash
 # List all initiator groups
@@ -205,6 +158,8 @@ symaccess -sid <sid> -name <parent_ig> -type initiator add -ig <child_ig>
 
 ### Port Groups
 
+![Port Groups](../../../../assets/powermax-proc-port-groups.svg)
+
 ```bash
 # List all port groups
 symaccess list -sid <sid> -type port
@@ -224,6 +179,8 @@ symaccess -sid <sid> -name <pg_name> -type port remove -dirport <dir_id>:<port_i
 
 ### Creating a Masking View
 
+![Creating a Masking View](../../../../assets/powermax-proc-creating-a-masking-view.svg)
+
 ```bash
 # Prerequisites: SG, IG, and PG must all exist
 # Create the masking view linking all three
@@ -234,6 +191,8 @@ symaccess create view -sid <sid> -name <view_name> \
 ```
 
 ### Deleting a Masking View
+
+![Deleting a Masking View](../../../../assets/powermax-proc-deleting-a-masking-view.svg)
 
 ```bash
 # Delete masking view (does not delete SG/IG/PG)
@@ -247,6 +206,8 @@ symaccess delete -sid <sid> -name <pg_name> -type port
 ```
 
 ### Troubleshooting Host Access
+
+![Troubleshooting Host Access](../../../../assets/powermax-proc-troubleshooting-host-access.svg)
 
 ```bash
 # Verify host WWN is registered with the array
@@ -296,12 +257,16 @@ flowchart TD
 
 ### Prerequisites
 
+![Prerequisites](../../../../assets/powermax-proc-prerequisites.svg)
+
 Before provisioning, confirm:
 - Host HBA WWNs are logged into the fabric and registered with the array
 - An appropriate Storage Resource Pool (SRP) and service level exist
 - Zoning is in place (if Fibre Channel)
 
 ### Step 1 — Create or Identify the Storage Group
+
+![Step 1 — Create or Identify the Storage Group](../../../../assets/powermax-proc-step-1-create-or-identify-the-storage-group.svg)
 
 ```bash
 # Check if a suitable SG already exists
@@ -312,6 +277,8 @@ symsg create <hostname>_SG -sid <sid> -srp SRP_1 -slo Diamond
 ```
 
 ### Step 2 — Create Thin Devices
+
+![Step 2 — Create Thin Devices](../../../../assets/powermax-proc-step-2-create-thin-devices.svg)
 
 ```bash
 # Create 5 x 100 GB TDEV devices and add directly to the SG
@@ -325,6 +292,8 @@ symsg show <hostname>_SG -sid <sid>
 
 ### Step 3 — Create the Initiator Group
 
+![Step 3 — Create the Initiator Group](../../../../assets/powermax-proc-step-3-create-the-initiator-group.svg)
+
 ```bash
 # Create initiator group for the host
 symaccess create -sid <sid> -name <hostname>_IG -type initiator
@@ -335,6 +304,8 @@ symaccess -sid <sid> -name <hostname>_IG -type initiator add -wwn <wwn_port_b>
 ```
 
 ### Step 4 — Create or Identify the Port Group
+
+![Step 4 — Create or Identify the Port Group](../../../../assets/powermax-proc-step-4-create-or-identify-the-port-group.svg)
 
 ```bash
 # List existing port groups
@@ -347,6 +318,8 @@ symaccess -sid <sid> -name <fabric>_PG -type port add -dirport 02E:4
 ```
 
 ### Step 5 — Create the Masking View
+
+![Step 5 — Create the Masking View](../../../../assets/powermax-proc-step-5-create-the-masking-view.svg)
 
 ```bash
 # Create masking view linking SG + IG + PG
@@ -361,6 +334,8 @@ symaccess show view <hostname>_MV -sid <sid>
 
 ### Step 6 — Host-Side Validation
 
+![Step 6 — Host-Side Validation](../../../../assets/powermax-proc-step-6-host-side-validation.svg)
+
 ```bash
 # On Linux — rescan for new devices
 rescan-scsi-bus.sh
@@ -374,6 +349,8 @@ Get-Disk | Where-Object OperationalStatus -eq "Offline"
 
 ### Adding More Devices to an Existing Host
 
+![Adding More Devices to an Existing Host](../../../../assets/powermax-proc-adding-more-devices-to-an-existing-host.svg)
+
 ```bash
 # Create additional devices in existing SG
 symconfigure -sid <sid> -cmd \
@@ -384,6 +361,8 @@ symconfigure -sid <sid> -cmd \
 ```
 
 ### Capacity Checks Before Provisioning
+
+![Capacity Checks Before Provisioning](../../../../assets/powermax-proc-capacity-checks-before-provisioning.svg)
 
 ```bash
 # SRP free capacity

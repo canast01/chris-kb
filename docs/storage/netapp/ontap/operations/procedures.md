@@ -11,58 +11,7 @@ ONTAP day-2 procedures — change readiness, rolling node upgrades, volume and L
 
 *Applies to: ONTAP 9.x*
 </div>
-```text
-┌──────────────────────────────── NetApp ONTAP — Operational Procedures ────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │             ONTAP operational procedures: standard tasks for day-2 administration             │   │
-│   │           Covers: provisioning, expansion, maintenance, DR testing, and decommission          │   │
-│   │           Pre/post checks required for all maintenance activities affecting storage           │   │
-│   │            All procedures require approved change management tickets in production            │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Open change → pre-check → execute → verify → post-check → close                                    │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │           Cluster           │  │        HA node pairs        │  │          Scale-out          │   │
-│   │             SVM             │  │        Virtual server       │  │       Protocol access       │   │
-│   │          Aggregate          │  │         RAID groups         │  │         Storage pool        │   │
-│   │           FlexVol           │  │         Thin volume         │  │        Data container       │   │
-│   │          SnapMirror         │  │         Replication         │  │          Async/Sync         │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Procedure     │    Pre-check     │       Steps       │      Verify      │    Post-check    │   │
-│   │    Provision     │  Capacity free?  │   Create volume   │   Host access    │   Monitor I/O    │   │
-│   │      Expand      │   Pool space?    │    Grow volume    │    FS resize     │   Verify size    │   │
-│   │     Snapshot     │   Policy set?    │   Take snapshot   │   Snap listed    │   Consistency    │   │
-│   │     Failover     │  Repl. in sync?  │    Break repl.    │    App online    │    Verify RTO    │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: AFF/FAS HA node pairs · cluster network · client access network · MetroCluster           │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    ONTAP              = NetApp storage OS; unified NAS, SAN, and object across AFF, FAS, ONTAP Select │
-│    SVM                = Storage Virtual Machine; logical storage server with protocols, IP, and vol...│
-│    Aggregate          = RAID group of disks; underpins FlexVols and FlexGroups within a node          │
-│    FlexVol            = flexible thin-provisioned volume within an aggregate; most common container   │
-│    FlexGroup          = scale-out volume spanning multiple aggregates; for very large NAS workloads   │
-│    SnapMirror         = async or synchronous replication between ONTAP systems for DR and backup      │
-│    SnapVault          = backup-oriented SnapMirror variant; independent retention at destination      │
-│    FlexClone          = instant space-efficient writable clone of a volume or LUN from snapshot       │
-│    Snapshot           = ONTAP space-efficient PiT copy; stored in .snapshot directory on NFS          │
-│    ONTAP Mediator     = third-site quorum for SnapMirror SM-BC; prevents split-brain scenarios        │
-│    SM-BC              = SnapMirror Business Continuity; synchronous zero-RPO active-active SAN repl...│
-│    vserver            = ONTAP CLI name for SVM; vserver show and vserver nfs show are common commands │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 
 ## Before you begin
@@ -197,12 +146,16 @@ SVMs are logical storage containers within an ONTAP cluster. Each SVM has its ow
 
 ### List SVMs
 
+![List SVMs](../../../../assets/ontap-proc-list-svms.svg)
+
 ```bash
 vserver show
 vserver show -fields type,state,admin-state
 ```
 
 ### SVM Health
+
+![SVM Health](../../../../assets/ontap-proc-svm-health.svg)
 
 ```bash
 # Confirm all SVMs are running
@@ -214,6 +167,8 @@ volume show -vserver <svm_name> -volume <svm_name>_root
 
 ### Create an SVM
 
+![Create an SVM](../../../../assets/ontap-proc-create-an-svm.svg)
+
 ```bash
 vserver create \
     -vserver <svm_name> \
@@ -223,6 +178,8 @@ vserver create \
 ```
 
 ### LIF Management
+
+![LIF Management](../../../../assets/ontap-proc-lif-management.svg)
 
 ```bash
 # List LIFs for an SVM
@@ -245,6 +202,8 @@ network interface migrate -vserver <svm_name> -lif <lif_name> -dest-node <node> 
 
 ### DNS Configuration per SVM
 
+![DNS Configuration per SVM](../../../../assets/ontap-proc-dns-configuration-per-svm.svg)
+
 ```bash
 vserver services name-service dns show -vserver <svm_name>
 
@@ -256,6 +215,8 @@ vserver services name-service dns create \
 
 ### NIS / LDAP Lookup
 
+![NIS / LDAP Lookup](../../../../assets/ontap-proc-nis-ldap-lookup.svg)
+
 ```bash
 vserver services name-service ns-switch show -vserver <svm_name>
 vserver services name-service ldap show -vserver <svm_name>
@@ -263,12 +224,16 @@ vserver services name-service ldap show -vserver <svm_name>
 
 ### Stop / Start an SVM
 
+![Stop / Start an SVM](../../../../assets/ontap-proc-stop-start-an-svm.svg)
+
 ```bash
 vserver stop -vserver <svm_name>
 vserver start -vserver <svm_name>
 ```
 
 ### Delete an SVM
+
+![Delete an SVM](../../../../assets/ontap-proc-delete-an-svm.svg)
 
 ```bash
 # Ensure no volumes except root
@@ -279,6 +244,8 @@ vserver delete -vserver <svm_name>
 ```
 
 ### SVM Common Issues
+
+![SVM Common Issues](../../../../assets/ontap-proc-svm-common-issues.svg)
 
 | Issue | Check | Action |
 |---|---|---|
@@ -293,6 +260,8 @@ vserver delete -vserver <svm_name>
 
 ### List Volumes
 
+![List Volumes](../../../../assets/ontap-proc-list-volumes.svg)
+
 ```bash
 volume show
 volume show -vserver <svm_name>
@@ -300,6 +269,8 @@ volume show -fields size,used,available,percent-used,state
 ```
 
 ### Volume Health
+
+![Volume Health](../../../../assets/ontap-proc-volume-health.svg)
 
 ```bash
 # Show offline or restricted volumes
@@ -310,6 +281,8 @@ volume show -fields percent-used | awk '$2 > 80'
 ```
 
 ### Create a Volume
+
+![Create a Volume](../../../../assets/ontap-proc-create-a-volume.svg)
 
 ```bash
 volume create \
@@ -323,11 +296,15 @@ volume create \
 
 ### Resize a Volume
 
+![Resize a Volume](../../../../assets/ontap-proc-resize-a-volume.svg)
+
 ```bash
 volume size -vserver <svm_name> -volume <vol_name> -new-size 1T
 ```
 
 ### Volume Autosize
+
+![Volume Autosize](../../../../assets/ontap-proc-volume-autosize.svg)
 
 ```bash
 volume autosize -vserver <svm_name> -volume <vol_name> \
@@ -337,6 +314,8 @@ volume autosize -vserver <svm_name> -volume <vol_name> \
 ```
 
 ### Volume Efficiency (Deduplication / Compression)
+
+![Volume Efficiency (Deduplication / Compression)](../../../../assets/ontap-proc-volume-efficiency-deduplication-compression.svg)
 
 ```bash
 # Check efficiency state
@@ -351,6 +330,8 @@ volume efficiency start -vserver <svm_name> -volume <vol_name>
 
 ### Move a Volume (Between Aggregates)
 
+![Move a Volume (Between Aggregates)](../../../../assets/ontap-proc-move-a-volume-between-aggregates.svg)
+
 ```bash
 volume move start \
     -vserver <svm_name> \
@@ -362,12 +343,16 @@ volume move show
 
 ### Take a Volume Offline / Online
 
+![Take a Volume Offline / Online](../../../../assets/ontap-proc-take-a-volume-offline-online.svg)
+
 ```bash
 volume offline -vserver <svm_name> -volume <vol_name>
 volume online -vserver <svm_name> -volume <vol_name>
 ```
 
 ### Delete a Volume
+
+![Delete a Volume](../../../../assets/ontap-proc-delete-a-volume.svg)
 
 ```bash
 # Offline first
@@ -378,6 +363,8 @@ volume delete -vserver <svm_name> -volume <vol_name>
 ```
 
 ### Volume Common Issues
+
+![Volume Common Issues](../../../../assets/ontap-proc-volume-common-issues.svg)
 
 | Issue | Check | Action |
 |---|---|---|
@@ -394,6 +381,8 @@ ONTAP supports NFS, SMB/CIFS, iSCSI, FCP (Fibre Channel), and NVMe over Fabrics.
 
 ### NFS
 
+![NFS](../../../../assets/ontap-proc-nfs.svg)
+
 ```bash
 # Check NFS service status per SVM
 nfs show -vserver <svm_name>
@@ -407,6 +396,8 @@ nfs connected-client show -vserver <svm_name>
 
 ### SMB/CIFS
 
+![SMB/CIFS](../../../../assets/ontap-proc-smb-cifs.svg)
+
 ```bash
 # Check CIFS server status
 cifs show -vserver <svm_name>
@@ -419,6 +410,8 @@ cifs session show -vserver <svm_name>
 ```
 
 ### iSCSI
+
+![iSCSI](../../../../assets/ontap-proc-iscsi.svg)
 
 ```bash
 # Check iSCSI service status
@@ -436,6 +429,8 @@ iscsi tpgroup show -vserver <svm_name>
 
 ### FCP (Fibre Channel)
 
+![FCP (Fibre Channel)](../../../../assets/ontap-proc-fcp-fibre-channel.svg)
+
 ```bash
 # Check FCP service status
 fcp show -vserver <svm_name>
@@ -452,12 +447,16 @@ system node hardware unified-connect show
 
 ### Protocol on LIF Verification
 
+![Protocol on LIF Verification](../../../../assets/ontap-proc-protocol-on-lif-verification.svg)
+
 ```bash
 # Show all data LIFs and their protocols
 network interface show -role data -fields vserver,lif,address,data-protocol
 ```
 
 ### Enable/Disable a Protocol on an SVM
+
+![Enable/Disable a Protocol on an SVM](../../../../assets/ontap-proc-enable-disable-a-protocol-on-an-svm.svg)
 
 ```bash
 # Enable NFS
@@ -471,6 +470,8 @@ iscsi create -vserver <svm_name>
 ```
 
 ### Protocol Common Issues
+
+![Protocol Common Issues](../../../../assets/ontap-proc-protocol-common-issues.svg)
 
 | Issue | Check | Action |
 |---|---|---|

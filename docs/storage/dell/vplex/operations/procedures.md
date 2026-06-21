@@ -11,58 +11,7 @@ Procedures reference covering Change Readiness, Maintenance Window, Post-Change 
 
 *Applies to: VPLEX*
 </div>
-```text
-┌───────────────────────────────── Dell VPLEX — Operational Procedures ─────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │             VPLEX operational procedures: standard tasks for day-2 administration             │   │
-│   │           Covers: provisioning, expansion, maintenance, DR testing, and decommission          │   │
-│   │           Pre/post checks required for all maintenance activities affecting storage           │   │
-│   │            All procedures require approved change management tickets in production            │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Open change → pre-check → execute → verify → post-check → close                                    │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │        Virtualisation       │  │         Backend LUNs        │  │      Abstracted to VVs      │   │
-│   │            Metro            │  │         Sync stretch        │  │        <5ms RTT sites       │   │
-│   │             Geo             │  │      Async replication      │  │         Any distance        │   │
-│   │          Clustering         │  │        Active-active        │  │       Shared namespace      │   │
-│   │            Quorum           │  │          Witness VM         │  │      Split-brain guard      │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Procedure     │    Pre-check     │       Steps       │      Verify      │    Post-check    │   │
-│   │    Provision     │  Capacity free?  │   Create volume   │   Host access    │   Monitor I/O    │   │
-│   │      Expand      │   Pool space?    │    Grow volume    │    FS resize     │   Verify size    │   │
-│   │     Snapshot     │   Policy set?    │   Take snapshot   │   Snap listed    │   Consistency    │   │
-│   │     Failover     │  Repl. in sync?  │    Break repl.    │    App online    │    Verify RTO    │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: VPLEX VS2/VS6 appliance · FC fabric · backend arrays · WAN link (Metro/Geo)              │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    VPLEX              = Dell storage federation; aggregates arrays into virtual volumes across vendors│
-│    Virtual volume     = VPLEX-abstracted LUN presented to hosts; backend is array LUNs                │
-│    VPLEX Metro        = synchronous active-active stretch cluster; same VV served from two sites      │
-│    VPLEX Geo          = asynchronous active-active replication; higher RPO, no distance constraint    │
-│    Distributed VV     = virtual volume spanning two sites for Metro active-active host access         │
-│    Witness            = third-site quorum arbiter for Metro; prevents split-brain island scenarios    │
-│    WAN-COM            = WAN communication module in VPLEX Geo; manages inter-site replication traffic │
-│    Management Server  = embedded Linux VM in VPLEX engine; serves web UI and vplex CLI                │
-│    Consistency group  = set of virtual volumes that failover together maintaining write order         │
-│    Backend volume     = LUN from underlying array presented to VPLEX engine for virtualisation        │
-│    Local device       = RAID device or extent of backend volumes on a single VPLEX cluster            │
-│    Cluster            = single VPLEX installation; Metro topology requires exactly two clusters       │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 
 ## Before you begin
@@ -146,12 +95,16 @@ Consistency groups (CGs) in VPLEX ensure that a set of virtual volumes is treate
 
 ### List Consistency Groups
 
+![List Consistency Groups](../../../../assets/vplex-proc-list-consistency-groups.svg)
+
 ```bash
 VPlexcli:/> ll /clusters/cluster-1/consistency-groups/
 VPlexcli:/> ll /clusters/cluster-2/consistency-groups/
 ```
 
 ### View CG Details
+
+![View CG Details](../../../../assets/vplex-proc-view-cg-details.svg)
 
 ```bash
 VPlexcli:/> ll /clusters/cluster-1/consistency-groups/<cg_name>/
@@ -164,11 +117,15 @@ Key attributes:
 
 ### Create a Consistency Group
 
+![Create a Consistency Group](../../../../assets/vplex-proc-create-a-consistency-group.svg)
+
 ```bash
 VPlexcli:/> consistency-group create --name <cg_name> --cluster-name cluster-1
 ```
 
 ### Add Volumes to a CG
+
+![Add Volumes to a CG](../../../../assets/vplex-proc-add-volumes-to-a-cg.svg)
 
 ```bash
 VPlexcli:/> consistency-group add-virtual-volume \
@@ -178,6 +135,8 @@ VPlexcli:/> consistency-group add-virtual-volume \
 
 ### Remove a Volume from a CG
 
+![Remove a Volume from a CG](../../../../assets/vplex-proc-remove-a-volume-from-a-cg.svg)
+
 ```bash
 VPlexcli:/> consistency-group remove-virtual-volume \
     --consistency-group /clusters/cluster-1/consistency-groups/<cg_name> \
@@ -185,6 +144,8 @@ VPlexcli:/> consistency-group remove-virtual-volume \
 ```
 
 ### Distributed Consistency Groups
+
+![Distributed Consistency Groups](../../../../assets/vplex-proc-distributed-consistency-groups.svg)
 
 For Metro configurations, CGs span both clusters:
 
@@ -195,6 +156,8 @@ VPlexcli:/> ll /clusters/cluster-1/consistency-groups/<cg_name>/
 ```
 
 ### Detach / Re-attach CG (Metro Failover)
+
+![Detach / Re-attach CG (Metro Failover)](../../../../assets/vplex-proc-detach-re-attach-cg-metro-failover.svg)
 
 ```bash
 # Detach from cluster-2 (planned maintenance or failover)
@@ -211,6 +174,8 @@ VPlexcli:/> consistency-group attach \
 VPLEX Metro stretches virtual volumes across two sites with synchronous mirroring, enabling transparent failover.
 
 ### Metro Architecture Overview
+
+![Metro Architecture Overview](../../../../assets/vplex-proc-metro-architecture-overview.svg)
 
 - **Cluster-1** — Site A (local cluster)
 - **Cluster-2** — Site B (remote cluster)
@@ -243,6 +208,8 @@ flowchart TD
 
 ### Check Distributed Device Status
 
+![Check Distributed Device Status](../../../../assets/vplex-proc-check-distributed-device-status.svg)
+
 ```bash
 VPlexcli:/> ll /distributed-storage/distributed-devices/
 VPlexcli:/> ll /distributed-storage/distributed-devices/<device_name>/
@@ -255,6 +222,8 @@ Key attributes:
 
 ### Planned Failover (Migrate Active Leg)
 
+![Planned Failover (Migrate Active Leg)](../../../../assets/vplex-proc-planned-failover-migrate-active-leg.svg)
+
 ```bash
 # Move active leg to cluster-2
 VPlexcli:/> device migrate \
@@ -264,12 +233,16 @@ VPlexcli:/> device migrate \
 
 ### Witness Configuration
 
+![Witness Configuration](../../../../assets/vplex-proc-witness-configuration.svg)
+
 ```bash
 VPlexcli:/> ll /distributed-storage/witness/
 # Check: witness-connectivity = connected
 ```
 
 ### Split-Brain Recovery
+
+![Split-Brain Recovery](../../../../assets/vplex-proc-split-brain-recovery.svg)
 
 If WAN COM link fails and both clusters believe they are active:
 
@@ -293,6 +266,8 @@ VPlexcli:/> device rebuild \
 
 ### WAN COM Health
 
+![WAN COM Health](../../../../assets/vplex-proc-wan-com-health.svg)
+
 ```bash
 VPlexcli:/> ll /clusters/cluster-1/connectivity/
 ```
@@ -300,6 +275,8 @@ VPlexcli:/> ll /clusters/cluster-1/connectivity/
 Monitor inter-cluster latency — VPLEX Metro requires < 5ms RTT between sites.
 
 ### Common Metro Issues
+
+![Common Metro Issues](../../../../assets/vplex-proc-common-metro-issues.svg)
 
 | Issue | Check | Action |
 |---|---|---|

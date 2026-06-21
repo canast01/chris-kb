@@ -45,49 +45,11 @@ flowchart TD
     ready -->|Yes| triggerFO
     triggerFO --> breakSync --> activateZones --> dnsSwitch --> notify --> validate --> done
 ```
-```text
-┌──────────────────────────────────── Superna Eyeglass — Procedures ────────────────────────────────────┐
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              Routine Procedures              │  │                DR Procedures                │   │
-│   │          Add new protection source           │  │              Initiate failover              │   │
-│   │           Modify retention policy            │  │               Validate replica              │   │
-│   │          Expire old recover points           │  │              Redirect host I/O              │   │
-│   │             Add storage capacity             │  │         Test failover (non-disrupt)         │   │
-│   │           Service account rotation           │  │            Failback to production           │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                        Change Control Requirements for Superna Eyeglass                       │   │
-│   │           All changes to protection policies require change ticket with rollback plan         │   │
-│   │                      Failover tests must be scheduled in maintenance window                   │   │
-│   │              Firmware/software upgrades need 48 h pre-approval and backup snapshot            │   │
-│   │                  Post-change: verify jobs run successfully for 2 backup cycles                │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  ESXi VM (Eyeglass appliance) · PowerScale cluster pair (production + DR) · SyncIQ replication link   │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Eyeglass      = Superna Eyeglass; software appliance for NAS DR and ransomware protection            │
-│  RAPA          = Ransomware Protection with Automated Response; detects and quarantines threats       │
-│  SyncIQ        = PowerScale built-in replication; Eyeglass monitors and orchestrates policies         │
-│  DFS-N         = Windows Distributed File System Namespace; Eyeglass automates failover of DFS        │
-│  Failover      = Eyeglass-orchestrated shift of NAS access from production to DR cluster              │
-│  Failback      = reversing failover; Eyeglass re-syncs DR changes back and cuts back to product       │
-│  Quota Sync    = Eyeglass replicates SmartQuotas from source to DR to preserve user limits            │
-│  Export Sync   = NFS exports and SMB shares replicated so clients can reconnect at DR site            │
-│  Quarantine    = RAPA isolation of suspect directory; blocks writes, alerts ops team                  │
-│  Shadow Copy   = Eyeglass exposes PowerScale snapshots as Windows Previous Versions for NFS sha       │
-│  Runbook       = Eyeglass DR Assistant guided checklist for pre-checks, failover, and validation      │
-│  igls          = Eyeglass CLI; used for status, sync, DR, and RAPA operations                         │
-│  SmartConnect  = PowerScale DNS load balancing; failover changes SmartConnect zone delegation         │
-│  Configuration = shares, exports, quotas, NFS aliases; Eyeglass syncs these between clusters          │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 ### DNS Cutover
+
+![DNS Cutover](../../../../assets/superna-eyeglass-proc-dns-cutover.svg)
 
 Eyeglass automates DNS delegation updates if integrated with DNS; manual steps if not.
 
@@ -106,6 +68,8 @@ nslookup <smartconnect_zone_name>
 ```
 
 ### Failover State Reference
+
+![Failover State Reference](../../../../assets/superna-eyeglass-proc-failover-state-reference.svg)
 
 | State | Meaning | Action |
 |---|---|---|
@@ -161,6 +125,8 @@ flowchart LR
 
 ### Pre-Failback Checklist
 
+![Pre-Failback Checklist](../../../../assets/superna-eyeglass-proc-pre-failback-checklist.svg)
+
 ```bash
 # Confirm production PowerScale cluster is online and healthy
 isi status
@@ -182,6 +148,8 @@ egcli drtest preflight --cluster <production-cluster>
 
 ### Initiating Failback via Eyeglass
 
+![Initiating Failback via Eyeglass](../../../../assets/superna-eyeglass-proc-initiating-failback-via-eyeglass.svg)
+
 ```bash
 # Log in to Eyeglass DR Assistant (web UI or CLI)
 # Eyeglass UI: https://<eyeglass-ip>:8443
@@ -200,6 +168,8 @@ egcli drfailback status --policy <policy_name>
 ```
 
 ### Reversing SyncIQ Replication
+
+![Reversing SyncIQ Replication](../../../../assets/superna-eyeglass-proc-reversing-synciq-replication.svg)
 
 During the DR period, users may have written data to the DR cluster. This data must be synced back to production before access is cut back.
 
@@ -221,6 +191,8 @@ watch -n 30 "isi sync jobs list"
 
 ### Access Zone Cutover Back to Production
 
+![Access Zone Cutover Back to Production](../../../../assets/superna-eyeglass-proc-access-zone-cutover-back-to-production.svg)
+
 ```bash
 # On production PowerScale — confirm access zones are configured
 isi zone zones list
@@ -241,6 +213,8 @@ isi smb shares list
 ```
 
 ### Post-Failback Validation
+
+![Post-Failback Validation](../../../../assets/superna-eyeglass-proc-post-failback-validation.svg)
 
 | Check | Command | Expected |
 |---|---|---|

@@ -11,58 +11,7 @@ NetApp Keystone procedures: burst capacity activation, storage tier changes, sch
 
 *Applies to: Keystone STaaS*
 </div>
-```text
-┌────────────────────────────── NetApp Keystone — Operational Procedures ───────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │            Keystone operational procedures: standard tasks for day-2 administration           │   │
-│   │           Covers: provisioning, expansion, maintenance, DR testing, and decommission          │   │
-│   │           Pre/post checks required for all maintenance activities affecting storage           │   │
-│   │            All procedures require approved change management tickets in production            │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Open change → pre-check → execute → verify → post-check → close                                    │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │           Hardware          │  │       AFF/FAS on-prem       │  │         NetApp-owned        │   │
-│   │        Service level        │  │       Extreme/Perf/Std      │  │         Latency SLA         │   │
-│   │          Collector          │  │         Telemetry VM        │  │        ONTAP polling        │   │
-│   │          Dashboard          │  │            BlueXP           │  │       Usage visibility      │   │
-│   │           Billing           │  │       Committed+burst       │  │       Monthly invoice       │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Procedure     │    Pre-check     │       Steps       │      Verify      │    Post-check    │   │
-│   │    Provision     │  Capacity free?  │   Create volume   │   Host access    │   Monitor I/O    │   │
-│   │      Expand      │   Pool space?    │    Grow volume    │    FS resize     │   Verify size    │   │
-│   │     Snapshot     │   Policy set?    │   Take snapshot   │   Snap listed    │   Consistency    │   │
-│   │     Failover     │  Repl. in sync?  │    Break repl.    │    App online    │    Verify RTO    │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: NetApp AFF/FAS arrays on-prem · Keystone Collector VM · BlueXP cloud portal              │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    Keystone           = NetApp STaaS; fixed-term subscription for ONTAP or StorageGRID capacity       │
-│    Service level      = tiered SLA: Extreme (NVMe), Performance (SSD), Standard (HDD)                 │
-│    Committed capacity = minimum contracted TiB; billed monthly even if below threshold                │
-│    Burst capacity     = usage above committed; available without pre-ordering; billed monthly         │
-│    Keystone Collector = on-prem VM that gathers usage metrics and sends to NetApp Keystone            │
-│    BlueXP             = NetApp SaaS control plane; Keystone dashboard, DRaaS, and cloud integrations  │
-│    AFF                = All Flash FAS; ONTAP-based NVMe/SSD array used for Extreme and Performance ...│
-│    FAS                = Fabric Attached Storage; ONTAP hybrid HDD/SSD for Standard service level      │
-│    StorageGRID        = NetApp S3 object storage; Object service level in Keystone subscriptions      │
-│    AutoSupport        = ONTAP telemetry relay; sends call-home data and log bundles to NetApp         │
-│    Service request    = NetApp SR; support ticket opened via mysupport.netapp.com portal              │
-│    SKU                = Keystone service SKU identifies the service level and raw or usable capacity  │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 
 ---
@@ -162,6 +111,8 @@ curl -sk https://<cluster-mgmt-lif>/api/cluster | python3 -m json.tool
 
 ### BlueXP Digital Wallet
 
+![BlueXP Digital Wallet](../../../../assets/keystone-proc-bluexp-digital-wallet.svg)
+
 Primary source for Keystone consumption reporting:
 
 1. Log in to **BlueXP** (console.bluexp.netapp.com)
@@ -174,12 +125,16 @@ Primary source for Keystone consumption reporting:
 
 ### Monthly Consumption Reports
 
+![Monthly Consumption Reports](../../../../assets/keystone-proc-monthly-consumption-reports.svg)
+
 - Reports are generated monthly by NetApp
 - Available in BlueXP Keystone dashboard before invoice generation
 - Review consumption report against committed capacity before month-end
 - If burst consumption is unexpected, identify the source before the invoice is finalized
 
 ### Identifying High-Consuming Volumes (ONTAP CLI)
+
+![Identifying High-Consuming Volumes (ONTAP CLI)](../../../../assets/keystone-proc-identifying-high-consuming-volumes-ontap-cli.svg)
 
 ```bash
 # List volumes sorted by used capacity
@@ -190,6 +145,8 @@ qos statistics volume show
 ```
 
 ### Reporting Discrepancies
+
+![Reporting Discrepancies](../../../../assets/keystone-proc-reporting-discrepancies.svg)
 
 If the consumption report shows unexpected usage:
 

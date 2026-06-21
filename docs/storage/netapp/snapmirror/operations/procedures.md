@@ -11,58 +11,7 @@ SnapMirror procedures: creating protection relationships, scheduling updates, qu
 
 *Applies to: SnapMirror*
 </div>
-```text
-┌───────────────────────────── NetApp SnapMirror — Operational Procedures ──────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │           SnapMirror operational procedures: standard tasks for day-2 administration          │   │
-│   │           Covers: provisioning, expansion, maintenance, DR testing, and decommission          │   │
-│   │           Pre/post checks required for all maintenance activities affecting storage           │   │
-│   │            All procedures require approved change management tickets in production            │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Open change → pre-check → execute → verify → post-check → close                                    │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │            Async            │  │        Periodic sync        │  │         RPO: minutes        │   │
-│   │             Sync            │  │           Zero RPO          │  │          Sub-ms lag         │   │
-│   │            SM-BC            │  │        Active-active        │  │        Transparent FO       │   │
-│   │            Vault            │  │        Long retention       │  │         Backup copy         │   │
-│   │            Cloud            │  │         ONTAP → CVO         │  │       Cloud DR/backup       │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Procedure     │    Pre-check     │       Steps       │      Verify      │    Post-check    │   │
-│   │    Provision     │  Capacity free?  │   Create volume   │   Host access    │   Monitor I/O    │   │
-│   │      Expand      │   Pool space?    │    Grow volume    │    FS resize     │   Verify size    │   │
-│   │     Snapshot     │   Policy set?    │   Take snapshot   │   Snap listed    │   Consistency    │   │
-│   │     Failover     │  Repl. in sync?  │    Break repl.    │    App online    │    Verify RTO    │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: Source ONTAP cluster · destination ONTAP cluster · intercluster LIFs · WAN link          │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    SnapMirror         = ONTAP replication; transfers only changed blocks after initial baseline sync  │
-│    Intercluster LIF   = dedicated logical interface for SnapMirror traffic between clusters           │
-│    SnapMirror policy  = defines schedule, retention, and transfer type (async/sync/vault)             │
-│    Baseline transfer  = first full snapshot transfer establishing the SnapMirror relationship         │
-│    Update             = incremental transfer; only sends new or changed blocks since last successfu...│
-│    Snapmirror break   = breaks the DR relationship; activates destination volume for read-write       │
-│    Resync             = re-establishes a broken SnapMirror relationship from the last common snapshot │
-│    SM-BC              = SnapMirror Business Continuity; synchronous zero-RPO active-active SAN volumes│
-│    Mediator           = ONTAP Mediator; quorum service for SM-BC running on Linux VM at third site    │
-│    SnapVault          = SnapMirror variant for backup retention; destination has independent schedule │
-│    MirrorAndVault     = policy combining SnapMirror DR and SnapVault backup retention copies          │
-│    Fanout             = single source volume replicating to multiple destination clusters simultane...│
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 
 ---
@@ -123,6 +72,8 @@ SnapMirror failover activates the destination volume as the primary, allowing cl
 
 ### Planned Failover (Switchover)
 
+![Planned Failover (Switchover)](../../../../assets/snapmirror-proc-planned-failover-switchover.svg)
+
 For maintenance or planned migration:
 
 ```bash
@@ -138,6 +89,8 @@ Update client access (DNS, share paths, mount points) to point to the destinatio
 
 ### Unplanned Failover (Primary Site Down)
 
+![Unplanned Failover (Primary Site Down)](../../../../assets/snapmirror-proc-unplanned-failover-primary-site-down.svg)
+
 ```bash
 # On the destination cluster — break the relationship to enable write access
 snapmirror break -destination-path <dest_svm:dest_vol>
@@ -149,6 +102,8 @@ snapmirror show -destination-path <dest_svm:dest_vol> -fields lag-time
 Note: if replication was asynchronous, the `lag-time` value indicates the RPO gap.
 
 ### Failover Checklist
+
+![Failover Checklist](../../../../assets/snapmirror-proc-failover-checklist.svg)
 
 - [ ] Determine RPO: check `lag-time` before breaking relationship
 - [ ] Break SnapMirror: `snapmirror break`
@@ -165,11 +120,15 @@ Resync re-establishes a SnapMirror relationship after it has been broken (intent
 
 ### When to Resync
 
+![When to Resync](../../../../assets/snapmirror-proc-when-to-resync.svg)
+
 - After a planned failover (`snapmirror break`) — resync to restore replication
 - After data has diverged on both source and destination
 - After re-establishing connectivity between clusters following an outage
 
 ### Standard Resync (Source → Destination)
+
+![Standard Resync (Source → Destination)](../../../../assets/snapmirror-proc-standard-resync-source-destination.svg)
 
 ```bash
 # Re-establish replication from source to destination
@@ -180,6 +139,8 @@ snapmirror resync -source-path <src_svm:src_vol> \
 Resync overwrites the destination with data from the source. Any writes to the destination since the break will be lost.
 
 ### Reverse Resync (After Failover)
+
+![Reverse Resync (After Failover)](../../../../assets/snapmirror-proc-reverse-resync-after-failover.svg)
 
 When the original destination was activated (failed over to) and is now the active source:
 

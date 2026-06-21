@@ -11,58 +11,7 @@ Procedures reference covering Change Readiness, Maintenance Window, Post-Change 
 
 *Applies to: Unity XT*
 </div>
-```text
-┌─────────────────────────────── Dell Unity XT — Operational Procedures ────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │            Unity XT operational procedures: standard tasks for day-2 administration           │   │
-│   │           Covers: provisioning, expansion, maintenance, DR testing, and decommission          │   │
-│   │           Pre/post checks required for all maintenance activities affecting storage           │   │
-│   │            All procedures require approved change management tickets in production            │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Open change → pre-check → execute → verify → post-check → close                                    │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │             Ctrl            │  │         SP-A + SP-B         │  │        Cache mirrored       │   │
-│   │             Pool            │  │       Dynamic FAST VP       │  │         Auto-tiering        │   │
-│   │          NAS server         │  │        File protocols       │  │          Per-tenant         │   │
-│   │           Snapshot          │  │        Writable snaps       │  │        Thin PiT copy        │   │
-│   │         Replication         │  │         Async/Metro         │  │       Native or RP4VM       │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Procedure     │    Pre-check     │       Steps       │      Verify      │    Post-check    │   │
-│   │    Provision     │  Capacity free?  │   Create volume   │   Host access    │   Monitor I/O    │   │
-│   │      Expand      │   Pool space?    │    Grow volume    │    FS resize     │   Verify size    │   │
-│   │     Snapshot     │   Policy set?    │   Take snapshot   │   Snap listed    │   Consistency    │   │
-│   │     Failover     │  Repl. in sync?  │    Break repl.    │    App online    │    Verify RTO    │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: Unity XT 380F/480F/680F/880F · dual SPs · DPE/DAE expansion · 10/25 GbE                  │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    Unity XT           = Dell unified mid-range array; block LUNs, file NAS, and VMware vVols          │
-│    Unisphere          = HTML5 GUI and REST API for Unity XT management; SP-hosted management portal   │
-│    UEMCLI             = CLI for Unity XT; uemcli -d <ip> -u admin -p <pw> /show commands              │
-│    Storage pool       = collection of drives forming a usable pool; FAST VP tiers data automatically  │
-│    FAST VP            = Fully Automated Storage Tiering VP; moves hot and cold data between tiers     │
-│    NAS server         = virtual file server on Unity; each has its own IP, DNS, and CIFS/NFS shares   │
-│    Data Mover         = older EMC term for NAS server; used in VNX and early Unity documentation      │
-│    SP-A / SP-B        = storage processors; active-active HA pair with mirrored cache                 │
-│    Snapshot           = space-efficient PiT copy of LUN or FS; writable snapshots supported           │
-│    RecoverPoint       = RP4VM; journal-based continuous data protection for Unity volumes             │
-│    Metro              = synchronous replication between two Unity XT sites; active-active zero RPO    │
-│    vVols              = Virtual Volumes; VASA provider exposes per-VM storage objects to vCenter      │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 
 ## Before you begin
@@ -151,6 +100,8 @@ graph TD
 
 ### LUN Overview
 
+![LUN Overview](../../../../assets/unity-proc-lun-overview.svg)
+
 ```bash
 # List all LUNs
 uemcli -d <ip> -u admin /stor/config/lun show
@@ -161,6 +112,8 @@ uemcli -d <ip> -u admin /stor/config/lun -id <lun_id> show -detail
 ```
 
 ### Create a LUN
+
+![Create a LUN](../../../../assets/unity-proc-create-a-lun.svg)
 
 ```bash
 # Create a basic thin LUN in a pool
@@ -187,6 +140,8 @@ uemcli -d <ip> -u admin /stor/config/lun create \
 
 ### Modify and Expand
 
+![Modify and Expand](../../../../assets/unity-proc-modify-and-expand.svg)
+
 ```bash
 # Expand LUN size (can only increase)
 uemcli -d <ip> -u admin /stor/config/lun -id <lun_id> set -size 2T
@@ -199,6 +154,8 @@ uemcli -d <ip> -u admin /stor/config/lun -id <lun_id> set -descr "Updated descri
 ```
 
 ### Host Access (LUN Mapping)
+
+![Host Access (LUN Mapping)](../../../../assets/unity-proc-host-access-lun-mapping.svg)
 
 ```bash
 # Grant host access to a LUN
@@ -214,6 +171,8 @@ uemcli -d <ip> -u admin /stor/config/lunacl -id <acl_id> delete
 ```
 
 ### LUN Snapshots
+
+![LUN Snapshots](../../../../assets/unity-proc-lun-snapshots.svg)
 
 ```bash
 # List snapshots for a LUN
@@ -237,6 +196,8 @@ uemcli -d <ip> -u admin /prot/snap -id <snap_id> copy \
 
 ### Delete a LUN
 
+![Delete a LUN](../../../../assets/unity-proc-delete-a-lun.svg)
+
 ```bash
 # Delete requires all host access and snapshots to be removed first
 # 1. Remove host access
@@ -251,6 +212,8 @@ uemcli -d <ip> -u admin /stor/config/lun -id <lun_id> delete
 ```
 
 ### Host-Side Validation (After Mapping)
+
+![Host-Side Validation (After Mapping)](../../../../assets/unity-proc-host-side-validation-after-mapping.svg)
 
 ```bash
 # Linux — rescan and discover new LUN
@@ -270,6 +233,8 @@ Format-Volume -DriveLetter <X> -FileSystem NTFS
 NAS server lifecycle management — create, configure, and troubleshoot NAS servers on Dell Unity.
 
 ### Overview
+
+![Overview](../../../../assets/unity-proc-overview.svg)
 
 A NAS server on Dell Unity is a logical entity that owns file interfaces (network ports), AD/LDAP authentication configuration, and NFS/SMB protocol settings. Each NAS server runs on one storage processor and can fail over to the peer SP.
 
@@ -298,6 +263,8 @@ graph LR
 
 ### List and Inspect
 
+![List and Inspect](../../../../assets/unity-proc-list-and-inspect.svg)
+
 ```bash
 # List all NAS servers
 uemcli -d <ip> -u admin /nas/server show
@@ -308,6 +275,8 @@ uemcli -d <ip> -u admin /nas/server -id <nas_id> show -detail
 ```
 
 ### Create a NAS Server
+
+![Create a NAS Server](../../../../assets/unity-proc-create-a-nas-server.svg)
 
 ```bash
 # Create NAS server on a specific SP
@@ -322,6 +291,8 @@ uemcli -d <ip> -u admin /nas/server -id <nas_id> set \
 ```
 
 ### AD / LDAP Authentication
+
+![AD / LDAP Authentication](../../../../assets/unity-proc-ad-ldap-authentication.svg)
 
 ```bash
 # Join NAS server to Active Directory
@@ -341,6 +312,8 @@ uemcli -d <ip> -u admin /nas/ldap show
 
 ### File Interfaces (Network)
 
+![File Interfaces (Network)](../../../../assets/unity-proc-file-interfaces-network.svg)
+
 ```bash
 # List file interfaces (IPs on the NAS server)
 uemcli -d <ip> -u admin /net/nas/if show
@@ -356,6 +329,8 @@ uemcli -d <ip> -u admin /net/nas/if create \
 ```
 
 ### File Systems (on the NAS Server)
+
+![File Systems (on the NAS Server)](../../../../assets/unity-proc-file-systems-on-the-nas-server.svg)
 
 ```bash
 # List file systems
@@ -386,6 +361,8 @@ uemcli -d <ip> -u admin /prot/smb create \
 
 ### Failover / SP Rebalance
 
+![Failover / SP Rebalance](../../../../assets/unity-proc-failover-sp-rebalance.svg)
+
 ```bash
 # Move NAS server to the other SP (planned rebalance)
 uemcli -d <ip> -u admin /nas/server -id <nas_id> set -sp <spb>
@@ -395,6 +372,8 @@ uemcli -d <ip> -u admin /nas/server show | grep -E "Name|SP"
 ```
 
 ### Troubleshooting
+
+![Troubleshooting](../../../../assets/unity-proc-troubleshooting.svg)
 
 ```bash
 # Check NAS server health

@@ -11,58 +11,7 @@ PowerStore operational procedures — block volume and NAS file system provision
 
 *Applies to: PowerStore 3.x*
 </div>
-```text
-┌────────────────────────────── Dell PowerStore — Operational Procedures ───────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │           PowerStore operational procedures: standard tasks for day-2 administration          │   │
-│   │           Covers: provisioning, expansion, maintenance, DR testing, and decommission          │   │
-│   │           Pre/post checks required for all maintenance activities affecting storage           │   │
-│   │            All procedures require approved change management tickets in production            │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Open change → pre-check → execute → verify → post-check → close                                    │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │           T-model           │  │          Block only         │  │        iSCSI/FC/NVMe        │   │
-│   │           X-model           │  │         Block + File        │  │       Unified protocol      │   │
-│   │            Metro            │  │       Sync replication      │  │       Zero-RPO stretch      │   │
-│   │          Protection         │  │        Snapshot/Clone       │  │       Immutable snaps       │   │
-│   │             Mgmt            │  │          PSM / REST         │  │         Unified pane        │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Procedure     │    Pre-check     │       Steps       │      Verify      │    Post-check    │   │
-│   │    Provision     │  Capacity free?  │   Create volume   │   Host access    │   Monitor I/O    │   │
-│   │      Expand      │   Pool space?    │    Grow volume    │    FS resize     │   Verify size    │   │
-│   │     Snapshot     │   Policy set?    │   Take snapshot   │   Snap listed    │   Consistency    │   │
-│   │     Failover     │  Repl. in sync?  │    Break repl.    │    App online    │    Verify RTO    │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: PowerStore T/X appliance · NVMe drives · SAS expansion shelves · 10/25 GbE               │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    PowerStore         = Dell mid-range NVMe storage; T-model block-only, X-model unified block+file   │
-│    PowerStore Manager = browser GUI and REST API endpoint for all PowerStore operations               │
-│    Volume group       = logical collection of volumes sharing snapshot and replication policies       │
-│    Protection policy  = assigned to volumes; defines snapshot schedule, retention, and replication    │
-│    Metro volume       = synchronously replicated volume across two sites; zero RPO active-active      │
-│    Snapshot           = space-efficient point-in-time copy; crash-consistent or app-consistent        │
-│    Clone              = full writable copy of a volume or file system; independent lifecycle          │
-│    Applied-to         = PowerStore host mapping; volumes are applied-to a host or host group object   │
-│    Capacity license   = PowerStore uses usable-capacity licensing; licensed in TiB increments         │
-│    Storage container  = PowerStore X-model; unified block and file from the same storage pool         │
-│    Appliance          = single PowerStore node pair (dual controllers); scalable to 4 appliances      │
-│    NVMe-oF            = NVMe over Fabrics; FC-NVMe or NVMe/TCP host connectivity on PowerStore        │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 
 ## Before you begin
@@ -77,6 +26,8 @@ PowerStore operational procedures — block volume and NAS file system provision
 ## Provisioning a Block Volume
 
 ### Step-by-Step: Create and Map a Volume to a Host
+
+![Step-by-Step: Create and Map a Volume to a Host](../../../../assets/powerstore-proc-step-by-step-create-and-map-a-volume-to-a-host.svg)
 
 This is the core provisioning workflow for presenting block storage to a host.
 
@@ -200,6 +151,8 @@ echo "192.168.20.10:/homedirs-prod-001 /mnt/homedirs nfs4 rw,hard,intr,timeo=600
 
 ### Create a Manual Snapshot
 
+![Create a Manual Snapshot](../../../../assets/powerstore-proc-create-a-manual-snapshot.svg)
+
 ```bash
 # Create a volume snapshot (manual, immediate)
 curl -k -X POST "https://<mgmt-ip>/api/rest/volume_snapshot" \
@@ -224,6 +177,8 @@ curl -k -X POST "https://<mgmt-ip>/api/rest/filesystem_snapshot" \
 
 ### Restore a Volume from Snapshot
 
+![Restore a Volume from Snapshot](../../../../assets/powerstore-proc-restore-a-volume-from-snapshot.svg)
+
 Use this procedure to roll back a volume to a previous snapshot. The source volume must be unmounted or quiesced before restore.
 
 ```bash
@@ -243,6 +198,8 @@ curl -k -X POST "https://<mgmt-ip>/api/rest/volume_snapshot/<snapshot-id>/restor
 
 ### Clone a Volume
 
+![Clone a Volume](../../../../assets/powerstore-proc-clone-a-volume.svg)
+
 Cloning creates an independent, read-write copy of a volume from its current state. Useful for dev/test provisioning without impacting production.
 
 ```bash
@@ -259,6 +216,8 @@ curl -k -X POST "https://<mgmt-ip>/api/rest/volume/<source-volume-id>/clone" \
 ## Host Management
 
 ### Add a New Host
+
+![Add a New Host](../../../../assets/powerstore-proc-add-a-new-host.svg)
 
 ```bash
 # Create host object
@@ -290,6 +249,8 @@ curl -k -X POST "https://<mgmt-ip>/api/rest/host_group/<host-group-id>/add_hosts
 
 ### Decommission a Host
 
+![Decommission a Host](../../../../assets/powerstore-proc-decommission-a-host.svg)
+
 Before decommissioning, confirm all volumes are unmounted on the host and all mappings are removed.
 
 ```bash
@@ -315,6 +276,8 @@ curl -k -X DELETE "https://<mgmt-ip>/api/rest/host/<host-id>" \
 ## Replication Management
 
 ### Create an Async Replication Session
+
+![Create an Async Replication Session](../../../../assets/powerstore-proc-create-an-async-replication-session.svg)
 
 ```bash
 # Step 1: Ensure a remote system object exists for the target PowerStore
@@ -347,6 +310,8 @@ curl -k -X POST "https://<mgmt-ip>/api/rest/replication_rule" \
 
 ### Failover to DR (Planned Failover)
 
+![Failover to DR (Planned Failover)](../../../../assets/powerstore-proc-failover-to-dr-planned-failover.svg)
+
 Planned failover for a scheduled DR test or migration:
 
 ```bash
@@ -374,6 +339,8 @@ curl -k -X POST "https://<mgmt-ip>/api/rest/replication_session/<session-id>/fai
 
 ### Promote a Metro Volume (Site Failure)
 
+![Promote a Metro Volume (Site Failure)](../../../../assets/powerstore-proc-promote-a-metro-volume-site-failure.svg)
+
 If the primary site fails and the mediator has granted authority to the secondary site:
 
 ```bash
@@ -390,6 +357,8 @@ curl -k -X POST "https://<dr-mgmt-ip>/api/rest/replication_session/<session-id>/
 ```
 
 ### Resync After Site Recovery
+
+![Resync After Site Recovery](../../../../assets/powerstore-proc-resync-after-site-recovery.svg)
 
 ```bash
 # After primary site recovery, resync Metro Volume
