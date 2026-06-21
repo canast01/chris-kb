@@ -12,7 +12,7 @@ search:
 Response procedure for an ESXi host showing "Not Responding" or "Disconnected" in vCenter. Severity depends on whether VMs are running and inaccessible on that host.
 </div>
 
-![INC-005: ESXi Host Disconnected from vCenter](../../../assets/reference-incident-response-host-disconnected.svg)
+![INC-005: ESXi Host Disconnected from vCenter](../../assets/reference-incident-response-host-disconnected.svg)
 
 > **Severity: P1** if VMs are running on the host and unreachable. **P2** if host is empty or HA has already restarted VMs elsewhere.
 

@@ -13,7 +13,7 @@ search:
 Response procedure for SnapMirror lag exceeding RPO targets, SRM replication alerts, or RecoverPoint RPO breach. Severity escalates to P1 the moment lag exceeds your documented RPO target.
 </div>
 
-![INC-004: Replication Lag / DR Gap Alert](../../../assets/reference-incident-response-replication-lag-alert.svg)
+![INC-004: Replication Lag / DR Gap Alert](../../assets/reference-incident-response-replication-lag-alert.svg)
 
 > **Severity: P2** (lag increasing) → **P1** (RPO breached). Escalate immediately on RPO breach.
 

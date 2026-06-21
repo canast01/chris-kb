@@ -13,11 +13,9 @@ search:
 Daily Veeam Backup &amp; Replication health-check sequence — takes ~5 minutes. Run this every morning before starting any operational work.
 </div>
 
-![Veeam Morning Health-Check Runbook](../../../../../assets/backup-veeam-operations-morning-health-check-index.svg)
+![Veeam Morning Health-Check Runbook](../../../../assets/backup-veeam-operations-morning-health-check-index.svg)
 
----
-
-## Before You Begin
+## Before you begin
 
 **Prerequisites:**
 

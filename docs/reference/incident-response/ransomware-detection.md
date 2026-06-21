@@ -12,7 +12,7 @@ search:
 P0 incident response for ransomware or crypto-locker activity detected on infrastructure. Priority: isolate, preserve evidence, recover from immutable backup. Do NOT reboot affected systems before evidence capture.
 </div>
 
-![INC-003: Ransomware / Crypto Attack Detected](../../../assets/reference-incident-response-ransomware-detection.svg)
+![INC-003: Ransomware / Crypto Attack Detected](../../assets/reference-incident-response-ransomware-detection.svg)
 
 > **Severity: P0** — Engage security team and management immediately. Contact cyber insurance before taking any recovery actions.
 
