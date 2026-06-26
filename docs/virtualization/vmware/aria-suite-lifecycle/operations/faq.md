@@ -9,6 +9,8 @@ tags:
 <div class="kb-summary">
 Common questions about VMware Aria Suite Lifecycle Manager operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
 </div>
+![VMware Aria Suite Lifecycle Manager — Frequently Asked Questions](../../../../assets/virtualization-vmware-aria-suite-lifecycle-operations-faq.svg)
+
 
 ![VMware Aria Suite Lifecycle Manager FAQ](../../../../assets/virtualization-vmware-aria-suite-lifecycle-operations-faq.svg)
 

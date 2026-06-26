@@ -10,6 +10,7 @@ tags:
 Pure1 operations: fleet health dashboard review, predictive analytics alert configuration, capacity and performance trending, and support case creation from Pure1.
 
 *Applies to: Pure1*
+  <a class="kb-card" href="faq/"><strong>FAQ</strong><span>Frequently asked questions, common issues, and quick answers for day-to-day operations.</span></a>
 </div>
 ![Pure1 Operations](../../../../assets/storage-pure-pure1-operations-index.svg)
 

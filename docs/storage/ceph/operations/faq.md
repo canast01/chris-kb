@@ -9,6 +9,8 @@ tags:
 <div class="kb-summary">
 Common questions about Ceph operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
 </div>
+![Ceph — Frequently Asked Questions](../../../assets/storage-ceph-operations-faq.svg)
+
 
 ![Ceph FAQ](../../../assets/storage-ceph-operations-faq.svg)
 

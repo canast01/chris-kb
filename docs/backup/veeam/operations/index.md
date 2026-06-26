@@ -53,6 +53,7 @@ Veeam day-to-day operations — backup job management, restore procedures, scale
   <span>Daily Veeam job and repository health-check runbook — takes ~5 minutes.</span>
 </a>
 
+  <a class="kb-card" href="faq/"><strong>FAQ</strong><span>Frequently asked questions, common issues, and quick answers for day-to-day operations.</span></a>
 </div>
 
 ---

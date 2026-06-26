@@ -9,6 +9,8 @@ tags:
 <div class="kb-summary">
 Common questions about Certificate Management operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
 </div>
+![Certificate Management — Frequently Asked Questions](../../../assets/security-certificates-operations-faq.svg)
+
 
 ![Certificate Management FAQ](../../../assets/security-certificates-operations-faq.svg)
 

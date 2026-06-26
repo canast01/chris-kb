@@ -9,6 +9,8 @@ tags:
 <div class="kb-summary">
 Common questions about Compliance Standards operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
 </div>
+![Compliance Standards — Frequently Asked Questions](../../../assets/security-compliance-standards-operations-faq.svg)
+
 
 ![Compliance Standards FAQ](../../../assets/security-compliance-standards-operations-faq.svg)
 

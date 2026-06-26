@@ -53,5 +53,5 @@ SANnav day-to-day operations — dashboard monitoring, fabric discovery, alert m
   <span>Automation scripts for common operational tasks.</span>
 </a>
 
+  <a class="kb-card" href="faq/"><strong>FAQ</strong><span>Frequently asked questions, common issues, and quick answers for day-to-day operations.</span></a>
 </div>
-

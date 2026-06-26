@@ -48,5 +48,5 @@ Commvault day-to-day operations — job management, subclient configuration, dat
   <span>Automation scripts for health checks and operations.</span>
 </a>
 
+  <a class="kb-card" href="faq/"><strong>FAQ</strong><span>Frequently asked questions, common issues, and quick answers for day-to-day operations.</span></a>
 </div>
-

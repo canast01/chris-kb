@@ -25,5 +25,5 @@ CloudIQ — Operations reference: CLI Reference, Health Checks, Procedures, Inst
 <a class="kb-card" href="alerts/"><strong>Alerts</strong><span>Alert configuration, notification rules, and alert suppression.</span></a>
 <a class="kb-card" href="recommendations/"><strong>Recommendations</strong><span>CloudIQ AI-driven recommendations and action items.</span></a>
 <a class="kb-card" href="reports/"><strong>Reports</strong><span>Scheduled and on-demand reports for storage health and utilization.</span></a>
+  <a class="kb-card" href="faq/"><strong>FAQ</strong><span>Frequently asked questions, common issues, and quick answers for day-to-day operations.</span></a>
 </div>
-

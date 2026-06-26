@@ -9,6 +9,8 @@ tags:
 <div class="kb-summary">
 Common questions about VMware vCenter operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
 </div>
+![VMware vCenter — Frequently Asked Questions](../../../../assets/virtualization-vmware-vcenter-operations-faq.svg)
+
 
 ![VMware vCenter FAQ](../../../../assets/virtualization-vmware-vcenter-operations-faq.svg)
 

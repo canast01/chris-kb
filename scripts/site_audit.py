@@ -337,6 +337,7 @@ for path in all_md():
 
     # 19b: leaf procedure pages SHOULD have "Before you begin"
     if (is_proc_dir
+            and os.path.basename(path) not in ('faq.md', 'known-issues.md')
             and '<div class="kb-grid' not in content
             and '## Before you begin' not in content
             and '## Prerequisites' not in content
@@ -522,7 +523,7 @@ for _path in all_md():
         continue
     # skip index.md landing pages (they're card-nav) and known-issues / escalation flat tables
     _fname = os.path.basename(_path)
-    if _fname in ('known-issues.md',):
+    if _fname in ('known-issues.md', 'faq.md'):
         continue
     if len(_parts) < 3:
         continue

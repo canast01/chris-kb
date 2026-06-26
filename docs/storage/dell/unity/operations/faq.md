@@ -9,6 +9,8 @@ tags:
 <div class="kb-summary">
 Common questions about Dell Unity operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
 </div>
+![Dell Unity — Frequently Asked Questions](../../../../assets/storage-dell-unity-operations-faq.svg)
+
 
 ![Dell Unity FAQ](../../../../assets/storage-dell-unity-operations-faq.svg)
 

@@ -9,6 +9,8 @@ tags:
 <div class="kb-summary">
 Common questions about Dell VxRail operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
 </div>
+![Dell VxRail — Frequently Asked Questions](../../../../assets/virtualization-vmware-vxrail-operations-faq.svg)
+
 
 ![Dell VxRail FAQ](../../../../assets/virtualization-vmware-vxrail-operations-faq.svg)
 

@@ -9,6 +9,8 @@ tags:
 <div class="kb-summary">
 Common questions about VMware Aria Operations operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
 </div>
+![VMware Aria Operations — Frequently Asked Questions](../../../../assets/virtualization-vmware-aria-operations-operations-faq.svg)
+
 
 ![VMware Aria Operations FAQ](../../../../assets/virtualization-vmware-aria-operations-operations-faq.svg)
 

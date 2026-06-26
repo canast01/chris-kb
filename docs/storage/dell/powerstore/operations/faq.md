@@ -9,6 +9,8 @@ tags:
 <div class="kb-summary">
 Common questions about Dell PowerStore operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
 </div>
+![Dell PowerStore — Frequently Asked Questions](../../../../assets/storage-dell-powerstore-operations-faq.svg)
+
 
 ![Dell PowerStore FAQ](../../../../assets/storage-dell-powerstore-operations-faq.svg)
 

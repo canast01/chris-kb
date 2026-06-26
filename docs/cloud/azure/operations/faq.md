@@ -9,6 +9,8 @@ tags:
 <div class="kb-summary">
 Common questions about Microsoft Azure operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
 </div>
+![Microsoft Azure — Frequently Asked Questions](../../../assets/cloud-azure-operations-faq.svg)
+
 
 ![Microsoft Azure FAQ](../../../assets/cloud-azure-operations-faq.svg)
 

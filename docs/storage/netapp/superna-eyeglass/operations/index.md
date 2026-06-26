@@ -48,5 +48,5 @@ Superna Eyeglass day-to-day operations — DR orchestration, configuration sync 
   <span>Automation scripts for health checks, RPO reporting, and failover validation.</span>
 </a>
 
+  <a class="kb-card" href="faq/"><strong>FAQ</strong><span>Frequently asked questions, common issues, and quick answers for day-to-day operations.</span></a>
 </div>
-

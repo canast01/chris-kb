@@ -53,7 +53,7 @@ Brocade FabricOS day-to-day operations — zoning, port management, fabric healt
   <span>Automation scripts for common operational tasks.</span>
 </a>
 
+  <a class="kb-card" href="faq/"><strong>FAQ</strong><span>Frequently asked questions, common issues, and quick answers for day-to-day operations.</span></a>
 </div>
 
 > Part of the [Brocade Fabric OS](../index.md) reference.
-

@@ -10,6 +10,7 @@ tags:
 Evergreen//One operations: subscription usage monitoring, controller upgrade scheduling, capacity tier activation, and health status via Pure1 portal.
 
 *Applies to: Evergreen//One*
+  <a class="kb-card" href="faq/"><strong>FAQ</strong><span>Frequently asked questions, common issues, and quick answers for day-to-day operations.</span></a>
 </div>
 ![Evergreen//One — Operations](../../../../assets/storage-pure-evergreen-one-operations-index.svg)
 

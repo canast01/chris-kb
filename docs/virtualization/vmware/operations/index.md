@@ -36,5 +36,5 @@ Operational procedures, health checks, troubleshooting guides, and runbooks for 
   <span>Step-by-step operational runbooks for common tasks and incidents.</span>
 </a>
 
+  <a class="kb-card" href="faq/"><strong>FAQ</strong><span>Frequently asked questions, common issues, and quick answers for day-to-day operations.</span></a>
 </div>
-

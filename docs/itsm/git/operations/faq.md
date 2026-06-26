@@ -9,6 +9,8 @@ tags:
 <div class="kb-summary">
 Common questions about Git operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
 </div>
+![Git — Frequently Asked Questions](../../../assets/itsm-git-operations-faq.svg)
+
 
 ![Git FAQ](../../../assets/itsm-git-operations-faq.svg)
 

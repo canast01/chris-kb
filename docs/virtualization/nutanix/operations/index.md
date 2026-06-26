@@ -31,4 +31,5 @@ Day-to-day operations for Nutanix HCI — health monitoring, administrative proc
     <strong>Scripts</strong>
     <span>Reusable scripts for health snapshots, NCC automation, storage reports, VM inventory, and maintenance helpers.</span>
   </a>
+  <a class="kb-card" href="faq/"><strong>FAQ</strong><span>Frequently asked questions, common issues, and quick answers for day-to-day operations.</span></a>
 </div>

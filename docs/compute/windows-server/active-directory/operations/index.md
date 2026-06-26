@@ -48,5 +48,5 @@ Active Directory day-to-day operations — user and group management, GPO admini
   <span>Automation scripts for AD health, user audit, and operations.</span>
 </a>
 
+  <a class="kb-card" href="faq/"><strong>FAQ</strong><span>Frequently asked questions, common issues, and quick answers for day-to-day operations.</span></a>
 </div>
-

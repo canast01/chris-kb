@@ -9,6 +9,8 @@ tags:
 <div class="kb-summary">
 Common questions about Security Monitoring operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
 </div>
+![Security Monitoring — Frequently Asked Questions](../../../assets/security-security-monitoring-operations-faq.svg)
+
 
 ![Security Monitoring FAQ](../../../assets/security-security-monitoring-operations-faq.svg)
 

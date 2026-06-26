@@ -9,6 +9,8 @@ tags:
 <div class="kb-summary">
 Common questions about Cisco Nexus Dashboard operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
 </div>
+![Cisco Nexus Dashboard — Frequently Asked Questions](../../../../assets/san-cisco-nexus-dashboard-operations-faq.svg)
+
 
 ![Cisco Nexus Dashboard FAQ](../../../../assets/san-cisco-nexus-dashboard-operations-faq.svg)
 

@@ -48,5 +48,5 @@ Day-to-day PowerShell administration — script execution, module management, re
   <span>Automation scripts for infrastructure operations.</span>
 </a>
 
+  <a class="kb-card" href="faq/"><strong>FAQ</strong><span>Frequently asked questions, common issues, and quick answers for day-to-day operations.</span></a>
 </div>
-

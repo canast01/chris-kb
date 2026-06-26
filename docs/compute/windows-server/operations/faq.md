@@ -9,6 +9,8 @@ tags:
 <div class="kb-summary">
 Common questions about Windows Server operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
 </div>
+![Windows Server — Frequently Asked Questions](../../../assets/compute-windows-server-operations-faq.svg)
+
 
 ![Windows Server FAQ](../../../assets/compute-windows-server-operations-faq.svg)
 

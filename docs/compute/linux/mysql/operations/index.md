@@ -22,5 +22,5 @@ Health checks, procedures, CLI, backup/restore, upgrades, and scripts.
   <a class="kb-card" href="backup-restore/">Backup Restore</a>
   <a class="kb-card" href="install-upgrade/">Install Upgrade</a>
   <a class="kb-card" href="scripts/">Scripts</a>
+  <a class="kb-card" href="faq/"><strong>FAQ</strong><span>Frequently asked questions, common issues, and quick answers for day-to-day operations.</span></a>
 </div>
-

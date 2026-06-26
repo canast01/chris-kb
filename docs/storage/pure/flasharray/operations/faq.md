@@ -9,6 +9,8 @@ tags:
 <div class="kb-summary">
 Common questions about Pure Storage FlashArray operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
 </div>
+![Pure Storage FlashArray — Frequently Asked Questions](../../../../assets/storage-pure-flasharray-operations-faq.svg)
+
 
 ![Pure Storage FlashArray FAQ](../../../../assets/storage-pure-flasharray-operations-faq.svg)
 

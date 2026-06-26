@@ -9,6 +9,8 @@ tags:
 <div class="kb-summary">
 Common questions about Brocade Fabric OS operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
 </div>
+![Brocade Fabric OS — Frequently Asked Questions](../../../../assets/san-brocade-fabric-os-operations-faq.svg)
+
 
 ![Brocade Fabric OS FAQ](../../../../assets/san-brocade-fabric-os-operations-faq.svg)
 

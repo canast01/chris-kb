@@ -9,6 +9,8 @@ tags:
 <div class="kb-summary">
 Common questions about Dell SRDF/S (Synchronous Replication) operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
 </div>
+![Dell SRDF/S (Synchronous Replication) — Frequently Asked Questions](../../../../assets/storage-dell-srdf-s-operations-faq.svg)
+
 
 ![Dell SRDF/S (Synchronous Replication) FAQ](../../../../assets/storage-dell-srdf-s-operations-faq.svg)
 

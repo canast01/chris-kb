@@ -9,6 +9,8 @@ tags:
 <div class="kb-summary">
 Common questions about PostgreSQL operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
 </div>
+![PostgreSQL — Frequently Asked Questions](../../../../assets/compute-linux-postgresql-operations-faq.svg)
+
 
 ![PostgreSQL FAQ](../../../../assets/compute-linux-postgresql-operations-faq.svg)
 

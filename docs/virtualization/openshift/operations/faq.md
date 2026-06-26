@@ -9,6 +9,8 @@ tags:
 <div class="kb-summary">
 Common questions about Red Hat OpenShift operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
 </div>
+![Red Hat OpenShift — Frequently Asked Questions](../../../assets/virtualization-openshift-operations-faq.svg)
+
 
 ![Red Hat OpenShift FAQ](../../../assets/virtualization-openshift-operations-faq.svg)
 

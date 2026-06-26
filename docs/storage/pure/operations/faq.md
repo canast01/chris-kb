@@ -9,6 +9,8 @@ tags:
 <div class="kb-summary">
 Common questions about Pure Storage operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
 </div>
+![Pure Storage — Frequently Asked Questions](../../../assets/storage-pure-operations-faq.svg)
+
 
 ![Pure Storage FAQ](../../../assets/storage-pure-operations-faq.svg)
 

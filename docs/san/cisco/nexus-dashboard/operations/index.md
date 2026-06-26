@@ -53,5 +53,5 @@ Nexus Dashboard daily operations — fabric health monitoring, flow visibility, 
 <a class="kb-card" href="visibility/"><strong>Visibility</strong><span>Device discovery, topology views, and flow visibility.</span></a>
 <a class="kb-card" href="alerts/"><strong>Alerts</strong><span>Alert management, suppression rules, and notification configuration.</span></a>
 
+  <a class="kb-card" href="faq/"><strong>FAQ</strong><span>Frequently asked questions, common issues, and quick answers for day-to-day operations.</span></a>
 </div>
-

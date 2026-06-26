@@ -9,6 +9,8 @@ tags:
 <div class="kb-summary">
 Common questions about VMware NSX operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
 </div>
+![VMware NSX — Frequently Asked Questions](../../../../assets/virtualization-vmware-nsx-operations-faq.svg)
+
 
 ![VMware NSX FAQ](../../../../assets/virtualization-vmware-nsx-operations-faq.svg)
 

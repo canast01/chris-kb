@@ -47,5 +47,5 @@ Aria Automation day-to-day operations — blueprint publishing, request manageme
   <span>Automation scripts and reusable code.</span>
 </a>
 
+  <a class="kb-card" href="faq/"><strong>FAQ</strong><span>Frequently asked questions, common issues, and quick answers for day-to-day operations.</span></a>
 </div>
-

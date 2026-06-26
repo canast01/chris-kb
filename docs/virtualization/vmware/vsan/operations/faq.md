@@ -9,6 +9,8 @@ tags:
 <div class="kb-summary">
 Common questions about VMware vSAN operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
 </div>
+![VMware vSAN — Frequently Asked Questions](../../../../assets/virtualization-vmware-vsan-operations-faq.svg)
+
 
 ![VMware vSAN FAQ](../../../../assets/virtualization-vmware-vsan-operations-faq.svg)
 

@@ -10,6 +10,7 @@ tags:
 SCG operations: device registration, connectivity health checks, firmware advisory review, SupportAssist case creation, and daily telemetry verification.
 
 *Applies to: Secure Connect Gateway*
+  <a class="kb-card" href="faq/"><strong>FAQ</strong><span>Frequently asked questions, common issues, and quick answers for day-to-day operations.</span></a>
 </div>
 ![Secure Connect Gateway — Operations](../../../../assets/storage-dell-secure-connect-gateway-operations-index.svg)
 

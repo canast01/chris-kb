@@ -48,5 +48,5 @@ Day-to-day Git operations — branching strategy, merging, rebase, stash, hooks,
   <span>Automation scripts and utilities.</span>
 </a>
 
+  <a class="kb-card" href="faq/"><strong>FAQ</strong><span>Frequently asked questions, common issues, and quick answers for day-to-day operations.</span></a>
 </div>
-

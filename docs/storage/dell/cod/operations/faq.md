@@ -9,6 +9,8 @@ tags:
 <div class="kb-summary">
 Common questions about Dell Capacity on Demand operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
 </div>
+![Dell Capacity on Demand — Frequently Asked Questions](../../../../assets/storage-dell-cod-operations-faq.svg)
+
 
 ![Dell Capacity on Demand FAQ](../../../../assets/storage-dell-cod-operations-faq.svg)
 

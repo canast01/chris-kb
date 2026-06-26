@@ -8,19 +8,19 @@ Knowledge base statistics: page counts, section distribution, and content type c
 
 
 
-Generated: 2026-06-21
+Generated: 2026-06-25
 
 ## Current totals
 
 | Metric | Count |
 |---|---:|
-| Total markdown pages | 2,756 |
+| Total markdown pages | 2,846 |
 | Sections | 11 |
 | Pages with full-width ASCII diagrams | 272 |
-| Pages with SVG diagrams | 2,753 |
+| Pages with SVG diagrams | 2,843 |
 | Pages with Mermaid diagrams | 681 |
-| Pages with kb-summary | 2,477 |
-| Pages with tags | 2,729 |
+| Pages with kb-summary | 2,567 |
+| Pages with tags | 2,819 |
 | Audit score | 36 / 37 |
 
 ## Section page counts

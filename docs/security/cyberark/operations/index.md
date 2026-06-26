@@ -48,5 +48,5 @@ CyberArk day-to-day operations — safe management, account onboarding, session 
   <span>Automation scripts for account management and health checks.</span>
 </a>
 
+  <a class="kb-card" href="faq/"><strong>FAQ</strong><span>Frequently asked questions, common issues, and quick answers for day-to-day operations.</span></a>
 </div>
-

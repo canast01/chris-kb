@@ -9,6 +9,8 @@ tags:
 <div class="kb-summary">
 Common questions about Dell Secure Connect Gateway operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
 </div>
+![Dell Secure Connect Gateway — Frequently Asked Questions](../../../../assets/storage-dell-secure-connect-gateway-operations-faq.svg)
+
 
 ![Dell Secure Connect Gateway FAQ](../../../../assets/storage-dell-secure-connect-gateway-operations-faq.svg)
 

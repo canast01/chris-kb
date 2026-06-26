@@ -7,6 +7,7 @@ tags:
 
 <div class="kb-summary">
 Step-by-step procedures for enrolling users in MFA, resetting credentials, configuring MFA across vCenter and Azure AD, and reviewing MFA adoption.
+  <a class="kb-card" href="faq/"><strong>FAQ</strong><span>Frequently asked questions, common issues, and quick answers for day-to-day operations.</span></a>
 </div>
 ![Multi-Factor Authentication — Procedures](../../../assets/security-mfa-operations-index.svg)
 

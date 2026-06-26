@@ -7,6 +7,7 @@ tags:
 
 <div class="kb-summary">
 Step-by-step procedures for conducting infrastructure security audits, reviewing firewall rules, auditing privileged accounts, checking certificates, and tracking findings to closure.
+  <a class="kb-card" href="faq/"><strong>FAQ</strong><span>Frequently asked questions, common issues, and quick answers for day-to-day operations.</span></a>
 </div>
 ![Security Audit — Procedures](../../../assets/security-security-audit-operations-index.svg)
 

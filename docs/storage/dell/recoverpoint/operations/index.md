@@ -48,5 +48,5 @@ RecoverPoint day-to-day operations — consistency group management, RPO monitor
   <span>Automation scripts for health checks, DR tests, and RPO reporting.</span>
 </a>
 
+  <a class="kb-card" href="faq/"><strong>FAQ</strong><span>Frequently asked questions, common issues, and quick answers for day-to-day operations.</span></a>
 </div>
-

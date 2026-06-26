@@ -9,6 +9,8 @@ tags:
 <div class="kb-summary">
 Common questions about CyberArk PAM operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
 </div>
+![CyberArk PAM — Frequently Asked Questions](../../../assets/security-cyberark-operations-faq.svg)
+
 
 ![CyberArk PAM FAQ](../../../assets/security-cyberark-operations-faq.svg)
 

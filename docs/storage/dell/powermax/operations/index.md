@@ -46,5 +46,5 @@ PowerMax day-to-day operations — SRDF management, storage group provisioning, 
   <span>Automation scripts for health checks, SRDF monitoring, and operations.</span>
 </a>
 
+  <a class="kb-card" href="faq/"><strong>FAQ</strong><span>Frequently asked questions, common issues, and quick answers for day-to-day operations.</span></a>
 </div>
-

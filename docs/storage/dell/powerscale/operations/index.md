@@ -46,5 +46,5 @@ PowerScale day-to-day operations — SMB/NFS share management, SyncIQ replicatio
   <span>Commands, syntax, and quick reference.</span>
 </a>
 
+  <a class="kb-card" href="faq/"><strong>FAQ</strong><span>Frequently asked questions, common issues, and quick answers for day-to-day operations.</span></a>
 </div>
-

@@ -48,5 +48,5 @@ SRDF/S day-to-day operations — synchronous link monitoring, R1/R2 device manag
   <span>Automation scripts for state checks, failover, health reporting, and latency.</span>
 </a>
 
+  <a class="kb-card" href="faq/"><strong>FAQ</strong><span>Frequently asked questions, common issues, and quick answers for day-to-day operations.</span></a>
 </div>
-

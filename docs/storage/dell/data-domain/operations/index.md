@@ -22,5 +22,5 @@ Data Domain — Operations reference: Health Checks, Procedures, CLI Reference, 
 <a class="kb-card" href="backup-restore/"><strong>Backup & Restore</strong><span>Backup configuration, restore procedures, and validation.</span></a>
 <a class="kb-card" href="scripts/"><strong>Scripts</strong><span>Automation scripts and reusable code.</span></a>
 <a class="kb-card" href="common-issues/"><strong>Common Issues</strong><span>Known issues, error codes, and resolution procedures for Data Domain.</span></a>
+  <a class="kb-card" href="faq/"><strong>FAQ</strong><span>Frequently asked questions, common issues, and quick answers for day-to-day operations.</span></a>
 </div>
-

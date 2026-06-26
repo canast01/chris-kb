@@ -9,6 +9,8 @@ tags:
 <div class="kb-summary">
 Common questions about PowerShell operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
 </div>
+![PowerShell — Frequently Asked Questions](../../../assets/automation-powershell-operations-faq.svg)
+
 
 ![PowerShell FAQ](../../../assets/automation-powershell-operations-faq.svg)
 

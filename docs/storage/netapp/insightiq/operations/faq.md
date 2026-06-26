@@ -9,6 +9,8 @@ tags:
 <div class="kb-summary">
 Common questions about NetApp InsightIQ operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
 </div>
+![NetApp InsightIQ — Frequently Asked Questions](../../../../assets/storage-netapp-insightiq-operations-faq.svg)
+
 
 ![NetApp InsightIQ FAQ](../../../../assets/storage-netapp-insightiq-operations-faq.svg)
 

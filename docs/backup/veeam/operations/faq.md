@@ -9,6 +9,8 @@ tags:
 <div class="kb-summary">
 Common questions about Veeam Backup & Replication operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
 </div>
+![Veeam Backup & Replication — Frequently Asked Questions](../../../assets/backup-veeam-operations-faq.svg)
+
 
 ![Veeam Backup & Replication FAQ](../../../assets/backup-veeam-operations-faq.svg)
 

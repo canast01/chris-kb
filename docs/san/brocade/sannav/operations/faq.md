@@ -9,6 +9,8 @@ tags:
 <div class="kb-summary">
 Common questions about Brocade SANnav operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
 </div>
+![Brocade SANnav — Frequently Asked Questions](../../../../assets/san-brocade-sannav-operations-faq.svg)
+
 
 ![Brocade SANnav FAQ](../../../../assets/san-brocade-sannav-operations-faq.svg)
 

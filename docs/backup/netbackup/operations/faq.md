@@ -9,6 +9,8 @@ tags:
 <div class="kb-summary">
 Common questions about Veritas NetBackup operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
 </div>
+![Veritas NetBackup — Frequently Asked Questions](../../../assets/backup-netbackup-operations-faq.svg)
+
 
 ![Veritas NetBackup FAQ](../../../assets/backup-netbackup-operations-faq.svg)
 

@@ -20,5 +20,5 @@ Incident handling operational procedures: incident classification, triage workfl
   <span>Incident handling procedures — first response, classification, escalation matrix, evidence collection, and post-incident review steps.</span>
 </a>
 
+  <a class="kb-card" href="faq/"><strong>FAQ</strong><span>Frequently asked questions, common issues, and quick answers for day-to-day operations.</span></a>
 </div>
-

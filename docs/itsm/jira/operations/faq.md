@@ -9,6 +9,8 @@ tags:
 <div class="kb-summary">
 Common questions about Jira operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
 </div>
+![Jira — Frequently Asked Questions](../../../assets/itsm-jira-operations-faq.svg)
+
 
 ![Jira FAQ](../../../assets/itsm-jira-operations-faq.svg)
 

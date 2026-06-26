@@ -9,6 +9,7 @@ tags:
 InsightIQ Operations reference covering Daily Checklist, Cluster Connection Troubleshooting, Capacity Review (Weekly), Appliance Health Checks, Alert Threshold Review (Monthly) and 2 more sections.
 
 *Applies to: InsightIQ*
+  <a class="kb-card" href="faq/"><strong>FAQ</strong><span>Frequently asked questions, common issues, and quick answers for day-to-day operations.</span></a>
 </div>
 ![InsightIQ Operations](../../../../assets/storage-netapp-insightiq-operations-index.svg)
 

@@ -9,6 +9,8 @@ tags:
 <div class="kb-summary">
 Common questions about Cisco DCNM operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
 </div>
+![Cisco DCNM — Frequently Asked Questions](../../../../assets/san-cisco-cisco-dcnm-operations-faq.svg)
+
 
 ![Cisco DCNM FAQ](../../../../assets/san-cisco-cisco-dcnm-operations-faq.svg)
 

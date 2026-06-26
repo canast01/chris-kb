@@ -9,6 +9,8 @@ tags:
 <div class="kb-summary">
 Common questions about ServiceNow operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
 </div>
+![ServiceNow — Frequently Asked Questions](../../../assets/itsm-servicenow-operations-faq.svg)
+
 
 ![ServiceNow FAQ](../../../assets/itsm-servicenow-operations-faq.svg)
 

@@ -7,6 +7,7 @@ tags:
 
 <div class="kb-summary">
 Step-by-step procedures for reviewing SIEM alerts, investigating security events, tuning detection rules, and generating monitoring reports.
+  <a class="kb-card" href="faq/"><strong>FAQ</strong><span>Frequently asked questions, common issues, and quick answers for day-to-day operations.</span></a>
 </div>
 ![Security Monitoring — Procedures](../../../assets/security-security-monitoring-operations-index.svg)
 

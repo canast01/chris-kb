@@ -51,5 +51,5 @@ Certificate lifecycle operations — renewal, re-issuance, CSR generation, chain
   <span>Adding CA certificates to OS trust stores — Linux, Windows (local and GPO), Java keystores, and chain verification.</span>
 </a>
 
+  <a class="kb-card" href="faq/"><strong>FAQ</strong><span>Frequently asked questions, common issues, and quick answers for day-to-day operations.</span></a>
 </div>
-

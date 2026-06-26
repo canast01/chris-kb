@@ -9,6 +9,8 @@ tags:
 <div class="kb-summary">
 Common questions about NetApp ONTAP operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
 </div>
+![NetApp ONTAP — Frequently Asked Questions](../../../../assets/storage-netapp-ontap-operations-faq.svg)
+
 
 ![NetApp ONTAP FAQ](../../../../assets/storage-netapp-ontap-operations-faq.svg)
 

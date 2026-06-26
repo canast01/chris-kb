@@ -7,6 +7,7 @@ tags:
 
 <div class="kb-summary">
 Step-by-step procedures for connecting, configuring, and troubleshooting LDAP identity sources across vCenter, Aria Operations, and other enterprise platforms.
+  <a class="kb-card" href="faq/"><strong>FAQ</strong><span>Frequently asked questions, common issues, and quick answers for day-to-day operations.</span></a>
 </div>
 ![LDAP Integration — Procedures](../../../assets/security-ldap-integration-operations-index.svg)
 

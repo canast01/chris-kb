@@ -51,5 +51,5 @@ Day-to-day operational reference for VMware vSAN. Covers CLI commands, health ch
   <span>Automation scripts and reusable code.</span>
 </a>
 
+  <a class="kb-card" href="faq/"><strong>FAQ</strong><span>Frequently asked questions, common issues, and quick answers for day-to-day operations.</span></a>
 </div>
-

@@ -9,6 +9,8 @@ tags:
 <div class="kb-summary">
 Common questions about AWS Elastic VMware Service (EVS) operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
 </div>
+![AWS Elastic VMware Service (EVS) — Frequently Asked Questions](../../../../assets/cloud-aws-evs-operations-faq.svg)
+
 
 ![AWS Elastic VMware Service (EVS) FAQ](../../../../assets/cloud-aws-evs-operations-faq.svg)
 

@@ -9,6 +9,8 @@ tags:
 <div class="kb-summary">
 Common questions about Dell SRDF/A (Asynchronous Replication) operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
 </div>
+![Dell SRDF/A (Asynchronous Replication) — Frequently Asked Questions](../../../../assets/storage-dell-srdf-a-operations-faq.svg)
+
 
 ![Dell SRDF/A (Asynchronous Replication) FAQ](../../../../assets/storage-dell-srdf-a-operations-faq.svg)
 

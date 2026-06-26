@@ -7,6 +7,7 @@ tags:
 
 <div class="kb-summary">
 Step-by-step procedures for conducting, documenting, and remediating periodic access reviews across AD, service accounts, and privileged groups.
+  <a class="kb-card" href="faq/"><strong>FAQ</strong><span>Frequently asked questions, common issues, and quick answers for day-to-day operations.</span></a>
 </div>
 ![Access Review — Procedures](../../../assets/security-access-review-operations-index.svg)
 

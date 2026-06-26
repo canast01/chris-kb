@@ -9,6 +9,8 @@ tags:
 <div class="kb-summary">
 Common questions about Pure Storage Evergreen operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
 </div>
+![Pure Storage Evergreen — Frequently Asked Questions](../../../../assets/storage-pure-evergreen-operations-faq.svg)
+
 
 ![Pure Storage Evergreen FAQ](../../../../assets/storage-pure-evergreen-operations-faq.svg)
 

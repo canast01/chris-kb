@@ -48,5 +48,5 @@ SRDF/A day-to-day operations — cycle monitoring, delta set management, STAR mo
   <span>Automation scripts for daily checks, health, incident triage, and validation.</span>
 </a>
 
+  <a class="kb-card" href="faq/"><strong>FAQ</strong><span>Frequently asked questions, common issues, and quick answers for day-to-day operations.</span></a>
 </div>
-

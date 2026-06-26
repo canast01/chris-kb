@@ -9,6 +9,8 @@ tags:
 <div class="kb-summary">
 Common questions about SAML Configuration operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
 </div>
+![SAML Configuration — Frequently Asked Questions](../../../assets/security-saml-configuration-operations-faq.svg)
+
 
 ![SAML Configuration FAQ](../../../assets/security-saml-configuration-operations-faq.svg)
 

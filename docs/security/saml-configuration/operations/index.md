@@ -7,6 +7,7 @@ tags:
 
 <div class="kb-summary">
 Step-by-step procedures for configuring SAML SSO with Azure Entra ID and Okta, managing attribute mappings, rotating signing certificates, and troubleshooting assertion failures.
+  <a class="kb-card" href="faq/"><strong>FAQ</strong><span>Frequently asked questions, common issues, and quick answers for day-to-day operations.</span></a>
 </div>
 ![SAML Configuration — Procedures](../../../assets/security-saml-configuration-operations-index.svg)
 

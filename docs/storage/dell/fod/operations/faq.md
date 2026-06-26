@@ -9,6 +9,8 @@ tags:
 <div class="kb-summary">
 Common questions about Dell Features on Demand operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
 </div>
+![Dell Features on Demand — Frequently Asked Questions](../../../../assets/storage-dell-fod-operations-faq.svg)
+
 
 ![Dell Features on Demand FAQ](../../../../assets/storage-dell-fod-operations-faq.svg)
 

@@ -7,6 +7,7 @@ tags:
 
 <div class="kb-summary">
 Step-by-step procedures for assessing controls against CIS, ISO 27001, NIST, and PCI-DSS frameworks, collecting audit evidence, and managing control gaps to closure.
+  <a class="kb-card" href="faq/"><strong>FAQ</strong><span>Frequently asked questions, common issues, and quick answers for day-to-day operations.</span></a>
 </div>
 ![Compliance Standards — Procedures](../../../assets/security-compliance-standards-operations-index.svg)
 

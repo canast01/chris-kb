@@ -61,5 +61,5 @@ VxRail operations notes for daily checks, maintenance windows, node work, expans
   <strong>Pre-Upgrade Checks</strong>
   <span>Pre-upgrade readiness checks for VxRail — compatibility, cluster health, free capacity, and snapshot state.</span>
 </a>
+  <a class="kb-card" href="faq/"><strong>FAQ</strong><span>Frequently asked questions, common issues, and quick answers for day-to-day operations.</span></a>
 </div>
-

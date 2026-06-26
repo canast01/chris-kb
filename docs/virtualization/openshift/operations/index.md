@@ -66,5 +66,8 @@ Day-2 operations: oc CLI, health checks, node management, upgrade procedures, et
     <span class="kb-card-title">Backup & Restore</span>
     <span class="kb-card-desc">etcd backup/restore, OADP for application workloads</span>
   </a>
+  <a class="kb-card" href="faq/">
+    <span class="kb-card-title">FAQ</span>
+    <span class="kb-card-desc">Frequently asked questions, common issues, and quick answers for day-to-day operations.</span>
+  </a>
 </div>
-

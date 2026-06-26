@@ -9,6 +9,8 @@ tags:
 <div class="kb-summary">
 Common questions about NetApp SnapCenter operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
 </div>
+![NetApp SnapCenter — Frequently Asked Questions](../../../../assets/storage-netapp-snapcenter-operations-faq.svg)
+
 
 ![NetApp SnapCenter FAQ](../../../../assets/storage-netapp-snapcenter-operations-faq.svg)
 

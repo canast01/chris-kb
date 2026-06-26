@@ -9,6 +9,8 @@ tags:
 <div class="kb-summary">
 Common questions about VMware Cloud Foundation operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
 </div>
+![VMware Cloud Foundation — Frequently Asked Questions](../../../../assets/virtualization-vmware-vmware-cloud-foundation-operations-faq.svg)
+
 
 ![VMware Cloud Foundation FAQ](../../../../assets/virtualization-vmware-vmware-cloud-foundation-operations-faq.svg)
 

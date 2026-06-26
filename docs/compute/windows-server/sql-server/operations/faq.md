@@ -9,6 +9,8 @@ tags:
 <div class="kb-summary">
 Common questions about Microsoft SQL Server operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
 </div>
+![Microsoft SQL Server — Frequently Asked Questions](../../../../assets/compute-windows-server-sql-server-operations-faq.svg)
+
 
 ![Microsoft SQL Server FAQ](../../../../assets/compute-windows-server-sql-server-operations-faq.svg)
 

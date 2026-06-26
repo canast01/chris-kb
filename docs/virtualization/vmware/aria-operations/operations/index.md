@@ -85,6 +85,7 @@ Aria Operations daily operations — policy management, alert tuning, dashboard 
 <a class="kb-card" href="dashboards/"><strong>Dashboards</strong><span>Dashboard creation, widget configuration, and dashboard sharing.</span></a>
 <a class="kb-card" href="reports/"><strong>Reports</strong><span>Scheduled and on-demand reports for capacity, health, and performance.</span></a>
 
+  <a class="kb-card" href="faq/"><strong>FAQ</strong><span>Frequently asked questions, common issues, and quick answers for day-to-day operations.</span></a>
 </div>
 
 ## Daily Checklist

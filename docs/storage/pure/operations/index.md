@@ -31,5 +31,5 @@ Pure Storage operations — Pure1 cloud portal management, hardware and capacity
   <span>Notes, checks, runbooks, commands, troubleshooting, and operational references for Support Cases.</span>
 </a>
 
+  <a class="kb-card" href="faq/"><strong>FAQ</strong><span>Frequently asked questions, common issues, and quick answers for day-to-day operations.</span></a>
 </div>
-

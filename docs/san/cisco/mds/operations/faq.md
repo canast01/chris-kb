@@ -9,6 +9,8 @@ tags:
 <div class="kb-summary">
 Common questions about Cisco MDS operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
 </div>
+![Cisco MDS — Frequently Asked Questions](../../../../assets/san-cisco-mds-operations-faq.svg)
+
 
 ![Cisco MDS FAQ](../../../../assets/san-cisco-mds-operations-faq.svg)
 

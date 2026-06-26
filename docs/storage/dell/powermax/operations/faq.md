@@ -9,6 +9,8 @@ tags:
 <div class="kb-summary">
 Common questions about Dell PowerMax operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
 </div>
+![Dell PowerMax — Frequently Asked Questions](../../../../assets/storage-dell-powermax-operations-faq.svg)
+
 
 ![Dell PowerMax FAQ](../../../../assets/storage-dell-powermax-operations-faq.svg)
 
