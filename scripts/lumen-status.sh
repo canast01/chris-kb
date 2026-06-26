@@ -83,6 +83,7 @@ if [ "$status" = "complete" ]; then
     echo "Status:   ✅ COMPLETE"
     echo "Indexed:  $indexed files → $chunks chunks in $elapsed"
     rm -f "$WAL_PREV"
+    osascript -e 'display notification "Lumen index complete — semantic search is ready." with title "chris-kb" sound name "Glass"' 2>/dev/null || true
     exit 0
 fi
 
