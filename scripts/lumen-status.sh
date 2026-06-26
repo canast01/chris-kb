@@ -7,7 +7,7 @@ set -euo pipefail
 LOG="$HOME/.local/share/lumen/debug.log"
 LUMEN_BIN="$HOME/.claude/plugins/cache/claude-plugins-official/lumen/0.0.41/bin/lumen-darwin-amd64"
 KB="$HOME/chris-kb"
-WAL_PREV="$KB/.lumen-wal-prev"
+WAL_PREV="$KB/.lumen-wal-prev"   # format: "<size>:<unchanged_count>"
 
 if [ ! -f "$LOG" ]; then
     echo "No lumen debug log found at $LOG"
@@ -116,21 +116,34 @@ if [ -z "$PROC" ]; then
     exit 0
 fi
 
-# Check WAL growth (stuck detection)
+# Check WAL growth (stuck detection — requires 2 consecutive unchanged readings)
+# WAL_PREV file format: "<size>:<unchanged_count>"
 PREV_WAL=0
-[ -f "$WAL_PREV" ] && PREV_WAL=$(cat "$WAL_PREV")
-echo "$WAL_SIZE" > "$WAL_PREV"
+PREV_COUNT=0
+if [ -f "$WAL_PREV" ]; then
+    RAW=$(cat "$WAL_PREV")
+    PREV_WAL="${RAW%%:*}"
+    PREV_COUNT="${RAW##*:}"
+fi
 
-echo "Status:   ⏳ IN PROGRESS (PID $PROC)"
+PIDS_DISPLAY=$(echo "$PROC" | tr '\n' ' ' | sed 's/ $//')
+echo "Status:   ⏳ IN PROGRESS (PID $PIDS_DISPLAY)"
 echo "WAL size: ${WAL_SIZE} bytes (prev: ${PREV_WAL} bytes)"
 
 if [ "${PREV_WAL}" -gt 0 ] && [ "${WAL_SIZE}" -le "${PREV_WAL}" ]; then
-    echo "Action:   ⚠️  WAL not growing — indexer appears stuck. Restarting..."
-    kill "$PROC" 2>/dev/null || true
-    sleep 2
-    nohup "$LUMEN_BIN" index "$KB" >> "$KB/lumen-status.log" 2>&1 &
-    echo "          Restarted (PID $!)"
-    rm -f "$WAL_PREV"
+    NEW_COUNT=$(( PREV_COUNT + 1 ))
+    if [ "${NEW_COUNT}" -ge 2 ]; then
+        echo "Action:   ⚠️  WAL unchanged for 2 checks — indexer stuck. Restarting..."
+        echo "$PROC" | xargs -r kill 2>/dev/null || true
+        sleep 2
+        nohup "$LUMEN_BIN" index "$KB" >> "$KB/lumen-status.log" 2>&1 &
+        echo "          Restarted (PID $!)"
+        rm -f "$WAL_PREV"
+    else
+        echo "          WAL unchanged (check 1/2) — monitoring..."
+        echo "${WAL_SIZE}:${NEW_COUNT}" > "$WAL_PREV"
+    fi
 else
     echo "          WAL growing ✓ — indexer healthy"
+    echo "${WAL_SIZE}:0" > "$WAL_PREV"
 fi
