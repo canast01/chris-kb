@@ -6,6 +6,7 @@ set -euo pipefail
 
 LOG="$HOME/.local/share/lumen/debug.log"
 LUMEN_BIN="$HOME/.claude/plugins/cache/claude-plugins-official/lumen/0.0.41/bin/lumen-darwin-amd64"
+LUMEN_MODEL="nomic-embed-text"
 KB="$HOME/chris-kb"
 WAL_PREV="$KB/.lumen-wal-prev"   # format: "<size>:<unchanged_count>"
 
@@ -95,7 +96,7 @@ if [ "$status" = "failed" ]; then
     echo "Status:   ❌ FAILED — $error"
     echo "Action:   Restarting indexer..."
     pkill -f "lumen-darwin.*index" 2>/dev/null || true
-    nohup "$LUMEN_BIN" index "$KB" >> "$KB/lumen-status.log" 2>&1 &
+    nohup "$LUMEN_BIN" index "$KB" -m "$LUMEN_MODEL" >> "$KB/lumen-status.log" 2>&1 &
     echo "          Restarted (PID $!)"
     rm -f "$WAL_PREV"
     exit 0
@@ -110,7 +111,7 @@ WAL_SIZE=$(find "$HOME/.local/share/lumen" -name "index.db-wal" 2>/dev/null \
 if [ -z "$PROC" ]; then
     echo "Status:   ❌ PROCESS DEAD (no lumen-darwin index process found)"
     echo "Action:   Restarting indexer..."
-    nohup "$LUMEN_BIN" index "$KB" >> "$KB/lumen-status.log" 2>&1 &
+    nohup "$LUMEN_BIN" index "$KB" -m "$LUMEN_MODEL" >> "$KB/lumen-status.log" 2>&1 &
     echo "          Restarted (PID $!)"
     rm -f "$WAL_PREV"
     exit 0
@@ -136,7 +137,7 @@ if [ "${PREV_WAL}" -gt 0 ] && [ "${WAL_SIZE}" -le "${PREV_WAL}" ]; then
         echo "Action:   ⚠️  WAL unchanged for 2 checks — indexer stuck. Restarting..."
         echo "$PROC" | xargs -r kill 2>/dev/null || true
         sleep 2
-        nohup "$LUMEN_BIN" index "$KB" >> "$KB/lumen-status.log" 2>&1 &
+        nohup "$LUMEN_BIN" index "$KB" -m "$LUMEN_MODEL" >> "$KB/lumen-status.log" 2>&1 &
         echo "          Restarted (PID $!)"
         rm -f "$WAL_PREV"
     else
