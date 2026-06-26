@@ -133,15 +133,15 @@ echo "WAL size: ${WAL_SIZE} bytes (prev: ${PREV_WAL} bytes)"
 
 if [ "${PREV_WAL}" -gt 0 ] && [ "${WAL_SIZE}" -le "${PREV_WAL}" ]; then
     NEW_COUNT=$(( PREV_COUNT + 1 ))
-    if [ "${NEW_COUNT}" -ge 2 ]; then
-        echo "Action:   ⚠️  WAL unchanged for 2 checks — indexer stuck. Restarting..."
+    if [ "${NEW_COUNT}" -ge 3 ]; then
+        echo "Action:   ⚠️  WAL unchanged for 3 checks — indexer stuck. Restarting..."
         echo "$PROC" | xargs -r kill 2>/dev/null || true
         sleep 2
         nohup "$LUMEN_BIN" index "$KB" -m "$LUMEN_MODEL" >> "$KB/lumen-status.log" 2>&1 &
         echo "          Restarted (PID $!)"
         rm -f "$WAL_PREV"
     else
-        echo "          WAL unchanged (check 1/2) — monitoring..."
+        echo "          WAL unchanged (check ${NEW_COUNT}/3) — monitoring..."
         echo "${WAL_SIZE}:${NEW_COUNT}" > "$WAL_PREV"
     fi
 else
