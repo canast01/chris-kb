@@ -24,6 +24,11 @@ This guide covers the initial setup of a NetApp ONTAP cluster from first boot th
 
 ## Before you begin
 
+<!-- video-link -->
+!!! tip "Video Walkthrough"
+    [:fontawesome-brands-youtube: NetApp ONTAP 9 Complete Training Course](https://www.youtube.com/watch?v=VE9dqRiGX2o){ .md-button }
+<!-- /video-link -->
+
 - **Access:** Storage admin credentials (cluster admin or equivalent)
 - **Environment:** DNS, NTP, and network connectivity verified before starting
 - **Change management:** change request approved; maintenance window scheduled

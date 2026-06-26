@@ -28,7 +28,7 @@ info "Running site audit..."
 AUDIT_OUT=$(python3 scripts/site_audit.py 2>&1)
 SUMMARY=$(echo "$AUDIT_OUT" | grep "SUMMARY:")
 echo "  $SUMMARY"
-if ! echo "$SUMMARY" | grep -q "37/37"; then
+if ! echo "$SUMMARY" | grep -qE "SUMMARY: ([0-9]+)/\1 checks clean"; then
     echo "$AUDIT_OUT" | grep -E "❌|⚠️"
     fail "Audit has failures — fix before pushing"
 fi

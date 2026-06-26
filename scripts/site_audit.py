@@ -824,6 +824,36 @@ if _missing_verify:
         warn(issues, f'... and {len(_missing_verify)-12} more (run --full)')
 
 
+# ── Check 38: Video registry validity and coverage ───────────────────────────
+issues = check(38, 'Video registry validity and coverage')
+_videos_yml = os.path.join(REPO, 'docs', 'videos.yml')
+if not os.path.exists(_videos_yml):
+    warn(issues, 'docs/videos.yml not found')
+else:
+    try:
+        import yaml as _yaml
+        with open(_videos_yml) as _vf:
+            _vdata = _yaml.safe_load(_vf)
+        _ventries = _vdata.get('videos', []) if _vdata else []
+        _bad_pages = []
+        _bad_urls = []
+        for _ve in _ventries:
+            _vpage = os.path.join(REPO, _ve.get('page', ''))
+            if not os.path.exists(_vpage):
+                _bad_pages.append(_ve.get('page', '(missing page field)'))
+            _vurl = _ve.get('url', '')
+            if not _vurl.startswith('https://www.youtube.com/watch?v='):
+                _bad_urls.append(f'{_ve.get("page","?")} — {_vurl}')
+        for _p in _bad_pages:
+            warn(issues, f'Registry page not found: {_p}')
+        for _u in _bad_urls:
+            warn(issues, f'Non-YouTube URL in registry: {_u}')
+        results[38]['video_count'] = len(_ventries)
+        results[38]['bad_pages'] = len(_bad_pages)
+    except Exception as _e:
+        warn(issues, f'Failed to parse videos.yml: {_e}')
+
+
 # ── Report ────────────────────────────────────────────────────────────────────
 print('\n' + '='*70)
 print('KB SITE AUDIT REPORT')
@@ -838,6 +868,8 @@ for n in sorted(results):
         extra = f' — {r["svg_count"]} SVGs checked'
     if n == 30 and 'url_count' in r and not CHECK_LINKS:
         extra = f' — {r["url_count"]} URLs found (run --check-links to validate)'
+    if n == 38 and 'video_count' in r:
+        extra = f' — {r["video_count"]} videos registered'
     status = f'✅ Clean{extra}' if not issues else f'❌ {len(issues)} issue(s)'
     print(f'Check {n:2d}: {r["name"]}')
     print(f'         {status}')

@@ -23,6 +23,11 @@ End-to-end deployment guide from bare metal to a validated vSAN cluster. Phases 
 
 ## Before you begin
 
+<!-- video-link -->
+!!! tip "Video Walkthrough"
+    [:fontawesome-brands-youtube: How to Build a VMware vSAN Express Storage Architecture Cluster — Step by Step](https://www.youtube.com/watch?v=RDauebK14Nw){ .md-button }
+<!-- /video-link -->
+
 - **Access:** vCenter Administrator role and SSH access to VCSA/ESXi hosts
 - **Environment:** DNS, NTP, and network connectivity verified before starting
 - **Change management:** change request approved; maintenance window scheduled
