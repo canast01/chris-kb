@@ -84,6 +84,9 @@ if [ "$status" = "complete" ]; then
     echo "Indexed:  $indexed files → $chunks chunks in $elapsed"
     rm -f "$WAL_PREV"
     osascript -e 'display notification "Lumen index complete — semantic search is ready." with title "chris-kb" sound name "Glass"' 2>/dev/null || true
+    # Self-unload so launchd doesn't keep firing after completion
+    PLIST="$HOME/Library/LaunchAgents/com.chrisanastasiadis.lumen-status.plist"
+    [ -f "$PLIST" ] && launchctl unload "$PLIST" 2>/dev/null || true
     exit 0
 fi
 
