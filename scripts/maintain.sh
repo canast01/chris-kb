@@ -34,7 +34,13 @@ if ! echo "$SUMMARY" | grep -q "37/37"; then
 fi
 ok "Audit clean"
 
-# ── 3. Commit + push if anything changed ─────────────────────────────────────
+# ── 3. Incremental semantic search re-index ──────────────────────────────────
+if [ -d ".kb-search" ] && command -v python3 &>/dev/null; then
+    info "Re-indexing changed pages for semantic search..."
+    python3 scripts/kb_embed.py && ok "Search index updated" || echo "  ⚠️  Search index skipped (check OPENAI_API_KEY)"
+fi
+
+# ── 4. Commit + push if anything changed ─────────────────────────────────────
 CHANGES=$(git status --short | wc -l | tr -d ' ')
 if [ "${CHANGES}" -gt 0 ]; then
     info "$CHANGES file(s) changed — committing..."
