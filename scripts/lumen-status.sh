@@ -1,22 +1,27 @@
 #!/usr/bin/env bash
-# Check lumen indexing status for chris-kb from the debug log.
+# Check lumen indexing status for chris-kb.
+# Detects completion, failure, dead process, and stuck (no WAL growth).
+# Writes WAL size to .lumen-wal-prev for stuck detection between runs.
 set -euo pipefail
 
 LOG="$HOME/.local/share/lumen/debug.log"
+LUMEN_BIN="$HOME/.claude/plugins/cache/claude-plugins-official/lumen/0.0.41/bin/lumen-darwin-amd64"
+KB="$HOME/chris-kb"
+WAL_PREV="$KB/.lumen-wal-prev"
 
 if [ ! -f "$LOG" ]; then
     echo "No lumen debug log found at $LOG"
     exit 1
 fi
 
-echo "=== Lumen Index Status (chris-kb) ==="
+echo "=== Lumen Index Status (chris-kb) — $(date '+%Y-%m-%d %H:%M') ==="
 
-# Parse log in Python so we correctly track only the MOST RECENT session
-python3 - "$LOG" <<'PYEOF'
+# ── Parse most recent chris-kb session from log ───────────────────────────────
+STATUS=$(python3 - "$LOG" <<'PYEOF'
 import sys, json
 
 log_path = sys.argv[1]
-session = {}  # state of the most recent chris-kb session
+session = {}
 
 with open(log_path) as f:
     for line in f:
@@ -32,7 +37,6 @@ with open(log_path) as f:
             continue
         msg = d.get("msg", "")
         if msg == "indexing started":
-            # New session — reset state
             session = {"started": d["time"][:19].replace("T", " "), "status": "in_progress"}
         elif msg == "indexing plan" and session:
             session["total"] = d.get("total_files", "?")
@@ -48,24 +52,81 @@ with open(log_path) as f:
             session["error"] = d.get("err", "unknown")
 
 if not session:
-    print("No indexing session found for chris-kb")
+    print("NO_SESSION")
     sys.exit(0)
 
-print(f"Started:  {session.get('started', '?')}")
-if "total" in session:
-    print(f"Plan:     {session['total']} files ({session['to_add']} to add, {session['to_modify']} to modify)")
-
-status = session.get("status")
-if status == "complete":
-    print(f"Status:   ✅ COMPLETE")
-    print(f"Indexed:  {session['indexed']} files → {session['chunks']} chunks in {session['elapsed']}")
-elif status == "failed":
-    print(f"Status:   ❌ FAILED — {session['error']}")
-else:
-    print(f"Status:   ⏳ IN PROGRESS")
-    print(f"Watch:    tail -f {log_path} | grep chris-kb")
+def q(v): return f"'{v}'"
+print(f"started={q(session.get('started','?'))}")
+print(f"total={q(session.get('total','?'))}")
+print(f"to_add={q(session.get('to_add','?'))}")
+print(f"to_modify={q(session.get('to_modify','?'))}")
+print(f"status={q(session.get('status','?'))}")
+print(f"indexed={q(session.get('indexed',''))}")
+print(f"chunks={q(session.get('chunks',''))}")
+print(f"elapsed={q(session.get('elapsed',''))}")
+print(f"error={q(session.get('error',''))}")
 PYEOF
+)
 
-# Show WAL size as a progress proxy (grows as chunks are written)
-WAL=$(find "$HOME/.local/share/lumen" -name "index.db-wal" 2>/dev/null | xargs ls -lh 2>/dev/null | awk '{print $5}' | sort -h | tail -1 || true)
-[ -n "$WAL" ] && echo "WAL size: $WAL (grows as chunks are written)"
+if [ "$STATUS" = "NO_SESSION" ]; then
+    echo "No indexing session found for chris-kb"
+    exit 0
+fi
+
+eval "$STATUS"
+
+echo "Started:  $started"
+[ -n "${total:-}" ] && echo "Plan:     $total files ($to_add to add, $to_modify to modify)"
+
+# ── COMPLETE ──────────────────────────────────────────────────────────────────
+if [ "$status" = "complete" ]; then
+    echo "Status:   ✅ COMPLETE"
+    echo "Indexed:  $indexed files → $chunks chunks in $elapsed"
+    rm -f "$WAL_PREV"
+    exit 0
+fi
+
+# ── FAILED (log says so) ──────────────────────────────────────────────────────
+if [ "$status" = "failed" ]; then
+    echo "Status:   ❌ FAILED — $error"
+    echo "Action:   Restarting indexer..."
+    pkill -f "lumen-darwin.*index" 2>/dev/null || true
+    nohup "$LUMEN_BIN" index "$KB" >> "$KB/lumen-status.log" 2>&1 &
+    echo "          Restarted (PID $!)"
+    rm -f "$WAL_PREV"
+    exit 0
+fi
+
+# ── IN PROGRESS — check liveness and WAL growth ───────────────────────────────
+PROC=$(pgrep -f "lumen-darwin.*index" || true)
+WAL_SIZE=$(find "$HOME/.local/share/lumen" -name "index.db-wal" 2>/dev/null \
+    | xargs ls -l 2>/dev/null | awk '{print $5}' | sort -n | tail -1 || echo 0)
+
+# Check if process is alive
+if [ -z "$PROC" ]; then
+    echo "Status:   ❌ PROCESS DEAD (no lumen-darwin index process found)"
+    echo "Action:   Restarting indexer..."
+    nohup "$LUMEN_BIN" index "$KB" >> "$KB/lumen-status.log" 2>&1 &
+    echo "          Restarted (PID $!)"
+    rm -f "$WAL_PREV"
+    exit 0
+fi
+
+# Check WAL growth (stuck detection)
+PREV_WAL=0
+[ -f "$WAL_PREV" ] && PREV_WAL=$(cat "$WAL_PREV")
+echo "$WAL_SIZE" > "$WAL_PREV"
+
+echo "Status:   ⏳ IN PROGRESS (PID $PROC)"
+echo "WAL size: ${WAL_SIZE} bytes (prev: ${PREV_WAL} bytes)"
+
+if [ "${PREV_WAL}" -gt 0 ] && [ "${WAL_SIZE}" -le "${PREV_WAL}" ]; then
+    echo "Action:   ⚠️  WAL not growing — indexer appears stuck. Restarting..."
+    kill "$PROC" 2>/dev/null || true
+    sleep 2
+    nohup "$LUMEN_BIN" index "$KB" >> "$KB/lumen-status.log" 2>&1 &
+    echo "          Restarted (PID $!)"
+    rm -f "$WAL_PREV"
+else
+    echo "          WAL growing ✓ — indexer healthy"
+fi
