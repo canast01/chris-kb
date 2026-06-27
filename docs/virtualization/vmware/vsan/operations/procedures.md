@@ -45,12 +45,13 @@ esxcli vsan debug object list | grep -v healthy
 
 **Step 2 — Remove the disk from its disk group**
 
-**From vCenter UI:**
-Cluster → Configure → vSAN → Disk Management → select host → select failed disk → Remove Disk
+=== "vCenter UI"
+    Cluster → Configure → vSAN → Disk Management → select host → select failed disk → **Remove Disk**
 
-```bash
-esxcli vsan storage remove -d <failed_capacity_naa>
-```
+=== "ESXi CLI"
+    ```bash
+    esxcli vsan storage remove -d <failed_capacity_naa>
+    ```
 
 **Step 3 — Replace the physical disk**
 
@@ -64,12 +65,13 @@ esxcli storage core device list | grep <new_naa>
 
 **Step 5 — Add the new disk to the existing disk group**
 
-**From vCenter UI:**
-Cluster → Configure → vSAN → Disk Management → select host → Claim Disk → assign capacity role
+=== "vCenter UI"
+    Cluster → Configure → vSAN → Disk Management → select host → Claim Disk → assign capacity role
 
-```bash
-esxcli vsan storage add -s <existing_cache_ssd_naa> -d <new_capacity_naa>
-```
+=== "ESXi CLI"
+    ```bash
+    esxcli vsan storage add -s <existing_cache_ssd_naa> -d <new_capacity_naa>
+    ```
 
 **Step 6 — Monitor resync to completion**
 
@@ -101,12 +103,14 @@ esxcli vsan debug object list | grep -v healthy
 
 Removing the cache SSD removes the entire group. vSAN will start rebuilding all affected components on other hosts once the group is removed.
 
-**From vCenter UI:**
-Cluster → Configure → vSAN → Disk Management → select host → select disk group → Remove Disk Group (use Migrate Data if other hosts have capacity)
+=== "vCenter UI"
+    Cluster → Configure → vSAN → Disk Management → select host → select disk group → Remove Disk Group (use Migrate Data if other hosts have capacity)
 
-```bash
-esxcli vsan storage remove -s <failed_cache_ssd_naa>
-```
+=== "CLI"
+    ```bash
+    esxcli vsan storage remove -s <failed_cache_ssd_naa>
+    ```
+
 
 **Step 3 — Replace the physical cache SSD**
 
@@ -120,12 +124,14 @@ esxcli storage core device list | grep <new_naa>
 
 **Step 5 — Recreate the disk group**
 
-**From vCenter UI:**
-Cluster → Configure → vSAN → Disk Management → select host → Create Disk Group → assign cache and capacity roles
+=== "vCenter UI"
+    Cluster → Configure → vSAN → Disk Management → select host → Create Disk Group → assign cache and capacity roles
 
-```bash
-esxcli vsan storage add -s <new_cache_ssd_naa> -d <capacity_naa1> -d <capacity_naa2>
-```
+=== "CLI"
+    ```bash
+    esxcli vsan storage add -s <new_cache_ssd_naa> -d <capacity_naa1> -d <capacity_naa2>
+    ```
+
 
 **Step 6 — Monitor resync to completion**
 
@@ -177,12 +183,14 @@ esxcli vsan debug resync summary get
 
 **Step 4 — Exit maintenance mode after work is complete**
 
-**From vCenter UI:**
-Right-click host → Maintenance Mode → Exit Maintenance Mode
+=== "vCenter UI"
+    Right-click host → Maintenance Mode → Exit Maintenance Mode
 
-```powershell
-Set-VMHost -VMHost $host -State Connected
-```
+=== "PowerCLI"
+    ```powershell
+    Set-VMHost -VMHost $host -State Connected
+    ```
+
 
 Confirm the host rejoins the cluster:
 
@@ -404,14 +412,16 @@ Get-SpbmEntityConfiguration | Where-Object { $_.ComplianceStatus -ne "compliant"
 
 **Step 2 — Re-apply the policy to trigger recalculation**
 
-**From vCenter UI:**
-Cluster → Monitor → vSAN → Virtual Objects → select non-compliant object → right-click → Reapply Storage Policy
+=== "vCenter UI"
+    Cluster → Monitor → vSAN → Virtual Objects → select non-compliant object → right-click → Reapply Storage Policy
 
-```powershell
-$vm = Get-VM "my-vm"
-$policy = Get-SpbmStoragePolicy "VSAN-T1-FTT2-RAID6"
-Get-HardDisk -VM $vm | Set-SpbmEntityConfiguration -StoragePolicy $policy
-```
+=== "PowerCLI"
+    ```powershell
+    $vm = Get-VM "my-vm"
+    $policy = Get-SpbmStoragePolicy "VSAN-T1-FTT2-RAID6"
+    Get-HardDisk -VM $vm | Set-SpbmEntityConfiguration -StoragePolicy $policy
+    ```
+
 
 **Step 3 — Monitor resync**
 
@@ -499,13 +509,15 @@ Confirm host model, NIC, SSD, and NVMe devices are on the [VMware Compatibility 
 
 **Step 2 — Add host to vCenter and the cluster**
 
-**From vCenter UI:**
-Datacenter → Add Host → enter IP/hostname → root credentials → add to the vSAN cluster
+=== "vCenter UI"
+    Datacenter → Add Host → enter IP/hostname → root credentials → add to the vSAN cluster
 
-```powershell
-Add-VMHost -Name esxi-new.example.com -Location (Get-Cluster "VSAN-LON-01") `
-    -User root -Password <password> -Force
-```
+=== "PowerCLI"
+    ```powershell
+    Add-VMHost -Name esxi-new.example.com -Location (Get-Cluster "VSAN-LON-01") `
+        -User root -Password <password> -Force
+    ```
+
 
 **Step 3 — Claim disks**
 
@@ -876,13 +888,15 @@ esxcli system ntp set --enabled true
 
 **Step 3 — Add to vCenter and Cluster**
 
-**From vCenter UI:**
-Datacenter → Add Host → enter IP/hostname → provide root credentials → add to the vSAN cluster
+=== "vCenter UI"
+    Datacenter → Add Host → enter IP/hostname → provide root credentials → add to the vSAN cluster
 
-```powershell
-Add-VMHost -Name esxi-new.example.com -Location (Get-Cluster "VSAN-LON-01") `
-    -User root -Password <password> -Force
-```
+=== "PowerCLI"
+    ```powershell
+    Add-VMHost -Name esxi-new.example.com -Location (Get-Cluster "VSAN-LON-01") `
+        -User root -Password <password> -Force
+    ```
+
 
 **Step 4 — Configure vSAN VMkernel**
 
@@ -948,13 +962,15 @@ Decommissioning removes a host from the cluster and redistributes all its data. 
 
 **Step 1 — Full Data Evacuation**
 
-**From vCenter UI:**
-Right-click host → Maintenance Mode → Enter Maintenance Mode → **Full data migration**
+=== "vCenter UI"
+    Right-click host → Maintenance Mode → Enter Maintenance Mode → **Full data migration**
 
-```powershell
-Set-VMHost -VMHost (Get-VMHost esxi-decom.example.com) `
-    -State Maintenance -VsanDataMigrationMode Full
-```
+=== "PowerCLI"
+    ```powershell
+    Set-VMHost -VMHost (Get-VMHost esxi-decom.example.com) `
+        -State Maintenance -VsanDataMigrationMode Full
+    ```
+
 
 Monitor evacuation — do not proceed until resync is at zero:
 
@@ -967,21 +983,25 @@ watch -n 30 "esxcli vsan debug resync summary get"
 
 **Step 2 — Remove Disk Groups**
 
-**From vCenter UI:**
-Cluster → Configure → vSAN → Disk Management → select host → Remove Disk Groups
+=== "vCenter UI"
+    Cluster → Configure → vSAN → Disk Management → select host → Remove Disk Groups
 
-```bash
-esxcli vsan storage remove -s <cache_ssd_naa>
-```
+=== "CLI"
+    ```bash
+    esxcli vsan storage remove -s <cache_ssd_naa>
+    ```
+
 
 **Step 3 — Remove Host from Cluster**
 
-**From vCenter UI:**
-Right-click host → Remove from Inventory (or Move to another datacenter)
+=== "vCenter UI"
+    Right-click host → Remove from Inventory (or Move to another datacenter)
 
-```powershell
-Remove-VMHost -VMHost (Get-VMHost esxi-decom.example.com) -Confirm:$false
-```
+=== "PowerCLI"
+    ```powershell
+    Remove-VMHost -VMHost (Get-VMHost esxi-decom.example.com) -Confirm:$false
+    ```
+
 
 **Step 4 — Verify No Orphaned Objects**
 
@@ -1292,15 +1312,17 @@ Cluster → Configure → vSAN → Fault Domains → Add Fault Domain
 
 **Step 2 — Create domains and assign hosts**
 
-**From vCenter UI:**
-Add Fault Domain → name the domain (e.g., "Rack-A") → add hosts → repeat for each rack
+=== "vCenter UI"
+    Add Fault Domain → name the domain (e.g., "Rack-A") → add hosts → repeat for each rack
 
-```powershell
-$cluster = Get-Cluster "VSAN-LON-01"
-New-VsanFaultDomain -Name "Rack-A" -VMHost (Get-VMHost esxi-01, esxi-02) -Cluster $cluster
-New-VsanFaultDomain -Name "Rack-B" -VMHost (Get-VMHost esxi-03, esxi-04) -Cluster $cluster
-New-VsanFaultDomain -Name "Rack-C" -VMHost (Get-VMHost esxi-05, esxi-06) -Cluster $cluster
-```
+=== "PowerCLI"
+    ```powershell
+    $cluster = Get-Cluster "VSAN-LON-01"
+    New-VsanFaultDomain -Name "Rack-A" -VMHost (Get-VMHost esxi-01, esxi-02) -Cluster $cluster
+    New-VsanFaultDomain -Name "Rack-B" -VMHost (Get-VMHost esxi-03, esxi-04) -Cluster $cluster
+    New-VsanFaultDomain -Name "Rack-C" -VMHost (Get-VMHost esxi-05, esxi-06) -Cluster $cluster
+    ```
+
 
 **Step 3 — Monitor rebalance**
 
@@ -1703,12 +1725,14 @@ vmkping -I vmk2 <witness_vsan_vmk_ip>
 
 **Step 4 — Exit maintenance mode and verify resync**
 
-**From vCenter UI:**
-Right-click the maintenance node → Maintenance Mode → Exit Maintenance Mode
+=== "vCenter UI"
+    Right-click the maintenance node → Maintenance Mode → Exit Maintenance Mode
 
-```bash
-watch -n 60 "esxcli vsan debug resync summary get"
-```
+=== "CLI"
+    ```bash
+    watch -n 60 "esxcli vsan debug resync summary get"
+    ```
+
 
 ---
 

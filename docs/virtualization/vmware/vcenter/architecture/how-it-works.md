@@ -15,6 +15,31 @@ How It Works reference covering Deployment Model, Core Services, Main Dependenci
 </div>
 ![vCenter — How It Works](../../../../assets/virtualization-vmware-vcenter-architecture-how-it-works.svg)
 
+```d2
+direction: right
+
+vcenter: vCenter Server (VCSA) {
+  shape: hexagon
+}
+
+clients: vSphere Clients {shape: person}
+ad: Active Directory {shape: rectangle}
+dns: DNS {shape: rectangle}
+ntp: NTP {shape: rectangle}
+esxi: ESXi Hosts {shape: rectangle}
+vsan: vSAN Datastore {shape: cylinder}
+nsx: NSX Manager {shape: rectangle}
+backup: Backup Target {shape: cylinder}
+
+clients -> vcenter: HTTPS 443
+vcenter -> ad: LDAP/S 389·636
+vcenter -> dns: UDP 53
+vcenter -> ntp: UDP 123
+vcenter -> esxi: TCP 443·902
+esxi -> vsan: vSAN traffic
+vcenter -> nsx: REST API 443
+vcenter -> backup: SCP·SFTP
+```
 
 ## Deployment Model
 
@@ -142,6 +167,56 @@ service-control --status --all
 
 Sizing is set at deploy time and can be changed by modifying vCPU/RAM after deployment (requires reboot). Disk partitions can be expanded online.
 
+```vega-lite
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "title": "vCenter Sizing — Maximum VMs by Deployment Size",
+  "width": 400,
+  "height": 200,
+  "data": {
+    "values": [
+      {"size": "Tiny",    "max_vms": 100,   "max_hosts": 10},
+      {"size": "Small",   "max_vms": 1000,  "max_hosts": 100},
+      {"size": "Medium",  "max_vms": 4000,  "max_hosts": 400},
+      {"size": "Large",   "max_vms": 10000, "max_hosts": 1000},
+      {"size": "X-Large", "max_vms": 35000, "max_hosts": 2000}
+    ]
+  },
+  "layer": [
+    {
+      "mark": {"type": "bar", "tooltip": true},
+      "encoding": {
+        "x": {
+          "field": "size",
+          "type": "ordinal",
+          "sort": ["Tiny", "Small", "Medium", "Large", "X-Large"],
+          "title": "Deployment Size"
+        },
+        "y": {"field": "max_vms", "type": "quantitative", "title": "Max VMs"},
+        "color": {
+          "field": "size",
+          "type": "nominal",
+          "legend": null,
+          "scale": {"range": ["#64b5f6","#42a5f5","#2196f3","#1e88e5","#1565c0"]}
+        }
+      }
+    },
+    {
+      "mark": {"type": "text", "dy": -6, "fontSize": 11},
+      "encoding": {
+        "x": {
+          "field": "size",
+          "type": "ordinal",
+          "sort": ["Tiny", "Small", "Medium", "Large", "X-Large"]
+        },
+        "y": {"field": "max_vms", "type": "quantitative"},
+        "text": {"field": "max_vms", "type": "quantitative"}
+      }
+    }
+  ]
+}
+```
+
 ---
 
 ## Failure Domains
@@ -268,6 +343,35 @@ Swagger UI: `https://<vcenter>/apiexplorer`
 
 ## Identity Federation (vSphere 8)
 
+vSphere 8 supports Active Directory Federation Services (AD FS) as an external identity provider via OIDC, replacing the older LDAP bind model. The flow below shows how vSphere Client authenticates a user through an external IdP.
+
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+actor Admin
+participant "vSphere Client" as UI
+participant "vCenter SSO\n(STSD)" as SSO
+participant "AD FS / IdP\n(OIDC)" as IDP
+participant "Active Directory" as AD
+
+Admin -> UI: Open https://vcenter/ui
+UI -> SSO: GET /ui — unauthenticated
+SSO --> UI: Redirect → IdP authorization endpoint
+UI -> IDP: Authorization request (OIDC code flow)
+IDP --> Admin: IdP login page
+Admin -> IDP: Credentials (AD UPN format)
+IDP -> AD: Kerberos / LDAP credential validation
+AD --> IDP: Auth OK + group membership
+IDP --> UI: Authorization code
+UI -> SSO: Exchange code → SSO token
+SSO -> IDP: Token introspection / JWKS verification
+IDP --> SSO: ID token claims (UPN, groups)
+SSO --> UI: vCenter session established
+UI --> Admin: vSphere Client dashboard (roles from group mapping)
+@enduml
+```
 
 ---
 
