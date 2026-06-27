@@ -19,20 +19,7 @@ Firewall and NSG port reference for Microsoft Azure infrastructure. Covers manag
 
 ## Network Zones
 
-```text
-On-Premises / Corporate                     Azure
-┌────────────────────────┐                  ┌───────────────────────────────────────────────────────────┐
-│  Admin workstations    │──443 (HTTPS)────▶│  management.azure.com API                                 │
-│  Terraform / Ansible   │──443────────────▶│  *.azure.com APIs                                         │
-│  CI/CD runners         │──443────────────▶│  *.microsoftonline.com (Entra ID)                         │
-└────────────────────────┘                  │                                         │
-                                            │  Azure Virtual Network                  │
-         ExpressRoute / VPN Gateway         │  ┌─────────────────────────────────┐    │
-┌────────────────────────┐──22/3389/443────▶│  │  VMs / AKS nodes / SQL          │    │
-│  On-prem workloads     │                  │  │  (NSG per subnet or per NIC)    │                      │
-└────────────────────────┘                  │  └─────────────────────────────────┘    │
-                                            └─────────────────────────────────────────┘
-```
+![Microsoft Azure — Ports and Network Requirements — Diagram](../../../assets/cloud-azure-architecture-ports-diagram.svg)
 
 ## Before you begin
 

@@ -178,28 +178,7 @@ Blast radius:
 
 ## Escalation Path
 
-```text
-Step 1 — Open P1 SR via APEX Console or support.dell.com with multipath + SCG logs
-         ↓
-Step 2 — For P1: call Dell support phone immediately after opening the portal SR
-         (number on case confirmation page; 24×7 for P1)
-         ↓
-Step 3 — Dell T1 reviews case and determines whether issue is host-side or infrastructure-side
-         → Host-side: Dell guides host reconfiguration (HBA, iSCSI, multipath settings)
-         → Infrastructure-side: Dell dispatches hardware engineer for on-site remediation
-         ↓
-Step 4 — If no meaningful progress in 4 hours for P1 / 8 hours for P2:
-         → Add case update: "Requesting escalation — production storage offline since [time]"
-         → Contact your Dell account team to escalate to TAC manager
-         ↓
-Step 5 — For P1 unresolved > 4 hours:
-         → Request executive escalation through Dell account team
-         → Provide business impact: affected hosts, databases/applications offline, revenue impact
-         ↓
-Step 6 — After resolution: request a written RCA (Root Cause Analysis) from Dell
-         → RCA is standard for P1 events under ProSupport Plus
-         → RCA should include root cause, timeline, corrective action, and preventive measures
-```
+![APEX Storage as a Service — Escalation — Diagram](../../../../assets/storage-dell-apex-storage-as-a-service-troubleshooting-escalation-diagram.svg)
 
 ---
 

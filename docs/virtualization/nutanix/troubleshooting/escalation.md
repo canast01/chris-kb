@@ -188,27 +188,7 @@ Blast radius: 1 production VM down (db-prod-01); cluster at RF minimum; 1 more f
 
 ## Escalation Path
 
-```text
-Step 1 — Open case at portal.nutanix.com with NCC output and support bundle attached
-         ↓
-Step 2 — Nutanix T1 engineer acknowledges (S1: < 30 min; S2: < 4 hr)
-         ↓
-Step 3 — If no meaningful progress within 30 minutes for S1 or 4 hours for S2:
-         → Reply in case: "Requesting escalation to Senior Support Engineer"
-         → State: "[CAN_TOLERATE=0 / VM down / Stargate I/O errors / data at risk]"
-         ↓
-Step 4 — Nutanix T2 Senior Engineer assigned
-         → They will request Pulse remote access or a screen-share session
-         → Enable Pulse if not already active; or arrange a Jump Host for air-gapped envs
-         ↓
-Step 5 — If the issue requires engineering involvement (AOS bug, Stargate regression):
-         → T2 escalates to Nutanix Engineering
-         → Engineering may provide a targeted fix, hotfix build, or specific recovery procedure
-         ↓
-Step 6 — For S1 with data loss or cluster offline, unresolved after 2 hours:
-         → Request Critical Situation (CritSit) escalation via the case
-         → Your Account Executive or Customer Success Manager can initiate CritSit
-```
+![Nutanix — Escalation — Diagram](../../../assets/virtualization-nutanix-troubleshooting-escalation-diagram.svg)
 
 ---
 

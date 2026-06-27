@@ -50,14 +50,7 @@ The Vault Server Key (`server.key`) is the master encryption key. Without it, th
 
 ### Location
 
-```text
-<Vault install path>\PrivateArk\Server\
-├── server.key        # Server private key (AES-256 encrypted at rest)
-├── recpub.key        # Recovery public key
-├── recprv.key        # Recovery private key (may be stored separately)
-└── conf\
-    └── dbparm.ini    # Vault configuration
-```
+![CyberArk — Backup & Restore — Diagram](../../../../assets/security-cyberark-operations-backup-restore-diagram.svg)
 
 ### Backup the Server Key
 

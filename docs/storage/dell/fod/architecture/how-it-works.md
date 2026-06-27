@@ -51,16 +51,7 @@ graph TB
 
 ## Metering Model
 
-```text
-Total Installed Capacity (physically installed)
-    │
-    ├── Committed Baseline (licensed, always billed)
-    │       └── Available for immediate use
-    │
-    └── Burst Range (base → burst ceiling)
-            └── Metered monthly at per-TiB rate
-                Billed on peak-hour consumption during billing month
-```
+![Flex on Demand — How It Works — Diagram](../../../../assets/storage-dell-fod-architecture-how-it-works-diagram.svg)
 
 FOD contracts define a **base** commitment and a **burst ceiling**. Usage between base and ceiling is billed monthly. Usage above the burst ceiling may trigger over-usage charges or require an immediate license upgrade.
 

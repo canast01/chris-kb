@@ -14,24 +14,7 @@ Install & Upgrade reference covering Evergreen Program Tiers, Software Upgrade (
 ![Evergreen — Install & Upgrade](../../../../assets/storage-pure-evergreen-operations-install-upgrade.svg)
 
 
-```text
-Evergreen Upgrade Types
-  ┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
-  │  Purity NDU Software Upgrade                           │
-  │  Customer-initiated, fully non-disruptive              │
-  │  purearray upgrade --check → --stage → --exec         │
-  └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-  ┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
-  │  Ever Modern Controller Refresh (~3 yr cycle)          │
-  │  Pure-executed, non-disruptive                         │
-  │  Scheduled with Pure account team (90+ day lead time)  │
-  └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-  ┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
-  │  Capacity Expansion                                    │
-  │  Add NVMe shelf or True Forward amendment              │
-  │  Pure installs new shelf (hot-add, non-disruptive)     │
-  └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+![Evergreen — Install & Upgrade — Diagram](../../../../assets/storage-pure-evergreen-operations-install-upgrade-diagram.svg)
 
 > Part of the [Evergreen Operations](index.md) reference.
 

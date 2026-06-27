@@ -51,44 +51,7 @@ flowchart TD
     J -->|Yes| K["Pilot Light\n(scale up on failover)"]
     J -->|No| L["Backup-Restore\n(periodic backup, manual restore process)"]
 ```
-```text
-┌─────────────────────────────── Architecture — Disaster Recovery Design ───────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │        DR design: select site topology and replication pattern to meet RPO/RTO targets        │   │
-│   │          Tiers: hot standby (< 1 min RTO), warm (< 4h), cold (> 4h, data only backup)         │   │
-│   │       Replication: synchronous (zero RPO, latency cost) vs async (small RPO, no latency)      │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                   DR Tiers                   │  │             Replication Options             │   │
-│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
-│   │             Hot: always-on sync              │  │           Sync: zero RPO; ≤ 100km           │   │
-│   │            Warm: replicated async            │  │              Async: RPO minutes             │   │
-│   │              Cold: backup only               │  │             SRM / Zerto / vVols             │   │
-│   │             DR site sizing: N+x              │  │          Storage-level replication          │   │
-│   │            Test annually minimum             │  │           App-consistent snapshots          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   │       Tier       │       RPO        │        RTO        │       Cost       │    Technology    │   │
-│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
-│   │   Hot standby    │    Near zero     │      < 15 min     │     Highest      │     Sync rep     │   │
-│   │   Warm standby   │     < 15 min     │     1-4 hours     │      Medium      │    Async rep     │   │
-│   │   Cold standby   │    < 24 hours    │     > 4 hours     │      Lowest      │   Backup/tape    │   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    RPO          = Recovery Point Objective; max acceptable data loss; drives replication freq         │
-│    RTO          = Recovery Time Objective; max acceptable downtime; drives DR tier selection          │
-│    Synchronous  = Write confirmed only after replica ACK; zero data loss; limited by distance         │
-│    Asynchronous = Write confirmed locally; replica slightly behind; RPO = replication interval        │
-│    SRM          = VMware Site Recovery Manager; orchestrates VM failover between vCenter sites        │
-│    BCP          = Business Continuity Plan; broader than DR; includes people, process, comms          │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+![Disaster Recovery Design — Diagram](../../../assets/backup-dr-operations-dr-design-diagram.svg)
 
 **Design decisions for DR site topology:**
 

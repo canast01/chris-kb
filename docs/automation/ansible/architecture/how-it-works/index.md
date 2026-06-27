@@ -63,18 +63,7 @@ sequenceDiagram
 
 Roles provide a structured, reusable packaging format bundling tasks, handlers, variables, templates, and files.
 
-```text
-roles/
-└── nginx/
-    ├── defaults/main.yml
-    ├── vars/main.yml
-    ├── tasks/main.yml
-    ├── handlers/main.yml
-    ├── templates/
-    ├── files/
-    ├── meta/main.yml
-    └── molecule/
-```
+![Ansible — How It Works — Diagram](../../../../assets/automation-ansible-architecture-how-it-works-diagram.svg)
 
 ---
 

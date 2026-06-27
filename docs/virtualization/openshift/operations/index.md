@@ -12,35 +12,7 @@ Day-2 operations: oc CLI, health checks, node management, upgrade procedures, et
 ![OpenShift — Operations](../../../assets/virtualization-openshift-operations-index.svg)
 
 
-```text
-┌──────────────────────────────────────── OpenShift Operations ─────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                                   OpenShift Day-2 Operations                                  │   │
-│   │          Six sub-sections: CLI, Health Checks, Procedures, Upgrades, Backup, Scripts          │   │
-│   │           Health baseline: all COs True/False/False; all nodes Ready; etcd 3 members          │   │
-│   │               Upgrades: oc adm upgrade → EUS-to-EUS path for minor version jumps              │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                 ▼                               ▼                                 ▼                   │
-│                                                                                                       │
-│   ┌────────────────────────────┐  ┌────────────────────────────┐  ┌───────────────────────────────┐   │
-│   │        Daily Health        │  │         Procedures         │  │            Upgrades           │   │
-│   │       oc get co,nodes      │  │     Node drain/uncordon    │  │          oc adm upgrade       │   │
-│   │     etcd endpoint health   │  │      MachineSet scaling    │  │         EUS channel path      │   │
-│   │     cert rotation check    │  │        Cert rotation       │  │        Version lifecycle      │   │
-│   └────────────────────────────┘  └────────────────────────────┘  └───────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               Backup & Restore               │  │                   Scripts                   │   │
-│   │              etcd snapshot backup            │  │                health-check.sh              │   │
-│   │             Restore from etcd snap           │  │                 csr-approve.sh              │   │
-│   │               OADP / Velero apps             │  │                 node-drain.sh               │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-```
+![OpenShift — Operations — Diagram](../../../assets/virtualization-openshift-operations-diagram.svg)
 <div class="kb-grid">
   <a class="kb-card" href="cli-reference/">
     <span class="kb-card-title">CLI Reference</span>

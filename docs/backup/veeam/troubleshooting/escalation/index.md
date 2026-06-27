@@ -133,27 +133,7 @@ Blast radius: 47 VMs in the backup job failed; no successful backup for 24h
 
 ## Escalation Path
 
-```text
-Step 1 — Open case at my.veeam.com with log bundle attached
-         ↓
-Step 2 — T1 support acknowledges and confirms logs received (typically 1–2 hr)
-         ↓
-Step 3 — If no meaningful progress within SLA (1 hr for Sev1, 4 hr for Sev2):
-         → Reply in the case: "Requesting escalation to Senior Veeam Engineer"
-         → State impact: "[47 VMs unprotected / restore failing in DR / chain broken]"
-         ↓
-Step 4 — Senior engineer is assigned; they may request a live remote session
-         → Have VBR Console open and screen sharing ready (Teams/Zoom)
-         → Ensure SSH/RDP to Backup Server is accessible
-         ↓
-Step 5 — If issue requires code-level investigation or patch:
-         → Senior engineer escalates to Veeam Engineering
-         → Engineering may provide a hotfix build if a product bug is confirmed
-         ↓
-Step 6 — For active data loss or restore failure in a live DR scenario:
-         → Request escalation to Veeam ProSupport duty manager
-         → Add to case: "Escalation requested — active DR restore failing; data at risk"
-```
+![Veeam — Escalation — Diagram](../../../../assets/backup-veeam-troubleshooting-escalation-diagram.svg)
 
 ---
 

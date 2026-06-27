@@ -33,15 +33,7 @@ PowerStore encrypts all data at rest using AES-256 encryption at the drive level
 
 PowerStore D@RE uses a two-tier key hierarchy:
 
-```text
-Drive Encryption Keys (DEKs)
-  └── Unique per NVMe SSD; generated and stored on the drive controller
-Key Encryption Keys (KEKs)
-  └── Encrypt the DEKs; held by PowerStore node
-      Options:
-      ├── Internal Key Management (IKM)  — KEKs stored within PowerStoreOS (default)
-      └── External Key Management (EKM)  — KEKs stored in an external KMIP key server
-```
+![PowerStore — Encryption — Diagram](../../../../assets/storage-dell-powerstore-security-encryption-diagram.svg)
 
 ### Verify D@RE Status
 

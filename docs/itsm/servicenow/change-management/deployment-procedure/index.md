@@ -28,15 +28,7 @@ rm /etc/<service>.conf.pre-<date>   # only after validation passes
 
 # Update ITSM ticket: outcome, duration, any deviations
 ```
-```text
-Validation fails?
-  ├─ Immediate: service down / error rate > 3×baseline
-  │     → Roll back now; notify stakeholders
-  └─ Degraded: latency elevated / some errors
-        → Investigate for 10 min
-              ├─ Improving → continue soak
-              └─ Not improving → roll back
-```
+![Deployment Procedure — Diagram](../../../../assets/itsm-servicenow-change-management-deployment-procedure-diagram.svg)
 ```bash
 # Restore config from backup
 cp /etc/<service>.conf.pre-<date> /etc/<service>.conf

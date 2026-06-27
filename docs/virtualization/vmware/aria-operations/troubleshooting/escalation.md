@@ -16,49 +16,7 @@ How to escalate VMware Aria Operations issues to Broadcom support: what data to 
 ![Aria Operations — Escalation](../../../../assets/virtualization-vmware-aria-operations-troubleshooting-escala.svg)
 
 
-```text
-┌───────────────────────────────────── Aria Operations Escalation ──────────────────────────────────────┐
-│                                                                                                       │
-│  Escalate Aria Operations issues to VMware GSS when the vROps UI is completely                        │
-│  unavailable, all adapters are disconnected, a cluster node is offline causing                        │
-│  data collection to stop, or an upgrade has corrupted the cluster state.                              │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Step 1 — Collect Data               │  │          Step 2 — Open the SR               │   │
-│   │  Generate support bundle via UI or VAMI      │  │  Go to support.broadcom.com → sign in       │   │
-│   │  Capture cluster node status from Admin UI   │  │  Product: VMware Aria Operations            │   │
-│   │  Note Aria Ops version + cluster size         │  │  Severity: P1 down / P2 degraded / P3 minor │  │
-│   │  Collect adapter error details + timeline    │  │  Attach support bundle + cluster status     │   │
-│   │  Write timeline: last good → first failure   │  │  Include vROps version and node topology    │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  For P1: open portal case AND call Broadcom support immediately.                                      │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Step 3 — Escalation Path            │  │         What NOT to Do                      │   │
-│   │  T1: triage + confirm bundle received        │  │  Do not delete adapters during investigation│   │
-│   │  T2: Aria Ops SE assigned; deep analysis     │  │  Do not restart all services on all nodes   │   │
-│   │  T3: engineering review for code-level fix   │  │  Do not reboot cluster nodes without GSS    │   │
-│   │  CritSit: P1 monitoring down > 2 hours       │  │  Do not apply upgrade mid-incident          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Adapter       = Aria Ops data collection plugin; one adapter per monitored product                   │
-│  Master node   = primary Aria Ops cluster node; hosts the UI and orchestrates collection              │
-│  Replica node  = additional Aria Ops nodes for HA and capacity; collect data in parallel              │
-│  Data node     = optional remote nodes for geographically distributed collection                      │
-│  VAMI          = Virtual Appliance Management Interface; port 5480; cluster health UI                 │
-│  PAK file      = Aria Ops management pack archive; used to install adapter plugins                    │
-│  services.sh   = Aria Ops cluster service management script                                           │
-│  CaSA          = Aria Ops support bundle tool; `/usr/lib/vmware-casa/casa-support-bundle.sh`          │
-│  GSS           = Global Support Services; Broadcom/VMware support team                                │
-│  CritSit       = Critical Situation; Broadcom war room; triggered for prolonged monitoring outage     │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+![Aria Operations — Escalation — Diagram](../../../../assets/virtualization-vmware-aria-operations-troubleshooting-escalation-diagram.svg)
 
 ---
 
@@ -217,26 +175,7 @@ Blast radius: Monitoring data collection halted for entire environment; 1,400 ob
 
 ## Escalation Path
 
-```text
-Step 1 — Open case at support.broadcom.com with support bundle and cluster status attached
-         ↓
-Step 2 — T1 support engineer acknowledges (Sev1: < 30 min; Sev2: < 2 hr)
-         ↓
-Step 3 — If no meaningful progress in 30 minutes for Sev1 or 2 hours for Sev2:
-         → Reply: "Requesting escalation to Aria Operations Senior Engineer"
-         → State: "[UI down / cluster degraded / all adapters in error / monitoring blind]"
-         ↓
-Step 4 — Aria Operations T2 Senior Engineer assigned
-         → They will request SSH access to the master node for a live session
-         → Have SSH and VAMI access to all nodes ready
-         ↓
-Step 5 — If issue is a confirmed product bug (cluster sync failure, adapter framework issue):
-         → T2 escalates to Aria Operations Engineering
-         → Engineering may provide a specific patch, recovery procedure, or database repair script
-         ↓
-Step 6 — For Sev1 monitoring outage unresolved after 2 hours:
-         → Request CritSit escalation; contact your Broadcom TAM or Account Executive
-```
+![Aria Operations — Escalation — Diagram](../../../../assets/virtualization-vmware-aria-operations-troubleshooting-escalation-d2.svg)
 
 ---
 

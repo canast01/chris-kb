@@ -14,25 +14,7 @@ Health Checks reference covering Daily Checks, Health Check, Array Health, Blade
 
 
 
-```text
-FlashBlade Health Check Sequence
-  purefb alert list ──► Any active alerts?
-         │
-         ▼
-  purefb blade list ──► All blades healthy (no failed/missing)?
-         │
-         ▼
-  purefb hardware list ──► Chassis / PSU / fans ok?
-         │
-         ▼
-  purefb array list --space ──► Capacity < 80%?
-         │
-         ▼
-  purefb replication list ──► ActiveDR lag within RPO?
-         │
-         ▼
-  Pure1 portal ──► Fleet-level anomaly check
-```
+![FlashBlade — Health Checks — Diagram](../../../../assets/storage-pure-flashblade-operations-health-checks-diagram.svg)
 
 > Part of the [FlashBlade Operations](index.md) reference.
 

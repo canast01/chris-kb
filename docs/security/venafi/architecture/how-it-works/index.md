@@ -68,22 +68,7 @@ graph TB
 
 The Venafi policy tree (`\VED\Policy\`) organises certificates into folders that apply inheritance-based policy. Certificates inherit policy settings from parent folders unless explicitly overridden.
 
-```text
-\VED\Policy\
-├── Internal\
-│   ├── Production\
-│   │   ├── Servers\
-│   │   └── Services\
-│   ├── Non-Production\
-│   │   ├── Dev\
-│   │   └── Test\
-│   └── Infrastructure\
-│       ├── Network\
-│       └── VMware\
-└── External\
-    ├── Public\
-    └── Partners\
-```
+![Venafi — How It Works — Diagram](../../../../assets/security-venafi-architecture-how-it-works-diagram.svg)
 
 Policy folder settings:
 

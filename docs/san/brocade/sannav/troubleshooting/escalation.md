@@ -203,27 +203,7 @@ Blast radius: SANnav UI completely unavailable; zone changes not possible; fabri
 
 ## Escalation Path
 
-```text
-Step 1 — Open case at support.broadcom.com with SANnav bundle + journalctl + supportsaves
-         ↓
-Step 2 — TAC T1 engineer acknowledges (Sev1: < 30 min; Sev2: < 2 hr)
-         ↓
-Step 3 — If no meaningful progress in 30 minutes for Sev1 or 2 hours for Sev2:
-         → Reply: "Requesting escalation to SANnav Senior Engineer"
-         → State: "[UI down / zone push failing / discovery stopped / upgrade failed]"
-         ↓
-Step 4 — SANnav T2 Senior Engineer assigned
-         → They may request SSH access to the SANnav appliance VM for a live session
-         → Have SSH access to the appliance and vSphere console access (for VM restart) ready
-         ↓
-Step 5 — If issue involves a confirmed SANnav bug (upgrade regression, DB schema issue):
-         → T2 escalates to SANnav Engineering
-         → Engineering provides targeted recovery procedure or patch build
-         ↓
-Step 6 — For Sev1 with SANnav down > 2 hours and no resolution:
-         → Request TAM or account team escalation
-         → TAC will arrange a bridge call with Engineering if needed
-```
+![Brocade SANnav — Escalation — Diagram](../../../../assets/san-brocade-sannav-troubleshooting-escalation-diagram.svg)
 
 ---
 

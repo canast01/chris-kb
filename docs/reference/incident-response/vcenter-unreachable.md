@@ -67,17 +67,7 @@ Look for services in `stopped` state, especially `vpxd`, `vmware-vpostgres`, `vm
 
 Determine which of three scenarios applies before proceeding:
 
-```text
-Is the vCenter VM pingable?
-  → NO  ──→ [A] vCenter VM is down (power off or host issue)
-  → YES
-      Is HTTPS (443) responding?
-        → NO  ──→ [B] vCenter service is down (vpxd or rhttpproxy crashed)
-        → YES
-            Is the UI loading?
-              → NO  ──→ [C] Database issue (vPostgres not responding)
-              → YES ──→ Client-side or DNS issue — clear browser cache / check DNS
-```
+![INC-001: vCenter Server Unreachable — Diagram](../../assets/reference-incident-response-vcenter-unreachable-diagram.svg)
 
 ---
 

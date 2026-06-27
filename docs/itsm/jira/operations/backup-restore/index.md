@@ -53,21 +53,7 @@ tar -czf "${BACKUP_DIR}/jira_fs_${TIMESTAMP}.tar.gz" \
 
 echo "Filesystem backup complete: ${BACKUP_DIR}/${TIMESTAMP}"
 ```
-```text
-/var/atlassian/application-data/jira/shared/
-├── attachments/          ← INCLUDE (primary data)
-├── avatars/              ← INCLUDE
-├── logos/                ← INCLUDE
-├── export/               ← OPTIONAL (regeneratable)
-├── plugins/              ← INCLUDE
-└── data/                 ← INCLUDE
-
-# Per-node (back up once — same on all nodes):
-/var/atlassian/application-data/jira/
-├── dbconfig.xml          ← INCLUDE
-├── cluster.properties    ← INCLUDE
-└── jira-config.properties ← INCLUDE
-```
+![Jira — Backup and Restore — Diagram](../../../../assets/itsm-jira-operations-backup-restore-diagram.svg)
 ```bash
 #!/bin/bash
 # snapshot-backup.sh — Coordinated LVM snapshot backup

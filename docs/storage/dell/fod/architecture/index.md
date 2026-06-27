@@ -11,55 +11,7 @@ Consumption-based capacity model on PowerMax, PowerStore, and PowerScale. Additi
 *Applies to: Dell FOD*
 </div>
 
-```text
-┌───────────────────────────── Dell FOD — Features on Demand Architecture ──────────────────────────────┐
-│                                                                                                       │
-│  Software feature licensing for PowerMax; activates SRDF, TimeFinder, and other features              │
-│  without hardware changes; license key via ESRS or offline import in Unisphere.                       │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               Licensing Model                │  │              Available Features             │   │
-│   │         Software-defined activation          │  │        SRDF: synchronous replication        │   │
-│   │        License key: term or permanent        │  │         TimeFinder: snapshots+clones        │   │
-│   │           ESRS: online validation            │  │          SRDF/Metro: active-active          │   │
-│   │         Offline: import license file         │  │           Analytics: AI-based recs          │   │
-│   │          No hardware change needed           │  │             Cloud tiering: to S3            │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  SRDF and TimeFinder are most commonly licensed via FOD; both need ESRS for validation.               │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               Activation Steps               │  │                  FOD vs COD                 │   │
-│   │           Order feature from Dell            │  │         FOD: software feature unlock        │   │
-│   │          License key sent by email           │  │           COD: raw capacity unlock          │   │
-│   │           Unisphere: System → FOD            │  │          Same ESRS channel for both         │   │
-│   │         Import key → ESRS validates          │  │          Can combine on same array          │   │
-│   │          Feature active in minutes           │  │             Both: PowerMax only             │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  PowerMax array (all features physically capable but software-locked);                                │
-│  ESRS connectivity to esrs.dell.com on TCP 443 required for online activation.                        │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  FOD            = Features on Demand; PowerMax software feature licensing                             │
-│  SRDF           = Symmetrix Remote Data Facility; PowerMax replication technology                     │
-│  TimeFinder     = PowerMax snapshot and clone technology                                              │
-│  SRDF/Metro     = synchronous active-active replication; zero RPO Metro stretch                       │
-│  ESRS           = EMC Secure Remote Services; Dell license validation channel                         │
-│  Unisphere      = PowerMax web management UI; FOD license import location                             │
-│  Term license   = time-limited feature license; must be renewed                                       │
-│  Permanent license= one-time purchase; no renewal; tied to array serial number                        │
-│  COD            = Capacity on Demand; capacity extension (different from FOD)                         │
-│  Feature lock   = feature code in array firmware; FOD key unlocks it                                  │
-│  Offline import = load license file via USB/SFTP without ESRS connectivity                            │
-│  PowerMax       = Dell high-end AFA; only platform supporting FOD                                     │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+![Flex on Demand — Architecture — Diagram](../../../../assets/storage-dell-fod-architecture-diagram.svg)
 
 ```mermaid
 graph TB

@@ -157,27 +157,7 @@ Blast radius: All 150 production VMs unprotected for 24h; restore not tested
 
 ## Escalation Path
 
-```text
-Step 1 — Open case at ma.commvault.com with CV_DIAG bundle attached
-         ↓
-Step 2 — T1 support acknowledges and reviews the bundle (Sev1: within 1 hr)
-         ↓
-Step 3 — If no meaningful progress in 1 hour for Sev1 or 4 hours for Sev2:
-         → Reply in case: "Requesting escalation to Senior Commvault Engineer"
-         → State: "[CommServe down / 150 VMs unprotected / DDB corrupt]"
-         ↓
-Step 4 — Senior Engineer is assigned; they will request a remote WebEx/Teams session
-         → Have CommCell Console open and Remote Desktop access to CommServe ready
-         → Ensure Commvault support can reach CommServe on port 8400 or via VPN
-         ↓
-Step 5 — If issue is a confirmed product bug:
-         → Engineer escalates to Commvault Engineering
-         → Engineering may provide a hotfix build or targeted patch
-         ↓
-Step 6 — For Sev1 unresolved after 2 hours or active data loss:
-         → Request escalation to Commvault Support Manager
-         → Add to case: "Escalation requested — [CommServe down / data loss / Xh elapsed]"
-```
+![Commvault — Escalation — Diagram](../../../../assets/backup-commvault-troubleshooting-escalation-diagram.svg)
 
 ---
 

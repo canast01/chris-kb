@@ -86,25 +86,7 @@ ENTRYPOINT ["python", "-m", "widget_automation"]
 
 ## Project Layout
 
-```text
-widget-automation/
-├── pyproject.toml
-├── poetry.lock
-├── Dockerfile
-├── .env.example
-├── src/
-│   └── widget_automation/
-│       ├── __init__.py
-│       ├── __main__.py
-│       ├── cli.py
-│       ├── config.py
-│       ├── api.py
-│       └── utils.py
-└── tests/
-    ├── conftest.py
-    ├── test_api.py
-    └── test_config.py
-```
+![Python Automation — How It Works — Diagram](../../../../assets/automation-python-architecture-how-it-works-diagram.svg)
 
 ---
 

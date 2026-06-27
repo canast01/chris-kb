@@ -191,26 +191,7 @@ Escalation needed:
 
 ## Escalation Path
 
-```text
-Step 1 — Open SR at support.dell.com with error output and SN comparison
-         Specify in Notes which team should handle (Licensing vs TAC vs Account team)
-         ↓
-Step 2 — Key rejection / SN mismatch → Dell Licensing team
-         → Licensing re-generates the key with the correct SID
-         → SLA: 1 business day; for emergency capacity events, account team can expedite
-         ↓
-Step 3 — Capacity not reflecting after valid key import → Dell TAC
-         → TAC checks firmware version requirements and backend license flag state
-         → May require a firmware update or a backend unlock on the PowerMax array
-         ↓
-Step 4 — Contract or billing dispute → Dell Account team
-         → Account team connects to Dell Contract Management
-         → Purchase order number required to locate the key history
-         ↓
-Step 5 — If unresolved after 1 business day (P3) or 4 hours (P2):
-         → Add case update: "Requesting escalation — capacity expansion blocked since [date]"
-         → Contact your Dell account executive to expedite with the Licensing team
-```
+![COD — Escalation — Diagram](../../../../assets/storage-dell-cod-troubleshooting-escalation-diagram.svg)
 
 ---
 

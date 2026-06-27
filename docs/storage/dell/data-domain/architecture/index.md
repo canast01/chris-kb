@@ -11,55 +11,7 @@ Dell PowerProtect DD (Data Domain) is a purpose-built backup appliance with inli
 *Applies to: Data Domain DD OS 7.x*
 </div>
 
-```text
-┌────────────────────────── Dell Data Domain — Backup Appliance Architecture ───────────────────────────┐
-│                                                                                                       │
-│  Purpose-built backup appliance (PBBA) with inline global deduplication (65:1 typical);               │
-│  DD Boost protocol for direct backup app integration; DD Replicator for AIR.                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              Core Architecture               │  │                  Data Paths                 │   │
-│   │        PBBA: optimized for backup IO         │  │        DD Boost: OST plugin on client       │   │
-│   │         Inline dedup: before writing         │  │         NFS/CIFS: legacy backup apps        │   │
-│   │         Typical ratio: 20:1 to 65:1          │  │         DD VTL: virtual tape library        │   │
-│   │          DDVE: virtual edition (VM)          │  │         Boost FC: FC-attached option        │   │
-│   │           DD OS: purpose-built OS            │  │         S3: object interface (DDVE)         │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  DD Boost offloads dedup processing to client (backup server) for faster throughput.                  │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │         Replication (DD Replicator)          │  │                  Management                 │   │
-│   │          AIR: Automatic Image Repl           │  │            DD OS CLI: ddsh shell            │   │
-│   │         Dir-to-dir or MTree replica          │  │          DD System Manager: web UI          │   │
-│   │         Collection replication: full         │  │         DD Mgmt Center: multi-system        │   │
-│   │           Cascade: A → B → C chain           │  │          REST API v2.1: automation          │   │
-│   │           Cloud tier: S3 cold tier           │  │         SNMP: monitoring integration        │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  DD appliance (DD6300/DD9300/DD9900) or DDVE VM; FC or Ethernet to backup servers;                    │
-│  replication link: WAN between primary and DR site DD appliances.                                     │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  PBBA           = Purpose-Built Backup Appliance; optimized HW + SW for backup                        │
-│  DD Boost       = Dell Data Domain Boost; dedup-aware backup app protocol                             │
-│  OST            = OpenStorage Technology; Veritas API that DD Boost uses                              │
-│  Deduplication  = removing duplicate data; write once, reference many times                           │
-│  MTree          = logical partition on Data Domain; like a volume; each client uses one               │
-│  AIR            = Automatic Image Replication; replicates backup images to remote DD                  │
-│  DDVE           = Data Domain Virtual Edition; runs as VM (VMware or AWS)                             │
-│  DD Replicator  = DD feature that performs async replication between DD systems                       │
-│  DD VTL         = Virtual Tape Library; presents DD as tape drives to legacy apps                     │
-│  Collection replica= full DD system replication; used for DR of the DD itself                         │
-│  StreamFusion   = DD technology for parallel stream dedup during backup                               │
-│  Cloud tier     = cold tier to S3/Azure Blob; reduces on-prem footprint                               │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+![Data Domain — Architecture — Diagram](../../../../assets/storage-dell-data-domain-architecture-diagram.svg)
 ![Data Domain Architecture](../../../../assets/data-domain-architecture-overview.svg)
 
 <div class="kb-grid kb-grid-3">

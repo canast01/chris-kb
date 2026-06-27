@@ -187,29 +187,7 @@ Blast radius: DR capability lost for 12 volumes; RPO currently 2 hours and growi
 
 ## Escalation Path
 
-```text
-Step 1 — Open case at mysupport.netapp.com with AutoSupport invoked on both clusters
-         ↓
-Step 2 — TSE acknowledges and reviews AutoSupport + snapmirror show data
-         (P1: < 1 hr; P2: < 2 hr — requires SupportEdge 24×7)
-         ↓
-Step 3 — If no meaningful progress in 2 hours for P1:
-         → Reply: "Requesting escalation to SnapMirror Specialist Engineer"
-         → State: "[all relationships broken / SM-BC quorum lost / resync failing]"
-         ↓
-Step 4 — Product Specialist Engineer assigned
-         → They will review EMS events and may request live cluster access (WebEx session)
-         → Have SSH to both cluster management LIFs ready
-         ↓
-Step 5 — If issue involves code-level problem (SM-BC quorum state, resync algorithm bug):
-         → Specialist escalates to NetApp ONTAP Engineering
-         → Engineering may provide targeted EMS debug commands or a hotpatch
-         ↓
-Step 6 — For P1 with DR completely unavailable > 2 hours:
-         → Call +1-888-463-8277 and request a Duty Manager escalation
-         → Engage NetApp account team for executive escalation
-         → TAM involvement: essential for SM-BC implementations where quorum loss affects SAN I/O
-```
+![SnapMirror — Escalation — Diagram](../../../../assets/storage-netapp-snapmirror-troubleshooting-escalation-diagram.svg)
 
 ---
 

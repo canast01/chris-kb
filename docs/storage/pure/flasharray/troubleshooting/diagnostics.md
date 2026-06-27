@@ -401,23 +401,7 @@ purepgroup list --schedule
 
 **Pod unhealthy or paused — diagnostic flow:**
 
-```text
-purepod list → note the pod status and which arrays are members
-    ↓
-Is the inter-array replication link up?
-    → purenetwork list — confirm replication interface IPs are correct
-    → Ping the remote array replication IP from local array (via support tunnel if needed)
-    → Check for network events (routing changes, VLAN misconfiguration, bandwidth saturation)
-    ↓
-Is the mediator reachable?
-    → purepod list --mediator — check mediator IP and version
-    → Confirm outbound HTTPS (port 443) is reachable to the mediator IP from both arrays
-    → Note: mediator failure alone does not stop replication — it only affects split-brain resolution
-    ↓
-If replication link is down: resolve network issue first
-If mediator is unreachable: resolve connectivity; pod continues replicating with full inter-array link
-If pod is paused: purepod replica-link resume (for async) or investigate network for sync
-```
+![FlashArray — Diagnostics — Diagram](../../../../assets/storage-pure-flasharray-troubleshooting-diagnostics-diagram.svg)
 
 ---
 
@@ -439,21 +423,7 @@ purepgroup list --space
 
 **Unexpected capacity growth — investigation flow:**
 
-```text
-purearray list --space → confirm overall capacity % and snapshot %
-    ↓
-puresnap list --space --sort size- → identify largest snapshot consumers
-    ↓
-purepgroup list --schedule → check retention settings
-    ↓
-Are snapshots being created faster than the schedule expires them?
-    → Reduce snap-per-day or snap-for-days in the protection group schedule
-    → Manually eradicate stale snapshots: puresnap eradicate <snap_name>
-    ↓
-Is volume used capacity unexpectedly high?
-    → Check for volumes with high write activity (application logs, temp tables)
-    → Check data reduction ratio — incompressible/encrypted data does not reduce
-```
+![FlashArray — Diagnostics — Diagram](../../../../assets/storage-pure-flasharray-troubleshooting-diagnostics-d2.svg)
 
 ---
 

@@ -15,14 +15,7 @@ An iSCSI initiator is the client-side component — typically software on a serv
 
 ## IQN Format
 
-```text
-iqn.YYYY-MM.reverse-domain:identifier
-iqn.2024-01.com.example:server01-hba0
-│   │        │                                                                                          │
-│   │        domain       unique identifier
-│   date company adopted iSCSI
-└── iSCSI Qualified Name prefix
-```
+![iSCSI Initiators — Diagram](../../../../assets/networking-protocols-iscsi-initiators-diagram.svg)
 
 ## Linux Software Initiator (open-iscsi)
 

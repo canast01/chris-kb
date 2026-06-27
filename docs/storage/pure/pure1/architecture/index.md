@@ -11,55 +11,7 @@ Pure1 is a SaaS monitoring and analytics platform. FlashArray and FlashBlade sys
 *Applies to: Pure1*
 </div>
 
-```text
-┌───────────────────────────── Pure1 — SaaS Management and AIOps Platform ──────────────────────────────┐
-│                                                                                                       │
-│  Pure1 is Pure Storage cloud-hosted SaaS for managing all FlashArrays and FlashBlades;                │
-│  AIOps: predictive analytics, capacity forecasting, anomaly detection via Pure1 AI.                   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │            Platform Architecture             │  │            Analytics Capabilities           │   │
-│   │           SaaS: Pure-hosted cloud            │  │             Pure1 AI: ML models             │   │
-│   │           All arrays: single pane            │  │          Capacity forecast: 90 days         │   │
-│   │          Phone-home: telemetry feed          │  │            Anomaly: vs peer fleet           │   │
-│   │           REST API v2: management            │  │          Workload planning advisor          │   │
-│   │          Multi-site: cross-DC view           │  │         Proactive: auto support case        │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Pure1 is the only management plane; there is no on-prem equivalent management server.                │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             Telemetry Collection             │  │             Support Integration             │   │
-│   │          Array: phone-home over 443          │  │          SR: auto-open by Pure1 AI          │   │
-│   │         No on-prem collector needed          │  │           Case: status in Pure1 UI          │   │
-│   │           Logs + metrics + events            │  │           Remote assist: TAM view           │   │
-│   │        Historical: 1 year+ retention         │  │           My Pure1: customer login          │   │
-│   │          Real-time: 30s granularity          │  │          Role-based: view or manage         │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  Pure1 is fully SaaS; arrays need TCP 443 outbound to pure1.purestorage.com;                          │
-│  no on-prem servers or agents required.                                                               │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Pure1          = Pure Storage SaaS management and analytics portal                                   │
-│  SaaS           = Software as a Service; Pure hosts it; no on-prem infra needed                       │
-│  Phone-home     = array telemetry sent to Pure cloud; enables Pure1 AI analytics                      │
-│  Pure1 AI       = ML-based analytics; trained on Pure fleet; detects anomalies                        │
-│  Capacity forecast= predicts when arrays will hit threshold; 90-day horizon                           │
-│  Anomaly        = Pure1 AI flags unusual performance vs fleet peer comparison                         │
-│  Proactive SR   = Pure1 AI opens support case before you notice a problem                             │
-│  REST API v2    = Pure1 northbound API; pull metrics, manage arrays programmatically                  │
-│  Multi-site     = all arrays across all sites visible in one Pure1 login                              │
-│  TAM            = Technical Account Manager; has read-only view of your Pure1                         │
-│  My Pure1       = customer-facing login at pure1.purestorage.com                                      │
-│  Historical retention= Pure1 keeps 1 year+ of telemetry for trend analysis                            │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+![Pure1 — Architecture — Diagram](../../../../assets/storage-pure-pure1-architecture-diagram.svg)
 ![Pure1 Architecture](../../../../assets/pure1-architecture-overview.svg)
 
 <div class="kb-grid kb-grid-3">

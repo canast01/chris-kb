@@ -13,30 +13,7 @@ Pure Storage Evergreen//One Integration reference covering Pure1 Integration, Ca
 ![Pure Storage Evergreen//One Integration](../../../../assets/storage-pure-evergreen-one-integration-index.svg)
 
 
-```text
-  Evergreen//One Integration Landscape
-
-  ┌───────────────────────────────────────── ┐   phonehome    ┌ ──────────────────────────────────────────┐
-  │  FlashArray / │──HTTPS 443────►│  Pure1 Portal      │
-  │  FlashBlade   │◄───────────────│  SLA / Capacity /  │
-  │  (Pure-owned) │  telemetry     │  Health / Alerts   │
-  └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-          │                                 │ REST API
-          │ FC/iSCSI/NVMe/NFS               ▼
-          ▼                        ┌────────────────────┐
-  ┌───────────────┐                │  FinOps / CMDB /   │
-  │  vSphere /    │◄── VASA/VAAI   │  Billing systems   │
-  │  ESXi hosts   │                └────────────────────┘
-  └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-          │ SRM / vVols
-          ▼
-  ┌───────────────────────────────────────── ┐                ┌ ──────────────────────────────────────────┐
-  │  VMware SRM   │                │  Backup tools      │
-  │  (DR orchestr)│                │  Veeam / Commvault │
-  └───────────────┘                │  Rubrik / NetBackup│
-                                   └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-  Snapshot capacity counts toward monthly consumption total
-```
+![Pure Storage Evergreen//One Integration — Diagram](../../../../assets/storage-pure-evergreen-one-integration-diagram.svg)
 
 ## Pure1 Integration
 

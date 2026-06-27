@@ -11,55 +11,7 @@ Linux server infrastructure running RHEL and Ubuntu — systemd service manageme
 *Applies to: RHEL 8.x / 9.x · Ubuntu 22.04 / 24.04*
 </div>
 
-```text
-┌──────────────────────────────── Linux Platform Architecture Overview ─────────────────────────────────┐
-│                                                                                                       │
-│  Linux underpins most infrastructure; RHEL/CentOS for enterprise, Ubuntu for cloud;                   │
-│  kernel + systemd + package manager form the core; network via NetworkManager or nmcli.               │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                Distributions                 │  │               Core Components               │   │
-│   │         RHEL: enterprise production          │  │         Kernel: hardware abstraction        │   │
-│   │         CentOS Stream: upstream test         │  │           systemd: service manager          │   │
-│   │            Ubuntu: cloud + DevOps            │  │          glibc: C standard library          │   │
-│   │            Debian: stable/minimal            │  │               PAM: auth stack               │   │
-│   │          SLES: SAP + HPC workloads           │  │          NetworkManager: networking         │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Choose distro based on vendor support matrix; RHEL for VMware, vSAN, SAP, Oracle.                    │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              Package Management              │  │             Storage and Security            │   │
-│   │          RPM/DNF: RHEL/CentOS/SLES           │  │             LVM: logical volumes            │   │
-│   │           APT/dpkg: Debian/Ubuntu            │  │            ext4/XFS: filesystems            │   │
-│   │          Subscription: RHEL + SLES           │  │            SELinux/AppArmor: MAC            │   │
-│   │          Repos: local mirror or CDN          │  │            firewalld/nftables: FW           │   │
-│   │         Errata: security + bug fixes         │  │           SSH: remote access (22)           │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  x86-64 or ARM64 bare metal or VM; NIC (1/10/25GbE); local disk or SAN/NAS;                           │
-│  IPMI/iDRAC/iLO for OOB management; firmware and BIOS managed separately.                             │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  RHEL           = Red Hat Enterprise Linux; subscription required; 10-year support                    │
-│  systemd        = Linux init system and service manager; PID 1; unit files                            │
-│  DNF            = package manager for RHEL 8+; replaces yum                                           │
-│  LVM            = Logical Volume Manager; flexible disk partitioning                                  │
-│  SELinux        = Security-Enhanced Linux; Mandatory Access Control by policy                         │
-│  PAM            = Pluggable Authentication Modules; Linux auth stack                                  │
-│  glibc          = GNU C Library; fundamental library all Linux programs use                           │
-│  NetworkManager = service that manages network interfaces and connections                             │
-│  firewalld      = RHEL firewall daemon; zones and rules; wraps nftables/iptables                      │
-│  XFS            = default filesystem for RHEL 7+; high performance, no shrink                         │
-│  Subscription   = RHEL/SLES entitlement; required for security patches                                │
-│  Errata         = security advisory with associated package updates                                   │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+![Linux — Architecture — Diagram](../../../assets/compute-linux-architecture-diagram.svg)
 ![Linux Architecture](../../../assets/linux-architecture-overview.svg)
 
 <div class="kb-grid kb-grid-3">

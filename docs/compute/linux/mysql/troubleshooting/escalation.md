@@ -15,49 +15,7 @@ How to escalate MySQL and MariaDB issues to Oracle MySQL support or Percona supp
 ![MySQL / MariaDB — Escalation](../../../../assets/compute-linux-mysql-troubleshooting-escalation.svg)
 
 
-```text
-┌──────────────────────────────── MySQL / MariaDB — Escalation ─────────────────────────────────────────┐
-│                                                                                                       │
-│  Escalate MySQL/MariaDB issues to vendor support (Oracle or Percona) when the instance is             │
-│  completely unreachable, InnoDB crash recovery is looping, replication is stopped with an             │
-│  error that cannot be skipped safely, or data loss or corruption is suspected.                        │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Step 1 — Collect Data               │  │          Step 2 — Open the Case             │   │
-│   │  Save error log (last 500 lines)             │  │  Oracle MySQL: support.oracle.com (MOS)     │   │
-│   │  Run SHOW ENGINE INNODB STATUS               │  │  Percona: percona.com/services              │   │
-│   │  Run SHOW REPLICA STATUS \G                  │  │  Severity: P1 (down) / P2 (degraded)        │   │
-│   │  Run SHOW FULL PROCESSLIST                   │  │  Attach error log + InnoDB status + replic  │   │
-│   │  Write timeline: last good → first failure   │  │  For P1: also call vendor phone support     │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  For P1: do not restart mysqld repeatedly on crash recovery loop; take data dir snapshot first.       │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Step 3 — Escalation Path            │  │         What NOT to Do                      │   │
-│   │  T1: triage + confirm logs received          │  │  Do not run innodb_force_recovery > 3       │   │
-│   │  T2: MySQL/MariaDB SE assigned; deep review  │  │  Do not flush binary logs before capture    │   │
-│   │  DBA: involve DBA for schema or data issues  │  │  Do not delete corrupted .ibd files         │   │
-│   │  P1 data loss: snapshot data dir before ops  │  │  Do not repeatedly restart on InnoDB loop   │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  InnoDB         = MySQL/MariaDB default storage engine; transactional; ACID-compliant                 │
-│  REPLICA STATUS = SHOW REPLICA STATUS \G; shows replication position, lag, and errors                 │
-│  Last_Error     = replication SQL thread error; error code + message; core for escalation             │
-│  innodb_force_recovery = startup option 1-6; allows MySQL to start with InnoDB damage; dangerous      │
-│  crash recovery = InnoDB automatic repair process on startup after unclean shutdown                   │
-│  OOM kill       = Linux out-of-memory killer terminates mysqld; check with `dmesg`                    │
-│  binlog         = binary log; records all changes for replication and point-in-time recovery          │
-│  Errno          = OS-level error code in replication status; 0 = no error                             │
-│  pt-query-digest = Percona tool; analyzes slow query log; install from percona-toolkit                │
-│  ibdata1        = InnoDB shared tablespace file; corruption here is catastrophic                      │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+![MySQL / MariaDB — Escalation — Diagram](../../../../assets/compute-linux-mysql-troubleshooting-escalation-diagram.svg)
 
 ---
 
@@ -236,24 +194,7 @@ Blast radius: db-prod-02 out of sync since 06:30 UTC; RPO window: 30 minutes if 
 
 ## Escalation Path
 
-```text
-Step 1 — Engage DBA immediately for any P1 condition
-         ↓
-Step 2 — Open case at Oracle MOS or Percona with error log + InnoDB status + replication status
-         ↓
-Step 3 — T1 engineer acknowledges; reviews diagnostic data
-         ↓
-Step 4 — If no meaningful progress (Sev1: < 1 hr; Sev2: < 4 hr):
-         → Reply: "Requesting escalation to MySQL/MariaDB Senior Engineer"
-         → State: "[crash loop / replica down / data loss risk / production halted]"
-         ↓
-Step 5 — Senior engineer assigned; may request SSH access via jump host
-         → Have root access to MySQL data directory and error log ready
-         → Confirm a data directory snapshot exists before allowing any recovery steps
-         ↓
-Step 6 — If issue involves a confirmed MySQL/MariaDB bug (version regression):
-         → Vendor escalates to engineering; may provide a specific build or workaround
-```
+![MySQL / MariaDB — Escalation — Diagram](../../../../assets/compute-linux-mysql-troubleshooting-escalation-d2.svg)
 
 ---
 

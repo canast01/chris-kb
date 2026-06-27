@@ -236,27 +236,7 @@ ALTER AVAILABILITY GROUP [AG_Name] FORCE_FAILOVER_ALLOW_DATA_LOSS;
 
 ## Escalation Path
 
-```text
-Step 1 — Open case at support.microsoft.com with error log + blocking + AG output attached
-         ↓
-Step 2 — Microsoft CSS T1 engineer acknowledges (Sev A: < 2 hr; Sev B: < 4 hr)
-         ↓
-Step 3 — If no meaningful progress within 2 hours for Sev A:
-         → Reply in case: "Requesting escalation to SQL Server Senior Engineer"
-         → State: "[service down / database suspect / AG primary lost / transaction log full]"
-         ↓
-Step 4 — SQL Server T2 Senior CSS Engineer assigned
-         → They will review the error log and may request a live session
-         → Have SSMS and RDP access to the SQL Server host ready
-         ↓
-Step 5 — If issue involves a known SQL Server bug or regression (e.g. CU regression):
-         → CSS escalates to SQL Server Engineering
-         → Engineering may provide a targeted hotfix build or workaround procedure
-         ↓
-Step 6 — For Sev A with data loss or service down > 1 hour with no resolution:
-         → Request CritSit escalation via the case
-         → Contact your Microsoft account team or Technical Account Manager
-```
+![SQL Server — Escalation — Diagram](../../../../assets/compute-windows-server-sql-server-troubleshooting-escalation-diagram.svg)
 
 ---
 

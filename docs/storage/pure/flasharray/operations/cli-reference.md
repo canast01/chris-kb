@@ -16,22 +16,7 @@ CLI Reference reference covering Admin Accounts, Alerts & Audit, Array & System 
 
 
 
-```text
-Purity CLI Hierarchy
-  purity
-  ├── purearray   — array identity, NTP, DNS, upgrade, phonehome
-  ├── purevol     — volumes: create / resize / connect / snap
-  ├── purehost    — host entries: WWN/IQN registration
-  ├── purehgroup  — host groups: cluster-level volume masking
-  ├── purepgroup  — protection groups: snapshot + replication
-  ├── purepod     — ActiveCluster pods: sync replication
-  ├── puredrive   — drive health and status
-  ├── purehw      — hardware components (fans, PSU, NVRAM)
-  ├── pureport    — FC and Ethernet port info + WWNs
-  ├── purealert   — alert management
-  ├── pureaudit   — audit log
-  └── pureadmin   — user accounts, roles, API tokens
-```
+![FlashArray — CLI Reference — Diagram](../../../../assets/storage-pure-flasharray-operations-cli-reference-diagram.svg)
 
 Commonly used Purity CLI commands for managing Pure FlashArray all-flash storage systems. Connect via SSH to the array's management IP and log in as `pureuser` or another admin account.
 

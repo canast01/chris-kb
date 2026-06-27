@@ -173,28 +173,7 @@ Blast radius: 6 hosts have reduced path count; I/O is continuing via remaining p
 
 ## Escalation Path
 
-```text
-Step 1 — Open case at dell.com/support with symcfg snapshot + event log attached
-         ↓
-Step 2 — Dell T1 engineer acknowledges (P1: < 2 hr ProSupport Plus; P2: < 4 hr)
-         ↓
-Step 3 — If no meaningful progress within 2 hours for P1:
-         → Reply in case: "Requesting escalation to PowerMax Senior Engineer"
-         → State: "[director offline / I/O stopped / SRDF broken / drive failure]"
-         ↓
-Step 4 — PowerMax T2 Senior Engineer assigned
-         → They will review the symcfg data and may initiate an SRS remote session
-         → Confirm SRS-VE is deployed and Dell can connect via it
-         → Have Solutions Enabler host access and Unisphere admin credentials ready
-         ↓
-Step 5 — If issue requires microcode-level investigation or director replacement:
-         → Dell dispatches a field engineer for hardware work
-         → Provide data center access details (site, cage, rack, unit)
-         ↓
-Step 6 — For prolonged P1 or SRDF failover decision:
-         → Request TAM engagement
-         → TAM can arrange engineering bridge and accelerate hardware dispatch
-```
+![PowerMax — Escalation — Diagram](../../../../assets/storage-dell-powermax-troubleshooting-escalation-diagram.svg)
 
 ---
 

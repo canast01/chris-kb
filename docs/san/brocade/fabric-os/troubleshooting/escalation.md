@@ -169,27 +169,7 @@ Blast radius: 12 hosts on fabric A cannot see storage; VMs on those hosts have I
 
 ## Escalation Path
 
-```text
-Step 1 — Open case at support.broadcom.com with supportsave bundles from all switches
-         ↓
-Step 2 — T1 TAC engineer acknowledges and confirms bundles received (typically 30 min–2 hr)
-         ↓
-Step 3 — If no meaningful progress in 2 hours for Sev1 or 1 business day for Sev2:
-         → Reply in the case: "Requesting escalation to Senior Brocade SAN Engineer"
-         → State: "Impact: [N] hosts cannot access storage on fabric [A/B]; I/O stalled"
-         ↓
-Step 4 — Senior SAN Engineer is assigned; they may request remote access to the switch
-         → Enable remote access: TAC will connect via SSH to the switch through your jump host
-         → Have the TAC tunnel or Webex session ready
-         ↓
-Step 5 — If issue requires firmware-level investigation or a code defect:
-         → Senior engineer escalates to Brocade Engineering
-         → Engineering may provide a patch FOS build if a defect is confirmed
-         ↓
-Step 6 — For full fabric down with no path to restore, or 24h+ without resolution:
-         → Request escalation to Broadcom TAC manager
-         → Add to case: "Escalation requested — fabric down, N hosts with no storage, Xh+ elapsed"
-```
+![Brocade Fabric OS — Escalation — Diagram](../../../../assets/san-brocade-fabric-os-troubleshooting-escalation-diagram.svg)
 
 ---
 

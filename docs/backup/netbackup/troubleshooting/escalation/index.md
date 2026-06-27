@@ -180,25 +180,7 @@ Blast radius:
 
 ## Escalation Path
 
-```text
-Step 1 — Open support case at my.veritas.com with nbsu bundle attached
-         ↓
-Step 2 — For S1: call Veritas support phone immediately after opening the portal case
-         (number shown on case confirmation page; varies by region: NA, EMEA, APAC)
-         ↓
-Step 3 — Veritas T1 support confirms receipt and reviews nbsu bundle (typically 30 min–2 h)
-         ↓
-Step 4 — If no meaningful progress in 4 hours for S1 or 1 business day for S2:
-         → Reply in the case: "Requesting escalation to Senior Support Engineer"
-         → State impact: "Production backup window missed since [date]; [n] TB at risk"
-         ↓
-Step 5 — Senior engineer may schedule a remote session (GoTo or Zoom)
-         → Have root/Administrator access to master and media servers ready
-         → Have nbsu bundle, bpdbjobs output, and logs accessible
-         ↓
-Step 6 — For catalog corruption or data loss risk: request Critical Situation (CritSit) engagement
-         → State in the case: "Requesting CritSit — catalog integrity at risk / potential data loss"
-```
+![NetBackup — Escalation — Diagram](../../../../assets/backup-netbackup-troubleshooting-escalation-diagram.svg)
 
 ---
 

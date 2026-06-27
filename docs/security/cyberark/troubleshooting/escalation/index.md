@@ -210,25 +210,7 @@ Blast radius:
 
 ## Escalation Path
 
-```text
-Step 1 — Open SR at support.cyberark.com with DiagnosticTool bundle attached
-         ↓
-Step 2 — For Sev 1: call CyberArk emergency support phone immediately after opening SR
-         (phone number shown on support portal; available 24×7)
-         ↓
-Step 3 — CyberArk T1 reviews bundle and triages issue (typically 30 min–1 h for Sev 1)
-         ↓
-Step 4 — If no meaningful progress in 2 hours for Sev 1 or 1 business day for Sev 2:
-         → Reply in the case: "Requesting escalation to Senior Engineer"
-         → State: "Impact: [n] users cannot authenticate to PAM; CPM halted"
-         ↓
-Step 5 — For security incidents (suspected unauthorised Vault access, account compromise):
-         → Simultaneously engage CyberArk Blue Team Services through your account team
-         → Blue Team provides incident response under a separate engagement contract
-         ↓
-Step 6 — For P1 unresolved > 4 hours:
-         → Request Critical Situation engagement via your CyberArk account manager
-```
+![CyberArk — Escalation — Diagram](../../../../assets/security-cyberark-troubleshooting-escalation-diagram.svg)
 
 ---
 

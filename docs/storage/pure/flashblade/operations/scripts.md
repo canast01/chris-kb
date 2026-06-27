@@ -16,21 +16,7 @@ Scripts reference covering Array Health Check (Python), Filesystem Capacity Repo
 
 
 
-```text
-Automation Architecture — FlashBlade
-  Python / Bash / Ansible
-             │
-             ▼
-  Purity//FB REST API (HTTPS/443)
-  ├── /api/2.x/arrays           — system info + capacity
-  ├── /api/2.x/blades           — blade health
-  ├── /api/2.x/alerts           — active alerts
-  ├── /api/2.x/file-systems     — filesystem inventory
-  └── /api/2.x/buckets          — S3 bucket inventory
-             │
-             ▼
-  FlashBlade Fabric Module ──► Blades
-```
+![FlashBlade — Scripts — Diagram](../../../../assets/storage-pure-flashblade-operations-scripts-diagram.svg)
 
 > Part of the [FlashBlade Operations](index.md) reference.
 

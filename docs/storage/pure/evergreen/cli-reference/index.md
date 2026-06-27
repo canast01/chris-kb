@@ -13,22 +13,7 @@ Pure Evergreen CLI Reference reference covering Overview, Pure1 REST API, FlashA
 ![Pure Evergreen CLI Reference](../../../../assets/storage-pure-evergreen-cli-reference-index.svg)
 
 
-```text
-Evergreen Management Interfaces
-  ┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
-  │  Pure1 REST API                                    │
-  │  ├── GET /arrays          — array inventory        │
-  │  ├── GET /subscriptions   — entitlement + capacity │
-  │  ├── GET /metrics         — performance data       │
-  │  └── GET /alerts          — fleet-wide alerts      │
-  └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-  ┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
-  │  Per-array Purity CLI (SSH to array mgmt IP)       │
-  │  ├── purearray list --controller  — controller gen │
-  │  ├── purearray list --space       — capacity used  │
-  │  └── purearray phonehome list     — telemetry ok   │
-  └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+![Pure Evergreen CLI Reference — Diagram](../../../../assets/storage-pure-evergreen-cli-reference-diagram.svg)
 
 > Part of the [Evergreen](../index.md) reference.
 ---

@@ -14,28 +14,7 @@ Install & Upgrade reference covering Purity Version Matrix, Upgrade Paths, Refre
 ![FlashBlade — Install & Upgrade](../../../../assets/storage-pure-flashblade-operations-install-upgrade.svg)
 
 
-```text
-Purity//FB Non-Disruptive Upgrade (NDU)
-  ┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
-  │  1. Review release notes + Pure1 upgrade planning    │
-  │     tool — verify version compatibility              │
-  └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-                             ▼
-  ┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
-  │  2. Pre-check: purefb upgrade check                  │
-  │     (alerts, blade health, replication lag)          │
-  └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-                             ▼
-  ┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
-  │  3. Stage + execute upgrade                          │
-  │     Blades upgrade one at a time — I/O continues    │
-  └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-                             ▼
-  ┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
-  │  4. Validate: purefb array list                      │
-  │     All blades on new version, no alerts             │
-  └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+![FlashBlade — Install & Upgrade — Diagram](../../../../assets/storage-pure-flashblade-operations-install-upgrade-diagram.svg)
 
 > Part of the [FlashBlade Operations](index.md) reference.
 

@@ -174,20 +174,7 @@ The OpenSSL CA directory structure must be backed up atomically (while no signin
 
 ### Typical OpenSSL CA Directory
 
-```text
-/etc/ssl/CA/
-├── ca.key          # CA private key — MUST be encrypted
-├── ca.crt          # CA certificate (self-signed)
-├── ca.csr          # Original signing request (keep for reference)
-├── index.txt       # Certificate database
-├── index.txt.attr
-├── serial          # Current serial number
-├── crlnumber       # CRL serial counter
-├── crl/
-│   └── ca.crl      # Current CRL
-├── certs/          # Issued certificates archive
-└── newcerts/       # Copies of all issued certs (by serial)
-```
+![Certificates — Backup & Restore — Diagram](../../../../assets/security-certificates-operations-backup-restore-diagram.svg)
 
 ### Backup Command
 

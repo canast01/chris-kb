@@ -105,34 +105,7 @@ The SCG has its own version lifecycle and must be kept current for compatibility
 
 ### SCG Version Check
 
-```text
-┌─────────────────────────────────── CloudIQ — Lifecycle Management ────────────────────────────────────┐
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                  Onboarding                  │  │             Ongoing Maintenance             │   │
-│   │             Create Dell account              │  │            Monitor telemetry age            │   │
-│   │               Register arrays                │  │             Re-register if stale            │   │
-│   │               Configure alerts               │  │            Update array firmware            │   │
-│   │              Add users + roles               │  │            Rotate service account           │   │
-│   │            Test webhook delivery             │  │             Annual access review            │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  CloudIQ is SaaS — no on-prem component to patch · array firmware controls telemetry client           │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Telemetry age = Time since last successful push from array; stale > 15 min triggers alert            │
-│  Re-registration = Removing and re-adding array to CloudIQ; resets telemetry stream                   │
-│  Service account rotation = Changing Dell account password used for CloudIQ API access                │
-│  Access review = Auditing CloudIQ user list; removing departed staff and role changes                 │
-│  Array firmware = On-array software; update process depends on array model (PSTCLI, ESRS)             │
-│  ESRS = EMC Secure Remote Services; gateway used by some older Dell arrays for telemetry              │
-│  CloudIQ SaaS = Hosted by Dell; no customer upgrade responsibility for the platform itself            │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-```
+![CloudIQ — Install & Upgrade — Diagram](../../../../assets/storage-dell-cloudiq-operations-install-upgrade-diagram.svg)
 ## API Token Lifecycle
 
 CloudIQ REST API tokens use OAuth2 client credentials. Tokens should be rotated annually.

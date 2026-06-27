@@ -12,25 +12,7 @@ Procedures reference covering Change Readiness, Maintenance Window, Post-Change 
 *Applies to: FlashBlade Purity//FB 4.x*
 </div>
 
-```text
-FlashBlade NFS Filesystem Provisioning Flow
-  ┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
-  │  Create filesystem (purefb fs create --size)         │
-  └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-                             ▼
-  ┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
-  │  Set NFS export policy (purefb fs setattr --nfs)     │
-  │  (allowed client IPs / CIDR, access mode)            │
-  └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-                             ▼
-  ┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
-  │  Mount on client: mount -t nfs <fb_ip>:/<fs> /mnt   │
-  └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-                             ▼
-  ┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
-  │  Add to snapshot policy (purefb policy ...)          │
-  └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+![FlashBlade — Procedures — Diagram](../../../../assets/storage-pure-flashblade-operations-procedures-diagram.svg)
 
 > Part of the [FlashBlade Operations](index.md) reference.
 

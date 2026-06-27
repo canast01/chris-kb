@@ -17,40 +17,7 @@ tags:
 Cross-product runbook integrating Pure Storage FlashArray, Veeam Backup and Replication, and Pure Protection with SafeMode immutable snapshots. Covers FlashArray volume and protection group prep, Veeam storage snapshot integration, SafeMode immutability verification, and restore testing across crash-consistent and app-consistent scenarios.
 </div>
 
-```text
-  ┌────────────────────────────────────────────────────────────────────────┐
-  │                        PROTECTION ARCHITECTURE                         │
-  │                                                                        │
-  │  ┌──────────────────────────────┐   ┌───────────────────────────────┐  │
-  │  │      FlashArray (Primary)    │   │     Veeam B&R Server          │  │
-  │  │                              │   │                               │  │
-  │  │  ┌──────────┐ ┌───────────┐  │   │  ┌─────────────────────────┐  │  │
-  │  │  │  Volumes │ │  Pure     │  │   │  │  Backup Jobs            │  │  │
-  │  │  │  vol_vm* │ │  Protection│ │   │  │  ┌─────────────────────┐│  │  │
-  │  │  └──────────┘ │  Group    │ │   │  │  │ Storage Snapshot    ││  │  │
-  │  │               │  pg_prod  │◄┼───┼──┼─►│ Integration (VADP)  ││  │  │
-  │  │               └───────────┘ │   │  │  └─────────────────────┘│  │  │
-  │  │                             │   │  └─────────────────────────┘  │  │
-  │  │  ┌──────────────────────┐   │   │                               │  │
-  │  │  │ SafeMode (Immutable) │   │   │  ┌─────────────────────────┐  │  │
-  │  │  │ Snapshots — eradicate│   │   │  │  Backup Copy Job        │  │  │
-  │  │  │ protected 24h delay  │   │   │  │  → Object Storage /Tape │  │  │
-  │  │  └──────────────────────┘   │   │  └─────────────────────────┘  │  │
-  │  └──────────────────────────────┘   └───────────────────────────────┘  │
-  │                  │ Hardware snapshots                    │              │
-  │                  │ (seconds RPO)                         │              │
-  │  ┌───────────────▼──────────────────────────────────────▼───────────┐  │
-  │  │                      Pure1 Cloud                                  │  │
-  │  │  SafeMode status  │  Capacity analytics  │  Array management     │  │
-  │  └───────────────────────────────────────────────────────────────────┘  │
-  └────────────────────────────────────────────────────────────────────────┘
-
-  RPO SUMMARY:
-  Pure Protection snapshots  : minutes (schedule-driven)
-  Veeam backup job           : hours (policy-driven, RPO SLA)
-  SafeMode immutable copy    : protected for configured retention
-  Backup copy (object/tape)  : daily offsite
-```
+![Pure Storage FlashArray with Veeam and Pure Protection — Diagram](../../assets/storage-runbooks-flasharray-veeam-pure-protection-diagram.svg)
 
 ## Before You Begin
 
@@ -77,26 +44,7 @@ vcenter_backup@corp.local — vCenter read/backup role for Veeam
 
 ## Architecture Overview
 
-```text
-DATA PROTECTION TIERS:
-┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
-│ Tier 1: Pure Protection Snapshots (on-array, space-efficient)                                         │
-│   Schedule: hourly, retain 24h → daily, retain 30 days                                                │
-│   RPO: minutes  RTO: seconds (clone from snapshot)                                                    │
-├────────────────────────────────────────────────────────────────┤
-│ Tier 2: Veeam Backup (application-consistent, VADP)                                                   │
-│   Schedule: nightly  Retain: 14 restore points                                                        │
-│   RPO: hours  RTO: minutes (Instant VM Recovery)                                                      │
-├────────────────────────────────────────────────────────────────┤
-│ Tier 3: Veeam Backup Copy → Object Storage (immutable)                                                │
-│   Schedule: daily  Retain: 30 days (GFS monthly 12 months)                                            │
-│   RPO: 24h  RTO: minutes to hours (depends on object tier)                                            │
-├────────────────────────────────────────────────────────────────┤
-│ Tier 4: SafeMode Immutable Snapshots (ransomware protection)                                          │
-│   Eradication delay: 24h minimum (configurable)                                                       │
-│   Cannot be deleted during lock period — even by array admin                                          │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+![Pure Storage FlashArray with Veeam and Pure Protection — Diagram](../../assets/storage-runbooks-flasharray-veeam-pure-protection-d2.svg)
 
 ---
 

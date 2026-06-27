@@ -233,15 +233,7 @@ mkdir infra && cd infra
 
 Create the standard file layout:
 
-```text
-infra/
-├── main.tf          # Core resource definitions
-├── variables.tf     # Input variable declarations
-├── outputs.tf       # Output value declarations
-├── providers.tf     # Provider and backend configuration
-├── versions.tf      # Terraform and provider version constraints
-└── terraform.tfvars # Variable values (never commit secrets here)
-```
+![Terraform — Environment Setup — Diagram](../../../assets/automation-terraform-deploy-diagram.svg)
 
 `versions.tf` — pin provider versions to avoid unexpected upgrades:
 

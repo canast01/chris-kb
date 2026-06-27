@@ -16,20 +16,7 @@ CLI Reference reference covering Array Hardware, File Systems (NFS / SMB), Netwo
 
 
 
-```text
-purefb CLI Hierarchy
-  purefb
-  ├── array       — system info, capacity, performance
-  ├── blade       — blade health and status
-  ├── hardware    — chassis, PSU, fans, network cards
-  ├── fs          — filesystems: create / resize / export
-  ├── bucket      — S3 buckets: create / ACL / quota
-  ├── policy      — snapshot and replication policies
-  ├── replication — ActiveDR relationships
-  ├── alert       — alert management
-  ├── user        — local admin accounts
-  └── support     — phone-home and diagnostics
-```
+![FlashBlade — CLI Reference — Diagram](../../../../assets/storage-pure-flashblade-operations-cli-reference-diagram.svg)
 
 > Part of the [FlashBlade Operations](index.md) reference.
 

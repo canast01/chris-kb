@@ -13,55 +13,7 @@ Architecture reference for Pure Storage FlashBlade. Covers the scale-out blade m
 
 ![FlashBlade Architecture](../../../../assets/flashblade-architecture-overview.svg)
 
-```text
-┌──────────────────── Pure FlashBlade — Scale-Out Unstructured Storage Architecture ────────────────────┐
-│                                                                                                       │
-│  Scale-out all-flash for unstructured data; blade-based architecture; NFS, SMB, S3;                   │
-│  target: AI/ML datasets, genomics, media workflows, backup targets.                                   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                 Architecture                 │  │                  Protocols                  │   │
-│   │           FlashBlade chassis (4U)            │  │            NFS v3/v4.1: Linux/AI            │   │
-│   │          Blades: capacity + compute          │  │           SMB 2/3: Windows shares           │   │
-│   │          Scale: add blades for perf          │  │          S3: object; AI data lakes          │   │
-│   │         //S: storage blade (current)         │  │            HDFS: Hadoop connector           │   │
-│   │           Fabric: 40GbE or 100GbE            │  │          Multi-protocol: same data          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Performance scales linearly: each blade adds both capacity and throughput.                           │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                Data Services                 │  │                  Management                 │   │
-│   │         Snapshots: instant, no-cost          │  │          Purity//FB UI: web browser         │   │
-│   │         Replication: async to remote         │  │           REST API v2: automation           │   │
-│   │         Pure Object Store: S3 compat         │  │            Pure1: multi-site SaaS           │   │
-│   │          SafeMode: immutable snaps           │  │            CLI: purectl commands            │   │
-│   │         File system: directory-based         │  │          NFS exports: per-FS share          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  FlashBlade chassis in rack; 40GbE or 100GbE data ports per blade; management                         │
-│  port (Eth); blades share chassis backplane for internal communication.                               │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  FlashBlade     = Pure scale-out all-flash for file and object workloads                              │
-│  //S blade      = current FlashBlade generation; each blade = storage + compute                       │
-│  Scale-out      = add blades to grow capacity and performance simultaneously                          │
-│  Purity//FB     = FlashBlade OS; manages filesystem, S3, snapshots                                    │
-│  NFS export     = directory shared over NFS; each filesystem can have one export                      │
-│  Pure Object Store= S3-compatible object store built into FlashBlade //S                              │
-│  SafeMode       = immutable Snapshot; admin cannot delete; ransomware protection                      │
-│  HDFS           = Hadoop filesystem; FlashBlade presents as HDFS target                               │
-│  AI/ML workload = high-throughput random read; FlashBlade optimized for this                          │
-│  Replication    = async policy-based; replicates filesystems to remote FlashBlade                     │
-│  Multi-protocol = same data accessible via NFS, SMB, and S3 simultaneously                            │
-│  Blade          = hot-plug module; each adds storage capacity + bandwidth + IOPS                      │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+![FlashBlade — Architecture — Diagram](../../../../assets/storage-pure-flashblade-architecture-diagram.svg)
 
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="how-it-works/"><strong>How It Works</strong><span>Scale-out architecture, HA topology, protocols, file and object services.</span></a>

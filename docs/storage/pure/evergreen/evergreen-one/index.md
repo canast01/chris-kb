@@ -13,28 +13,7 @@ Evergreen//One (Evergreen Sub-Service) reference covering How Evergreen//One Wor
 ![Evergreen//One (Evergreen Sub-Service)](../../../../assets/storage-pure-evergreen-evergreen-one-index.svg)
 
 
-```text
-  Evergreen//One Subscription Model
-
-  Customer pays for consumed capacity (OpEx — no CapEx)
-
-  ┌───────────────────────────────────────── ┐   installs &    ┌ ─────────────────────────────────────────┐
-  │  Pure Storage │──manages HW────►│  Customer Site    │
-  │               │◄────────────────│  FlashArray /     │
-  │  Guarantees:  │  phonehome      │  FlashBlade       │
-  │  ├─ 99.9999%  │  telemetry      │  (Pure-owned)     │
-  │  │  availability               └───────────┬───────┘
-  │  ├─ IOPS/latency SLA                       │
-  │  └─ capacity SLA            FC/iSCSI/NVMe  │
-  └───────────────┘                            ▼
-                               ┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
-  Monthly billing:             │  Hosts / VMs          │
-  ┌──────────────────┐         │  (customer-managed)   │
-  │ Reserved ──► rate│         └───────────────────────┘
-  │ Burst    ──► +$$ │
-  └──────────────────┘   Pure manages: HW refresh,
-                         Purity upgrades, drive swap
-```
+![Evergreen//One (Evergreen Sub-Service) — Diagram](../../../../assets/storage-pure-evergreen-evergreen-one-diagram.svg)
 
 Evergreen//One is Pure Storage's storage-as-a-service (STaaS) offering — a subscription model where Pure owns, manages, and refreshes hardware while the customer pays for consumed capacity.
 ## How Evergreen//One Works

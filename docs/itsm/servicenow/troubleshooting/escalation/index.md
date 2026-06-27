@@ -197,26 +197,7 @@ Secondary: <name>, <email>
 
 ## Escalation Path
 
-```text
-Step 1 — Open HI portal case with stats.do output and sys_log export
-         ↓
-Step 2 — For P1: call ServiceNow support phone immediately after opening the case
-         (number on case confirmation page; 24×7 for P1)
-         ↓
-Step 3 — ServiceNow NOC confirms instance state and triage begins (typically < 1 hour for P1)
-         ↓
-Step 4 — If no meaningful progress in 2 hours for P1 / 1 business day for P2:
-         → Add a case update: "Requesting escalation to Senior Support Engineer"
-         → State business impact: "[n] users blocked; [process/service] offline since [time]"
-         ↓
-Step 5 — For a confirmed platform defect (hotfix needed):
-         → ServiceNow engineering creates an emergency patch
-         → You will be asked to apply it during a maintenance window
-         ↓
-Step 6 — For data integrity or security incidents (accidental data deletion, ACL bypass):
-         → Engage ServiceNow Trust and Reliability team through your account manager
-         → ServiceNow retains backups for 7 days; request restore must go through the account team
-```
+![ServiceNow — Escalation — Diagram](../../../../assets/itsm-servicenow-troubleshooting-escalation-diagram.svg)
 
 ---
 

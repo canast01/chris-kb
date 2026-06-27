@@ -44,23 +44,7 @@ graph TD
     class C,D,E,F,G,H,I done
 ```
 
-```text
-┌─────────────────────────────────────────── Ceph Deployment ───────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                                  Ceph Deployment with cephadm                                 │   │
-│   │                   cephadm manages Ceph daemons as containers (Podman/Docker)                  │   │
-│   │            Sequence: bootstrap first MON → add hosts → add MONs → add OSDs → pools            │   │
-│   │              Bootstrap: cephadm bootstrap --mon-ip <ip> --cluster-network <CIDR>              │   │
-│   │                 Validation: HEALTH_OK + all OSDs up+in + PGs all active+clean                 │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│    cephadm   = Ceph Admin tool; deploys and manages Ceph daemons as containers                        │
-│    Bootstrap = First command; creates initial MON + MGR on one node                                   │
-│    noout flag= Prevent OSDs from being marked out during maintenance                                  │
-│                                                                                                       │
-```
+![Ceph — Deploy — Diagram](../../../assets/storage-ceph-deploy-diagram.svg)
 
 ## Prerequisites
 

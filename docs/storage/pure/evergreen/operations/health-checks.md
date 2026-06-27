@@ -14,28 +14,7 @@ Health Checks reference covering Quick Health Check (5 minutes), Full Health Che
 
 
 
-```text
-Evergreen Health Check — Daily Sequence
-  Pure1 portal ──► All arrays green?
-          │
-          ▼
-  purealert list ──► No error/warning alerts?
-          │
-          ▼
-  puredrive list ──► All drives healthy?
-          │
-          ▼
-  purearray list --controller ──► Both controllers ok?
-          │
-          ▼
-  purearray phonehome list ──► Phone-home active?
-          │
-          ▼
-  Pure1 → Subscription dashboard ──► Capacity within entitlement?
-          │
-          ▼
-          PASS
-```
+![Evergreen — Health Checks — Diagram](../../../../assets/storage-pure-evergreen-operations-health-checks-diagram.svg)
 
 > Part of the [Evergreen Operations](index.md) reference.
 

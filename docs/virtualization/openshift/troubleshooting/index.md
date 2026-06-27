@@ -14,28 +14,7 @@ OpenShift troubleshooting: pod failures, node issues, cluster operator problems,
 ![OpenShift — Troubleshooting](../../../assets/virtualization-openshift-troubleshooting-index.svg)
 
 
-```text
-┌────────────────────────────────────── OpenShift Troubleshooting ──────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                               OpenShift Troubleshooting Overview                              │   │
-│   │       Three sub-sections: Common Issues, Diagnostics (must-gather), Escalation (Red Hat)      │   │
-│   │       First step: oc get events -A and oc logs <pod> --previous; resolves 90% of issues       │   │
-│   │         Escalation: always attach must-gather; Sev 1 = call Red Hat after opening case        │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                 ▼                               ▼                                 ▼                   │
-│                                                                                                       │
-│   ┌────────────────────────────┐  ┌────────────────────────────┐  ┌───────────────────────────────┐   │
-│   │       Common Issues        │  │        Diagnostics         │  │           Escalation          │   │
-│   │       CrashLoopBackOff     │  │      must-gather bundle    │  │       Sev 1–4 definitions     │   │
-│   │       ImagePullBackOff     │  │        oc adm inspect      │  │       SOS report per node     │   │
-│   │        Node NotReady       │  │       etcd diagnostics     │  │       Case data checklist     │   │
-│   │          OOMKilled         │  │        Network debug       │  │       TAM escalation path     │   │
-│   │      Operator Degraded     │  │     Node crictl/kubelet    │  │        access.redhat.com      │   │
-│   └────────────────────────────┘  └────────────────────────────┘  └───────────────────────────────┘   │
-│                                                                                                       │
-```
+![OpenShift — Troubleshooting — Diagram](../../../assets/virtualization-openshift-troubleshooting-diagram.svg)
 
 ```mermaid
 graph TD

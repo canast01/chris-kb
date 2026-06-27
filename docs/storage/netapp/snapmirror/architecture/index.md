@@ -11,55 +11,7 @@ SnapMirror architecture reference — replication types (Async, Sync, SMBC, XDP)
 *Applies to: SnapMirror*
 </div>
 
-```text
-┌──────────────────────────── NetApp SnapMirror — Replication Architecture ─────────────────────────────┐
-│                                                                                                       │
-│  ONTAP replication technology: async for DR, sync for Metro zero-RPO, SMBC for                        │
-│  active-active; Cloud SnapMirror tiers to CVO on AWS/Azure/GCP.                                       │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              Replication Modes               │  │                  Use Cases                  │   │
-│   │          Async: low RPO, remote DR           │  │          DR: failover to secondary          │   │
-│   │          Sync: 0 RPO; metro stretch          │  │             Metro: cross-site HA            │   │
-│   │          SMBC: active-active; 0 RPO          │  │            Cloud: tier or migrate           │   │
-│   │          Vault: long-term retention          │  │           Backup: SnapVault copies          │   │
-│   │          Unified: data + protection          │  │         Dev/test: clone from mirror         │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  SMBC requires ONTAP Mediator for automated failover without manual intervention.                     │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              Async Architecture              │  │           Sync / SMBC Architecture          │   │
-│   │       Snapshots transferred as deltas        │  │          Write completes both sites         │   │
-│   │          Schedule: hourly/daily/etc          │  │           RPO: zero (synchronous)           │   │
-│   │         Mirror: secondary read-only          │  │          SMBC: both sides serve IO          │   │
-│   │        Failover: manual break-mirror         │  │           Mediator: auto failover           │   │
-│   │         Lag: RPO = transfer interval         │  │            Max distance: 10ms RTT           │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  Primary ONTAP cluster and secondary ONTAP cluster (or CVO in cloud); intercluster                    │
-│  LIFs on dedicated ports; WAN or DCI link between sites for replication traffic.                      │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  SnapMirror     = ONTAP replication technology; async, sync, or vault modes                           │
-│  Async          = delta Snapshot transfers on schedule; best for remote DR sites                      │
-│  Sync SnapMirror= write confirmed on both nodes before ACK; 0 RPO; requires low RTT                   │
-│  SMBC           = SnapMirror Business Continuity; active-active; both serve reads/writes              │
-│  SnapVault      = vault mode; secondary keeps more snapshots than primary                             │
-│  RPO            = Recovery Point Objective; how much data you can afford to lose                      │
-│  Break mirror   = convert secondary from read-only to writable; DR activation step                    │
-│  Mediator       = ONTAP Mediator VM; tiebreaker for SMBC automated failover                           │
-│  Intercluster LIF= dedicated IP address for cluster-to-cluster replication traffic                    │
-│  Cloud SnapMirror= replicate ONTAP volumes to Cloud Volumes ONTAP (CVO) on cloud                      │
-│  Lag time       = how far behind the secondary is; = RPO in async mode                                │
-│  CVO            = Cloud Volumes ONTAP; ONTAP on public cloud; SnapMirror target                       │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+![SnapMirror — Architecture — Diagram](../../../../assets/storage-netapp-snapmirror-architecture-diagram.svg)
 
 ```mermaid
 graph LR

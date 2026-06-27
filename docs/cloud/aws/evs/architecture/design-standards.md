@@ -143,15 +143,7 @@ vCenter VCHA (vCenter High Availability) deploys a passive clone of vCenter Serv
 
 ## Direct Connect Bandwidth
 
-```text
-Purpose                     Minimum bandwidth
-────────────────────────────────────────────────────────────
-Management reachability     10 Mbps (vCenter, SDDC access)
-HCX cold migration          100 Mbps per concurrent migration
-HCX vMotion (live)          1 Gbps per 100 VMs actively moving
-HCX bulk migration (WAN opt)100 Mbps (compressed; effective rate higher)
-Production workload access  Size for peak VM traffic + 30% headroom
-````
+![Amazon EVS — Design Standards — Diagram](../../../../assets/cloud-aws-evs-architecture-design-standards-diagram.svg)`
 
 Use Direct Connect dedicated connection (1 Gbps or 10 Gbps) for production. VPN is acceptable for small test clusters.
 

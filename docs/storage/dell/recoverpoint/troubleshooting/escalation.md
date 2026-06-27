@@ -168,27 +168,7 @@ Blast radius: 12 CGs paused; replication stopped; RPO growing; DR images stale s
 
 ## Escalation Path
 
-```text
-Step 1 — Open case at dell.com/support with RPA bundles from both sites attached
-         ↓
-Step 2 — Dell T1 engineer acknowledges (P1: < 2 hr ProSupport Plus; P2: < 4 hr)
-         ↓
-Step 3 — If no meaningful progress within 2 hours for P1:
-         → Reply in case: "Requesting escalation to RecoverPoint Senior Engineer"
-         → State: "[all CGs paused / journal full / failover blocked / data loss risk]"
-         ↓
-Step 4 — RP T2 Senior Engineer assigned
-         → They will review the RPA bundles and may request console access to the RP management UI
-         → Have console access to both Site A and Site B RP management ready
-         ↓
-Step 5 — If issue involves a CG state that cannot be resolved by reconfiguration:
-         → T2 escalates to RecoverPoint Engineering
-         → Engineering may provide targeted CG state recovery or journal reset procedure
-         ↓
-Step 6 — For active data loss or failover required:
-         → Request TAM engagement immediately
-         → TAM can arrange bridge call with Engineering and coordinate emergency failover guidance
-```
+![RecoverPoint — Escalation — Diagram](../../../../assets/storage-dell-recoverpoint-troubleshooting-escalation-diagram.svg)
 
 ---
 

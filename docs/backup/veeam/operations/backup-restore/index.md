@@ -55,12 +55,7 @@ This performs a Storage vMotion in the background. The VM remains live throughou
 
 Full VM Restore copies the backup to a production datastore. Use for planned recoveries or when instant recovery is not required.
 
-```text
-Veeam Console → Home → Restore → VMware vSphere VMs →
-  Entire VM Restore → select backup → select restore point →
-  Original location or New location → select ESXi host and datastore →
-  Power on VM after restoring → Finish
-```
+![Veeam — Backup & Restore — Diagram](../../../../assets/backup-veeam-operations-backup-restore-diagram.svg)
 
 ```powershell
 $vm     = Find-VBRViEntity -Name "PRODVM01"

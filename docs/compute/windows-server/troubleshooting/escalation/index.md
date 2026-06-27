@@ -187,27 +187,7 @@ Blast radius: Application service unavailable; 50 users affected
 
 ## Escalation Path
 
-```text
-Step 1 — Open case at support.microsoft.com with event logs and msinfo32 attached
-         ↓
-Step 2 — CSS engineer acknowledges (Sev A: within 1 hr; Sev B: within 4 hr)
-         ↓
-Step 3 — If no meaningful progress in 2 hours for Sev A or 4 hours for Sev B:
-         → Reply in case: "Requesting escalation to Senior Engineer or DSE"
-         → State: "[server in BSOD loop / service down / 50 users affected]"
-         ↓
-Step 4 — Senior Engineer or DSE (Delivery Service Engineer) assigned
-         → They will initiate a Microsoft Remote Assistance (MSRA) session
-         → Have Remote Desktop access and the case number ready
-         ↓
-Step 5 — If issue requires kernel or driver code investigation:
-         → Engineer escalates to Microsoft Engineering
-         → Engineering may provide a hotfix or Cumulative Update regression analysis
-         ↓
-Step 6 — For Sev A open more than 2 hours with no resolution:
-         → If you have Premier: contact your TAM directly
-         → Request escalation to Escalation Management team through the case
-```
+![Windows Server — Escalation — Diagram](../../../../assets/compute-windows-server-troubleshooting-escalation-diagram.svg)
 
 ---
 

@@ -14,28 +14,7 @@ Script Reference reference covering Subscription Capacity Report, Alert Configur
 ![Evergreen — Script Reference](../../../../assets/storage-pure-evergreen-operations-scripts.svg)
 
 
-```text
-  Pure Script Execution Paths
-
-  Purity CLI (SSH)               Pure1 REST API
-  ┌──────────────────────────────────────────── ┐           ┌ ────────────────────────────────────────────┐
-  │  puritysh        │           │  Bearer token auth   │
-  │  purearray list  │           │  GET /arrays         │
-  │  purevol list    │           │  GET /metrics/history│
-  │  purealert list  │           │  GET /subscriptions  │
-  │  purepgroup list │           └──────────┬───────────┘
-  └──────────────────┘                      │
-                                            ▼
-  Pure PowerShell SDK              ┌────────────────────┐
-  ┌──────────────────┐             │  Python / Bash     │
-  │  New-PfaArray    │             │  eo1_usage.py      │
-  │  Get-PfaVolumes  │             │  burst_alert.sh    │
-  │  Set-PfaVolume   │             │  sla_check.py      │
-  └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-  Alert audit: curl ──► /api/2.x/alert-watchers
-  Replication:  curl ──► /api/2.x/protection-groups
-```
+![Evergreen — Script Reference — Diagram](../../../../assets/storage-pure-evergreen-operations-scripts-diagram.svg)
 
 ## Before you begin
 

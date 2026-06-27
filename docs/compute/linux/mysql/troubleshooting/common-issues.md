@@ -113,14 +113,7 @@ psql -c "SHOW max_connections;"
 mysql -e "SHOW STATUS LIKE 'Threads_connected';"
 mysql -e "SHOW VARIABLES LIKE 'max_connections';"
 ```
-```text
-Query slow?
-  ├─ EXPLAIN shows Seq Scan on large table → add index
-  ├─ EXPLAIN shows correct index but slow → stale statistics → ANALYZE
-  ├─ Waiting on lock → find blocker; kill if necessary
-  ├─ High I/O wait → buffer pool too small → increase shared_buffers / innodb_buffer_pool_size
-  └─ CPU spiking → too many connections or parallel queries → check pool; tune work_mem
-```
+![MySQL / MariaDB — Common Issues — Diagram](../../../../assets/compute-linux-mysql-troubleshooting-common-issues-diagram.svg)
 
 ---
 

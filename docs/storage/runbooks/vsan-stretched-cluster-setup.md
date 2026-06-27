@@ -17,34 +17,7 @@ tags:
 Cross-product runbook for deploying and validating a VMware vSAN stretched cluster across two sites with a third-site witness host. Covers witness appliance deployment, fault domain configuration, SPBM storage policy creation, network validation, failover simulation, and optional SRM integration for RPO=0 protection.
 </div>
 
-```text
-  SITE A (Preferred)              WITNESS SITE (3rd)          SITE B (Secondary)
-  ┌───────────────────┐           ┌───────────────────┐        ┌───────────────────┐
-  │                   │           │                   │        │                   │
-  │  ┌─────────────┐  │   vSAN    │  ┌─────────────┐  │  vSAN  │  ┌─────────────┐  │
-  │  │  ESXi-A01   │  │  Witness  │  │   Witness   │  │ Witness│  │  ESXi-B01   │  │
-  │  │  ESXi-A02   │◄─┼───Traffic─┼─►│   Appliance │◄─┼─Traffic┼─►│  ESXi-B02   │  │
-  │  │  ESXi-A03   │  │           │  │  (metadata) │  │        │  │  ESXi-B03   │  │
-  │  └─────────────┘  │           │  └─────────────┘  │        │  └─────────────┘  │
-  │        │           │           └───────────────────┘        │        │          │
-  │  ┌─────┴────────┐  │                                         │  ┌─────┴───────┐  │
-  │  │  vSAN        │  │◄═══════ Inter-site data path ══════════►│  │  vSAN       │  │
-  │  │  Datastore   │  │         (RTT ≤ 5ms required)           │  │  Datastore  │  │
-  │  │  (preferred) │  │                                         │  │ (secondary) │  │
-  │  └──────────────┘  │                                         │  └─────────────┘  │
-  │                    │                                         │                   │
-  │  ┌──────────────┐  │                                         │  ┌─────────────┐  │
-  │  │  vCenter     │  │                                         │  │  VMs (dark) │  │
-  │  │  (primary)   │  │                                         │  │  standby    │  │
-  │  └──────────────┘  │                                         │  └─────────────┘  │
-  └───────────────────┘                                          └───────────────────┘
-
-  vSAN STRETCHED CLUSTER POLICY (RAID-1 across sites):
-  ┌──────────────────────────────────────────────────────────────────┐
-  │  VM Object  →  Component A (Site A)  +  Component B (Site B)    │
-  │             +  Witness Component (Witness Site) [metadata only]  │
-  └──────────────────────────────────────────────────────────────────┘
-```
+![vSAN Stretched Cluster Setup and Validation — Diagram](../../assets/storage-runbooks-vsan-stretched-cluster-setup-diagram.svg)
 
 ## Before You Begin
 

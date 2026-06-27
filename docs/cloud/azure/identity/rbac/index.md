@@ -19,13 +19,7 @@ Azure Role-Based Access Control (RBAC) is the authorisation system for Azure res
 
 ## RBAC Model
 
-```text
-Scope hierarchy (broader → narrower):
-  Management Group
-    └── Subscription
-          └── Resource Group
-                └── Resource
-```
+![Azure — RBAC — Diagram](../../../../assets/cloud-azure-identity-rbac-diagram.svg)
 
 A role assignment at a broader scope is inherited by all narrower scopes beneath it.
 

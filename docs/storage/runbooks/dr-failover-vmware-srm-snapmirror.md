@@ -18,31 +18,7 @@ Cross-product runbook for executing a DR failover and failback using VMware Site
 ![DR Failover: VMware SRM with NetApp SnapMirror](../../assets/storage-runbooks-dr-failover-vmware-srm-snapmirror.svg)
 
 
-```text
-  PRIMARY SITE                            SECONDARY (DR) SITE
-  ┌────────────────────────────────┐      ┌────────────────────────────────┐
-  │                                │      │                                │
-  │  ┌──────────┐  ┌───────────┐  │      │  ┌──────────┐  ┌───────────┐  │
-  │  │ vCenter  │  │    SRM    │  │      │  │ vCenter  │  │    SRM    │  │
-  │  │ Primary  │  │ Primary   │◄─┼──────┼─►│   DR     │  │    DR     │  │
-  │  └──────────┘  └───────────┘  │      │  └──────────┘  └───────────┘  │
-  │        │                      │      │        │                       │
-  │  ┌─────┴──────────────────┐   │      │  ┌─────┴──────────────────┐   │
-  │  │   ESXi Cluster (Prod)  │   │      │  │  ESXi Cluster (DR)     │   │
-  │  │  ┌───┐  ┌───┐  ┌───┐  │   │      │  │  ┌───┐  ┌───┐         │   │
-  │  │  │VM1│  │VM2│  │VM3│  │   │      │  │  │VM1│  │VM2│ (dark)  │   │
-  │  │  └───┘  └───┘  └───┘  │   │      │  │  └───┘  └───┘         │   │
-  │  └────────────────────────┘   │      │  └────────────────────────┘   │
-  │                                │      │                               │
-  │  ┌──────────────────────────┐  │      │  ┌──────────────────────────┐ │
-  │  │  ONTAP Primary Cluster   │  │      │  │  ONTAP DR Cluster        │ │
-  │  │  svm_prod / vol_prod_*   │──┼──────┼─►│  svm_dr / vol_dr_*      │ │
-  │  │  (SnapMirror source)     │  │      │  │  (SnapMirror dest, RO)  │ │
-  │  └──────────────────────────┘  │      │  └──────────────────────────┘ │
-  │                                │      │                               │
-  └────────────────────────────────┘      └────────────────────────────────┘
-                    SnapMirror replication (async, RPO-driven schedule)
-```
+![DR Failover: VMware SRM with NetApp SnapMirror — Diagram](../../assets/storage-runbooks-dr-failover-vmware-srm-snapmirror-diagram.svg)
 
 ## Before You Begin
 

@@ -14,31 +14,7 @@ Pure Evergreen procedures: requesting capacity upgrades, scheduling controller r
 
 ---
 
-```text
-  Pure Operational Procedure Flow
-
-  Provision volume          Snapshot / Replication
-  ┌───────────────────────────────────────────── ┐        ┌ ──────────────────────────────────────────────┐
-  │ purevol create │        │ purepgroup create      │
-  │ purevol connect│        │ purepgroup setattr     │
-  │  --hgroup      │        │  --vollist             │
-  │ Host rescan    │        │ purepgroup schedule    │
-  │ multipath -ll  │        │  --snap-frequency      │
-  └────────────────┘        │ purepgroup connect     │
-                            │  --hgroup <remote>     │
-  Purity Upgrade            └───────────────────────┘
-  ┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
-  │ Pre: purearray upgrade --check     │
-  │      purealert list (no errors)    │
-  │      purehostconnection list       │
-  │        (≥2 paths per host)         │
-  │ Run: Pure Support leads ──► rolling│
-  │        controller restart          │
-  │ Post: purearray list (version)     │
-  │       purealert list (no new)      │
-  │       purepod list (online)        │
-  └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+![Evergreen — Procedures — Diagram](../../../../assets/storage-pure-evergreen-operations-procedures-diagram.svg)
 
 ---
 

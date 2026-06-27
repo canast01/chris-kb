@@ -16,21 +16,7 @@ Backup & Restore reference covering Evergreen//Forever — No Traditional Backup
 
 
 
-```text
-Evergreen Configuration Backup + Restore
-  Configuration export (before controller refresh / migration):
-  ├── pureconfig list --all  ──► export array config to file
-  ├── purepgroup list --schedule ──► document PGroup schedules
-  └── purehost list + purehgroup list ──► host/group inventory
-          │
-          ▼
-  Store offline: CMDB / Git / secure file share
-
-  Post-refresh validation:
-  ├── purearray list --controller ──► new gen controllers
-  ├── purealert list ──► no residual alerts
-  └── purehost list --connection ──► all host paths restored
-```
+![Evergreen — Backup & Restore — Diagram](../../../../assets/storage-pure-evergreen-operations-backup-restore-diagram.svg)
 
 ## Before you begin
 

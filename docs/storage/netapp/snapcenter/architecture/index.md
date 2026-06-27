@@ -11,55 +11,7 @@ SnapCenter architecture reference — topology, HA options, components, connecti
 *Applies to: SnapCenter 5.x*
 </div>
 
-```text
-┌───────────────────────── NetApp SnapCenter — Centralized Backup Architecture ─────────────────────────┐
-│                                                                                                       │
-│  Windows-based backup orchestration for app-aware ONTAP Snapshots; plugins for SQL,                   │
-│  Oracle, SAP HANA, VMware, Exchange; SnapVault for DR copies; REST API for automation.                │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                 Architecture                 │  │            Supported Applications           │   │
-│   │          SnapCenter Server: Windows          │  │           SQL Server: VSS quiesce           │   │
-│   │           Plugins: per-app agents            │  │           Oracle: RMAN integration          │   │
-│   │         MySQL: internal metadata DB          │  │            SAP HANA: Backint API            │   │
-│   │            Web UI: browser-based             │  │            VMware: VADP snapshots           │   │
-│   │                REST API: 4.6+                │  │             Exchange: VSS-aware             │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Snapshots are instant and zero-impact; SnapVault fans out to secondary ONTAP for DR.                 │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                 Backup Flow                  │  │                Cloning and DR               │   │
-│   │             Plugin quiesces app              │  │         Clone from Snapshot: instant        │   │
-│   │            ONTAP Snapshot created            │  │             Dev/test: thin clone            │   │
-│   │        SnapVault: vault to secondary         │  │           SnapMirror: DR failover           │   │
-│   │           Catalog: metadata stored           │  │           Restore: volume or file           │   │
-│   │           Retention: policy-based            │  │          SMSQL: SQL-aware failover          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  Windows Server VM for SnapCenter; ONTAP primary + secondary HA pairs; management                     │
-│  network access from SnapCenter to ONTAP cluster-mgmt LIF on HTTPS.                                   │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  SnapCenter     = NetApp centralized backup and clone management server                               │
-│  Plugin         = per-application agent; installed on app server; quiesces app                        │
-│  VSS            = Windows Volume Shadow Service; quiescence for SQL and Exchange                      │
-│  Snapshot       = instant ONTAP point-in-time copy; no IO impact; basis for backup                    │
-│  SnapVault      = vault-mode replication; keeps long-term backup copies on secondary                  │
-│  SnapMirror     = DR replication; failover brings secondary ONTAP to primary role                     │
-│  Clone          = writable thin copy from Snapshot; used for dev/test instantly                       │
-│  Backint API    = SAP HANA backup interface; SnapCenter speaks Backint natively                       │
-│  RMAN           = Oracle recovery manager; SnapCenter plugin coordinates with it                      │
-│  Retention policy= defines how many Snapshot copies to keep and for how long                          │
-│  Catalog        = SnapCenter database of all backups; needed for restore operations                   │
-│  SMSQL          = SnapManager for SQL; legacy tool; replaced by SnapCenter plugin                     │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+![SnapCenter — Architecture — Diagram](../../../../assets/storage-netapp-snapcenter-architecture-diagram.svg)
 
 ```mermaid
 graph TB

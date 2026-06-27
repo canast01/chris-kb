@@ -15,16 +15,7 @@ A cipher suite specifies the algorithms used for key exchange, authentication, e
 
 ## Cipher Suite Name Structure (TLS 1.2)
 
-```text
-TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-│   │         │   │        │                                                                            │
-│   │         │   │        │   MAC (integrity)
-│   │         │   │        mode
-│   │         │   key size
-│   │         bulk cipher (symmetric encryption)
-│   key exchange + auth
-TLS protocol prefix
-```
+![TLS Cipher Suites — Diagram](../../../../assets/networking-protocols-tls-ciphers-diagram.svg)
 
 TLS 1.3 simplifies this — cipher suites only specify the symmetric cipher and hash:
 ```text

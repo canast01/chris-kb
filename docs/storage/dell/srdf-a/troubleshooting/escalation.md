@@ -168,28 +168,7 @@ Blast radius: DR completely unavailable; R2 volumes not accepting writes; RPO gr
 
 ## Escalation Path
 
-```text
-Step 1 — Open case at dell.com/support with symrdf output + event logs from both arrays
-         ↓
-Step 2 — Dell T1 engineer acknowledges (P1: < 2 hr ProSupport Plus; P2: < 4 hr)
-         ↓
-Step 3 — If no meaningful progress within 2 hours for P1:
-         → Reply in case: "Requesting escalation to PowerMax/SRDF Senior Engineer"
-         → State: "[groups suspended / link down / failover blocked / RPO breach]"
-         ↓
-Step 4 — PowerMax T2 Senior Engineer assigned
-         → They will review the symrdf data and may request a remote SE session
-         → Confirm SRS-VE is deployed and Dell can connect remotely
-         → Have Solutions Enabler host and Unisphere access ready
-         ↓
-Step 5 — If issue is an SRDF/A code-level problem (cycle consistency mechanism, delta set corruption):
-         → T2 escalates to PowerMax SRDF Engineering
-         → Engineering may provide targeted recovery commands
-         ↓
-Step 6 — For P1 with DR unavailable > 2 hours:
-         → Request TAM engagement
-         → TAM to arrange engineering bridge and confirm failover decision if data loss is imminent
-```
+![SRDF/A — Escalation — Diagram](../../../../assets/storage-dell-srdf-a-troubleshooting-escalation-diagram.svg)
 
 ---
 

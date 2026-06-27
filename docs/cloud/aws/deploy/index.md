@@ -35,17 +35,7 @@ This guide covers building a multi-account AWS Landing Zone from scratch: AWS Or
 
 Before creating any accounts, define your OU structure on paper:
 
-```text
-Root
-├── Infrastructure
-│   └── Log Archive
-│   └── Audit (Security Tooling)
-├── Workloads
-│   ├── Development
-│   ├── Staging
-│   └── Production
-└── Sandbox
-```
+![AWS — Account and Landing Zone Setup — Diagram](../../../assets/cloud-aws-deploy-diagram.svg)
 
 ---
 

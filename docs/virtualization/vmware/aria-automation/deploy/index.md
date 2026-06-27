@@ -62,13 +62,7 @@ TLS: generate a SAN cert covering all FQDNs above; upload to LCM Certificate Man
 
 **Option B — Add to existing LCM:**
 
-```text
-LCM → Lifecycle Operations → Environments → Add Product → Aria Automation
-→ Select version from depot → enter service FQDNs
-→ Map vCenter, datastore, resource pool, port group
-→ Upload TLS certificates → Run Pre-Checks (all green)
-→ Submit deployment
-```
+![Aria Automation — Deploy — Diagram](../../../../assets/virtualization-vmware-aria-automation-deploy-diagram.svg)
 
 ```bash
 # Monitor deployment from LCM appliance
@@ -165,11 +159,7 @@ resources:
           - echo "Provisioned by Aria Automation" >> /etc/motd
 ```
 
-```text
-Design → Cloud Templates → Version → Create Version → Release: 1.0.0
-Service Broker → Content Sources → New → Aria Automation → sync
-Service Broker → Content → select item → Share → Project-AppTeam-Prod
-```
+![Aria Automation — Deploy — Diagram](../../../../assets/virtualization-vmware-aria-automation-deploy-d2.svg)
 
 ---
 

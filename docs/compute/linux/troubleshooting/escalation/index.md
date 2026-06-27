@@ -201,26 +201,7 @@ Blast radius: 3 applications on this host unavailable; 150 users affected
 
 ## Escalation Path
 
-```text
-Step 1 — Open case with sosreport attached (see above)
-         ↓
-Step 2 — T1 CEE/TSE acknowledges and reviews sosreport (P1: within 1 hr; P2: within 2 hr)
-         ↓
-Step 3 — If no meaningful progress in 2 hours for Sev1 or 4 hours for Sev2:
-         → Reply: "Requesting escalation to Senior Kernel Engineer"
-         → State: "[host panicking continuously / 150 users offline / data at risk]"
-         ↓
-Step 4 — Senior engineer assigned; they may request remote access via approved SSH tunnel
-         → Have root SSH access to the host and the case number ready
-         ↓
-Step 5 — If issue is confirmed as a kernel bug:
-         → Vendor engineer opens internal bug and works toward a hotfix kernel errata
-         → You will receive a package update when available
-         ↓
-Step 6 — For unresolved Sev1 after 4 hours:
-         → Request escalation to Support Duty Manager (Red Hat) or Escalation Manager (Canonical)
-         → If you have a TAM, contact them directly to engage executive-level support
-```
+![Linux — Escalation — Diagram](../../../../assets/compute-linux-troubleshooting-escalation-diagram.svg)
 
 ---
 

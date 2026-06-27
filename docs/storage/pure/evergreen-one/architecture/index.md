@@ -11,55 +11,7 @@ Evergreen//One is Pure's Storage-as-a-Service model. Pure owns and manages the h
 *Applies to: Evergreen//One*
 </div>
 
-```text
-┌─────────────────────── Pure Evergreen//One — Storage as a Service Architecture ───────────────────────┐
-│                                                                                                       │
-│  Pure Storage STaaS: all-NVMe FlashArray delivered to customer DC; Pure manages HW;                   │
-│  non-disruptive controller upgrades; consumption billing via Pure1 portal.                            │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                Service Model                 │  │             Underlying Platform             │   │
-│   │         FlashArray in customer rack          │  │          FlashArray //X: block NVMe         │   │
-│   │         Pure manages HW + Purity OS          │  │          FlashBlade //S: file + obj         │   │
-│   │        Non-disruptive controller swap        │  │          All-NVMe: no spinning disk         │   │
-│   │         Customer manages data + VMs          │  │          SafeMode: immutable snaps          │   │
-│   │          Subscription: per TB/month          │  │           Pure1: management portal          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Pure guarantees controller upgrades are included; no forklift needed ever.                           │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              SLA and Guarantees              │  │                  Management                 │   │
-│   │          Availability: 99.9999% SLA          │  │              Pure1: SaaS portal             │   │
-│   │         Performance: guaranteed IOPS         │  │             REST API: automation            │   │
-│   │        Non-disruptive upgrade: always        │  │           Pure Support: proactive           │   │
-│   │           Capacity burst: elastic            │  │         Pure1 AI: predictive alerts         │   │
-│   │          Energy efficiency included          │  │         MSP option: partner managed         │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  Pure FlashArray //X or //C in customer rack; FC or iSCSI or NVMe-oF host connections;                │
-│  Pure1 cloud portal management; phone-home telemetry over TCP 443 to Pure cloud.                      │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Evergreen//One = Pure STaaS; hardware in your DC, Pure manages it, you consume it                    │
-│  STaaS          = Storage as a Service; pay per TB used, not upfront CapEx                            │
-│  Non-disruptive = controller upgrade without IO downtime; Pure guarantee                              │
-│  SafeMode       = immutable Snapshot; cannot be deleted even by admin; ransomware                     │
-│  Pure1          = Pure SaaS management and analytics portal; all arrays in one view                   │
-│  FlashArray //X = Pure block storage array; NVMe; target for Evergreen//One block                     │
-│  FlashBlade //S = Pure scale-out file+object; target for Evergreen//One unstructured                  │
-│  Purity OS      = Pure storage OS; runs on FlashArray; managed by Pure under contract                 │
-│  99.9999% SLA   = six nines; ~32 seconds total downtime per year                                      │
-│  Capacity burst = use more than committed; billed at overage rate automatically                       │
-│  Proactive support= Pure1 AI detects issues and opens support cases before you do                     │
-│  Phone-home     = telemetry from array to Pure cloud; required for managed service                    │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+![Evergreen//One — Architecture — Diagram](../../../../assets/storage-pure-evergreen-one-architecture-diagram.svg)
 
 ```mermaid
 graph TB

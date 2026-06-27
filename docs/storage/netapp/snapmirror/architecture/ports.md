@@ -19,17 +19,7 @@ Firewall port reference for NetApp SnapMirror. SnapMirror is a replication featu
 
 ## Network Zones
 
-```text
-Site A                                    Site B
-┌─────────────────────────────┐           ┌─────────────────────────────────────────────────────────────┐
-│  ONTAP Cluster A            │           │  ONTAP Cluster B                                            │
-│  ┌────────────────────┐     │  WAN/IP   │  ┌───────────────────┐                                      │
-│  │ Intercluster LIF   │─────┼──────────▶│  │ Intercluster LIF  │                                      │
-│  │ (dedicated or mgmt)│◀────┼───────────┤  │                   │                                      │
-│  └────────────────────┘     │  11104/   │  └───────────────────┘                                      │
-│                             │  11105    │                                                             │
-└─────────────────────────────┘           └─────────────────────────────────────────────────────────────┘
-```
+![NetApp SnapMirror — Ports and Network Requirements — Diagram](../../../../assets/storage-netapp-snapmirror-architecture-ports-diagram.svg)
 
 ## Before you begin
 

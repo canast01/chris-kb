@@ -114,14 +114,7 @@ FlashBlade S3 access control uses a two-layer model: object store accounts own b
 
 ### Object Store Account Model
 
-```text
-Organization
-└── Object Store Account (e.g., ml-platform)
-    ├── User (e.g., svc-training-pipeline)
-    │   └── Access Key (AWS_ACCESS_KEY_ID + AWS_SECRET_ACCESS_KEY)
-    └── Bucket (e.g., prod-ml-training-data)
-        └── Bucket Policy (optional — grants/denies access to specific users or prefixes)
-```
+![FlashBlade — Access Control — Diagram](../../../../assets/storage-pure-flashblade-security-access-control-diagram.svg)
 
 ### Create Accounts, Users, and Access Keys
 

@@ -68,16 +68,7 @@ Replication groups define which VDCs participate in geo-replication. Every names
 
 ## Namespace and Bucket Hierarchy
 
-```text
-VDC
-└── Namespace (multi-tenancy boundary)
-    ├── Assigned to one Replication Group
-    ├── Quota (hard or advisory)
-    ├── IAM Users (object users with S3 access keys)
-    └── Bucket
-        ├── Versioning, lifecycle policy, access policy
-        └── Object Lock (WORM — compliance or governance mode)
-```
+![Dell ECS — How It Works — Diagram](../../../../assets/storage-dell-ecs-architecture-how-it-works-diagram.svg)
 
 ## Supported API Protocols
 

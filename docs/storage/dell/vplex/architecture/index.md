@@ -11,55 +11,7 @@ Dell VPLEX is a storage federation and virtualisation platform that decouples ph
 *Applies to: VPLEX*
 </div>
 
-```text
-┌────────────────────────── Dell VPLEX — Storage Virtualization Architecture ───────────────────────────┐
-│                                                                                                       │
-│  Storage virtualization appliance between hosts and arrays; presents virtual volumes                  │
-│  abstracting underlying LUNs; Metro active-active stretch; non-disruptive migration.                  │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                   Function                   │  │            Deployment Topologies            │   │
-│   │         Storage virtualization layer         │  │         Local: single site; migrate         │   │
-│   │         Sits between hosts + arrays          │  │         Metro: active-active 2-site         │   │
-│   │           Presents virtual volumes           │  │           Geo: async distant sites          │   │
-│   │          Abstracts underlying LUNs           │  │        Cluster: 2 directors per site        │   │
-│   │         Cache coherency: distributed         │  │            FC: only connectivity            │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  VPLEX Metro enables VMware vMSC (Metro Storage Cluster) for cross-site vMotion.                      │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                Key Use Cases                 │  │                  Management                 │   │
-│   │           Non-disruptive migration           │  │           VPLEX Management Console          │   │
-│   │         Heterogeneous array support          │  │             vscli: command line             │   │
-│   │         Active-active Metro stretch          │  │             REST API: automation            │   │
-│   │          Host transparent migration          │  │          VPLEX Witness: tiebreaker          │   │
-│   │        vMSC: VMware stretched cluster        │  │           vCenter plugin optional           │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  VPLEX VS2 appliance (2U rackmount); FC fabric connections to both hosts and arrays;                  │
-│  Inter-cluster link (ICL): FC between VPLEX clusters at both Metro sites.                             │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  VPLEX          = Dell storage virtualization appliance; brand name                                   │
-│  Virtual volume = logical volume presented to hosts; maps to one or more LUNs                         │
-│  Virtual device = internal VPLEX construct mapping virtual vol to storage extents                     │
-│  Metro          = synchronous active-active VPLEX across 2 sites; shared volume                       │
-│  Local          = single-site VPLEX; non-disruptive migration use case                                │
-│  Cache coherency= VPLEX distributed cache ensures consistency across both copies                      │
-│  ICL            = Inter-Cluster Link; FC link between the two VPLEX clusters                          │
-│  Director       = VPLEX compute module; two per cluster for HA                                        │
-│  vMSC           = vSphere Metro Storage Cluster; VMware validated with VPLEX Metro                    │
-│  Witness        = VPLEX tiebreaker VM; determines surviving site on network partition                 │
-│  Non-disruptive migration= move LUNs between arrays while host IO continues                           │
-│  Heterogeneous  = VPLEX virtualizes LUNs from any vendor (PowerMax, NetApp, Pure)                     │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+![VPLEX — Architecture — Diagram](../../../../assets/storage-dell-vplex-architecture-diagram.svg)
 
 ```mermaid
 graph LR

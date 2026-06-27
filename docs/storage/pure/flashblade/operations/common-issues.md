@@ -14,27 +14,7 @@ Known Issues reference covering Incident Triage, Common Issues Reference.
 ![FlashBlade — Known Issues](../../../../assets/storage-pure-flashblade-operations-common-issues.svg)
 
 
-```text
-FlashBlade Triage Flow
-  Alert / Symptom reported
-          │
-          ▼
-  purefb alert list ──► Identify failure domain
-          │
-   ┌────────────────────────────────────────────────── ┴ ──────────────────────────────────────────────────┐
-   ▼                                     ▼
-Blade fault                       Client connectivity loss
-purefb blade list                  Check NFS export policy
-  │                                or S3 bucket ACL
-  ▼                                       │
-Open Pure support case             Verify network / IP routing
-  │                                from client to FlashBlade
-  ▼
-Monitor blade replacement
-
-Replication issue:
-  purefb replication list ──► lag / status ──► check network BW
-```
+![FlashBlade — Known Issues — Diagram](../../../../assets/storage-pure-flashblade-operations-common-issues-diagram.svg)
 
 > Part of the [FlashBlade Operations](index.md) reference.
 

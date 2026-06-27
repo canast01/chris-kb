@@ -6,48 +6,7 @@ Quality gates and content standards for the chrisanastasiadis.com knowledge base
 ![Site Quality Dashboard](assets/site-quality.svg)
 
 
-```text
-┌────────────────────────────────────── KB Site Quality Dashboard ──────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │       Quality gates and content standards for the chrisanastasiadis.com knowledge base        │   │
-│   │              37-check automated audit · pre-commit hooks · GitHub Actions CI                  │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │     Structure Rules         │  │      Content Rules           │  │       CI / Tooling          │  │
-│   │     ─────────────           │  │      ─────────────           │  │       ─────────────         │  │
-│   │  Every page in nav          │  │  ≥ 3 ## sections on CLI pg  │  │  site_audit.py (37 checks)  │   │
-│   │  index.md → card grid only  │  │  ≥ 1 code block on CLI pg   │  │  pre-commit hooks (5 rules) │   │
-│   │  No raw kb-grid in content  │  │  Mermaid via fenced block    │  │  GitHub Actions CI pipeline │  │
-│   │  Products under vendor nav  │  │  Tags on every content page  │  │  MkDocs strict build check  │  │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   Section          │  Pages  │  Section            │  Pages  │  Section          │  Pages     │   │
-│   │   Storage          │   709   │  SAN                │   136   │  Backup           │   103      │   │
-│   │   Virtualization   │   685   │  ITSM               │   153   │  Networking       │    83      │   │
-│   │   Cloud            │   295   │  Security           │   113   │  Certifications   │    14      │   │
-│   │   Compute          │   175   │  Automation         │   126   │                   │            │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: GitHub Pages / Cloudflare CDN · MkDocs Material build · Actions CI pipeline              │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    kb-summary      = Required <div> block on every page; summarises content for search/nav            │
-│    kb-card         = Anchor-style card (<a class="kb-card">) used in landing page grids               │
-│    kb-grid         = Card grid container; appears on index.md pages only, never content pages         │
-│    CLI reference   = Page with commands, flags, and examples; must have ≥ 3 sections + code block     │
-│    Mermaid         = Diagram syntax rendered by mkdocs-material; must use fenced ```mermaid block     │
-│    site_audit.py   = 37-check automated audit; run before committing or after bulk changes            │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+![Site Quality Dashboard — Diagram](assets/site-quality-diagram.svg)
 
 Generated: 2026-06-26
 
@@ -58,8 +17,8 @@ Generated: 2026-06-26
 | Total markdown pages | 2,846 |
 | Sections | 11 |
 | Pages with kb-summary | 2,567 |
-| Pages with full-width ASCII diagram | 272 |
-| Pages with SVG diagrams | 2,843 |
+| Pages with full-width ASCII diagram | 63 |
+| Pages with SVG diagrams | 2,846 |
 | Pages with Mermaid diagrams | 681 |
 | Pages with tags | 2,819 |
 | Audit score | 36 / 37 |

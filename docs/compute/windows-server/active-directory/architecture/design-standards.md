@@ -43,29 +43,7 @@ graph TD
 
 Top-level OUs are functional (Servers, Workstations, Users, Groups, Service Accounts). Geographic sub-OUs are used where region-specific GPO or delegation is required.
 
-```text
-DC=corp,DC=example,DC=com
-├── OU=Servers
-│   ├── OU=EMEA
-│   ├── OU=APAC
-│   └── OU=AMER
-├── OU=Workstations
-│   ├── OU=EMEA
-│   └── OU=AMER
-├── OU=Users
-│   ├── OU=Staff
-│   ├── OU=Contractors
-│   └── OU=External
-├── OU=Groups
-│   ├── OU=Security
-│   └── OU=Distribution
-├── OU=Service Accounts
-│   └── OU=Managed
-└── OU=Admin
-    ├── OU=Tier0
-    ├── OU=Tier1
-    └── OU=PAW
-```
+![Active Directory Standards — Diagram](../../../../assets/compute-windows-server-active-directory-architecture-design-standards-diagram.svg)
 
 Rules:
 - Computers must always be in the correct OU before GPO applies — do not leave in the default `CN=Computers` container.

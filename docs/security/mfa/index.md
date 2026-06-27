@@ -14,37 +14,9 @@ Multi-Factor Authentication (MFA) reference covering Overview, MFA Authenticatio
 
 
 
-```text
-  User                  Identity Provider (IdP)          MFA Service           Application
-    │                            │                            │                     │
-    │── Username + Password ────►│                            │                     │
-    │                            │── Validate credentials ───►│                     │
-    │                            │◄── Primary auth OK ────────│                     │
-    │                            │                            │                     │
-    │                            │── Trigger MFA challenge ──►│                     │
-    │◄── MFA challenge sent ─────│   (push / OTP / hardware)  │                     │
-    │                            │                            │                     │
-    │── OTP / Approve push ─────────────────────────────────►│                     │
-    │                            │◄── Factor confirmed ───────│                     │
-    │                            │                            │                     │
-    │◄── Auth token (SAML/OIDC) ─│                            │                     │
-    │                            │                            │                     │
-    │── Present token ────────────────────────────────────────────────────────────►│
-    │◄── Access granted ──────────────────────────────────────────────────────────│
-    │                            │                            │                     │
-    │                    [Session established — token TTL enforced]                │
-```
+![Multi-Factor Authentication (MFA) — Diagram](../../assets/security-mfa-diagram.svg)
 
-```text
-  TOTP (Time-based OTP)                Push Notification
-  ──────────────────────────────────   ─────────────────────────────────────────
-  User generates 6-digit code          IdP sends push to registered device
-  Code derived from shared secret      User taps Approve / Deny
-  Valid for 30-second window           Out-of-band — does not traverse browser
-  Works offline (no network needed)    Requires network on mobile device
-  Phishing-resistant if typed once     Vulnerable to MFA fatigue (auto-accept)
-  Hardware token: highest assurance    Number-matching mitigates fatigue attacks
-```
+![Multi-Factor Authentication (MFA) — Diagram](../../assets/security-mfa-d2.svg)
 
 <div class="kb-grid">
   <a class="kb-card" href="operations/">

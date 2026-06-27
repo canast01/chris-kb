@@ -183,24 +183,7 @@ Blast radius:
 
 ## Escalation Path
 
-```text
-Step 1 — Internal: automation team investigates with step debug logging
-         (ACTIONS_STEP_DEBUG: true and ACTIONS_RUNNER_DEBUG: true secrets)
-         ↓
-Step 2 — If issue is not workflow-specific (affects all runners or all workflows):
-         → Platform / infra team: check runner host networking, DNS, TLS, proxy config
-         ↓
-Step 3 — If platform team cannot resolve: open GitHub Enterprise support case at support.github.com
-         → Attach runner diagnostics and failing run logs
-         ↓
-Step 4 — If GitHub confirms a platform incident affecting your organisation:
-         → Follow githubstatus.com for resolution timeline
-         → No further escalation needed — GitHub's SRE team is engaged
-         ↓
-Step 5 — If case is not progressing within SLA:
-         → Reply in the support case: "Requesting escalation — impact: [describe production impact]"
-         → Contact your GitHub account manager to expedite
-```
+![GitHub Actions — Escalation — Diagram](../../../../assets/automation-github-actions-troubleshooting-escalation-diagram.svg)
 
 ---
 

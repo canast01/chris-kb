@@ -19,20 +19,7 @@ Firewall and security-group port reference for AWS infrastructure. Covers manage
 
 ## Network Zones
 
-```text
-On-Premises / Corporate                     AWS
-┌─────────────────────────┐                 ┌───────────────────────────────────────────────────────────┐
-│  Admin workstations     │──443 (HTTPS)───▶│  AWS Management Console / API                             │
-│  Automation (TF/Ansible)│──443───────────▶│  *.amazonaws.com APIs                                     │
-│  CI/CD runners          │──443───────────▶│  *.amazonaws.com                                          │
-└─────────────────────────┘                 │                                       │
-                                            │  VPC                                  │
-         Direct Connect / VPN              │  ┌──────────────────────────────────┐ │
-┌─────────────────────────┐──443/22/3389──▶│  │  EC2 / EKS nodes / RDS          │ │
-│  On-prem workloads      │                │  │  (Security Groups per resource)  │                      │
-└─────────────────────────┘                │  └──────────────────────────────────┘ │
-                                            └───────────────────────────────────────┘
-```
+![AWS — Ports and Network Requirements — Diagram](../../../assets/cloud-aws-architecture-ports-diagram.svg)
 
 ## Before you begin
 

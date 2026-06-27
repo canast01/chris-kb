@@ -168,13 +168,7 @@ SRDF (Symmetrix Remote Data Facility) is PowerMax's native replication protocol,
 
 PowerMax organises storage through a hierarchy of logical constructs:
 
-```text
-Physical NVMe Drives
-    └── Storage Resource Pool (SRP)
-          └── Storage Group (SG)
-                └── Thin Devices (TDEVs)
-                      └── Masking View → Host
-```
+![Dell PowerMax — How It Works — Diagram](../../../../assets/storage-dell-powermax-architecture-how-it-works-diagram.svg)
 
 **Thin Devices (TDEVs):** The logical block devices presented to hosts. TDEVs are thin-provisioned — physical capacity is allocated from the SRP only as data is written. A TDEV can be presented as much larger than the physical capacity available.
 

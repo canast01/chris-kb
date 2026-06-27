@@ -168,27 +168,7 @@ Blast radius: 4 ESXi hosts cannot access storage; 20 VMs have I/O stalled
 
 ## Escalation Path
 
-```text
-Step 1 — Check SupportAssist for auto-opened case; if none, open case at dell.com/support
-         ↓
-Step 2 — Dell support engineer acknowledges (P1: within 1 hr; P2: within 4 hr)
-         ↓
-Step 3 — If no meaningful progress in 1 hour for P1 or 4 hours for P2:
-         → Reply in case: "Requesting escalation to Senior Engineer / TAM"
-         → State: "[hosts have no storage / Node A down / Metro broken]"
-         ↓
-Step 4 — TAM (Technical Account Manager) assigned for ProSupport Plus contracts
-         → TAM escalates to engineering and can expedite hardware dispatch
-         → Have PSM and REST API access ready for a remote session
-         ↓
-Step 5 — If hardware is confirmed failed:
-         → Dell initiates hardware dispatch per your ProSupport contract SLA
-         → For NBD: next business day; for 4h: parts dispatched within 4 hours
-         ↓
-Step 6 — For P1 open more than 4 hours with no resolution:
-         → Call Dell support and request escalation to the Duty Manager
-         → Contact your Dell Account Executive for executive-level escalation
-```
+![PowerStore — Escalation — Diagram](../../../../assets/storage-dell-powerstore-troubleshooting-escalation-diagram.svg)
 
 ---
 

@@ -14,34 +14,7 @@ IPI vs UPI vs agent-based installation methods, install-config.yaml structure fo
 ![OpenShift — Deploy](../../../assets/virtualization-openshift-deploy-index.svg)
 
 
-```text
-┌──────────────────────────────────────── OpenShift Deployment ─────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                                 OpenShift Installation Methods                                │   │
-│   │       IPI: installer manages infrastructure (vSphere, AWS, bare-metal); fully automated       │   │
-│   │      UPI: admin provisions infra manually; installer only bootstraps the cluster software     │   │
-│   │     Air-gap: all images mirrored to internal registry; no internet required during install    │   │
-│   │        install-config.yaml: single source of truth for cluster topology and parameters        │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │           IPI Install (Automated)            │  │             UPI Install (Manual)            │   │
-│   │        openshift-install create cluster      │  │            Provision nodes manually         │   │
-│   │        Installer creates VMs (vSphere)       │  │           Generate ignition configs         │   │
-│   │          Manages load balancers, DNS         │  │            Bootstrap node → masters         │   │
-│   │         MachineAPI for worker scaling        │  │           Manual worker CSR approval        │   │
-│   │         Recommended for vSphere/cloud        │  │         Required for bare-metal/custom      │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│    Bootstrap  = Temporary node that initializes first master; removed after install                   │
-│    Ignition   = CoreOS provisioning system; configures RHCOS nodes on first boot                      │
-│    CSR        = Certificate Signing Request; workers submit CSRs; admin approves                      │
-│                                                                                                       │
-```
+![OpenShift — Deploy — Diagram](../../../assets/virtualization-openshift-deploy-diagram.svg)
 
 ## Before you begin
 

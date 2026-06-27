@@ -30,17 +30,7 @@ Certificate policy standards enforced through the Venafi policy tree. All certif
 
 Policy folders use lowercase-hyphenated names. Certificate objects (leaf nodes) use the FQDN as the object name.
 
-```text
-\VED\Policy\
-├── internal\
-│   ├── production\          e.g., \VED\Policy\internal\production\servers\
-│   ├── non-production\
-│   └── infrastructure\
-│           ├── network\
-│           └── vmware\
-└── external\
-    └── public\
-```
+![Venafi — Standards — Diagram](../../../../assets/security-venafi-architecture-design-standards-diagram.svg)
 
 Certificate object naming within a folder: `<fqdn>` (e.g., `app01.corp.example.com`). For wildcard certificates: `wildcard.<domain>` (e.g., `wildcard.corp.example.com`). No spaces or special characters in object names.
 

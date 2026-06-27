@@ -14,25 +14,7 @@ Backup & Restore reference covering Snapshot-Based Backup Overview, Snapshot Man
 ![FlashBlade — Backup & Restore](../../../../assets/storage-pure-flashblade-operations-backup-restore.svg)
 
 
-```text
-FlashBlade Data Protection Tiers
-  ┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
-  │  Local Snapshots (filesystem / bucket)                     │
-  │  Snapshot policy schedule ──► point-in-time copies         │
-  └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-                          │  async replication
-  ┌────────────────────────────────────────────────── ▼ ──────────────────────────────────────────────────┐
-  │  ActiveDR Replication                                      │
-  │  Filesystem/bucket ──► remote FlashBlade (RPO: minutes)    │
-  └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-                          │  backup integration
-  ┌────────────────────────────────────────────────── ▼ ──────────────────────────────────────────────────┐
-  │  Application Backup to FlashBlade (target)                 │
-  │  Veeam / Commvault ──► NFS or S3 backup target on FB      │
-  └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-Restore: snapshot → create clone → mount → validate → promote
-```
+![FlashBlade — Backup & Restore — Diagram](../../../../assets/storage-pure-flashblade-operations-backup-restore-diagram.svg)
 
 > Part of the [FlashBlade Operations](index.md) reference.
 

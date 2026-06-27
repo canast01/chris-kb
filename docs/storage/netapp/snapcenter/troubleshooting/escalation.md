@@ -188,28 +188,7 @@ Blast radius: All 20 SQL Server databases unprotected for 24h; RPO gap open
 
 ## Escalation Path
 
-```text
-Step 1 — Open case at mysupport.netapp.com with support bundle attached
-         ↓
-Step 2 — TSE (Technical Support Engineer) acknowledges and reviews the bundle
-         (P1: within 1 hour; P2: within 2 hours)
-         ↓
-Step 3 — If no meaningful progress in 2 hours for P1 or 4 hours for P2:
-         → Reply in case: "Requesting escalation to SnapCenter Specialist or Escalation Engineer"
-         → State: "[all backups failing / restore broken / 20 DBs unprotected]"
-         ↓
-Step 4 — Application plugin specialist assigned if issue is in the SQL/Oracle/VMware plugin layer
-         → They may request a TeamViewer/Teams session to the SnapCenter Server host
-         → Have SnapCenter GUI open and Windows Remote Desktop access ready
-         ↓
-Step 5 — If issue is a confirmed SnapCenter product bug:
-         → TSE opens a bug ID and escalates to SnapCenter Engineering
-         → Engineering provides a targeted hotfix or recommends a patch build
-         ↓
-Step 6 — For P1 unresolved after 2 hours:
-         → Call +1-888-463-8277 and request escalation to Support Duty Manager
-         → Contact your NetApp Account Manager to engage executive escalation
-```
+![SnapCenter — Escalation — Diagram](../../../../assets/storage-netapp-snapcenter-troubleshooting-escalation-diagram.svg)
 
 ---
 

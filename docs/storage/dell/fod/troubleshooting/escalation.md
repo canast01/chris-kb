@@ -179,26 +179,7 @@ Escalation needed:
 
 ## Escalation Path
 
-```text
-Step 1 — Open SR at support.dell.com with error output and SN comparison attached
-         Specify in Notes which team should handle (Licensing vs TAC vs Account team)
-         ↓
-Step 2 — Key rejection / SN mismatch → Dell Licensing team
-         → Typical resolution: Licensing re-generates the key for the correct SN
-         → SLA: 1 business day; if time-critical, ask account team to expedite
-         ↓
-Step 3 — Feature not activating after valid key import → Dell TAC
-         → TAC will check firmware version requirements and backend feature flag state
-         → May require a firmware update or a TAC-initiated backend unlock
-         ↓
-Step 4 — Contract or billing issue → Dell Account team
-         → Account team connects to Dell Contract Management for entitlement verification
-         → Purchase order number required for account team to locate the key history
-         ↓
-Step 5 — If unresolved after 1 business day for P2 or P3:
-         → Add case update: "Requesting escalation — capacity expansion blocked since [date]"
-         → Contact your Dell account executive directly to expedite with the Licensing team
-```
+![FOD — Escalation — Diagram](../../../../assets/storage-dell-fod-troubleshooting-escalation-diagram.svg)
 
 ---
 

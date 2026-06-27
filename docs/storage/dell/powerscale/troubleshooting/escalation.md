@@ -175,27 +175,7 @@ Blast radius: H600 pool degraded; data protected at N+1 only; one more drive fai
 
 ## Escalation Path
 
-```text
-Step 1 — Open case at dell.com/support with isi_gather_info bundle attached
-         ↓
-Step 2 — Dell T1 engineer acknowledges (P1: < 2 hr ProSupport Plus; P2: < 4 hr)
-         ↓
-Step 3 — If no meaningful progress within 2 hours for P1:
-         → Reply in case: "Requesting escalation to PowerScale Senior Engineer"
-         → State: "[SMARTFAIL stuck / NFS access down / data at risk / node offline]"
-         ↓
-Step 4 — PowerScale T2 Senior Engineer assigned
-         → They will review the isi_gather_info bundle and may request SSH access
-         → Have SSH access to nodes and OneFS admin UI ready; confirm SupportAssist is enabled
-         ↓
-Step 5 — If issue requires hardware dispatch (failed node, drive replacement):
-         → Dell dispatches a field engineer with replacement hardware
-         → Provide physical access details (data center, rack, row)
-         ↓
-Step 6 — For prolonged P1 or complex cluster recovery:
-         → Request TAM engagement (Technical Account Manager)
-         → For on-site senior engineering: request Global Priority Services (GPS)
-```
+![PowerScale — Escalation — Diagram](../../../../assets/storage-dell-powerscale-troubleshooting-escalation-diagram.svg)
 
 ---
 

@@ -193,26 +193,7 @@ Blast radius:
 
 ## Escalation Path
 
-```text
-Step 1 — Self-service: check AWS Health Dashboard; resolve via AWS documentation or re:Post
-         ↓
-Step 2 — Open support case at console.aws.amazon.com/support with appropriate severity
-         Attach CloudTrail export, resource configuration, and timeline
-         ↓
-Step 3 — For Urgent cases: use AWS Chat support (Support Center → Chat) simultaneously
-         This reaches the same team faster than waiting for an email response
-         ↓
-Step 4 — If no meaningful progress in 2 hours for Urgent / 1 business day for High:
-         → Add a case update: "Requesting escalation — impact: [production revenue / user count affected]"
-         ↓
-Step 5 — Enterprise plan: contact your TAM (Technical Account Manager)
-         → TAM can expedite case routing and engage AWS service teams directly
-         → TAM contact details are in the AWS Support Console under Enterprise support
-         ↓
-Step 6 — For data loss, security incidents, or 24h+ unresolved Urgent:
-         → Request AWS Critical Situation team engagement through your TAM or account team
-         → Provide business impact in revenue-per-hour or user-count terms
-```
+![AWS — Escalation — Diagram](../../../../assets/cloud-aws-troubleshooting-escalation-diagram.svg)
 
 ---
 

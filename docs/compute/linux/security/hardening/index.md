@@ -59,73 +59,7 @@ flowchart TD
 
 Apply via `/etc/sysctl.d/99-hardening.conf`. Load with `sysctl --system`.
 
-```text
-# /etc/sysctl.d/99-hardening.conf
-
-# ── Network hardening ────────────────────────────────────────────────────────
-
-# Disable IP forwarding (unless this is a router)
-net.ipv4.ip_forward = 0
-net.ipv6.conf.all.forwarding = 0
-
-# Disable IPv6 if not used
-net.ipv6.conf.all.disable_ipv6 = 1
-net.ipv6.conf.default.disable_ipv6 = 1
-
-# Prevent source routing
-net.ipv4.conf.all.accept_source_route = 0
-net.ipv4.conf.default.accept_source_route = 0
-net.ipv6.conf.all.accept_source_route = 0
-
-# Prevent ICMP redirects (MITM vector)
-net.ipv4.conf.all.accept_redirects = 0
-net.ipv4.conf.default.accept_redirects = 0
-net.ipv4.conf.all.send_redirects = 0
-net.ipv6.conf.all.accept_redirects = 0
-
-# Enable reverse path filtering (anti-spoofing)
-net.ipv4.conf.all.rp_filter = 1
-net.ipv4.conf.default.rp_filter = 1
-
-# Log suspicious packets
-net.ipv4.conf.all.log_martians = 1
-net.ipv4.conf.default.log_martians = 1
-
-# Ignore ICMP broadcast (Smurf attack prevention)
-net.ipv4.icmp_echo_ignore_broadcasts = 1
-
-# Ignore bogus ICMP error responses
-net.ipv4.icmp_ignore_bogus_error_responses = 1
-
-# SYN cookies — protect against SYN flood
-net.ipv4.tcp_syncookies = 1
-
-# TCP timestamps — disable to reduce fingerprinting
-net.ipv4.tcp_timestamps = 0
-
-# ── Kernel hardening ─────────────────────────────────────────────────────────
-
-# Restrict dmesg to root only
-kernel.dmesg_restrict = 1
-
-# Restrict kernel pointer exposure
-kernel.kptr_restrict = 2
-
-# Disable core dumps for setuid programs
-fs.suid_dumpable = 0
-
-# Restrict ptrace — 1 = only parent can ptrace child; 3 = disabled entirely
-kernel.yama.ptrace_scope = 1
-
-# Disable magic SysRq key
-kernel.sysrq = 0
-
-# Randomise virtual address space (ASLR) — 2 = full randomisation
-kernel.randomize_va_space = 2
-
-# Restrict access to kernel address space
-kernel.perf_event_paranoid = 3
-```
+![Linux — Hardening — Diagram](../../../../assets/compute-linux-security-hardening-diagram.svg)
 
 ```bash
 # Apply without rebooting
@@ -151,63 +85,7 @@ systemctl enable --now auditd
 
 Place rules in `/etc/audit/rules.d/99-hardening.rules`. Loaded by `augenrules --load`.
 
-```text
-# /etc/audit/rules.d/99-hardening.rules
-
-# Delete all existing rules first
--D
-
-# Set buffer size — increase on busy systems
--b 8192
-
-# Failure mode: 1 = print warning; 2 = panic (use 2 on high-security systems)
--f 1
-
-# ── Identity and authentication ───────────────────────────────────────────────
--w /etc/passwd -p wa -k identity
--w /etc/shadow -p wa -k identity
--w /etc/group -p wa -k identity
--w /etc/gshadow -p wa -k identity
--w /etc/sudoers -p wa -k sudoers
--w /etc/sudoers.d/ -p wa -k sudoers
--w /etc/security/access.conf -p wa -k login_access
-
-# ── Authentication events ─────────────────────────────────────────────────────
--w /var/log/lastlog -p wa -k logins
--w /var/run/faillock/ -p wa -k logins
-
-# ── SSH configuration changes ─────────────────────────────────────────────────
--w /etc/ssh/sshd_config -p wa -k sshd_config
-
-# ── Privileged command execution ──────────────────────────────────────────────
--a always,exit -F arch=b64 -S execve -F euid=0 -k privileged_exec
--w /usr/bin/sudo -p x -k sudo_exec
--w /usr/bin/su -p x -k su_exec
-
-# ── Network configuration ─────────────────────────────────────────────────────
--a always,exit -F arch=b64 -S sethostname -S setdomainname -k hostname_change
--w /etc/hosts -p wa -k network_config
--w /etc/sysconfig/network -p wa -k network_config
-
-# ── Module loading ────────────────────────────────────────────────────────────
--w /sbin/insmod -p x -k modules
--w /sbin/rmmod -p x -k modules
--w /sbin/modprobe -p x -k modules
--a always,exit -F arch=b64 -S init_module -S delete_module -k modules
-
-# ── Cron ──────────────────────────────────────────────────────────────────────
--w /etc/cron.allow -p wa -k cron
--w /etc/cron.deny -p wa -k cron
--w /etc/cron.d/ -p wa -k cron
--w /etc/cron.daily/ -p wa -k cron
--w /var/spool/cron/ -p wa -k cron
-
-# ── Time ─────────────────────────────────────────────────────────────────────
--a always,exit -F arch=b64 -S adjtimex -S settimeofday -S clock_settime -k time_change
-
-# ── Make rules immutable — requires reboot to change (comment out during setup)
--e 2
-```
+![Linux — Hardening — Diagram](../../../../assets/compute-linux-security-hardening-d2.svg)
 
 ```bash
 # Load rules
@@ -267,42 +145,7 @@ SHA_CRYPT_MAX_ROUNDS 100000
 
 ## PAM Password Policy
 
-```text
-# /etc/pam.d/system-auth — full hardened stack
-
-# ── auth ─────────────────────────────────────────────────────────────────────
-auth        required      pam_env.so
-auth        required      pam_faillock.so preauth silent deny=5 unlock_time=900
-auth        sufficient    pam_unix.so nullok
-auth        sufficient    pam_sss.so forward_pass
-auth        [default=die] pam_faillock.so authfail deny=5 unlock_time=900
-auth        requisite     pam_succeed_if.so uid >= 1000 quiet_success
-auth        required      pam_deny.so
-
-# ── account ──────────────────────────────────────────────────────────────────
-account     required      pam_unix.so
-account     sufficient    pam_localuser.so
-account     sufficient    pam_succeed_if.so uid < 1000 quiet
-account     [default=bad success=ok user_unknown=ignore] pam_sss.so
-account     required      pam_permit.so
-account     required      pam_faillock.so
-account     required      pam_access.so
-
-# ── password ─────────────────────────────────────────────────────────────────
-password    requisite     pam_pwquality.so try_first_pass local_users_only \
-                          retry=3 minlen=14 minclass=3 maxrepeat=3 dictcheck=1
-password    sufficient    pam_unix.so sha512 shadow nullok use_authtok remember=24
-password    sufficient    pam_sss.so use_authtok
-password    required      pam_deny.so
-
-# ── session ──────────────────────────────────────────────────────────────────
-session     optional      pam_keyinit.so revoke
-session     required      pam_limits.so
-session     optional      pam_oddjob_mkhomedir.so umask=0077
-session     [success=1 default=ignore] pam_succeed_if.so service in crond quiet use_uid
-session     required      pam_unix.so
-session     optional      pam_sss.so
-```
+![Linux — Hardening — Diagram](../../../../assets/compute-linux-security-hardening-d3.svg)
 
 ## File System Hardening
 

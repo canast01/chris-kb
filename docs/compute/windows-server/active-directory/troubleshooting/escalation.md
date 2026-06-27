@@ -185,27 +185,7 @@ Blast radius: Users in Site B cannot authenticate; dc03 out of sync with dc01
 
 ## Escalation Path
 
-```text
-Step 1 — Open case at support.microsoft.com with dcdiag + repadmin + event logs attached
-         ↓
-Step 2 — Microsoft CSS T1 engineer acknowledges (Sev A: < 2 hr; Sev B: < 4 hr)
-         ↓
-Step 3 — If no meaningful progress within 2 hours for Sev A:
-         → Reply in case: "Requesting escalation to Active Directory Senior Engineer"
-         → State: "[auth down / replication split-brain / FSMO lost]"
-         ↓
-Step 4 — AD T2 Senior CSS Engineer assigned
-         → They will review repadmin output and may request a remote session
-         → Have RDP or local console access to each affected DC ready
-         ↓
-Step 5 — If issue involves the AD schema, forest, or cross-domain trust:
-         → CSS may involve the AD Engineering team directly
-         → Schema changes and forest-level recovery require Engineering involvement
-         ↓
-Step 6 — For Sev A with authentication down and no resolution:
-         → Request CritSit escalation via the case
-         → Contact your Microsoft account team or Technical Account Manager
-```
+![Active Directory — Escalation — Diagram](../../../../assets/compute-windows-server-active-directory-troubleshooting-escalation-diagram.svg)
 
 ---
 

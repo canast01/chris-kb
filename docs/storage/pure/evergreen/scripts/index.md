@@ -15,19 +15,7 @@ Pure Evergreen automation scripts: REST API calls for entitlement status, Python
 
 
 
-```text
-Evergreen Automation Flow
-  Python script
-  └── Pure1 REST API (JWT auth)
-          │
-          ▼
-  ├── /subscriptions  ──► committed vs consumed TiB
-  ├── /arrays         ──► per-array capacity + health
-  └── /alerts         ──► fleet alerts
-          │
-          ▼
-  Output: CSV capacity report / Slack alert / email
-```
+![Evergreen — Scripts — Diagram](../../../../assets/storage-pure-evergreen-scripts-diagram.svg)
 
 ---
 ## Pre-Upgrade Path Validation (Bash)

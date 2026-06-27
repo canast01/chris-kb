@@ -17,36 +17,7 @@ Cross-product runbook for migrating virtual machine workloads from VMware vSAN t
 ![Migrate VM Workloads from vSAN to ONTAP NFS](../../assets/storage-runbooks-vmware-vsan-to-ontap-migration.svg)
 
 
-```text
-  Production Site
-  ┌─────────────────────────────────────────────────────────────┐
-  │                                                             │
-  │   ┌────────────┐   Storage vMotion   ┌──────────────────┐  │
-  │   │  vSAN      │ ─────────────────► │  ONTAP NFS       │  │
-  │   │  Datastore │                    │  Datastore       │  │
-  │   │  (source)  │                    │  (destination)   │  │
-  │   └────────────┘                    └──────────────────┘  │
-  │         │                                    │             │
-  │   ┌─────┴──────────────────────────────┐     │             │
-  │   │        ESXi Host Cluster           │     │             │
-  │   │  ┌──────┐  ┌──────┐  ┌──────┐     │     │             │
-  │   │  │ VM1  │  │ VM2  │  │ VM3  │ ◄───┼─────┘             │
-  │   │  └──────┘  └──────┘  └──────┘     │                   │
-  │   └────────────────────────────────────┘                   │
-  │                        │                                   │
-  │                   vCenter Server                           │
-  │                        │                                   │
-  │              ┌─────────┴──────────┐                        │
-  │              │   ONTAP Cluster    │                        │
-  │              │  ┌──────────────┐  │                        │
-  │              │  │    SVM       │  │                        │
-  │              │  │  NFS Export  │  │                        │
-  │              │  │  /vol/nfs_ds │  │                        │
-  │              │  └──────────────┘  │                        │
-  │              │  Node A   Node B   │                        │
-  │              └────────────────────┘                        │
-  └─────────────────────────────────────────────────────────────┘
-```
+![Migrate VM Workloads from vSAN to ONTAP NFS — Diagram](../../assets/storage-runbooks-vmware-vsan-to-ontap-migration-diagram.svg)
 
 ## Before You Begin
 

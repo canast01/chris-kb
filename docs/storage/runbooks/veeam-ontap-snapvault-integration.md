@@ -17,32 +17,7 @@ Cross-product runbook for integrating Veeam Backup &amp; Replication with NetApp
 ![Veeam Backup with ONTAP SnapVault Integration](../../assets/storage-runbooks-veeam-ontap-snapvault-integration.svg)
 
 
-```text
-  ┌──────────────────────────────────────────────────────────────────────┐
-  │                        Data Protection Flow                          │
-  │                                                                      │
-  │  ┌─────────────┐    NFS mount     ┌──────────────────────────────┐  │
-  │  │  ESXi Hosts │ ◄────────────── │   ONTAP Primary Cluster      │  │
-  │  │  (VMs)      │                  │   svm_vmware / vol_nfs_ds01  │  │
-  │  └──────┬──────┘                  └──────────────┬───────────────┘  │
-  │         │                                        │                  │
-  │    backup I/O                            SnapVault replication       │
-  │         │                                (scheduled, async)         │
-  │         ▼                                        │                  │
-  │  ┌─────────────────────────────┐                 ▼                  │
-  │  │  Veeam Backup Server        │       ┌──────────────────────────┐ │
-  │  │  ┌──────────────────────┐   │       │  ONTAP SnapVault Dest.  │ │
-  │  │  │  Veeam Proxy         │   │       │  svm_vault / vol_vault  │ │
-  │  │  │  (hot-add / network) │   │       │  (long-term retention)  │ │
-  │  │  └──────────────────────┘   │       └──────────────────────────┘ │
-  │  │  ┌──────────────────────┐   │                                    │
-  │  │  │  Veeam Repository    │   │       ┌──────────────────────────┐ │
-  │  │  │  (landing zone disk) │   │       │  Restore targets:        │ │
-  │  │  └──────────────────────┘   │       │  - Instant VM Recovery   │ │
-  │  └─────────────────────────────┘       │  - Granular file restore │ │
-  │                                        └──────────────────────────┘ │
-  └──────────────────────────────────────────────────────────────────────┘
-```
+![Veeam Backup with ONTAP SnapVault Integration — Diagram](../../assets/storage-runbooks-veeam-ontap-snapvault-integration-diagram.svg)
 
 ## Before You Begin
 

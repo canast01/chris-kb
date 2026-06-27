@@ -66,38 +66,7 @@ A version mismatch between ND and its managed fabrics can result in loss of mana
 
 ## Pre-Upgrade Checklist
 
-```text
-┌─────────────────────────────── Nexus Dashboard — Lifecycle Management ────────────────────────────────┐
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                    Deploy                    │  │                   Upgrade                   │   │
-│   │              Bootstrap 3 nodes               │  │             Check release notes             │   │
-│   │            Assign mgmt + data IPs            │  │             Backup config first             │   │
-│   │             Form cluster via UI              │  │              acs upgrade apply              │   │
-│   │            Install apps (NDI etc)            │  │             Rolling node upgrade            │   │
-│   │               Onboard fabrics                │  │               Verify apps post              │   │
-│   │              Configure ITSM out              │  │               Rollback if fail              │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  3 physical or VM nodes · Cisco ISO install · upgrade via acs CLI or ND UI                            │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Bootstrap = Initial ND node setup: assign hostname, IPs, NTP, DNS via console                        │
-│  Cluster form = Joining 3 nodes into quorum cluster via ND web UI                                     │
-│  App install = Installing NDI, NDFC, NDO as apps from ND admin > Apps                                 │
-│  Fabric onboard = Adding APIC or NX-OS fabric to ND with credentials                                  │
-│  acs upgrade = CLI command to apply upgrade image to cluster                                          │
-│  Rolling upgrade = Upgrading nodes sequentially to maintain quorum                                    │
-│  Backup = acs backup create before upgrade; stored externally                                         │
-│  Rollback = Restoring from backup if upgrade causes data loss                                         │
-│  Release notes = Cisco release notes; check for breaking changes before upgrade                       │
-│  Verify apps = Post-upgrade check: NDI collecting, NDFC managing, NDO syncing                         │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-### Replacing a Failed Node
-```
+![Cisco Nexus Dashboard — Operations Install & Upgrade — Diagram](../../../../assets/san-cisco-nexus-dashboard-operations-install-upgrade-diagram.svg)
 
 1. Remove the failed node: Admin > Cluster Configuration > [Node] > Delete
 2. Deploy a new ND node (OVA or physical) with identical network configuration

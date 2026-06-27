@@ -104,20 +104,7 @@ For organizations using AWS IAM Identity Center (formerly AWS SSO), EVS console 
 
 Architecture of authentication layers:
 
-```text
-Corporate IdP (Okta/Entra ID)
-        │
-        │ SAML 2.0 federation
-        ▼
-AWS IAM Identity Center
-        │
-        ├── Permission Set: EVSFullAccess  → EVS API (cluster management)
-        ├── Permission Set: EVSReadOnly    → EVS API (audit/monitoring)
-        │
-        └── (separate) SAML federation to vCenter SSO
-                │
-                └── vCenter → NSX-T (through vCenter-NSX trust)
-```
+![Amazon EVS — Authentication — Diagram](../../../../assets/cloud-aws-evs-security-authentication-diagram.svg)
 
 To connect IAM Identity Center to vCenter SSO using SAML federation:
 1. In vCenter → Administration → SSO → Configuration → Identity Provider, configure an external SAML identity provider.

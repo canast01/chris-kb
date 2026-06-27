@@ -214,27 +214,7 @@ Blast radius:
 
 ## Escalation Path
 
-```text
-Step 1 — Open SR at support.superna.net with support bundle attached
-         ↓
-Step 2 — For S1: call Superna emergency support phone immediately after opening the SR
-         (listed on support.superna.net; 24×7 for production-down issues)
-         ↓
-Step 3 — Superna T1 reviews bundle and triage begins (typically < 2 hours for S1)
-         ↓
-Step 4 — If no meaningful progress within SLA:
-         → Reply in the ticket: "Requesting escalation to Tier 2 / Senior Engineer"
-         → State impact: "Production failover is blocked; [n] TB of NAS not replicating since [date]"
-         ↓
-Step 5 — For licensing issues (appliance shows Unlicensed):
-         → Use the Superna licensing portal directly at superna.net/support
-         → Match UUID in Admin UI → About to the UUID in the licensing portal
-         → If UUID mismatch (after OVA redeployment): request license re-issue via the portal
-         → Do NOT open a general support SR for licensing — it routes to the wrong team
-         ↓
-Step 6 — For account-level escalation (e.g., persistent unresolved critical issue):
-         → Contact Superna account manager directly
-```
+![Superna Eyeglass — Escalation — Diagram](../../../../assets/storage-netapp-superna-eyeglass-troubleshooting-escalation-diagram.svg)
 
 ---
 

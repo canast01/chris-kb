@@ -93,23 +93,7 @@ All Nutanix certs use the **Pearson VUE** exam delivery platform.
 
 ## Quick Reference Card
 
-```text
-Key CLIs:
-  ncli cluster info          → cluster status
-  allssh "genesis status"    → service health across all CVMs
-  ncc --health_checks run_all → full automated health check
-  acli vm.list               → list all VMs
-  ncli alert list severity=critical → active critical alerts
-
-Key directories (CVM):
-  /home/nutanix/data/logs/   → all service logs
-  /home/nutanix/data/logbay/ → support bundles
-
-Key ports:
-  9440  → Prism Element HTTPS
-  9443  → Prism Central HTTPS
-  2009  → CVM to CVM (cluster traffic + replication)
-```
+![Nutanix — Learning Path — Diagram](../../assets/virtualization-nutanix-learning-path-diagram.svg)
 
 ---
 

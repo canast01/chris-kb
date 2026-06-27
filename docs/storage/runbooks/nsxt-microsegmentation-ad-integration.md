@@ -17,38 +17,7 @@ tags:
 Cross-product runbook for deploying NSX-T microsegmentation backed by Active Directory identity. Covers AD LDAP integration, security group creation from AD groups, Distributed Firewall (DFW) tier rules, Identity Firewall (IDFW) for user-based policies, and full connectivity validation with rollback steps.
 </div>
 
-```text
-  ACTIVE DIRECTORY                NSX MANAGER                     vCENTER
-  ┌──────────────────┐            ┌──────────────────────────┐    ┌──────────────────┐
-  │                  │            │                          │    │                  │
-  │  ┌────────────┐  │  LDAP/     │  ┌──────────────────┐   │    │  ┌────────────┐  │
-  │  │ Domain     │  │  LDAPS     │  │ Identity Source  │   │    │  │  vCenter   │  │
-  │  │ corp.local │◄─┼────────────┼─►│ (AD/LDAP)        │   │    │  │  Tags      │  │
-  │  └────────────┘  │            │  └──────────────────┘   │    │  └────────────┘  │
-  │                  │            │           │              │    │        │         │
-  │  ┌────────────┐  │            │  ┌────────┴─────────┐   │    │  ┌─────┴──────┐  │
-  │  │ Groups:    │  │  Group     │  │ NSX Security     │   │    │  │ VM Tags:   │  │
-  │  │ grp-db     │──┼────────────┼─►│ Groups           │   │    │  │ tier=web   │  │
-  │  │ grp-web    │  │  Sync      │  │ sg-db-servers    │   │    │  │ tier=app   │  │
-  │  │ grp-admins │  │            │  │ sg-web-servers   │   │    │  │ tier=db    │  │
-  │  └────────────┘  │            │  └──────────────────┘   │    │  └────────────┘  │
-  └──────────────────┘            │           │              │    └──────────────────┘
-                                  │  ┌────────┴─────────┐   │
-                                  │  │ Distributed      │   │
-                                  │  │ Firewall (DFW)   │   │
-                                  │  │ + IDFW Rules     │   │
-                                  │  └──────────────────┘   │
-                                  └──────────────────────────┘
-                                             │
-                          ┌──────────────────┼──────────────────┐
-                          │                  │                  │
-                    ┌─────┴────┐      ┌──────┴───┐      ┌──────┴───┐
-                    │  Web VMs │      │  App VMs │      │  DB VMs  │
-                    │ (tier=   │─────►│ (tier=   │─────►│ (tier=   │
-                    │  web)    │ 80/  │  app)    │ 5432/│  db)     │
-                    └──────────┘ 443  └──────────┘ 8080 └──────────┘
-                         Deny all other east-west by default
-```
+![NSX-T Microsegmentation with Active Directory Integration — Diagram](../../assets/storage-runbooks-nsxt-microsegmentation-ad-integration-diagram.svg)
 
 ## Before You Begin
 
@@ -196,24 +165,7 @@ curl -sk -u admin:<password> \
 
 ### 3.1 DFW Section Structure
 
-```text
-DFW POLICY ORDER (top to bottom):
-┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
-│  Section: NSX-Microseg-Allow                                                                          │
-│  ┌───────────────────────────────────────────────────────────────┐                                    │
-│  │ Rule  │ Name         │ Src            │ Dst         │ Svc     │ Action                             │
-│  ├───────┼──────────────┼────────────────┼─────────────┼─────────┼────────┤
-│  │  10   │ web-to-app   │ sg-web-servers │ sg-app-srvs │ TCP 8080│ Allow                              │
-│  │  20   │ app-to-db    │ sg-app-servers │ sg-db-srvs  │ TCP 5432│ Allow                              │
-│  │  30   │ mgmt-to-all  │ sg-jumpbox     │ Any         │ TCP 22  │ Allow                              │
-│  │  40   │ health-check │ sg-lb-nodes    │ sg-web-srvs │ TCP 80  │ Allow                              │
-│  └───────────────────────────────────────────────────────────────┘                                    │
-│  Section: NSX-Microseg-Deny                                                                           │
-│  ┌───────────────────────────────────────────────────────────────┐                                    │
-│  │  90   │ deny-east-w  │ Any            │ Any         │ Any     │ Drop                               │
-│  └───────────────────────────────────────────────────────────────┘                                    │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+![NSX-T Microsegmentation with Active Directory Integration — Diagram](../../assets/storage-runbooks-nsxt-microsegmentation-ad-integration-d2.svg)
 
 ### 3.2 Create DFW Policy via API
 

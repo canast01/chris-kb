@@ -16,22 +16,7 @@ Authentication reference covering Authentication Mechanisms Summary, Local Accou
 
 
 
-```text
-FlashBlade Authentication — Data vs Management Plane
-  Management plane (GUI / API / CLI):
-    Browser ──► SAML SSO (IdP) ──► MFA ──► Purity//FB RBAC
-    Script  ──► API token ──────────────► Purity//FB RBAC
-
-  Data plane:
-    NFS clients ──► Kerberos (AD) or AUTH_SYS (UID/GID)
-    SMB clients ──► Active Directory (Kerberos / NTLM)
-    S3 clients  ──► S3 access key + secret key
-
-  Identity sources:
-    ├── AD / LDAP ──► group membership ──► role mapping
-    ├── Local accounts (break-glass only)
-    └── API tokens (service accounts for automation)
-```
+![FlashBlade — Authentication — Diagram](../../../../assets/storage-pure-flashblade-security-authentication-diagram.svg)
 
 > Part of the [FlashBlade Security](index.md) reference.
 

@@ -120,12 +120,7 @@ AHV is Nutanix's native **KVM-based Type-1 hypervisor**, included at no addition
 
 AOS stores all data as **extent groups** — fixed-size chunks (typically 1 MB) stored in **containers** (logical storage pools). A vDisk is a logical mapping from sequential offsets to extent groups scattered across the cluster.
 
-```text
-vDisk (logical)
-  ├── vDisk map → [extent 0 → node A disk /dev/sdb offset 4096]
-  ├── vDisk map → [extent 1 → node B disk /dev/nvme0 offset 8192]
-  └── vDisk map → [extent 2 → node C disk /dev/sdc offset 16384]
-```
+![Nutanix — How It Works — Diagram](../../../assets/virtualization-nutanix-architecture-how-it-works-diagram.svg)
 
 Each extent group is replicated RF times. RF2 means 2 copies; RF3 means 3 copies. Copies are placed on different nodes and, where possible, different block/rack failure domains.
 

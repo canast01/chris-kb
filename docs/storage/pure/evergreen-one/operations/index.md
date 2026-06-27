@@ -17,32 +17,7 @@ Evergreen//One operations: subscription usage monitoring, controller upgrade sch
 
 ---
 
-```text
-  Evergreen//One Operations Flow
-
-  ┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
-  │  Daily: Pure1 capacity dashboard    │
-  │  ├─ Consumed vs reserved TiB        │
-  │  ├─ Burst trend (flag if growing)   │
-  │  └─ Phonehome active for all arrays │
-  └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-                    │ issue found?
-          ┌────────────────────────────────────────────────── ▼ ──────────────────────────────────────────────────┐
-          │  Triage            │
-          │  Hardware/SW ───►  │  Open Pure Support case
-          │  Capacity spike ─► │  Identify top consumers
-          │  SLA breach ────►  │  Log credit claim
-          │  Burst billing ─►  │  Export Pure1 report
-          └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-                    │
-          ┌────────────────────────────────────────────────── ▼ ──────────────────────────────────────────────────┐
-          │  Change Readiness  │
-          │  ├─ Burst headroom │
-          │  ├─ Billing timing │
-          │  └─ 30-day lead    │
-          │     for capacity   │
-          └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+![Evergreen//One — Operations — Diagram](../../../../assets/storage-pure-evergreen-one-operations-diagram.svg)
 
 ## Before you begin
 

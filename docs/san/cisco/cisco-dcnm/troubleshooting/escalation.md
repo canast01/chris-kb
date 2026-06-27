@@ -209,27 +209,7 @@ Blast radius: All DCNM fabric management unavailable; no zone changes can be pus
 
 ## Escalation Path
 
-```text
-Step 1 — Open SR at case.cisco.com with support bundle + MDS show tech-support attached
-         ↓
-Step 2 — Cisco TAC SE acknowledges (Sev-1: < 1 hr; Sev-2: < 2 hr — requires SMARTnet 24×7)
-         ↓
-Step 3 — If no meaningful progress within 2 hours for Sev-1:
-         → Reply in case: "Requesting escalation to DCNM SME"
-         → State: "[DCNM down / zone push failing / database corrupted / upgrade failed]"
-         ↓
-Step 4 — Cisco DCNM Subject Matter Expert assigned
-         → They will review the support bundle and may request a remote session (WebEx)
-         → Have SSH access to the DCNM VM ready for the TAC engineer
-         ↓
-Step 5 — If issue is a confirmed code-level bug or database corruption:
-         → SME escalates to Cisco DCNM Engineering
-         → Engineering may provide a targeted patch or database recovery procedure
-         ↓
-Step 6 — For Sev-1 unresolved > 2 hours:
-         → Request Duty Manager escalation during the TAC call
-         → Engage Cisco account team and TAM for executive escalation
-```
+![Cisco DCNM — Escalation — Diagram](../../../../assets/san-cisco-cisco-dcnm-troubleshooting-escalation-diagram.svg)
 
 ---
 

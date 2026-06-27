@@ -16,18 +16,7 @@ FlashBlade — Operations reference: Health Checks, Procedures, Common Issues, C
 
 
 
-```text
-FlashBlade Day-to-Day Operations
-  Pure1 Cloud ──► fleet health + AI alerts + capacity forecast
-          │
-          ▼  phone-home telemetry
-  FlashBlade (Purity//FB GUI / CLI / REST)
-  ├── purefb alert list   ─── active alerts
-  ├── purefb blade list   ─── blade health
-  ├── purefb hardware list─── chassis / PSU / fans
-  ├── purefb array list   ─── capacity + data reduction
-  └── purefb replication  ─── ActiveDR relationship status
-```
+![FlashBlade — Operations — Diagram](../../../../assets/storage-pure-flashblade-operations-diagram.svg)
 
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="health-checks/"><strong>Health Checks</strong><span>Routine checks, service validation, and status verification.</span></a>

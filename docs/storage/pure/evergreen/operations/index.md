@@ -16,23 +16,7 @@ Evergreen — Operations reference: Health Checks, Procedures, Common Issues, CL
 
 
 
-```text
-Evergreen Operations Touch Points
-  Pure1 portal ──► daily subscription + health review
-          │
-          ▼
-  FlashArray Purity CLI / GUI
-  ├── purealert list       ─── active alerts
-  ├── puredrive list       ─── drive health
-  ├── purearray monitor    ─── performance metrics
-  ├── purepod list         ─── replication status
-  └── purearray phonehome  ─── phone-home active?
-          │
-          ▼
-  Change / maintenance:
-  ├── Pre-check → execute → post-check validation
-  └── Controller refresh: coordinate with Pure account team
-```
+![Evergreen — Operations — Diagram](../../../../assets/storage-pure-evergreen-operations-diagram.svg)
 
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="health-checks/"><strong>Health Checks</strong><span>Routine checks, service validation, and status verification.</span></a>

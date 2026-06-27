@@ -179,21 +179,7 @@ sequenceDiagram
 
 ## LDAP Bind Flow
 
-```text
-  Client                         Active Directory (LDAP)
-    │                                      │
-    │── TCP SYN ──────────────────────────►│  (port 389 / 636)
-    │◄── TCP SYN-ACK ─────────────────────│
-    │── LDAP Bind Request (DN + password) ►│
-    │◄── Bind Response (success / error) ──│
-    │                                      │
-    │── Search Request (filter + scope) ──►│
-    │◄── Search Entries ───────────────────│
-    │◄── Search Done ──────────────────────│
-    │                                      │
-    │── Unbind ───────────────────────────►│
-    │── TCP FIN ──────────────────────────►│
-```
+![Active Directory — How It Works — Diagram](../../../../assets/compute-windows-server-active-directory-architecture-how-it-works-diagram.svg)
 
 ---
 

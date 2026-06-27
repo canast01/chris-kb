@@ -12,55 +12,7 @@ Analytics cluster for vSphere performance, capacity, and compliance monitoring. 
 *Applies to: Aria Operations 8.x*
 </div>
 
-```text
-┌────────────────────────── Aria Operations Architecture — Analytics Cluster ───────────────────────────┐
-│                                                                                                       │
-│  Analytics cluster for vSphere performance, capacity, and compliance; adapters                        │
-│  collect metrics from vCenter/NSX/storage; remote collectors extend reach.                            │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             Cluster Architecture             │  │               Data Collection               │   │
-│   │           Primary + replica nodes            │  │         vCenter adapter: 5 min poll         │   │
-│   │          Data nodes: metric storage          │  │         NSX adapter: topology + perf        │   │
-│   │           Witness node: HA quorum            │  │       Storage adapters: array metrics       │   │
-│   │          HBase: time-series storage          │  │       Remote collector: DMZ/WAN reach       │   │
-│   │         Cassandra: config + metadata         │  │         SDDC Health: self-monitoring        │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Remote collectors send data to cluster without requiring cluster to reach targets.                   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │            Analytics and Alerting            │  │           Capacity and Compliance           │   │
-│   │         Workload Optimization: DRS+          │  │          Capacity: runway forecast          │   │
-│   │        What-if: cluster sizing model         │  │          Reclaim: idle VM detection         │   │
-│   │       Alert: symptom + recommendation        │  │         Compliance: benchmark packs         │   │
-│   │          Custom dashboard: widgets           │  │          Pricing: cost per VM model         │   │
-│   │          Reports: scheduled PDF/CSV          │  │        Predictive DRS: sends forecast       │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  Linux VMs (Photon OS) for each node; shared NFS for backups; cluster needs                           │
-│  connectivity to all vCenter instances and adapters on TCP 443.                                       │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Primary node    = master node; UI + API + orchestration                                              │
-│  Data node       = stores time-series metrics in HBase                                                │
-│  Remote collector= separate VM; collects from isolated networks                                       │
-│  Adapter         = plugin connecting Aria Ops to a data source                                        │
-│  HBase           = distributed time-series store; metric retention                                    │
-│  Cassandra       = config and relationship metadata store                                             │
-│  Symptom         = threshold crossing or anomaly on a metric                                          │
-│  Alert           = grouped symptoms with recommendation and action                                    │
-│  Workload Opt    = automated vMotion recommendations via DRS integration                              │
-│  Capacity runway = days until resource exhaustion at current growth rate                              │
-│  Predictive DRS  = sends 60-min demand forecast to vCenter DRS                                        │
-│  Compliance pack = benchmark rules; CIS, vSphere Security Hardening Guide                             │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+![Aria Operations — Architecture — Diagram](../../../../assets/virtualization-vmware-aria-operations-architecture-diagram.svg)
 ![Aria Operations Cluster Architecture](../../../../assets/aria-operations-architecture-overview.svg)
 
 <div class="kb-grid kb-grid-3">

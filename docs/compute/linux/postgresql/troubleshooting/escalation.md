@@ -218,24 +218,7 @@ In all cases, include in the description:
 
 ## Escalation Path
 
-```text
-Step 1 — Engage DBA on-call immediately for any P1 condition
-         ↓
-Step 2 — Open vendor support case with error log + pg_stat_activity + replication state
-         ↓
-Step 3 — T1 engineer acknowledges and reviews diagnostic data
-         ↓
-Step 4 — If no meaningful progress (P1: < 1 hr; P2: < 4 hr):
-         → Reply: "Requesting escalation to PostgreSQL Senior Engineer"
-         → State: "[postmaster down / PANIC in log / lock chain / wraparound imminent]"
-         ↓
-Step 5 — Senior engineer assigned; may request SSH access to the PostgreSQL host
-         → Have OS-level access and PostgreSQL superuser credentials ready
-         → Confirm a file-level backup or snapshot exists before allowing recovery steps
-         ↓
-Step 6 — If issue involves a confirmed PostgreSQL bug:
-         → Vendor escalates to engineering; may provide a patch or specific workaround
-```
+![PostgreSQL — Escalation — Diagram](../../../../assets/compute-linux-postgresql-troubleshooting-escalation-diagram.svg)
 
 ---
 

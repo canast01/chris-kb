@@ -15,32 +15,7 @@ Evergreen//One automation scripts: Python examples for subscription consumption 
 
 ---
 
-```text
-  Pure REST API Automation Flow
-
-  Script / Cron job
-  ┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
-  │  1. Generate RS256 JWT             │
-  │     (PURE1_APP_ID + private key)   │
-  └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-                     │ POST /oauth2/token
-                     ▼
-  ┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
-  │  Pure1 API — Bearer token          │
-  │  GET /subscriptions                │
-  │  GET /subscription-assets          │
-  │  GET /metrics/history              │
-  └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-                     │
-          ┌────────────────────────────────────────────────── ▼ ──────────────────────────────────────────────────┐
-          │  Parse & Alert      │
-          │  consumed > reserve │──► BURST alert / email
-          │  pct > 90%          │──► WARN in report
-          │  days_to_end < 90   │──► EXPIRY warn
-          └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-  Per-array: SSH ──► purearray list --space
-                      purevol list --space
-```
+![Evergreen//One — Scripts — Diagram](../../../../assets/storage-pure-evergreen-one-scripts-diagram.svg)
 
 ## Consumption Usage Report (Python)
 

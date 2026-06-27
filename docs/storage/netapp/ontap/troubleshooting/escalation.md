@@ -179,28 +179,7 @@ AutoSupport sent: Yes — invoked at 14:35 UTC with message "aggr_data degraded,
 
 ## Escalation Path
 
-```text
-Step 1 — Open case at mysupport.netapp.com with AutoSupport invoked and event log attached
-         ↓
-Step 2 — TSE (Technical Support Engineer) acknowledges and reviews AutoSupport data
-         (P1: within 1 hour; P2: within 2 hours)
-         ↓
-Step 3 — If no meaningful progress after 2 hours for P1 or 4 hours for P2:
-         → Reply in case: "Requesting escalation to ONTAP Specialist or Escalation Engineer"
-         → State: "[node offline / 12 NFS hosts without storage / DR capability lost]"
-         ↓
-Step 4 — Product Specialist or Escalation Engineer is assigned
-         → They may request a live WebEx session for cluster access
-         → Have SSH to cluster management LIF and ONTAP System Manager ready
-         ↓
-Step 5 — If issue requires firmware or code-level investigation:
-         → Escalation Engineer involves NetApp Engineering
-         → Engineering may provide a hotpatch or workaround procedure
-         ↓
-Step 6 — For P1 with no resolution after 4 hours:
-         → Call +1-888-463-8277 and request escalation to Support Duty Manager
-         → Contact your NetApp Account Manager to engage executive escalation
-```
+![ONTAP — Escalation — Diagram](../../../../assets/storage-netapp-ontap-troubleshooting-escalation-diagram.svg)
 
 ---
 

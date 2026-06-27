@@ -14,36 +14,7 @@ Alerts reference covering Viewing Alerts, Alert Severity Levels, Common Alert Ty
 ![Pure Storage Operations — Alerts](../../../../assets/storage-pure-operations-alerts-index.svg)
 
 
-```text
-  Pure Alert Flow
-
-  FlashArray / FlashBlade
-  ┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
-  │  Array event generated  │
-  │  (drive, temp, capacity,│
-  │   replication, network) │
-  └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-               │
-  ┌────────────────────────────────────────────────── ▼ ──────────────────────────────────────────────────┐
-  │  Pure1 (phone-home)     │
-  │  Consolidated alert     │
-  │  dashboard              │
-  └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-       │      │      │
-       ▼      ▼      ▼
-  ┌───────────────────────────────────────────── ┐ ┌─────┐ ┌ ─────────────────────────────────────────────┐
-  │ Email  │ │SNMP │ │  Syslog    │
-  │ alert  │ │trap │ │  ──► SIEM  │
-  └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-       │
-       ▼
-  ┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
-  │  Response                      │
-  │  Critical ──► page on-call now │
-  │  Warning  ──► investigate today│
-  │  Info     ──► review when able │
-  └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+![Pure Storage Operations — Alerts — Diagram](../../../../assets/storage-pure-operations-alerts-diagram.svg)
 
 ## Before you begin
 

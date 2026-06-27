@@ -29,17 +29,7 @@ Backup & Restore reference covering Protection Architecture Overview, Native Sna
 
 PowerStore data protection is layered: native snapshots and replication provide first-line protection; external backup tools provide secondary copies. Use both — snapshots enable fast local restores; backup copies provide offsite protection and long-term retention.
 
-```text
-Protection Layers (outer to inner)
-├── 1. External Backup (Veeam / PPDM / Commvault)
-│      Offsite copy; long-term retention; covers volume + data
-├── 2. Async Replication
-│      DR site copy; RPO-based; recovers from site failure
-├── 3. Metro Volume (if deployed)
-│      Synchronous copy; zero RPO; covers node/site failure
-└── 4. Native Snapshots
-       Local; fastest restore; covers logical corruption / accidental deletion
-```
+![PowerStore — Backup & Restore — Diagram](../../../../assets/storage-dell-powerstore-operations-backup-restore-diagram.svg)
 
 ## Native Snapshots
 

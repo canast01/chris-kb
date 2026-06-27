@@ -206,29 +206,7 @@ Blast radius:
 
 ## Escalation Path
 
-```text
-Step 1 — Internal: automation team investigates with -vvv logging and checks for collection version changes
-         ↓
-Step 2 — If issue is AWX platform-level (all jobs failing, pods crash-looping):
-         → Platform team: check AWX pod resource limits, PVC space, Kubernetes node pressure
-         → Common: AWX-task OOMKilled → increase memory limit in AWX Operator config
-         ↓
-Step 3 — If issue is a collection/module bug (works in older collection version):
-         → Pin the collection to the last known-good version in requirements.yml
-         → File a GitHub issue on the collection repo: github.com/ansible-collections/<name>
-         ↓
-Step 4 — If issue is Ansible Core bug or AAP platform defect:
-         → Open Red Hat support case at access.redhat.com (requires AAP subscription)
-         → Attach AWX support bundle + -vvv log + pod logs
-         ↓
-Step 5 — If Red Hat case is not progressing within SLA:
-         → Add case update: "Requesting escalation to Senior Support Engineer"
-         → State impact: "All [product] automation blocked since [date]; [n] jobs failing"
-         ↓
-Step 6 — For AAP licensing issues (subscription expired, activation code error):
-         → Red Hat support case: category = Subscription / Licensing
-         → Provide subscription account number and subscription ID from access.redhat.com
-```
+![Ansible — Escalation — Diagram](../../../../assets/automation-ansible-troubleshooting-escalation-diagram.svg)
 
 ---
 

@@ -15,30 +15,7 @@ Pure Evergreen//One CLI reference: `purearray list`, `purevolume list`, `purejob
 
 ---
 
-```text
-  Subscription & Capacity Management — Command Flow
-
-  Pure1 REST API                    Per-Array CLI (SSH)
-  ┌──────────────────────────────────────────── ┐           ┌ ────────────────────────────────────────────┐
-  │ /subscriptions      │           │ purearray list       │
-  │  ├─ list all subs   │           │   --space  (usage)   │
-  │  └─ get capacity    │           │   --controller       │
-  │                     │           │                      │
-  │ /subscription-assets│           │ purevol list --space │
-  │  └─ per-array usage │           │ purealert list       │
-  │                     │           │ purehw list          │
-  │ /metrics/history    │           │   --type drive/fan   │
-  │  └─ trend data      │           └──────────────────────┘
-  └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-             │ Bearer token (OAuth2 RS256 JWT)
-             ▼
-  ┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
-  │  Capacity States    │
-  │  Reserved ◄── OK    │
-  │  >Reserved ◄─ BURST │  ← higher per-TiB billing
-  │  >Burst cap ◄─ OVER │  ← order required
-  └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+![Pure Evergreen//One CLI Reference — Diagram](../../../../assets/storage-pure-evergreen-one-cli-reference-diagram.svg)
 
 ## Overview
 

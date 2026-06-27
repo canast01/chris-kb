@@ -16,20 +16,7 @@ Hardening reference covering Hardening Checklist, Step-by-Step Controls, Post-Ha
 
 
 
-```text
-FlashArray Hardening Sequence
-  1. Change defaults ──► rename/vault pureuser, create named admins
-  2. Configure AD/LDAP ──► group-to-role mapping
-  3. Enable SAML SSO ──► MFA enforced at IdP level
-  4. Restrict mgmt network ──► dedicated VLAN, firewall ACL
-  5. Install CA-signed TLS cert ──► replace self-signed
-  6. Disable unused protocols ──► FC/iSCSI only what is needed
-  7. Configure SNMPv3 ──► disable legacy SNMP versions
-  8. Enable SafeMode ──► Pure Support required to destroy snaps
-  9. Verify encryption at rest ──► purearray list --encryption
- 10. Configure TLS syslog ──► forward audit log to SIEM
- 11. Set idle timeout ──► purearray setattr --idle-timeout 15
-```
+![FlashArray — Hardening — Diagram](../../../../assets/storage-pure-flasharray-security-hardening-diagram.svg)
 
 This page covers the ordered hardening steps to apply on every new FlashArray before it enters production, along with the rationale and CLI commands for each control. Apply these steps after initial network and identity configuration and before connecting any production hosts.
 

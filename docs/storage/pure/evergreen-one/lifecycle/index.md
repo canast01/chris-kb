@@ -13,31 +13,7 @@ Pure Storage Evergreen//One Lifecycle reference covering Overview, Service Agree
 ![Pure Storage Evergreen//One Lifecycle](../../../../assets/storage-pure-evergreen-one-lifecycle-index.svg)
 
 
-```text
-  Contract Lifecycle
-  ┌───────────────────────────────── ┐   ┌──────────┐   ┌──────────┐   ┌ ─────────────────────────────────┐
-  │ Contract │──►│Provision │──►│ Operate  │──►│  Renew / │
-  │ Signed   │   │ (30 day  │   │  3–5 yr  │   │  Retire  │
-  └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-                 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-                                     │
-                         ┌────────────────────────────────────────────────── ▼ ──────────────────────────────────────────────────┐
-                         │  Annual Review       │
-                         │  ├─ Capacity true-up │
-                         │  ├─ SLA review       │
-                         │  └─ Tier alignment   │
-                         └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-                                     │
-                         ┌────────────────────────────────────────────────── ▼ ──────────────────────────────────────────────────┐
-                         │  Monthly Billing     │
-                         │  Below reserve ──►   │
-                         │    reserved rate     │
-                         │  Above reserve ──►   │
-                         │    burst rate (daily)│
-                         └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-  Pure manages: controller refresh, Purity upgrades,
-  drive replacement, security patches — all transparent
-```
+![Pure Storage Evergreen//One Lifecycle — Diagram](../../../../assets/storage-pure-evergreen-one-lifecycle-diagram.svg)
 
 ## Overview
 

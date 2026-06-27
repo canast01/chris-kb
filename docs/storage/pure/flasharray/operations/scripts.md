@@ -16,21 +16,7 @@ Scripts reference covering Array Health Check (Python), ActiveCluster Pod Status
 
 
 
-```text
-Automation Architecture — FlashArray
-  Python / Bash / PowerShell / Ansible
-             │
-             ▼
-  Purity REST API (HTTPS/443)
-  ├── /api/2.x/arrays      — array health + space
-  ├── /api/2.x/alerts      — active alert list
-  ├── /api/2.x/drives      — drive health
-  ├── /api/2.x/pods        — ActiveCluster status
-  └── /api/2.x/volumes     — volume inventory
-             │
-             ▼
-  FlashArray (CT0 / CT1)
-```
+![FlashArray — Scripts — Diagram](../../../../assets/storage-pure-flasharray-operations-scripts-diagram.svg)
 
 ## Before you begin
 

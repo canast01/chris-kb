@@ -14,24 +14,7 @@ Common Issues reference covering Incident Triage Checklist, Common Issues Refere
 ![Evergreen — Common Issues](../../../../assets/storage-pure-evergreen-operations-common-issues.svg)
 
 
-```text
-Evergreen Common Issues — Triage
-  Issue type
-       │
-   ┌────────────────────────────────────────────────── ┴ ──────────────────────────────────────────────────┐
-   ▼                                           ▼
-Capacity / subscription                 Hardware / performance
-Pure1 subscription dashboard            purealert + puredrive
-  │                                       │
-  ▼                                       ▼
-Contact account team                   Open support case
-True Forward amendment                 Pure1 auto-monitors
-   │
-   ▼
-Controller refresh missed:
-  Contact Pure account team immediately
-  Operating past support window voids Ever Modern guarantee
-```
+![Evergreen — Common Issues — Diagram](../../../../assets/storage-pure-evergreen-operations-common-issues-diagram.svg)
 
 > Part of the [Evergreen Operations](index.md) reference.
 

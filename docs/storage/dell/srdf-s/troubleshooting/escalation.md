@@ -174,27 +174,7 @@ Blast radius: 48 production hosts experiencing I/O delays (holding writes pendin
 
 ## Escalation Path
 
-```text
-Step 1 — Open case at dell.com/support with symrdf output + event logs from both arrays
-         ↓
-Step 2 — Dell T1 engineer acknowledges (P1: < 2 hr ProSupport Plus; P2: < 4 hr)
-         ↓
-Step 3 — If no meaningful progress within 1 hour for P1 (I/O impacting applications):
-         → Reply: "Requesting escalation to PowerMax SRDF/S Senior Engineer"
-         → State: "[Partitioned state / I/O queuing / host latency / link failure]"
-         ↓
-Step 4 — PowerMax T2 Senior Engineer assigned
-         → SRDF/S P1s are urgent — T2 may request immediate remote session via SRS-VE
-         → Have Solutions Enabler host, Unisphere, and fiber/network team contact ready
-         ↓
-Step 5 — If issue requires deciding between Adaptive Copy, failover, or link restore:
-         → Dell will provide explicit command sequence and risk assessment for each option
-         → Do not make this decision independently
-         ↓
-Step 6 — For P1 with I/O stopped > 30 minutes:
-         → Request TAM engagement immediately
-         → TAM to arrange engineering bridge and coordinate failover decision if link cannot be restored
-```
+![SRDF/S — Escalation — Diagram](../../../../assets/storage-dell-srdf-s-troubleshooting-escalation-diagram.svg)
 
 ---
 

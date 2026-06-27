@@ -180,27 +180,7 @@ Blast radius: db-prod-01 has lost all PowerPath-managed paths; all database LUNs
 
 ## Escalation Path
 
-```text
-Step 1 — Open case at dell.com/support with powermt output + kernel log attached
-         ↓
-Step 2 — Dell T1 engineer acknowledges (P1: < 2 hr ProSupport Plus; P2: < 4 hr)
-         ↓
-Step 3 — If no meaningful progress within 2 hours for P1:
-         → Reply in case: "Requesting escalation to PowerPath Senior Engineer"
-         → State: "[all paths dead / I/O stopped / host down / driver issue]"
-         ↓
-Step 4 — PowerPath T2 Senior Engineer assigned
-         → They will review powermt output and kernel logs
-         → May request SSH access to the host or a remote desktop session
-         ↓
-Step 5 — If issue is a confirmed driver/firmware incompatibility:
-         → T2 engages Dell EMC PowerPath Engineering
-         → Engineering provides a targeted fix or defines the rollback procedure
-         ↓
-Step 6 — For prolonged P1 with application down:
-         → Request TAM engagement
-         → TAM can arrange bridge call with Engineering and coordinate hardware dispatch if needed
-```
+![PowerPath — Escalation — Diagram](../../../../assets/storage-dell-powerpath-troubleshooting-escalation-diagram.svg)
 
 ---
 

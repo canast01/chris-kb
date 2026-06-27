@@ -21,20 +21,7 @@ az lock create --name "prod-rg-lock" --resource-group <rg> --lock-type CanNotDel
 # List locks
 az lock list --resource-group <rg>
 ```
-```text
-Management Group: Corp
-├── Platform
-│   ├── sub-connectivity-prod       # Hub networking, ExpressRoute, DNS
-│   ├── sub-identity-prod           # Domain controllers, ADCS
-│   └── sub-management-prod         # Log Analytics, Backup, Automation
-├── Landing Zones
-│   ├── sub-app01-prod
-│   ├── sub-app01-dev
-│   ├── sub-app02-prod
-│   └── sub-app02-dev
-└── Sandbox
-    └── sub-sandbox
-```
+![Azure Architecture — Design Standards — Diagram](../../../../assets/cloud-azure-architecture-design-standards-diagram.svg)
 
 ---
 

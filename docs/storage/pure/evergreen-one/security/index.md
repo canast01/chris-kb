@@ -14,33 +14,7 @@ Pure Storage Evergreen//One Security reference covering Hardening Checklist, RBA
 ![Pure Storage Evergreen//One Security](../../../../assets/storage-pure-evergreen-one-security-index.svg)
 
 
-```text
-  Pure Security Architecture
-
-  ┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
-  │  FlashArray / FlashBlade                        │
-  │                                                 │
-  │  Encryption                                     │
-  │  ├─ Data at rest: XTS-AES-256 (always on)       │
-  │  ├─ Data in flight: TLS 1.2+ (management)       │
-  │  └─ Drive erasure: cryptographic key destroy    │
-  │                                                 │
-  │  RBAC                                           │
-  │  ├─ array_admin ──► full system access          │
-  │  ├─ storage_admin ──► volumes / snapshots       │
-  │  ├─ ops_admin ──► read + alert ack              │
-  │  └─ readonly ──► auditors / CMDB                │
-  │                                                 │
-  │  Audit Logging                                  │
-  │  └─ Every admin action ──► syslog ──► SIEM      │
-  │     (customer AND Pure Support actions logged)  │
-  │                                                 │
-  │  SafeMode                                       │
-  │  └─ Snapshot destroy requires Pure Support ─►   │
-  │     Protection against ransomware               │
-  └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-  SSO/SAML ──► IdP MFA enforced for all interactive login
-```
+![Pure Storage Evergreen//One Security — Diagram](../../../../assets/storage-pure-evergreen-one-security-diagram.svg)
 
 ## Before you begin
 

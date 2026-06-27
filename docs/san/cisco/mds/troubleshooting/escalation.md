@@ -179,27 +179,7 @@ Blast radius: 8 hosts in VSAN 10 cannot see storage; VMs on those hosts have I/O
 
 ## Escalation Path
 
-```text
-Step 1 — Open case at mycase.cloudapps.cisco.com with show tech-support attached
-         ↓
-Step 2 — TAC engineer acknowledges and reviews the bundle (P1: within 1 hr)
-         ↓
-Step 3 — If no meaningful progress in 1 hour for P1 or 4 hours for P2:
-         → Reply in case: "Requesting escalation to MDS Senior Engineer / TSM"
-         → State: "[8 hosts have no storage access / ISSU failed / fabric segmented]"
-         ↓
-Step 4 — Senior MDS Engineer is assigned; they may request CLI access to the switch
-         → Enable remote SSH access for TAC through your jump host
-         → Have the switch management IP and read-only credentials ready
-         ↓
-Step 5 — If issue is a confirmed NX-OS bug:
-         → TAC provides a hotfix SMU (Software Maintenance Upgrade)
-         → Or recommends a specific NX-OS release with the fix
-         ↓
-Step 6 — If hardware is confirmed failed (ASIC, line card, power supply):
-         → TAC initiates RMA; parts dispatched according to your SmartNet contract SLA
-         → For 8×5 NBD: next business day; for 24×7×4: 4 hours
-```
+![Cisco MDS — Escalation — Diagram](../../../../assets/san-cisco-mds-troubleshooting-escalation-diagram.svg)
 
 ---
 

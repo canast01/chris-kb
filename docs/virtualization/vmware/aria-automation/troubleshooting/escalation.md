@@ -162,26 +162,7 @@ Blast radius: Aria Automation UI completely unavailable; no new deployments poss
 
 ## Escalation Path
 
-```text
-Step 1 — Open case at support.broadcom.com with support bundle and pod state attached
-         ↓
-Step 2 — T1 support engineer acknowledges and reviews the bundle (Sev1: < 30 min)
-         ↓
-Step 3 — If no meaningful progress in 30 minutes for Sev1 or 2 hours for Sev2:
-         → Reply: "Requesting escalation to Aria Automation Senior Engineer"
-         → State: "[UI down / upgrade stuck / 200 projects affected]"
-         ↓
-Step 4 — Aria Automation T2 Senior Engineer assigned
-         → They will request SSH access to the appliance for a live session
-         → Have SSH and VAMI access ready; confirm the appliance is reachable
-         ↓
-Step 5 — If issue is a confirmed product bug (upgrade regression, Postgres schema issue):
-         → T2 escalates to Aria Automation Engineering (T3)
-         → Engineering provides a specific recovery procedure or hotfix
-         ↓
-Step 6 — For Sev1 unresolved after 2 hours:
-         → Request CritSit escalation; contact your Broadcom TAM or Account Executive
-```
+![Aria Automation — Escalation — Diagram](../../../../assets/virtualization-vmware-aria-automation-troubleshooting-escalation-diagram.svg)
 
 ---
 

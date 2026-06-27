@@ -74,16 +74,7 @@ WAFL is ONTAP's internal filesystem engine. It is not a POSIX filesystem exposed
 
 ONTAP organises storage through a layered hierarchy. Understanding this hierarchy is fundamental to diagnosing capacity issues, designing multi-tenancy, and planning data protection.
 
-```text
-Physical Drives (NVMe, SSD, HDD, or mixed)
-    └── RAID Groups (RAID-DP or RAID-TEC)
-          └── Aggregate (storage pool owned by a node)
-                └── Volume (FlexVol or FlexGroup — logical container)
-                      ├── Snapshot copies (WAFL PiT copies; stored in volume)
-                      ├── LUNs (for SAN: iSCSI, FC, NVMe)
-                      ├── NVMe Namespaces (NVMe/FC or NVMe/TCP)
-                      └── Files / Shares (for NAS: NFS exports, SMB shares)
-```
+![NetApp ONTAP — How It Works — Diagram](../../../../assets/storage-netapp-ontap-architecture-how-it-works-diagram.svg)
 
 Volumes (FlexVols) are the primary logical container. A volume is always owned by a single node's aggregate but can be accessed via LIFs on both nodes in the HA pair. FlexGroups are scale-out volumes that span multiple aggregates across multiple nodes, designed for very large NAS workloads that exceed the limits of a single FlexVol.
 

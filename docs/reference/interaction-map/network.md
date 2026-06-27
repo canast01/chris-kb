@@ -33,13 +33,7 @@ The **VTEP** (Tunnel Endpoint) is a dedicated VMkernel adapter on each ESXi host
 
 ## BGP uplink topology
 
-```text
-NSX T0 (active/standby or ECMP)
-  └── Edge Node uplink port group (VLAN-backed on vDS)
-        └── Physical NIC
-              └── ToR Switch (eBGP peer)
-                    └── Core / Spine
-```
+![Network Domain — Interaction Map — Diagram](../../assets/reference-interaction-map-network-diagram.svg)
 
 BFD (Bidirectional Forwarding Detection) runs between Edge uplinks and ToR for sub-second failover detection.
 

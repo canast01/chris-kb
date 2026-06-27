@@ -27,13 +27,7 @@ Key Vault secrets store arbitrary string values — passwords, connection string
 
 ## Secret Structure
 
-```text
-Vault: my-vault
-  └── Secret: db-connection-string
-        ├── Version: abc123  (current)  → "Server=sql01;User=app;Password=S3cr3t"
-        ├── Version: def456  (previous) → "Server=sql01;User=app;Password=0ldP@ss"
-        └── Version: ghi789  (disabled)
-```
+![Azure — Key Vault Secrets — Diagram](../../../../assets/cloud-azure-security-secrets-diagram.svg)
 
 Each `set` operation creates a new version. The current version is the most recently set enabled version.
 

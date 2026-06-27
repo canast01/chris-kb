@@ -122,16 +122,7 @@ Maintain AD/LDAP group synchronisation as the source of truth. Avoid manually ad
 
 ### Recommended Group Structure
 
-```text
-AD Group                        → Jira Mapping
-──────────────────────────────────────────────
-GRP-Jira-Admins                → jira-administrators
-GRP-Jira-Users                 → jira-software-users
-GRP-Jira-ServiceDesk-Agents    → jira-servicedesk-users
-GRP-<ProjectCode>-Developers   → Project role: Developer
-GRP-<ProjectCode>-QA           → Project role: QA
-GRP-<ProjectCode>-PM           → Project role: PM
-```
+![Jira — Access Control — Diagram](../../../../assets/itsm-jira-security-access-control-diagram.svg)
 
 ```bash
 # List group members

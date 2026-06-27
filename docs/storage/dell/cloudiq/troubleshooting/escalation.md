@@ -199,26 +199,7 @@ Blast radius:
 
 ## Escalation Path
 
-```text
-Step 1 — Open Dell support case at support.dell.com with SCG log bundle attached
-         ↓
-Step 2 — Dell T1 reviews SCG logs and triage begins (typically 4 hours for P2)
-         ↓
-Step 3 — If issue is SCG-side (connectivity, certificate, proxy):
-         → Dell T1/T2 guidance on SCG reconfiguration
-         → Common: update trust store after certificate rotation; proxy exception for CloudIQ endpoints
-         ↓
-Step 4 — If issue is CloudIQ SaaS-side (ingest pipeline, missing data in backend):
-         → Dell escalates to CloudIQ product team for backend investigation
-         → Request: "Requesting CloudIQ SRE to check ingest pipeline for system ID [id] since [timestamp]"
-         ↓
-Step 5 — If no progress in 4 hours for P1 / 1 business day for P2:
-         → Add case update: "Requesting escalation — [n] systems unmonitored since [date]"
-         → Contact Dell account team to expedite if SaaS team investigation is needed
-         ↓
-Step 6 — For sustained SaaS outages affecting contractual monitoring obligations:
-         → Request engagement through Dell Global Priority Services via your account team
-```
+![CloudIQ — Escalation — Diagram](../../../../assets/storage-dell-cloudiq-troubleshooting-escalation-diagram.svg)
 
 ---
 

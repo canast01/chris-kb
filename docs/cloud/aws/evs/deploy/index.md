@@ -27,23 +27,7 @@ EVS cluster deployment: prerequisites, VPC setup, cluster creation via AWS conso
 
 ---
 
-```text
-┌──────────────────────────────────────── Amazon EVS Deployment ────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                                    EVS Deployment Sequence                                    │   │
-│   │            Pre-requisites: VPC, subnets, SGs, IAM service-linked role, key pair, DX           │   │
-│   │                 Cluster creation via AWS console or CLI; takes 90-120 minutes                 │   │
-│   │         Post-deploy: retrieve secrets, configure SDDC Manager, deploy HCX service mesh        │   │
-│   │         Validation: cluster CREATED + vSAN green + NSX-T stable + HCX service mesh Up         │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│    SDDC Manager = VCF control plane; manages hosts, domains, upgrades, credentials                    │
-│    VTEP subnet  = NSX-T tunnel endpoint traffic; separate from management subnet                      │
-│    Service mesh = HCX Interconnect + WAN Opt + Network Extension appliance pair                       │
-│                                                                                                       │
-```
+![Amazon EVS — Deploy — Diagram](../../../../assets/cloud-aws-evs-deploy-diagram.svg)
 
 ```mermaid
 graph TD

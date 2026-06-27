@@ -14,28 +14,7 @@ Health Checks reference covering Daily Checks, Health Check, Controller Health, 
 
 
 
-```text
-FlashArray Health Check Sequence
-  purealert list ──► Any error/warning alerts?
-         │
-         ▼
-  puredrive list ──► All drives healthy?
-         │
-         ▼
-  purearray list --controller ──► Both CT0 + CT1 ok?
-         │
-         ▼
-  purepod list ──► ActiveCluster pods stretched + replicating?
-         │
-         ▼
-  purearray list --space ──► Capacity < 80% used?
-         │
-         ▼
-  purehost list ──► All hosts connected (no zero-path hosts)?
-         │
-         ▼
-         OK — check Pure1 for fleet-level anomalies
-```
+![FlashArray — Health Checks — Diagram](../../../../assets/storage-pure-flasharray-operations-health-checks-diagram.svg)
 
 ## Before you begin
 

@@ -11,55 +11,7 @@ Consumption-based STaaS model — Dell owns and manages on-premises PowerStore, 
 *Applies to: APEX Storage-as-a-Service*
 </div>
 
-```text
-┌─────────────────────── Dell APEX Storage-as-a-Service — Architecture Overview ────────────────────────┐
-│                                                                                                       │
-│  Consumption-based storage delivered to your data center or AWS; no upfront CapEx;                    │
-│  Dell provisions and manages hardware; customer manages data and workloads.                           │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                Service Model                 │  │         Underlying Storage Platforms        │   │
-│   │          Pay per GB/month consumed           │  │        PowerStore X: block workloads        │   │
-│   │           Hardware delivered to DC           │  │          PowerMax: mission-critical         │   │
-│   │           No upfront capital cost            │  │          PowerFlex: hyper-converged         │   │
-│   │          Dell manages HW lifecycle           │  │           ECS: object storage (S3)          │   │
-│   │         Elastic burst: +/- capacity          │  │          PowerScale: scale-out NAS          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Customer retains control of data placement, access, and security policies.                           │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          APEX Console (Management)           │  │              Operational Model              │   │
-│   │         Single portal: all services          │  │        Dell: HW monitoring + support        │   │
-│   │           REST API for automation            │  │          Customer: VM/app workloads         │   │
-│   │           Subscription management            │  │        CloudIQ: performance insights        │   │
-│   │            Consumption dashboards            │  │         APEX Observer: on-prem agent        │   │
-│   │          Multi-site view: one pane           │  │          SLA: 99.9999% availability         │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  Dell-supplied arrays in customer rack; dedicated rack power and cooling by customer;                 │
-│  network connectivity to APEX Console via internet (TCP 443); APEX Observer VM on-prem.               │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  APEX           = Dell Storage-as-a-Service brand; on-prem hardware, cloud billing                    │
-│  APEX Console   = SaaS management portal for all APEX services; REST API                              │
-│  OpEx model     = operational expenditure; no large upfront hardware purchase                         │
-│  Commitment period= minimum contract term (1, 3, or 5 years)                                          │
-│  Burst capacity = temporary capacity above committed level; billed at higher rate                     │
-│  APEX Observer  = on-prem VM that reports telemetry to APEX Console                                   │
-│  CloudIQ        = Dell AIOps analytics; integrated with APEX for health scoring                       │
-│  PowerStore     = Dell mid-range AFA; common APEX block storage platform                              │
-│  PowerMax       = Dell high-end AFA; APEX option for mission-critical block                           │
-│  PowerFlex      = Dell hyper-converged / software-defined storage option                              │
-│  ECS            = Elastic Cloud Storage; Dell object storage; S3-compatible                           │
-│  Elastic scaling= add or reduce committed capacity via APEX Console request                           │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+![APEX Storage as a Service — Architecture — Diagram](../../../../assets/storage-dell-apex-storage-as-a-service-architecture-diagram.svg)
 
 ```mermaid
 graph TB

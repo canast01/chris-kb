@@ -181,28 +181,7 @@ Blast radius: 6 ESXi hosts have partial path loss; VMs are I/O retrying on CT1 p
 
 ## Escalation Path
 
-```text
-Step 1 — Check Pure1 for auto-opened case; if none, open case at support.purestorage.com
-         ↓
-Step 2 — Pure TAC engineer reviews Pure1 telemetry + purediag bundle (P1: within 1 hr)
-         ↓
-Step 3 — If no meaningful progress in 1 hour for P1 or 4 hours for P2:
-         → Add to case: "Requesting escalation to Senior Engineer / TAC Manager"
-         → State: "[CT0 down / hosts have no I/O / 6 ESXi hosts affected]"
-         → Call support hotline to reinforce the escalation request
-         ↓
-Step 4 — Senior engineer assigned; they will initiate a remote session via Pure1 tooling
-         → Have SSH access to the array and web GUI available
-         → Confirm the purediag bundle was received (support engineer confirms via Pure1)
-         ↓
-Step 5 — If hardware is confirmed failed:
-         → Pure dispatches a field engineer with replacement hardware
-         → For Evergreen support: controller replacement is non-disruptive if one CT is still running
-         ↓
-Step 6 — For P1 unresolved after 2 hours:
-         → Contact your Pure Account Executive (AE) directly
-         → AE has an escalation path to VP of Customer Support for sustained P1 incidents
-```
+![FlashArray — Escalation — Diagram](../../../../assets/storage-pure-flasharray-troubleshooting-escalation-diagram.svg)
 
 ---
 

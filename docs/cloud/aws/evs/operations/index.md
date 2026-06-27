@@ -15,26 +15,7 @@ EVS day-2 operations: cluster health, host management, vSAN capacity, lifecycle 
 ![Amazon EVS — Operations](../../../../assets/cloud-aws-evs-operations-index.svg)
 
 
-```text
-┌──────────────────────────────────────── Amazon EVS Operations ────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                                      EVS Day-2 Operations                                     │   │
-│   │          Six sub-sections: CLI, Health Checks, Procedures, Upgrades, Backup, Scripts          │   │
-│   │         Health baseline: cluster CREATED + all hosts CREATED + vSAN green + NSX stable        │   │
-│   │        Host add/remove via AWS EVS API after vSAN evacuation completes (BytesToSync=0)        │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                 ▼                               ▼                                 ▼                   │
-│                                                                                                       │
-│   ┌────────────────────────────┐  ┌────────────────────────────┐  ┌───────────────────────────────┐   │
-│   │        Daily Health        │  │      Host Management       │  │         VCF Lifecycle         │   │
-│   │      AWS cluster state     │  │        Add host (API)      │  │      SDDC Manager upgrades    │   │
-│   │      vSAN health checks    │  │    Remove host (evacuate)  │  │       VCF upgrade sequence    │   │
-│   │    NSX-T component status  │  │        HCX migration       │  │       HCX version upgrade     │   │
-│   └────────────────────────────┘  └────────────────────────────┘  └───────────────────────────────┘   │
-│                                                                                                       │
-```
+![Amazon EVS — Operations — Diagram](../../../../assets/cloud-aws-evs-operations-diagram.svg)
 <div class="kb-grid">
   <a class="kb-card" href="cli-reference/">
     <span class="kb-card-title">CLI Reference</span>

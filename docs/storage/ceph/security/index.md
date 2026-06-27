@@ -15,27 +15,7 @@ Ceph security: CephX authentication for all daemon and client communication, RBA
 ![Ceph — Security](../../../assets/storage-ceph-security-index.svg)
 
 
-```text
-┌──────────────────────────────────────────── Ceph Security ────────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                                     Ceph Security Controls                                    │   │
-│   │        Four sub-sections: Access Control (CephX), Authentication, Encryption, Hardening       │   │
-│   │            CephX: all clients require a key; granular capabilities per pool/service           │   │
-│   │            Encryption: dmcrypt at OSD level; msgr2 secure for in-transit encryption           │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              Identity & Access               │  │           Data & Network Security           │   │
-│   │            CephX shared-secret auth          │  │             OSD dmcrypt encryption          │   │
-│   │          Capability per pool/service         │  │            RBD per-image encryption         │   │
-│   │               profile rbd preset             │  │              RGW SSE-S3 / SSE-KMS           │   │
-│   │             Key rotation (manual)            │  │               msgr2 secure mode             │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-```
+![Ceph — Security — Diagram](../../../assets/storage-ceph-security-diagram.svg)
 <div class="kb-grid">
   <a class="kb-card" href="access-control/">
     <span class="kb-card-title">Access Control</span>

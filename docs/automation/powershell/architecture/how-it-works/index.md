@@ -60,16 +60,7 @@ flowchart LR
 
 A module is a directory containing a manifest (`.psd1`) and script files (`.psm1`) or binary DLLs.
 
-```text
-MyModule/
-├── MyModule.psd1
-├── MyModule.psm1
-├── Public/
-│   ├── Get-Widget.ps1
-│   └── Set-Widget.ps1
-└── Private/
-    └── Invoke-WidgetApi.ps1
-```
+![PowerShell — How It Works — Diagram](../../../../assets/automation-powershell-architecture-how-it-works-diagram.svg)
 
 ```powershell
 Install-Module -Name PSFramework -Scope CurrentUser -Repository PSGallery

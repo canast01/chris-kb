@@ -14,44 +14,7 @@ Ceph is an open-source distributed storage system providing block (RBD), file (C
 ![Ceph Distributed Storage](../../assets/storage-ceph-index.svg)
 
 
-```text
-┌────────────────────────────────────── Ceph Distributed Storage ───────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                         Ceph — Open-source Distributed Storage System                         │   │
-│   │           Provides block (RBD), file (CephFS), and object (RGW/S3) from one cluster           │   │
-│   │         RADOS: object store engine; CRUSH: placement algorithm without metadata server        │   │
-│   │           OSD: 1 per disk; MON: 3-5 for quorum; MGR: 2 for orchestration + dashboard          │   │
-│   │              Replication: N copies (replica pool) or erasure coding (k+m chunks)              │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                 ▼                               ▼                                 ▼                   │
-│                                                                                                       │
-│   ┌────────────────────────────┐  ┌────────────────────────────┐  ┌───────────────────────────────┐   │
-│   │        Block (RBD)         │  │       File (CephFS)        │  │          Object (RGW)         │   │
-│   │       Thin-prov images     │  │       POSIX filesystem     │  │       S3/Swift compatible     │   │
-│   │      Snapshots + clones    │  │      MDS for namespace     │  │       radosgw-admin users     │   │
-│   │     K8s CSI / OpenStack    │  │      NFS-Ganesha export    │  │      Bucket lifecycle/quota   │   │
-│   └────────────────────────────┘  └────────────────────────────┘  └───────────────────────────────┘   │
-│                                                                                                       │
-│                  │                             │                   │                   │              │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                 RADOS Layer                  │  │                 Daemon Layer                │   │
-│   │            Object store (all pools)          │  │                OSD: 1 per disk              │   │
-│   │              CRUSH placement algo            │  │            MON: cluster map quorum          │   │
-│   │               PG replication/EC              │  │          MGR: metrics + orchestration       │   │
-│   │             Self-healing recovery            │  │            cephadm: container mgmt          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│    RADOS   = Reliable Autonomic Distributed Object Store; storage engine for all Ceph services        │
-│    OSD     = Object Storage Daemon; one per disk; stores data + handles replication/recovery          │
-│    CRUSH   = Controlled Replication Under Scalable Hashing; placement algorithm (no lookup)           │
-│    PG      = Placement Group; unit of replication; ~100 per OSD; maps to set of OSDs                  │
-│    BlueStore= Default OSD backend; raw block device; superior to older FileStore/XFS                  │
-│                                                                                                       │
-```
+![Ceph Distributed Storage — Diagram](../../assets/storage-ceph-diagram.svg)
 <div class="kb-grid">
   <a class="kb-card" href="architecture/">
     <span class="kb-card-title">Architecture</span>

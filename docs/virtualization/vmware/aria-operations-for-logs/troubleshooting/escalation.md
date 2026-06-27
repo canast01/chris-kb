@@ -157,27 +157,7 @@ Compliance impact: Logs are PCI-in-scope — security team notified
 
 ## Escalation Path
 
-```text
-Step 1 — Open case at support.broadcom.com with VAMI support bundle attached
-         ↓
-Step 2 — T1 support engineer acknowledges (Sev1: < 30 min; Sev2: < 2 hr)
-         ↓
-Step 3 — If no meaningful progress in 30 minutes for Sev1 or 2 hours for Sev2:
-         → Reply: "Requesting escalation to Aria Logs Senior Engineer"
-         → State: "[ingestion stopped / cluster degraded / compliance data at risk]"
-         ↓
-Step 4 — Aria Logs T2 Senior Engineer is assigned
-         → They will request SSH access to the master node for a live session
-         → Have SSH access to all cluster nodes and VAMI access ready
-         ↓
-Step 5 — If issue involves a confirmed bug (cluster join failure, Cassandra corruption):
-         → T2 escalates to Aria Logs Engineering
-         → Engineering may provide a targeted fix or manual recovery procedure
-         ↓
-Step 6 — For Sev1 compliance data loss with no resolution after 2 hours:
-         → Request CritSit escalation; contact your Broadcom TAM
-         → TAM may convene a bridge call with engineering
-```
+![Aria Ops for Logs — Escalation — Diagram](../../../../assets/virtualization-vmware-aria-operations-for-logs-troubleshooting-escalation-diagram.svg)
 
 ---
 

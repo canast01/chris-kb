@@ -194,28 +194,7 @@ Blast radius: All backup jobs failing; cannot write new backups; DR copy stale s
 
 ## Escalation Path
 
-```text
-Step 1 — Open case at dell.com/support with support bundle attached (or autosupport send)
-         ↓
-Step 2 — Dell T1 engineer acknowledges (P1: < 2 hr ProSupport Plus; P2: < 4 hr)
-         ↓
-Step 3 — If no meaningful progress within 2 hours for P1:
-         → Reply in case: "Requesting escalation to Data Domain Senior Engineer"
-         → State: "[filesystem offline / drive failure / replication stopped]"
-         ↓
-Step 4 — Data Domain T2 Senior Engineer assigned
-         → They will review the support bundle and may request SSH access to the appliance
-         → Have SSH access as sysadmin ready; confirm AutoSupport is sending telemetry
-         ↓
-Step 5 — If issue requires hardware replacement (disk, NVRAM, PSU):
-         → Dell identifies the failed component from the bundle
-         → Dell dispatches a field engineer with the replacement hardware
-         → Provide data center access details
-         ↓
-Step 6 — For prolonged P1 (filesystem offline > 2 hours with no resolution path):
-         → Request TAM engagement
-         → TAM escalates to Data Domain Engineering if needed
-```
+![Dell Data Domain — Escalation — Diagram](../../../../assets/storage-dell-data-domain-troubleshooting-escalation-diagram.svg)
 
 ---
 

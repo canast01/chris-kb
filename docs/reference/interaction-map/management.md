@@ -28,17 +28,7 @@ How VCF, Aria Suite Lifecycle, and vCenter SSO interact — lifecycle APIs, cred
 
 ## VCF workload domain model
 
-```text
-SDDC Manager
-  └── Management Domain (always first)
-  │     ├── vCenter (management)
-  │     ├── NSX Manager cluster (shared or per-domain)
-  │     └── vSAN cluster
-  └── Workload Domain 1..N
-        ├── vCenter (per domain)
-        ├── NSX (shared from mgmt or dedicated)
-        └── vSAN cluster
-```
+![Management Domain — Interaction Map — Diagram](../../assets/reference-interaction-map-management-diagram.svg)
 
 Each workload domain has its own vCenter. SDDC Manager is the single pane of glass for lifecycle operations across all domains.
 

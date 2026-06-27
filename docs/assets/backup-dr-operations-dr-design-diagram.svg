@@ -1,0 +1,105 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="820" height="600">
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="0" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#455a64" />
+    </marker>
+  </defs>
+  <rect width="820" height="30" fill="#1a2744" />
+  <text x="410" y="20" font-family="Arial,Helvetica,sans-serif" font-size="14" font-weight="bold" fill="#ffffff" text-anchor="middle">
+    Architecture — Disaster Recovery Design
+  </text>
+  
+  <rect x="10" y="50" width="800" height="60" rx="6" fill="#e3f2fd" stroke="#1565c0" />
+  <text x="410" y="70" font-family="Arial,Helvetica,sans-serif" font-size="11" fill="#1a2744" text-anchor="middle">
+    DR design: select site topology and replication pattern to meet RPO/RTO targets
+  </text>
+  <text x="410" y="85" font-family="Arial,Helvetica,sans-serif" font-size="11" fill="#1a2744" text-anchor="middle">
+    Tiers: hot standby (&lt; 1 min RTO), warm (&lt; 4h), cold (&gt; 4h, data only backup)
+  </text>
+  <text x="410" y="100" font-family="Arial,Helvetica,sans-serif" font-size="11" fill="#1a2744" text-anchor="middle">
+    Replication: synchronous (zero RPO, latency cost) vs async (small RPO, no latency)
+  </text>
+  
+  <line x1="205" y1="120" x2="205" y2="140" stroke="#455a64" stroke-width="1.5" marker-end="url(#arrowhead)" />
+  <line x1="615" y1="120" x2="615" y2="140" stroke="#455a64" stroke-width="1.5" marker-end="url(#arrowhead)" />
+  
+  <rect x="10" y="140" width="390" height="140" rx="6" fill="#e8f5e9" stroke="#2e7d32" />
+  <text x="205" y="160" font-family="Arial,Helvetica,sans-serif" font-size="11" fill="#1a2744" text-anchor="middle">
+    DR Tiers
+  </text>
+  <text x="205" y="180" font-family="Arial,Helvetica,sans-serif" font-size="11" fill="#1a2744" text-anchor="middle">
+    Hot: always-on sync
+  </text>
+  <text x="205" y="195" font-family="Arial,Helvetica,sans-serif" font-size="11" fill="#1a2744" text-anchor="middle">
+    Warm: replicated async
+  </text>
+  <text x="205" y="210" font-family="Arial,Helvetica,sans-serif" font-size="11" fill="#1a2744" text-anchor="middle">
+    Cold: backup only
+  </text>
+  <text x="205" y="225" font-family="Arial,Helvetica,sans-serif" font-size="11" fill="#1a2744" text-anchor="middle">
+    DR site sizing: N+x
+  </text>
+  <text x="205" y="240" font-family="Arial,Helvetica,sans-serif" font-size="11" fill="#1a2744" text-anchor="middle">
+    Test annually minimum
+  </text>
+  
+  <rect x="420" y="140" width="390" height="140" rx="6" fill="#e8eaf6" stroke="#3949ab" />
+  <text x="615" y="160" font-family="Arial,Helvetica,sans-serif" font-size="11" fill="#1a2744" text-anchor="middle">
+    Replication Options
+  </text>
+  <text x="615" y="180" font-family="Arial,Helvetica,sans-serif" font-size="11" fill="#1a2744" text-anchor="middle">
+    Sync: zero RPO; ≤ 100km
+  </text>
+  <text x="615" y="195" font-family="Arial,Helvetica,sans-serif" font-size="11" fill="#1a2744" text-anchor="middle">
+    Async: RPO minutes
+  </text>
+  <text x="615" y="210" font-family="Arial,Helvetica,sans-serif" font-size="11" fill="#1a2744" text-anchor="middle">
+    SRM / Zerto / vVols
+  </text>
+  <text x="615" y="225" font-family="Arial,Helvetica,sans-serif" font-size="11" fill="#1a2744" text-anchor="middle">
+    Storage-level replication
+  </text>
+  <text x="615" y="240" font-family="Arial,Helvetica,sans-serif" font-size="11" fill="#1a2744" text-anchor="middle">
+    App-consistent snapshots
+  </text>
+  
+  <text x="410" y="270" font-family="Arial,Helvetica,sans-serif" font-size="11" fill="#1a2744" text-anchor="middle">
+    Tier       RPO        RTO        Cost       Technology
+  </text>
+  <text x="410" y="285" font-family="Arial,Helvetica,sans-serif" font-size="11" fill="#1a2744" text-anchor="middle">
+    Hot standby    Near zero     &lt; 15 min     Highest      Sync rep
+  </text>
+  <text x="410" y="300" font-family="Arial,Helvetica,sans-serif" font-size="11" fill="#1a2744" text-anchor="middle">
+    Warm standby   &lt; 15 min     1-4 hours     Medium      Async rep
+  </text>
+  <text x="410" y="315" font-family="Arial,Helvetica,sans-serif" font-size="11" fill="#1a2744" text-anchor="middle">
+    Cold standby   &lt; 24 hours    &gt; 4 hours     Lowest      Backup/tape
+  </text>
+  
+  <text x="410" y="345" font-family="Arial,Helvetica,sans-serif" font-size="11" fill="#1a2744" text-anchor="middle">
+    Key terms:
+  </text>
+  <text x="410" y="360" font-family="Arial,Helvetica,sans-serif" font-size="10" fill="#37474f" text-anchor="middle">
+    RPO = Recovery Point Objective; max acceptable data loss; drives replication freq
+  </text>
+  <text x="410" y="375" font-family="Arial,Helvetica,sans-serif" font-size="10" fill="#37474f" text-anchor="middle">
+    RTO = Recovery Time Objective; max acceptable downtime; drives DR tier selection
+  </text>
+  <text x="410" y="390" font-family="Arial,Helvetica,sans-serif" font-size="10" fill="#37474f" text-anchor="middle">
+    Synchronous = Write confirmed only after replica ACK; zero data loss; limited by distance
+  </text>
+  <text x="410" y="405" font-family="Arial,Helvetica,sans-serif" font-size="10" fill="#37474f" text-anchor="middle">
+    Asynchronous = Write confirmed locally; replica slightly behind; RPO = replication interval
+  </text>
+  <text x="410" y="420" font-family="Arial,Helvetica,sans-serif" font-size="10" fill="#37474f" text-anchor="middle">
+    SRM = VMware Site Recovery Manager; orchestrates VM failover between vCenter sites
+  </text>
+  <text x="410" y="435" font-family="Arial,Helvetica,sans-serif" font-size="10" fill="#37474f" text-anchor="middle">
+    BCP = Business Continuity Plan; broader than DR; includes people, process, comms
+  </text>
+  
+  <rect y="570" width="820" height="30" fill="#f5f7fa" />
+  <text x="410" y="590" font-family="Arial,Helvetica,sans-serif" font-size="10" fill="#9e9e9e" text-anchor="middle">
+    Diagram Type: Disaster Recovery Design
+  </text>
+</svg>

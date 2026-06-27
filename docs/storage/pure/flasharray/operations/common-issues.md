@@ -14,27 +14,7 @@ Known Issues reference covering Quick Reference, Incident Triage, Performance Is
 ![FlashArray — Known Issues](../../../../assets/storage-pure-flasharray-operations-common-issues.svg)
 
 
-```text
-FlashArray Triage Flow
-  Alert / Symptom reported
-          │
-          ▼
-  purealert list ──► Identify failure domain
-          │
-   ┌────────────────────────────────────────────────── ┴ ──────────────────────────────────────────────────┐
-   ▼                                     ▼
-Drive fault                       Host connectivity loss
-puredrive list                    purehost list + pureport list
-  │                                       │
-  ▼                                       ▼
-Open Pure support case             Check FC zoning / iSCSI path
-  │                                       │
-  ▼                                       ▼
-Monitor rebuild                    Verify multipath on host side
-
-ActiveCluster issue:
-  purepod list ──► pod state ──► check mediator + repl network
-```
+![FlashArray — Known Issues — Diagram](../../../../assets/storage-pure-flasharray-operations-common-issues-diagram.svg)
 
 ## Before you begin
 

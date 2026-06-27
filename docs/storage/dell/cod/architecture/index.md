@@ -11,55 +11,7 @@ Software-defined capacity licensing for Dell PowerMax and VMAX arrays. Physical 
 *Applies to: Cloud for Desktop (COD)*
 </div>
 
-```text
-┌───────────────────────────── Dell COD — Capacity on Demand Architecture ──────────────────────────────┐
-│                                                                                                       │
-│  Software-defined capacity expansion for PowerMax; no hardware shipment needed;                       │
-│  activated via ESRS connectivity to Dell cloud; license key unlocks pre-installed capacity.           │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               Licensing Model                │  │              Activation Process             │   │
-│   │      Base capacity: shipped with array       │  │          Order COD units from Dell          │   │
-│   │          COD: pre-installed, locked          │  │          License key sent by email          │   │
-│   │        Tiers: increments of capacity         │  │           Import in Unisphere: COD          │   │
-│   │         Pay: only activated capacity         │  │          ESRS validates entitlement         │   │
-│   │        Grace period: 30 days offline         │  │        Capacity available in minutes        │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  COD is capacity only; FOD is for software features; both require ESRS connectivity.                  │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               ESRS Integration               │  │                  COD vs FOD                 │   │
-│   │       ESRS: call-home to esrs.dell.com       │  │           COD: raw capacity unlock          │   │
-│   │          TCP 443 outbound required           │  │           FOD: feature activation           │   │
-│   │         ESRS gateway: optional proxy         │  │           Both: same ESRS channel           │   │
-│   │         Offline: 30-day grace period         │  │         Both: supported on PowerMax         │   │
-│   │         ConnectEMC: legacy ESRS name         │  │           Both: instant activation          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  PowerMax array (all capacity physically installed); ESRS gateway VM optional;                        │
-│  management network with internet access to esrs.dell.com on TCP 443.                                 │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  COD            = Capacity on Demand; pre-installed capacity unlocked by license                      │
-│  FOD            = Features on Demand; software feature activation (SRDF, TimeFinder)                  │
-│  ESRS           = EMC Secure Remote Services; call-home + license validation channel                  │
-│  Unisphere      = PowerMax web management UI; where COD is activated                                  │
-│  License key    = alphanumeric string delivered by Dell email after order                             │
-│  Capacity tier  = fixed increment of COD capacity available for activation                            │
-│  Grace period   = 30 days ESRS offline before COD locks; contact Dell to extend                       │
-│  ConnectEMC     = legacy name for ESRS call-home service                                              │
-│  ESRS gateway   = optional on-prem VM that proxies array call-home traffic                            │
-│  PowerMax       = Dell high-end AFA; COD applies to this platform                                     │
-│  Entitlement    = Dell contract record matching license key to serial number                          │
-│  esrs.dell.com  = Dell ESRS validation endpoint; TCP 443 must be reachable                            │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+![Capacity on Demand — Architecture — Diagram](../../../../assets/storage-dell-cod-architecture-diagram.svg)
 ![Capacity on Demand Architecture](../../../../assets/cod-architecture-overview.svg)
 
 <div class="kb-grid kb-grid-3">

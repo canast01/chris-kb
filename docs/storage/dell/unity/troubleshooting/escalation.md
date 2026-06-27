@@ -15,50 +15,7 @@ How to escalate Dell Unity XT issues to Dell Technologies support: what data to 
 ![Unity XT — Escalation](../../../../assets/storage-dell-unity-troubleshooting-escalation.svg)
 
 
-```text
-┌──────────────────────────────── Dell Unity XT — Escalation ───────────────────────────────────────────┐
-│                                                                                                       │
-│  Escalate Unity XT issues to Dell support when a Storage Processor (SP) is offline and the            │
-│  array is in single-SP mode, NFS or iSCSI I/O has stopped for production hosts, a drive failure       │
-│  has pushed a pool below its protection threshold, or an OE upgrade has failed mid-way through.       │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Step 1 — Collect Data               │  │          Step 2 — Open the Case             │   │
-│   │  uemcli /sys/general show (health + version) │  │  Go to dell.com/support → My Cases          │   │
-│   │  uemcli /env/health show (component faults)  │  │  Select product by SP serial number         │   │
-│   │  uemcli /sys/alert show (active alerts)      │  │  Severity: P1 SP down / P2 degraded         │   │
-│   │  Generate service bundle (Unisphere UI)      │  │  Attach service bundle + alert history      │   │
-│   │  Write timeline: last healthy → first fault  │  │  For P1: also call Dell support             │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  For P1: open portal case AND call Dell immediately.                                                  │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Step 3 — Escalation Path            │  │         What NOT to Do                      │   │
-│   │  T1: triage + confirm bundle received        │  │  Do not reboot both SPs simultaneously      │   │
-│   │  T2: Unity SE assigned; deep array review    │  │  Do not modify pools during single-SP mode  │   │
-│   │  TAM: engage for P1 or prolonged issues      │  │  Do not pull drives without Dell guidance   │   │
-│   │  GPS: on-site senior engineering for complex │  │  Do not start OE upgrade during incident    │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  SP-A / SP-B     = Storage Processors; active-active HA pair; one failing = single-SP mode            │
-│  OE              = Operating Environment; Unity operating system; version in uemcli /sys/sw show      │
-│  uemcli          = Unity CLI; `uemcli -d <sp-ip> -u admin -p <pw> /command` on management host        │
-│  pool            = collection of drives forming usable storage capacity; FAST VP tiers data           │
-│  FAST VP         = Fully Automated Storage Tiering VP; moves hot/cold data between drive tiers        │
-│  NAS server      = virtual file server on Unity; owns IP, DNS, shares; independent per-tenant         │
-│  service bundle  = Unity diagnostic archive; generated via Unisphere or uemcli; mandatory             │
-│  SupportAssist   = Dell telemetry and auto-case creation; configured in Unisphere                     │
-│  ProSupport Plus = Dell highest support tier; 24×7; P1 response < 2 hr                                │
-│  TAM             = Technical Account Manager; named Dell contact for critical case escalation         │
-│  GPS             = Global Priority Services; senior on-site or remote Dell engineering                │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+![Unity XT — Escalation — Diagram](../../../../assets/storage-dell-unity-troubleshooting-escalation-diagram.svg)
 
 ---
 
@@ -221,27 +178,7 @@ Blast radius: SP-B offline; all hosts at half path count; I/O continuing on SP-A
 
 ## Escalation Path
 
-```text
-Step 1 — Open case at dell.com/support with service bundle + health + alert output attached
-         ↓
-Step 2 — Dell T1 engineer acknowledges (P1: < 2 hr ProSupport Plus; P2: < 4 hr)
-         ↓
-Step 3 — If no meaningful progress within 2 hours for P1:
-         → Reply in case: "Requesting escalation to Unity XT Senior Engineer"
-         → State: "[SP offline / I/O stopped / pool degraded / OE upgrade failed]"
-         ↓
-Step 4 — Unity T2 Senior Engineer assigned
-         → They will review the service bundle and may request Unisphere or uemcli access
-         → Have Unisphere admin credentials and uemcli CLI host access ready
-         ↓
-Step 5 — If issue requires SP replacement or drive hardware dispatch:
-         → Dell dispatches a field engineer with replacement hardware
-         → Provide physical access details (data center, rack, unit position)
-         ↓
-Step 6 — For prolonged P1 or complex OE upgrade recovery:
-         → Request TAM engagement (Technical Account Manager)
-         → For on-site senior engineering: request Global Priority Services (GPS)
-```
+![Unity XT — Escalation — Diagram](../../../../assets/storage-dell-unity-troubleshooting-escalation-d2.svg)
 
 ---
 

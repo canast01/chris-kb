@@ -37,22 +37,7 @@ A well-designed management group hierarchy mirrors your organisational structure
 
 ### Reference Hierarchy Pattern
 
-```text
-Tenant Root Group
-├── mg-platform          (shared services: networking, identity, monitoring)
-│   ├── sub-connectivity
-│   └── sub-identity
-├── mg-landingzones      (application workloads)
-│   ├── mg-production
-│   │   └── sub-prod-app1
-│   ├── mg-staging
-│   │   └── sub-staging-app1
-│   └── mg-dev
-│       └── sub-dev-app1
-├── mg-sandboxes         (unrestricted experimentation)
-│   └── sub-sandbox-chris
-└── mg-decommissioned    (subscriptions pending closure)
-```
+![Management Groups — Diagram](../../../../assets/cloud-azure-governance-management-groups-diagram.svg)
 
 ## Azure Landing Zone Topology
 

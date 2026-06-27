@@ -47,27 +47,13 @@ curl -sk -H "Authorization: Bearer $TOKEN" \
 
 ## Tanzu architecture layers
 
-```text
-kubectl / tanzu CLI
-  └── Tanzu Kubernetes Grid (TKG)
-        └── Supervisor Cluster (vCenter Workload Control Plane)
-              └── ESXi hosts (Supervisor Namespace = vSphere Namespace)
-                    └── TanzuKubernetesCluster (guest cluster)
-```
+![Automation Domain — Interaction Map — Diagram](../../assets/reference-interaction-map-automation-diagram.svg)
 
 For **TKGs** (vSphere with Tanzu): the Supervisor runs directly on vSphere; no separate management cluster needed.
 
 ## Horizon provisioning flow
 
-```text
-Horizon Connection Server
-  └── vCenter (pool provisioning)
-        └── Instant Clone Engine (or Full Clone)
-              └── ESXi host (guest VM)
-                    └── Horizon Agent (inside VM)
-                          └── PCoIP / Blast Extreme (to UAG)
-                                └── Horizon Client (end user)
-```
+![Automation Domain — Interaction Map — Diagram](../../assets/reference-interaction-map-automation-d2.svg)
 
 ## See also
 

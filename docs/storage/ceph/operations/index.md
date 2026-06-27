@@ -15,26 +15,7 @@ Ceph day-2 operations: cluster health monitoring, OSD management, pool tuning, C
 ![Ceph — Operations](../../../assets/storage-ceph-operations-index.svg)
 
 
-```text
-┌─────────────────────────────────────────── Ceph Operations ───────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                                     Ceph Day-2 Operations                                     │   │
-│   │          Six sub-sections: CLI, Health Checks, Procedures, Lifecycle, Backup, Scripts         │   │
-│   │               Health baseline: HEALTH_OK + all OSDs up+in + all PGs active+clean              │   │
-│   │           Before maintenance: set noout flag; ensure HEALTH_OK before removing flag           │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                 ▼                               ▼                                 ▼                   │
-│                                                                                                       │
-│   ┌────────────────────────────┐  ┌────────────────────────────┐  ┌───────────────────────────────┐   │
-│   │        Daily Health        │  │       OSD Management       │  │           Lifecycle           │   │
-│   │      ceph health detail    │  │       OSD replacement      │  │         cephadm upgrade       │   │
-│   │          PG status         │  │       Add/remove nodes     │  │         Upgrade sequence      │   │
-│   │       Capacity review      │  │       CRUSH rebalance      │  │          RBD mirroring        │   │
-│   └────────────────────────────┘  └────────────────────────────┘  └───────────────────────────────┘   │
-│                                                                                                       │
-```
+![Ceph — Operations — Diagram](../../../assets/storage-ceph-operations-diagram.svg)
 <div class="kb-grid">
   <a class="kb-card" href="cli-reference/">
     <span class="kb-card-title">CLI Reference</span>

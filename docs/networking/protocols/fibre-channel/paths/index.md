@@ -11,32 +11,7 @@ A path is a complete end-to-end connection from an HBA port through the fabric t
 ![FC Paths](../../../../assets/networking-protocols-fibre-channel-paths-index.svg)
 
 
-```text
-        DUAL-FABRIC MULTIPATH TOPOLOGY (4 paths to 1 LUN)
-                ┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
-                │    HOST     │
-                │ ┌─────────┐ │
-                │ │ HBA0    │ │  WWPN-A
-                │ │ (port0) ├─┼──────────────► FC Switch A ──► Array CT-A0 ─┐
-                │ └─────────┘ │                                              │
-                │             │               path 1 (active)                │
-                │ ┌─────────┐ │  WWPN-A                                      ├──► LUN
-                │ │ HBA0    │ │                                              │
-                │ │ (port1) ├─┼──────────────► FC Switch B ──► Array CT-B0 ─┤
-                │ └─────────┘ │               path 2                         │
-                │             │                                              │
-                │ ┌─────────┐ │  WWPN-B                                      │
-                │ │ HBA1    │ │                                              │
-                │ │ (port0) ├─┼──────────────► FC Switch A ──► Array CT-A1 ─┤
-                │ └─────────┘ │               path 3                         │
-                │             │                                              │
-                │ ┌─────────┐ │  WWPN-B                                      │
-                │ │ HBA1    │ │                                              │
-                │ │ (port1) ├─┼──────────────► FC Switch B ──► Array CT-B1 ─┘
-                │ └─────────┘ │               path 4
-                └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-        MPIO distributes I/O across active paths (round-robin or policy)
-```
+![FC Paths — Diagram](../../../../assets/networking-protocols-fibre-channel-paths-diagram.svg)
 Multipath I/O (MPIO) uses multiple paths simultaneously for redundancy and load distribution.
 
 ## Path Architecture

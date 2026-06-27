@@ -15,27 +15,7 @@ EVS security controls: AWS IAM for cluster management, vSphere RBAC, NSX-T micro
 ![Amazon EVS — Security](../../../../assets/cloud-aws-evs-security-index.svg)
 
 
-```text
-┌───────────────────────────────────────── Amazon EVS Security ─────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                                     EVS Security Controls                                     │   │
-│   │      Four sub-sections: Access Control (IAM + vSphere RBAC), Auth, Encryption, Hardening      │   │
-│   │        Two RBAC planes: AWS IAM (host/cluster lifecycle) + vSphere RBAC (VM operations)       │   │
-│   │          NSX-T DFW: default deny + explicit allow; VPC SGs restrict management access         │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              Identity & Access               │  │           Data & Network Security           │   │
-│   │            AWS IAM scoped policies           │  │           vSAN encryption (NKP/KMS)         │   │
-│   │               vSphere RBAC roles             │  │              VM encryption policy           │   │
-│   │            AD/LDAP SSO integration           │  │             NSX-T DFW default deny          │   │
-│   │              MFA for AWS console             │  │              VPC Flow Logs audit            │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-```
+![Amazon EVS — Security — Diagram](../../../../assets/cloud-aws-evs-security-diagram.svg)
 <div class="kb-grid">
   <a class="kb-card" href="access-control/">
     <span class="kb-card-title">Access Control</span>

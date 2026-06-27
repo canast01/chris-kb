@@ -48,16 +48,7 @@ graph TD
 
 ## Refs and Branches
 
-```text
-.git/
-├── HEAD                    → ref: refs/heads/main
-├── refs/
-│   ├── heads/              → local branches
-│   ├── remotes/
-│   │   └── origin/
-│   └── tags/
-└── packed-refs             → bulk storage for many refs
-```
+![Git — How It Works — Diagram](../../../../assets/itsm-git-architecture-how-it-works-diagram.svg)
 
 | Ref | Purpose |
 |-----|---------|
@@ -140,19 +131,7 @@ sequenceDiagram
 
 ## Storage Layout
 
-```text
-# GitLab on-disk layout (default Omnibus)
-/var/opt/gitlab/
-├── git-data/
-│   └── repositories/
-│       └── <namespace>/
-│           └── <project>.git/
-│               ├── objects/
-│               ├── refs/
-│               └── hooks/
-└── gitlab-rails/
-    └── uploads/
-```
+![Git — How It Works — Diagram](../../../../assets/itsm-git-architecture-how-it-works-d2.svg)
 
 ---
 

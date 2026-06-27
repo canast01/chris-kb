@@ -214,25 +214,7 @@ PowerStore supports non-disruptive import from the following Dell legacy platfor
 
 ### Import Process Overview
 
-```text
-1. Pre-migration health check
-   └── Source and target both show green in CloudIQ or Unisphere
-2. Import session creation
-   └── PowerStore Manager → Protection → Import → Create Import Session
-   └── Provide source array management IP and credentials
-3. Host re-zoning (FC) or iSCSI re-configuration
-   └── Add PowerStore target ports to existing host fabric zones
-   └── Host sees both source and target simultaneously
-4. Import session start
-   └── PowerStore copies source volume data to PowerStore volume in background
-   └── Host continues I/O to source during copy
-5. Cutover (online or scheduled)
-   └── PowerStore flushes final delta; host I/O redirected to PowerStore
-   └── Source volume becomes read-only
-6. Post-migration validation
-   └── Confirm host I/O active on PowerStore; verify data integrity
-   └── Remove source array zones/mappings
-```
+![PowerStore — Standards — Diagram](../../../../assets/storage-dell-powerstore-architecture-design-standards-diagram.svg)
 
 ## Monitoring and Alerting Standards
 

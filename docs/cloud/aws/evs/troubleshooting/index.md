@@ -17,27 +17,7 @@ EVS troubleshooting: host failures, vSAN degraded health, HCX connectivity issue
 ![Amazon EVS — Troubleshooting](../../../../assets/cloud-aws-evs-troubleshooting-index.svg)
 
 
-```text
-┌───────────────────────────────────── Amazon EVS Troubleshooting ──────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                                  EVS Troubleshooting Overview                                 │   │
-│   │           Three sub-sections: Common Issues, Diagnostics (bundles/logs), Escalation           │   │
-│   │         Host FAILED state: contact AWS support before deleting (preserves diagnostics)        │   │
-│   │             Joint issues (HCX, NSX-T/VPC): open both AWS and VMware support cases             │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                 ▼                               ▼                                 ▼                   │
-│                                                                                                       │
-│   ┌────────────────────────────┐  ┌────────────────────────────┐  ┌───────────────────────────────┐   │
-│   │       Common Issues        │  │        Diagnostics         │  │           Escalation          │   │
-│   │      Host FAILED state     │  │    CloudTrail EVS events   │  │       AWS severity levels     │   │
-│   │     vSAN degraded health   │  │     VPC Flow Logs query    │  │        Required case data     │   │
-│   │    HCX service mesh down   │  │     NSX-T support bundle   │  │        AWS + VMware joint     │   │
-│   │    NSX-T routing failure   │  │     Log locations table    │  │       TAM escalation path     │   │
-│   └────────────────────────────┘  └────────────────────────────┘  └───────────────────────────────┘   │
-│                                                                                                       │
-```
+![Amazon EVS — Troubleshooting — Diagram](../../../../assets/cloud-aws-evs-troubleshooting-diagram.svg)
 <div class="kb-grid">
   <a class="kb-card" href="common-issues/">
     <span class="kb-card-title">Common Issues</span>

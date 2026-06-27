@@ -202,28 +202,7 @@ Blast radius: NDFC unavailable; no zone changes possible; NDI telemetry stopped;
 
 ## Escalation Path
 
-```text
-Step 1 — Open SR at case.cisco.com with ND tech-support bundle attached
-         ↓
-Step 2 — Cisco TAC SE acknowledges (Sev-1: < 1 hr; Sev-2: < 2 hr — requires SMARTnet 24×7)
-         ↓
-Step 3 — If no meaningful progress within 2 hours for Sev-1:
-         → Reply in case: "Requesting escalation to Nexus Dashboard SME"
-         → State: "[cluster node NotReady / etcd quorum lost / app unavailable / upgrade failed]"
-         ↓
-Step 4 — Cisco ND Subject Matter Expert assigned
-         → They will review the tech-support bundle and may request a remote session (WebEx)
-         → Have ndadmin SSH access and ESXi console access to the affected node ready
-         ↓
-Step 5 — If issue is a confirmed k8s or etcd code-level bug:
-         → SME escalates to Cisco Nexus Dashboard Engineering
-         → Engineering may provide a targeted patch, node-rejoin procedure, or etcd recovery steps
-         ↓
-Step 6 — For Sev-1 unresolved > 2 hours:
-         → Request Duty Manager escalation during the TAC call
-         → Engage Cisco account team and TAM for executive escalation
-         → Have the ND backup timestamp and location ready in case a restore is needed
-```
+![Cisco Nexus Dashboard — Escalation — Diagram](../../../../assets/san-cisco-nexus-dashboard-troubleshooting-escalation-diagram.svg)
 
 ---
 

@@ -17,27 +17,7 @@ Ceph troubleshooting: OSD down/out recovery, PG degraded and stuck states, slow 
 ![Ceph — Troubleshooting](../../../assets/storage-ceph-troubleshooting-index.svg)
 
 
-```text
-┌──────────────────────────────────────── Ceph Troubleshooting ─────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                                 Ceph Troubleshooting Overview                                 │   │
-│   │         Three sub-sections: Common Issues, Diagnostics (logs/health codes), Escalation        │   │
-│   │            Start: ceph health detail — every warning has a health code with context           │   │
-│   │        Sev 1: any HEALTH_ERR with inactive PGs or cluster full → open case immediately        │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                 ▼                               ▼                                 ▼                   │
-│                                                                                                       │
-│   ┌────────────────────────────┐  ┌────────────────────────────┐  ┌───────────────────────────────┐   │
-│   │       Common Issues        │  │        Diagnostics         │  │           Escalation          │   │
-│   │           OSD down         │  │      Health code guide     │  │        Red Hat RHCS cases     │   │
-│   │      PG degraded/stuck     │  │       OSD log analysis     │  │       Required data bundle    │   │
-│   │        Slow requests       │  │      Crash dump review     │  │       Community resources     │   │
-│   │    Nearfull/Full cluster   │  │     Network diagnostics    │  │        Emergency commands     │   │
-│   └────────────────────────────┘  └────────────────────────────┘  └───────────────────────────────┘   │
-│                                                                                                       │
-```
+![Ceph — Troubleshooting — Diagram](../../../assets/storage-ceph-troubleshooting-diagram.svg)
 
 ```mermaid
 graph TD

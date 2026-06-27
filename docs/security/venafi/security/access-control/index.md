@@ -52,15 +52,7 @@ Venafi TPP permissions are scoped to **policy folders** — the organizational u
 
 **Recommended folder structure:**
 
-```text
-Policy/
-├── Production/
-│   ├── Internal-PKI/
-│   └── Public-CA/
-└── Non-Production/
-    ├── Dev/
-    └── Test/
-```
+![Venafi — Access Control — Diagram](../../../../assets/security-venafi-security-access-control-diagram.svg)
 
 ## Service Account Configuration
 

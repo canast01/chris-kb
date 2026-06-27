@@ -173,30 +173,7 @@ Blast radius:
 
 ## Escalation Path
 
-```text
-Step 1 — Internal: automation team investigates with debug logging and environment checks
-         → Check for recent package upgrades: git log, pip freeze diff
-         ↓
-Step 2 — If the issue is in the operating environment (SSL, network, OS):
-         → Infra team: OS SSL library update, certificate trust store, proxy config
-         ↓
-Step 3 — If the issue is a CPython bug (segfault, memory corruption, incorrect stdlib behavior):
-         → File a bug at bugs.python.org with a minimal reproduction script
-         → Temporary fix: pin to previous Python minor version
-         ↓
-Step 4 — If the issue is in a third-party library (requests, boto3, paramiko, etc.):
-         → File a GitHub issue on the library's repository
-         → Community repos: github.com/psf/requests, github.com/boto/boto3, etc.
-         → Include: Python version, library version, minimal reproduction script, expected vs actual
-         ↓
-Step 5 — If a CVE is found in a production dependency:
-         → Pin the vulnerable package to a patched version immediately
-         → Rotate any secrets the vulnerable code could have accessed
-         → Engage the security team to assess the exposure window
-         ↓
-Step 6 — If the vendor library has a paid support contract (e.g., Red Hat Python, IBM):
-         → Open a case with the vendor support portal (support.redhat.com, etc.)
-```
+![Python Automation — Escalation — Diagram](../../../../assets/automation-python-troubleshooting-escalation-diagram.svg)
 
 ---
 

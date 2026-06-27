@@ -57,11 +57,7 @@ sequenceDiagram
 
 ### Portal
 
-```text
-Entra Portal → Privileged Identity Management → Azure resources
-→ Select scope → Manage → Assignments → Add assignments
-→ Role → Member → Assignment type: Eligible → Duration → Assign
-```
+![Azure — Privileged Identity Management (PIM) — Diagram](../../../../assets/cloud-azure-identity-privileged-identity-management-diagram.svg)
 
 ### PowerShell
 
