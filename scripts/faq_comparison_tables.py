@@ -88,7 +88,9 @@ def parse_qa_pairs(content: str) -> list[tuple[str, str, int]]:
                 answer = lines[j].lstrip()[2:].strip()
                 if "|" not in answer and answer:
                     pairs.append((question, answer, j))
-            i = j + 1
+                i = j + 1  # advance past the A: line
+            else:
+                i = j  # no A: found — let outer loop process lines[j] (may be next Q)
         else:
             i += 1
     return pairs
