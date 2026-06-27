@@ -20,6 +20,21 @@ End-to-end deployment guide for VMware Horizon VDI and published applications. P
 
 ---
 
+
+```mermaid
+flowchart TD
+    s0["Before you begin"]
+    s1["Phase 1 — Prerequisites"]
+    s2["Phase 2 — Connection Server Pod"]
+    s3["Phase 3 — Unified Access Gateway (UAG)"]
+    s4["Phase 4 — Desktop Pools and RDSH Farms"]
+    s5["Phase 5 — App Volumes and Dynamic Environm..."]
+    s6["Phase 6 — Validation"]
+    s7["✓ Verify"]
+    s0 --> s1 --> s2 --> s3 --> s4 --> s5 --> s6 --> s7
+    style s7 fill:#2e7d32,color:#fff,stroke:#1b5e20
+```
+
 ## Before you begin
 
 - **Access:** vCenter Administrator role and SSH access to VCSA/ESXi hosts

@@ -16,6 +16,25 @@ Landing Zone deployment guide: Management Group hierarchy, Azure Policy, Defende
 
 
 
+
+```mermaid
+flowchart TD
+    s0["Before you begin"]
+    s1["Prerequisites"]
+    s2["Create Management Group Hierarchy"]
+    s3["Configure Azure Policy at Management Group..."]
+    s4["Configure Microsoft Defender for Cloud"]
+    s5["Set Up Log Analytics Workspace and Sentinel"]
+    s6["Configure Entra ID (Azure AD) Baseline"]
+    s7["Set Up Hub VNet and Peering"]
+    s8["Enable Azure Backup Vault"]
+    s9["✓ Validate the Deployment"]
+    s10["✓ Verify"]
+    s0 --> s1 --> s2 --> s3 --> s4 --> s5 --> s6 --> s7 --> s8 --> s9 --> s10
+    style s9 fill:#2e7d32,color:#fff,stroke:#1b5e20
+    style s10 fill:#2e7d32,color:#fff,stroke:#1b5e20
+```
+
 ## Before you begin
 
 - **Access:** admin credentials for the target system and any upstream dependencies (DNS, NTP, vCenter, directory services)

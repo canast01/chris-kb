@@ -22,6 +22,25 @@ This guide covers deploying a new Linux server from OS install through hardening
 
 ---
 
+
+```mermaid
+flowchart TD
+    s0["Before you begin"]
+    s1["Install the OS"]
+    s2["Configure Network (Static IP)"]
+    s3["Configure NTP"]
+    s4["Register with Subscription Manager (RHEL)"]
+    s5["Apply Security Baseline"]
+    s6["Configure SSH Hardening"]
+    s7["Configure Syslog Forwarding"]
+    s8["Domain Join (if required)"]
+    s9["✓ Validate the Deployment"]
+    s10["✓ Verify"]
+    s0 --> s1 --> s2 --> s3 --> s4 --> s5 --> s6 --> s7 --> s8 --> s9 --> s10
+    style s9 fill:#2e7d32,color:#fff,stroke:#1b5e20
+    style s10 fill:#2e7d32,color:#fff,stroke:#1b5e20
+```
+
 ## Before you begin
 
 - **Access:** root or sudo-capable account on target hosts

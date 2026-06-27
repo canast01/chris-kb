@@ -16,6 +16,24 @@ Step-by-step guide to installing Confluence Data Center, configuring the databas
 
 
 
+
+```mermaid
+flowchart TD
+    s0["Before you begin"]
+    s1["Prerequisites"]
+    s2["Install Confluence"]
+    s3["Configure Database"]
+    s4["Create First Space"]
+    s5["Configure LDAP Authentication"]
+    s6["Install Recommended Add-ons"]
+    s7["Configure Backup Schedule"]
+    s8["✓ Validate Deployment"]
+    s9["✓ Verify"]
+    s0 --> s1 --> s2 --> s3 --> s4 --> s5 --> s6 --> s7 --> s8 --> s9
+    style s8 fill:#2e7d32,color:#fff,stroke:#1b5e20
+    style s9 fill:#2e7d32,color:#fff,stroke:#1b5e20
+```
+
 ## Before you begin
 
 - **Access:** admin credentials for the target system and any upstream dependencies (DNS, NTP, vCenter, directory services)

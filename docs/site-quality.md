@@ -19,7 +19,7 @@ Generated: 2026-06-26
 | Pages with kb-summary | 2,567 |
 | Pages with full-width ASCII diagram | 63 |
 | Pages with SVG diagrams | 2,846 |
-| Pages with Mermaid diagrams | 681 |
+| Pages with Mermaid diagrams | 744 |
 | Pages with tags | 2,819 |
 | Audit score | 36 / 37 |
 | MkDocs strict build warnings | 0 |

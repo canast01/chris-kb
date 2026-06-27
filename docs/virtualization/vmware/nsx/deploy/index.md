@@ -21,6 +21,21 @@ End-to-end deployment guide for VMware NSX network virtualisation. Phases 1–2 
 
 ---
 
+
+```mermaid
+flowchart TD
+    s0["Before you begin"]
+    s1["Phase 1 — Prerequisites"]
+    s2["Phase 2 — NSX Manager Cluster"]
+    s3["Phase 3 — Transport Zones and Profiles"]
+    s4["Phase 4 — Host Transport Node Preparation"]
+    s5["Phase 5 — Edge Cluster and T0 Gateway"]
+    s6["Phase 6 — Logical Networking and Validation"]
+    s7["✓ Verify"]
+    s0 --> s1 --> s2 --> s3 --> s4 --> s5 --> s6 --> s7
+    style s7 fill:#2e7d32,color:#fff,stroke:#1b5e20
+```
+
 ## Before you begin
 
 <!-- video-link -->

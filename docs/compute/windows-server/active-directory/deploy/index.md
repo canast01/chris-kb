@@ -16,6 +16,25 @@ Deploy a new Active Directory forest on Windows Server 2022 — first DC, DNS, N
 
 
 
+
+```mermaid
+flowchart TD
+    s0["Before you begin"]
+    s1["Prerequisites — Hardware and Network"]
+    s2["Install Active Directory Domain Services"]
+    s3["Promote the First Domain Controller (New F..."]
+    s4["Configure DNS Forwarders"]
+    s5["Configure NTP on Domain Controller"]
+    s6["Add Replica Domain Controllers"]
+    s7["Create Organisational Unit Structure"]
+    s8["Apply Security Baseline GPO"]
+    s9["✓ Validate the Deployment"]
+    s10["✓ Verify"]
+    s0 --> s1 --> s2 --> s3 --> s4 --> s5 --> s6 --> s7 --> s8 --> s9 --> s10
+    style s9 fill:#2e7d32,color:#fff,stroke:#1b5e20
+    style s10 fill:#2e7d32,color:#fff,stroke:#1b5e20
+```
+
 ## Before you begin
 
 - **Access:** admin credentials for the target system and any upstream dependencies (DNS, NTP, vCenter, directory services)

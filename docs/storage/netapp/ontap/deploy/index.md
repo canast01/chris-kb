@@ -19,6 +19,22 @@ This guide covers the end-to-end deployment of a NetApp ONTAP cluster — from p
 
 ---
 
+
+```mermaid
+flowchart TD
+    s0["Before you begin"]
+    s1["Phase 1 — Physical Layer"]
+    s2["Phase 2 — Initial Cluster Setup"]
+    s3["Phase 3 — Cluster Configuration"]
+    s4["Phase 4 — Network Configuration"]
+    s5["Phase 5 — Storage Provisioning"]
+    s6["Phase 6 — Data Protection"]
+    s7["Phase 7 — Validation"]
+    s8["✓ Verify"]
+    s0 --> s1 --> s2 --> s3 --> s4 --> s5 --> s6 --> s7 --> s8
+    style s8 fill:#2e7d32,color:#fff,stroke:#1b5e20
+```
+
 ## Before you begin
 
 - **Access:** Root/admin access to both nodes via serial console (Node 1 first), and SSH access to the cluster management LIF after initial setup. Out-of-band management access (BMC/SP) must be configured and reachable before any cluster work begins.

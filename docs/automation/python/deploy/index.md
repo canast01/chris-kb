@@ -17,6 +17,23 @@ pipeline before running your first automation scripts.
 
 ---
 
+
+```mermaid
+flowchart TD
+    s0["Before you begin"]
+    s1["Install Python"]
+    s2["Create a Project Virtual Environment"]
+    s3["Install Project Dependencies"]
+    s4["Configure Environment Variables"]
+    s5["Set Up IDE Integration (VS Code)"]
+    s6["Configure a CI Pipeline for Python Scripts"]
+    s7["✓ Validate the Environment"]
+    s8["✓ Verify"]
+    s0 --> s1 --> s2 --> s3 --> s4 --> s5 --> s6 --> s7 --> s8
+    style s7 fill:#2e7d32,color:#fff,stroke:#1b5e20
+    style s8 fill:#2e7d32,color:#fff,stroke:#1b5e20
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

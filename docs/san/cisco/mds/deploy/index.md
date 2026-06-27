@@ -23,6 +23,24 @@ This guide covers deploying a Cisco MDS 9000 series SAN switch from physical ins
 
 ---
 
+
+```mermaid
+flowchart TD
+    s0["Before you begin"]
+    s1["Prerequisites"]
+    s2["Rack and Cable"]
+    s3["Initial NX-OS Setup"]
+    s4["Configure VSAN and Port Channels"]
+    s5["Zone Configuration"]
+    s6["NDFC Integration"]
+    s7["Host Connectivity"]
+    s8["✓ Validate"]
+    s9["✓ Verify"]
+    s0 --> s1 --> s2 --> s3 --> s4 --> s5 --> s6 --> s7 --> s8 --> s9
+    style s8 fill:#2e7d32,color:#fff,stroke:#1b5e20
+    style s9 fill:#2e7d32,color:#fff,stroke:#1b5e20
+```
+
 ## Prerequisites
 
 **Hardware:**

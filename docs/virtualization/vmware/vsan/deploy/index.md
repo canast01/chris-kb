@@ -21,6 +21,22 @@ End-to-end deployment guide from bare metal to a validated vSAN cluster. Phases 
 
 ---
 
+
+```mermaid
+flowchart TD
+    s0["Before you begin"]
+    s1["Phase 1 — Physical Layer"]
+    s2["Phase 2 — ESXi Installation and First-Boot..."]
+    s3["Phase 3 — vCenter Deployment and Initial C..."]
+    s4["Phase 4 — dvSwitch and vSAN Network Setup"]
+    s5["Phase 5 — vSAN Cluster Enablement"]
+    s6["Phase 6 — Aria Suite Lifecycle and Monitor..."]
+    s7["Phase 7 — End-to-End Validation"]
+    s8["✓ Verify"]
+    s0 --> s1 --> s2 --> s3 --> s4 --> s5 --> s6 --> s7 --> s8
+    style s8 fill:#2e7d32,color:#fff,stroke:#1b5e20
+```
+
 ## Before you begin
 
 <!-- video-link -->

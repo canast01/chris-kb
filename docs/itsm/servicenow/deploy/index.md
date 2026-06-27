@@ -17,6 +17,24 @@ Step-by-step guide to requesting a ServiceNow developer instance, configuring ad
 
 
 
+
+```mermaid
+flowchart TD
+    s0["Before you begin"]
+    s1["Request Development Instance"]
+    s2["Configure Admin Account"]
+    s3["Connect LDAP/Active Directory"]
+    s4["Import Users and Groups"]
+    s5["Configure Email (SMTP)"]
+    s6["Install Required Plugins"]
+    s7["Configure MID Server"]
+    s8["✓ Validate Instance"]
+    s9["✓ Verify"]
+    s0 --> s1 --> s2 --> s3 --> s4 --> s5 --> s6 --> s7 --> s8 --> s9
+    style s8 fill:#2e7d32,color:#fff,stroke:#1b5e20
+    style s9 fill:#2e7d32,color:#fff,stroke:#1b5e20
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

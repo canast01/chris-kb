@@ -18,6 +18,23 @@ PostgreSQL initial deployment — installation on RHEL/Ubuntu, postgresql.conf b
 
 
 
+
+```mermaid
+flowchart TD
+    s0["Before you begin"]
+    s1["Install on RHEL / Rocky"]
+    s2["Install on Ubuntu"]
+    s3["Initial Configuration (`postgresql.conf`)"]
+    s4["`pg_hba.conf` Access Control"]
+    s5["Firewall"]
+    s6["Create Application User and Database"]
+    s7["✓ Validation"]
+    s8["✓ Verify"]
+    s0 --> s1 --> s2 --> s3 --> s4 --> s5 --> s6 --> s7 --> s8
+    style s7 fill:#2e7d32,color:#fff,stroke:#1b5e20
+    style s8 fill:#2e7d32,color:#fff,stroke:#1b5e20
+```
+
 ## Before you begin
 
 - **Access:** root or sudo-capable account on target hosts

@@ -18,6 +18,22 @@ Step-by-step guide to connecting Dell storage systems to CloudIQ via the Secure 
 
 
 
+
+```mermaid
+flowchart TD
+    s0["Before you begin"]
+    s1["Prerequisites"]
+    s2["Install Secure Connect Gateway (SCG)"]
+    s3["Register Storage Systems with SCG"]
+    s4["✓ Verify Telemetry in CloudIQ Portal"]
+    s5["Configure Alert Notifications"]
+    s6["Add Additional Storage Systems"]
+    s7["✓ Validate Data Collection"]
+    s0 --> s1 --> s2 --> s3 --> s4 --> s5 --> s6 --> s7
+    style s4 fill:#2e7d32,color:#fff,stroke:#1b5e20
+    style s7 fill:#2e7d32,color:#fff,stroke:#1b5e20
+```
+
 ## Before you begin
 
 - **Access:** admin credentials for the target system and any upstream dependencies (DNS, NTP, vCenter, directory services)

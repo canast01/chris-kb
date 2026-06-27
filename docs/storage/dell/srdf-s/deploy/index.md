@@ -21,6 +21,23 @@ search:
 
 
 
+
+```mermaid
+flowchart TD
+    s0["Before you begin"]
+    s1["Prerequisites"]
+    s2["Zone SRDF Director Ports"]
+    s3["Create the SRDF/S Group"]
+    s4["Add Devices"]
+    s5["Establish Synchronous Replication"]
+    s6["✓ Verify Synchronization"]
+    s7["Test Write Latency Impact"]
+    s8["✓ Validate the Deployment"]
+    s0 --> s1 --> s2 --> s3 --> s4 --> s5 --> s6 --> s7 --> s8
+    style s6 fill:#2e7d32,color:#fff,stroke:#1b5e20
+    style s8 fill:#2e7d32,color:#fff,stroke:#1b5e20
+```
+
 ## Prerequisites
 
 Two PowerMax/VMAX arrays within low-latency WAN (<10ms RTT between SRDF ports), Fibre Channel or IP SRDF links, SRDF synchronous licence on both arrays, capacity on R2 equal to R1 devices being protected.

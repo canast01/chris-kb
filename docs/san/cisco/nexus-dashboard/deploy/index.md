@@ -25,6 +25,22 @@ This guide covers deploying Cisco Nexus Dashboard (ND) from OVA to a validated 3
 
 ---
 
+
+```mermaid
+flowchart TD
+    s0["Before you begin"]
+    s1["Prerequisites"]
+    s2["Deploy ND OVA (3-Node Cluster)"]
+    s3["Cluster Formation"]
+    s4["Install NDFC/NDI Services"]
+    s5["Add First Site"]
+    s6["✓ Validate"]
+    s7["✓ Verify"]
+    s0 --> s1 --> s2 --> s3 --> s4 --> s5 --> s6 --> s7
+    style s6 fill:#2e7d32,color:#fff,stroke:#1b5e20
+    style s7 fill:#2e7d32,color:#fff,stroke:#1b5e20
+```
+
 ## Prerequisites
 
 **Cluster requirements:**

@@ -15,6 +15,20 @@ This guide provides an orientation to deploying Pure Storage infrastructure, cov
 
 ---
 
+
+```mermaid
+flowchart TD
+    s0["Before you begin"]
+    s1["FlashArray Initial Config"]
+    s2["Host Connectivity"]
+    s3["Protection Groups"]
+    s4["Pure1 Setup"]
+    s5["FlashBlade Initial Config"]
+    s6["✓ Verify"]
+    s0 --> s1 --> s2 --> s3 --> s4 --> s5 --> s6
+    style s6 fill:#2e7d32,color:#fff,stroke:#1b5e20
+```
+
 ## Before you begin
 
 <!-- video-link -->

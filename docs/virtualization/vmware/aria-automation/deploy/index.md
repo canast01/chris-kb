@@ -20,6 +20,21 @@ End-to-end deployment guide for VMware Aria Automation (on-premises). Covers pre
 
 ---
 
+
+```mermaid
+flowchart TD
+    s0["Before you begin"]
+    s1["Phase 1 — Pre-Deployment Prerequisites"]
+    s2["Phase 2 — LCM Deployment"]
+    s3["Phase 3 — Cloud Account Configuration"]
+    s4["Phase 4 — Projects, Mappings, and Governance"]
+    s5["Phase 5 — Blueprints and Service Catalogue"]
+    s6["Phase 6 — End-to-End Validation"]
+    s7["✓ Verify"]
+    s0 --> s1 --> s2 --> s3 --> s4 --> s5 --> s6 --> s7
+    style s7 fill:#2e7d32,color:#fff,stroke:#1b5e20
+```
+
 ## Before you begin
 
 - **Access:** vCenter Administrator role and SSH access to VCSA/ESXi hosts

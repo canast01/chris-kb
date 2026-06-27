@@ -16,6 +16,22 @@ Step-by-step guide to enabling Phone Home on Pure Storage FlashArray and FlashBl
 
 
 
+
+```mermaid
+flowchart TD
+    s0["Before you begin"]
+    s1["Prerequisites"]
+    s2["Enable Phone Home on FlashArray"]
+    s3["Enable Phone Home on FlashBlade"]
+    s4["✓ Verify Array Appears in Pure1"]
+    s5["Configure User Access"]
+    s6["Configure Alert Notifications"]
+    s7["✓ Validate Telemetry"]
+    s0 --> s1 --> s2 --> s3 --> s4 --> s5 --> s6 --> s7
+    style s4 fill:#2e7d32,color:#fff,stroke:#1b5e20
+    style s7 fill:#2e7d32,color:#fff,stroke:#1b5e20
+```
+
 ## Before you begin
 
 - **Access:** admin credentials for the target system and any upstream dependencies (DNS, NTP, vCenter, directory services)

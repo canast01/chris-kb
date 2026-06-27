@@ -30,6 +30,24 @@ This guide walks through deploying a Dell PowerMax array from physical installat
 
 ---
 
+
+```mermaid
+flowchart TD
+    s0["Before you begin"]
+    s1["Prerequisites"]
+    s2["Rack and Power On"]
+    s3["Initial Array Configuration (SRDF Ports, F..."]
+    s4["Connect to Unisphere"]
+    s5["Discover and Configure Storage Pools"]
+    s6["Create First Storage Group and Masking View"]
+    s7["Configure SRDF Replication (If Applicable)"]
+    s8["✓ Validate Host Connectivity"]
+    s9["✓ Verify"]
+    s0 --> s1 --> s2 --> s3 --> s4 --> s5 --> s6 --> s7 --> s8 --> s9
+    style s8 fill:#2e7d32,color:#fff,stroke:#1b5e20
+    style s9 fill:#2e7d32,color:#fff,stroke:#1b5e20
+```
+
 ## Prerequisites
 
 Before racking the array, confirm the following are in place.

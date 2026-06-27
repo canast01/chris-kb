@@ -18,6 +18,22 @@ Step-by-step guide to setting up Dell APEX AIOps, connecting storage arrays, ena
 
 
 
+
+```mermaid
+flowchart TD
+    s0["Before you begin"]
+    s1["Prerequisites"]
+    s2["Connect Storage Arrays"]
+    s3["Enable AI-Powered Recommendations"]
+    s4["Configure Dashboards"]
+    s5["Set Capacity Alert Thresholds"]
+    s6["✓ Validate Telemetry and Recommendations"]
+    s7["✓ Verify"]
+    s0 --> s1 --> s2 --> s3 --> s4 --> s5 --> s6 --> s7
+    style s6 fill:#2e7d32,color:#fff,stroke:#1b5e20
+    style s7 fill:#2e7d32,color:#fff,stroke:#1b5e20
+```
+
 ## Before you begin
 
 - **Access:** admin credentials for the target system and any upstream dependencies (DNS, NTP, vCenter, directory services)

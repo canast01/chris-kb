@@ -25,6 +25,23 @@ This guide covers deploying NetApp SnapCenter Server from prerequisites through 
 
 ---
 
+
+```mermaid
+flowchart TD
+    s0["Before you begin"]
+    s1["Prerequisites"]
+    s2["Install SnapCenter Server"]
+    s3["Add ONTAP Storage System"]
+    s4["Install Plugin on First Host"]
+    s5["Create Backup Policy"]
+    s6["Run First Backup"]
+    s7["✓ Validate"]
+    s8["✓ Verify"]
+    s0 --> s1 --> s2 --> s3 --> s4 --> s5 --> s6 --> s7 --> s8
+    style s7 fill:#2e7d32,color:#fff,stroke:#1b5e20
+    style s8 fill:#2e7d32,color:#fff,stroke:#1b5e20
+```
+
 ## Prerequisites
 
 **Windows Server requirements:**

@@ -17,6 +17,23 @@ Step-by-step guide to installing Ansible, configuring inventory and SSH authenti
 
 
 
+
+```mermaid
+flowchart TD
+    s0["Before you begin"]
+    s1["Install Ansible"]
+    s2["Configure Inventory File"]
+    s3["Configure SSH Key Authentication"]
+    s4["Configure ansible.cfg"]
+    s5["Test Connectivity"]
+    s6["Install Required Collections and Roles"]
+    s7["Configure Ansible Vault for Secrets"]
+    s8["Run First Playbook"]
+    s9["✓ Verify"]
+    s0 --> s1 --> s2 --> s3 --> s4 --> s5 --> s6 --> s7 --> s8 --> s9
+    style s9 fill:#2e7d32,color:#fff,stroke:#1b5e20
+```
+
 ## Before you begin
 
 - **Access:** SSH key or service account with sudo on managed hosts; Ansible control node
