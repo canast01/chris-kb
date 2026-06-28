@@ -33,6 +33,31 @@ center -> data_management_with_bluexp
 center -> evergreen_storage_hardware_refresh
 ```
 
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+actor "Customer" as CUS
+participant "Keystone Portal\n(NetApp cloud)" as KS
+participant "OpsRamp\n(monitoring agent)" as OPS
+participant "ONTAP / StorageGRID\n(on-prem hardware)" as STG
+participant "NetApp SRE\nTeam" as SRE
+
+CUS -> KS: Subscribe to service tier
+KS -> SRE: Provision on-prem hardware
+SRE -> STG: Deploy + validate
+STG -> OPS: Telemetry stream
+OPS -> KS: Capacity + health data
+KS --> CUS: Dashboard + usage invoice
+
+CUS -> KS: Burst capacity request
+KS -> SRE: Approve + expand
+SRE -> STG: Add capacity
+KS --> CUS: Burst reflected in dashboard
+@enduml
+```
+
 ## Overview
 
 NetApp Keystone is a Storage as a Service (STaaS) subscription that delivers on-premises NetApp hardware — AFF/FAS for block and file, StorageGRID for object — on an OpEx consumption model. NetApp installs, owns, and manages the hardware at the customer's data center or colocation facility. The customer commits to a minimum capacity per service tier and pays for committed capacity plus burst usage above the commitment. A Keystone Collector agent reports consumption telemetry to NetApp for billing.

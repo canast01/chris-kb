@@ -35,6 +35,32 @@ center -> namespace_and_bucket_hierarchy
 center -> supported_api_protocols
 ```
 
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+actor "S3 / Swift Client" as CLT
+participant "ECS Data Node\n(object API)" as DN
+participant "Chunk Manager\n(erasure coding)" as CM
+participant "Disk\n(local storage)" as DISK
+participant "Remote ECS Site\n(geo-replication)" as REMOTE
+participant "ECS Portal\n(management)" as MGR
+
+CLT -> DN: PUT object (S3 / Swift)
+DN -> CM: Chunk + erasure-code (12+4)
+CM -> DISK: Write coded chunks across nodes
+DISK --> CM: Confirmed
+CM --> DN: Object stored
+DN --> CLT: 200 OK + ETag
+
+DN -> REMOTE: Async geo-replication
+REMOTE --> DN: Replicated
+
+MGR -> DN: Policy + quota management
+@enduml
+```
+
 ## Overview
 
 Dell ECS (Enterprise Content Storage) is a scale-out, software-defined object storage platform built on commodity x86 nodes. It exposes S3, Swift, Atmos, and CAS APIs over HTTPS. The software stack runs entirely on commodity hardware and provides geo-distribution across sites via Virtual Data Centers (VDCs) linked into replication groups.

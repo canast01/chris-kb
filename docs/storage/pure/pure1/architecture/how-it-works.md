@@ -30,6 +30,27 @@ center -> architecture
 center -> high_availability
 ```
 
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+participant "FlashArray /\nFlashBlade" as ARR
+participant "Pure1 Cloud\nGateway (array-side)" as GW
+participant "Pure1 SaaS\n(cloud.purestorage.com)" as P1
+participant "AI Engine\n(Pure1 Meta)" as AI
+actor "Admin" as ADM
+
+ARR -> GW: Telemetry (metrics / logs / config)
+GW -> P1: Encrypted upload (REST HTTPS)
+P1 -> AI: Capacity + workload analysis
+AI --> P1: Forecast + anomaly
+P1 --> ADM: Dashboard + proactive alert
+ADM -> P1: Open support case
+P1 -> ARR: Remote assist session (Pure1 Connect)
+@enduml
+```
+
 ## Architecture
 
 ```mermaid

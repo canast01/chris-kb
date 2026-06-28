@@ -35,6 +35,29 @@ center -> data_services
 center -> metro_volume
 ```
 
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+participant "Host\n(FC / iSCSI / NVMe-oF)" as HOST
+participant "Front-End\nDirectors" as FE
+participant "NVRAM\n(write cache)" as NV
+participant "Back-End\nDirectors" as BE
+participant "NVMe Flash\n(appliance nodes)" as FLASH
+participant "PowerStore Manager\n(Kubernetes-based)" as MGR
+
+HOST -> FE: Write I/O
+FE -> NV: Stage write (mirrored NVRAM)
+NV --> FE: Ack to host
+FE -> BE: Destage to flash
+BE -> FLASH: NVMe write
+FLASH --> BE: Confirmed
+MGR -> FLASH: Automated tiering + compression
+MGR --> FE: Telemetry + alert
+@enduml
+```
+
 ## Overview
 
 Dell PowerStore is a mid-range all-flash platform built on an active-active appliance architecture with an NVMe-based internal fabric. It runs **PowerStoreOS (PSTROS)** — a microservices-based OS with containerised workloads. Two families: PowerStore **T** (scale-out capable) and PowerStore **X** (includes AppsOn — embedded vSphere).

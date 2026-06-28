@@ -24,6 +24,31 @@ product_management_topology: "Product Management Topology" {shape: rectangle}
 center -> product_management_topology
 ```
 
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+actor "Admin" as ADM
+participant "Aria Suite LCM\n(lifecycle manager)" as LCM
+participant "My VMware\n(download portal)" as MV
+participant "Content Locker\n(NFS / datastore)" as CL
+participant "Aria Product\n(vROps / vRLI / vRA)" as PROD
+participant "vCenter\n(deployment target)" as VC
+
+ADM -> LCM: Create environment + product mapping
+LCM -> MV: Download product binaries
+MV --> LCM: OVA / ISO
+LCM -> CL: Store binaries
+ADM -> LCM: Deploy / upgrade product
+LCM -> VC: Deploy OVA
+VC --> LCM: VM deployed
+LCM -> PROD: Bootstrap + configure
+PROD --> LCM: Health check passed
+LCM --> ADM: Product ready
+@enduml
+```
+
 ## Overview
 
 Aria Suite Lifecycle (LCM) is a management appliance that deploys, upgrades, and manages the entire VMware Aria product suite from a single control plane. LCM eliminates per-product upgrade complexity by orchestrating pre-checks, snapshots, binary staging, sequential node upgrades, and post-checks as a single audited workflow. All credentials and certificates are stored in the integrated **Locker** vault.

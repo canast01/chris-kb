@@ -27,6 +27,30 @@ center -> sizing
 center -> rpo_tiers
 ```
 
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+participant "ONTAP Source\n(primary SVM)" as SRC
+participant "SnapMirror\nRelationship" as SM
+participant "ONTAP Target\n(DR SVM)" as TGT
+participant "Superna Eyeglass\n(DR orchestrator)" as EG
+participant "AD / DNS" as AD
+actor "Admin" as ADM
+
+EG -> SM: Monitor replication lag
+SM --> EG: Lag + relationship state
+ADM -> EG: Initiate DR test / failover
+EG -> SM: Quiesce source SVM
+EG -> TGT: Break SnapMirror + mount volumes
+EG -> AD: Update DNS CNAME to target
+EG -> AD: Update CIFS shares + exports
+AD --> EG: DNS propagated
+EG --> ADM: Failover complete — clients reconnecting
+@enduml
+```
+
 ## Overview
 
 Superna Eyeglass is a DR orchestration platform purpose-built for NetApp PowerScale (Isilon). It automates the share, quota, and DNS reconfiguration steps that previously required hours of manual work during a SyncIQ failover. Eyeglass continuously monitors DR readiness and scores it at 100% only when all shares, exports, quotas, and DNS zones are aligned between primary and DR clusters.

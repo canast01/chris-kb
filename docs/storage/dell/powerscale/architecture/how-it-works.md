@@ -35,6 +35,32 @@ center -> components
 center -> connectivity
 ```
 
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+actor "NFS / SMB Client" as CLT
+participant "SmartConnect\n(DNS round-robin / zone)" as SC
+participant "Chosen Node\n(OneFS)" as NODE
+participant "OneFS Distributed\nFile System" as DFS
+participant "Backend Disks\n(SSD / HDD)" as DISK
+participant "SyncIQ\n(replication)" as SYNC
+
+CLT -> SC: DNS lookup for cluster FQDN
+SC --> CLT: IP of least-loaded node
+CLT -> NODE: NFS mount / SMB connect
+NODE -> DFS: Coordinate with peer nodes
+DFS -> DISK: Stripe data across nodes (N+2/N+3)
+DISK --> DFS: Data
+DFS --> NODE: Serve
+NODE --> CLT: File data
+
+NODE -> SYNC: Policy-based replication job
+SYNC -> NODE: Delta to target cluster
+@enduml
+```
+
 ## Overview
 
 Dell PowerScale (formerly Isilon) is a scale-out NAS platform running the **OneFS** distributed operating system. All nodes in a cluster are peers — there is no dedicated metadata controller. The entire cluster presents a single namespace rooted at `/ifs` across all protocols (NFS, SMB, HDFS, S3, FTP). Clusters scale from a minimum of 3 nodes to 252 nodes.

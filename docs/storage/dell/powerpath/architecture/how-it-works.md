@@ -35,6 +35,30 @@ center -> supported_platforms
 center -> key_commands
 ```
 
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+participant "Application" as APP
+participant "PowerPath\n(multipath driver)" as PP
+participant "Path A\n(HBA-0 → Fabric A → SP-A)" as PA
+participant "Path B\n(HBA-0 → Fabric A → SP-B)" as PB
+participant "Path C\n(HBA-1 → Fabric B → SP-A)" as PC
+participant "Path D\n(HBA-1 → Fabric B → SP-B)" as PD
+participant "Storage Array" as ARR
+
+APP -> PP: I/O request
+PP -> PP: Select optimal path\n(Adaptive / CLARiion CLB)
+PP -> PA: Send I/O (active path)
+PA -> ARR: FC frame
+ARR --> PA: Response
+PA --> PP: I/O complete
+
+note over PP,PD: On path failure —\nauto failover to next\nactive path in <1s
+@enduml
+```
+
 ## Overview
 
 Dell PowerPath is a host-side multipath I/O driver that sits between the OS block device layer and the physical HBA/iSCSI initiator layer. It intercepts I/O destined for storage LUNs and distributes it across all available physical paths, providing automatic failover on path loss and load balancing across healthy paths. PowerPath presents a single virtual (pseudo) device per LUN to the OS regardless of how many physical paths exist.

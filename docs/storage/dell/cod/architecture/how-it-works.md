@@ -33,6 +33,29 @@ center -> access_control_and_authentication
 center -> namespace_and_metadata_service
 ```
 
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+actor "Customer Admin" as ADM
+participant "Dell Licensing\nPortal" as LIC
+participant "PowerMax /\nPowerStore Array" as ARR
+participant "Unisphere\n(local management)" as UI
+participant "Dell SRE\nTeam" as SRE
+
+ADM -> LIC: Request capacity burst
+LIC -> SRE: Generate license file
+SRE -> ADM: Deliver license
+ADM -> UI: Apply license key
+UI -> ARR: Unlock reserved capacity
+ARR --> UI: Capacity now available
+UI --> ADM: Burst active (30 / 90 day term)
+
+note over ARR,LIC: Physical hardware pre-installed\nbut license-gated — activates on demand.
+@enduml
+```
+
 ## Overview
 
 Capacity on Demand (COD) is a software-defined capacity licensing model for Dell PowerMax and VMAX arrays. Physical drives are installed in the array chassis at the factory but the capacity is logically locked at the array controller level until a COD license is applied. No truck roll or hardware change is required — activation is entirely software-driven through SYMCLI or Unisphere.

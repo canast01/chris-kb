@@ -30,6 +30,29 @@ center -> flow_data_retention_defaults
 center -> internal_service_architecture
 ```
 
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+participant "Data Sources\n(NSX / vCenter / AWS / Azure)" as SRC
+participant "Collector VM\n(proxy)" as COL
+participant "Aria Ops for Networks\nPlatform VM" as AOFN
+participant "Flow Analysis\nEngine" as FLOW
+participant "Path Analysis" as PATH
+actor "Network Admin" as ADM
+
+SRC -> COL: API polling + IPFIX flows
+COL -> AOFN: Forward telemetry
+AOFN -> FLOW: Process NetFlow / IPFIX
+AOFN -> PATH: Build topology model
+ADM -> AOFN: Run path trace (src → dst)
+PATH --> ADM: Hop-by-hop path + security groups
+ADM -> AOFN: Security audit query
+AOFN --> ADM: Micro-segmentation gaps
+@enduml
+```
+
 ## Deployment Model
 
 Aria Operations for Networks (AON, formerly vRealize Network Insight / VRNi) consists of two distinct VM roles deployed from separate OVAs:

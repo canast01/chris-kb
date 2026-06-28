@@ -36,6 +36,29 @@ center -> telemetry_sources
 center -> data_flow
 ```
 
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+participant "Storage Arrays\n(PowerMax / PowerStore)" as ARR
+participant "Compute\n(vSphere / Bare Metal)" as COMP
+participant "Network\n(switches / HBAs)" as NET
+participant "Dell AIOps\nPlatform" as AIO
+participant "ML Inference\nEngine" as ML
+actor "Ops Team" as OPS
+
+ARR -> AIO: Performance + capacity telemetry
+COMP -> AIO: Host metrics
+NET -> AIO: Flow + error telemetry
+AIO -> ML: Correlate cross-domain signals
+ML --> AIO: Root cause + impact analysis
+AIO -> OPS: Unified alert with context
+OPS -> AIO: Acknowledge + annotate
+AIO -> ML: Feedback loop (improve model)
+@enduml
+```
+
 ## Architecture
 
 ```mermaid

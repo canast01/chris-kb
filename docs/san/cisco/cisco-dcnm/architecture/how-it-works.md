@@ -32,6 +32,30 @@ center -> vm_sizing_standalone_11x
 center -> dcnm_11x_vs_ndfc_12x
 ```
 
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+actor "SAN Admin" as ADM
+participant "DCNM\n(Data Center Network Manager)" as DCNM
+participant "MDS Switch\n(NX-OS)" as MDS
+participant "Nexus Switch\n(Ethernet fabric)" as NEX
+participant "Endpoint\n(host / storage)" as EP
+
+ADM -> DCNM: Define zoning policy / VSAN
+DCNM -> MDS: Push NX-OS config (SSH / SNMP)
+MDS --> DCNM: Config applied
+ADM -> DCNM: Deploy LAN template
+DCNM -> NEX: Push VLANs / vPC config
+NEX --> DCNM: Applied
+
+EP -> MDS: FC login (FLOGI)
+MDS -> DCNM: SNMP notification
+DCNM -> ADM: Zone membership update
+@enduml
+```
+
 ## Overview
 
 Cisco Data Center Network Manager (DCNM) is Cisco's SAN and LAN management platform for Cisco MDS 9000 Fibre Channel switches. DCNM 11.x is the last standalone appliance release. Starting with version 12.0 (2022), DCNM was renamed **Nexus Dashboard Fabric Controller (NDFC)** and runs as an application on the Cisco Nexus Dashboard platform.

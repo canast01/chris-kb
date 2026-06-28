@@ -31,6 +31,31 @@ center -> underlying_platforms
 center -> best_practices
 ```
 
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+actor "Customer Admin" as ADM
+participant "APEX Console\n(Dell cloud)" as APEX
+participant "CloudIQ\n(telemetry)" as CIQ
+participant "On-Prem Storage\n(PowerStore / PowerFlex)" as STG
+participant "Dell Service\nDelivery" as SVC
+
+ADM -> APEX: Subscribe + configure service
+APEX -> SVC: Provision hardware on-prem
+SVC -> STG: Deploy + validate
+STG -> CIQ: Stream telemetry
+CIQ -> APEX: Usage + capacity data
+APEX --> ADM: Dashboard + invoice
+
+ADM -> APEX: Expand capacity request
+APEX -> SVC: Dispatch field engineer
+SVC -> STG: Add shelf / node
+STG --> APEX: Capacity updated
+@enduml
+```
+
 ## Overview
 
 Dell APEX Storage as a Service (STaaS) is a consumption-based storage model where Dell provisions, owns, and manages the physical infrastructure on-premises at the customer site. Capacity is metered monthly based on committed and burst usage, billed through the APEX Console. The underlying platforms are PowerStore, PowerScale, or PowerFlex, managed by Dell — the customer interacts primarily with the APEX Console or REST API for visibility, capacity requests, and billing reporting.

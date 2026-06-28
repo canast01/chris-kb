@@ -36,6 +36,30 @@ center -> nvram_write_cache
 center -> host_connectivity
 ```
 
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+actor "Customer" as CUS
+participant "Pure1\n(cloud management)" as P1
+participant "FlashArray\n(on-prem)" as FA
+participant "Pure Field\nEngineer" as FE
+participant "New Controller /\nShelves" as HW
+
+CUS -> P1: Evergreen subscription active
+P1 -> FA: Telemetry + health monitoring
+P1 -> FE: Schedule non-disruptive upgrade
+FE -> HW: Bring new controller / shelf
+FE -> FA: Online controller swap (NDU)
+FA -> HW: Migrate data in background
+HW --> FA: Data migration complete
+FE -> FA: Remove old controller
+FA --> P1: Upgrade confirmed
+P1 --> CUS: Notification — no downtime taken
+@enduml
+```
+
 ## Overview
 
 Evergreen is Pure Storage's hardware subscription model for the FlashArray platform (//X, //C, and //E series). Rather than purchasing hardware outright, customers subscribe to a capacity and performance tier — with controller hardware refreshes, Purity software upgrades, and support included in the subscription cost. The defining principle is no forklift upgrades: when controllers reach end of generation, Pure replaces them non-disruptively while data remains on the existing NVMe drive shelf — hosts stay connected and I/O continues during the swap.

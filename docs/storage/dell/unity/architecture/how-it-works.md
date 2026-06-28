@@ -35,6 +35,31 @@ center -> data_services
 center -> networking
 ```
 
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+participant "Host\n(FC / iSCSI / NFS / SMB)" as HOST
+participant "Storage Processor A\n(active)" as SPA
+participant "Storage Processor B\n(standby / HA)" as SPB
+participant "Cache\n(DRAM + SSD)" as CACHE
+participant "Drive Enclosures\n(SAS / NL-SAS / NVMe)" as DISK
+participant "Unisphere\n(management)" as UI
+
+HOST -> SPA: Block or file I/O
+SPA -> CACHE: Check read cache / stage write
+CACHE -> DISK: Destage or read from disk
+DISK --> CACHE: Data
+CACHE --> SPA: Serve data
+SPA --> HOST: Response
+
+SPA -> SPB: Mirror cache + sync state
+UI -> SPA: Provision LUN / NAS server
+UI -> SPB: Monitor standby health
+@enduml
+```
+
 ## Overview
 
 Dell Unity XT is a mid-range unified storage platform delivering block (FC, iSCSI) and file (NFS, SMB) from a single system. It uses a dual storage processor (SP A / SP B) active-active architecture with write-cache mirroring. Administration is via Unisphere for Unity (GUI) or `uemcli` (CLI).

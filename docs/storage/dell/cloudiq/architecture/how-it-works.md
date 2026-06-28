@@ -30,6 +30,27 @@ center -> supported_platforms
 center -> key_capabilities
 ```
 
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+participant "Dell Storage Array\n(PowerMax / PowerStore / etc.)" as ARR
+participant "SRS / Secure Connect\nGateway" as SCG
+participant "CloudIQ\nSaaS (cloud.dell.com)" as CIQ
+participant "AI / ML Engine" as AI
+actor "Admin" as ADM
+
+ARR -> SCG: Telemetry (metrics, logs, config)
+SCG -> CIQ: Encrypted upload (HTTPS)
+CIQ -> AI: Anomaly detection + capacity forecast
+AI --> CIQ: Health score + recommendations
+CIQ --> ADM: Dashboard + proactive alerts
+ADM -> CIQ: View performance / capacity trend
+CIQ -> ADM: Predictive report
+@enduml
+```
+
 ## Overview
 
 Dell CloudIQ is a cloud-native AIOps SaaS platform hosted by Dell. It receives telemetry from on-premises Dell infrastructure via the Secure Connect Gateway (SCG) and processes it through machine-learning models to produce health scores, capacity forecasts, and anomaly alerts. CloudIQ requires no on-premises compute beyond the SCG appliance — all analytics run in Dell's cloud.

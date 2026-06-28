@@ -24,6 +24,30 @@ log_pipeline_architecture: "Log Pipeline Architecture" {shape: rectangle}
 center -> log_pipeline_architecture
 ```
 
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+participant "Log Source\n(ESXi / vCenter / App)" as SRC
+participant "syslog / API\n(TCP 514 / 9543)" as INGST
+participant "Aria Ops for Logs\n(master + worker)" as LOG
+participant "Index / Search\n(Elasticsearch)" as IDX
+participant "Alert Engine" as ALT
+actor "Admin" as ADM
+
+SRC -> INGST: Syslog stream / REST ingest
+INGST -> LOG: Parse + enrich
+LOG -> IDX: Index log events
+ADM -> LOG: Interactive query / dashboard
+LOG -> IDX: Search query
+IDX --> LOG: Results
+LOG --> ADM: Log view
+LOG -> ALT: Threshold rule match
+ALT -> ADM: Notification / webhook
+@enduml
+```
+
 ## Overview
 
 Aria Operations for Logs (formerly vRealize Log Insight) collects, indexes, and correlates log data from VMware infrastructure and other sources. It provides real-time search, pattern-based alerting, content pack dashboards, and bidirectional launch-in-context integration with Aria Operations. Logs are retained in a hot Cassandra index and optionally archived to NFS for long-term storage.

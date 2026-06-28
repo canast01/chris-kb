@@ -38,6 +38,29 @@ center -> sizing_guidelines
 center -> network_requirements
 ```
 
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+participant "PowerScale Cluster\n(Isilon)" as PSC
+participant "InsightIQ\nCollector" as COL
+participant "InsightIQ\nDatastore" as DS
+participant "Report Engine" as RPT
+actor "Admin" as ADM
+
+PSC -> COL: Performance stats (every 30s via REST)
+COL -> DS: Store raw + aggregated metrics
+ADM -> RPT: Request performance report
+RPT -> DS: Query time-series data
+DS --> RPT: Metrics
+RPT --> ADM: Charts (throughput / latency / ops)
+ADM -> RPT: Capacity planning query
+RPT -> DS: Trend + forecast
+DS --> ADM: Capacity forecast
+@enduml
+```
+
 ## Deployment Architecture
 
 ```mermaid

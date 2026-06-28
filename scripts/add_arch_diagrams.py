@@ -1292,6 +1292,597 @@ note over VPC,ESX: Traffic stays within AWS region.\\nOn-prem connectivity via D
 """,
     },
 
+    # ── Aria Operations for Logs ─────────────────────────────────────────────
+
+    {
+        "file": "virtualization/vmware/aria-operations-for-logs/architecture/how-it-works.md",
+        "type": "plantuml",
+        "position": "after_svg",
+        "content": """\
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+participant "Log Source\\n(ESXi / vCenter / App)" as SRC
+participant "syslog / API\\n(TCP 514 / 9543)" as INGST
+participant "Aria Ops for Logs\\n(master + worker)" as LOG
+participant "Index / Search\\n(Elasticsearch)" as IDX
+participant "Alert Engine" as ALT
+actor "Admin" as ADM
+
+SRC -> INGST: Syslog stream / REST ingest
+INGST -> LOG: Parse + enrich
+LOG -> IDX: Index log events
+ADM -> LOG: Interactive query / dashboard
+LOG -> IDX: Search query
+IDX --> LOG: Results
+LOG --> ADM: Log view
+LOG -> ALT: Threshold rule match
+ALT -> ADM: Notification / webhook
+@enduml
+```
+""",
+    },
+
+    # ── Aria Operations for Networks ─────────────────────────────────────────
+
+    {
+        "file": "virtualization/vmware/aria-operations-for-networks/architecture/how-it-works.md",
+        "type": "plantuml",
+        "position": "after_svg",
+        "content": """\
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+participant "Data Sources\\n(NSX / vCenter / AWS / Azure)" as SRC
+participant "Collector VM\\n(proxy)" as COL
+participant "Aria Ops for Networks\\nPlatform VM" as AOFN
+participant "Flow Analysis\\nEngine" as FLOW
+participant "Path Analysis" as PATH
+actor "Network Admin" as ADM
+
+SRC -> COL: API polling + IPFIX flows
+COL -> AOFN: Forward telemetry
+AOFN -> FLOW: Process NetFlow / IPFIX
+AOFN -> PATH: Build topology model
+ADM -> AOFN: Run path trace (src → dst)
+PATH --> ADM: Hop-by-hop path + security groups
+ADM -> AOFN: Security audit query
+AOFN --> ADM: Micro-segmentation gaps
+@enduml
+```
+""",
+    },
+
+    # ── Aria Suite Lifecycle ─────────────────────────────────────────────────
+
+    {
+        "file": "virtualization/vmware/aria-suite-lifecycle/architecture/how-it-works.md",
+        "type": "plantuml",
+        "position": "after_svg",
+        "content": """\
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+actor "Admin" as ADM
+participant "Aria Suite LCM\\n(lifecycle manager)" as LCM
+participant "My VMware\\n(download portal)" as MV
+participant "Content Locker\\n(NFS / datastore)" as CL
+participant "Aria Product\\n(vROps / vRLI / vRA)" as PROD
+participant "vCenter\\n(deployment target)" as VC
+
+ADM -> LCM: Create environment + product mapping
+LCM -> MV: Download product binaries
+MV --> LCM: OVA / ISO
+LCM -> CL: Store binaries
+ADM -> LCM: Deploy / upgrade product
+LCM -> VC: Deploy OVA
+VC --> LCM: VM deployed
+LCM -> PROD: Bootstrap + configure
+PROD --> LCM: Health check passed
+LCM --> ADM: Product ready
+@enduml
+```
+""",
+    },
+
+    # ── Dell PowerStore ───────────────────────────────────────────────────────
+
+    {
+        "file": "storage/dell/powerstore/architecture/how-it-works.md",
+        "type": "plantuml",
+        "position": "after_svg",
+        "content": """\
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+participant "Host\\n(FC / iSCSI / NVMe-oF)" as HOST
+participant "Front-End\\nDirectors" as FE
+participant "NVRAM\\n(write cache)" as NV
+participant "Back-End\\nDirectors" as BE
+participant "NVMe Flash\\n(appliance nodes)" as FLASH
+participant "PowerStore Manager\\n(Kubernetes-based)" as MGR
+
+HOST -> FE: Write I/O
+FE -> NV: Stage write (mirrored NVRAM)
+NV --> FE: Ack to host
+FE -> BE: Destage to flash
+BE -> FLASH: NVMe write
+FLASH --> BE: Confirmed
+MGR -> FLASH: Automated tiering + compression
+MGR --> FE: Telemetry + alert
+@enduml
+```
+""",
+    },
+
+    # ── Dell PowerScale (Isilon) ──────────────────────────────────────────────
+
+    {
+        "file": "storage/dell/powerscale/architecture/how-it-works.md",
+        "type": "plantuml",
+        "position": "after_svg",
+        "content": """\
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+actor "NFS / SMB Client" as CLT
+participant "SmartConnect\\n(DNS round-robin / zone)" as SC
+participant "Chosen Node\\n(OneFS)" as NODE
+participant "OneFS Distributed\\nFile System" as DFS
+participant "Backend Disks\\n(SSD / HDD)" as DISK
+participant "SyncIQ\\n(replication)" as SYNC
+
+CLT -> SC: DNS lookup for cluster FQDN
+SC --> CLT: IP of least-loaded node
+CLT -> NODE: NFS mount / SMB connect
+NODE -> DFS: Coordinate with peer nodes
+DFS -> DISK: Stripe data across nodes (N+2/N+3)
+DISK --> DFS: Data
+DFS --> NODE: Serve
+NODE --> CLT: File data
+
+NODE -> SYNC: Policy-based replication job
+SYNC -> NODE: Delta to target cluster
+@enduml
+```
+""",
+    },
+
+    # ── Dell Unity XT ────────────────────────────────────────────────────────
+
+    {
+        "file": "storage/dell/unity/architecture/how-it-works.md",
+        "type": "plantuml",
+        "position": "after_svg",
+        "content": """\
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+participant "Host\\n(FC / iSCSI / NFS / SMB)" as HOST
+participant "Storage Processor A\\n(active)" as SPA
+participant "Storage Processor B\\n(standby / HA)" as SPB
+participant "Cache\\n(DRAM + SSD)" as CACHE
+participant "Drive Enclosures\\n(SAS / NL-SAS / NVMe)" as DISK
+participant "Unisphere\\n(management)" as UI
+
+HOST -> SPA: Block or file I/O
+SPA -> CACHE: Check read cache / stage write
+CACHE -> DISK: Destage or read from disk
+DISK --> CACHE: Data
+CACHE --> SPA: Serve data
+SPA --> HOST: Response
+
+SPA -> SPB: Mirror cache + sync state
+UI -> SPA: Provision LUN / NAS server
+UI -> SPB: Monitor standby health
+@enduml
+```
+""",
+    },
+
+    # ── Dell PowerPath ────────────────────────────────────────────────────────
+
+    {
+        "file": "storage/dell/powerpath/architecture/how-it-works.md",
+        "type": "plantuml",
+        "position": "after_svg",
+        "content": """\
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+participant "Application" as APP
+participant "PowerPath\\n(multipath driver)" as PP
+participant "Path A\\n(HBA-0 → Fabric A → SP-A)" as PA
+participant "Path B\\n(HBA-0 → Fabric A → SP-B)" as PB
+participant "Path C\\n(HBA-1 → Fabric B → SP-A)" as PC
+participant "Path D\\n(HBA-1 → Fabric B → SP-B)" as PD
+participant "Storage Array" as ARR
+
+APP -> PP: I/O request
+PP -> PP: Select optimal path\\n(Adaptive / CLARiion CLB)
+PP -> PA: Send I/O (active path)
+PA -> ARR: FC frame
+ARR --> PA: Response
+PA --> PP: I/O complete
+
+note over PP,PD: On path failure —\\nauto failover to next\\nactive path in <1s
+@enduml
+```
+""",
+    },
+
+    # ── Dell ECS ─────────────────────────────────────────────────────────────
+
+    {
+        "file": "storage/dell/ecs/architecture/how-it-works.md",
+        "type": "plantuml",
+        "position": "after_svg",
+        "content": """\
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+actor "S3 / Swift Client" as CLT
+participant "ECS Data Node\\n(object API)" as DN
+participant "Chunk Manager\\n(erasure coding)" as CM
+participant "Disk\\n(local storage)" as DISK
+participant "Remote ECS Site\\n(geo-replication)" as REMOTE
+participant "ECS Portal\\n(management)" as MGR
+
+CLT -> DN: PUT object (S3 / Swift)
+DN -> CM: Chunk + erasure-code (12+4)
+CM -> DISK: Write coded chunks across nodes
+DISK --> CM: Confirmed
+CM --> DN: Object stored
+DN --> CLT: 200 OK + ETag
+
+DN -> REMOTE: Async geo-replication
+REMOTE --> DN: Replicated
+
+MGR -> DN: Policy + quota management
+@enduml
+```
+""",
+    },
+
+    # ── Dell APEX Storage ─────────────────────────────────────────────────────
+
+    {
+        "file": "storage/dell/apex-storage-as-a-service/architecture/how-it-works.md",
+        "type": "plantuml",
+        "position": "after_svg",
+        "content": """\
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+actor "Customer Admin" as ADM
+participant "APEX Console\\n(Dell cloud)" as APEX
+participant "CloudIQ\\n(telemetry)" as CIQ
+participant "On-Prem Storage\\n(PowerStore / PowerFlex)" as STG
+participant "Dell Service\\nDelivery" as SVC
+
+ADM -> APEX: Subscribe + configure service
+APEX -> SVC: Provision hardware on-prem
+SVC -> STG: Deploy + validate
+STG -> CIQ: Stream telemetry
+CIQ -> APEX: Usage + capacity data
+APEX --> ADM: Dashboard + invoice
+
+ADM -> APEX: Expand capacity request
+APEX -> SVC: Dispatch field engineer
+SVC -> STG: Add shelf / node
+STG --> APEX: Capacity updated
+@enduml
+```
+""",
+    },
+
+    # ── Dell CloudIQ ──────────────────────────────────────────────────────────
+
+    {
+        "file": "storage/dell/cloudiq/architecture/how-it-works.md",
+        "type": "plantuml",
+        "position": "after_svg",
+        "content": """\
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+participant "Dell Storage Array\\n(PowerMax / PowerStore / etc.)" as ARR
+participant "SRS / Secure Connect\\nGateway" as SCG
+participant "CloudIQ\\nSaaS (cloud.dell.com)" as CIQ
+participant "AI / ML Engine" as AI
+actor "Admin" as ADM
+
+ARR -> SCG: Telemetry (metrics, logs, config)
+SCG -> CIQ: Encrypted upload (HTTPS)
+CIQ -> AI: Anomaly detection + capacity forecast
+AI --> CIQ: Health score + recommendations
+CIQ --> ADM: Dashboard + proactive alerts
+ADM -> CIQ: View performance / capacity trend
+CIQ -> ADM: Predictive report
+@enduml
+```
+""",
+    },
+
+    # ── Dell AIOps ────────────────────────────────────────────────────────────
+
+    {
+        "file": "storage/dell/dell-aiops/architecture/how-it-works.md",
+        "type": "plantuml",
+        "position": "after_svg",
+        "content": """\
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+participant "Storage Arrays\\n(PowerMax / PowerStore)" as ARR
+participant "Compute\\n(vSphere / Bare Metal)" as COMP
+participant "Network\\n(switches / HBAs)" as NET
+participant "Dell AIOps\\nPlatform" as AIO
+participant "ML Inference\\nEngine" as ML
+actor "Ops Team" as OPS
+
+ARR -> AIO: Performance + capacity telemetry
+COMP -> AIO: Host metrics
+NET -> AIO: Flow + error telemetry
+AIO -> ML: Correlate cross-domain signals
+ML --> AIO: Root cause + impact analysis
+AIO -> OPS: Unified alert with context
+OPS -> AIO: Acknowledge + annotate
+AIO -> ML: Feedback loop (improve model)
+@enduml
+```
+""",
+    },
+
+    # ── NetApp InsightIQ ──────────────────────────────────────────────────────
+
+    {
+        "file": "storage/netapp/insightiq/architecture/how-it-works.md",
+        "type": "plantuml",
+        "position": "after_svg",
+        "content": """\
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+participant "PowerScale Cluster\\n(Isilon)" as PSC
+participant "InsightIQ\\nCollector" as COL
+participant "InsightIQ\\nDatastore" as DS
+participant "Report Engine" as RPT
+actor "Admin" as ADM
+
+PSC -> COL: Performance stats (every 30s via REST)
+COL -> DS: Store raw + aggregated metrics
+ADM -> RPT: Request performance report
+RPT -> DS: Query time-series data
+DS --> RPT: Metrics
+RPT --> ADM: Charts (throughput / latency / ops)
+ADM -> RPT: Capacity planning query
+RPT -> DS: Trend + forecast
+DS --> ADM: Capacity forecast
+@enduml
+```
+""",
+    },
+
+    # ── NetApp Keystone ───────────────────────────────────────────────────────
+
+    {
+        "file": "storage/netapp/keystone/architecture/how-it-works.md",
+        "type": "plantuml",
+        "position": "after_svg",
+        "content": """\
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+actor "Customer" as CUS
+participant "Keystone Portal\\n(NetApp cloud)" as KS
+participant "OpsRamp\\n(monitoring agent)" as OPS
+participant "ONTAP / StorageGRID\\n(on-prem hardware)" as STG
+participant "NetApp SRE\\nTeam" as SRE
+
+CUS -> KS: Subscribe to service tier
+KS -> SRE: Provision on-prem hardware
+SRE -> STG: Deploy + validate
+STG -> OPS: Telemetry stream
+OPS -> KS: Capacity + health data
+KS --> CUS: Dashboard + usage invoice
+
+CUS -> KS: Burst capacity request
+KS -> SRE: Approve + expand
+SRE -> STG: Add capacity
+KS --> CUS: Burst reflected in dashboard
+@enduml
+```
+""",
+    },
+
+    # ── Superna Eyeglass ──────────────────────────────────────────────────────
+
+    {
+        "file": "storage/netapp/superna-eyeglass/architecture/how-it-works.md",
+        "type": "plantuml",
+        "position": "after_svg",
+        "content": """\
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+participant "ONTAP Source\\n(primary SVM)" as SRC
+participant "SnapMirror\\nRelationship" as SM
+participant "ONTAP Target\\n(DR SVM)" as TGT
+participant "Superna Eyeglass\\n(DR orchestrator)" as EG
+participant "AD / DNS" as AD
+actor "Admin" as ADM
+
+EG -> SM: Monitor replication lag
+SM --> EG: Lag + relationship state
+ADM -> EG: Initiate DR test / failover
+EG -> SM: Quiesce source SVM
+EG -> TGT: Break SnapMirror + mount volumes
+EG -> AD: Update DNS CNAME to target
+EG -> AD: Update CIFS shares + exports
+AD --> EG: DNS propagated
+EG --> ADM: Failover complete — clients reconnecting
+@enduml
+```
+""",
+    },
+
+    # ── Pure Evergreen ────────────────────────────────────────────────────────
+
+    {
+        "file": "storage/pure/evergreen/architecture/how-it-works.md",
+        "type": "plantuml",
+        "position": "after_svg",
+        "content": """\
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+actor "Customer" as CUS
+participant "Pure1\\n(cloud management)" as P1
+participant "FlashArray\\n(on-prem)" as FA
+participant "Pure Field\\nEngineer" as FE
+participant "New Controller /\\nShelves" as HW
+
+CUS -> P1: Evergreen subscription active
+P1 -> FA: Telemetry + health monitoring
+P1 -> FE: Schedule non-disruptive upgrade
+FE -> HW: Bring new controller / shelf
+FE -> FA: Online controller swap (NDU)
+FA -> HW: Migrate data in background
+HW --> FA: Data migration complete
+FE -> FA: Remove old controller
+FA --> P1: Upgrade confirmed
+P1 --> CUS: Notification — no downtime taken
+@enduml
+```
+""",
+    },
+
+    # ── Pure1 ─────────────────────────────────────────────────────────────────
+
+    {
+        "file": "storage/pure/pure1/architecture/how-it-works.md",
+        "type": "plantuml",
+        "position": "after_svg",
+        "content": """\
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+participant "FlashArray /\\nFlashBlade" as ARR
+participant "Pure1 Cloud\\nGateway (array-side)" as GW
+participant "Pure1 SaaS\\n(cloud.purestorage.com)" as P1
+participant "AI Engine\\n(Pure1 Meta)" as AI
+actor "Admin" as ADM
+
+ARR -> GW: Telemetry (metrics / logs / config)
+GW -> P1: Encrypted upload (REST HTTPS)
+P1 -> AI: Capacity + workload analysis
+AI --> P1: Forecast + anomaly
+P1 --> ADM: Dashboard + proactive alert
+ADM -> P1: Open support case
+P1 -> ARR: Remote assist session (Pure1 Connect)
+@enduml
+```
+""",
+    },
+
+    # ── Cisco DCNM ────────────────────────────────────────────────────────────
+
+    {
+        "file": "san/cisco/cisco-dcnm/architecture/how-it-works.md",
+        "type": "plantuml",
+        "position": "after_svg",
+        "content": """\
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+actor "SAN Admin" as ADM
+participant "DCNM\\n(Data Center Network Manager)" as DCNM
+participant "MDS Switch\\n(NX-OS)" as MDS
+participant "Nexus Switch\\n(Ethernet fabric)" as NEX
+participant "Endpoint\\n(host / storage)" as EP
+
+ADM -> DCNM: Define zoning policy / VSAN
+DCNM -> MDS: Push NX-OS config (SSH / SNMP)
+MDS --> DCNM: Config applied
+ADM -> DCNM: Deploy LAN template
+DCNM -> NEX: Push VLANs / vPC config
+NEX --> DCNM: Applied
+
+EP -> MDS: FC login (FLOGI)
+MDS -> DCNM: SNMP notification
+DCNM -> ADM: Zone membership update
+@enduml
+```
+""",
+    },
+
+    # ── Dell COD / FOD ────────────────────────────────────────────────────────
+
+    {
+        "file": "storage/dell/cod/architecture/how-it-works.md",
+        "type": "plantuml",
+        "position": "after_svg",
+        "content": """\
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+actor "Customer Admin" as ADM
+participant "Dell Licensing\\nPortal" as LIC
+participant "PowerMax /\\nPowerStore Array" as ARR
+participant "Unisphere\\n(local management)" as UI
+participant "Dell SRE\\nTeam" as SRE
+
+ADM -> LIC: Request capacity burst
+LIC -> SRE: Generate license file
+SRE -> ADM: Deliver license
+ADM -> UI: Apply license key
+UI -> ARR: Unlock reserved capacity
+ARR --> UI: Capacity now available
+UI --> ADM: Burst active (30 / 90 day term)
+
+note over ARR,LIC: Physical hardware pre-installed\\nbut license-gated — activates on demand.
+@enduml
+```
+""",
+    },
+
 ]
 
 # ---------------------------------------------------------------------------
