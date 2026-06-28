@@ -1,0 +1,120 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="820" height="680">
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="0" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#455a64" />
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="820" height="30" fill="#1a2744" />
+  <text x="410" y="20" font-family="Arial,Helvetica,sans-serif" font-size="14" font-weight="bold" fill="#ffffff" text-anchor="middle">
+    Pure FlashBlade — Deployment Sequence
+  </text>
+
+  <!-- Step 1 -->
+  <rect x="10" y="40" width="800" height="80" rx="6" fill="#e3f2fd" stroke="#1565c0" />
+  <text x="20" y="60" font-family="Arial,Helvetica,sans-serif" font-size="11" fill="#1a2744">
+    Step 1 · Prerequisites
+  </text>
+  <text x="20" y="75" font-family="Arial,Helvetica,sans-serif" font-size="10" fill="#37474f">
+    FlashBlade 4U chassis with blade modules pre-installed; chassis management module (dual ports)
+  </text>
+  <text x="20" y="90" font-family="Arial,Helvetica,sans-serif" font-size="10" fill="#37474f">
+    100GbE data switches with sufficient ports for all chassis NIC ports
+  </text>
+  <text x="20" y="105" font-family="Arial,Helvetica,sans-serif" font-size="10" fill="#37474f">
+    OOB management switch for chassis management interface; dual PDU circuits per chassis shelf
+  </text>
+  <text x="20" y="120" font-family="Arial,Helvetica,sans-serif" font-size="10" fill="#37474f">
+    IP plan: chassis management IP, data VIF IP(s), replication VIF IP if DR planned
+  </text>
+  <text x="20" y="135" font-family="Arial,Helvetica,sans-serif" font-size="10" fill="#37474f">
+    Software: Purity//FB 4.x (pre-installed); Pure1 account; NFS/S3 client tools on hosts
+  </text>
+
+  <line x1="410" y1="130" x2="410" y2="150" stroke="#455a64" stroke-width="1.5" marker-end="url(#arrowhead)" />
+
+  <!-- Step 2 -->
+  <rect x="10" y="160" width="800" height="80" rx="6" fill="#e8eaf6" stroke="#3949ab" />
+  <text x="20" y="180" font-family="Arial,Helvetica,sans-serif" font-size="11" fill="#1a2744">
+    Step 2 · Rack, Cable, and Setup Wizard
+  </text>
+  <text x="20" y="195" font-family="Arial,Helvetica,sans-serif" font-size="10" fill="#37474f">
+    Rack 4U chassis; connect OOB management cables to chassis management module (both ports for HA)
+  </text>
+  <text x="20" y="210" font-family="Arial,Helvetica,sans-serif" font-size="10" fill="#37474f">
+    Connect 100GbE data cables from blade network ports to data switches; connect PDU feeds
+  </text>
+  <text x="20" y="225" font-family="Arial,Helvetica,sans-serif" font-size="10" fill="#37474f">
+    Power on; browse to chassis management IP; complete setup wizard: name, IP, DNS, NTP, password
+  </text>
+  <text x="20" y="240" font-family="Arial,Helvetica,sans-serif" font-size="10" fill="#37474f">
+    Verify blade inventory: all blades and chassis components show healthy after boot
+  </text>
+
+  <line x1="410" y1="250" x2="410" y2="270" stroke="#455a64" stroke-width="1.5" marker-end="url(#arrowhead)" />
+
+  <!-- Step 3 -->
+  <rect x="10" y="280" width="800" height="80" rx="6" fill="#e8f5e9" stroke="#2e7d32" />
+  <text x="20" y="300" font-family="Arial,Helvetica,sans-serif" font-size="11" fill="#1a2744">
+    Step 3 · Data VIF and Subnet Configuration
+  </text>
+  <text x="20" y="315" font-family="Arial,Helvetica,sans-serif" font-size="10" fill="#37474f">
+    System → Network → Subnets: create data subnet matching your data VLAN (MTU 9000 recommended)
+  </text>
+  <text x="20" y="330" font-family="Arial,Helvetica,sans-serif" font-size="10" fill="#37474f">
+    System → Network → VIFs: create data VIF(s); assign to subnet; bind to blade network ports
+  </text>
+  <text x="20" y="345" font-family="Arial,Helvetica,sans-serif" font-size="10" fill="#37474f">
+    Create replication VIF if replication is planned; assign to replication subnet
+  </text>
+  <text x="20" y="360" font-family="Arial,Helvetica,sans-serif" font-size="10" fill="#37474f">
+    Confirm data VIFs pingable from a host on the same VLAN
+  </text>
+
+  <line x1="410" y1="370" x2="410" y2="390" stroke="#455a64" stroke-width="1.5" marker-end="url(#arrowhead)" />
+
+  <!-- Step 4 -->
+  <rect x="10" y="400" width="800" height="80" rx="6" fill="#fff8e1" stroke="#f57f17" />
+  <text x="20" y="420" font-family="Arial,Helvetica,sans-serif" font-size="11" fill="#1a2744">
+    Step 4 · File Systems and Object Buckets
+  </text>
+  <text x="20" y="435" font-family="Arial,Helvetica,sans-serif" font-size="10" fill="#37474f">
+    NFS: Storage → File Systems → Create; set name, capacity, NFS export rules (client network, RW)
+  </text>
+  <text x="20" y="450" font-family="Arial,Helvetica,sans-serif" font-size="10" fill="#37474f">
+    SMB: create file system; enable SMB; join AD domain for Kerberos (Settings → Directory Service)
+  </text>
+  <text x="20" y="465" font-family="Arial,Helvetica,sans-serif" font-size="10" fill="#37474f">
+    S3: Storage → Buckets → Create; assign object store account; note S3 endpoint URL and access keys
+  </text>
+  <text x="20" y="480" font-family="Arial,Helvetica,sans-serif" font-size="10" fill="#37474f">
+    Test: mount NFS export on Linux client (`mount -t nfs &lt;VIF-IP&gt;:/fs_name /mnt`); run write test
+  </text>
+
+  <line x1="410" y1="490" x2="410" y2="510" stroke="#455a64" stroke-width="1.5" marker-end="url(#arrowhead)" />
+
+  <!-- Step 5 -->
+  <rect x="10" y="520" width="800" height="80" rx="6" fill="#fce4ec" stroke="#c62828" />
+  <text x="20" y="540" font-family="Arial,Helvetica,sans-serif" font-size="11" fill="#1a2744">
+    Step 5 · Replication, Pure1, and Baseline
+  </text>
+  <text x="20" y="555" font-family="Arial,Helvetica,sans-serif" font-size="10" fill="#37474f">
+    Create snapshot policies: snapshots per file system on schedule (hourly/daily/weekly retention)
+  </text>
+  <text x="20" y="570" font-family="Arial,Helvetica,sans-serif" font-size="10" fill="#37474f">
+    Configure replication: Storage → Replication → Add; select target FlashBlade and source objects
+  </text>
+  <text x="20" y="585" font-family="Arial,Helvetica,sans-serif" font-size="10" fill="#37474f">
+    Register in Pure1: Settings → Support → Enable Remote Assistance; link to Pure1 organisation
+  </text>
+  <text x="20" y="600" font-family="Arial,Helvetica,sans-serif" font-size="10" fill="#37474f">
+    Record: chassis serial, blade count, VIF IPs, file system names, bucket names, Pure1 org
+  </text>
+  <text x="20" y="615" font-family="Arial,Helvetica,sans-serif" font-size="10" fill="#37474f">
+    Set capacity alerts (default 80%); schedule quarterly firmware review via Pure1 recommendations
+  </text>
+
+  <rect x="0" y="640" width="820" height="30" fill="#f5f7fa" />
+  <text x="410" y="660" font-family="Arial,Helvetica,sans-serif" font-size="10" fill="#9e9e9e" text-anchor="middle">
+    Diagram Type: Deployment Sequence
+  </text>
+</svg>
