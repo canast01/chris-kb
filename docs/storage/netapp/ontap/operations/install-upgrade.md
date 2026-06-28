@@ -16,6 +16,23 @@ Install & Upgrade reference covering ONTAP Version Matrix, Upgrade Paths, EOL Tr
 
 
 
+```d2
+direction: right
+
+hub: "NetApp ONTAP\nOperations" {shape: hexagon}
+ontap_version_matrix: "ONTAP Version Matrix" {shape: rectangle}
+upgrade_paths: "Upgrade Paths" {shape: rectangle}
+eol_tracking: "EOL Tracking" {shape: rectangle}
+refresh_planning: "Refresh Planning" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+hub -> ontap_version_matrix
+hub -> upgrade_paths
+hub -> eol_tracking
+hub -> refresh_planning
+hub -> verify
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

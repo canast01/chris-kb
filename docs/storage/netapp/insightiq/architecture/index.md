@@ -22,6 +22,17 @@ InsightIQ is an on-premises virtual appliance that collects performance telemetr
 
 ---
 
+```d2
+direction: right
+
+center: "InsightIQ" {shape: hexagon}
+component_roles: "Component Roles" {shape: rectangle}
+deployment_architecture: "Deployment Architecture" {shape: rectangle}
+
+center -> component_roles
+center -> deployment_architecture
+```
+
 ## Component Roles
 
 | Component | Details |

@@ -185,6 +185,15 @@ show startup-config | head -20
 # Confirm timestamp matches the last intended save
 ```
 
+```d2
+direction: right
+
+hub: "Cisco MDS\nOperations" {shape: hexagon}
+verify: "Verify" {shape: rectangle}
+
+hub -> verify
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

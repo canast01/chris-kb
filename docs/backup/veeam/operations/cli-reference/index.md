@@ -14,6 +14,25 @@ CLI Reference reference covering Backup Infrastructure Topology, Sessions & Hist
 ![Veeam — CLI Reference](../../../../assets/backup-veeam-operations-cli-reference-index.svg)
 
 
+```d2
+direction: right
+
+center: "Veeam" {shape: rectangle}
+backup_infrastructure_topology: "Backup Infrastructure Topology" {shape: rectangle}
+restore_points: "Restore Points" {shape: rectangle}
+vm_restore: "VM Restore" {shape: rectangle}
+infrastructure: "Infrastructure" {shape: rectangle}
+configuration_backup: "Configuration Backup" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+center -> backup_infrastructure_topology
+center -> restore_points
+center -> vm_restore
+center -> infrastructure
+center -> configuration_backup
+center -> verify
+```
+
 ## Before you begin
 
 - **Access:** Backup admin role on backup server; target system credentials

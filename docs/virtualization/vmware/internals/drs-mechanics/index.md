@@ -45,6 +45,26 @@ graph TD
     E -->|Fully automated| F
     E -->|Manual / partial| G
 ```
+
+```d2
+direction: right
+
+center: "Drs Mechanics" {shape: hexagon}
+imbalance_score_calculation: "Imbalance Score Calculation" {shape: rectangle}
+migration_priority_bands: "Migration Priority Bands" {shape: rectangle}
+reservation_vs_entitlement: "Reservation vs Entitlement" {shape: rectangle}
+initial_placement: "Initial Placement" {shape: rectangle}
+predictive_drs: "Predictive DRS" {shape: rectangle}
+drs_behavior_by_automation_level: "DRS Behavior by Automation Level" {shape: rectangle}
+
+center -> imbalance_score_calculation
+center -> migration_priority_bands
+center -> reservation_vs_entitlement
+center -> initial_placement
+center -> predictive_drs
+center -> drs_behavior_by_automation_level
+```
+
 ## Imbalance Score Calculation
 
 DRS computes a **normalized imbalance score** per host each invocation cycle (every 5 minutes, or triggered by VM power-on, vMotion completion, or host join).

@@ -16,6 +16,29 @@ NetApp Keystone Troubleshooting reference covering Common Issues, Diagnostic, Lo
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+common_issues: "Common Issues" {shape: rectangle}
+diagnostic: "Diagnostic" {shape: rectangle}
+log_locations: "Log Locations" {shape: rectangle}
+before_calling_support: "Before Calling Support" {shape: rectangle}
+verify_resolution: "Verify resolution" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> common_issues: investigate
+symptom -> diagnostic: investigate
+symptom -> log_locations: investigate
+symptom -> before_calling_support: investigate
+symptom -> verify_resolution: investigate
+common_issues -> resolution
+diagnostic -> resolution
+log_locations -> resolution
+before_calling_support -> resolution
+verify_resolution -> resolution
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

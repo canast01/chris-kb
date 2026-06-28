@@ -27,6 +27,25 @@ With compression: (50 × 8192) / (86400 × 0.7) = 6.8 Mbps
 
 ---
 
+```d2
+direction: right
+
+center: "Site Recovery Manager" {shape: hexagon}
+test_frequency_recommendations: "Test Frequency Recommendations" {shape: rectangle}
+srm_design_checklist: "SRM Design Checklist" {shape: rectangle}
+naming_conventions: "Naming Conventions" {shape: rectangle}
+priority_tiers: "Priority Tiers" {shape: rectangle}
+recovery_plan_design: "Recovery Plan Design" {shape: rectangle}
+test_frequency_and_documentation: "Test Frequency and Documentation" {shape: rectangle}
+
+center -> test_frequency_recommendations
+center -> srm_design_checklist
+center -> naming_conventions
+center -> priority_tiers
+center -> recovery_plan_design
+center -> test_frequency_and_documentation
+```
+
 ## Test Frequency Recommendations
 
 | Activity | Recommended Frequency |

@@ -17,6 +17,32 @@ search:
 
 ---
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+diagnostic_flow: "Diagnostic Flow" {shape: rectangle}
+no_desktop_sources_available: "'No Desktop Sources Available'" {shape: rectangle}
+black_screen_after_login: "Black Screen After Login" {shape: rectangle}
+slow_login: "Slow Login" {shape: rectangle}
+uag_shows_disconnected_from_connecti: "UAG Shows Disconnected from Connection Server" {shape: rectangle}
+app_volumes_appstack_fails_to_mount: "App Volumes AppStack Fails to Mount" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> diagnostic_flow: investigate
+symptom -> no_desktop_sources_available: investigate
+symptom -> black_screen_after_login: investigate
+symptom -> slow_login: investigate
+symptom -> uag_shows_disconnected_from_connecti: investigate
+symptom -> app_volumes_appstack_fails_to_mount: investigate
+diagnostic_flow -> resolution
+no_desktop_sources_available -> resolution
+black_screen_after_login -> resolution
+slow_login -> resolution
+uag_shows_disconnected_from_connecti -> resolution
+app_volumes_appstack_fails_to_mount -> resolution
+```
+
 ## Diagnostic Flow
 
 ```mermaid

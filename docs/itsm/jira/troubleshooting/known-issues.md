@@ -18,6 +18,23 @@ Catalog of known Jira Data Center bugs, error codes, and workarounds covering cl
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+database: "Database" {shape: rectangle}
+clustering: "Clustering" {shape: rectangle}
+index: "Index" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> database: investigate
+symptom -> clustering: investigate
+symptom -> index: investigate
+database -> resolution
+clustering -> resolution
+index -> resolution
+```
+
 ## Before you begin
 
 - Jira logs: `<jira-home>/log/atlassian-jira.log`.

@@ -18,6 +18,27 @@ Authentication reference for VxRail components. Covers VxRail Manager local and 
 
 ---
 
+```d2
+direction: down
+
+external: External / Untrusted {shape: rectangle}
+vxrail_manager_local_account_mystic: "VxRail Manager Local Account (mystic)" {shape: rectangle}
+vxrail_manager_ldapad_integration: "VxRail Manager LDAP/AD Integration" {shape: rectangle}
+idrac_authentication: "iDRAC Authentication" {shape: rectangle}
+vcenter_sso_configuration: "vCenter SSO Configuration" {shape: rectangle}
+esxi_host_accounts: "ESXi Host Accounts" {shape: rectangle}
+service_account_policy: "Service Account Policy" {shape: rectangle}
+core: "VxRail Core" {shape: hexagon}
+
+external -> vxrail_manager_local_account_mystic: traffic in
+vxrail_manager_local_account_mystic -> vxrail_manager_ldapad_integration
+vxrail_manager_ldapad_integration -> idrac_authentication
+idrac_authentication -> vcenter_sso_configuration
+vcenter_sso_configuration -> esxi_host_accounts
+esxi_host_accounts -> service_account_policy
+service_account_policy -> core: secured path
+```
+
 ## Before you begin
 
 - **Access:** vCenter Administrator role

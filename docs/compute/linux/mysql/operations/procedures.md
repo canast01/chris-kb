@@ -13,6 +13,19 @@ MySQL/MariaDB procedures: schema changes with `pt-online-schema-change`, user an
 ![MySQL / MariaDB — Procedures](../../../../assets/compute-linux-mysql-operations-procedures.svg)
 
 
+```d2
+direction: right
+
+hub: "Linux\nOperations" {shape: hexagon}
+database_maintenance_procedures: "Database — Maintenance Procedures" {shape: rectangle}
+sql_server_maintenance: "SQL Server Maintenance" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+hub -> database_maintenance_procedures
+hub -> sql_server_maintenance
+hub -> verify
+```
+
 ## Before you begin
 
 - **Access:** root or sudo-capable account on target hosts

@@ -17,6 +17,21 @@ Install & Upgrade reference covering ESA Migration, Driver and Firmware.
 
 
 
+```d2
+direction: right
+
+hub: "vSAN\nOperations" {shape: hexagon}
+upgrade_procedure: "Upgrade Procedure" {shape: rectangle}
+esa_migration: "ESA Migration" {shape: rectangle}
+driver_and_firmware: "Driver and Firmware" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+hub -> upgrade_procedure
+hub -> esa_migration
+hub -> driver_and_firmware
+hub -> verify
+```
+
 ## Before you begin
 
 - **Access:** vCenter read-only minimum; Administrator role for remediation steps

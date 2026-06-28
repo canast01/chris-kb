@@ -18,6 +18,25 @@ source — then tuning alert definitions to prevent recurrence.
 
 
 
+```d2
+direction: right
+
+center: "Scenarios" {shape: hexagon}
+products_involved: "Products Involved" {shape: rectangle}
+1_triage_by_root_cause_sort_by_trigg: "1. Triage by Root Cause — Sort by Triggered Time" {shape: rectangle}
+2_group_by_object_type: "2. Group by Object Type" {shape: rectangle}
+3_use_the_relationship_view_to_find_: "3. Use the Relationship View to Find the Parent Object" {shape: rectangle}
+4_identify_common_root_causes: "4. Identify Common Root Causes" {shape: rectangle}
+5_cancel_vs_suppress_do_the_right_th: "5. Cancel vs Suppress — Do the Right Thing" {shape: rectangle}
+
+center -> products_involved
+center -> 1_triage_by_root_cause_sort_by_trigg
+center -> 2_group_by_object_type
+center -> 3_use_the_relationship_view_to_find_
+center -> 4_identify_common_root_causes
+center -> 5_cancel_vs_suppress_do_the_right_th
+```
+
 ## Products Involved
 
 | Product | Role in This Scenario |

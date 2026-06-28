@@ -45,6 +45,23 @@ A minimal dashboard JSON skeleton:
 }
 ```
 
+```d2
+direction: right
+
+center: "Azure" {shape: hexagon}
+pinning_metrics_charts: "Pinning Metrics Charts" {shape: rectangle}
+common_dashboard_tile_types: "Common Dashboard Tile Types" {shape: rectangle}
+sharing_dashboards: "Sharing Dashboards" {shape: rectangle}
+exporting_and_importing_dashboard_js: "Exporting and Importing Dashboard JSON" {shape: rectangle}
+dashboard_governance: "Dashboard Governance" {shape: rectangle}
+
+center -> pinning_metrics_charts
+center -> common_dashboard_tile_types
+center -> sharing_dashboards
+center -> exporting_and_importing_dashboard_js
+center -> dashboard_governance
+```
+
 ## Pinning Metrics Charts
 
 Charts from Metrics Explorer can be pinned directly to a dashboard from the portal. Each chart tile is parameterised by resource, metric, aggregation, and time range.

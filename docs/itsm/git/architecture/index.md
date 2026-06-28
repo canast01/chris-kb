@@ -22,6 +22,17 @@ Git is a distributed version control system where every clone is a complete repo
 
 ---
 
+```d2
+direction: right
+
+center: "Architecture" {shape: hexagon}
+object_model_summary: "Object Model Summary" {shape: rectangle}
+distributed_architecture: "Distributed Architecture" {shape: rectangle}
+
+center -> object_model_summary
+center -> distributed_architecture
+```
+
 ## Object Model Summary
 
 | Object | Description |

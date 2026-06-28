@@ -6,6 +6,27 @@ search:
   boost: 1.5
 ---
 
+```d2
+direction: right
+
+plan: "Plan" {shape: oval}
+prerequisites: "Prerequisites" {shape: rectangle}
+rack_nodes: "Rack Nodes" {shape: rectangle}
+run_onefs_setup_wizard: "Run OneFS Setup Wizard" {shape: rectangle}
+configure_network_interfaces_and_sma: "Configure Network Interfaces and SmartConnect" {shape: rectangle}
+add_nodes_to_cluster: "Add Nodes to Cluster" {shape: rectangle}
+configure_nfs_and_smb: "Configure NFS and SMB" {shape: rectangle}
+validate: "Validate" {shape: oval}
+
+plan -> prerequisites
+prerequisites -> rack_nodes
+rack_nodes -> run_onefs_setup_wizard
+run_onefs_setup_wizard -> configure_network_interfaces_and_sma
+configure_network_interfaces_and_sma -> add_nodes_to_cluster
+add_nodes_to_cluster -> configure_nfs_and_smb
+configure_nfs_and_smb -> validate
+```
+
 ## Before you begin
 
 - **Access:** admin credentials for the target system and any upstream dependencies (DNS, NTP, vCenter, directory services)

@@ -46,6 +46,32 @@ graph TD
     class N,O escalate
 ```
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+step_1_inspect_the_error_object: "Step 1 — Inspect the error object" {shape: rectangle}
+step_2_enable_trace_logging: "Step 2 — Enable trace logging" {shape: rectangle}
+step_3_transcript_logging: "Step 3 — Transcript logging" {shape: rectangle}
+step_4_winrm_connectivity_diagnostic: "Step 4 — WinRM connectivity diagnostics" {shape: rectangle}
+step_5_execution_policy_and_module_d: "Step 5 — Execution policy and module diagnostics" {shape: rectangle}
+step_6_collect_diagnostic_bundle: "Step 6 — Collect diagnostic bundle" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> step_1_inspect_the_error_object: investigate
+symptom -> step_2_enable_trace_logging: investigate
+symptom -> step_3_transcript_logging: investigate
+symptom -> step_4_winrm_connectivity_diagnostic: investigate
+symptom -> step_5_execution_policy_and_module_d: investigate
+symptom -> step_6_collect_diagnostic_bundle: investigate
+step_1_inspect_the_error_object -> resolution
+step_2_enable_trace_logging -> resolution
+step_3_transcript_logging -> resolution
+step_4_winrm_connectivity_diagnostic -> resolution
+step_5_execution_policy_and_module_d -> resolution
+step_6_collect_diagnostic_bundle -> resolution
+```
+
 ## Before you begin
 
 - **Access:** Terminal on the affected workstation or automation server; admin rights for execution policy changes and module installation; target system credentials for WinRM issues

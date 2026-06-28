@@ -17,6 +17,24 @@ Certificate policy standards enforced through the Venafi policy tree. All certif
 
 
 ---
+
+```d2
+direction: down
+
+policy_tree_naming_conventions: "Policy Tree Naming Conventions" {shape: rectangle}
+key_algorithm_standards: "Key Algorithm Standards" {shape: rectangle}
+validity_period_standards: "Validity Period Standards" {shape: rectangle}
+subject_and_san_requirements: "Subject and SAN Requirements" {shape: rectangle}
+wildcard_certificate_policy: "Wildcard Certificate Policy" {shape: rectangle}
+certificate_request_workflow: "Certificate Request Workflow" {shape: rectangle}
+
+policy_tree_naming_conventions -> key_algorithm_standards: hardens
+key_algorithm_standards -> validity_period_standards: hardens
+validity_period_standards -> subject_and_san_requirements: hardens
+subject_and_san_requirements -> wildcard_certificate_policy: hardens
+wildcard_certificate_policy -> certificate_request_workflow: hardens
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

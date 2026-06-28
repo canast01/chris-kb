@@ -18,6 +18,20 @@ Catalog of known CloudIQ bugs, error codes, and workarounds. CloudIQ is a SaaS p
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+array_connectivity: "Array Connectivity" {shape: rectangle}
+portal: "Portal" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> array_connectivity: investigate
+symptom -> portal: investigate
+array_connectivity -> resolution
+portal -> resolution
+```
+
 ## Before you begin
 
 - CloudIQ phone-home uses outbound TCP 443 from array management IPs to `cloudiq.dell.com` and `esrs.dell.com`.

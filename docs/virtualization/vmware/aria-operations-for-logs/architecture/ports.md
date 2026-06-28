@@ -20,6 +20,25 @@ Firewall port reference for VMware Aria Operations for Logs (formerly vRealize L
 
 
 
+```d2
+direction: right
+
+center: "Aria Operations for Logs" {shape: hexagon}
+inbound_client_to_aria_operations_fo: "Inbound — Client to Aria Operations for Logs Cluster" {shape: rectangle}
+inbound_log_sources_to_cluster_ilb: "Inbound — Log Sources to Cluster ILB" {shape: rectangle}
+cluster_internal_master_to_worker_no: "Cluster Internal — Master to Worker Nodes" {shape: rectangle}
+outbound_aria_logs_integration: "Outbound — Aria Logs Integration" {shape: rectangle}
+outbound_external_services: "Outbound — External Services" {shape: rectangle}
+firewall_zone_summary: "Firewall Zone Summary" {shape: rectangle}
+
+center -> inbound_client_to_aria_operations_fo
+center -> inbound_log_sources_to_cluster_ilb
+center -> cluster_internal_master_to_worker_no
+center -> outbound_aria_logs_integration
+center -> outbound_external_services
+center -> firewall_zone_summary
+```
+
 ## Before you begin
 
 - Aria Operations for Logs uses an Integrated Load Balancer (ILB) with a virtual IP — open all inbound ports to the ILB VIP, not individual node IPs

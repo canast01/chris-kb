@@ -18,6 +18,32 @@ Virtualization troubleshooting: VM power-on failures, network port-group misconf
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+troubleshooting_flow: "Troubleshooting Flow" {shape: rectangle}
+symptom_index: "Symptom Index" {shape: rectangle}
+esxi_host_diagnostics: "ESXi Host Diagnostics" {shape: rectangle}
+vsan_health_check: "vSAN Health Check" {shape: rectangle}
+horizon_connection_diagnosis: "Horizon Connection Diagnosis" {shape: rectangle}
+tanzu_kubernetes_troubleshooting: "Tanzu / Kubernetes Troubleshooting" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> troubleshooting_flow: investigate
+symptom -> symptom_index: investigate
+symptom -> esxi_host_diagnostics: investigate
+symptom -> vsan_health_check: investigate
+symptom -> horizon_connection_diagnosis: investigate
+symptom -> tanzu_kubernetes_troubleshooting: investigate
+troubleshooting_flow -> resolution
+symptom_index -> resolution
+esxi_host_diagnostics -> resolution
+vsan_health_check -> resolution
+horizon_connection_diagnosis -> resolution
+tanzu_kubernetes_troubleshooting -> resolution
+```
+
 ## Troubleshooting Flow
 
 Start by defining the scope, then work down through the stack.

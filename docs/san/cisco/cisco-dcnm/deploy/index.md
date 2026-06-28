@@ -6,6 +6,27 @@ search:
   boost: 1.5
 ---
 
+```d2
+direction: right
+
+plan: "Plan" {shape: oval}
+prerequisites: "Prerequisites" {shape: rectangle}
+deploy_dcnm_ova: "Deploy DCNM OVA" {shape: rectangle}
+initial_setup_wizard: "Initial Setup Wizard" {shape: rectangle}
+add_first_fabric: "Add First Fabric" {shape: rectangle}
+configure_lan_fabric_vxlan_or_classi: "Configure LAN Fabric (VXLAN or Classic)" {shape: rectangle}
+deploy_switches: "Deploy Switches" {shape: rectangle}
+validate: "Validate" {shape: oval}
+
+plan -> prerequisites
+prerequisites -> deploy_dcnm_ova
+deploy_dcnm_ova -> initial_setup_wizard
+initial_setup_wizard -> add_first_fabric
+add_first_fabric -> configure_lan_fabric_vxlan_or_classi
+configure_lan_fabric_vxlan_or_classi -> deploy_switches
+deploy_switches -> validate
+```
+
 ## Before you begin
 
 - **Access:** admin credentials for the target system and any upstream dependencies (DNS, NTP, vCenter, directory services)

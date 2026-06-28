@@ -18,6 +18,26 @@ Catalog of known ONTAP bugs, error codes, and workarounds covering NFS, SMB, Sna
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+nfs: "NFS" {shape: rectangle}
+smb_cifs: "SMB / CIFS" {shape: rectangle}
+snapmirror_replication: "SnapMirror / Replication" {shape: rectangle}
+iscsi_san: "iSCSI / SAN" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> nfs: investigate
+symptom -> smb_cifs: investigate
+symptom -> snapmirror_replication: investigate
+symptom -> iscsi_san: investigate
+nfs -> resolution
+smb_cifs -> resolution
+snapmirror_replication -> resolution
+iscsi_san -> resolution
+```
+
 ## Before you begin
 
 - Run `system health alert show` on the cluster for active alerts.

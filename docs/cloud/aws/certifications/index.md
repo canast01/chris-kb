@@ -44,6 +44,22 @@ Certifications reference covering Overview, Core Certification Paths, Daily Stud
 <a class="kb-card" href="services/"><strong>Services</strong><span>Per-service study notes — IAM, EC2, VPC, S3, RDS, Lambda, and more.</span></a>
 
 </div>
+
+```d2
+direction: right
+
+center: "AWS" {shape: hexagon}
+core_certification_paths: "Core Certification Paths" {shape: rectangle}
+daily_study_focus: "Daily Study Focus" {shape: rectangle}
+useful_commands: "Useful Commands" {shape: rectangle}
+renewal_notes: "Renewal Notes" {shape: rectangle}
+
+center -> core_certification_paths
+center -> daily_study_focus
+center -> useful_commands
+center -> renewal_notes
+```
+
 ## Overview
 
 AWS certifications validate skills in designing, deploying, operating, and securing workloads in Amazon Web Services environments.

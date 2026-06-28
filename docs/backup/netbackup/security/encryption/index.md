@@ -24,6 +24,19 @@ NetBackup encryption: KMS server configuration, backup data encryption policy se
 
 Mandate client-side or media-server-side encryption for all policies covering PII or regulated data.
 
+```d2
+direction: down
+
+network_controls: "Network Controls" {shape: rectangle}
+os_hardening: "OS Hardening" {shape: rectangle}
+application_security: "Application Security" {shape: rectangle}
+audit_monitoring: "Audit & Monitoring" {shape: rectangle}
+
+network_controls -> os_hardening: hardens
+os_hardening -> application_security: hardens
+application_security -> audit_monitoring: hardens
+```
+
 ## Before you begin
 
 - **Access:** Backup admin role on backup server; target system credentials

@@ -18,6 +18,23 @@ Catalog of known Tanzu Kubernetes Grid (TKG) and Supervisor cluster bugs, error 
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+supervisor_cluster: "Supervisor Cluster" {shape: rectangle}
+tkg_workload_clusters: "TKG Workload Clusters" {shape: rectangle}
+storage: "Storage" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> supervisor_cluster: investigate
+symptom -> tkg_workload_clusters: investigate
+symptom -> storage: investigate
+supervisor_cluster -> resolution
+tkg_workload_clusters -> resolution
+storage -> resolution
+```
+
 ## Before you begin
 
 - Supervisor control plane logs: `kubectl logs -n vmware-system-tkg <pod>` from the Supervisor context.

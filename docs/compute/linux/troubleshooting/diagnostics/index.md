@@ -55,6 +55,32 @@ graph TD
     class S escalate
 ```
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+step_1_read_the_service_and_system_l: "Step 1 — Read the service and system log" {shape: rectangle}
+step_2_read_dmesg_for_kernel_and_har: "Step 2 — Read dmesg for kernel and hardware events" {shape: rectangle}
+step_3_search_audit_log_for_selinux_: "Step 3 — Search audit log for SELinux denials and auth event" {shape: rectangle}
+step_4_diagnose_authentication_and_s: "Step 4 — Diagnose authentication and SSH events" {shape: rectangle}
+step_5_trace_a_failing_process: "Step 5 — Trace a failing process" {shape: rectangle}
+step_6_profile_performance: "Step 6 — Profile performance" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> step_1_read_the_service_and_system_l: investigate
+symptom -> step_2_read_dmesg_for_kernel_and_har: investigate
+symptom -> step_3_search_audit_log_for_selinux_: investigate
+symptom -> step_4_diagnose_authentication_and_s: investigate
+symptom -> step_5_trace_a_failing_process: investigate
+symptom -> step_6_profile_performance: investigate
+step_1_read_the_service_and_system_l -> resolution
+step_2_read_dmesg_for_kernel_and_har -> resolution
+step_3_search_audit_log_for_selinux_ -> resolution
+step_4_diagnose_authentication_and_s -> resolution
+step_5_trace_a_failing_process -> resolution
+step_6_profile_performance -> resolution
+```
+
 ## Before you begin
 
 - **Access:** root or sudo-capable account on the target host

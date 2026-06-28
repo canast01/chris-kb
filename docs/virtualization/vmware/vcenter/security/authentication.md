@@ -17,6 +17,27 @@ Authentication reference covering SSO Security, TLS Configuration, Certificates 
 
 
 
+```d2
+direction: down
+
+external: External / Untrusted {shape: rectangle}
+tls_configuration: "TLS Configuration" {shape: rectangle}
+certificates_to_track: "Certificates to Track" {shape: rectangle}
+certificate_replacement_process: "Certificate Replacement Process" {shape: rectangle}
+validation_after_replacement: "Validation After Replacement" {shape: rectangle}
+emergency_escalation: "Emergency Escalation" {shape: rectangle}
+saml_federation_external_idp: "SAML Federation (External IdP)" {shape: rectangle}
+core: "vCenter Server Core" {shape: hexagon}
+
+external -> tls_configuration: traffic in
+tls_configuration -> certificates_to_track
+certificates_to_track -> certificate_replacement_process
+certificate_replacement_process -> validation_after_replacement
+validation_after_replacement -> emergency_escalation
+emergency_escalation -> saml_federation_external_idp
+saml_federation_external_idp -> core: secured path
+```
+
 ## Before you begin
 
 - **Access:** vCenter Administrator role

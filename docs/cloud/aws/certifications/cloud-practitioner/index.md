@@ -18,6 +18,25 @@ AWS CLOUD PRACTITIONER CLF-C02
 14-DAY STUDY PLAN  |  3 HRS/DAY  |  50 Q&A PER DAY
 Christos Anastasiadis  |  May 2026
 
+```d2
+direction: right
+
+center: "AWS" {shape: hexagon}
+exam_facts: "Exam Facts" {shape: rectangle}
+exam_domains: "Exam Domains" {shape: rectangle}
+day_1_cloud_concepts_aws_global_infr: "Day 1 — CLOUD CONCEPTS & AWS GLOBAL INFRASTRUCTURE" {shape: rectangle}
+day_2_shared_responsibility_model_ia: "Day 2 — SHARED RESPONSIBILITY MODEL & IAM" {shape: rectangle}
+day_3_core_compute_services: "Day 3 — CORE COMPUTE SERVICES" {shape: rectangle}
+day_4_storage_services: "Day 4 — STORAGE SERVICES" {shape: rectangle}
+
+center -> exam_facts
+center -> exam_domains
+center -> day_1_cloud_concepts_aws_global_infr
+center -> day_2_shared_responsibility_model_ia
+center -> day_3_core_compute_services
+center -> day_4_storage_services
+```
+
 ## Exam Facts
 
 | | |

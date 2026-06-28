@@ -58,6 +58,32 @@ graph TD
     class U,V escalate
 ```
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+step_1_check_platform_api_health: "Step 1 — Check platform API health" {shape: rectangle}
+step_2_check_data_source_connectivit: "Step 2 — Check data source connectivity and sync status" {shape: rectangle}
+step_3_verify_netflow_receipt: "Step 3 — Verify NetFlow receipt" {shape: rectangle}
+step_4_inspect_platform_and_collecto: "Step 4 — Inspect platform and collector logs" {shape: rectangle}
+step_5_check_disk_space: "Step 5 — Check disk space" {shape: rectangle}
+step_6_check_platform_certificate: "Step 6 — Check platform certificate" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> step_1_check_platform_api_health: investigate
+symptom -> step_2_check_data_source_connectivit: investigate
+symptom -> step_3_verify_netflow_receipt: investigate
+symptom -> step_4_inspect_platform_and_collecto: investigate
+symptom -> step_5_check_disk_space: investigate
+symptom -> step_6_check_platform_certificate: investigate
+step_1_check_platform_api_health -> resolution
+step_2_check_data_source_connectivit -> resolution
+step_3_verify_netflow_receipt -> resolution
+step_4_inspect_platform_and_collecto -> resolution
+step_5_check_disk_space -> resolution
+step_6_check_platform_certificate -> resolution
+```
+
 ## Before you begin
 
 - **Access:** SSH to the vRNI platform VM (`admin` user); SSH to collector VM(s); vRNI admin UI credentials

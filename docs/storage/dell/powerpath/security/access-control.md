@@ -16,6 +16,21 @@ Access Control reference covering RBAC, Sudoers Configuration, Audit Logging.
 
 
 
+```d2
+direction: down
+
+external: External / Untrusted {shape: rectangle}
+rbac: "RBAC" {shape: rectangle}
+sudoers_configuration: "Sudoers Configuration" {shape: rectangle}
+audit_logging: "Audit Logging" {shape: rectangle}
+core: "PowerPath Core" {shape: hexagon}
+
+external -> rbac: traffic in
+rbac -> sudoers_configuration
+sudoers_configuration -> audit_logging
+audit_logging -> core: secured path
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

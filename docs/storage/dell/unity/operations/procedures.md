@@ -14,6 +14,25 @@ Procedures reference covering Change Readiness, Maintenance Window, Post-Change 
 
 
 
+```d2
+direction: right
+
+hub: "Unity XT\nOperations" {shape: hexagon}
+change_readiness: "Change Readiness" {shape: rectangle}
+maintenance_window: "Maintenance Window" {shape: rectangle}
+postchange_validation: "Post-Change Validation" {shape: rectangle}
+lun_management: "LUN Management" {shape: rectangle}
+nas_server_management: "NAS Server Management" {shape: rectangle}
+create_a_lun: "Create a LUN" {shape: rectangle}
+
+hub -> change_readiness
+hub -> maintenance_window
+hub -> postchange_validation
+hub -> lun_management
+hub -> nas_server_management
+hub -> create_a_lun
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

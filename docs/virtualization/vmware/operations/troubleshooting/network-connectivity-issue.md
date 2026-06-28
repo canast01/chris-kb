@@ -19,6 +19,33 @@ Troubleshooting VM network connectivity failures — vSwitch/vDS configuration, 
 
 
 ---
+
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+vmotion_fails: "vMotion Fails" {shape: rectangle}
+vm_network_outage: "VM Network Outage" {shape: rectangle}
+host_management_network_issue: "Host Management Network Issue" {shape: rectangle}
+nsx_issues: "NSX Issues" {shape: rectangle}
+packet_loss_on_a_vm_or_host: "Packet Loss on a VM or Host" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> vmotion_fails: investigate
+symptom -> vm_network_outage: investigate
+symptom -> host_management_network_issue: investigate
+symptom -> nsx_issues: investigate
+symptom -> packet_loss_on_a_vm_or_host: investigate
+symptom -> verify: investigate
+vmotion_fails -> resolution
+vm_network_outage -> resolution
+host_management_network_issue -> resolution
+nsx_issues -> resolution
+packet_loss_on_a_vm_or_host -> resolution
+verify -> resolution
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

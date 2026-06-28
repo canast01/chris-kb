@@ -143,6 +143,23 @@ if ($summary.LastBackupResultHR -ne 0 -or
 }
 ```
 
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+participant "Source\n(Windows Server)" as SRC
+participant "Backup Engine" as ENG
+participant "Target / Vault" as TGT
+
+SRC -> ENG: Verify
+ENG -> TGT: Write
+TGT --> ENG: Confirmed
+ENG --> SRC: Done
+
+@enduml
+```
+
 ## Before you begin
 
 - **Access:** Local Administrator or Domain Admin on target hosts

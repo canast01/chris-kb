@@ -19,6 +19,29 @@ Catalog of known ESXi bugs, error codes, and workarounds. Each entry includes th
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+purple_screen_of_death_psod: "Purple Screen of Death (PSOD)" {shape: rectangle}
+network: "Network" {shape: rectangle}
+storage: "Storage" {shape: rectangle}
+memory_and_performance: "Memory and Performance" {shape: rectangle}
+upgrade_and_patching: "Upgrade and Patching" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> purple_screen_of_death_psod: investigate
+symptom -> network: investigate
+symptom -> storage: investigate
+symptom -> memory_and_performance: investigate
+symptom -> upgrade_and_patching: investigate
+purple_screen_of_death_psod -> resolution
+network -> resolution
+storage -> resolution
+memory_and_performance -> resolution
+upgrade_and_patching -> resolution
+```
+
 ## Before you begin
 
 - ESXi bugs are tracked in VMware/Broadcom Release Notes and KB articles at `kb.broadcom.com`.

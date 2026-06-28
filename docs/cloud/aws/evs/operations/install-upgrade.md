@@ -15,6 +15,25 @@ VCF upgrades via SDDC Manager, ESXi patching lifecycle, NSX-T and HCX upgrade se
 
 
 
+```d2
+direction: right
+
+hub: "AWS EVS\nOperations" {shape: hexagon}
+vcf_upgrade_order: "VCF Upgrade Order" {shape: rectangle}
+preupgrade_checklist: "Pre-Upgrade Checklist" {shape: rectangle}
+esxi_upgrade_via_vsphere_lifecycle_m: "ESXi Upgrade via vSphere Lifecycle Manager" {shape: rectangle}
+hcx_version_upgrade: "HCX Version Upgrade" {shape: rectangle}
+sddc_manager_lifecycle: "SDDC Manager Lifecycle" {shape: rectangle}
+rollback_considerations: "Rollback Considerations" {shape: rectangle}
+
+hub -> vcf_upgrade_order
+hub -> preupgrade_checklist
+hub -> esxi_upgrade_via_vsphere_lifecycle_m
+hub -> hcx_version_upgrade
+hub -> sddc_manager_lifecycle
+hub -> rollback_considerations
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

@@ -16,6 +16,25 @@ Scripts reference covering SRDF State Monitor, Array Health Check, SRDF Planned 
 
 
 
+```d2
+direction: right
+
+hub: "PowerMax\nOperations" {shape: hexagon}
+srdf_state_monitor: "SRDF State Monitor" {shape: rectangle}
+array_health_check: "Array Health Check" {shape: rectangle}
+srdf_planned_failover: "SRDF Planned Failover" {shape: rectangle}
+ansible_powermax_health_playbook: "Ansible PowerMax Health Playbook" {shape: rectangle}
+windows_srdf_health_check_via_unisph: "Windows: SRDF Health Check via Unisphere REST API (PowerShel" {shape: rectangle}
+windows_srdf_state_check_via_plink_c: "Windows: SRDF State Check via Plink (CMD)" {shape: rectangle}
+
+hub -> srdf_state_monitor
+hub -> array_health_check
+hub -> srdf_planned_failover
+hub -> ansible_powermax_health_playbook
+hub -> windows_srdf_health_check_via_unisph
+hub -> windows_srdf_state_check_via_plink_c
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

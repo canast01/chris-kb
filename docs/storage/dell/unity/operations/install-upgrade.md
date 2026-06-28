@@ -16,6 +16,23 @@ Install & Upgrade reference covering Unity OE Version Matrix, Upgrade Paths, Har
 
 
 
+```d2
+direction: right
+
+hub: "Unity XT\nOperations" {shape: hexagon}
+unity_oe_version_matrix: "Unity OE Version Matrix" {shape: rectangle}
+upgrade_paths: "Upgrade Paths" {shape: rectangle}
+hardware_refresh: "Hardware Refresh" {shape: rectangle}
+eol_tracking: "EOL Tracking" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+hub -> unity_oe_version_matrix
+hub -> upgrade_paths
+hub -> hardware_refresh
+hub -> eol_tracking
+hub -> verify
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

@@ -18,6 +18,25 @@ Certificate infrastructure follows a three-tier PKI hierarchy: an offline, air-g
 
 ---
 
+```d2
+direction: right
+
+center: "How It Works" {shape: hexagon}
+pki_hierarchy: "PKI Hierarchy" {shape: rectangle}
+certificate_lifecycle_flow: "Certificate Lifecycle Flow" {shape: rectangle}
+adcs_role_components: "ADCS Role Components" {shape: rectangle}
+certificate_templates: "Certificate Templates" {shape: rectangle}
+cdp_and_aia_configuration: "CDP and AIA Configuration" {shape: rectangle}
+autoenrollment_via_group_policy: "Auto-Enrollment via Group Policy" {shape: rectangle}
+
+center -> pki_hierarchy
+center -> certificate_lifecycle_flow
+center -> adcs_role_components
+center -> certificate_templates
+center -> cdp_and_aia_configuration
+center -> autoenrollment_via_group_policy
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

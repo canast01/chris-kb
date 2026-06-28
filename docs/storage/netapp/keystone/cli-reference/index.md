@@ -82,6 +82,19 @@ curl -s "https://api.bluexp.netapp.com/marketplace/api/v1/capacity-pools" \
   -H "Authorization: Bearer $BLUEXP_TOKEN" | python3 -m json.tool
 ```
 
+```d2
+direction: right
+
+center: "Keystone STaaS" {shape: rectangle}
+component_a: "Component A" {shape: rectangle}
+component_b: "Component B" {shape: rectangle}
+component_c: "Component C" {shape: rectangle}
+
+center -> component_a
+center -> component_b
+center -> component_c
+```
+
 ## See also
 
 - [NetApp Keystone — Overview](../../)

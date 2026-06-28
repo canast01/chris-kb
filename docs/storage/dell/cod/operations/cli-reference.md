@@ -102,6 +102,15 @@ symcfg -version
 symcfg list -sid <sid> -v 2>&1 | head -5
 ```
 
+```d2
+direction: right
+
+hub: "Cloud On Demand\nOperations" {shape: hexagon}
+verify: "Verify" {shape: rectangle}
+
+hub -> verify
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

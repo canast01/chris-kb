@@ -15,6 +15,25 @@ VCF health checks: SDDC Manager health API, `lcm health check`, workload domain 
 
 VCF Daily Health Check — Coverage Map
 
+```d2
+direction: right
+
+hub: "VMware Cloud Foundation\nOperations" {shape: hexagon}
+run_this_routine: "Run This Routine" {shape: rectangle}
+common_operational_issues: "Common Operational Issues" {shape: rectangle}
+sddc_manager_service_health: "SDDC Manager Service Health" {shape: rectangle}
+workload_domain_health: "Workload Domain Health" {shape: rectangle}
+esxi_host_pool_health: "ESXi Host Pool Health" {shape: rectangle}
+certificate_expiry_check: "Certificate Expiry Check" {shape: rectangle}
+
+hub -> run_this_routine
+hub -> common_operational_issues
+hub -> sddc_manager_service_health
+hub -> workload_domain_health
+hub -> esxi_host_pool_health
+hub -> certificate_expiry_check
+```
+
 ## Before you begin
 
 - **Access:** vCenter read-only minimum; Administrator role for remediation steps

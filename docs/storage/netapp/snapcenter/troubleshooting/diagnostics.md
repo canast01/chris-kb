@@ -47,6 +47,32 @@ graph TD
     class N,O escalate
 ```
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+step_1_check_failed_jobs: "Step 1 — Check failed jobs" {shape: rectangle}
+step_2_check_resource_groups_and_hos: "Step 2 — Check resource groups and hosts" {shape: rectangle}
+step_3_check_ontap_storage_connectio: "Step 3 — Check ONTAP storage connections" {shape: rectangle}
+step_4_check_plugin_service_on_the_h: "Step 4 — Check plug-in service on the host" {shape: rectangle}
+step_5_inspect_component_logs_on_the: "Step 5 — Inspect component logs on the SnapCenter server" {shape: rectangle}
+step_6_generate_support_bundle_for_n: "Step 6 — Generate support bundle for NetApp SR" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> step_1_check_failed_jobs: investigate
+symptom -> step_2_check_resource_groups_and_hos: investigate
+symptom -> step_3_check_ontap_storage_connectio: investigate
+symptom -> step_4_check_plugin_service_on_the_h: investigate
+symptom -> step_5_inspect_component_logs_on_the: investigate
+symptom -> step_6_generate_support_bundle_for_n: investigate
+step_1_check_failed_jobs -> resolution
+step_2_check_resource_groups_and_hos -> resolution
+step_3_check_ontap_storage_connectio -> resolution
+step_4_check_plugin_service_on_the_h -> resolution
+step_5_inspect_component_logs_on_the -> resolution
+step_6_generate_support_bundle_for_n -> resolution
+```
+
 ## Before you begin
 
 - **Access:** SnapCenter admin role (SnapCenterAdmin); Windows admin on the SnapCenter server; ONTAP cluster admin credentials

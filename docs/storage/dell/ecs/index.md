@@ -38,6 +38,25 @@ Scale-out software-defined object storage — S3, Swift, and CAS APIs, geo-distr
 
 </div>
 
+```d2
+direction: right
+
+center: "ECS" {shape: hexagon}
+where_it_fits: "Where It Fits" {shape: rectangle}
+daily_checks: "Daily Checks" {shape: rectangle}
+health_commands: "Health Commands" {shape: rectangle}
+common_issues: "Common Issues" {shape: rectangle}
+operational_tasks: "Operational Tasks" {shape: rectangle}
+upgrade_notes: "Upgrade Notes" {shape: rectangle}
+
+center -> where_it_fits
+center -> daily_checks
+center -> health_commands
+center -> common_issues
+center -> operational_tasks
+center -> upgrade_notes
+```
+
 ## Overview
 
 Dell ECS (Enterprise Content Storage) is a scale-out, software-defined object storage platform supporting S3, Swift, Atmos, and CAS (Content Addressable Storage) APIs. It is deployed as clusters of commodity nodes and can be stretched across multiple sites as Virtual Data Centers (VDCs) connected into geo-distributed replication groups. ECS is the successor to EMC Atmos and is designed for unstructured data at petabyte scale, providing multi-tenancy through namespaces and buckets.

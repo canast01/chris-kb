@@ -15,6 +15,25 @@ Management groups provide a level of scope above subscriptions. They enable you 
 
 
 
+```d2
+direction: right
+
+center: "Azure" {shape: hexagon}
+azure_resource_hierarchy: "Azure Resource Hierarchy" {shape: rectangle}
+hierarchy_design: "Hierarchy Design" {shape: rectangle}
+azure_landing_zone_topology: "Azure Landing Zone Topology" {shape: rectangle}
+managing_management_groups: "Managing Management Groups" {shape: rectangle}
+policy_inheritance: "Policy Inheritance" {shape: rectangle}
+rbac_at_management_group_scope: "RBAC at Management Group Scope" {shape: rectangle}
+
+center -> azure_resource_hierarchy
+center -> hierarchy_design
+center -> azure_landing_zone_topology
+center -> managing_management_groups
+center -> policy_inheritance
+center -> rbac_at_management_group_scope
+```
+
 ## Azure Resource Hierarchy
 
 ```mermaid

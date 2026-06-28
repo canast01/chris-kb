@@ -27,6 +27,17 @@ FOD metering access is managed through the underlying array management interface
 - **CloudIQ API**: OAuth2 client credentials for programmatic access to metered usage data.
 ---
 
+```d2
+direction: down
+
+external: External / Untrusted {shape: rectangle}
+related_reference: "Related Reference" {shape: rectangle}
+core: "Flex On Demand Core" {shape: hexagon}
+
+external -> related_reference: traffic in
+related_reference -> core: secured path
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

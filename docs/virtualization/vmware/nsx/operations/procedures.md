@@ -17,6 +17,25 @@ Step-by-step NSX procedures — segments, T0/T1 gateways, DFW security policies,
 
 ---
 
+```d2
+direction: right
+
+hub: "NSX-T\nOperations" {shape: hexagon}
+create_a_segment: "Create a Segment" {shape: rectangle}
+verify_segment_health: "Verify Segment Health" {shape: rectangle}
+configure_a_t1_gateway: "Configure a T1 Gateway" {shape: rectangle}
+configure_a_t0_gateway_bgp_peering: "Configure a T0 Gateway (BGP Peering)" {shape: rectangle}
+trigger_edge_node_failover: "Trigger Edge Node Failover" {shape: rectangle}
+create_a_dfw_security_policy: "Create a DFW Security Policy" {shape: rectangle}
+
+hub -> create_a_segment
+hub -> verify_segment_health
+hub -> configure_a_t1_gateway
+hub -> configure_a_t0_gateway_bgp_peering
+hub -> trigger_edge_node_failover
+hub -> create_a_dfw_security_policy
+```
+
 ## Before you begin
 
 - **Access:** vCenter read-only minimum; Administrator role for remediation steps

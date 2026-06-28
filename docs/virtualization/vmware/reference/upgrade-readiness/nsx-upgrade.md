@@ -17,6 +17,25 @@ NSX Upgrade Readiness Checklist reference covering Current State, Target Version
 
 
 
+```d2
+direction: right
+
+plan: "Plan" {shape: oval}
+current_state: "Current State" {shape: rectangle}
+target_version: "Target Version" {shape: rectangle}
+preupgrade_checks: "Pre-Upgrade Checks" {shape: rectangle}
+upgrade_process_overview: "Upgrade Process Overview" {shape: rectangle}
+postupgrade_validation: "Post-Upgrade Validation" {shape: rectangle}
+validate: "Validate" {shape: oval}
+
+plan -> current_state
+current_state -> target_version
+target_version -> preupgrade_checks
+preupgrade_checks -> upgrade_process_overview
+upgrade_process_overview -> postupgrade_validation
+postupgrade_validation -> validate
+```
+
 ## Current State
 
 - Confirm current NSX Manager version

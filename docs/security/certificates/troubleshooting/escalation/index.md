@@ -17,6 +17,28 @@ Procedures for raising support cases with Microsoft ADCS, commercial CAs (DigiCe
 
 
 ---
+
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+actor "On-Call Engineer" as ENG
+participant "Escalation\nSystem" as SYS
+participant "Vendor Support" as SUP
+
+ENG -> SYS: Support Channel Summary
+SYS --> ENG: Output
+ENG -> SYS: Microsoft ADCS
+SYS --> ENG: Output
+ENG -> SYS: DigiCert
+SYS --> ENG: Output
+ENG -> SUP: Escalate with diagnostic bundle
+SUP --> ENG: Case / resolution path
+
+@enduml
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

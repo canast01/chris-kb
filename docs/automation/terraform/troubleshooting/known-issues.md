@@ -18,6 +18,23 @@ Catalog of known Terraform and Terraform Enterprise bugs, error codes, and worka
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+state_and_locking: "State and Locking" {shape: rectangle}
+provider_errors: "Provider Errors" {shape: rectangle}
+tfe_enterprise: "TFE (Enterprise)" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> state_and_locking: investigate
+symptom -> provider_errors: investigate
+symptom -> tfe_enterprise: investigate
+state_and_locking -> resolution
+provider_errors -> resolution
+tfe_enterprise -> resolution
+```
+
 ## Before you begin
 
 - Terraform errors appear in `terraform plan` / `terraform apply` output.

@@ -35,6 +35,27 @@ Pre-Upgrade Checklist Flow
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+```d2
+direction: right
+
+plan: "Plan" {shape: oval}
+vxrail_manager: "VxRail Manager" {shape: rectangle}
+vcenter_health: "vCenter Health" {shape: rectangle}
+vsan_health: "vSAN Health" {shape: rectangle}
+hardware_health: "Hardware Health" {shape: rectangle}
+infrastructure: "Infrastructure" {shape: rectangle}
+backup_and_recovery_readiness: "Backup and Recovery Readiness" {shape: rectangle}
+validate: "Validate" {shape: oval}
+
+plan -> vxrail_manager
+vxrail_manager -> vcenter_health
+vcenter_health -> vsan_health
+vsan_health -> hardware_health
+hardware_health -> infrastructure
+infrastructure -> backup_and_recovery_readiness
+backup_and_recovery_readiness -> validate
+```
+
 ## VxRail Manager
 
 - VxRail Manager VM is powered on and reachable

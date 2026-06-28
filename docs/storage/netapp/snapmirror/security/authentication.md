@@ -18,6 +18,23 @@ SnapMirror authentication: intercluster cluster peer passphrase management, `clu
 
 ---
 
+```d2
+direction: down
+
+external: External / Untrusted {shape: rectangle}
+intercluster_authentication: "Intercluster Authentication" {shape: rectangle}
+ontap_credential_security_for_replic: "ONTAP Credential Security for Replication Management" {shape: rectangle}
+rest_api_authentication: "REST API Authentication" {shape: rectangle}
+smbc_mediator_authentication: "SMBC Mediator Authentication" {shape: rectangle}
+core: "SnapMirror Core" {shape: hexagon}
+
+external -> intercluster_authentication: traffic in
+intercluster_authentication -> ontap_credential_security_for_replic
+ontap_credential_security_for_replic -> rest_api_authentication
+rest_api_authentication -> smbc_mediator_authentication
+smbc_mediator_authentication -> core: secured path
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

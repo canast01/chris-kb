@@ -20,6 +20,19 @@ Firewall port reference for Dell PowerPath (multipath I/O software). PowerPath r
 
 
 
+```d2
+direction: right
+
+center: "PowerPath" {shape: hexagon}
+powerpath_host_agent_no_inbound_port: "PowerPath (Host Agent — No Inbound Ports)" {shape: rectangle}
+powerpath_management_appliance_ppma_: "PowerPath Management Appliance (PPMA) — Optional Centralised" {shape: rectangle}
+firewall_summary: "Firewall Summary" {shape: rectangle}
+
+center -> powerpath_host_agent_no_inbound_port
+center -> powerpath_management_appliance_ppma_
+center -> firewall_summary
+```
+
 ## PowerPath (Host Agent — No Inbound Ports)
 
 PowerPath is a multipath driver installed on hosts. It intercepts I/O to SAN targets (FC, iSCSI). It has no network listener — all paths are via existing SAN connectivity:

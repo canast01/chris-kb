@@ -15,6 +15,25 @@ DNS and NTP Validation reference covering Why This Matters, NTP Validation — E
 
 
 
+```d2
+direction: right
+
+center: "Time Dns Validation" {shape: hexagon}
+why_this_matters: "Why This Matters" {shape: rectangle}
+ntp_validation_esxi_host: "NTP Validation — ESXi Host" {shape: rectangle}
+ntp_validation_vcenter_appliance: "NTP Validation — vCenter Appliance" {shape: rectangle}
+dns_validation_esxi_host: "DNS Validation — ESXi Host" {shape: rectangle}
+dns_validation_powercli: "DNS Validation — PowerCLI" {shape: rectangle}
+time_consistency_check_across_cluste: "Time Consistency Check Across Cluster" {shape: rectangle}
+
+center -> why_this_matters
+center -> ntp_validation_esxi_host
+center -> ntp_validation_vcenter_appliance
+center -> dns_validation_esxi_host
+center -> dns_validation_powercli
+center -> time_consistency_check_across_cluste
+```
+
 ## Why This Matters
 
 Time and DNS are foundational dependencies for the entire VMware stack. Failures cause cascading issues:

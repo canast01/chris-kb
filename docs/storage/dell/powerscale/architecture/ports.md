@@ -20,6 +20,25 @@ Firewall port reference for Dell PowerScale (formerly Isilon). Covers OneFS mana
 
 
 
+```d2
+direction: right
+
+center: "PowerScale (Isilon)" {shape: hexagon}
+inbound_management: "Inbound — Management" {shape: rectangle}
+outbound_array_to_external: "Outbound — Array to External" {shape: rectangle}
+nfs_data_access: "NFS Data Access" {shape: rectangle}
+smb_data_access: "SMB Data Access" {shape: rectangle}
+s3_object_access_s3compatible_api: "S3 Object Access (S3-Compatible API)" {shape: rectangle}
+hdfs_hadoop: "HDFS (Hadoop)" {shape: rectangle}
+
+center -> inbound_management
+center -> outbound_array_to_external
+center -> nfs_data_access
+center -> smb_data_access
+center -> s3_object_access_s3compatible_api
+center -> hdfs_hadoop
+```
+
 ## Inbound — Management
 
 | Port | Protocol | Source | Purpose |

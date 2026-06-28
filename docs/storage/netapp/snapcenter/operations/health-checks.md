@@ -13,6 +13,21 @@ SnapCenter health checks: `Get-SmJob -State Failed`, plugin service status, repo
 </div>
 
 
+```d2
+direction: right
+
+hub: "SnapCenter\nOperations" {shape: hexagon}
+run_this_routine: "Run This Routine" {shape: rectangle}
+daily_checks: "Daily Checks" {shape: rectangle}
+health_check: "Health Check" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+hub -> run_this_routine
+hub -> daily_checks
+hub -> health_check
+hub -> verify
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

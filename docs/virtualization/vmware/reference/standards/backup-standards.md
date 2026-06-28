@@ -15,6 +15,23 @@ VMware Backup Standards reference covering Critical VM Backup Policy, Standard V
 
 
 
+```d2
+direction: down
+
+critical_vm_backup_policy: "Critical VM Backup Policy" {shape: rectangle}
+standard_vm_backup_policy: "Standard VM Backup Policy" {shape: rectangle}
+vcenter_backup: "vCenter Backup" {shape: rectangle}
+snapshot_handling: "Snapshot Handling" {shape: rectangle}
+backup_monitoring: "Backup Monitoring" {shape: rectangle}
+backup_failure_escalation: "Backup Failure Escalation" {shape: rectangle}
+
+critical_vm_backup_policy -> standard_vm_backup_policy: hardens
+standard_vm_backup_policy -> vcenter_backup: hardens
+vcenter_backup -> snapshot_handling: hardens
+snapshot_handling -> backup_monitoring: hardens
+backup_monitoring -> backup_failure_escalation: hardens
+```
+
 ## Critical VM Backup Policy
 
 - Daily backup minimum

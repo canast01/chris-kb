@@ -14,6 +14,25 @@ AWS Services Reference reference covering Compute Services, Storage Services, Ne
 
 
 
+```d2
+direction: right
+
+center: "AWS" {shape: hexagon}
+compute_services: "Compute Services" {shape: rectangle}
+storage_services: "Storage Services" {shape: rectangle}
+networking_services: "Networking Services" {shape: rectangle}
+security_services: "Security Services" {shape: rectangle}
+database_services: "Database Services" {shape: rectangle}
+study_checklist: "Study Checklist" {shape: rectangle}
+
+center -> compute_services
+center -> storage_services
+center -> networking_services
+center -> security_services
+center -> database_services
+center -> study_checklist
+```
+
 ## Compute Services
 
 | Service | Category | Key Facts |

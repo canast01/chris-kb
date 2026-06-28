@@ -21,6 +21,21 @@ Forward to SIEM via syslog: Management Console → System Settings → Syslog No
 - `enable_image_access` events (indicates failover test or actual DR)
 - User account creation or role changes
 
+```d2
+direction: down
+
+external: External / Untrusted {shape: rectangle}
+perimeter_controls: "Perimeter Controls" {shape: rectangle}
+identity_access: "Identity & Access" {shape: rectangle}
+audit_logging: "Audit & Logging" {shape: rectangle}
+core: "RecoverPoint Core" {shape: hexagon}
+
+external -> perimeter_controls: traffic in
+perimeter_controls -> identity_access
+identity_access -> audit_logging
+audit_logging -> core: secured path
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

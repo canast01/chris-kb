@@ -16,6 +16,27 @@ PostgreSQL hardening — disabling superuser remote login, SSL enforcement, rest
 
 
 
+```d2
+direction: down
+
+external: External / Untrusted {shape: rectangle}
+restrict_superuser_access: "Restrict Superuser Access" {shape: rectangle}
+configuration_hardening: "Configuration Hardening" {shape: rectangle}
+pghbaconf_hardening: "pg_hba.conf Hardening" {shape: rectangle}
+oslevel_permissions: "OS-Level Permissions" {shape: rectangle}
+disable_unnecessary_features: "Disable Unnecessary Features" {shape: rectangle}
+cis_benchmark_key_controls: "CIS Benchmark Key Controls" {shape: rectangle}
+core: "PostgreSQL Core" {shape: hexagon}
+
+external -> restrict_superuser_access: traffic in
+restrict_superuser_access -> configuration_hardening
+configuration_hardening -> pghbaconf_hardening
+pghbaconf_hardening -> oslevel_permissions
+oslevel_permissions -> disable_unnecessary_features
+disable_unnecessary_features -> cis_benchmark_key_controls
+cis_benchmark_key_controls -> core: secured path
+```
+
 ## Before you begin
 
 - **Access:** root or sudo-capable account on target hosts

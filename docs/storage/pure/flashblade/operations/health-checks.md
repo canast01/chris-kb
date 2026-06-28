@@ -20,6 +20,25 @@ Health Checks reference covering Daily Checks, Health Check, Array Health, Blade
 
 ---
 
+```d2
+direction: right
+
+hub: "FlashBlade\nOperations" {shape: hexagon}
+run_this_routine: "Run This Routine" {shape: rectangle}
+daily_checks: "Daily Checks" {shape: rectangle}
+health_check: "Health Check" {shape: rectangle}
+array_health: "Array Health" {shape: rectangle}
+blade_health: "Blade Health" {shape: rectangle}
+drive_media_health: "Drive / Media Health" {shape: rectangle}
+
+hub -> run_this_routine
+hub -> daily_checks
+hub -> health_check
+hub -> array_health
+hub -> blade_health
+hub -> drive_media_health
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

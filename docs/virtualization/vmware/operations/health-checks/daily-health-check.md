@@ -14,6 +14,27 @@ Morning checks covering all components that can silently degrade overnight. Targ
 
 
 
+```d2
+direction: right
+
+begin_checks: "Begin Checks" {shape: oval}
+3_cluster_ha_drs: "3. Cluster HA / DRS" {shape: rectangle}
+4_datastore_free_space: "4. Datastore Free Space" {shape: rectangle}
+5_vsan_health: "5. vSAN Health" {shape: rectangle}
+6_critical_vm_status: "6. Critical VM Status" {shape: rectangle}
+7_active_alarms: "7. Active Alarms" {shape: rectangle}
+8_backup_job_status: "8. Backup Job Status" {shape: rectangle}
+generate_report: "Generate Report" {shape: oval}
+
+begin_checks -> 3_cluster_ha_drs
+3_cluster_ha_drs -> 4_datastore_free_space
+4_datastore_free_space -> 5_vsan_health
+5_vsan_health -> 6_critical_vm_status
+6_critical_vm_status -> 7_active_alarms
+7_active_alarms -> 8_backup_job_status
+8_backup_job_status -> generate_report
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

@@ -17,6 +17,26 @@ CyberArk integrates with AD, MFA, ticketing, VMware, Linux, and automation tooli
 
 
 ---
+
+```d2
+direction: right
+
+center: "Integrations" {shape: hexagon}
+integration_overview: "Integration Overview" {shape: rectangle}
+integration_topology: "Integration Topology" {shape: rectangle}
+active_directory_ldap_integration: "Active Directory / LDAP Integration" {shape: rectangle}
+mfa_integration_duo_rsa: "MFA Integration (Duo / RSA)" {shape: rectangle}
+vmware_vcenter_integration: "VMware vCenter Integration" {shape: rectangle}
+linux_ssh_key_rotation: "Linux SSH Key Rotation" {shape: rectangle}
+
+center -> integration_overview
+center -> integration_topology
+center -> active_directory_ldap_integration
+center -> mfa_integration_duo_rsa
+center -> vmware_vcenter_integration
+center -> linux_ssh_key_rotation
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

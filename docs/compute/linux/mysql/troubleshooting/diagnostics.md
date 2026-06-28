@@ -53,6 +53,32 @@ graph TD
     class T escalate
 ```
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+step_1_check_the_error_log_and_servi: "Step 1 — Check the error log and service status" {shape: rectangle}
+step_2_check_active_connections_and_: "Step 2 — Check active connections and long-running queries" {shape: rectangle}
+step_3_find_and_resolve_lock_content: "Step 3 — Find and resolve lock contention" {shape: rectangle}
+step_4_check_innodb_engine_status: "Step 4 — Check InnoDB engine status" {shape: rectangle}
+step_5_enable_and_analyse_the_slow_q: "Step 5 — Enable and analyse the slow query log" {shape: rectangle}
+step_6_check_replication_status: "Step 6 — Check replication status" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> step_1_check_the_error_log_and_servi: investigate
+symptom -> step_2_check_active_connections_and_: investigate
+symptom -> step_3_find_and_resolve_lock_content: investigate
+symptom -> step_4_check_innodb_engine_status: investigate
+symptom -> step_5_enable_and_analyse_the_slow_q: investigate
+symptom -> step_6_check_replication_status: investigate
+step_1_check_the_error_log_and_servi -> resolution
+step_2_check_active_connections_and_ -> resolution
+step_3_find_and_resolve_lock_content -> resolution
+step_4_check_innodb_engine_status -> resolution
+step_5_enable_and_analyse_the_slow_q -> resolution
+step_6_check_replication_status -> resolution
+```
+
 ## Before you begin
 
 - **Access:** root or a MySQL account with `PROCESS`, `SUPER`, and `REPLICATION CLIENT` privileges; OS sudo for log access

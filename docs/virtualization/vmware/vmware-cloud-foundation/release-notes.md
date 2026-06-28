@@ -11,6 +11,19 @@ Version history and release notes for VMware Cloud Foundation.
 
 ![Release Notes](../../../assets/vmware-cloud-foundation-release-notes.svg)
 
+```d2
+direction: right
+
+center: "VMware Cloud Foundation" {shape: hexagon}
+version_history: "Version History" {shape: rectangle}
+key_terminology: "Key Terminology" {shape: rectangle}
+upgrade_path: "Upgrade Path" {shape: rectangle}
+
+center -> version_history
+center -> key_terminology
+center -> upgrade_path
+```
+
 ## Version History
 
 | Version | Released | Summary | Notes |

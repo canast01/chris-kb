@@ -15,6 +15,25 @@ Azure Policy compliance reviews evaluate the current state of resources against 
 
 
 
+```d2
+direction: right
+
+center: "Azure" {shape: hexagon}
+compliance_review_cycle: "Compliance Review Cycle" {shape: rectangle}
+compliance_dashboard: "Compliance Dashboard" {shape: rectangle}
+noncompliant_resources: "Non-Compliant Resources" {shape: rectangle}
+remediation_tasks: "Remediation Tasks" {shape: rectangle}
+compliance_review_cadence: "Compliance Review Cadence" {shape: rectangle}
+exporting_compliance_data: "Exporting Compliance Data" {shape: rectangle}
+
+center -> compliance_review_cycle
+center -> compliance_dashboard
+center -> noncompliant_resources
+center -> remediation_tasks
+center -> compliance_review_cadence
+center -> exporting_compliance_data
+```
+
 ## Compliance Review Cycle
 
 ```mermaid

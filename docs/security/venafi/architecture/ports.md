@@ -20,6 +20,25 @@ Firewall port reference for Venafi Trust Protection Platform (TPP). Covers the T
 
 
 
+```d2
+direction: right
+
+center: "Architecture" {shape: hexagon}
+inbound_client_to_tpp: "Inbound — Client to TPP" {shape: rectangle}
+tpp_to_microsoft_adcs_active_directo: "TPP to Microsoft ADCS (Active Directory Certificate Services" {shape: rectangle}
+tpp_to_external_public_cas: "TPP to External / Public CAs" {shape: rectangle}
+tpp_to_active_directory_ldap: "TPP to Active Directory / LDAP" {shape: rectangle}
+tpp_satellite_to_certificate_endpoin: "TPP / Satellite to Certificate Endpoints (Deployment)" {shape: rectangle}
+satellite_remote_engine_to_tpp: "Satellite (Remote Engine) to TPP" {shape: rectangle}
+
+center -> inbound_client_to_tpp
+center -> tpp_to_microsoft_adcs_active_directo
+center -> tpp_to_external_public_cas
+center -> tpp_to_active_directory_ldap
+center -> tpp_satellite_to_certificate_endpoin
+center -> satellite_remote_engine_to_tpp
+```
+
 ## Before you begin
 
 - TPP runs as a Windows service; the primary UI and API endpoint is HTTPS/443 (Aperture web console and REST API)

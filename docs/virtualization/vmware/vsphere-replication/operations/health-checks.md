@@ -16,6 +16,25 @@ Health Checks reference covering VRA and Site Pairing Status, Check All Replicat
   Health Check Chain
 
 
+```d2
+direction: right
+
+hub: "vSphere Replication\nOperations" {shape: hexagon}
+run_this_routine: "Run This Routine" {shape: rectangle}
+vra_and_site_pairing_status: "VRA and Site Pairing Status" {shape: rectangle}
+check_all_replications_for_rpo_viola: "Check All Replications for RPO Violations" {shape: rectangle}
+verify_vra_disk_space: "Verify VRA Disk Space" {shape: rectangle}
+vrs_health_if_deployed: "VRS Health (if deployed)" {shape: rectangle}
+verify_replication_files_on_target_d: "Verify Replication Files on Target Datastore" {shape: rectangle}
+
+hub -> run_this_routine
+hub -> vra_and_site_pairing_status
+hub -> check_all_replications_for_rpo_viola
+hub -> verify_vra_disk_space
+hub -> vrs_health_if_deployed
+hub -> verify_replication_files_on_target_d
+```
+
 ## Before you begin
 
 - **Access:** vCenter read-only minimum; Administrator role for remediation steps

@@ -20,6 +20,23 @@ Install & Upgrade reference covering Purity Version Matrix, Upgrade Paths, Refre
 
 ---
 
+```d2
+direction: right
+
+hub: "FlashBlade\nOperations" {shape: hexagon}
+purity_version_matrix: "Purity Version Matrix" {shape: rectangle}
+upgrade_paths: "Upgrade Paths" {shape: rectangle}
+refresh_planning: "Refresh Planning" {shape: rectangle}
+eol_tracking: "EOL Tracking" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+hub -> purity_version_matrix
+hub -> upgrade_paths
+hub -> refresh_planning
+hub -> eol_tracking
+hub -> verify
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

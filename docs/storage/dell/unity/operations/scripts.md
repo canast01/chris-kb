@@ -17,6 +17,26 @@ Dell Unity automation scripts: PowerShell Toolkit cmdlets for snapshot managemen
 
 
 ---
+
+```d2
+direction: right
+
+hub: "Unity XT\nOperations" {shape: hexagon}
+system_health_check: "System Health Check" {shape: rectangle}
+storage_processor_monitor: "Storage Processor Monitor" {shape: rectangle}
+replication_session_check: "Replication Session Check" {shape: rectangle}
+ansible_unity_health_playbook: "Ansible Unity Health Playbook" {shape: rectangle}
+windows_unity_health_check_via_rest_: "Windows: Unity Health Check via REST API (PowerShell)" {shape: rectangle}
+windows_unity_capacity_and_storage_p: "Windows: Unity Capacity and Storage Pools via Plink (CMD)" {shape: rectangle}
+
+hub -> system_health_check
+hub -> storage_processor_monitor
+hub -> replication_session_check
+hub -> ansible_unity_health_playbook
+hub -> windows_unity_health_check_via_rest_
+hub -> windows_unity_capacity_and_storage_p
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

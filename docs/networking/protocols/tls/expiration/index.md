@@ -14,6 +14,23 @@ Expired certificates cause immediate outages — services reject connections wit
 
 Expiration monitoring and automated renewal must be in place for every certificate in production.
 
+```d2
+direction: right
+
+center: "TLS" {shape: hexagon}
+checking_expiry: "Checking Expiry" {shape: rectangle}
+expiry_monitoring: "Expiry Monitoring" {shape: rectangle}
+renewal_workflow: "Renewal Workflow" {shape: rectangle}
+emergency_expired_certificate_respon: "Emergency Expired Certificate Response" {shape: rectangle}
+expiry_thresholds_reference: "Expiry Thresholds Reference" {shape: rectangle}
+
+center -> checking_expiry
+center -> expiry_monitoring
+center -> renewal_workflow
+center -> emergency_expired_certificate_respon
+center -> expiry_thresholds_reference
+```
+
 ## Checking Expiry
 
 ```bash

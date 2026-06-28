@@ -14,6 +14,31 @@ VMware Backup Failure Runbook reference covering Identify Failed VMs, Review the
 
 
 
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+actor "Responder" as A
+participant "Runbooks System" as B
+participant "Dependent System" as C
+
+A -> B: Identify Failed VMs
+B --> A: OK
+A -> B: Review the Error Message
+B --> A: OK
+A -> B: Check VM Snapshot State
+B --> A: OK
+A -> B: Check Datastore Free Space
+B --> A: OK
+A -> B: Check Backup Proxy Health
+B --> A: OK
+A -> B: Check Backup Repository
+B --> A: OK
+
+@enduml
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

@@ -18,6 +18,29 @@ Dell VPLEX common issues — path and virtual volume failures, backend LUN error
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+diagnostic_flow: "Diagnostic Flow" {shape: rectangle}
+incident_triage: "Incident Triage" {shape: rectangle}
+issue_reference: "Issue Reference" {shape: rectangle}
+common_issues_quick_reference: "Common Issues — Quick Reference" {shape: rectangle}
+verify_resolution: "Verify resolution" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> diagnostic_flow: investigate
+symptom -> incident_triage: investigate
+symptom -> issue_reference: investigate
+symptom -> common_issues_quick_reference: investigate
+symptom -> verify_resolution: investigate
+diagnostic_flow -> resolution
+incident_triage -> resolution
+issue_reference -> resolution
+common_issues_quick_reference -> resolution
+verify_resolution -> resolution
+```
+
 ## Diagnostic Flow
 
 ```mermaid

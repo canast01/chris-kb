@@ -16,6 +16,25 @@ Standard procedures covering the full incident lifecycle: declaration through po
 
 ---
 
+```d2
+direction: right
+
+hub: "Procedures\nOperations" {shape: hexagon}
+declare_an_incident: "Declare an Incident" {shape: rectangle}
+assemble_the_incident_response_team: "Assemble the Incident Response Team" {shape: rectangle}
+isolate_affected_systems: "Isolate Affected Systems" {shape: rectangle}
+preserve_evidence: "Preserve Evidence" {shape: rectangle}
+contain_the_threat: "Contain the Threat" {shape: rectangle}
+eradicate_the_root_cause: "Eradicate the Root Cause" {shape: rectangle}
+
+hub -> declare_an_incident
+hub -> assemble_the_incident_response_team
+hub -> isolate_affected_systems
+hub -> preserve_evidence
+hub -> contain_the_threat
+hub -> eradicate_the_root_cause
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

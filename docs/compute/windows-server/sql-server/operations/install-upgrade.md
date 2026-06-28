@@ -15,6 +15,25 @@ SQL Server upgrade procedures — in-place upgrade, side-by-side upgrade, compat
 
 
 
+```d2
+direction: right
+
+hub: "SQL Server\nOperations" {shape: hexagon}
+upgrade_path: "Upgrade Path" {shape: rectangle}
+preupgrade_steps: "Pre-Upgrade Steps" {shape: rectangle}
+inplace_upgrade: "In-Place Upgrade" {shape: rectangle}
+postupgrade_steps: "Post-Upgrade Steps" {shape: rectangle}
+compatibility_level_strategy: "Compatibility Level Strategy" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+hub -> upgrade_path
+hub -> preupgrade_steps
+hub -> inplace_upgrade
+hub -> postupgrade_steps
+hub -> compatibility_level_strategy
+hub -> verify
+```
+
 ## Before you begin
 
 - **Access:** Local Administrator or Domain Admin on target hosts

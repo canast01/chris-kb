@@ -16,6 +16,23 @@ This page documents operational standards enforced within the ServiceNow platfor
 
 ---
 
+```d2
+direction: down
+
+incident_priority_matrix: "Incident Priority Matrix" {shape: rectangle}
+sla_targets: "SLA Targets" {shape: rectangle}
+change_risk_scoring: "Change Risk Scoring" {shape: rectangle}
+change_types: "Change Types" {shape: rectangle}
+change_advisory_board_cab_workflow: "Change Advisory Board (CAB) Workflow" {shape: rectangle}
+cmdb_data_quality_standards: "CMDB Data Quality Standards" {shape: rectangle}
+
+incident_priority_matrix -> sla_targets: hardens
+sla_targets -> change_risk_scoring: hardens
+change_risk_scoring -> change_types: hardens
+change_types -> change_advisory_board_cab_workflow: hardens
+change_advisory_board_cab_workflow -> cmdb_data_quality_standards: hardens
+```
+
 ## Incident Priority Matrix
 
 Priority is calculated from Impact × Urgency. ServiceNow evaluates this automatically on incident submission if auto-calculation is enabled (Business Rule: **Calculate Priority**).

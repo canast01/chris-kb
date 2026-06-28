@@ -14,6 +14,21 @@ How It Works reference covering Overview, Component Topology, MediaAgent and Ded
 ![Commvault — How It Works](../../../../assets/backup-commvault-architecture-how-it-works-index.svg)
 
 
+```d2
+direction: right
+
+center: "Commvault" {shape: hexagon}
+component_topology: "Component Topology" {shape: rectangle}
+storage_library_types: "Storage Library Types" {shape: rectangle}
+port_requirements: "Port Requirements" {shape: rectangle}
+multisite_topology: "Multi-Site Topology" {shape: rectangle}
+
+center -> component_topology
+center -> storage_library_types
+center -> port_requirements
+center -> multisite_topology
+```
+
 ## Overview
 
 Commvault provides enterprise backup, recovery, replication, archive, and data protection management. The CommServe is the single command-and-control server — it holds the configuration database (SQL Server) mapping every backup job, client, and storage policy. MediaAgents perform data movement and host the Deduplication Database (DDB). Clients are the protected hosts (VMs, databases, filesystems).

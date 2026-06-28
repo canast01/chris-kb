@@ -34,6 +34,27 @@ flowchart TD
     style s7 fill:#2e7d32,color:#fff,stroke:#1b5e20
 ```
 
+```d2
+direction: right
+
+plan: "Plan" {shape: oval}
+prerequisites: "Prerequisites" {shape: rectangle}
+install_secure_connect_gateway_scg: "Install Secure Connect Gateway (SCG)" {shape: rectangle}
+register_storage_systems_with_scg: "Register Storage Systems with SCG" {shape: rectangle}
+verify_telemetry_in_cloudiq_portal: "Verify Telemetry in CloudIQ Portal" {shape: rectangle}
+configure_alert_notifications: "Configure Alert Notifications" {shape: rectangle}
+add_additional_storage_systems: "Add Additional Storage Systems" {shape: rectangle}
+validate: "Validate" {shape: oval}
+
+plan -> prerequisites
+prerequisites -> install_secure_connect_gateway_scg
+install_secure_connect_gateway_scg -> register_storage_systems_with_scg
+register_storage_systems_with_scg -> verify_telemetry_in_cloudiq_portal
+verify_telemetry_in_cloudiq_portal -> configure_alert_notifications
+configure_alert_notifications -> add_additional_storage_systems
+add_additional_storage_systems -> validate
+```
+
 ## Before you begin
 
 - **Access:** admin credentials for the target system and any upstream dependencies (DNS, NTP, vCenter, directory services)

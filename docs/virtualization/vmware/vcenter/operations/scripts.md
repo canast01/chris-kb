@@ -18,6 +18,25 @@ Scripts reference covering VM Health and Inventory Report (PowerShell / PowerCLI
 
 
 
+```d2
+direction: right
+
+hub: "vCenter Server\nOperations" {shape: hexagon}
+vm_health_and_inventory_report_power: "VM Health and Inventory Report (PowerShell / PowerCLI)" {shape: rectangle}
+cluster_capacity_report_powershell_p: "Cluster Capacity Report (PowerShell / PowerCLI)" {shape: rectangle}
+daily_check_script_powershellpowercl: "Daily Check Script (PowerShell/PowerCLI)" {shape: rectangle}
+change_precheck_script_powershellpow: "Change Pre-Check Script (PowerShell/PowerCLI)" {shape: rectangle}
+incident_triage_script_powershellpow: "Incident Triage Script (PowerShell/PowerCLI)" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+hub -> vm_health_and_inventory_report_power
+hub -> cluster_capacity_report_powershell_p
+hub -> daily_check_script_powershellpowercl
+hub -> change_precheck_script_powershellpow
+hub -> incident_triage_script_powershellpow
+hub -> verify
+```
+
 ## Before you begin
 
 - **Access:** vCenter read-only minimum; Administrator role for remediation steps

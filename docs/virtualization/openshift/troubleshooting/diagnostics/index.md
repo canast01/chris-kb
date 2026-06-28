@@ -41,6 +41,32 @@ graph TD
     class K ok
 ```
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+mustgather: "must-gather" {shape: rectangle}
+oc_adm_inspect_targeted: "oc adm inspect (Targeted)" {shape: rectangle}
+metricsbased_diagnostics: "Metrics-Based Diagnostics" {shape: rectangle}
+etcd_diagnostics: "etcd Diagnostics" {shape: rectangle}
+network_diagnostics: "Network Diagnostics" {shape: rectangle}
+log_aggregation: "Log Aggregation" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> mustgather: investigate
+symptom -> oc_adm_inspect_targeted: investigate
+symptom -> metricsbased_diagnostics: investigate
+symptom -> etcd_diagnostics: investigate
+symptom -> network_diagnostics: investigate
+symptom -> log_aggregation: investigate
+mustgather -> resolution
+oc_adm_inspect_targeted -> resolution
+metricsbased_diagnostics -> resolution
+etcd_diagnostics -> resolution
+network_diagnostics -> resolution
+log_aggregation -> resolution
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

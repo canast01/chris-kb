@@ -17,6 +17,25 @@ Reference for creating, managing, sizing, and operating Azure Virtual Machines u
 
 ---
 
+```d2
+direction: right
+
+center: "Azure" {shape: hexagon}
+azure_vm_architecture: "Azure VM Architecture" {shape: rectangle}
+azure_vm_deployment_flow: "Azure VM Deployment Flow" {shape: rectangle}
+creating_vms: "Creating VMs" {shape: rectangle}
+vm_sizing: "VM Sizing" {shape: rectangle}
+power_state_operations: "Power State Operations" {shape: rectangle}
+disk_operations: "Disk Operations" {shape: rectangle}
+
+center -> azure_vm_architecture
+center -> azure_vm_deployment_flow
+center -> creating_vms
+center -> vm_sizing
+center -> power_state_operations
+center -> disk_operations
+```
+
 ## Azure VM Architecture
 
 ```mermaid

@@ -15,6 +15,23 @@ Change Risk Assessment reference covering Overview, Risk Assessment Matrix, Risk
 
 
 
+```d2
+direction: right
+
+center: "ServiceNow" {shape: hexagon}
+risk_assessment_matrix: "Risk Assessment Matrix" {shape: rectangle}
+risk_identification_checklist: "Risk Identification Checklist" {shape: rectangle}
+risk_mitigation_examples: "Risk Mitigation Examples" {shape: rectangle}
+residual_risk_and_acceptance: "Residual Risk and Acceptance" {shape: rectangle}
+risk_review_during_implementation: "Risk Review During Implementation" {shape: rectangle}
+
+center -> risk_assessment_matrix
+center -> risk_identification_checklist
+center -> risk_mitigation_examples
+center -> residual_risk_and_acceptance
+center -> risk_review_during_implementation
+```
+
 ## Overview
 
 Risk assessment is a mandatory step for every change above the Standard tier. It ensures that implementation teams and approvers have a shared understanding of what could go wrong, how likely that is, and what controls are in place to reduce the probability or limit the impact. A well-completed risk assessment is a decision-support tool, not a compliance checkbox.

@@ -15,6 +15,27 @@ EVS encryption: vSAN encryption at rest, VM encryption via vSphere Encryption, T
 
 
 
+```d2
+direction: down
+
+external: External / Untrusted {shape: rectangle}
+encryption_layers: "Encryption Layers" {shape: rectangle}
+vsan_encryption_at_rest: "vSAN Encryption at Rest" {shape: rectangle}
+aws_kms_integration_kmip: "AWS KMS Integration (KMIP)" {shape: rectangle}
+vm_encryption: "VM Encryption" {shape: rectangle}
+tls_certificate_management: "TLS Certificate Management" {shape: rectangle}
+intransit_encryption: "In-Transit Encryption" {shape: rectangle}
+core: "AWS EVS Core" {shape: hexagon}
+
+external -> encryption_layers: traffic in
+encryption_layers -> vsan_encryption_at_rest
+vsan_encryption_at_rest -> aws_kms_integration_kmip
+aws_kms_integration_kmip -> vm_encryption
+vm_encryption -> tls_certificate_management
+tls_certificate_management -> intransit_encryption
+intransit_encryption -> core: secured path
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

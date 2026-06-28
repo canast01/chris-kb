@@ -14,6 +14,21 @@ Ansible encryption: `ansible-vault encrypt`, `encrypt_string`, vault ID configur
 ![Ansible — Encryption](../../../../assets/automation-ansible-security-encryption-index.svg)
 
 
+```d2
+direction: down
+
+ansible_vault: "Ansible Vault" {shape: rectangle}
+tls_certificate_management: "TLS Certificate Management" {shape: rectangle}
+ssh_transport_encryption: "SSH Transport Encryption" {shape: rectangle}
+sensitive_task_output: "Sensitive Task Output" {shape: rectangle}
+encryption_standards_summary: "Encryption Standards Summary" {shape: rectangle}
+
+ansible_vault -> tls_certificate_management: hardens
+tls_certificate_management -> ssh_transport_encryption: hardens
+ssh_transport_encryption -> sensitive_task_output: hardens
+sensitive_task_output -> encryption_standards_summary: hardens
+```
+
 ## Before you begin
 
 - **Access:** SSH key or service account with sudo on managed hosts; Ansible control node

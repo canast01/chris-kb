@@ -29,6 +29,21 @@ Key vCenter-managed vSAN functions:
 
 If vCenter is unavailable, existing VMs continue running (vSAN data plane is independent of vCenter), but no configuration changes can be made and health monitoring is unavailable.
 
+```d2
+direction: right
+
+center: "vSAN" {shape: hexagon}
+nsx_integration: "NSX Integration" {shape: rectangle}
+stretched_cluster_witness: "Stretched Cluster Witness" {shape: rectangle}
+file_services: "File Services" {shape: rectangle}
+aria_operations: "Aria Operations" {shape: rectangle}
+
+center -> nsx_integration
+center -> stretched_cluster_witness
+center -> file_services
+center -> aria_operations
+```
+
 ## NSX Integration
 
 vSAN and NSX coexist on the same ESXi hosts and share the vSphere Distributed Switch (vDS). Careful NIC planning is required to avoid contention.

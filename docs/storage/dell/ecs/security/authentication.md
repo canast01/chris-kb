@@ -16,6 +16,27 @@ Authentication reference covering User Model Overview, Local Accounts, LDAP / Ac
 
 
 
+```d2
+direction: down
+
+external: External / Untrusted {shape: rectangle}
+user_model_overview: "User Model Overview" {shape: rectangle}
+local_accounts: "Local Accounts" {shape: rectangle}
+ldap_active_directory: "LDAP / Active Directory" {shape: rectangle}
+s3_object_user_authentication: "S3 Object User Authentication" {shape: rectangle}
+audit_logging: "Audit Logging" {shape: rectangle}
+related_reference: "Related Reference" {shape: rectangle}
+core: "ECS Core" {shape: hexagon}
+
+external -> user_model_overview: traffic in
+user_model_overview -> local_accounts
+local_accounts -> ldap_active_directory
+ldap_active_directory -> s3_object_user_authentication
+s3_object_user_authentication -> audit_logging
+audit_logging -> related_reference
+related_reference -> core: secured path
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

@@ -21,6 +21,31 @@ tags:
 | Estimated time | 5–20 minutes |
 | Impact | Service unavailable during restart (seconds to minutes depending on startup time) |
 
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+actor "Responder" as A
+participant "Linux System" as B
+participant "Dependent System" as C
+
+A -> B: Process Flow
+B --> A: OK
+A -> B: Step 2  Attempt Config Reload (preferred  no downt
+B --> A: OK
+A -> B: Step 3  Full Restart
+B --> A: OK
+A -> B: Step 4  Validate
+B --> A: OK
+A -> B: Rollback
+B --> A: OK
+A -> B: Common Issues
+B --> A: OK
+
+@enduml
+```
+
 ## Before you begin
 
 - **Access:** root or sudo-capable account on target hosts

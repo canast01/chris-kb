@@ -17,6 +17,32 @@ iSCSI Troubleshooting reference covering Diagnostic Flow, Quick Diagnostics, Com
         TRIAGE: HOST CANNOT SEE iSCSI LUN
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+diagnostic_flow: "Diagnostic Flow" {shape: rectangle}
+quick_diagnostics: "Quick Diagnostics" {shape: rectangle}
+common_issues_reference: "Common Issues Reference" {shape: rectangle}
+mtu_troubleshooting: "MTU Troubleshooting" {shape: rectangle}
+log_locations: "Log Locations" {shape: rectangle}
+kernel_messages_linux: "Kernel Messages (Linux)" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> diagnostic_flow: investigate
+symptom -> quick_diagnostics: investigate
+symptom -> common_issues_reference: investigate
+symptom -> mtu_troubleshooting: investigate
+symptom -> log_locations: investigate
+symptom -> kernel_messages_linux: investigate
+diagnostic_flow -> resolution
+quick_diagnostics -> resolution
+common_issues_reference -> resolution
+mtu_troubleshooting -> resolution
+log_locations -> resolution
+kernel_messages_linux -> resolution
+```
+
 ## Before you begin
 
 - **Access:** Network admin credentials; console or SSH to devices

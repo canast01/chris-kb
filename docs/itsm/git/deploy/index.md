@@ -36,6 +36,27 @@ flowchart TD
     style s9 fill:#2e7d32,color:#fff,stroke:#1b5e20
 ```
 
+```d2
+direction: right
+
+plan: "Plan" {shape: oval}
+install_git: "Install Git" {shape: rectangle}
+configure_global_user_settings: "Configure Global User Settings" {shape: rectangle}
+set_up_ssh_key_authentication: "Set Up SSH Key Authentication" {shape: rectangle}
+clone_first_repository: "Clone First Repository" {shape: rectangle}
+configure_default_editor_and_diff_to: "Configure Default Editor and Diff Tool" {shape: rectangle}
+set_up_gitignore: "Set Up .gitignore" {shape: rectangle}
+validate: "Validate" {shape: oval}
+
+plan -> install_git
+install_git -> configure_global_user_settings
+configure_global_user_settings -> set_up_ssh_key_authentication
+set_up_ssh_key_authentication -> clone_first_repository
+clone_first_repository -> configure_default_editor_and_diff_to
+configure_default_editor_and_diff_to -> set_up_gitignore
+set_up_gitignore -> validate
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

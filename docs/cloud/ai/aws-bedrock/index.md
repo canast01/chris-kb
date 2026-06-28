@@ -39,6 +39,19 @@ AWS Bedrock is a fully managed serverless service for invoking foundation models
 
 </div>
 
+```d2
+direction: right
+
+center: "AWS Bedrock" {shape: hexagon}
+quick_reference: "Quick Reference" {shape: rectangle}
+common_operations: "Common Operations" {shape: rectangle}
+key_considerations: "Key Considerations" {shape: rectangle}
+
+center -> quick_reference
+center -> common_operations
+center -> key_considerations
+```
+
 ## Quick Reference
 
 ### Supported Model Providers and Model IDs

@@ -15,6 +15,23 @@ Maintenance Window Execution reference covering Overview, Go / No-Go at Window O
 
 
 
+```d2
+direction: right
+
+center: "ServiceNow" {shape: hexagon}
+go_nogo_at_window_open: "Go / No-Go at Window Open" {shape: rectangle}
+execution_checklist: "Execution Checklist" {shape: rectangle}
+stepbystep_discipline: "Step-by-Step Discipline" {shape: rectangle}
+time_management_during_execution: "Time Management During Execution" {shape: rectangle}
+handling_unexpected_issues_during_ex: "Handling Unexpected Issues During Execution" {shape: rectangle}
+
+center -> go_nogo_at_window_open
+center -> execution_checklist
+center -> stepbystep_discipline
+center -> time_management_during_execution
+center -> handling_unexpected_issues_during_ex
+```
+
 ## Overview
 
 Execution is where the planned work happens. The discipline during this phase — following the runbook, checking off steps, calling go/no-go at the right moments — determines whether the window succeeds. Improvisation during execution is a leading cause of extended windows and unplanned outages.

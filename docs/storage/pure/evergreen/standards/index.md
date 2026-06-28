@@ -15,6 +15,17 @@ Pure Storage Evergreen Standards reference covering Naming Conventions, Build Ba
 
 Evergreen Standards — Object Naming and Design
 
+```d2
+direction: down
+
+naming_conventions: "Naming Conventions" {shape: rectangle}
+build_baseline: "Build Baseline" {shape: rectangle}
+subscription_checklist: "Subscription Checklist" {shape: rectangle}
+
+naming_conventions -> build_baseline: hardens
+build_baseline -> subscription_checklist: hardens
+```
+
 ## Naming Conventions
 
 Consistent naming across all FlashArray objects reduces operational confusion and enables automation.

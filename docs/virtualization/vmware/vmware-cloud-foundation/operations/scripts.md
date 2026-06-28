@@ -59,6 +59,15 @@ tags:
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+```d2
+direction: right
+
+hub: "VMware Cloud Foundation\nOperations" {shape: hexagon}
+verify: "Verify" {shape: rectangle}
+
+hub -> verify
+```
+
 ## Before you begin
 
 - **Access:** vCenter read-only minimum; Administrator role for remediation steps

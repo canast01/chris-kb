@@ -18,6 +18,26 @@ Catalog of known AWS bugs, error codes, and workarounds covering IAM, EC2, netwo
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+iam_and_permissions: "IAM and Permissions" {shape: rectangle}
+ec2: "EC2" {shape: rectangle}
+networking: "Networking" {shape: rectangle}
+service_limits: "Service Limits" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> iam_and_permissions: investigate
+symptom -> ec2: investigate
+symptom -> networking: investigate
+symptom -> service_limits: investigate
+iam_and_permissions -> resolution
+ec2 -> resolution
+networking -> resolution
+service_limits -> resolution
+```
+
 ## Before you begin
 
 - AWS errors appear in CloudTrail, CloudWatch Logs, and the EC2/RDS console.

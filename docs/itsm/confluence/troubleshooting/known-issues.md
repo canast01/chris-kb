@@ -18,6 +18,23 @@ Catalog of known Confluence Data Center bugs, error codes, and workarounds cover
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+synchrony_collaborative_editing: "Synchrony (Collaborative Editing)" {shape: rectangle}
+clustering: "Clustering" {shape: rectangle}
+database: "Database" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> synchrony_collaborative_editing: investigate
+symptom -> clustering: investigate
+symptom -> database: investigate
+synchrony_collaborative_editing -> resolution
+clustering -> resolution
+database -> resolution
+```
+
 ## Before you begin
 
 - Confluence logs: `<confluence-home>/logs/atlassian-confluence.log`.

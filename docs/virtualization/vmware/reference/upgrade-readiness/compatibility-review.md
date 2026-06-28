@@ -15,6 +15,27 @@ Verify version compatibility across the full VMware stack before any upgrade. Up
 
 
 
+```d2
+direction: right
+
+plan: "Plan" {shape: oval}
+vmware_product_interoperability_matr: "VMware Product Interoperability Matrix" {shape: rectangle}
+hardware_compatibility: "Hardware Compatibility" {shape: rectangle}
+thirdparty_tool_compatibility: "Third-Party Tool Compatibility" {shape: rectangle}
+vmware_tools_and_vm_hardware: "VMware Tools and VM Hardware" {shape: rectangle}
+certificate_compatibility: "Certificate Compatibility" {shape: rectangle}
+compatibility_review_signoff_checkli: "Compatibility Review Sign-Off Checklist" {shape: rectangle}
+validate: "Validate" {shape: oval}
+
+plan -> vmware_product_interoperability_matr
+vmware_product_interoperability_matr -> hardware_compatibility
+hardware_compatibility -> thirdparty_tool_compatibility
+thirdparty_tool_compatibility -> vmware_tools_and_vm_hardware
+vmware_tools_and_vm_hardware -> certificate_compatibility
+certificate_compatibility -> compatibility_review_signoff_checkli
+compatibility_review_signoff_checkli -> validate
+```
+
 ## VMware Product Interoperability Matrix
 
 Primary source: [VMware Product Interoperability Matrix](https://interopmatrix.vmware.com/)

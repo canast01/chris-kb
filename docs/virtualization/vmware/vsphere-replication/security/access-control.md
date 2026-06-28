@@ -20,6 +20,27 @@ Access Control reference covering vSphere Replication Uses vCenter RBAC, VR-Spec
 
 ---
 
+```d2
+direction: down
+
+external: External / Untrusted {shape: rectangle}
+vsphere_replication_uses_vcenter_rba: "vSphere Replication Uses vCenter RBAC" {shape: rectangle}
+vrspecific_vcenter_privileges: "VR-Specific vCenter Privileges" {shape: rectangle}
+recommended_role_assignments: "Recommended Role Assignments" {shape: rectangle}
+vra_appliance_admin_credentials: "VRA Appliance Admin Credentials" {shape: rectangle}
+networklevel_access_control: "Network-Level Access Control" {shape: rectangle}
+srm_service_account_permissions_for_: "SRM Service Account Permissions for VR" {shape: rectangle}
+core: "vSphere Replication Core" {shape: hexagon}
+
+external -> vsphere_replication_uses_vcenter_rba: traffic in
+vsphere_replication_uses_vcenter_rba -> vrspecific_vcenter_privileges
+vrspecific_vcenter_privileges -> recommended_role_assignments
+recommended_role_assignments -> vra_appliance_admin_credentials
+vra_appliance_admin_credentials -> networklevel_access_control
+networklevel_access_control -> srm_service_account_permissions_for_
+srm_service_account_permissions_for_ -> core: secured path
+```
+
 ## Before you begin
 
 - **Access:** vCenter Administrator role

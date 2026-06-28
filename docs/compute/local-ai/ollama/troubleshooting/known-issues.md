@@ -18,6 +18,23 @@ Catalog of known Ollama bugs, error codes, and workarounds covering model loadin
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+model_loading: "Model Loading" {shape: rectangle}
+api_server: "API Server" {shape: rectangle}
+performance: "Performance" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> model_loading: investigate
+symptom -> api_server: investigate
+symptom -> performance: investigate
+model_loading -> resolution
+api_server -> resolution
+performance -> resolution
+```
+
 ## Before you begin
 
 - Ollama logs: `journalctl -u ollama` (systemd) or `ollama serve --verbose` for debug output.

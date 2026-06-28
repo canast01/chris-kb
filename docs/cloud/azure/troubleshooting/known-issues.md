@@ -18,6 +18,26 @@ Catalog of known Azure bugs, error codes, and workarounds covering ARM, VM provi
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+arm_provisioning: "ARM / Provisioning" {shape: rectangle}
+entra_id_azure_ad: "Entra ID (Azure AD)" {shape: rectangle}
+networking: "Networking" {shape: rectangle}
+aks: "AKS" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> arm_provisioning: investigate
+symptom -> entra_id_azure_ad: investigate
+symptom -> networking: investigate
+symptom -> aks: investigate
+arm_provisioning -> resolution
+entra_id_azure_ad -> resolution
+networking -> resolution
+aks -> resolution
+```
+
 ## Before you begin
 
 - Azure errors appear in the portal → Activity Log and in the resource-level Diagnose and solve problems blade.

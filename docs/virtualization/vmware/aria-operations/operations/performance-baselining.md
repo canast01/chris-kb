@@ -42,6 +42,15 @@ Response (P95): avg 85ms | peak 340ms
 Error rate:     avg 0.02%
 ```
 
+```d2
+direction: right
+
+hub: "Aria Operations\nOperations" {shape: hexagon}
+verify: "Verify" {shape: rectangle}
+
+hub -> verify
+```
+
 ## Before you begin
 
 - **Access:** vCenter read-only minimum; Administrator role for remediation steps

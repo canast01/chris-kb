@@ -17,6 +17,41 @@ Internal architecture and data-path reference: Director architecture, Global Cac
 
 
 
+```d2
+direction: right
+
+hosts: Hosts {
+  h1: Host A {shape: rectangle}
+  h2: Host B {shape: rectangle}
+}
+
+pm1: PowerMax (Site A) {
+  fe_a: Front-End Directors\n(FC / iSCSI / NVMe) {shape: rectangle}
+  be_a: Back-End Directors\n(NVMe-oF to flash) {shape: rectangle}
+  rdf_a: RDF Directors {shape: rectangle}
+  flash_a: NVMe Flash Bays {shape: cylinder}
+  fe_a -> be_a: internal fabric
+  be_a -> flash_a
+}
+
+pm2: PowerMax (Site B) {
+  fe_b: Front-End Directors {shape: rectangle}
+  rdf_b: RDF Directors {shape: rectangle}
+  flash_b: NVMe Flash Bays {shape: cylinder}
+  fe_b -> flash_b
+}
+
+unisphere: Unisphere\n(management) {shape: rectangle}
+
+hosts.h1 -> pm1.fe_a: FC / NVMe-oF
+hosts.h2 -> pm2.fe_b: FC / NVMe-oF
+
+pm1.rdf_a -> pm2.rdf_b: SRDF replication\n(sync / async / STAR)
+
+unisphere -> pm1.fe_a: manage
+unisphere -> pm2.fe_b: manage
+```
+
 ## Architecture Overview
 
 PowerMax is Dell's flagship enterprise all-NVMe storage array, purpose-built for mission-critical tier-1 workloads including mainframe, OLTP databases, ERP platforms, and financial transaction systems. It uses a massively parallel director-based architecture: multiple independent processing boards (Directors) share access to a large global DRAM cache and back-end NVMe flash drives.

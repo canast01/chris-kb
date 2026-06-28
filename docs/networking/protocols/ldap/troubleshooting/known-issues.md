@@ -18,6 +18,23 @@ Catalog of known LDAP and LDAPS issues covering bind failures, certificate error
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+connectivity: "Connectivity" {shape: rectangle}
+search_issues: "Search Issues" {shape: rectangle}
+ldaps_certificate: "LDAPS Certificate" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> connectivity: investigate
+symptom -> search_issues: investigate
+symptom -> ldaps_certificate: investigate
+connectivity -> resolution
+search_issues -> resolution
+ldaps_certificate -> resolution
+```
+
 ## Before you begin
 
 - Test LDAP with: `ldapsearch -H ldap://<dc>:389 -x -D "user@domain.com" -W -b "dc=domain,dc=com" "(sAMAccountName=testuser)"`

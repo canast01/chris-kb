@@ -16,6 +16,17 @@ Nexus Dashboard: Endpoint Tracking, Flow Visibility, and Topology View reference
 
 
 
+```d2
+direction: right
+
+hub: "Nexus Dashboard\nOperations" {shape: hexagon}
+common_visibility_issues: "Common Visibility Issues" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+hub -> common_visibility_issues
+hub -> verify
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

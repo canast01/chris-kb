@@ -16,6 +16,25 @@ Effective prompting is the difference between reliable production outputs and in
 
 
 
+```d2
+direction: right
+
+center: "OpenAI API" {shape: hexagon}
+system_prompts: "System Prompts" {shape: rectangle}
+fewshot_examples: "Few-Shot Examples" {shape: rectangle}
+chainofthought: "Chain-of-Thought" {shape: rectangle}
+structured_output: "Structured Output" {shape: rectangle}
+controlling_output_format: "Controlling Output Format" {shape: rectangle}
+prompt_injection_defence: "Prompt Injection Defence" {shape: rectangle}
+
+center -> system_prompts
+center -> fewshot_examples
+center -> chainofthought
+center -> structured_output
+center -> controlling_output_format
+center -> prompt_injection_defence
+```
+
 ## System Prompts
 
 The system prompt sets persistent context, persona, and constraints. It is processed once and not repeated in subsequent messages.

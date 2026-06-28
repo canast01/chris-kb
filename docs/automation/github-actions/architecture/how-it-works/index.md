@@ -16,6 +16,21 @@ GitHub Actions is an event-driven CI/CD and automation platform embedded directl
 
 ---
 
+```d2
+direction: right
+
+center: "GitHub Actions" {shape: hexagon}
+core_execution_model: "Core Execution Model" {shape: rectangle}
+concurrency: "Concurrency" {shape: rectangle}
+artifacts: "Artifacts" {shape: rectangle}
+platform_limits: "Platform Limits" {shape: rectangle}
+
+center -> core_execution_model
+center -> concurrency
+center -> artifacts
+center -> platform_limits
+```
+
 ## Core Execution Model
 
 ```mermaid

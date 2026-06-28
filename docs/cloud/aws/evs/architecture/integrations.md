@@ -39,6 +39,23 @@ graph LR
     EVSVPC --> CW
 ```
 
+```d2
+direction: right
+
+center: "AWS EVS" {shape: hexagon}
+hcx_vmware_hybrid_cloud_extension: "HCX (VMware Hybrid Cloud Extension)" {shape: rectangle}
+direct_connect: "Direct Connect" {shape: rectangle}
+transit_gateway_tgw: "Transit Gateway (TGW)" {shape: rectangle}
+monitoring_integration: "Monitoring Integration" {shape: rectangle}
+aws_native_service_integration: "AWS Native Service Integration" {shape: rectangle}
+
+center -> hcx_vmware_hybrid_cloud_extension
+center -> direct_connect
+center -> transit_gateway_tgw
+center -> monitoring_integration
+center -> aws_native_service_integration
+```
+
 ## HCX (VMware Hybrid Cloud Extension)
 
 HCX is the primary migration tool for moving VMs from on-premises vSphere to EVS.

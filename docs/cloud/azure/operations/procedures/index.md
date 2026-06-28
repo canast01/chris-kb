@@ -18,6 +18,25 @@ Day-to-day operational tasks across compute, storage, and networking.
 
 ---
 
+```d2
+direction: right
+
+hub: "Azure\nOperations" {shape: hexagon}
+azure_operations_change_flow: "Azure Operations Change Flow" {shape: rectangle}
+runbook_templates: "Runbook Templates" {shape: rectangle}
+azure_automation: "Azure Automation" {shape: rectangle}
+create_a_virtual_machine_azure_cli: "Create a Virtual Machine (Azure CLI)" {shape: rectangle}
+resize_a_virtual_machine: "Resize a Virtual Machine" {shape: rectangle}
+create_and_attach_a_managed_disk: "Create and Attach a Managed Disk" {shape: rectangle}
+
+hub -> azure_operations_change_flow
+hub -> runbook_templates
+hub -> azure_automation
+hub -> create_a_virtual_machine_azure_cli
+hub -> resize_a_virtual_machine
+hub -> create_and_attach_a_managed_disk
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

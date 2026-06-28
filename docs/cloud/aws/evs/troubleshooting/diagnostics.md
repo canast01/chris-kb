@@ -52,6 +52,32 @@ graph TD
     class Q,R escalate
 ```
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+step_1_check_aws_host_and_infrastruc: "Step 1 — Check AWS host and infrastructure state" {shape: rectangle}
+step_2_check_cloudtrail_for_evs_api_: "Step 2 — Check CloudTrail for EVS API errors" {shape: rectangle}
+step_3_inspect_vpc_flow_logs_for_net: "Step 3 — Inspect VPC Flow Logs for network drops" {shape: rectangle}
+step_4_check_vmware_platform_health: "Step 4 — Check VMware platform health" {shape: rectangle}
+step_5_check_nsxt_health_in_evs: "Step 5 — Check NSX-T health in EVS" {shape: rectangle}
+step_6_collect_vsphere_nsxt_and_sddc: "Step 6 — Collect vSphere, NSX-T, and SDDC Manager bundles" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> step_1_check_aws_host_and_infrastruc: investigate
+symptom -> step_2_check_cloudtrail_for_evs_api_: investigate
+symptom -> step_3_inspect_vpc_flow_logs_for_net: investigate
+symptom -> step_4_check_vmware_platform_health: investigate
+symptom -> step_5_check_nsxt_health_in_evs: investigate
+symptom -> step_6_collect_vsphere_nsxt_and_sddc: investigate
+step_1_check_aws_host_and_infrastruc -> resolution
+step_2_check_cloudtrail_for_evs_api_ -> resolution
+step_3_inspect_vpc_flow_logs_for_net -> resolution
+step_4_check_vmware_platform_health -> resolution
+step_5_check_nsxt_health_in_evs -> resolution
+step_6_collect_vsphere_nsxt_and_sddc -> resolution
+```
+
 ## Before you begin
 
 - **Access:** AWS CLI configured with EVS permissions; vCenter admin credentials; NSX-T admin credentials; HCX admin credentials

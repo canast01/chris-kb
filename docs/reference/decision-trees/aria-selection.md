@@ -43,6 +43,17 @@ flowchart TD
     K --> M([Full Aria Suite stack\nLCM + Workspace ONE Access\n+ chosen Aria products])
 ```
 
+```d2
+direction: right
+
+center: "Decision Trees" {shape: hexagon}
+product_summary: "Product summary" {shape: rectangle}
+deployment_order_when_installing_the: "Deployment order when installing the full suite" {shape: rectangle}
+
+center -> product_summary
+center -> deployment_order_when_installing_the
+```
+
 ## Product summary
 
 | Product | Purpose | Key API | Replaces |

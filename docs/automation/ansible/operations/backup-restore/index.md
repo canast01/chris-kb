@@ -115,6 +115,23 @@ ansible-vault view group_vars/prod/vault.yml > /dev/null && echo "PASS: Vault de
 test -f /backups/awx/awx-backup-$(date -d yesterday +%F).json && echo "PASS: AWX backup found"
 ```
 
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+participant "Source\n(Ansible)" as SRC
+participant "Backup Engine" as ENG
+participant "Target / Vault" as TGT
+
+SRC -> ENG: Verify
+ENG -> TGT: Write
+TGT --> ENG: Confirmed
+ENG --> SRC: Done
+
+@enduml
+```
+
 ## Before you begin
 
 - **Access:** SSH key or service account with sudo on managed hosts; Ansible control node

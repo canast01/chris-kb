@@ -53,6 +53,17 @@ graph TB
   </a>
 </div>
 
+```d2
+direction: right
+
+center: "PowerMax" {shape: hexagon}
+models: "Models" {shape: rectangle}
+topology: "Topology" {shape: rectangle}
+
+center -> models
+center -> topology
+```
+
 ## Models
 
 | Model | Engines | Max Raw Capacity | Primary Use Case |

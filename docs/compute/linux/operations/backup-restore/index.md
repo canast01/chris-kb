@@ -144,6 +144,23 @@ if [ "$FAILED" -gt 0 ]; then
 fi
 ```
 
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+participant "Source\n(Linux)" as SRC
+participant "Backup Engine" as ENG
+participant "Target / Vault" as TGT
+
+SRC -> ENG: Verify
+ENG -> TGT: Write
+TGT --> ENG: Confirmed
+ENG --> SRC: Done
+
+@enduml
+```
+
 ## Before you begin
 
 - **Access:** root or sudo-capable account on target hosts

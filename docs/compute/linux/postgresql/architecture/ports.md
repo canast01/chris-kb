@@ -20,6 +20,25 @@ Firewall port reference for PostgreSQL. Covers client connections, replication (
 
 
 
+```d2
+direction: right
+
+center: "PostgreSQL" {shape: hexagon}
+inbound_client_connections: "Inbound — Client Connections" {shape: rectangle}
+streaming_replication_primary_to_rep: "Streaming Replication (Primary to Replica)" {shape: rectangle}
+patroni_ha_cluster_management: "Patroni HA (Cluster Management)" {shape: rectangle}
+monitoring: "Monitoring" {shape: rectangle}
+firewall_zone_summary: "Firewall Zone Summary" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+center -> inbound_client_connections
+center -> streaming_replication_primary_to_rep
+center -> patroni_ha_cluster_management
+center -> monitoring
+center -> firewall_zone_summary
+center -> verify
+```
+
 ## Inbound — Client Connections
 
 | Port | Protocol | Source | Purpose |

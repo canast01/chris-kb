@@ -14,6 +14,42 @@ Internal architecture and data-path reference: controller pair, NVRAM write path
 ![Pure FlashArray — How It Works](../../../../assets/storage-pure-flasharray-architecture-how-it-works.svg)
 
 
+```d2
+direction: right
+
+hosts: Hosts {
+  host1: Host 1 {shape: rectangle}
+  host2: Host 2 {shape: rectangle}
+}
+
+fa1: FlashArray //X (site A) {
+  ct0: Controller 0 {shape: rectangle}
+  ct1: Controller 1 {shape: rectangle}
+  nvme: NVMe Flash Modules {shape: cylinder}
+  ct0 -> ct1: Active/Active (NVRAM sync)
+  ct0 -> nvme
+  ct1 -> nvme
+}
+
+fa2: FlashArray //X (site B, ActiveCluster) {
+  ct0b: Controller 0 {shape: rectangle}
+  ct1b: Controller 1 {shape: rectangle}
+  nvme2: NVMe Flash Modules {shape: cylinder}
+  ct0b -> ct1b: Active/Active (NVRAM sync)
+  ct0b -> nvme2
+  ct1b -> nvme2
+}
+
+mediator: Pure1 Mediator\n(quorum arbitration) {shape: diamond}
+
+hosts.host1 -> fa1.ct0: FC / iSCSI / NVMe-oF
+hosts.host2 -> fa2.ct0b: FC / iSCSI / NVMe-oF
+
+fa1 -> fa2: ActiveCluster sync replication
+fa1 -> mediator: heartbeat
+fa2 -> mediator: heartbeat
+```
+
 ## Architecture Overview
 
 FlashArray is an all-NVMe (FA//X and FA//C) or all-flash (FA//m) block storage array built on a dual-controller, active-active architecture. There is no concept of a primary and secondary controller — both CT0 and CT1 serve host I/O simultaneously at all times. The array is designed so that any single hardware failure (a controller, a DirectFlash Module, an NVMe shelf, or a port) does not interrupt host I/O.

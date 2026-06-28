@@ -14,6 +14,15 @@ How It Works reference covering Overview, Management Group Hierarchy, Identity A
 ![Azure — How It Works](../../../../assets/cloud-azure-architecture-how-it-works-index.svg)
 
 
+```d2
+direction: right
+
+center: "Azure" {shape: hexagon}
+management_group_hierarchy: "Management Group Hierarchy" {shape: rectangle}
+
+center -> management_group_hierarchy
+```
+
 ## Overview
 
 Microsoft Azure is a hyperscale public cloud platform. Resources are organised in a hierarchy: Tenant (Entra ID) → Management Groups → Subscriptions → Resource Groups → Resources. Azure Policy and RBAC applied at a Management Group are inherited by all child subscriptions. A hub-and-spoke network topology connects on-premises environments via ExpressRoute to a hub VNet, with workload spoke VNets peered to the hub.

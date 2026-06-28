@@ -19,6 +19,25 @@ Firewall port reference for Microsoft Active Directory Domain Services. Covers c
 
 
 
+```d2
+direction: right
+
+center: "Active Directory" {shape: hexagon}
+client_authentication_all_domainjoin: "Client Authentication — All Domain-Joined Systems" {shape: rectangle}
+application_integration_ldapldaps: "Application Integration (LDAP/LDAPS)" {shape: rectangle}
+dns_domain_controller_as_dns_server: "DNS (Domain Controller as DNS Server)" {shape: rectangle}
+dctodc_replication_intrasite: "DC-to-DC Replication (Intra-Site)" {shape: rectangle}
+dctodc_replication_intersite_across_: "DC-to-DC Replication (Inter-Site — Across Firewall)" {shape: rectangle}
+remote_administration: "Remote Administration" {shape: rectangle}
+
+center -> client_authentication_all_domainjoin
+center -> application_integration_ldapldaps
+center -> dns_domain_controller_as_dns_server
+center -> dctodc_replication_intrasite
+center -> dctodc_replication_intersite_across_
+center -> remote_administration
+```
+
 ## Before you begin
 
 - Active Directory uses a large dynamic RPC port range (49152–65535) for replication and some admin operations — this is difficult to firewall without restricting the range via GPO

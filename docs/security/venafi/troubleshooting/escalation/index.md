@@ -19,6 +19,28 @@ Procedures for raising support cases with Venafi, collecting diagnostic data, an
 
 
 ---
+
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+actor "On-Call Engineer" as ENG
+participant "Escalation\nSystem" as SYS
+participant "Vendor Support" as SUP
+
+ENG -> SYS: Support Portal
+SYS --> ENG: Output
+ENG -> SYS: Severity Levels and SLA
+SYS --> ENG: Output
+ENG -> SYS: Pre-Collection Checklist
+SYS --> ENG: Output
+ENG -> SUP: Escalate with diagnostic bundle
+SUP --> ENG: Case / resolution path
+
+@enduml
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

@@ -18,6 +18,23 @@ SRDF/S CLI reference: `symrdf establish`, `symrdf query -synchronous`, `symrdf s
 
 All SRDF/S management is performed via SYMCLI (Solutions Enabler). Commands require appropriate RBAC permissions and must be run from a Solutions Enabler host with connectivity to the array. Always specify `-g <group>` to scope operations to the correct SRDF group and `-sid <sid>` to target the correct array.
 
+```d2
+direction: right
+
+hub: "SRDF/S\nOperations" {shape: hexagon}
+srdfs_operation_decision_map: "SRDF/S Operation Decision Map" {shape: rectangle}
+failover_failback: "Failover & Failback" {shape: rectangle}
+swap_metro_operations: "Swap & Metro Operations" {shape: rectangle}
+common_health_check_sequence: "Common Health Check Sequence" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+hub -> srdfs_operation_decision_map
+hub -> failover_failback
+hub -> swap_metro_operations
+hub -> common_health_check_sequence
+hub -> verify
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

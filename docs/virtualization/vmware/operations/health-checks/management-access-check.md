@@ -19,6 +19,27 @@ Checks to perform in vCenter UI:
 - [ ] Identity sources: Administration → Single Sign On → Configuration → Identity Sources — all should show Connected
 - [ ] System health: Administration → Deployments → System Configuration — all services green
 
+```d2
+direction: right
+
+begin_checks: "Begin Checks" {shape: oval}
+nsx_manager_access: "NSX Manager Access" {shape: rectangle}
+sddc_manager_access_vcf: "SDDC Manager Access (VCF)" {shape: rectangle}
+aria_operations_access: "Aria Operations Access" {shape: rectangle}
+adldap_identity_source_health: "AD/LDAP Identity Source Health" {shape: rectangle}
+access_control_review: "Access Control Review" {shape: rectangle}
+failed_login_monitoring: "Failed Login Monitoring" {shape: rectangle}
+generate_report: "Generate Report" {shape: oval}
+
+begin_checks -> nsx_manager_access
+nsx_manager_access -> sddc_manager_access_vcf
+sddc_manager_access_vcf -> aria_operations_access
+aria_operations_access -> adldap_identity_source_health
+adldap_identity_source_health -> access_control_review
+access_control_review -> failed_login_monitoring
+failed_login_monitoring -> generate_report
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

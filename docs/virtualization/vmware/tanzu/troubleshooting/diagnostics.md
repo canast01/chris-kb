@@ -54,6 +54,32 @@ graph TD
     class R,S escalate
 ```
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+step_1_check_cluster_events_and_pod_: "Step 1 — Check cluster events and pod state" {shape: rectangle}
+step_2_diagnose_supervisor_control_p: "Step 2 — Diagnose Supervisor control plane issues" {shape: rectangle}
+step_3_collect_the_diagnostics_bundl: "Step 3 — Collect the diagnostics bundle" {shape: rectangle}
+step_4_diagnose_csi_driver_and_pvc_i: "Step 4 — Diagnose CSI driver and PVC issues" {shape: rectangle}
+step_5_diagnose_pinniped_authenticat: "Step 5 — Diagnose Pinniped authentication failures" {shape: rectangle}
+step_6_check_harbor_registry_logs: "Step 6 — Check Harbor registry logs" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> step_1_check_cluster_events_and_pod_: investigate
+symptom -> step_2_diagnose_supervisor_control_p: investigate
+symptom -> step_3_collect_the_diagnostics_bundl: investigate
+symptom -> step_4_diagnose_csi_driver_and_pvc_i: investigate
+symptom -> step_5_diagnose_pinniped_authenticat: investigate
+symptom -> step_6_check_harbor_registry_logs: investigate
+step_1_check_cluster_events_and_pod_ -> resolution
+step_2_diagnose_supervisor_control_p -> resolution
+step_3_collect_the_diagnostics_bundl -> resolution
+step_4_diagnose_csi_driver_and_pvc_i -> resolution
+step_5_diagnose_pinniped_authenticat -> resolution
+step_6_check_harbor_registry_logs -> resolution
+```
+
 ## Before you begin
 
 - **Access:** kubeconfig for the management cluster and affected workload cluster; SSH access to the Supervisor control plane VMs (SSH key from vCenter → Workload Management → Supervisor); Harbor admin credentials

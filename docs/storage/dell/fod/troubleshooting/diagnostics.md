@@ -43,6 +43,32 @@ graph TD
     class L,N escalate
 ```
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+step_1_list_current_active_licenses: "Step 1 — List current active licenses" {shape: rectangle}
+step_2_check_array_serial_number: "Step 2 — Check array serial number" {shape: rectangle}
+step_3_inspect_the_fod_key_file: "Step 3 — Inspect the FoD key file" {shape: rectangle}
+step_4_dryrun_the_key_install_previe: "Step 4 — Dry-run the key install (preview)" {shape: rectangle}
+step_5_check_firmware_version_compat: "Step 5 — Check firmware version compatibility" {shape: rectangle}
+step_6_collect_diagnostic_output_for: "Step 6 — Collect diagnostic output for Dell SR" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> step_1_list_current_active_licenses: investigate
+symptom -> step_2_check_array_serial_number: investigate
+symptom -> step_3_inspect_the_fod_key_file: investigate
+symptom -> step_4_dryrun_the_key_install_previe: investigate
+symptom -> step_5_check_firmware_version_compat: investigate
+symptom -> step_6_collect_diagnostic_output_for: investigate
+step_1_list_current_active_licenses -> resolution
+step_2_check_array_serial_number -> resolution
+step_3_inspect_the_fod_key_file -> resolution
+step_4_dryrun_the_key_install_previe -> resolution
+step_5_check_firmware_version_compat -> resolution
+step_6_collect_diagnostic_output_for -> resolution
+```
+
 ## Before you begin
 
 - **Access:** Solutions Enabler access to the array (gatekeeper LUNs or Unisphere); the FoD `.lic` license file received from Dell

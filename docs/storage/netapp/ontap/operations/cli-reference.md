@@ -22,6 +22,25 @@ NetApp ONTAP is the operating system that runs on NetApp storage arrays (AFF, FA
 
 ---
 
+```d2
+direction: right
+
+hub: "NetApp ONTAP\nOperations" {shape: hexagon}
+cluster_nodes: "Cluster & Nodes" {shape: rectangle}
+system_health_events: "System Health & Events" {shape: rectangle}
+storage_aggregates_disks: "Storage — Aggregates & Disks" {shape: rectangle}
+volumes: "Volumes" {shape: rectangle}
+snapshots: "Snapshots" {shape: rectangle}
+svms_storage_virtual_machines: "SVMs (Storage Virtual Machines)" {shape: rectangle}
+
+hub -> cluster_nodes
+hub -> system_health_events
+hub -> storage_aggregates_disks
+hub -> volumes
+hub -> snapshots
+hub -> svms_storage_virtual_machines
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

@@ -19,6 +19,29 @@ Catalog of known NSX-T / NSX 4.x bugs, error codes, and workarounds covering man
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+manager_and_control_plane: "Manager and Control Plane" {shape: rectangle}
+overlay_geneve: "Overlay / Geneve" {shape: rectangle}
+edge_and_routing: "Edge and Routing" {shape: rectangle}
+distributed_firewall: "Distributed Firewall" {shape: rectangle}
+certificates: "Certificates" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> manager_and_control_plane: investigate
+symptom -> overlay_geneve: investigate
+symptom -> edge_and_routing: investigate
+symptom -> distributed_firewall: investigate
+symptom -> certificates: investigate
+manager_and_control_plane -> resolution
+overlay_geneve -> resolution
+edge_and_routing -> resolution
+distributed_firewall -> resolution
+certificates -> resolution
+```
+
 ## Before you begin
 
 - Check Manager cluster health first: `GET /api/v1/cluster/status` or NSX UI → System → Appliances.

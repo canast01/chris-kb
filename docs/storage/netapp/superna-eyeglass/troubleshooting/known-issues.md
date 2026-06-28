@@ -18,6 +18,20 @@ Catalog of known Superna Eyeglass bugs, error codes, and workarounds covering Sy
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+dr_orchestration: "DR Orchestration" {shape: rectangle}
+share_and_quota_replication: "Share and Quota Replication" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> dr_orchestration: investigate
+symptom -> share_and_quota_replication: investigate
+dr_orchestration -> resolution
+share_and_quota_replication -> resolution
+```
+
 ## Before you begin
 
 - Eyeglass errors appear in the web UI under `Administration → Activity → Jobs`.

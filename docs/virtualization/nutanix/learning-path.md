@@ -19,6 +19,25 @@ Recommended reading order for engineers getting up to speed on Nutanix HCI — f
 
 ---
 
+```d2
+direction: right
+
+center: "Nutanix AHV" {shape: hexagon}
+stage_1_foundation_start_here: "Stage 1 — Foundation (Start Here)" {shape: rectangle}
+stage_2_daytoday_operations: "Stage 2 — Day-to-Day Operations" {shape: rectangle}
+stage_3_security: "Stage 3 — Security" {shape: rectangle}
+stage_4_troubleshooting: "Stage 4 — Troubleshooting" {shape: rectangle}
+stage_5_advanced_topics: "Stage 5 — Advanced Topics" {shape: rectangle}
+recommended_certifications: "Recommended Certifications" {shape: rectangle}
+
+center -> stage_1_foundation_start_here
+center -> stage_2_daytoday_operations
+center -> stage_3_security
+center -> stage_4_troubleshooting
+center -> stage_5_advanced_topics
+center -> recommended_certifications
+```
+
 ## Stage 1 — Foundation (Start Here)
 
 Read in order. Each page builds on the previous.

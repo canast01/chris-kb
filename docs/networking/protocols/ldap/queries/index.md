@@ -13,6 +13,23 @@ LDAP Queries reference covering Overview, Filter Syntax, Common AD Attributes, P
 
 
 
+```d2
+direction: right
+
+center: "LDAP" {shape: hexagon}
+filter_syntax: "Filter Syntax" {shape: rectangle}
+common_ad_attributes: "Common AD Attributes" {shape: rectangle}
+powershell_getadobject: "PowerShell: Get-ADObject" {shape: rectangle}
+search_scope_and_base: "Search Scope and Base" {shape: rectangle}
+paging_large_result_sets: "Paging Large Result Sets" {shape: rectangle}
+
+center -> filter_syntax
+center -> common_ad_attributes
+center -> powershell_getadobject
+center -> search_scope_and_base
+center -> paging_large_result_sets
+```
+
 ## Overview
 
 LDAP queries use a filter syntax based on RFC 4515. Filters are composed of attribute-value assertions enclosed in parentheses. Boolean operators (`&`, `|`, `!`) combine multiple assertions. Knowing the common AD attributes and search bases is essential for effective directory lookups.

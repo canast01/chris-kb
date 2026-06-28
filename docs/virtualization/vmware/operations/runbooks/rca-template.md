@@ -16,6 +16,31 @@ RCA Template reference covering Summary, Impact, Timeline, Root Cause, Resolutio
 
 
 
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+actor "Responder" as A
+participant "Runbooks System" as B
+participant "Dependent System" as C
+
+A -> B: Summary
+B --> A: OK
+A -> B: Impact
+B --> A: OK
+A -> B: Timeline
+B --> A: OK
+A -> B: Root Cause
+B --> A: OK
+A -> B: Resolution
+B --> A: OK
+A -> B: Prevention
+B --> A: OK
+
+@enduml
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

@@ -22,6 +22,32 @@ PVWA is accessible over HTTPS only (TLS 1.2 minimum, TLS 1.3 preferred). All pri
 | LDAP / AD auth | PVWA authenticates against AD; group-based safe membership |
 | Break-glass account | Emergency Vault Admin account in sealed safe; access via dual-control + incident ticket |
 
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+actor "User / Service" as USR
+participant "Authentication" as SVC
+participant "Identity Provider\n(LDAP / OIDC / AD)" as IDP
+participant "Token / Session Store" as TOKEN
+
+USR -> SVC: Authentication request
+SVC -> IDP: Validate credentials
+IDP --> SVC: Identity confirmed
+SVC -> TOKEN: Issue session token
+TOKEN --> SVC: Token granted
+SVC --> USR: Access allowed
+
+note over SVC
+  PVWA Authentication Flow
+  LDAP Configuration
+  MFA (RADIUS) Configuration
+end note
+
+@enduml
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

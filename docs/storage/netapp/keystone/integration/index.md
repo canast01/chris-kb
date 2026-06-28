@@ -17,6 +17,17 @@ NetApp Keystone Integration reference covering ActiveIQ Digital Advisor, Keyston
 
 Authenticate via ActiveIQ API tokens generated in the BlueXP portal. Tokens are scoped to the customer account and expire on a configurable schedule.
 
+```d2
+direction: right
+
+center: "Keystone STaaS" {shape: hexagon}
+itsm_integration: "ITSM Integration" {shape: rectangle}
+cloudops_integration: "CloudOps Integration" {shape: rectangle}
+
+center -> itsm_integration
+center -> cloudops_integration
+```
+
 ## ITSM Integration
 
 Integrate Keystone consumption data with ServiceNow CMDB or similar ITSM platforms for:

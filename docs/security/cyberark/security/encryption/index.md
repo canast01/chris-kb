@@ -15,6 +15,15 @@ Session recordings are encrypted at rest using AES-256. Vault audit log integrit
 
 
 
+```d2
+direction: down
+
+encryption_controls: "Encryption Controls" {shape: rectangle}
+key_management_reference: "Key Management Reference" {shape: rectangle}
+
+encryption_controls -> key_management_reference: hardens
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

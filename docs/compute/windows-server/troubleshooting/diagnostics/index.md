@@ -18,6 +18,32 @@ Diagnostics reference covering Windows Event Log Pipeline, Key Security Event ID
 
 Diagnostic procedures and log analysis.
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+windows_event_log_pipeline: "Windows Event Log Pipeline" {shape: rectangle}
+exporting_logs: "Exporting Logs" {shape: rectangle}
+event_log_forwarding_wef: "Event Log Forwarding (WEF)" {shape: rectangle}
+log_size_and_retention: "Log Size and Retention" {shape: rectangle}
+sysmon_extended_logging: "Sysmon (Extended Logging)" {shape: rectangle}
+performance_analysis: "Performance Analysis" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> windows_event_log_pipeline: investigate
+symptom -> exporting_logs: investigate
+symptom -> event_log_forwarding_wef: investigate
+symptom -> log_size_and_retention: investigate
+symptom -> sysmon_extended_logging: investigate
+symptom -> performance_analysis: investigate
+windows_event_log_pipeline -> resolution
+exporting_logs -> resolution
+event_log_forwarding_wef -> resolution
+log_size_and_retention -> resolution
+sysmon_extended_logging -> resolution
+performance_analysis -> resolution
+```
+
 ## Before you begin
 
 - **Access:** Local Administrator or Domain Admin on target hosts

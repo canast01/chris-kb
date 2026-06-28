@@ -54,6 +54,25 @@ CLI Reference reference covering SRM REST API — Recovery Plans, PowerCLI for S
 ---
 
 
+```d2
+direction: right
+
+hub: "Site Recovery Manager\nOperations" {shape: hexagon}
+test_failover: "Test Failover" {shape: rectangle}
+start_a_test_failover: "Start a test failover" {shape: rectangle}
+check_test_status: "Check test status" {shape: rectangle}
+clean_up_remove_test_snapshot_restor: "Clean up (remove test snapshot, restore network)" {shape: rectangle}
+recovery_planned_migration_failover: "Recovery (Planned Migration / Failover)" {shape: rectangle}
+execute_planned_migration_graceful_b: "Execute planned migration (graceful, bidirectional)" {shape: rectangle}
+
+hub -> test_failover
+hub -> start_a_test_failover
+hub -> check_test_status
+hub -> clean_up_remove_test_snapshot_restor
+hub -> recovery_planned_migration_failover
+hub -> execute_planned_migration_graceful_b
+```
+
 ## Before you begin
 
 - **Access:** vCenter read-only minimum; Administrator role for remediation steps

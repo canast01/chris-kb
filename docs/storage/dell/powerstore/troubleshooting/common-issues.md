@@ -18,6 +18,32 @@ Common Issues reference covering Quick Reference, Host Connectivity Issues, Repl
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+diagnostic_flow: "Diagnostic Flow" {shape: rectangle}
+quick_reference: "Quick Reference" {shape: rectangle}
+host_connectivity_issues: "Host Connectivity Issues" {shape: rectangle}
+replication_issues: "Replication Issues" {shape: rectangle}
+performance_issues: "Performance Issues" {shape: rectangle}
+capacity_issues: "Capacity Issues" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> diagnostic_flow: investigate
+symptom -> quick_reference: investigate
+symptom -> host_connectivity_issues: investigate
+symptom -> replication_issues: investigate
+symptom -> performance_issues: investigate
+symptom -> capacity_issues: investigate
+diagnostic_flow -> resolution
+quick_reference -> resolution
+host_connectivity_issues -> resolution
+replication_issues -> resolution
+performance_issues -> resolution
+capacity_issues -> resolution
+```
+
 ## Diagnostic Flow
 
 ```mermaid

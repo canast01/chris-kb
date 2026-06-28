@@ -11,6 +11,21 @@ Restoration in the IRE follows a staged process: identify the latest clean backu
 ![IRE — Restore](../../../../assets/backup-dr-operations-ire-restore-index.svg)
 
 
+```d2
+direction: right
+
+center: "DR Operations" {shape: hexagon}
+restore_workflow: "Restore Workflow" {shape: rectangle}
+reintroduction_to_production: "Reintroduction to Production" {shape: rectangle}
+restore_time_estimates: "Restore Time Estimates" {shape: rectangle}
+common_issues: "Common Issues" {shape: rectangle}
+
+center -> restore_workflow
+center -> reintroduction_to_production
+center -> restore_time_estimates
+center -> common_issues
+```
+
 ## Restore Workflow
 
 ```mermaid

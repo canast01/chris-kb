@@ -48,6 +48,32 @@ graph TD
     class O escalate
 ```
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+step_1_check_appliance_health: "Step 1 — Check appliance health" {shape: rectangle}
+step_2_check_cluster_node_health: "Step 2 — Check cluster node health" {shape: rectangle}
+step_3_check_syslog_and_ingestion: "Step 3 — Check syslog and ingestion" {shape: rectangle}
+step_4_check_cassandra_performance: "Step 4 — Check Cassandra performance" {shape: rectangle}
+step_5_check_agent_liagent_on_source: "Step 5 — Check agent (liagent) on source hosts" {shape: rectangle}
+step_6_check_ntp: "Step 6 — Check NTP" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> step_1_check_appliance_health: investigate
+symptom -> step_2_check_cluster_node_health: investigate
+symptom -> step_3_check_syslog_and_ingestion: investigate
+symptom -> step_4_check_cassandra_performance: investigate
+symptom -> step_5_check_agent_liagent_on_source: investigate
+symptom -> step_6_check_ntp: investigate
+step_1_check_appliance_health -> resolution
+step_2_check_cluster_node_health -> resolution
+step_3_check_syslog_and_ingestion -> resolution
+step_4_check_cassandra_performance -> resolution
+step_5_check_agent_liagent_on_source -> resolution
+step_6_check_ntp -> resolution
+```
+
 ## Before you begin
 
 - **Access:** SSH to the vRLI appliance as `admin`; VAMI access at `https://<vRLI-IP>:5480`; vRLI admin UI access

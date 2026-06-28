@@ -15,6 +15,17 @@ How It Works reference covering Overview, Three-Tier Topology, Domain Sizing Gui
 
 
 
+```d2
+direction: right
+
+center: "NetBackup" {shape: hexagon}
+threetier_topology: "Three-Tier Topology" {shape: rectangle}
+domain_sizing_guidelines: "Domain Sizing Guidelines" {shape: rectangle}
+
+center -> threetier_topology
+center -> domain_sizing_guidelines
+```
+
 ## Overview
 
 NetBackup operates on a three-tier architecture: a centralized Primary Server (formerly Master Server) coordinates all operations via policy scheduling, catalog management, and resource arbitration. Media Servers handle data movement — reading from clients and writing to storage units. The Catalog is the operational heartbeat of the entire deployment, storing all image metadata, policies, and media inventory.

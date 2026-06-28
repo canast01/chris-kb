@@ -6,6 +6,27 @@ search:
   boost: 1.5
 ---
 
+```d2
+direction: right
+
+plan: "Plan" {shape: oval}
+prerequisites: "Prerequisites" {shape: rectangle}
+install_snapcenter_server: "Install SnapCenter Server" {shape: rectangle}
+add_ontap_storage_system: "Add ONTAP Storage System" {shape: rectangle}
+install_plugin_on_first_host: "Install Plugin on First Host" {shape: rectangle}
+create_backup_policy: "Create Backup Policy" {shape: rectangle}
+run_first_backup: "Run First Backup" {shape: rectangle}
+validate: "Validate" {shape: oval}
+
+plan -> prerequisites
+prerequisites -> install_snapcenter_server
+install_snapcenter_server -> add_ontap_storage_system
+add_ontap_storage_system -> install_plugin_on_first_host
+install_plugin_on_first_host -> create_backup_policy
+create_backup_policy -> run_first_backup
+run_first_backup -> validate
+```
+
 ## Before you begin
 
 - **Access:** admin credentials for the target system and any upstream dependencies (DNS, NTP, vCenter, directory services)

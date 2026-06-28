@@ -18,6 +18,23 @@ Catalog of known Nexus Dashboard bugs, error codes, and workarounds covering clu
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+cluster_health: "Cluster Health" {shape: rectangle}
+services: "Services" {shape: rectangle}
+upgrade: "Upgrade" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> cluster_health: investigate
+symptom -> services: investigate
+symptom -> upgrade: investigate
+cluster_health -> resolution
+services -> resolution
+upgrade -> resolution
+```
+
 ## Before you begin
 
 - Nexus Dashboard cluster health: ND UI → Infrastructure → Cluster Configuration → Health.

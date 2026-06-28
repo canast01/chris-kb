@@ -15,6 +15,23 @@ Pure1 Standards reference covering Array Tagging Policy, Capacity Threshold Stan
 
 
 
+```d2
+direction: down
+
+capacity_threshold_standards: "Capacity Threshold Standards" {shape: rectangle}
+alert_notification_routing: "Alert Notification Routing" {shape: rectangle}
+health_score_standards: "Health Score Standards" {shape: rectangle}
+api_access_standards: "API Access Standards" {shape: rectangle}
+reporting_cadence: "Reporting Cadence" {shape: rectangle}
+purity_version_standards: "Purity Version Standards" {shape: rectangle}
+
+capacity_threshold_standards -> alert_notification_routing: hardens
+alert_notification_routing -> health_score_standards: hardens
+health_score_standards -> api_access_standards: hardens
+api_access_standards -> reporting_cadence: hardens
+reporting_cadence -> purity_version_standards: hardens
+```
+
 ## Capacity Threshold Standards
 
 | Metric | Warning | Critical | Action |

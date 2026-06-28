@@ -16,6 +16,25 @@ Key Vault secrets store arbitrary string values — passwords, connection string
 
 
 
+```d2
+direction: right
+
+center: "Azure" {shape: hexagon}
+secret_structure: "Secret Structure" {shape: rectangle}
+managing_secrets: "Managing Secrets" {shape: rectangle}
+secret_references_in_azure_services: "Secret References in Azure Services" {shape: rectangle}
+secret_rotation: "Secret Rotation" {shape: rectangle}
+monitoring_secret_expiry: "Monitoring Secret Expiry" {shape: rectangle}
+common_issues: "Common Issues" {shape: rectangle}
+
+center -> secret_structure
+center -> managing_secrets
+center -> secret_references_in_azure_services
+center -> secret_rotation
+center -> monitoring_secret_expiry
+center -> common_issues
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

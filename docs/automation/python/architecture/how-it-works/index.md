@@ -16,6 +16,21 @@ Python is the dominant language for infrastructure automation, data pipelines, a
 
 ---
 
+```d2
+direction: right
+
+center: "Python" {shape: hexagon}
+architecture_model: "Architecture Model" {shape: rectangle}
+async_patterns: "Async Patterns" {shape: rectangle}
+containerisation_with_docker: "Containerisation with Docker" {shape: rectangle}
+project_layout: "Project Layout" {shape: rectangle}
+
+center -> architecture_model
+center -> async_patterns
+center -> containerisation_with_docker
+center -> project_layout
+```
+
 ## Architecture Model
 
 ```mermaid

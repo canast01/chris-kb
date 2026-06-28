@@ -17,6 +17,25 @@ Firewall and security-group port reference for AWS infrastructure. Covers manage
 ![AWS — Ports and Network Requirements](../../../assets/cloud-aws-architecture-ports.svg)
 
 
+```d2
+direction: right
+
+center: "AWS" {shape: hexagon}
+network_zones: "Network Zones" {shape: rectangle}
+outbound_onpremises_to_aws_apis: "Outbound — On-Premises to AWS APIs" {shape: rectangle}
+ec2_instance_management: "EC2 Instance Management" {shape: rectangle}
+load_balancer_alb_nlb_publicfacing: "Load Balancer (ALB / NLB) — Public-Facing" {shape: rectangle}
+rds_database: "RDS / Database" {shape: rectangle}
+s3_endpoint_access: "S3 — Endpoint Access" {shape: rectangle}
+
+center -> network_zones
+center -> outbound_onpremises_to_aws_apis
+center -> ec2_instance_management
+center -> load_balancer_alb_nlb_publicfacing
+center -> rds_database
+center -> s3_endpoint_access
+```
+
 ## Network Zones
 
 ![AWS — Ports and Network Requirements — Diagram](../../../assets/cloud-aws-architecture-ports-diagram.svg)

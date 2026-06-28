@@ -16,6 +16,17 @@ Nexus Dashboard: Fabric Alerts, Severity, Acknowledgement, and Notification Poli
 
 
 
+```d2
+direction: right
+
+hub: "Nexus Dashboard\nOperations" {shape: hexagon}
+common_alert_issues: "Common Alert Issues" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+hub -> common_alert_issues
+hub -> verify
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

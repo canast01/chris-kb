@@ -34,6 +34,27 @@ flowchart TD
     style s9 fill:#2e7d32,color:#fff,stroke:#1b5e20
 ```
 
+```d2
+direction: right
+
+plan: "Plan" {shape: oval}
+prerequisites: "Prerequisites" {shape: rectangle}
+install_confluence: "Install Confluence" {shape: rectangle}
+configure_database: "Configure Database" {shape: rectangle}
+create_first_space: "Create First Space" {shape: rectangle}
+configure_ldap_authentication: "Configure LDAP Authentication" {shape: rectangle}
+install_recommended_addons: "Install Recommended Add-ons" {shape: rectangle}
+validate: "Validate" {shape: oval}
+
+plan -> prerequisites
+prerequisites -> install_confluence
+install_confluence -> configure_database
+configure_database -> create_first_space
+create_first_space -> configure_ldap_authentication
+configure_ldap_authentication -> install_recommended_addons
+install_recommended_addons -> validate
+```
+
 ## Before you begin
 
 - **Access:** admin credentials for the target system and any upstream dependencies (DNS, NTP, vCenter, directory services)

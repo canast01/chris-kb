@@ -15,6 +15,25 @@ Upgrade Sequence Reference reference covering Correct Upgrade Order, Why Order M
 
 
 
+```d2
+direction: right
+
+center: "Upgrade Sequence Reference" {shape: hexagon}
+correct_upgrade_order: "Correct Upgrade Order" {shape: rectangle}
+why_order_matters: "Why Order Matters" {shape: rectangle}
+vcf_vmware_cloud_foundation_sequence: "VCF (VMware Cloud Foundation) Sequence" {shape: rectangle}
+compatibility_matrix_references: "Compatibility Matrix References" {shape: rectangle}
+key_version_constraints: "Key Version Constraints" {shape: rectangle}
+maintenance_window_planning: "Maintenance Window Planning" {shape: rectangle}
+
+center -> correct_upgrade_order
+center -> why_order_matters
+center -> vcf_vmware_cloud_foundation_sequence
+center -> compatibility_matrix_references
+center -> key_version_constraints
+center -> maintenance_window_planning
+```
+
 ## Correct Upgrade Order
 
 Upgrading VMware components in the wrong order causes compatibility failures, plugin breakage, and in worst cases requires rollback. Always follow this sequence:

@@ -20,6 +20,19 @@ Known Issues reference covering Incident Triage, Common Issues Reference.
 
 ---
 
+```d2
+direction: right
+
+hub: "FlashBlade\nOperations" {shape: hexagon}
+incident_triage: "Incident Triage" {shape: rectangle}
+common_issues_reference: "Common Issues Reference" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+hub -> incident_triage
+hub -> common_issues_reference
+hub -> verify
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

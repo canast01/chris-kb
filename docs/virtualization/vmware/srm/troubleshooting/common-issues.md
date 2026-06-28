@@ -25,6 +25,32 @@ search:
 
 ---
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+diagnostic_flow: "Diagnostic Flow" {shape: rectangle}
+recovery_plan_stuck_in_running: "Recovery Plan Stuck in 'Running'" {shape: rectangle}
+protection_group_shows_error: "Protection Group Shows Error" {shape: rectangle}
+test_failover_vms_fail_to_power_on: "Test Failover: VMs Fail to Power On" {shape: rectangle}
+failback_fails: "Failback Fails" {shape: rectangle}
+triage_decision_tree: "Triage Decision Tree" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> diagnostic_flow: investigate
+symptom -> recovery_plan_stuck_in_running: investigate
+symptom -> protection_group_shows_error: investigate
+symptom -> test_failover_vms_fail_to_power_on: investigate
+symptom -> failback_fails: investigate
+symptom -> triage_decision_tree: investigate
+diagnostic_flow -> resolution
+recovery_plan_stuck_in_running -> resolution
+protection_group_shows_error -> resolution
+test_failover_vms_fail_to_power_on -> resolution
+failback_fails -> resolution
+triage_decision_tree -> resolution
+```
+
 ## Diagnostic Flow
 
 ```mermaid

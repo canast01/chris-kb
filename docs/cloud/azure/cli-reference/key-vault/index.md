@@ -39,6 +39,19 @@ az keyvault certificate list --vault-name <vault>
 az keyvault certificate show --vault-name <vault> --name <cert>
 ```
 
+```d2
+direction: right
+
+center: "Azure" {shape: hexagon}
+component_a: "Component A" {shape: rectangle}
+component_b: "Component B" {shape: rectangle}
+component_c: "Component C" {shape: rectangle}
+
+center -> component_a
+center -> component_b
+center -> component_c
+```
+
 ## See also
 
 - [Azure CLI Reference](../index.md)

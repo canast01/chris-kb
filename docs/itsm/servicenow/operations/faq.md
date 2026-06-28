@@ -14,6 +14,23 @@ Common questions about ServiceNow operations, configuration, and troubleshooting
 
 ![ServiceNow FAQ](../../../assets/itsm-servicenow-operations-faq.svg)
 
+```d2
+direction: right
+
+hub: "ServiceNow\nOperations" {shape: hexagon}
+general: "General" {shape: rectangle}
+configuration: "Configuration" {shape: rectangle}
+operations: "Operations" {shape: rectangle}
+troubleshooting: "Troubleshooting" {shape: rectangle}
+backup_and_recovery: "Backup and Recovery" {shape: rectangle}
+
+hub -> general
+hub -> configuration
+hub -> operations
+hub -> troubleshooting
+hub -> backup_and_recovery
+```
+
 ## General
 
 **Q: How do I check which ServiceNow release is running?**

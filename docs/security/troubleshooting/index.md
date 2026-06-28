@@ -19,6 +19,29 @@ Security platform troubleshooting — certificate validation failures, CyberArk 
 <a class="kb-card" href="authentication-failures/"><strong>Authentication Failures</strong><span>AD, Kerberos, LDAP, certificate, and MFA authentication failure diagnosis and resolution.</span></a>
 </div>
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+symptom_index: "Symptom Index" {shape: rectangle}
+tls_certificate_failures: "TLS / Certificate Failures" {shape: rectangle}
+cyberark_vault_connectivity: "CyberArk Vault Connectivity" {shape: rectangle}
+mfa_duo_troubleshooting: "MFA / Duo Troubleshooting" {shape: rectangle}
+kerberos_authentication_failures: "Kerberos Authentication Failures" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> symptom_index: investigate
+symptom -> tls_certificate_failures: investigate
+symptom -> cyberark_vault_connectivity: investigate
+symptom -> mfa_duo_troubleshooting: investigate
+symptom -> kerberos_authentication_failures: investigate
+symptom_index -> resolution
+tls_certificate_failures -> resolution
+cyberark_vault_connectivity -> resolution
+mfa_duo_troubleshooting -> resolution
+kerberos_authentication_failures -> resolution
+```
+
 ## Symptom Index
 
 | Symptom | Component | First steps |

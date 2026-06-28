@@ -17,6 +17,25 @@ Backup & Restore reference covering Option 2 — VADP-Compatible Backup (Preferr
 
   LCM Backup Strategy
 
+```d2
+direction: right
+
+hub: "Aria Suite Lifecycle\nOperations" {shape: hexagon}
+option_2_vadpcompatible_backup_prefe: "Option 2 — VADP-Compatible Backup (Preferred for Production)" {shape: rectangle}
+backing_up_the_nfs_binary_repository: "Backing Up the NFS Binary Repository" {shape: rectangle}
+exporting_lcm_environment_configurat: "Exporting LCM Environment Configuration via API" {shape: rectangle}
+restore_procedure: "Restore Procedure" {shape: rectangle}
+backup_verification_checklist: "Backup Verification Checklist" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+hub -> option_2_vadpcompatible_backup_prefe
+hub -> backing_up_the_nfs_binary_repository
+hub -> exporting_lcm_environment_configurat
+hub -> restore_procedure
+hub -> backup_verification_checklist
+hub -> verify
+```
+
 ## Before you begin
 
 - **Access:** vCenter read-only minimum; Administrator role for remediation steps

@@ -16,6 +16,27 @@ Hardening reference covering Hardening Checklist, Network Segmentation, Operatin
 
 
 
+```d2
+direction: down
+
+external: External / Untrusted {shape: rectangle}
+hardening_checklist: "Hardening Checklist" {shape: rectangle}
+network_segmentation: "Network Segmentation" {shape: rectangle}
+operating_system_hardening_nodelevel: "Operating System Hardening (Node-Level)" {shape: rectangle}
+object_lock_worm_hardening: "Object Lock (WORM) Hardening" {shape: rectangle}
+secrets_management_integration: "Secrets Management Integration" {shape: rectangle}
+security_validation: "Security Validation" {shape: rectangle}
+core: "ECS Core" {shape: hexagon}
+
+external -> hardening_checklist: traffic in
+hardening_checklist -> network_segmentation
+network_segmentation -> operating_system_hardening_nodelevel
+operating_system_hardening_nodelevel -> object_lock_worm_hardening
+object_lock_worm_hardening -> secrets_management_integration
+secrets_management_integration -> security_validation
+security_validation -> core: secured path
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

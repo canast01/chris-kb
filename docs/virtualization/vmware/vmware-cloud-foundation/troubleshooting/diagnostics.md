@@ -56,6 +56,32 @@ graph TD
     class S,T escalate
 ```
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+step_1_check_sddc_manager_services_a: "Step 1 — Check SDDC Manager services and health" {shape: rectangle}
+step_2_analyze_lcm_lifecycle_and_upg: "Step 2 — Analyze LCM lifecycle and upgrade logs" {shape: rectangle}
+step_3_diagnose_nsx_manager_cluster_: "Step 3 — Diagnose NSX Manager cluster and transport nodes" {shape: rectangle}
+step_4_check_vcenter_appliance: "Step 4 — Check vCenter appliance" {shape: rectangle}
+step_5_query_sddc_manager_health_api: "Step 5 — Query SDDC Manager health API" {shape: rectangle}
+step_6_collect_sos_diagnostic_bundle: "Step 6 — Collect SOS diagnostic bundle" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> step_1_check_sddc_manager_services_a: investigate
+symptom -> step_2_analyze_lcm_lifecycle_and_upg: investigate
+symptom -> step_3_diagnose_nsx_manager_cluster_: investigate
+symptom -> step_4_check_vcenter_appliance: investigate
+symptom -> step_5_query_sddc_manager_health_api: investigate
+symptom -> step_6_collect_sos_diagnostic_bundle: investigate
+step_1_check_sddc_manager_services_a -> resolution
+step_2_analyze_lcm_lifecycle_and_upg -> resolution
+step_3_diagnose_nsx_manager_cluster_ -> resolution
+step_4_check_vcenter_appliance -> resolution
+step_5_query_sddc_manager_health_api -> resolution
+step_6_collect_sos_diagnostic_bundle -> resolution
+```
+
 ## Before you begin
 
 - **Access:** SSH to SDDC Manager (vcf user, then sudo for SOS); SSH to VCSA, NSX Manager, and ESXi hosts as needed; SDDC Manager admin credentials for the REST API

@@ -13,6 +13,25 @@ Health Checks reference covering Daily Checks, Health Check, Cluster Health Comm
 </div>
 
 
+```d2
+direction: right
+
+hub: "PowerScale (Isilon)\nOperations" {shape: hexagon}
+run_this_routine: "Run This Routine" {shape: rectangle}
+daily_checks: "Daily Checks" {shape: rectangle}
+health_check: "Health Check" {shape: rectangle}
+cluster_health_commands: "Cluster Health Commands" {shape: rectangle}
+health_check_summary: "Health Check Summary" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+hub -> run_this_routine
+hub -> daily_checks
+hub -> health_check
+hub -> cluster_health_commands
+hub -> health_check_summary
+hub -> verify
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

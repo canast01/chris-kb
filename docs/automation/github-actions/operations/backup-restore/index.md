@@ -91,6 +91,23 @@ git clone git@github.com:ORG/.github.git /backups/github/org-github-repo
 gh api orgs/ORG/actions/runner-groups | jq '.runner_groups[]' > runner-groups.json
 ```
 
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+participant "Source\n(GitHub Actions)" as SRC
+participant "Backup Engine" as ENG
+participant "Target / Vault" as TGT
+
+SRC -> ENG: Verify
+ENG -> TGT: Write
+TGT --> ENG: Confirmed
+ENG --> SRC: Done
+
+@enduml
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

@@ -16,6 +16,25 @@ Active Directory management uses native tools (`repadmin`, `dcdiag`, `nltest`, `
 
 
 
+```d2
+direction: right
+
+hub: "Active Directory\nOperations" {shape: hexagon}
+replication_health_triage_flow: "Replication Health Triage Flow" {shape: rectangle}
+replication_health: "Replication Health" {shape: rectangle}
+dc_diagnostics: "DC Diagnostics" {shape: rectangle}
+fsmo_roles: "FSMO Roles" {shape: rectangle}
+users_groups: "Users & Groups" {shape: rectangle}
+computers: "Computers" {shape: rectangle}
+
+hub -> replication_health_triage_flow
+hub -> replication_health
+hub -> dc_diagnostics
+hub -> fsmo_roles
+hub -> users_groups
+hub -> computers
+```
+
 ## Before you begin
 
 - **Access:** Local Administrator or Domain Admin on target hosts

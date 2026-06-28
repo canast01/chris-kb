@@ -56,6 +56,32 @@ graph TD
     class U escalate
 ```
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+step_1_confirm_identity_and_recent_c: "Step 1 — Confirm identity and recent changes" {shape: rectangle}
+step_2_diagnose_vpc_connectivity_wit: "Step 2 — Diagnose VPC connectivity with Flow Logs and Reacha" {shape: rectangle}
+step_3_diagnose_iam_access_denied_er: "Step 3 — Diagnose IAM access denied errors" {shape: rectangle}
+step_4_diagnose_ec2_instance_health: "Step 4 — Diagnose EC2 instance health" {shape: rectangle}
+step_5_diagnose_rds_performance_and_: "Step 5 — Diagnose RDS performance and connectivity" {shape: rectangle}
+step_6_diagnose_lambda_and_eks_failu: "Step 6 — Diagnose Lambda and EKS failures" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> step_1_confirm_identity_and_recent_c: investigate
+symptom -> step_2_diagnose_vpc_connectivity_wit: investigate
+symptom -> step_3_diagnose_iam_access_denied_er: investigate
+symptom -> step_4_diagnose_ec2_instance_health: investigate
+symptom -> step_5_diagnose_rds_performance_and_: investigate
+symptom -> step_6_diagnose_lambda_and_eks_failu: investigate
+step_1_confirm_identity_and_recent_c -> resolution
+step_2_diagnose_vpc_connectivity_wit -> resolution
+step_3_diagnose_iam_access_denied_er -> resolution
+step_4_diagnose_ec2_instance_health -> resolution
+step_5_diagnose_rds_performance_and_ -> resolution
+step_6_diagnose_lambda_and_eks_failu -> resolution
+```
+
 ## Before you begin
 
 - **Access:** AWS CLI configured with the correct profile and region; confirm with `aws sts get-caller-identity`; IAM permissions to read CloudTrail, CloudWatch Logs, and VPC Reachability

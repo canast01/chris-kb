@@ -19,6 +19,32 @@ How to escalate Cisco Nexus Dashboard (ND) issues to Cisco TAC: what data to col
 
 ---
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+preescalation_selfcheck: "Pre-Escalation Self-Check" {shape: rectangle}
+stepbystep_data_collection: "Step-by-Step Data Collection" {shape: rectangle}
+how_to_open_the_sr_on_caseciscocom: "How to Open the SR on case.cisco.com" {shape: rectangle}
+escalation_path: "Escalation Path" {shape: rectangle}
+what_not_to_do: "What NOT to Do" {shape: rectangle}
+useful_commands_for_case_updates: "Useful Commands for Case Updates" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> preescalation_selfcheck: investigate
+symptom -> stepbystep_data_collection: investigate
+symptom -> how_to_open_the_sr_on_caseciscocom: investigate
+symptom -> escalation_path: investigate
+symptom -> what_not_to_do: investigate
+symptom -> useful_commands_for_case_updates: investigate
+preescalation_selfcheck -> resolution
+stepbystep_data_collection -> resolution
+how_to_open_the_sr_on_caseciscocom -> resolution
+escalation_path -> resolution
+what_not_to_do -> resolution
+useful_commands_for_case_updates -> resolution
+```
+
 ## Before you begin
 
 - **Access required:** ndadmin SSH access to at least one ND cluster node; Cisco CCO account at case.cisco.com; credentials for managed MDS / Nexus switches if NDFC data is also needed

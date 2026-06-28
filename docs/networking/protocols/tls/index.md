@@ -36,6 +36,26 @@ TLS reference — certificate chain validation, cipher suites, SNI, mTLS, OCSP/C
 <a class="kb-card" href="troubleshooting/"><strong>Troubleshooting</strong><span>TLS handshake failures, certificate errors, and SNI troubleshooting.</span></a>
 
 </div>
+
+```d2
+direction: right
+
+center: "TLS" {shape: hexagon}
+protocol_versions: "Protocol Versions" {shape: rectangle}
+certificate_and_handshake_inspection: "Certificate and Handshake Inspection" {shape: rectangle}
+check_certificate_details_for_a_live: "Check certificate details for a live service" {shape: rectangle}
+check_expiry_only: "Check expiry only" {shape: rectangle}
+show_full_tls_handshake_negotiated_v: "Show full TLS handshake (negotiated version + cipher)" {shape: rectangle}
+force_specific_tls_version_testing: "Force specific TLS version (testing)" {shape: rectangle}
+
+center -> protocol_versions
+center -> certificate_and_handshake_inspection
+center -> check_certificate_details_for_a_live
+center -> check_expiry_only
+center -> show_full_tls_handshake_negotiated_v
+center -> force_specific_tls_version_testing
+```
+
 ## Protocol Versions
 
 | Version | Status | Notes |

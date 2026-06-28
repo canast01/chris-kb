@@ -498,6 +498,15 @@ foreach ($p in $ports | Sort-Object { [int]$_.Port }) {
 }
 ```
 
+```d2
+direction: right
+
+hub: "Brocade Fabric OS\nOperations" {shape: hexagon}
+verify: "Verify" {shape: rectangle}
+
+hub -> verify
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

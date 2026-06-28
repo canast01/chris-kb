@@ -16,6 +16,25 @@ An Azure Virtual Network (VNet) is the fundamental building block for private ne
 
 
 
+```d2
+direction: right
+
+center: "Azure" {shape: hexagon}
+hubandspoke_vnet_topology: "Hub-and-Spoke VNet Topology" {shape: rectangle}
+vnet_creation: "VNet Creation" {shape: rectangle}
+address_space_management: "Address Space Management" {shape: rectangle}
+vnet_peering: "VNet Peering" {shape: rectangle}
+peering_flags: "Peering Flags" {shape: rectangle}
+vnet_dns_settings: "VNet DNS Settings" {shape: rectangle}
+
+center -> hubandspoke_vnet_topology
+center -> vnet_creation
+center -> address_space_management
+center -> vnet_peering
+center -> peering_flags
+center -> vnet_dns_settings
+```
+
 ## Hub-and-Spoke VNet Topology
 
 ```mermaid

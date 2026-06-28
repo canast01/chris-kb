@@ -20,6 +20,25 @@ Evergreen//One uses the same FlashArray and FlashBlade hardware as standard Ever
 
 ---
 
+```d2
+direction: right
+
+center: "Evergreen//One" {shape: hexagon}
+pure1_management_plane: "Pure1 Management Plane" {shape: rectangle}
+vsphere_esxi_host_connectivity: "vSphere / ESXi Host Connectivity" {shape: rectangle}
+vmware_vasa_provider_vvols: "VMware VASA Provider (vVols)" {shape: rectangle}
+veeam_backup_replication: "Veeam Backup & Replication" {shape: rectangle}
+activecluster_synchronous_replicatio: "ActiveCluster (Synchronous Replication)" {shape: rectangle}
+siem_syslog_integration: "SIEM / Syslog Integration" {shape: rectangle}
+
+center -> pure1_management_plane
+center -> vsphere_esxi_host_connectivity
+center -> vmware_vasa_provider_vvols
+center -> veeam_backup_replication
+center -> activecluster_synchronous_replicatio
+center -> siem_syslog_integration
+```
+
 ## Pure1 Management Plane
 
 Pure1 is the cloud management and analytics portal that Pure uses to monitor all Evergreen//One installations. Phonehome telemetry is not optional — it is contractually required for SLA compliance.

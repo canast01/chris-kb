@@ -46,6 +46,32 @@ graph TD
     class N escalate
 ```
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+step_1_identify_the_failing_job: "Step 1 — Identify the failing job" {shape: rectangle}
+step_2_test_connectivity_to_affected: "Step 2 — Test connectivity to affected clients" {shape: rectangle}
+step_3_check_mediaagent_and_ddb_heal: "Step 3 — Check MediaAgent and DDB health" {shape: rectangle}
+step_4_read_log_files: "Step 4 — Read log files" {shape: rectangle}
+step_5_collect_cvdiag_support_bundle: "Step 5 — Collect CV_DIAG support bundle" {shape: rectangle}
+log_locations: "Log locations" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> step_1_identify_the_failing_job: investigate
+symptom -> step_2_test_connectivity_to_affected: investigate
+symptom -> step_3_check_mediaagent_and_ddb_heal: investigate
+symptom -> step_4_read_log_files: investigate
+symptom -> step_5_collect_cvdiag_support_bundle: investigate
+symptom -> log_locations: investigate
+step_1_identify_the_failing_job -> resolution
+step_2_test_connectivity_to_affected -> resolution
+step_3_check_mediaagent_and_ddb_heal -> resolution
+step_4_read_log_files -> resolution
+step_5_collect_cvdiag_support_bundle -> resolution
+log_locations -> resolution
+```
+
 ## Before you begin
 
 - **Access:** CommServe admin credentials (Command Center or Java Console); SSH or RDP to CommServe, MediaAgent, and affected client systems

@@ -16,6 +16,19 @@ Terraform is a declarative infrastructure-as-code tool that manages resources ac
 
 ---
 
+```d2
+direction: right
+
+center: "How It Works" {shape: hexagon}
+highlevel_architecture: "High-Level Architecture" {shape: rectangle}
+module_registry: "Module Registry" {shape: rectangle}
+core_workflow: "Core Workflow" {shape: rectangle}
+
+center -> highlevel_architecture
+center -> module_registry
+center -> core_workflow
+```
+
 ## High-Level Architecture
 
 ```mermaid

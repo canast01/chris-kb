@@ -11,6 +11,19 @@ The clean room is a verified, malware-free subset of the IRE used to analyse and
 ![IRE — Clean Room](../../../../assets/backup-dr-operations-ire-clean-room-index.svg)
 
 
+```d2
+direction: right
+
+center: "DR Operations" {shape: hexagon}
+purpose: "Purpose" {shape: rectangle}
+clean_room_architecture: "Clean Room Architecture" {shape: rectangle}
+common_issues: "Common Issues" {shape: rectangle}
+
+center -> purpose
+center -> clean_room_architecture
+center -> common_issues
+```
+
 ## Purpose
 
 After restoring a backup to the IRE, the restored data may still contain:

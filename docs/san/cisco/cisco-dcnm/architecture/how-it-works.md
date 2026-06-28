@@ -15,6 +15,23 @@ How It Works reference covering Overview, Deployment Models, Management Flow, Ne
 
 
 
+```d2
+direction: right
+
+center: "Cisco DCNM" {shape: hexagon}
+deployment_models: "Deployment Models" {shape: rectangle}
+management_flow: "Management Flow" {shape: rectangle}
+network_requirements: "Network Requirements" {shape: rectangle}
+vm_sizing_standalone_11x: "VM Sizing (Standalone, 11.x)" {shape: rectangle}
+dcnm_11x_vs_ndfc_12x: "DCNM 11.x vs. NDFC 12.x" {shape: rectangle}
+
+center -> deployment_models
+center -> management_flow
+center -> network_requirements
+center -> vm_sizing_standalone_11x
+center -> dcnm_11x_vs_ndfc_12x
+```
+
 ## Overview
 
 Cisco Data Center Network Manager (DCNM) is Cisco's SAN and LAN management platform for Cisco MDS 9000 Fibre Channel switches. DCNM 11.x is the last standalone appliance release. Starting with version 12.0 (2022), DCNM was renamed **Nexus Dashboard Fabric Controller (NDFC)** and runs as an application on the Cisco Nexus Dashboard platform.

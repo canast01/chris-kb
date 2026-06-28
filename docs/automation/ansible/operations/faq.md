@@ -14,6 +14,23 @@ Common questions about Ansible operations, configuration, and troubleshooting. F
 
 ![Ansible FAQ](../../../assets/automation-ansible-operations-faq.svg)
 
+```d2
+direction: right
+
+hub: "Ansible\nOperations" {shape: hexagon}
+general: "General" {shape: rectangle}
+configuration: "Configuration" {shape: rectangle}
+operations: "Operations" {shape: rectangle}
+troubleshooting: "Troubleshooting" {shape: rectangle}
+backup_and_recovery: "Backup and Recovery" {shape: rectangle}
+
+hub -> general
+hub -> configuration
+hub -> operations
+hub -> troubleshooting
+hub -> backup_and_recovery
+```
+
 ## General
 
 **Q: What version of Ansible is recommended for enterprise deployments?**

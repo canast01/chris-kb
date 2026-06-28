@@ -31,6 +31,25 @@ graph TB
     PROD --> STR
 ```
 
+```d2
+direction: right
+
+center: "AWS EVS" {shape: hexagon}
+host_type_selection: "Host Type Selection" {shape: rectangle}
+cluster_sizing: "Cluster Sizing" {shape: rectangle}
+vsan_policy_selection: "vSAN Policy Selection" {shape: rectangle}
+stretched_cluster_design: "Stretched Cluster Design" {shape: rectangle}
+vpc_and_cidr_design: "VPC and CIDR Design" {shape: rectangle}
+high_availability_design: "High Availability Design" {shape: rectangle}
+
+center -> host_type_selection
+center -> cluster_sizing
+center -> vsan_policy_selection
+center -> stretched_cluster_design
+center -> vpc_and_cidr_design
+center -> high_availability_design
+```
+
 ## Host Type Selection
 
 | Instance | vCPU | RAM | Raw Storage | Use Case |

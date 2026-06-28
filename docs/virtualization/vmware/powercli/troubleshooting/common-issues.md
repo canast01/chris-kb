@@ -18,6 +18,32 @@ Solutions for the most frequent PowerCLI problems: certificate errors, connectio
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+diagnostic_flow: "Diagnostic Flow" {shape: rectangle}
+certificate_error_on_connect: "Certificate Error on Connect" {shape: rectangle}
+module_not_found: "Module Not Found" {shape: rectangle}
+connection_refused_timeout: "Connection Refused / Timeout" {shape: rectangle}
+session_expired_invalid_session: "Session Expired / Invalid Session" {shape: rectangle}
+cmdlet_parameter_not_found: "Cmdlet Parameter Not Found" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> diagnostic_flow: investigate
+symptom -> certificate_error_on_connect: investigate
+symptom -> module_not_found: investigate
+symptom -> connection_refused_timeout: investigate
+symptom -> session_expired_invalid_session: investigate
+symptom -> cmdlet_parameter_not_found: investigate
+diagnostic_flow -> resolution
+certificate_error_on_connect -> resolution
+module_not_found -> resolution
+connection_refused_timeout -> resolution
+session_expired_invalid_session -> resolution
+cmdlet_parameter_not_found -> resolution
+```
+
 ## Diagnostic Flow
 
 ```mermaid

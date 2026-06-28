@@ -35,6 +35,27 @@ flowchart TD
     style s7 fill:#2e7d32,color:#fff,stroke:#1b5e20
 ```
 
+```d2
+direction: right
+
+plan: "Plan" {shape: oval}
+phase_1_predeployment_prerequisites: "Phase 1 — Pre-Deployment Prerequisites" {shape: rectangle}
+phase_2_lcm_deployment: "Phase 2 — LCM Deployment" {shape: rectangle}
+phase_3_cloud_account_configuration: "Phase 3 — Cloud Account Configuration" {shape: rectangle}
+phase_4_projects_mappings_and_govern: "Phase 4 — Projects, Mappings, and Governance" {shape: rectangle}
+phase_5_blueprints_and_service_catal: "Phase 5 — Blueprints and Service Catalogue" {shape: rectangle}
+phase_6_endtoend_validation: "Phase 6 — End-to-End Validation" {shape: rectangle}
+validate: "Validate" {shape: oval}
+
+plan -> phase_1_predeployment_prerequisites
+phase_1_predeployment_prerequisites -> phase_2_lcm_deployment
+phase_2_lcm_deployment -> phase_3_cloud_account_configuration
+phase_3_cloud_account_configuration -> phase_4_projects_mappings_and_govern
+phase_4_projects_mappings_and_govern -> phase_5_blueprints_and_service_catal
+phase_5_blueprints_and_service_catal -> phase_6_endtoend_validation
+phase_6_endtoend_validation -> validate
+```
+
 ## Before you begin
 
 - **Access:** vCenter Administrator role and SSH access to VCSA/ESXi hosts

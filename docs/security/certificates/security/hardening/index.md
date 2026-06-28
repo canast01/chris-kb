@@ -13,6 +13,17 @@ Hardening reference covering OCSP Stapling Flow, OCSP Stapling, Security Checkli
 
 
 
+```d2
+direction: down
+
+ocsp_stapling_flow: "OCSP Stapling Flow" {shape: rectangle}
+ocsp_stapling: "OCSP Stapling" {shape: rectangle}
+security_checklist: "Security Checklist" {shape: rectangle}
+
+ocsp_stapling_flow -> ocsp_stapling: hardens
+ocsp_stapling -> security_checklist: hardens
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

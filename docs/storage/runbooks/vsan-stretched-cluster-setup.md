@@ -19,6 +19,31 @@ Cross-product runbook for deploying and validating a VMware vSAN stretched clust
 
 ![vSAN Stretched Cluster Setup and Validation — Diagram](../../assets/storage-runbooks-vsan-stretched-cluster-setup-diagram.svg)
 
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+actor "Responder" as A
+participant "Runbooks System" as B
+participant "Dependent System" as C
+
+A -> B: Phase 1 Deploy the Witness Host
+B --> A: OK
+A -> B: Phase 2 Enable vSAN Stretched Cluster
+B --> A: OK
+A -> B: Phase 3 Storage Policy for Stretched Cluster
+B --> A: OK
+A -> B: Phase 4 Network Validation
+B --> A: OK
+A -> B: Phase 5 Failover Simulation
+B --> A: OK
+A -> B: SRM Integration Note
+B --> A: OK
+
+@enduml
+```
+
 ## Before You Begin
 
 **Network requirements:**

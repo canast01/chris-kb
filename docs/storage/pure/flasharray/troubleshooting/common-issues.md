@@ -20,6 +20,32 @@ Detailed resolution procedures for the most frequently encountered FlashArray is
 
 ---
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+diagnostic_flow: "Diagnostic Flow" {shape: rectangle}
+drive_failure_and_rebuild: "Drive Failure and Rebuild" {shape: rectangle}
+host_loses_all_paths_to_volumes: "Host Loses All Paths to Volumes" {shape: rectangle}
+host_has_only_one_active_path_single: "Host Has Only One Active Path (Single-Path Warning)" {shape: rectangle}
+activecluster_pod_mediator_unreachab: "ActiveCluster Pod Mediator Unreachable" {shape: rectangle}
+activecluster_pod_out_of_sync_paused: "ActiveCluster Pod Out of Sync (Paused or Unhealthy)" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> diagnostic_flow: investigate
+symptom -> drive_failure_and_rebuild: investigate
+symptom -> host_loses_all_paths_to_volumes: investigate
+symptom -> host_has_only_one_active_path_single: investigate
+symptom -> activecluster_pod_mediator_unreachab: investigate
+symptom -> activecluster_pod_out_of_sync_paused: investigate
+diagnostic_flow -> resolution
+drive_failure_and_rebuild -> resolution
+host_loses_all_paths_to_volumes -> resolution
+host_has_only_one_active_path_single -> resolution
+activecluster_pod_mediator_unreachab -> resolution
+activecluster_pod_out_of_sync_paused -> resolution
+```
+
 ## Diagnostic Flow
 
 ```mermaid

@@ -15,6 +15,23 @@ An initiative (formerly called a policy set definition) groups multiple related 
 
 
 
+```d2
+direction: right
+
+center: "Azure" {shape: hexagon}
+initiative_policy_set_structure: "Initiative (Policy Set) Structure" {shape: rectangle}
+creating_an_initiative: "Creating an Initiative" {shape: rectangle}
+parameter_mapping: "Parameter Mapping" {shape: rectangle}
+assigning_an_initiative: "Assigning an Initiative" {shape: rectangle}
+compliance_rollup: "Compliance Rollup" {shape: rectangle}
+
+center -> initiative_policy_set_structure
+center -> creating_an_initiative
+center -> parameter_mapping
+center -> assigning_an_initiative
+center -> compliance_rollup
+```
+
 ## Initiative (Policy Set) Structure
 
 ```mermaid

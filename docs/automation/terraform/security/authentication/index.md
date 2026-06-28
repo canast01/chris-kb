@@ -14,6 +14,32 @@ Authentication reference covering Provider Credential Flow — CI/CD, CI/CD Cred
 ![Terraform — Authentication](../../../../assets/automation-terraform-security-authentication-index.svg)
 
 
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+actor "User / Service" as USR
+participant "Authentication" as SVC
+participant "Identity Provider\n(LDAP / OIDC / AD)" as IDP
+participant "Token / Session Store" as TOKEN
+
+USR -> SVC: Authentication request
+SVC -> IDP: Validate credentials
+IDP --> SVC: Identity confirmed
+SVC -> TOKEN: Issue session token
+TOKEN --> SVC: Token granted
+SVC --> USR: Access allowed
+
+note over SVC
+  Provider Credential Flow  CI/CD
+  CI/CD Credential Injection
+  Credential Management Reference
+end note
+
+@enduml
+```
+
 ## Before you begin
 
 - **Access:** Provider credentials configured (`terraform login` or env vars)

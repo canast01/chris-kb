@@ -18,6 +18,23 @@ Catalog of known FlashBlade bugs, error codes, and workarounds covering NFS, SMB
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+nfs: "NFS" {shape: rectangle}
+s3_object: "S3 Object" {shape: rectangle}
+array_health: "Array Health" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> nfs: investigate
+symptom -> s3_object: investigate
+symptom -> array_health: investigate
+nfs -> resolution
+s3_object -> resolution
+array_health -> resolution
+```
+
 ## Before you begin
 
 - FlashBlade alerts appear in the web UI under `Health → Alerts`.

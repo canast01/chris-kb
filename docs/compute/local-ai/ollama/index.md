@@ -44,6 +44,19 @@ Ollama runs open-weight LLMs locally, exposing an OpenAI-compatible REST API wit
 
 </div>
 
+```d2
+direction: right
+
+center: "Ollama" {shape: hexagon}
+quick_reference: "Quick Reference" {shape: rectangle}
+common_operations: "Common Operations" {shape: rectangle}
+key_considerations: "Key Considerations" {shape: rectangle}
+
+center -> quick_reference
+center -> common_operations
+center -> key_considerations
+```
+
 ## Quick Reference
 
 ### Common Models and VRAM Requirements

@@ -18,6 +18,20 @@ Dell APEX Storage is a Dell-managed STaaS offering. Hardware operational issues 
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+portal_and_management: "Portal and Management" {shape: rectangle}
+data_access: "Data Access" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> portal_and_management: investigate
+symptom -> data_access: investigate
+portal_and_management -> resolution
+data_access -> resolution
+```
+
 ## Before you begin
 
 - For hardware faults or array failures, contact **Dell APEX support** — Dell manages the hardware lifecycle.

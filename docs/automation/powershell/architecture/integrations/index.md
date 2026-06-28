@@ -14,6 +14,17 @@ Integrations reference covering PowerCLI VM Management Flow, Windows.
 ![PowerShell — Integrations](../../../../assets/automation-powershell-architecture-integrations-index.svg)
 
 
+```d2
+direction: right
+
+center: "PowerShell" {shape: hexagon}
+powercli_vm_management_flow: "PowerCLI VM Management Flow" {shape: rectangle}
+windows: "Windows" {shape: rectangle}
+
+center -> powercli_vm_management_flow
+center -> windows
+```
+
 ## PowerCLI VM Management Flow
 
 ```mermaid

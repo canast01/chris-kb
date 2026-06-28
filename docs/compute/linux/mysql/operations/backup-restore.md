@@ -13,6 +13,17 @@ MySQL/MariaDB backup: `mysqldump --single-transaction`, `mysqlpump`, xtrabackup 
 ![MySQL / MariaDB — Backup Restore](../../../../assets/compute-linux-mysql-operations-backup-restore.svg)
 
 
+```d2
+direction: right
+
+hub: "Linux\nOperations" {shape: hexagon}
+database_backup_validation: "Database — Backup Validation" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+hub -> database_backup_validation
+hub -> verify
+```
+
 ## Before you begin
 
 - **Access:** root or sudo-capable account on target hosts

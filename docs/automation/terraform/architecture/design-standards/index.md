@@ -16,6 +16,23 @@ Consistent Terraform standards prevent state corruption, make code reviewable, a
 
 ---
 
+```d2
+direction: down
+
+directory_structure: "Directory Structure" {shape: rectangle}
+variable_and_output_standards: "Variable and Output Standards" {shape: rectangle}
+tfvars_management: "tfvars Management" {shape: rectangle}
+tagging_standards: "Tagging Standards" {shape: rectangle}
+state_file_locking: "State File Locking" {shape: rectangle}
+code_review_checklist: "Code Review Checklist" {shape: rectangle}
+
+directory_structure -> variable_and_output_standards: hardens
+variable_and_output_standards -> tfvars_management: hardens
+tfvars_management -> tagging_standards: hardens
+tagging_standards -> state_file_locking: hardens
+state_file_locking -> code_review_checklist: hardens
+```
+
 ## Directory Structure
 
 ### Root module (single environment)

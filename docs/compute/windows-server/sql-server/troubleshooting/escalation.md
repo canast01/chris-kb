@@ -19,6 +19,32 @@ How to escalate SQL Server issues to Microsoft support: what data to collect bef
 
 ---
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+preescalation_selfcheck: "Pre-Escalation Self-Check" {shape: rectangle}
+stepbystep_data_collection: "Step-by-Step Data Collection" {shape: rectangle}
+ag_manual_failover_procedure: "AG Manual Failover Procedure" {shape: rectangle}
+how_to_open_the_case_on_supportmicro: "How to Open the Case on support.microsoft.com" {shape: rectangle}
+escalation_path: "Escalation Path" {shape: rectangle}
+what_not_to_do: "What NOT to Do" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> preescalation_selfcheck: investigate
+symptom -> stepbystep_data_collection: investigate
+symptom -> ag_manual_failover_procedure: investigate
+symptom -> how_to_open_the_case_on_supportmicro: investigate
+symptom -> escalation_path: investigate
+symptom -> what_not_to_do: investigate
+preescalation_selfcheck -> resolution
+stepbystep_data_collection -> resolution
+ag_manual_failover_procedure -> resolution
+how_to_open_the_case_on_supportmicro -> resolution
+escalation_path -> resolution
+what_not_to_do -> resolution
+```
+
 ## Before you begin
 
 - **Access required:** `sysadmin` or `VIEW SERVER STATE` permission on the SQL Server instance; Local Administrator on the host; Microsoft support account at support.microsoft.com with a Microsoft Unified or Premier Support contract

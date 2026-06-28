@@ -20,6 +20,32 @@ Structured troubleshooting entries for common VMware/vSAN operational issues. Ea
 
 ---
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+1_host_disconnected_from_vcenter: "1. Host Disconnected from vCenter" {shape: rectangle}
+2_vsan_capacity_warning: "2. vSAN Capacity Warning" {shape: rectangle}
+3_vcenter_login_failure: "3. vCenter Login Failure" {shape: rectangle}
+4_vsan_object_inaccessible: "4. vSAN Object Inaccessible" {shape: rectangle}
+5_vcenter_appliance_service_failure_: "5. vCenter Appliance Service Failure (VAMI)" {shape: rectangle}
+6_esxi_host_psod_purple_screen_of_de: "6. ESXi Host PSOD / Purple Screen of Death" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> 1_host_disconnected_from_vcenter: investigate
+symptom -> 2_vsan_capacity_warning: investigate
+symptom -> 3_vcenter_login_failure: investigate
+symptom -> 4_vsan_object_inaccessible: investigate
+symptom -> 5_vcenter_appliance_service_failure_: investigate
+symptom -> 6_esxi_host_psod_purple_screen_of_de: investigate
+1_host_disconnected_from_vcenter -> resolution
+2_vsan_capacity_warning -> resolution
+3_vcenter_login_failure -> resolution
+4_vsan_object_inaccessible -> resolution
+5_vcenter_appliance_service_failure_ -> resolution
+6_esxi_host_psod_purple_screen_of_de -> resolution
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

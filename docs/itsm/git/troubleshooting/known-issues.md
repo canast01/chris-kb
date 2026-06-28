@@ -20,6 +20,23 @@ Catalog of known Git server bugs, error codes, and workarounds covering GitLab s
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+push_clone_failures: "Push / Clone Failures" {shape: rectangle}
+gitaly: "Gitaly" {shape: rectangle}
+gitlab_runner: "GitLab Runner" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> push_clone_failures: investigate
+symptom -> gitaly: investigate
+symptom -> gitlab_runner: investigate
+push_clone_failures -> resolution
+gitaly -> resolution
+gitlab_runner -> resolution
+```
+
 ## Before you begin
 
 - GitLab errors appear in `Admin → Monitoring → Logs` or `gitlab-ctl tail gitaly`.

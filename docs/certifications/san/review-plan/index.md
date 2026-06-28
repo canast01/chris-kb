@@ -14,6 +14,25 @@ SAN Certification Review Plan reference covering Target Certifications, Study Re
 
 
 
+```d2
+direction: right
+
+begin_checks: "Begin Checks" {shape: oval}
+target_certifications: "Target Certifications" {shape: rectangle}
+study_resources: "Study Resources" {shape: rectangle}
+8week_san_study_plan: "8-Week SAN Study Plan" {shape: rectangle}
+handson_lab_options: "Hands-On Lab Options" {shape: rectangle}
+study_checklist: "Study Checklist" {shape: rectangle}
+generate_report: "Generate Report" {shape: oval}
+
+begin_checks -> target_certifications
+target_certifications -> study_resources
+study_resources -> 8week_san_study_plan
+8week_san_study_plan -> handson_lab_options
+handson_lab_options -> study_checklist
+study_checklist -> generate_report
+```
+
 ## Target Certifications
 
 | Certification | Vendor | Level | Notes |

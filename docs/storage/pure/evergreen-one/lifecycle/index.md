@@ -15,6 +15,25 @@ Pure Storage Evergreen//One Lifecycle reference covering Overview, Service Agree
 
 ![Pure Storage Evergreen//One Lifecycle — Diagram](../../../../assets/storage-pure-evergreen-one-lifecycle-diagram.svg)
 
+```d2
+direction: right
+
+plan: "Plan" {shape: oval}
+service_agreement_lifecycle: "Service Agreement Lifecycle" {shape: rectangle}
+monthly_capacity_trueup: "Monthly Capacity True-Up" {shape: rectangle}
+hardware_and_software_upgrade_lifecy: "Hardware and Software Upgrade Lifecycle" {shape: rectangle}
+service_level_commitments: "Service Level Commitments" {shape: rectangle}
+end_of_service: "End of Service" {shape: rectangle}
+validate: "Validate" {shape: oval}
+
+plan -> service_agreement_lifecycle
+service_agreement_lifecycle -> monthly_capacity_trueup
+monthly_capacity_trueup -> hardware_and_software_upgrade_lifecy
+hardware_and_software_upgrade_lifecy -> service_level_commitments
+service_level_commitments -> end_of_service
+end_of_service -> validate
+```
+
 ## Overview
 
 Because Pure owns and manages the hardware in an Evergreen//One deployment, the customer has no hardware procurement, refresh, or disposal lifecycle to manage. Pure handles all hardware upgrades, Purity software upgrades, firmware patches, and failed component replacement. The customer lifecycle responsibilities centre on the **service agreement** itself: renewal, capacity true-up, and performance tier review.

@@ -39,6 +39,32 @@ graph TD
     class I,J escalate
 ```
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+step_1_query_srdf_pair_state: "Step 1 — Query SRDF pair state" {shape: rectangle}
+step_2_check_lag_and_cycle_performan: "Step 2 — Check lag and cycle performance" {shape: rectangle}
+step_3_verify_pair_consistency: "Step 3 — Verify pair consistency" {shape: rectangle}
+step_4_check_rf_ports_and_srdf_link_: "Step 4 — Check RF ports and SRDF link health" {shape: rectangle}
+step_5_collect_solutions_enabler_and: "Step 5 — Collect Solutions Enabler and array logs" {shape: rectangle}
+log_locations: "Log locations" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> step_1_query_srdf_pair_state: investigate
+symptom -> step_2_check_lag_and_cycle_performan: investigate
+symptom -> step_3_verify_pair_consistency: investigate
+symptom -> step_4_check_rf_ports_and_srdf_link_: investigate
+symptom -> step_5_collect_solutions_enabler_and: investigate
+symptom -> log_locations: investigate
+step_1_query_srdf_pair_state -> resolution
+step_2_check_lag_and_cycle_performan -> resolution
+step_3_verify_pair_consistency -> resolution
+step_4_check_rf_ports_and_srdf_link_ -> resolution
+step_5_collect_solutions_enabler_and -> resolution
+log_locations -> resolution
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials with Solutions Enabler (`symcli`) access; Solutions Enabler installed on a host with SE gatekeeper LUNs or via Unisphere REST API

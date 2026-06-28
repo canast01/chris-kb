@@ -20,6 +20,25 @@ Access Control reference covering APEX Console RBAC Roles, API Service Account C
 
 ---
 
+```d2
+direction: down
+
+external: External / Untrusted {shape: rectangle}
+apex_console_rbac_roles: "APEX Console RBAC Roles" {shape: rectangle}
+api_service_account_configuration: "API Service Account Configuration" {shape: rectangle}
+scg_access_controls: "SCG Access Controls" {shape: rectangle}
+cloudiq_user_roles: "CloudIQ User Roles" {shape: rectangle}
+general_controls: "General Controls" {shape: rectangle}
+core: "Flex On Demand Core" {shape: hexagon}
+
+external -> apex_console_rbac_roles: traffic in
+apex_console_rbac_roles -> api_service_account_configuration
+api_service_account_configuration -> scg_access_controls
+scg_access_controls -> cloudiq_user_roles
+cloudiq_user_roles -> general_controls
+general_controls -> core: secured path
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

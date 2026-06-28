@@ -16,6 +16,21 @@ MySQL integration points — application connectors (JDBC, ODBC, Python, PHP), P
 
 
 
+```d2
+direction: right
+
+center: "Linux" {shape: hexagon}
+application_connectors: "Application Connectors" {shape: rectangle}
+proxysql_integration: "ProxySQL Integration" {shape: rectangle}
+monitoring_integration: "Monitoring Integration" {shape: rectangle}
+backup_tool_integration: "Backup Tool Integration" {shape: rectangle}
+
+center -> application_connectors
+center -> proxysql_integration
+center -> monitoring_integration
+center -> backup_tool_integration
+```
+
 ## Application Connectors
 
 | Language | Connector | Notes |

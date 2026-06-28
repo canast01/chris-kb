@@ -17,6 +17,26 @@ Dell ECS automation scripts: `curl` REST API examples for bucket management, nam
 
 
 ---
+
+```d2
+direction: right
+
+hub: "ECS\nOperations" {shape: hexagon}
+node_capacity_health_check: "Node & Capacity Health Check" {shape: rectangle}
+bucket_audit: "Bucket Audit" {shape: rectangle}
+s3_connectivity_check: "S3 Connectivity Check" {shape: rectangle}
+daily_check_script: "Daily Check Script" {shape: rectangle}
+prechange_validation_script: "Pre-Change Validation Script" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+hub -> node_capacity_health_check
+hub -> bucket_audit
+hub -> s3_connectivity_check
+hub -> daily_check_script
+hub -> prechange_validation_script
+hub -> verify
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

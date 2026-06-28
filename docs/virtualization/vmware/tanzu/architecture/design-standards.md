@@ -17,6 +17,25 @@ Design Standards reference covering Supervisor Cluster Sizing, TKG Workload Clus
 
 
 
+```d2
+direction: right
+
+center: "Tanzu" {shape: hexagon}
+supervisor_cluster_sizing: "Supervisor Cluster Sizing" {shape: rectangle}
+tkg_workload_cluster_sizing: "TKG Workload Cluster Sizing" {shape: rectangle}
+namespace_design: "Namespace Design" {shape: rectangle}
+network_cidr_planning: "Network CIDR Planning" {shape: rectangle}
+storage_policy_mapping: "Storage Policy Mapping" {shape: rectangle}
+harbor_sizing: "Harbor Sizing" {shape: rectangle}
+
+center -> supervisor_cluster_sizing
+center -> tkg_workload_cluster_sizing
+center -> namespace_design
+center -> network_cidr_planning
+center -> storage_policy_mapping
+center -> harbor_sizing
+```
+
 ## Supervisor Cluster Sizing
 
 The Supervisor control plane consists of exactly 3 VMs — this is fixed and cannot be changed post-deployment. vSphere selects the VM sizing based on the `size_hint` set during Workload Management enablement.

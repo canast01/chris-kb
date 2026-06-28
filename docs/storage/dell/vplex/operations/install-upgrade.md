@@ -16,6 +16,23 @@ Install & Upgrade reference covering GeoSynchrony Version Matrix, Upgrade Paths,
 
 
 
+```d2
+direction: right
+
+hub: "VPLEX\nOperations" {shape: hexagon}
+geosynchrony_version_matrix: "GeoSynchrony Version Matrix" {shape: rectangle}
+upgrade_paths: "Upgrade Paths" {shape: rectangle}
+hardware_lifecycle: "Hardware Lifecycle" {shape: rectangle}
+eol_tracking: "EOL Tracking" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+hub -> geosynchrony_version_matrix
+hub -> upgrade_paths
+hub -> hardware_lifecycle
+hub -> eol_tracking
+hub -> verify
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

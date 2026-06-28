@@ -17,6 +17,26 @@ Dell FoD automation scripts: PowerShell and Python examples for capacity consump
 
 
 ---
+
+```d2
+direction: right
+
+hub: "Flex On Demand\nOperations" {shape: hexagon}
+metered_usage_reporter: "Metered Usage Reporter" {shape: rectangle}
+burst_detection_script: "Burst Detection Script" {shape: rectangle}
+ansible_fod_audit_playbook: "Ansible FOD Audit Playbook" {shape: rectangle}
+windows_fod_license_status_via_unisp: "Windows: FOD License Status via Unisphere REST API (PowerShe" {shape: rectangle}
+daily_check_script: "Daily Check Script" {shape: rectangle}
+incident_triage_script: "Incident Triage Script" {shape: rectangle}
+
+hub -> metered_usage_reporter
+hub -> burst_detection_script
+hub -> ansible_fod_audit_playbook
+hub -> windows_fod_license_status_via_unisp
+hub -> daily_check_script
+hub -> incident_triage_script
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

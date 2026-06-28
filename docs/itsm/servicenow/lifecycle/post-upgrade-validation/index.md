@@ -13,6 +13,25 @@ Structured validation procedure to confirm system health and application functio
 ![Post-Upgrade Validation](../../../../assets/itsm-servicenow-lifecycle-post-upgrade-validation-index.svg)
 
 
+```d2
+direction: right
+
+center: "ServiceNow" {shape: hexagon}
+validation_flow: "Validation Flow" {shape: rectangle}
+2_service_health: "2. Service Health" {shape: rectangle}
+3_application_health: "3. Application Health" {shape: rectangle}
+4_monitoring_validation: "4. Monitoring Validation" {shape: rectangle}
+5_performance_baseline_comparison: "5. Performance Baseline Comparison" {shape: rectangle}
+6_replication_and_data_integrity: "6. Replication and Data Integrity" {shape: rectangle}
+
+center -> validation_flow
+center -> 2_service_health
+center -> 3_application_health
+center -> 4_monitoring_validation
+center -> 5_performance_baseline_comparison
+center -> 6_replication_and_data_integrity
+```
+
 ## Validation Flow
 
 ```mermaid

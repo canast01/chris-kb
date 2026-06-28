@@ -19,6 +19,33 @@ Diagnosing inaccessible datastores across VMFS, NFS, and vSAN — APD/PDL states
 
 
 ---
+
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+datastore_inaccessible_apd_vs_pdl: "Datastore Inaccessible — APD vs PDL" {shape: rectangle}
+datastore_full: "Datastore Full" {shape: rectangle}
+high_datastore_latency: "High Datastore Latency" {shape: rectangle}
+vmfs_lock_failed_to_lock_the_file: "VMFS Lock — Failed to Lock the File" {shape: rectangle}
+vsan_object_noncompliant_or_degraded: "vSAN Object Non-Compliant or Degraded" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> datastore_inaccessible_apd_vs_pdl: investigate
+symptom -> datastore_full: investigate
+symptom -> high_datastore_latency: investigate
+symptom -> vmfs_lock_failed_to_lock_the_file: investigate
+symptom -> vsan_object_noncompliant_or_degraded: investigate
+symptom -> verify: investigate
+datastore_inaccessible_apd_vs_pdl -> resolution
+datastore_full -> resolution
+high_datastore_latency -> resolution
+vmfs_lock_failed_to_lock_the_file -> resolution
+vsan_object_noncompliant_or_degraded -> resolution
+verify -> resolution
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

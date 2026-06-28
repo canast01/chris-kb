@@ -20,6 +20,25 @@ Dell PowerMax (formerly VMAX) is Dell's enterprise all-flash storage platform. T
 
 > Requires Solutions Enabler installed on a management host with connectivity to the array. All commands target a specific array via `-sid <SymmID>`.
 
+```d2
+direction: right
+
+hub: "PowerMax\nOperations" {shape: hexagon}
+discovery_array_info: "Discovery & Array Info" {shape: rectangle}
+devices: "Devices" {shape: rectangle}
+storage_groups: "Storage Groups" {shape: rectangle}
+masking_views_access: "Masking Views & Access" {shape: rectangle}
+ports_hardware: "Ports & Hardware" {shape: rectangle}
+srdf_replication: "SRDF — Replication" {shape: rectangle}
+
+hub -> discovery_array_info
+hub -> devices
+hub -> storage_groups
+hub -> masking_views_access
+hub -> ports_hardware
+hub -> srdf_replication
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

@@ -15,6 +15,23 @@ Incident Triage reference covering Overview, Triage Process Flow, Initial Diagno
 
 
 
+```d2
+direction: right
+
+center: "ServiceNow" {shape: hexagon}
+triage_process_flow: "Triage Process Flow" {shape: rectangle}
+initial_diagnosis_checklist: "Initial Diagnosis Checklist" {shape: rectangle}
+priority_assignment_guide: "Priority Assignment Guide" {shape: rectangle}
+ticket_creation_at_triage: "Ticket Creation at Triage" {shape: rectangle}
+escalate_or_investigate_solo: "Escalate or Investigate Solo?" {shape: rectangle}
+
+center -> triage_process_flow
+center -> initial_diagnosis_checklist
+center -> priority_assignment_guide
+center -> ticket_creation_at_triage
+center -> escalate_or_investigate_solo
+```
+
 ## Overview
 
 Triage is the first structured activity after an alert fires or an issue is reported. The goal is to characterise the problem quickly — not to solve it. In 10–15 minutes, triage should produce a clear priority, an initial impact statement, and a decision about whether to escalate or investigate solo. Speed and accuracy both matter.

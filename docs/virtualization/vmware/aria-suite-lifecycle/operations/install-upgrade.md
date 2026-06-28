@@ -19,6 +19,21 @@ Install & Upgrade reference covering LCM Recovery, Product Decommission via LCM,
 
 Store backup archives off the LCM appliance (NFS, S3, or external storage).
 
+```d2
+direction: right
+
+hub: "Aria Suite Lifecycle\nOperations" {shape: hexagon}
+lcm_recovery: "LCM Recovery" {shape: rectangle}
+product_decommission_via_lcm: "Product Decommission via LCM" {shape: rectangle}
+full_suite_upgrade_procedure: "Full Suite Upgrade Procedure" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+hub -> lcm_recovery
+hub -> product_decommission_via_lcm
+hub -> full_suite_upgrade_procedure
+hub -> verify
+```
+
 ## Before you begin
 
 - **Access:** vCenter read-only minimum; Administrator role for remediation steps

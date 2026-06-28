@@ -24,6 +24,15 @@ Typical SLA thresholds for NAS workloads:
 | Analytics (HDFS) | < 100 ms average | > 5 GB/s |
 | Archive (cold NFS) | < 200 ms | Best effort |
 
+```d2
+direction: right
+
+center: "InsightIQ" {shape: hexagon}
+common_report_issues: "Common Report Issues" {shape: rectangle}
+
+center -> common_report_issues
+```
+
 ## Common Report Issues
 
 | Issue | Likely Cause | Fix |

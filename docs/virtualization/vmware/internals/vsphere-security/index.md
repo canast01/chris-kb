@@ -11,6 +11,25 @@ vSphere security covers a wide range of features from encrypting VM data at rest
 
 ---
 
+```d2
+direction: right
+
+center: "Vsphere Security" {shape: hexagon}
+vm_encryption: "VM Encryption" {shape: rectangle}
+vsphere_trust_authority_vta: "vSphere Trust Authority (vTA)" {shape: rectangle}
+key_management_key_rotation_and_life: "Key Management — Key Rotation and Lifecycle" {shape: rectangle}
+virtual_trusted_platform_module_vtpm: "Virtual Trusted Platform Module (vTPM)" {shape: rectangle}
+bios_vs_uefi_firmware: "BIOS vs UEFI Firmware" {shape: rectangle}
+virtualizationbased_security_vbs: "Virtualization-Based Security (VBS)" {shape: rectangle}
+
+center -> vm_encryption
+center -> vsphere_trust_authority_vta
+center -> key_management_key_rotation_and_life
+center -> virtual_trusted_platform_module_vtpm
+center -> bios_vs_uefi_firmware
+center -> virtualizationbased_security_vbs
+```
+
 ## VM Encryption
 
 vSphere VM Encryption (introduced in vSphere 6.5) encrypts VM data at rest — virtual machine disk files (VMDK), VM configuration files (VMX), and VM swap files.

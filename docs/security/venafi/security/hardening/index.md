@@ -15,6 +15,15 @@ All certificate lifecycle events are captured in the Venafi audit log and should
 
 
 
+```d2
+direction: down
+
+hardening_controls: "Hardening Controls" {shape: rectangle}
+hardening_checklist: "Hardening Checklist" {shape: rectangle}
+
+hardening_controls -> hardening_checklist: hardens
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

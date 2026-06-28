@@ -14,6 +14,23 @@ CIS benchmark controls, kernel hardening via sysctl, auditd configuration, login
 ![Linux — Hardening](../../../../assets/compute-linux-security-hardening-index.svg)
 
 
+```d2
+direction: down
+
+linux_hardening_layers: "Linux Hardening Layers" {shape: rectangle}
+kernel_hardening_sysctl: "Kernel Hardening — sysctl" {shape: rectangle}
+auditd_system_call_and_file_auditing: "auditd — System Call and File Auditing" {shape: rectangle}
+login_policy_etclogindefs: "Login Policy — /etc/login.defs" {shape: rectangle}
+pam_password_policy: "PAM Password Policy" {shape: rectangle}
+file_system_hardening: "File System Hardening" {shape: rectangle}
+
+linux_hardening_layers -> kernel_hardening_sysctl: hardens
+kernel_hardening_sysctl -> auditd_system_call_and_file_auditing: hardens
+auditd_system_call_and_file_auditing -> login_policy_etclogindefs: hardens
+login_policy_etclogindefs -> pam_password_policy: hardens
+pam_password_policy -> file_system_hardening: hardens
+```
+
 ## Before you begin
 
 - **Access:** root or sudo-capable account on target hosts

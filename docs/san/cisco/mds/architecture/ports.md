@@ -19,6 +19,25 @@ Firewall port reference for Cisco MDS 9000 Series SAN switches. Covers managemen
 
 
 
+```d2
+direction: right
+
+center: "Cisco MDS" {shape: hexagon}
+inbound_admin_access: "Inbound — Admin Access" {shape: rectangle}
+outbound_switch_to_external_services: "Outbound — Switch to External Services" {shape: rectangle}
+aaa_authentication_tacacs_and_radius: "AAA Authentication — TACACS+ and RADIUS" {shape: rectangle}
+cisco_dcnm_nexus_dashboard_fabric_co: "Cisco DCNM / Nexus Dashboard Fabric Controller" {shape: rectangle}
+cisco_call_home_optional: "Cisco Call Home (Optional)" {shape: rectangle}
+firewall_zone_summary: "Firewall Zone Summary" {shape: rectangle}
+
+center -> inbound_admin_access
+center -> outbound_switch_to_external_services
+center -> aaa_authentication_tacacs_and_radius
+center -> cisco_dcnm_nexus_dashboard_fabric_co
+center -> cisco_call_home_optional
+center -> firewall_zone_summary
+```
+
 ## Before you begin
 
 - MDS management uses the dedicated mgmt0 port (Ethernet) — separate from all FC ports

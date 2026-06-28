@@ -15,6 +15,27 @@ Hardening reference covering Default Account Hardening, LDAPS-Only Authenticatio
 ![Aria Ops for Logs — Hardening](../../../../assets/virtualization-vmware-aria-operations-for-logs-security-hard.svg)
 
 
+```d2
+direction: down
+
+external: External / Untrusted {shape: rectangle}
+default_account_hardening: "Default Account Hardening" {shape: rectangle}
+ldapsonly_authentication: "LDAPS-Only Authentication" {shape: rectangle}
+ssh_hardening: "SSH Hardening" {shape: rectangle}
+firewall_rules: "Firewall Rules" {shape: rectangle}
+syslog_output_for_audit: "Syslog Output for Audit" {shape: rectangle}
+hardening_checklist: "Hardening Checklist" {shape: rectangle}
+core: "Aria Operations for Logs Core" {shape: hexagon}
+
+external -> default_account_hardening: traffic in
+default_account_hardening -> ldapsonly_authentication
+ldapsonly_authentication -> ssh_hardening
+ssh_hardening -> firewall_rules
+firewall_rules -> syslog_output_for_audit
+syslog_output_for_audit -> hardening_checklist
+hardening_checklist -> core: secured path
+```
+
 ## Before you begin
 
 - **Access:** vCenter Administrator role

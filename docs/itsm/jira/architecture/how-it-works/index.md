@@ -14,6 +14,23 @@ How It Works reference covering Deployment Models, Data Center Reference Archite
 ![Jira — How It Works](../../../../assets/itsm-jira-architecture-how-it-works-index.svg)
 
 
+```d2
+direction: right
+
+center: "Jira" {shape: hexagon}
+deployment_models: "Deployment Models" {shape: rectangle}
+data_center_reference_architecture: "Data Center Reference Architecture" {shape: rectangle}
+clustering: "Clustering" {shape: rectangle}
+port_reference: "Port Reference" {shape: rectangle}
+cloud_architecture_reference: "Cloud Architecture (Reference)" {shape: rectangle}
+
+center -> deployment_models
+center -> data_center_reference_architecture
+center -> clustering
+center -> port_reference
+center -> cloud_architecture_reference
+```
+
 ## Deployment Models
 
 Jira is available in three deployment models, each with distinct architectural characteristics:

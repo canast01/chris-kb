@@ -46,6 +46,19 @@ Full API reference: [Pure Storage API documentation](https://support.purestorage
 
 ---
 
+```d2
+direction: right
+
+center: "FlashArray" {shape: hexagon}
+component_a: "Component A" {shape: rectangle}
+component_b: "Component B" {shape: rectangle}
+component_c: "Component C" {shape: rectangle}
+
+center -> component_a
+center -> component_b
+center -> component_c
+```
+
 ## See also
 
 - [FlashArray — How It Works](how-it-works/)

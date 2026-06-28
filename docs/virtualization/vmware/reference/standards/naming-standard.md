@@ -18,6 +18,23 @@ Naming Standard reference covering Overview, Virtual Machines, Clusters, ESXi Ho
 
 ---
 
+```d2
+direction: down
+
+virtual_machines: "Virtual Machines" {shape: rectangle}
+clusters: "Clusters" {shape: rectangle}
+esxi_hosts: "ESXi Hosts" {shape: rectangle}
+datastores: "Datastores" {shape: rectangle}
+port_groups: "Port Groups" {shape: rectangle}
+distributed_switches_vds: "Distributed Switches (vDS)" {shape: rectangle}
+
+virtual_machines -> clusters: hardens
+clusters -> esxi_hosts: hardens
+esxi_hosts -> datastores: hardens
+datastores -> port_groups: hardens
+port_groups -> distributed_switches_vds: hardens
+```
+
 ## Overview
 
 Consistent naming across the VMware environment reduces confusion during incidents, simplifies inventory queries, and supports automation. All new objects must follow this standard. Exceptions require a documented justification.

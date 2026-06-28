@@ -19,6 +19,27 @@ How to escalate Commvault backup issues to Commvault support: what data to colle
 
 ---
 
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+actor "On-Call Engineer" as ENG
+participant "Commvault\nSystem" as SYS
+participant "Vendor Support" as SUP
+
+ENG -> SYS: Pre-Escalation Self-Check
+SYS --> ENG: Output
+ENG -> SYS: Step-by-Step Data Collection
+SYS --> ENG: Output
+ENG -> SYS: How to Open the Case on the Commvault Support Port
+SYS --> ENG: Output
+ENG -> SUP: Escalate with diagnostic bundle
+SUP --> ENG: Case / resolution path
+
+@enduml
+```
+
 ## Before you begin
 
 - **Access required:** Commvault Administrator role on CommServe; access to CommCell Console; Commvault support account at ma.commvault.com with active support entitlement

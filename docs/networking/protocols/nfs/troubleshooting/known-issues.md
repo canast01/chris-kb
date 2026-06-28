@@ -18,6 +18,23 @@ Catalog of known NFS issues covering mount failures, permission errors, NFSv4 be
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+mount_failures: "Mount Failures" {shape: rectangle}
+permission_errors: "Permission Errors" {shape: rectangle}
+performance: "Performance" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> mount_failures: investigate
+symptom -> permission_errors: investigate
+symptom -> performance: investigate
+mount_failures -> resolution
+permission_errors -> resolution
+performance -> resolution
+```
+
 ## Before you begin
 
 - Test NFS: `showmount -e <nfs-server>` for export list; `mount -t nfs <server>:/export /mnt/test` for mount test.

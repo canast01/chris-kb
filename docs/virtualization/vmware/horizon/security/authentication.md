@@ -26,6 +26,27 @@ For RSA SecurID (hardware token):
 
 ---
 
+```d2
+direction: down
+
+external: External / Untrusted {shape: rectangle}
+saml_authentication_workspace_one_vi: "SAML Authentication (Workspace ONE / vIDM)" {shape: rectangle}
+smart_card_certificate_authenticatio: "Smart Card / Certificate Authentication" {shape: rectangle}
+true_sso: "True SSO" {shape: rectangle}
+unauthenticated_access_kiosk_mode: "Unauthenticated Access (Kiosk Mode)" {shape: rectangle}
+session_timeout_and_reauthentication: "Session Timeout and Reauthentication" {shape: rectangle}
+uag_identity_bridging: "UAG Identity Bridging" {shape: rectangle}
+core: "Horizon Core" {shape: hexagon}
+
+external -> saml_authentication_workspace_one_vi: traffic in
+saml_authentication_workspace_one_vi -> smart_card_certificate_authenticatio
+smart_card_certificate_authenticatio -> true_sso
+true_sso -> unauthenticated_access_kiosk_mode
+unauthenticated_access_kiosk_mode -> session_timeout_and_reauthentication
+session_timeout_and_reauthentication -> uag_identity_bridging
+uag_identity_bridging -> core: secured path
+```
+
 ## Before you begin
 
 - **Access:** vCenter Administrator role

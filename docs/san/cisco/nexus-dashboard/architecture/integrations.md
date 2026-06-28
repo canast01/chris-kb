@@ -19,6 +19,25 @@ acs system syslog show
 ```
 
 
+```d2
+direction: right
+
+center: "Nexus Dashboard" {shape: hexagon}
+aci_apic_integration: "ACI APIC Integration" {shape: rectangle}
+servicenow_itsm_integration: "ServiceNow ITSM Integration" {shape: rectangle}
+aaa_ldap_integration: "AAA / LDAP Integration" {shape: rectangle}
+smtp_notifications: "SMTP Notifications" {shape: rectangle}
+aria_operations_integration: "Aria Operations Integration" {shape: rectangle}
+integration_summary: "Integration Summary" {shape: rectangle}
+
+center -> aci_apic_integration
+center -> servicenow_itsm_integration
+center -> aaa_ldap_integration
+center -> smtp_notifications
+center -> aria_operations_integration
+center -> integration_summary
+```
+
 ## Overview
 
 Nexus Dashboard integrates with Cisco ACI and NX-OS fabric infrastructure as its core data sources, and extends to ITSM, SIEM, notification, and AAA platforms for operational workflows.

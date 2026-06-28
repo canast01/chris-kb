@@ -15,6 +15,25 @@ Data governance is the framework of policies, roles, processes, and controls tha
 
 ---
 
+```d2
+direction: right
+
+center: "Data Governance" {shape: hexagon}
+data_ownership_model: "Data Ownership Model" {shape: rectangle}
+data_classification_integration: "Data Classification Integration" {shape: rectangle}
+governance_process_flowchart: "Governance Process Flowchart" {shape: rectangle}
+audit_log_requirements: "Audit Log Requirements" {shape: rectangle}
+governance_tooling: "Governance Tooling" {shape: rectangle}
+policy_violation_response_procedure: "Policy Violation Response Procedure" {shape: rectangle}
+
+center -> data_ownership_model
+center -> data_classification_integration
+center -> governance_process_flowchart
+center -> audit_log_requirements
+center -> governance_tooling
+center -> policy_violation_response_procedure
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

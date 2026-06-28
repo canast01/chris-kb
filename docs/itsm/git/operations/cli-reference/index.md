@@ -143,6 +143,15 @@ git config --global alias.unstage "restore --staged"
 git config --global alias.aliases "config --get-regexp alias"
 ```
 
+```d2
+direction: right
+
+center: "Cli Reference" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+center -> verify
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

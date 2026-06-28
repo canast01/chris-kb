@@ -53,6 +53,32 @@ graph TD
     class R,S escalate
 ```
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+step_1_check_dcnm_service_status: "Step 1 — Check DCNM service status" {shape: rectangle}
+step_2_authenticate_and_check_rest_a: "Step 2 — Authenticate and check REST API" {shape: rectangle}
+step_3_check_postgresql_database_hea: "Step 3 — Check PostgreSQL database health" {shape: rectangle}
+step_4_test_switch_connectivity: "Step 4 — Test switch connectivity" {shape: rectangle}
+step_5_debug_discovery_and_fabric_is: "Step 5 — Debug discovery and fabric issues" {shape: rectangle}
+step_6_check_ha_replication_status: "Step 6 — Check HA replication status" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> step_1_check_dcnm_service_status: investigate
+symptom -> step_2_authenticate_and_check_rest_a: investigate
+symptom -> step_3_check_postgresql_database_hea: investigate
+symptom -> step_4_test_switch_connectivity: investigate
+symptom -> step_5_debug_discovery_and_fabric_is: investigate
+symptom -> step_6_check_ha_replication_status: investigate
+step_1_check_dcnm_service_status -> resolution
+step_2_authenticate_and_check_rest_a -> resolution
+step_3_check_postgresql_database_hea -> resolution
+step_4_test_switch_connectivity -> resolution
+step_5_debug_discovery_and_fabric_is -> resolution
+step_6_check_ha_replication_status -> resolution
+```
+
 ## Before you begin
 
 - **Access:** SSH to DCNM server (root or admin); DCNM admin UI credentials; SSH access to managed MDS/NX-OS switches

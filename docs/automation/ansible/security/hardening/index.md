@@ -165,6 +165,19 @@ from="10.0.50.10",no-agent-forwarding,no-X11-forwarding,no-port-forwarding ssh-e
     flat: true
 ```
 
+```d2
+direction: down
+
+network_controls: "Network Controls" {shape: rectangle}
+os_hardening: "OS Hardening" {shape: rectangle}
+application_security: "Application Security" {shape: rectangle}
+audit_monitoring: "Audit & Monitoring" {shape: rectangle}
+
+network_controls -> os_hardening: hardens
+os_hardening -> application_security: hardens
+application_security -> audit_monitoring: hardens
+```
+
 ## Before you begin
 
 - **Access:** SSH key or service account with sudo on managed hosts; Ansible control node

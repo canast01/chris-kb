@@ -20,6 +20,25 @@ Periodic access reviews ensure that users and service accounts hold only the per
   </a>
 </div>
 
+```d2
+direction: right
+
+center: "Access Review" {shape: hexagon}
+review_schedule: "Review Schedule" {shape: rectangle}
+active_directory_export_and_review: "Active Directory — Export and Review" {shape: rectangle}
+privileged_account_review: "Privileged Account Review" {shape: rectangle}
+service_account_review: "Service Account Review" {shape: rectangle}
+inactive_and_stale_account_cleanup: "Inactive and Stale Account Cleanup" {shape: rectangle}
+linux_posix_account_review: "Linux / POSIX Account Review" {shape: rectangle}
+
+center -> review_schedule
+center -> active_directory_export_and_review
+center -> privileged_account_review
+center -> service_account_review
+center -> inactive_and_stale_account_cleanup
+center -> linux_posix_account_review
+```
+
 ## Review Schedule
 
 | Scope | Frequency | Owner |

@@ -15,6 +15,25 @@ Azure Disk Snapshots reference covering Overview, Snapshot Lifecycle, Creating S
 
 
 
+```d2
+direction: right
+
+center: "Azure" {shape: hexagon}
+snapshot_lifecycle: "Snapshot Lifecycle" {shape: rectangle}
+creating_snapshots: "Creating Snapshots" {shape: rectangle}
+snapshot_vs_full_backup_comparison: "Snapshot vs Full Backup Comparison" {shape: rectangle}
+restoring_from_snapshot: "Restoring from Snapshot" {shape: rectangle}
+crossregion_snapshot_copy: "Cross-Region Snapshot Copy" {shape: rectangle}
+snapshot_retention_and_cleanup: "Snapshot Retention and Cleanup" {shape: rectangle}
+
+center -> snapshot_lifecycle
+center -> creating_snapshots
+center -> snapshot_vs_full_backup_comparison
+center -> restoring_from_snapshot
+center -> crossregion_snapshot_copy
+center -> snapshot_retention_and_cleanup
+```
+
 ## Overview
 
 Azure managed disk snapshots capture the full state of a managed disk at a point in time. Incremental snapshots store only changed blocks since the last snapshot, significantly reducing storage costs and copy time. Snapshots are stored as page blobs in Azure Storage and can be used to restore disks or copy across regions.

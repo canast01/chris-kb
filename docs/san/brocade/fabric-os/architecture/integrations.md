@@ -16,6 +16,23 @@ FabricOS integrations: DCNM and Brocade Network Advisor connectivity, SANnav man
 
 ---
 
+```d2
+direction: right
+
+center: "Brocade Fabric OS" {shape: hexagon}
+fc_login_sequence_flogi_plogi_prli: "FC Login Sequence (FLOGI / PLOGI / PRLI)" {shape: rectangle}
+dell_powermax_integration: "Dell PowerMax Integration" {shape: rectangle}
+netapp_ontap_integration: "NetApp ONTAP Integration" {shape: rectangle}
+pure_storage_flasharray_integration: "Pure Storage FlashArray Integration" {shape: rectangle}
+snmp_and_syslog: "SNMP and Syslog" {shape: rectangle}
+
+center -> fc_login_sequence_flogi_plogi_prli
+center -> dell_powermax_integration
+center -> netapp_ontap_integration
+center -> pure_storage_flasharray_integration
+center -> snmp_and_syslog
+```
+
 ## FC Login Sequence (FLOGI / PLOGI / PRLI)
 
 ```mermaid

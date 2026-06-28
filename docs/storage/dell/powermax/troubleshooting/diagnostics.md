@@ -18,6 +18,29 @@ Diagnostics reference covering Diagnostic Commands, Log Locations, Performance A
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+diagnostic_commands: "Diagnostic Commands" {shape: rectangle}
+log_locations: "Log Locations" {shape: rectangle}
+performance_analysis: "Performance Analysis" {shape: rectangle}
+before_calling_support: "Before Calling Support" {shape: rectangle}
+verify_resolution: "Verify resolution" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> diagnostic_commands: investigate
+symptom -> log_locations: investigate
+symptom -> performance_analysis: investigate
+symptom -> before_calling_support: investigate
+symptom -> verify_resolution: investigate
+diagnostic_commands -> resolution
+log_locations -> resolution
+performance_analysis -> resolution
+before_calling_support -> resolution
+verify_resolution -> resolution
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

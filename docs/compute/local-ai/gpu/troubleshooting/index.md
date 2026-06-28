@@ -15,6 +15,32 @@ This page covers the most common GPU workload failures: out-of-memory errors, CU
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+outofmemory_oom_errors: "Out-of-Memory (OOM) Errors" {shape: rectangle}
+cuda_runtime_errors: "CUDA Runtime Errors" {shape: rectangle}
+driver_and_framework_mismatch: "Driver and Framework Mismatch" {shape: rectangle}
+multigpu_issues: "Multi-GPU Issues" {shape: rectangle}
+gpu_not_detected: "GPU Not Detected" {shape: rectangle}
+temperature_and_throttling: "Temperature and Throttling" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> outofmemory_oom_errors: investigate
+symptom -> cuda_runtime_errors: investigate
+symptom -> driver_and_framework_mismatch: investigate
+symptom -> multigpu_issues: investigate
+symptom -> gpu_not_detected: investigate
+symptom -> temperature_and_throttling: investigate
+outofmemory_oom_errors -> resolution
+cuda_runtime_errors -> resolution
+driver_and_framework_mismatch -> resolution
+multigpu_issues -> resolution
+gpu_not_detected -> resolution
+temperature_and_throttling -> resolution
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

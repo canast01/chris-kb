@@ -17,6 +17,25 @@ Aria Automation backup uses a built-in tool that exports the platform configurat
 
 ---
 
+```d2
+direction: right
+
+hub: "Aria Automation\nOperations" {shape: hexagon}
+what_is_and_is_not_backed_up: "What Is and Is Not Backed Up" {shape: rectangle}
+configuring_the_backup_target: "Configuring the Backup Target" {shape: rectangle}
+restore_procedure: "Restore Procedure" {shape: rectangle}
+postrestore_validation: "Post-Restore Validation" {shape: rectangle}
+vmlevel_backup_for_disaster_recovery: "VM-Level Backup for Disaster Recovery" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+hub -> what_is_and_is_not_backed_up
+hub -> configuring_the_backup_target
+hub -> restore_procedure
+hub -> postrestore_validation
+hub -> vmlevel_backup_for_disaster_recovery
+hub -> verify
+```
+
 ## Before you begin
 
 - **Access:** vCenter read-only minimum; Administrator role for remediation steps

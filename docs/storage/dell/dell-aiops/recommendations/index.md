@@ -15,6 +15,15 @@ Dell AIOps: Actionable Recommendations and Implementation Tracking reference cov
 
 
 
+```d2
+direction: right
+
+center: "Dell AIOps" {shape: hexagon}
+common_recommendation_issues: "Common Recommendation Issues" {shape: rectangle}
+
+center -> common_recommendation_issues
+```
+
 ## Common Recommendation Issues
 
 | Issue | Likely Cause | Fix |

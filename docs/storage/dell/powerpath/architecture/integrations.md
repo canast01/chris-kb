@@ -16,6 +16,23 @@ Integrations reference covering Windows HBA Integration, Linux DM-Multipath Comp
 
 
 
+```d2
+direction: right
+
+center: "PowerPath" {shape: hexagon}
+windows_hba_integration: "Windows HBA Integration" {shape: rectangle}
+linux_dmmultipath_comparison: "Linux DM-Multipath Comparison" {shape: rectangle}
+vmware_vaai_integration_powerpathve: "VMware VAAI Integration (PowerPath/VE)" {shape: rectangle}
+aix_mpio_coexistence: "AIX MPIO Coexistence" {shape: rectangle}
+monitoring_integration: "Monitoring Integration" {shape: rectangle}
+
+center -> windows_hba_integration
+center -> linux_dmmultipath_comparison
+center -> vmware_vaai_integration_powerpathve
+center -> aix_mpio_coexistence
+center -> monitoring_integration
+```
+
 ## Windows HBA Integration
 
 On Windows Server, PowerPath installs as a filter driver that intercepts SCSI I/O before it reaches the Windows disk layer. PowerPath pseudo devices appear as standard disks in Disk Management and Device Manager.

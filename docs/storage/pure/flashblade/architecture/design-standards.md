@@ -17,6 +17,21 @@ Design Standards reference covering Naming Conventions, Sizing Guidelines, Build
 FlashBlade Design Checklist
 
 
+```d2
+direction: right
+
+center: "FlashBlade" {shape: hexagon}
+naming_conventions: "Naming Conventions" {shape: rectangle}
+sizing_guidelines: "Sizing Guidelines" {shape: rectangle}
+build_baseline: "Build Baseline" {shape: rectangle}
+configuration_checklist: "Configuration Checklist" {shape: rectangle}
+
+center -> naming_conventions
+center -> sizing_guidelines
+center -> build_baseline
+center -> configuration_checklist
+```
+
 ## Naming Conventions
 
 | Object | Pattern | Example |

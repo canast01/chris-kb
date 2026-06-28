@@ -32,6 +32,21 @@ flowchart LR
 
 ---
 
+```d2
+direction: right
+
+hub: "Superna Eyeglass\nOperations" {shape: hexagon}
+failback: "Failback" {shape: rectangle}
+onefs_synciq_supporting_commands: "OneFS SyncIQ (Supporting Commands)" {shape: rectangle}
+rest_api: "REST API" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+hub -> failback
+hub -> onefs_synciq_supporting_commands
+hub -> rest_api
+hub -> verify
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

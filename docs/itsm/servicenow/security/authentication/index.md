@@ -98,6 +98,26 @@ props.forEach(function(p) {
 });
 ```
 
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+actor "User / Service" as USR
+participant "ServiceNow" as SVC
+participant "Identity Provider\n(LDAP / OIDC / AD)" as IDP
+participant "Token / Session Store" as TOKEN
+
+USR -> SVC: Authentication request
+SVC -> IDP: Validate credentials
+IDP --> SVC: Identity confirmed
+SVC -> TOKEN: Issue session token
+TOKEN --> SVC: Token granted
+SVC --> USR: Access allowed
+
+@enduml
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

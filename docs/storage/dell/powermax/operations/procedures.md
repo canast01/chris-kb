@@ -14,6 +14,25 @@ Procedures reference covering Change Readiness, Maintenance Window, Post-Change 
 
 
 
+```d2
+direction: right
+
+hub: "PowerMax\nOperations" {shape: hexagon}
+change_readiness: "Change Readiness" {shape: rectangle}
+maintenance_window: "Maintenance Window" {shape: rectangle}
+postchange_validation: "Post-Change Validation" {shape: rectangle}
+masking_views: "Masking Views" {shape: rectangle}
+provisioning: "Provisioning" {shape: rectangle}
+create_a_storage_group_and_add_devic: "Create a Storage Group and Add Devices" {shape: rectangle}
+
+hub -> change_readiness
+hub -> maintenance_window
+hub -> postchange_validation
+hub -> masking_views
+hub -> provisioning
+hub -> create_a_storage_group_and_add_devic
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

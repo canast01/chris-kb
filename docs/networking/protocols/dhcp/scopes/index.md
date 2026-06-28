@@ -13,6 +13,25 @@ DHCP Scopes reference covering Overview, Creating a Scope, Exclusions, Scope Pla
 
 
 
+```d2
+direction: right
+
+center: "DHCP" {shape: hexagon}
+creating_a_scope: "Creating a Scope" {shape: rectangle}
+exclusions: "Exclusions" {shape: rectangle}
+scope_planning_reference: "Scope Planning Reference" {shape: rectangle}
+superscopes: "Superscopes" {shape: rectangle}
+dhcp_relay_ip_helper: "DHCP Relay (IP Helper)" {shape: rectangle}
+known_issues: "Known Issues" {shape: rectangle}
+
+center -> creating_a_scope
+center -> exclusions
+center -> scope_planning_reference
+center -> superscopes
+center -> dhcp_relay_ip_helper
+center -> known_issues
+```
+
 ## Overview
 
 A DHCP scope defines the pool of IP addresses available for a subnet. Scopes include a range, exclusions, lease duration, and options. Superscopes group multiple scopes for multinet subnets. DHCP relay (IP helper) is required when the DHCP server is on a different subnet from clients.

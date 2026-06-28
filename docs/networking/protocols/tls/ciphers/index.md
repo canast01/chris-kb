@@ -13,6 +13,25 @@ A cipher suite specifies the algorithms used for key exchange, authentication, e
 
 
 
+```d2
+direction: right
+
+center: "TLS" {shape: hexagon}
+cipher_suite_name_structure_tls_12: "Cipher Suite Name Structure (TLS 1.2)" {shape: rectangle}
+recommended_cipher_suites: "Recommended Cipher Suites" {shape: rectangle}
+checking_ciphers_on_a_live_endpoint: "Checking Ciphers on a Live Endpoint" {shape: rectangle}
+configuring_ciphers: "Configuring Ciphers" {shape: rectangle}
+tls_version_standards: "TLS Version Standards" {shape: rectangle}
+common_issues: "Common Issues" {shape: rectangle}
+
+center -> cipher_suite_name_structure_tls_12
+center -> recommended_cipher_suites
+center -> checking_ciphers_on_a_live_endpoint
+center -> configuring_ciphers
+center -> tls_version_standards
+center -> common_issues
+```
+
 ## Cipher Suite Name Structure (TLS 1.2)
 
 ![TLS Cipher Suites — Diagram](../../../../assets/networking-protocols-tls-ciphers-diagram.svg)

@@ -13,6 +13,17 @@ Top-10 vSphere Replication commands for replication configuration, status monito
 
 
 
+```d2
+direction: right
+
+center: "Cheat Sheets" {shape: rectangle}
+powercli: "PowerCLI" {shape: rectangle}
+vrms_rest_api: "VRMS REST API" {shape: rectangle}
+
+center -> powercli
+center -> vrms_rest_api
+```
+
 ## PowerCLI
 
 ```powershell

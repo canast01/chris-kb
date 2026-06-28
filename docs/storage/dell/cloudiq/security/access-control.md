@@ -30,6 +30,21 @@ CloudIQ provides role-based access control to limit what each user can view and 
 
 Assign roles under **Settings > Users**. Apply the principle of least privilege — most operational users should be Viewer or System Admin; CloudIQ Admin should be restricted to a small number of named individuals.
 
+```d2
+direction: down
+
+external: External / Untrusted {shape: rectangle}
+perimeter_controls: "Perimeter Controls" {shape: rectangle}
+identity_access: "Identity & Access" {shape: rectangle}
+audit_logging: "Audit & Logging" {shape: rectangle}
+core: "CloudIQ Core" {shape: hexagon}
+
+external -> perimeter_controls: traffic in
+perimeter_controls -> identity_access
+identity_access -> audit_logging
+audit_logging -> core: secured path
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

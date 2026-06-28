@@ -11,6 +11,23 @@ MySQL/MariaDB health checks: `SHOW SLAVE STATUS`, `SHOW PROCESSLIST`, `SHOW ENGI
 *Applies to: RHEL / Ubuntu LTS*
 </div>
 
+```d2
+direction: right
+
+hub: "Linux\nOperations" {shape: hexagon}
+run_this_routine: "Run This Routine" {shape: rectangle}
+database_daily_health_check: "Database — Daily Health Check" {shape: rectangle}
+database_capacity_monitoring: "Database — Capacity Monitoring" {shape: rectangle}
+database_replication_check: "Database — Replication Check" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+hub -> run_this_routine
+hub -> database_daily_health_check
+hub -> database_capacity_monitoring
+hub -> database_replication_check
+hub -> verify
+```
+
 ## Before you begin
 
 - **Access:** root or sudo-capable account on target hosts

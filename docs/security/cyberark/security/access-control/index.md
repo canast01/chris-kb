@@ -21,6 +21,23 @@ All production safes enforce dual-control to prevent unilateral credential acces
 | Master Policy review | Quarterly review of base policy and platform-specific overrides |
 | Vault DR access | DR Vault is read-only replica; promotion only during declared disaster |
 
+```d2
+direction: down
+
+root: "Access Control\nAccess Control" {shape: hexagon}
+safe_access_hierarchy: "Safe Access Hierarchy" {shape: rectangle}
+ad_groups_and_vault_roles: "AD Groups and Vault Roles" {shape: rectangle}
+safe_standards: "Safe Standards" {shape: rectangle}
+resources: Protected Resources {shape: cylinder}
+
+root -> safe_access_hierarchy: role
+safe_access_hierarchy -> resources: scoped
+root -> ad_groups_and_vault_roles: role
+ad_groups_and_vault_roles -> resources: scoped
+root -> safe_standards: role
+safe_standards -> resources: scoped
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

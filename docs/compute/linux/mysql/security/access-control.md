@@ -15,6 +15,25 @@ MySQL access control — user creation, GRANT/REVOKE, privilege hierarchy, role-
 
 
 
+```d2
+direction: down
+
+external: External / Untrusted {shape: rectangle}
+user_management: "User Management" {shape: rectangle}
+grant_statements: "GRANT Statements" {shape: rectangle}
+roles_mysql_80: "Roles (MySQL 8.0+)" {shape: rectangle}
+auditing_privileges: "Auditing Privileges" {shape: rectangle}
+privilege_hierarchy: "Privilege Hierarchy" {shape: rectangle}
+core: "Linux Core" {shape: hexagon}
+
+external -> user_management: traffic in
+user_management -> grant_statements
+grant_statements -> roles_mysql_80
+roles_mysql_80 -> auditing_privileges
+auditing_privileges -> privilege_hierarchy
+privilege_hierarchy -> core: secured path
+```
+
 ## Before you begin
 
 - **Access:** root or sudo-capable account on target hosts

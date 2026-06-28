@@ -14,6 +14,27 @@ Daily cluster health routine: cluster operators, node status, etcd health, monit
 
 
 
+```d2
+direction: right
+
+begin_checks: "Begin Checks" {shape: oval}
+health_check_triage_flow: "Health Check Triage Flow" {shape: rectangle}
+cluster_operator_health: "Cluster Operator Health" {shape: rectangle}
+node_health: "Node Health" {shape: rectangle}
+etcd_health: "etcd Health" {shape: rectangle}
+networking_health: "Networking Health" {shape: rectangle}
+storage_health: "Storage Health" {shape: rectangle}
+generate_report: "Generate Report" {shape: oval}
+
+begin_checks -> health_check_triage_flow
+health_check_triage_flow -> cluster_operator_health
+cluster_operator_health -> node_health
+node_health -> etcd_health
+etcd_health -> networking_health
+networking_health -> storage_health
+storage_health -> generate_report
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

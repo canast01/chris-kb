@@ -33,6 +33,27 @@ flowchart TD
     style s8 fill:#2e7d32,color:#fff,stroke:#1b5e20
 ```
 
+```d2
+direction: right
+
+plan: "Plan" {shape: oval}
+install_on_rhel_rocky: "Install on RHEL / Rocky" {shape: rectangle}
+install_on_ubuntu_debian: "Install on Ubuntu / Debian" {shape: rectangle}
+postinstall_hardening: "Post-Install Hardening" {shape: rectangle}
+initial_configuration_etcmysqlmysqlc: "Initial Configuration (`/etc/mysql/mysql.conf.d/mysqld.cnf`)" {shape: rectangle}
+firewall: "Firewall" {shape: rectangle}
+firstconnection_validation: "First-Connection Validation" {shape: rectangle}
+validate: "Validate" {shape: oval}
+
+plan -> install_on_rhel_rocky
+install_on_rhel_rocky -> install_on_ubuntu_debian
+install_on_ubuntu_debian -> postinstall_hardening
+postinstall_hardening -> initial_configuration_etcmysqlmysqlc
+initial_configuration_etcmysqlmysqlc -> firewall
+firewall -> firstconnection_validation
+firstconnection_validation -> validate
+```
+
 ## Before you begin
 
 - **Access:** root or sudo-capable account on target hosts

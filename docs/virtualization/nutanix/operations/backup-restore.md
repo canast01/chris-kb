@@ -20,6 +20,25 @@ Nutanix native snapshot-based protection, Protection Domain replication to a rem
 
 ---
 
+```d2
+direction: right
+
+hub: "Nutanix AHV\nOperations" {shape: hexagon}
+backup_approaches: "Backup Approaches" {shape: rectangle}
+native_snapshots_local_no_replicatio: "Native Snapshots (Local — No Replication)" {shape: rectangle}
+protection_domains_replication_to_re: "Protection Domains (Replication to Remote Cluster)" {shape: rectangle}
+nutanix_dr_prism_central_policybased: "Nutanix DR (Prism Central — Policy-Based)" {shape: rectangle}
+veeam_backup_replication_for_ahv: "Veeam Backup & Replication for AHV" {shape: rectangle}
+hycu_for_nutanix: "HYCU for Nutanix" {shape: rectangle}
+
+hub -> backup_approaches
+hub -> native_snapshots_local_no_replicatio
+hub -> protection_domains_replication_to_re
+hub -> nutanix_dr_prism_central_policybased
+hub -> veeam_backup_replication_for_ahv
+hub -> hycu_for_nutanix
+```
+
 ## Before you begin
 
 - **Access:** Prism Element admin (for PD/local snapshots); Prism Central admin (for DR policies)

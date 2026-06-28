@@ -15,6 +15,25 @@ Access Control reference covering RBAC Roles, Configuring Active Directory Integ
 ![Aria Ops for Logs — Access Control](../../../../assets/virtualization-vmware-aria-operations-for-logs-security-acce.svg)
 
 
+```d2
+direction: down
+
+external: External / Untrusted {shape: rectangle}
+rbac_roles: "RBAC Roles" {shape: rectangle}
+configuring_active_directory_integra: "Configuring Active Directory Integration" {shape: rectangle}
+local_user_accounts: "Local User Accounts" {shape: rectangle}
+api_authentication_for_automation: "API Authentication for Automation" {shape: rectangle}
+session_and_access_logging: "Session and Access Logging" {shape: rectangle}
+core: "Aria Operations for Logs Core" {shape: hexagon}
+
+external -> rbac_roles: traffic in
+rbac_roles -> configuring_active_directory_integra
+configuring_active_directory_integra -> local_user_accounts
+local_user_accounts -> api_authentication_for_automation
+api_authentication_for_automation -> session_and_access_logging
+session_and_access_logging -> core: secured path
+```
+
 ## Before you begin
 
 - **Access:** vCenter Administrator role

@@ -27,6 +27,19 @@ Flow telemetry fields:
 | `latency_us` | Fabric latency in microseconds |
 | `drop_count` | Packets dropped in fabric |
 
+```d2
+direction: right
+
+hub: "Nexus Dashboard\nOperations" {shape: hexagon}
+using_flow_data_for_troubleshooting: "Using Flow Data for Troubleshooting" {shape: rectangle}
+common_fabric_health_issues: "Common Fabric Health Issues" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+hub -> using_flow_data_for_troubleshooting
+hub -> common_fabric_health_issues
+hub -> verify
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

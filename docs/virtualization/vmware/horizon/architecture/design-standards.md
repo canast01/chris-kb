@@ -18,6 +18,25 @@ Design Standards reference covering Desktop VM Sizing, Storage Sizing, VLAN and 
   Pod Design (up to 7 Connection Servers, 10,000 IC desktops)
 
 
+```d2
+direction: right
+
+center: "Horizon" {shape: hexagon}
+storage_design: "Storage Design" {shape: rectangle}
+vlan_and_network_design: "VLAN and Network Design" {shape: rectangle}
+uag_sizing: "UAG Sizing" {shape: rectangle}
+app_volumes_sizing: "App Volumes Sizing" {shape: rectangle}
+golden_image_management: "Golden Image Management" {shape: rectangle}
+pod_federation_cloud_pod_architectur: "Pod Federation — Cloud Pod Architecture (CPA)" {shape: rectangle}
+
+center -> storage_design
+center -> vlan_and_network_design
+center -> uag_sizing
+center -> app_volumes_sizing
+center -> golden_image_management
+center -> pod_federation_cloud_pod_architectur
+```
+
 ## Storage Design
 
 ### App Volumes Storage

@@ -34,6 +34,23 @@ ONTAP Cloud (Cloud Volumes ONTAP) runs the same OS in AWS, Azure, and GCP, enabl
 
 ## HA Pair Architecture
 
+```d2
+direction: right
+
+node_a: Controller A (Active) {shape: rectangle}
+node_b: Controller B (HA Partner) {shape: rectangle}
+shelves: Disk Shelves {shape: cylinder}
+clients: Clients {shape: person}
+svms: SVMs (Data LIFs) {shape: rectangle}
+
+node_a -> node_b: HA interconnect\n(NVRAM mirror, RDMA)
+node_a -> shelves: SAS / NVMe (owns aggregates)
+node_b -> shelves: SAS / NVMe (takeover path)
+clients -> svms: NFS / CIFS / iSCSI / NVMe-oF
+svms -> node_a: served via aggregates
+node_b -> svms: serves LIFs during takeover
+```
+
 Two ONTAP controller nodes form an HA pair. Both nodes are active simultaneously — each serves its own set of aggregates and volumes, and each holds the partner node's NVRAM write log as a mirror. Under normal operation the workload is split across both nodes; under takeover one node serves the entire workload.
 
 Key hardware components per node:
@@ -162,6 +179,36 @@ flowchart LR
 ```
 
 ## SnapMirror and SnapVault
+
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+participant "Source SVM\n(Primary)" as SRC
+participant "Source Volume" as SVOL
+participant "SnapMirror Engine" as SM
+participant "Destination SVM\n(Secondary)" as DST
+participant "Destination Volume\n(DP — read-only)" as DVOL
+
+SRC -> SM: Initialize relationship
+SM -> SVOL: Create baseline Snapshot
+SM -> DST: Transfer baseline (full copy)
+DST -> DVOL: Write baseline
+DVOL --> SM: Baseline complete
+
+loop Scheduled update (hourly / daily)
+  SM -> SVOL: Create new Snapshot
+  SM -> SM: Compute incremental delta from last transfer Snapshot
+  SM -> DST: Transfer delta blocks
+  DST -> DVOL: Apply delta
+  DVOL --> SM: Update complete
+  SM -> SVOL: Delete previous transfer Snapshot
+end
+
+note over SM,DST: On DR activation — break relationship, promote DVOL to R/W
+@enduml
+```
 
 SnapMirror is ONTAP's native data replication engine. It operates at the volume level and transfers only changed WAFL blocks between snapshots — making replication incremental and network-efficient.
 

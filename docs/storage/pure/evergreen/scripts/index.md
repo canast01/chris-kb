@@ -18,6 +18,26 @@ Pure Evergreen automation scripts: REST API calls for entitlement status, Python
 ![Evergreen — Scripts — Diagram](../../../../assets/storage-pure-evergreen-scripts-diagram.svg)
 
 ---
+
+```d2
+direction: right
+
+center: "Evergreen" {shape: rectangle}
+preupgrade_path_validation_bash: "Pre-Upgrade Path Validation (Bash)" {shape: rectangle}
+upgrade_readiness_check_python: "Upgrade Readiness Check (Python)" {shape: rectangle}
+ansible_preupgrade_playbook: "Ansible Pre-Upgrade Playbook" {shape: rectangle}
+windows_evergreenone_usage_report_vi: "Windows: Evergreen//One Usage Report via Pure1 REST API (Pow" {shape: rectangle}
+daily_check_script_python: "Daily Check Script (Python)" {shape: rectangle}
+incident_triage_script_python: "Incident Triage Script (Python)" {shape: rectangle}
+
+center -> preupgrade_path_validation_bash
+center -> upgrade_readiness_check_python
+center -> ansible_preupgrade_playbook
+center -> windows_evergreenone_usage_report_vi
+center -> daily_check_script_python
+center -> incident_triage_script_python
+```
+
 ## Pre-Upgrade Path Validation (Bash)
 
 Before a Purity upgrade or Evergreen controller refresh, validate host paths, pod stretch status, mediator reachability, and snapshot count to produce a go/no-go checklist.

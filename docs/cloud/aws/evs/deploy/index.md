@@ -18,6 +18,27 @@ EVS cluster deployment: prerequisites, VPC setup, cluster creation via AWS conso
 
 
 
+```d2
+direction: right
+
+plan: "Plan" {shape: oval}
+prerequisites: "Prerequisites" {shape: rectangle}
+create_evs_cluster_aws_cli: "Create EVS Cluster (AWS CLI)" {shape: rectangle}
+vcf_initial_configuration: "VCF Initial Configuration" {shape: rectangle}
+hcx_deployment_onpremises_side: "HCX Deployment (On-Premises Side)" {shape: rectangle}
+network_extension_setup: "Network Extension Setup" {shape: rectangle}
+postdeploy_validation_checklist: "Post-Deploy Validation Checklist" {shape: rectangle}
+validate: "Validate" {shape: oval}
+
+plan -> prerequisites
+prerequisites -> create_evs_cluster_aws_cli
+create_evs_cluster_aws_cli -> vcf_initial_configuration
+vcf_initial_configuration -> hcx_deployment_onpremises_side
+hcx_deployment_onpremises_side -> network_extension_setup
+network_extension_setup -> postdeploy_validation_checklist
+postdeploy_validation_checklist -> validate
+```
+
 ## Before you begin
 
 - **Access:** admin credentials for the target system and any upstream dependencies (DNS, NTP, vCenter, directory services)

@@ -16,6 +16,29 @@ Common Issues reference covering Terraform Troubleshooting Decision Flow, Refres
 ![Terraform — Common Issues](../../../../assets/automation-terraform-troubleshooting-common-issues-index.svg)
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+diagnostic_flow: "Diagnostic Flow" {shape: rectangle}
+terraform_troubleshooting_decision_f: "Terraform Troubleshooting Decision Flow" {shape: rectangle}
+workspace_issues: "Workspace Issues" {shape: rectangle}
+common_error_reference: "Common Error Reference" {shape: rectangle}
+verify_resolution: "Verify resolution" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> diagnostic_flow: investigate
+symptom -> terraform_troubleshooting_decision_f: investigate
+symptom -> workspace_issues: investigate
+symptom -> common_error_reference: investigate
+symptom -> verify_resolution: investigate
+diagnostic_flow -> resolution
+terraform_troubleshooting_decision_f -> resolution
+workspace_issues -> resolution
+common_error_reference -> resolution
+verify_resolution -> resolution
+```
+
 ## Diagnostic Flow
 
 ```mermaid

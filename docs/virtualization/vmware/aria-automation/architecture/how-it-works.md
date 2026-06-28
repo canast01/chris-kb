@@ -15,6 +15,25 @@ How It Works reference covering Overview, Deployment Models, Cluster Topology, C
 ![Aria Automation — How It Works](../../../../assets/virtualization-vmware-aria-automation-architecture-how-it-wo.svg)
 
 
+```d2
+direction: right
+
+center: "Aria Automation" {shape: hexagon}
+deployment_models: "Deployment Models" {shape: rectangle}
+cluster_topology: "Cluster Topology" {shape: rectangle}
+cloud_account_types: "Cloud Account Types" {shape: rectangle}
+appliance_sizing: "Appliance Sizing" {shape: rectangle}
+network_ports: "Network Ports" {shape: rectangle}
+event_broker_topics_abx_extensibilit: "Event Broker Topics (ABX / Extensibility)" {shape: rectangle}
+
+center -> deployment_models
+center -> cluster_topology
+center -> cloud_account_types
+center -> appliance_sizing
+center -> network_ports
+center -> event_broker_topics_abx_extensibilit
+```
+
 ## Overview
 
 Aria Automation (formerly vRealize Automation) is available as a **SaaS offering** or an **on-premises appliance cluster**. The on-premises deployment is a Kubernetes-based microservices platform. All infrastructure provisioning flows through cloud templates (YAML IaC), projects, and cloud zones — Aria Automation resolves placement constraints and orchestrates provisioning without hardcoded infrastructure references.

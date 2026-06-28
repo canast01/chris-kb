@@ -17,6 +17,26 @@ Azure operational scripts: PowerShell and `az cli` automation for resource provi
 
 
 ---
+
+```d2
+direction: right
+
+center: "Azure" {shape: rectangle}
+script_categories: "Script Categories" {shape: rectangle}
+azure_subscription_health_check: "Azure Subscription Health Check" {shape: rectangle}
+vm_health_and_compliance_report: "VM Health and Compliance Report" {shape: rectangle}
+azure_cost_spike_alert: "Azure Cost Spike Alert" {shape: rectangle}
+network_security_group_audit: "Network Security Group Audit" {shape: rectangle}
+vm_dr_failover_with_azure_site_recov: "VM DR Failover with Azure Site Recovery (Ansible)" {shape: rectangle}
+
+center -> script_categories
+center -> azure_subscription_health_check
+center -> vm_health_and_compliance_report
+center -> azure_cost_spike_alert
+center -> network_security_group_audit
+center -> vm_dr_failover_with_azure_site_recov
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

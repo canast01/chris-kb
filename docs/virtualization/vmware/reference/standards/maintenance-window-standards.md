@@ -15,6 +15,23 @@ VMware Maintenance Window Standards reference covering Change Ticket Requirement
 
 
 
+```d2
+direction: down
+
+change_ticket_requirement: "Change Ticket Requirement" {shape: rectangle}
+stakeholder_notification: "Stakeholder Notification" {shape: rectangle}
+window_definition: "Window Definition" {shape: rectangle}
+prechange_evidence: "Pre-Change Evidence" {shape: rectangle}
+rollback_plan: "Rollback Plan" {shape: rectangle}
+communication_during_the_window: "Communication During the Window" {shape: rectangle}
+
+change_ticket_requirement -> stakeholder_notification: hardens
+stakeholder_notification -> window_definition: hardens
+window_definition -> prechange_evidence: hardens
+prechange_evidence -> rollback_plan: hardens
+rollback_plan -> communication_during_the_window: hardens
+```
+
 ## Change Ticket Requirement
 
 All maintenance windows require an approved change ticket before work begins.

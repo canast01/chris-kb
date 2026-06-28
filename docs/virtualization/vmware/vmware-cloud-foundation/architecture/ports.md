@@ -19,6 +19,25 @@ Firewall port reference for VMware Cloud Foundation (VCF). VCF uses the same por
 
 
 
+```d2
+direction: right
+
+center: "VMware Cloud Foundation" {shape: hexagon}
+inbound_client_to_sddc_manager: "Inbound — Client to SDDC Manager" {shape: rectangle}
+sddc_manager_to_management_domain_co: "SDDC Manager to Management Domain Components" {shape: rectangle}
+sddc_manager_to_workload_domain_comp: "SDDC Manager to Workload Domain Components" {shape: rectangle}
+sddc_manager_outbound_services: "SDDC Manager — Outbound Services" {shape: rectangle}
+cloud_builder_initial_deployment_onl: "Cloud Builder (Initial Deployment Only)" {shape: rectangle}
+all_underlying_product_ports: "All Underlying Product Ports" {shape: rectangle}
+
+center -> inbound_client_to_sddc_manager
+center -> sddc_manager_to_management_domain_co
+center -> sddc_manager_to_workload_domain_comp
+center -> sddc_manager_outbound_services
+center -> cloud_builder_initial_deployment_onl
+center -> all_underlying_product_ports
+```
+
 ## Before you begin
 
 - VCF is a composed stack — the underlying port requirements come from vCenter, ESXi, vSAN, NSX, and optionally Aria Suite

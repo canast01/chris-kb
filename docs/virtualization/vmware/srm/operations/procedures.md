@@ -55,6 +55,26 @@ Procedures ───────────────────────
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
+
+```d2
+direction: right
+
+hub: "Site Recovery Manager\nOperations" {shape: hexagon}
+planned_migration: "Planned Migration" {shape: rectangle}
+emergency_failover_disaster_recovery: "Emergency Failover (Disaster Recovery)" {shape: rectangle}
+reprotect: "Reprotect" {shape: rectangle}
+failback: "Failback" {shape: rectangle}
+srm_alarms_and_monitoring: "SRM Alarms and Monitoring" {shape: rectangle}
+quarterly_dr_drill_process: "Quarterly DR Drill Process" {shape: rectangle}
+
+hub -> planned_migration
+hub -> emergency_failover_disaster_recovery
+hub -> reprotect
+hub -> failback
+hub -> srm_alarms_and_monitoring
+hub -> quarterly_dr_drill_process
+```
+
 ## Before you begin
 
 - **Access:** vCenter read-only minimum; Administrator role for remediation steps

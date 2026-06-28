@@ -18,6 +18,23 @@ Design Standards reference covering Cluster Configuration, Stretched Cluster Arc
 
 
 
+```d2
+direction: right
+
+center: "vSAN" {shape: hexagon}
+cluster_configuration: "Cluster Configuration" {shape: rectangle}
+storage_policy_baseline: "Storage Policy Baseline" {shape: rectangle}
+naming_conventions: "Naming Conventions" {shape: rectangle}
+capacity_management: "Capacity Management" {shape: rectangle}
+sizing_guidance: "Sizing Guidance" {shape: rectangle}
+
+center -> cluster_configuration
+center -> storage_policy_baseline
+center -> naming_conventions
+center -> capacity_management
+center -> sizing_guidance
+```
+
 ## Cluster Configuration
 
 Apply the following configuration baseline to every vSAN cluster before placing it in production.

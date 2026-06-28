@@ -18,6 +18,26 @@ Catalog of known PowerMax bugs, error codes, and workarounds covering Unisphere,
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+host_connectivity: "Host Connectivity" {shape: rectangle}
+srdf: "SRDF" {shape: rectangle}
+unisphere: "Unisphere" {shape: rectangle}
+solutions_enabler: "Solutions Enabler" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> host_connectivity: investigate
+symptom -> srdf: investigate
+symptom -> unisphere: investigate
+symptom -> solutions_enabler: investigate
+host_connectivity -> resolution
+srdf -> resolution
+unisphere -> resolution
+solutions_enabler -> resolution
+```
+
 ## Before you begin
 
 - PowerMax alerts appear in Unisphere for PowerMax → Alerts Dashboard.

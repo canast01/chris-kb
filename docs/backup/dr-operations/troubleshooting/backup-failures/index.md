@@ -14,6 +14,25 @@ Backup Failures Troubleshooting reference covering Overview, Failure Classificat
 ![Backup Failures Troubleshooting](../../../../assets/backup-dr-operations-troubleshooting-backup-failures-index.svg)
 
 
+```d2
+direction: right
+
+center: "DR Operations" {shape: hexagon}
+failure_classification: "Failure Classification" {shape: rectangle}
+diagnostic_flowchart: "Diagnostic Flowchart" {shape: rectangle}
+commvault_troubleshooting: "Commvault Troubleshooting" {shape: rectangle}
+netbackup_troubleshooting: "NetBackup Troubleshooting" {shape: rectangle}
+repository_capacity_checks: "Repository Capacity Checks" {shape: rectangle}
+network_path_validation_to_backup_ta: "Network Path Validation to Backup Target" {shape: rectangle}
+
+center -> failure_classification
+center -> diagnostic_flowchart
+center -> commvault_troubleshooting
+center -> netbackup_troubleshooting
+center -> repository_capacity_checks
+center -> network_path_validation_to_backup_ta
+```
+
 ## Before you begin
 
 - **Access:** Backup admin role on backup server; target system credentials

@@ -9,6 +9,22 @@ Version history and release notes for Security.
 </div>
 
 ![Release Notes](../assets/security-release-notes.svg)
+
+```d2
+direction: down
+
+external: External / Untrusted {shape: rectangle}
+version_history: "Version History" {shape: rectangle}
+key_terminology: "Key Terminology" {shape: rectangle}
+upgrade_path: "Upgrade Path" {shape: rectangle}
+core: "Security Core" {shape: hexagon}
+
+external -> version_history: traffic in
+version_history -> key_terminology
+key_terminology -> upgrade_path
+upgrade_path -> core: secured path
+```
+
 ## Before you begin
 
 No special prerequisites — review the version table and cross-reference your deployed version before applying any update.

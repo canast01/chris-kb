@@ -14,6 +14,25 @@ DHCP Options reference covering Overview, Common Option Codes, Setting Scope-Lev
         DHCP OPTION HIERARCHY (most specific wins)
 
 
+```d2
+direction: right
+
+center: "DHCP" {shape: hexagon}
+common_option_codes: "Common Option Codes" {shape: rectangle}
+setting_scopelevel_options: "Setting Scope-Level Options" {shape: rectangle}
+setting_serverlevel_options: "Setting Server-Level Options" {shape: rectangle}
+vendorspecific_options_043: "Vendor-Specific Options (043)" {shape: rectangle}
+removing_options: "Removing Options" {shape: rectangle}
+known_issues: "Known Issues" {shape: rectangle}
+
+center -> common_option_codes
+center -> setting_scopelevel_options
+center -> setting_serverlevel_options
+center -> vendorspecific_options_043
+center -> removing_options
+center -> known_issues
+```
+
 ## Overview
 
 DHCP options deliver network configuration alongside an IP address. Options can be set at the server level (apply to all scopes), scope level (apply to one subnet), reservation level (apply to one client), or class level (apply to clients presenting a matching vendor or user class).

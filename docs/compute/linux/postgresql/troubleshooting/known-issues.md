@@ -18,6 +18,26 @@ Catalog of known PostgreSQL bugs, error codes, and workarounds covering connecti
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+connectivity: "Connectivity" {shape: rectangle}
+replication: "Replication" {shape: rectangle}
+vacuum_bloat: "Vacuum / Bloat" {shape: rectangle}
+patroni_ha: "Patroni HA" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> connectivity: investigate
+symptom -> replication: investigate
+symptom -> vacuum_bloat: investigate
+symptom -> patroni_ha: investigate
+connectivity -> resolution
+replication -> resolution
+vacuum_bloat -> resolution
+patroni_ha -> resolution
+```
+
 ## Before you begin
 
 - PostgreSQL logs: `/var/log/postgresql/postgresql-*.log` or via `journalctl -u postgresql`.

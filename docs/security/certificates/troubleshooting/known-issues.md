@@ -19,6 +19,26 @@ Catalog of known PKI and certificate bugs, error codes, and workarounds covering
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+adcs: "ADCS" {shape: rectangle}
+ocsp_crl: "OCSP / CRL" {shape: rectangle}
+lets_encrypt_acme: "Let's Encrypt / ACME" {shape: rectangle}
+general_tls: "General TLS" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> adcs: investigate
+symptom -> ocsp_crl: investigate
+symptom -> lets_encrypt_acme: investigate
+symptom -> general_tls: investigate
+adcs -> resolution
+ocsp_crl -> resolution
+lets_encrypt_acme -> resolution
+general_tls -> resolution
+```
+
 ## Before you begin
 
 - Certificate errors surface in many forms — browser warnings, application SSL errors, or authentication failures.

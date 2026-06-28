@@ -19,6 +19,23 @@ CLI Reference reference covering Services, Certificates, Proxy & Network, NTP & 
 
 ---
 
+```d2
+direction: right
+
+hub: "Aria Suite Lifecycle\nOperations" {shape: hexagon}
+certificates: "Certificates" {shape: rectangle}
+proxy_network: "Proxy & Network" {shape: rectangle}
+ntp_time: "NTP & Time" {shape: rectangle}
+logs: "Logs" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+hub -> certificates
+hub -> proxy_network
+hub -> ntp_time
+hub -> logs
+hub -> verify
+```
+
 ## Before you begin
 
 - **Access:** vCenter read-only minimum; Administrator role for remediation steps

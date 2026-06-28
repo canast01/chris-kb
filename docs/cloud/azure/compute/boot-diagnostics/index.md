@@ -17,6 +17,25 @@ Azure Boot Diagnostics captures the serial console output and a screenshot of th
 
 ---
 
+```d2
+direction: right
+
+center: "Azure" {shape: hexagon}
+boot_diagnostics_flow: "Boot Diagnostics Flow" {shape: rectangle}
+enabling_boot_diagnostics: "Enabling Boot Diagnostics" {shape: rectangle}
+enabling_at_vm_creation: "Enabling at VM Creation" {shape: rectangle}
+reading_boot_logs: "Reading Boot Logs" {shape: rectangle}
+serial_console_access: "Serial Console Access" {shape: rectangle}
+windows_special_admin_console_sac: "Windows — Special Admin Console (SAC)" {shape: rectangle}
+
+center -> boot_diagnostics_flow
+center -> enabling_boot_diagnostics
+center -> enabling_at_vm_creation
+center -> reading_boot_logs
+center -> serial_console_access
+center -> windows_special_admin_console_sac
+```
+
 ## Boot Diagnostics Flow
 
 ```mermaid

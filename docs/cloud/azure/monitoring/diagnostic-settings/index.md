@@ -15,6 +15,25 @@ Diagnostic settings control which resource logs and metrics are exported from an
 
 
 
+```d2
+direction: right
+
+center: "Azure" {shape: hexagon}
+diagnostic_settings_routing: "Diagnostic Settings Routing" {shape: rectangle}
+enabling_diagnostic_settings: "Enabling Diagnostic Settings" {shape: rectangle}
+log_categories_by_resource_type: "Log Categories by Resource Type" {shape: rectangle}
+supported_destinations: "Supported Destinations" {shape: rectangle}
+checking_coverage_at_scale: "Checking Coverage at Scale" {shape: rectangle}
+updating_and_deleting: "Updating and Deleting" {shape: rectangle}
+
+center -> diagnostic_settings_routing
+center -> enabling_diagnostic_settings
+center -> log_categories_by_resource_type
+center -> supported_destinations
+center -> checking_coverage_at_scale
+center -> updating_and_deleting
+```
+
 ## Diagnostic Settings Routing
 
 ```mermaid

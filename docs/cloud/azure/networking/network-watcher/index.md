@@ -16,6 +16,25 @@ Azure Network Watcher provides tools for monitoring, diagnosing, and gaining ins
 
 
 
+```d2
+direction: right
+
+center: "Azure" {shape: hexagon}
+network_watcher_toolset: "Network Watcher Toolset" {shape: rectangle}
+enabling_network_watcher: "Enabling Network Watcher" {shape: rectangle}
+connection_troubleshoot: "Connection Troubleshoot" {shape: rectangle}
+ip_flow_verify: "IP Flow Verify" {shape: rectangle}
+next_hop: "Next Hop" {shape: rectangle}
+packet_capture: "Packet Capture" {shape: rectangle}
+
+center -> network_watcher_toolset
+center -> enabling_network_watcher
+center -> connection_troubleshoot
+center -> ip_flow_verify
+center -> next_hop
+center -> packet_capture
+```
+
 ## Network Watcher Toolset
 
 ```mermaid

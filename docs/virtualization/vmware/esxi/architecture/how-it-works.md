@@ -21,6 +21,40 @@ VMkernel Internals — Resource Stack
 
 ## VMkernel Architecture
 
+```d2
+direction: down
+
+hardware: Physical Hardware {
+  cpu: CPUs {shape: rectangle}
+  mem: Memory {shape: rectangle}
+  nic: Network (NICs) {shape: rectangle}
+  hba: Storage (HBAs / NVMe) {shape: rectangle}
+}
+
+vmkernel: VMkernel (Hypervisor) {
+  scheduler: CPU Scheduler {shape: rectangle}
+  memctl: Memory Manager {shape: rectangle}
+  netstack: TCP/IP Network Stack {shape: rectangle}
+  psa: Storage Stack (PSA/NMP) {shape: rectangle}
+}
+
+userworld: User World (Processes) {
+  hostd: hostd (host agent) {shape: rectangle}
+  vpxa: vpxa (vCenter agent) {shape: rectangle}
+  ntpd: ntpd / syslog {shape: rectangle}
+}
+
+vms: Virtual Machines {
+  vm1: VM 1 (vCPU / vMEM / vNIC / vDisk) {shape: rectangle}
+  vm2: VM 2 {shape: rectangle}
+  vmn: VM N {shape: rectangle}
+}
+
+hardware -> vmkernel: direct hardware access
+vmkernel -> userworld: system calls
+vmkernel -> vms: virtualised resources
+```
+
 ### VMkernel Resource Scheduling
 
 ```mermaid

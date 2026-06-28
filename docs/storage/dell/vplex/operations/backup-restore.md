@@ -16,6 +16,23 @@ Backup configuration, restore procedures, and validation for Dell VPLEX.
 
 
 
+```d2
+direction: right
+
+hub: "VPLEX\nOperations" {shape: hexagon}
+configuration_backup: "Configuration Backup" {shape: rectangle}
+collecting_a_support_bundle: "Collecting a Support Bundle" {shape: rectangle}
+recovery_scenarios: "Recovery Scenarios" {shape: rectangle}
+validation: "Validation" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+hub -> configuration_backup
+hub -> collecting_a_support_bundle
+hub -> recovery_scenarios
+hub -> validation
+hub -> verify
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

@@ -14,6 +14,25 @@ FlashArray operational procedures — host and volume provisioning, snapshot and
 
 ![FlashArray — Procedures — Diagram](../../../../assets/storage-pure-flasharray-operations-procedures-diagram.svg)
 
+```d2
+direction: right
+
+hub: "FlashArray\nOperations" {shape: hexagon}
+change_readiness: "Change Readiness" {shape: rectangle}
+maintenance_window: "Maintenance Window" {shape: rectangle}
+postchange_validation: "Post-Change Validation" {shape: rectangle}
+host_volume_provisioning_flow: "Host Volume Provisioning Flow" {shape: rectangle}
+host_management: "Host Management" {shape: rectangle}
+volume_management: "Volume Management" {shape: rectangle}
+
+hub -> change_readiness
+hub -> maintenance_window
+hub -> postchange_validation
+hub -> host_volume_provisioning_flow
+hub -> host_management
+hub -> volume_management
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

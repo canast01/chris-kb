@@ -12,6 +12,25 @@ Dell AIOps Lifecycle reference covering Platform Update Model, Customer Lifecycl
 ![Dell AIOps Lifecycle](../../../../assets/storage-dell-dell-aiops-lifecycle-index.svg)
 
 
+```d2
+direction: right
+
+plan: "Plan" {shape: oval}
+platform_update_model: "Platform Update Model" {shape: rectangle}
+customer_lifecycle_responsibilities: "Customer Lifecycle Responsibilities" {shape: rectangle}
+secure_connect_gateway_scg_lifecycle: "Secure Connect Gateway (SCG) Lifecycle" {shape: rectangle}
+api_lifecycle: "API Lifecycle" {shape: rectangle}
+system_decommission: "System Decommission" {shape: rectangle}
+validate: "Validate" {shape: oval}
+
+plan -> platform_update_model
+platform_update_model -> customer_lifecycle_responsibilities
+customer_lifecycle_responsibilities -> secure_connect_gateway_scg_lifecycle
+secure_connect_gateway_scg_lifecycle -> api_lifecycle
+api_lifecycle -> system_decommission
+system_decommission -> validate
+```
+
 ## Platform Update Model
 
 Dell AIOps is a SaaS platform — feature updates, AI model improvements, and bug fixes are deployed by Dell without customer action. Customers should monitor CloudIQ release notes for:

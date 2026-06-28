@@ -21,6 +21,15 @@ Kubernetes-based microservices platform for infrastructure self-service automati
 <a class="kb-card" href="design-standards/"><strong>Design Standards</strong><span>Sizing guidelines, HA design, and configuration best practices.</span></a>
 </div>
 
+```d2
+direction: right
+
+center: "Aria Automation" {shape: hexagon}
+deployment_models: "Deployment Models" {shape: rectangle}
+
+center -> deployment_models
+```
+
 ## Deployment Models
 
 | Model | Description |

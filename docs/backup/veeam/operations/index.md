@@ -58,6 +58,21 @@ Veeam day-to-day operations — backup job management, restore procedures, scale
 
 ---
 
+```d2
+direction: right
+
+hub: "Veeam\nOperations" {shape: hexagon}
+routine_checks: "Routine Checks" {shape: rectangle}
+configuration: "Configuration" {shape: rectangle}
+monitoring: "Monitoring" {shape: rectangle}
+maintenance: "Maintenance" {shape: rectangle}
+
+hub -> routine_checks
+hub -> configuration
+hub -> monitoring
+hub -> maintenance
+```
+
 ## See also
 
 - [Backup — DR Operations](../../dr-operations/)

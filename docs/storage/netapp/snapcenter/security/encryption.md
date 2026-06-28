@@ -18,6 +18,25 @@ SnapCenter encryption: backup data encrypted at-rest on ONTAP volumes, in-transi
 
 ---
 
+```d2
+direction: down
+
+external: External / Untrusted {shape: rectangle}
+tls_and_certificate_management: "TLS and Certificate Management" {shape: rectangle}
+encryption_of_stored_credentials: "Encryption of Stored Credentials" {shape: rectangle}
+encryption_in_snapcentertoontap_comm: "Encryption in SnapCenter-to-ONTAP Communication" {shape: rectangle}
+encryption_of_snapcenter_agent_commu: "Encryption of SnapCenter Agent Communication" {shape: rectangle}
+compliance_summary: "Compliance Summary" {shape: rectangle}
+core: "SnapCenter Core" {shape: hexagon}
+
+external -> tls_and_certificate_management: traffic in
+tls_and_certificate_management -> encryption_of_stored_credentials
+encryption_of_stored_credentials -> encryption_in_snapcentertoontap_comm
+encryption_in_snapcentertoontap_comm -> encryption_of_snapcenter_agent_commu
+encryption_of_snapcenter_agent_commu -> compliance_summary
+compliance_summary -> core: secured path
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

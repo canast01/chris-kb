@@ -15,6 +15,25 @@ Encryption reference covering TLS Certificate Replacement, Cluster-Internal TLS,
 ![Aria Operations — Encryption](../../../../assets/virtualization-vmware-aria-operations-security-encryption.svg)
 
 
+```d2
+direction: down
+
+external: External / Untrusted {shape: rectangle}
+tls_certificate_replacement: "TLS Certificate Replacement" {shape: rectangle}
+data_at_rest_encryption: "Data at Rest Encryption" {shape: rectangle}
+credential_encryption_in_adapters: "Credential Encryption in Adapters" {shape: rectangle}
+certificate_expiry_monitoring: "Certificate Expiry Monitoring" {shape: rectangle}
+fips_mode: "FIPS Mode" {shape: rectangle}
+core: "Aria Operations Core" {shape: hexagon}
+
+external -> tls_certificate_replacement: traffic in
+tls_certificate_replacement -> data_at_rest_encryption
+data_at_rest_encryption -> credential_encryption_in_adapters
+credential_encryption_in_adapters -> certificate_expiry_monitoring
+certificate_expiry_monitoring -> fips_mode
+fips_mode -> core: secured path
+```
+
 ## Before you begin
 
 - **Access:** vCenter Administrator role

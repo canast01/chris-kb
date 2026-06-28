@@ -43,6 +43,27 @@ graph TD
 
 
 
+```d2
+direction: right
+
+begin_checks: "Begin Checks" {shape: oval}
+run_this_routine: "Run This Routine" {shape: rectangle}
+comprehensive_manual_checks: "Comprehensive Manual Checks" {shape: rectangle}
+healthwarn_triage: "HEALTH_WARN Triage" {shape: rectangle}
+osdspecific_checks: "OSD-Specific Checks" {shape: rectangle}
+recovery_monitoring: "Recovery Monitoring" {shape: rectangle}
+capacity_thresholds: "Capacity Thresholds" {shape: rectangle}
+generate_report: "Generate Report" {shape: oval}
+
+begin_checks -> run_this_routine
+run_this_routine -> comprehensive_manual_checks
+comprehensive_manual_checks -> healthwarn_triage
+healthwarn_triage -> osdspecific_checks
+osdspecific_checks -> recovery_monitoring
+recovery_monitoring -> capacity_thresholds
+capacity_thresholds -> generate_report
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

@@ -14,6 +14,25 @@ Network Connectivity Troubleshooting reference covering Overview, Failure Classi
 ![Network Connectivity Troubleshooting](../../../assets/networking-troubleshooting-network-connectivity-index.svg)
 
 
+```d2
+direction: right
+
+center: "Network Connectivity" {shape: hexagon}
+failure_classification_by_osi_layer: "Failure Classification by OSI Layer" {shape: rectangle}
+diagnostic_flowchart: "Diagnostic Flowchart" {shape: rectangle}
+vlan_and_trunk_verification: "VLAN and Trunk Verification" {shape: rectangle}
+routing_table_verification: "Routing Table Verification" {shape: rectangle}
+firewall_rule_testing: "Firewall Rule Testing" {shape: rectangle}
+mtu_and_jumbo_frame_issues: "MTU and Jumbo Frame Issues" {shape: rectangle}
+
+center -> failure_classification_by_osi_layer
+center -> diagnostic_flowchart
+center -> vlan_and_trunk_verification
+center -> routing_table_verification
+center -> firewall_rule_testing
+center -> mtu_and_jumbo_frame_issues
+```
+
 ## Before you begin
 
 - **Access:** Network admin credentials; console or SSH to devices

@@ -40,6 +40,15 @@ sequenceDiagram
     Note over RP: Replication was not interrupted
 ```
 
+```d2
+direction: right
+
+hub: "RecoverPoint\nOperations" {shape: hexagon}
+verify: "Verify" {shape: rectangle}
+
+hub -> verify
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

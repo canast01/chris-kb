@@ -22,6 +22,33 @@ Many spaces default to allowing all logged-in users to view and edit. Restrict t
 ```
 
 ```bash
+
+```d2
+direction: down
+
+root: "Access Control\nAccess Control" {shape: hexagon}
+audit_space_permissions_via_rest_api: "Audit space permissions via REST API" {shape: rectangle}
+check_if_any_spaces_allow_anonymous_: "Check if any spaces allow anonymous access via REST API" {shape: rectangle}
+then_for_each_space_key_check_for_an: "Then for each space key, check for anonymous permissions:" {shape: rectangle}
+trigger_manual_ldap_sync_confluence_: "Trigger manual LDAP sync (Confluence admin)" {shape: rectangle}
+administration_user_directories_sync: "Administration > User Directories > Synchronise" {shape: rectangle}
+or_via_api: "Or via API" {shape: rectangle}
+resources: Protected Resources {shape: cylinder}
+
+root -> audit_space_permissions_via_rest_api: role
+audit_space_permissions_via_rest_api -> resources: scoped
+root -> check_if_any_spaces_allow_anonymous_: role
+check_if_any_spaces_allow_anonymous_ -> resources: scoped
+root -> then_for_each_space_key_check_for_an: role
+then_for_each_space_key_check_for_an -> resources: scoped
+root -> trigger_manual_ldap_sync_confluence_: role
+trigger_manual_ldap_sync_confluence_ -> resources: scoped
+root -> administration_user_directories_sync: role
+administration_user_directories_sync -> resources: scoped
+root -> or_via_api: role
+or_via_api -> resources: scoped
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

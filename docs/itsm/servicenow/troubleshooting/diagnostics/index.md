@@ -51,6 +51,32 @@ graph TD
     class Q,R escalate
 ```
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+step_1_check_instance_health_via_sta: "Step 1 — Check instance health via stats.do" {shape: rectangle}
+step_2_inspect_db_activity_monitor_f: "Step 2 — Inspect DB Activity Monitor for slow queries" {shape: rectangle}
+step_3_run_system_diagnostics_selfte: "Step 3 — Run System Diagnostics self-test" {shape: rectangle}
+step_4_review_application_and_mid_se: "Step 4 — Review application and MID Server logs" {shape: rectangle}
+step_5_enable_session_debug_for_targ: "Step 5 — Enable Session Debug for targeted investigation" {shape: rectangle}
+step_6_run_background_script_diagnos: "Step 6 — Run Background Script diagnostic snapshot" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> step_1_check_instance_health_via_sta: investigate
+symptom -> step_2_inspect_db_activity_monitor_f: investigate
+symptom -> step_3_run_system_diagnostics_selfte: investigate
+symptom -> step_4_review_application_and_mid_se: investigate
+symptom -> step_5_enable_session_debug_for_targ: investigate
+symptom -> step_6_run_background_script_diagnos: investigate
+step_1_check_instance_health_via_sta -> resolution
+step_2_inspect_db_activity_monitor_f -> resolution
+step_3_run_system_diagnostics_selfte -> resolution
+step_4_review_application_and_mid_se -> resolution
+step_5_enable_session_debug_for_targ -> resolution
+step_6_run_background_script_diagnos -> resolution
+```
+
 ## Before you begin
 
 - **Access:** ServiceNow admin role; MID Server host SSH access (for integration issues)

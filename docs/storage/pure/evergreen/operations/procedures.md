@@ -22,6 +22,25 @@ This page covers day-to-day operational procedures for arrays under an Evergreen
 
 ---
 
+```d2
+direction: right
+
+hub: "Evergreen\nOperations" {shape: hexagon}
+change_readiness: "Change Readiness" {shape: rectangle}
+purity_software_upgrade_procedure: "Purity Software Upgrade Procedure" {shape: rectangle}
+controller_refresh_procedure_ever_mo: "Controller Refresh Procedure (Ever Modern)" {shape: rectangle}
+capacity_management_procedures: "Capacity Management Procedures" {shape: rectangle}
+subscription_lifecycle_procedures: "Subscription Lifecycle Procedures" {shape: rectangle}
+postchange_validation: "Post-Change Validation" {shape: rectangle}
+
+hub -> change_readiness
+hub -> purity_software_upgrade_procedure
+hub -> controller_refresh_procedure_ever_mo
+hub -> capacity_management_procedures
+hub -> subscription_lifecycle_procedures
+hub -> postchange_validation
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

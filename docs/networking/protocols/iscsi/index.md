@@ -15,6 +15,21 @@ iSCSI (Internet Small Computer Systems Interface) encapsulates SCSI commands ove
         iSCSI END-TO-END ARCHITECTURE
 
 
+```d2
+direction: right
+
+center: "iSCSI" {shape: hexagon}
+iscsi_session_establishment: "iSCSI Session Establishment" {shape: rectangle}
+quick_reference: "Quick Reference" {shape: rectangle}
+common_commands_config: "Common Commands / Config" {shape: rectangle}
+troubleshooting: "Troubleshooting" {shape: rectangle}
+
+center -> iscsi_session_establishment
+center -> quick_reference
+center -> common_commands_config
+center -> troubleshooting
+```
+
 ## iSCSI Session Establishment
 
 The sequence below traces a complete iSCSI session from TCP connection through discovery, CHAP authentication, operational parameter negotiation, and SCSI command flow.

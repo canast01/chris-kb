@@ -36,6 +36,43 @@ graph TD
     CFG --> CFGR[Restore: ceph auth import<br/>ceph osd setcrushmap]:::rest
 ```
 
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+participant "Source\n(Ceph)" as SRC
+participant "Backup Engine" as ENG
+participant "Target / Vault" as TGT
+
+SRC -> ENG: RBD Snapshot and Export
+ENG -> TGT: Write
+TGT --> ENG: Confirmed
+ENG --> SRC: Done
+SRC -> ENG: CephFS Snapshots
+ENG -> TGT: Write
+TGT --> ENG: Confirmed
+ENG --> SRC: Done
+SRC -> ENG: RGW Bucket Replication (Cross-Cluster DR)
+ENG -> TGT: Write
+TGT --> ENG: Confirmed
+ENG --> SRC: Done
+SRC -> ENG: RBD Mirroring (DR / Async Replication)
+ENG -> TGT: Write
+TGT --> ENG: Confirmed
+ENG --> SRC: Done
+SRC -> ENG: Cluster Configuration Backup
+ENG -> TGT: Write
+TGT --> ENG: Confirmed
+ENG --> SRC: Done
+SRC -> ENG: Restore from Configuration Backup
+ENG -> TGT: Write
+TGT --> ENG: Confirmed
+ENG --> SRC: Done
+
+@enduml
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

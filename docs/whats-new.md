@@ -14,6 +14,15 @@ Recent additions and updates to the knowledge base. Major changes by date — ne
 
 ![What's New](assets/whats-new.svg)
 
+```d2
+direction: right
+
+center: "System" {shape: hexagon}
+june_2026: "June 2026" {shape: rectangle}
+
+center -> june_2026
+```
+
 ## June 2026
 
 ### 2026-06-21 — Full SVG coverage: every page now has a diagram

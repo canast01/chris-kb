@@ -15,6 +15,25 @@ NTP Sources reference covering Stratum Hierarchy, Viewing Sources — chrony (Li
 
 An NTP source is a time server that the local daemon polls to correct the system clock. Source quality determines how accurate the local clock can be.
 
+```d2
+direction: right
+
+center: "NTP" {shape: hexagon}
+stratum_hierarchy: "Stratum Hierarchy" {shape: rectangle}
+viewing_sources_chrony_linux: "Viewing Sources — chrony (Linux)" {shape: rectangle}
+source_statistics: "Source Statistics" {shape: rectangle}
+configuring_sources_chrony: "Configuring Sources (chrony)" {shape: rectangle}
+windows_w32tm_source_config: "Windows — w32tm Source Config" {shape: rectangle}
+cisco_arista_sources: "Cisco / Arista Sources" {shape: rectangle}
+
+center -> stratum_hierarchy
+center -> viewing_sources_chrony_linux
+center -> source_statistics
+center -> configuring_sources_chrony
+center -> windows_w32tm_source_config
+center -> cisco_arista_sources
+```
+
 ## Stratum Hierarchy
 
 ```text

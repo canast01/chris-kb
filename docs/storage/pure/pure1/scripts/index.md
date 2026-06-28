@@ -78,6 +78,19 @@ def pure1_get_with_retry(path: str, token: str, max_retries: int = 5) -> dict:
     raise RuntimeError(f"Max retries exceeded for {path}")
 ```
 
+```d2
+direction: right
+
+center: "Pure1" {shape: rectangle}
+component_a: "Component A" {shape: rectangle}
+component_b: "Component B" {shape: rectangle}
+component_c: "Component C" {shape: rectangle}
+
+center -> component_a
+center -> component_b
+center -> component_c
+```
+
 ## See also
 
 - [Pure1 — Overview](../../)

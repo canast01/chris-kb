@@ -6,6 +6,27 @@ search:
   boost: 1.5
 ---
 
+```d2
+direction: right
+
+plan: "Plan" {shape: oval}
+prerequisites: "Prerequisites" {shape: rectangle}
+run_purity_initial_setup: "Run Purity Initial Setup" {shape: rectangle}
+configure_management_network: "Configure Management Network" {shape: rectangle}
+configure_host_connectivity_fc_or_is: "Configure Host Connectivity (FC or iSCSI)" {shape: rectangle}
+create_first_volume: "Create First Volume" {shape: rectangle}
+set_up_protection_group: "Set Up Protection Group" {shape: rectangle}
+validate: "Validate" {shape: oval}
+
+plan -> prerequisites
+prerequisites -> run_purity_initial_setup
+run_purity_initial_setup -> configure_management_network
+configure_management_network -> configure_host_connectivity_fc_or_is
+configure_host_connectivity_fc_or_is -> create_first_volume
+create_first_volume -> set_up_protection_group
+set_up_protection_group -> validate
+```
+
 ## Before you begin
 
 - **Access:** admin credentials for the target system and any upstream dependencies (DNS, NTP, vCenter, directory services)

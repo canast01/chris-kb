@@ -6,6 +6,27 @@ search:
   boost: 1.5
 ---
 
+```d2
+direction: right
+
+plan: "Plan" {shape: oval}
+prerequisites: "Prerequisites" {shape: rectangle}
+install_terraform: "Install Terraform" {shape: rectangle}
+configure_backend_remote_state: "Configure Backend (Remote State)" {shape: rectangle}
+configure_provider_credentials: "Configure Provider Credentials" {shape: rectangle}
+initialise_a_new_module: "Initialise a New Module" {shape: rectangle}
+configure_workspace_per_environment: "Configure Workspace per Environment" {shape: rectangle}
+validate: "Validate" {shape: oval}
+
+plan -> prerequisites
+prerequisites -> install_terraform
+install_terraform -> configure_backend_remote_state
+configure_backend_remote_state -> configure_provider_credentials
+configure_provider_credentials -> initialise_a_new_module
+initialise_a_new_module -> configure_workspace_per_environment
+configure_workspace_per_environment -> validate
+```
+
 ## Before you begin
 
 - **Access:** admin credentials for the target system and any upstream dependencies (DNS, NTP, vCenter, directory services)

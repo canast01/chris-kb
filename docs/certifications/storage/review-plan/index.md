@@ -13,6 +13,27 @@ Storage Certification Review Plan reference covering Certification Tracks Overvi
 
 
 
+```d2
+direction: right
+
+begin_checks: "Begin Checks" {shape: oval}
+certification_tracks_overview: "Certification Tracks Overview" {shape: rectangle}
+8week_study_plan_ncda_ontap_track: "8-Week Study Plan (NCDA / ONTAP Track)" {shape: rectangle}
+vendor_certification_resources: "Vendor Certification Resources" {shape: rectangle}
+handson_lab_options: "Hands-On Lab Options" {shape: rectangle}
+snia_resources: "SNIA Resources" {shape: rectangle}
+study_checklist: "Study Checklist" {shape: rectangle}
+generate_report: "Generate Report" {shape: oval}
+
+begin_checks -> certification_tracks_overview
+certification_tracks_overview -> 8week_study_plan_ncda_ontap_track
+8week_study_plan_ncda_ontap_track -> vendor_certification_resources
+vendor_certification_resources -> handson_lab_options
+handson_lab_options -> snia_resources
+snia_resources -> study_checklist
+study_checklist -> generate_report
+```
+
 ## Certification Tracks Overview
 
 | Certification | Vendor | Code | Level |

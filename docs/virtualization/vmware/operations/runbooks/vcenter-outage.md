@@ -14,6 +14,21 @@ nslookup <vcenter-fqdn>
 ```
 
 
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+actor "Responder" as A
+participant "Runbooks System" as B
+participant "Dependent System" as C
+
+A -> B: Verify
+B --> A: OK
+
+@enduml
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

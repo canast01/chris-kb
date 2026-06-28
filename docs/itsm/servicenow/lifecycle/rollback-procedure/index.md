@@ -13,6 +13,25 @@ Restores a system to its last known-good state when a change produces failures, 
 ![Rollback Procedure](../../../../assets/itsm-servicenow-lifecycle-rollback-procedure-index.svg)
 
 
+```d2
+direction: right
+
+center: "ServiceNow" {shape: hexagon}
+decision_framework: "Decision Framework" {shape: rectangle}
+method_3_configuration_revert: "Method 3 — Configuration Revert" {shape: rectangle}
+method_4_database_rollback: "Method 4 — Database Rollback" {shape: rectangle}
+method_5_full_backup_restore: "Method 5 — Full Backup Restore" {shape: rectangle}
+postrollback_validation: "Post-Rollback Validation" {shape: rectangle}
+rollback_checklist: "Rollback Checklist" {shape: rectangle}
+
+center -> decision_framework
+center -> method_3_configuration_revert
+center -> method_4_database_rollback
+center -> method_5_full_backup_restore
+center -> postrollback_validation
+center -> rollback_checklist
+```
+
 ## Decision Framework
 
 ```mermaid

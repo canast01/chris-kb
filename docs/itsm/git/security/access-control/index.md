@@ -16,6 +16,32 @@ Access control in Git hosting platforms governs who can read, write, and adminis
 
 ---
 
+```d2
+direction: down
+
+root: "Access Control\nAccess Control" {shape: hexagon}
+access_control_model_overview: "Access Control Model Overview" {shape: rectangle}
+branch_protection_rules: "Branch Protection Rules" {shape: rectangle}
+codeowners: "CODEOWNERS" {shape: rectangle}
+repository_visibility: "Repository Visibility" {shape: rectangle}
+deploy_key_access_control: "Deploy Key Access Control" {shape: rectangle}
+github_actions_permissions: "GitHub Actions Permissions" {shape: rectangle}
+resources: Protected Resources {shape: cylinder}
+
+root -> access_control_model_overview: role
+access_control_model_overview -> resources: scoped
+root -> branch_protection_rules: role
+branch_protection_rules -> resources: scoped
+root -> codeowners: role
+codeowners -> resources: scoped
+root -> repository_visibility: role
+repository_visibility -> resources: scoped
+root -> deploy_key_access_control: role
+deploy_key_access_control -> resources: scoped
+root -> github_actions_permissions: role
+github_actions_permissions -> resources: scoped
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

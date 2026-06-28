@@ -15,6 +15,15 @@ InsightIQ: Throughput, Latency, IOPS, and Protocol Performance Dashboards refere
 
 
 
+```d2
+direction: right
+
+center: "InsightIQ" {shape: hexagon}
+common_performance_issues: "Common Performance Issues" {shape: rectangle}
+
+center -> common_performance_issues
+```
+
 ## Common Performance Issues
 
 | Issue | Likely Cause | Fix |

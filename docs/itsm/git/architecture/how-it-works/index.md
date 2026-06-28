@@ -16,6 +16,23 @@ Git is a distributed version control system where every working copy is a full r
 
 ---
 
+```d2
+direction: right
+
+center: "How It Works" {shape: hexagon}
+distributed_model: "Distributed Model" {shape: rectangle}
+refs_and_branches: "Refs and Branches" {shape: rectangle}
+github_enterprise_gitlab_selfmanaged: "GitHub Enterprise / GitLab Self-Managed Architecture" {shape: rectangle}
+data_flow_git_push: "Data Flow — git push" {shape: rectangle}
+storage_layout: "Storage Layout" {shape: rectangle}
+
+center -> distributed_model
+center -> refs_and_branches
+center -> github_enterprise_gitlab_selfmanaged
+center -> data_flow_git_push
+center -> storage_layout
+```
+
 ## Distributed Model
 
 Unlike centralised VCS tools, every Git clone contains the entire repository history. By convention teams designate one remote (GitHub, GitLab, Bitbucket) as the integration point.

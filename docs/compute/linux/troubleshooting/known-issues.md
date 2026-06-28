@@ -17,6 +17,26 @@ Catalog of known Linux OS bugs, error codes, and workarounds covering boot issue
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+boot: "Boot" {shape: rectangle}
+storage: "Storage" {shape: rectangle}
+networking: "Networking" {shape: rectangle}
+services: "Services" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> boot: investigate
+symptom -> storage: investigate
+symptom -> networking: investigate
+symptom -> services: investigate
+boot -> resolution
+storage -> resolution
+networking -> resolution
+services -> resolution
+```
+
 ## Before you begin
 
 - `journalctl -xe` for recent system errors; `dmesg | tail -50` for kernel messages.

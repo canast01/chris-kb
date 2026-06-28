@@ -16,6 +16,23 @@ SRDF/A CLI reference: `symrdf list`, `symrdf query`, `symrdf establish`, `symrdf
 
 ---
 
+```d2
+direction: right
+
+hub: "SRDF/A\nOperations" {shape: hexagon}
+srdfa_command_decision_map: "SRDF/A Command Decision Map" {shape: rectangle}
+devicelevel_operations: "Device-Level Operations" {shape: rectangle}
+srdfa_consistency_protection: "SRDF/A Consistency Protection" {shape: rectangle}
+unisphere_rest_api: "Unisphere REST API" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+hub -> srdfa_command_decision_map
+hub -> devicelevel_operations
+hub -> srdfa_consistency_protection
+hub -> unisphere_rest_api
+hub -> verify
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

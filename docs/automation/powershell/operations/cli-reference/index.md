@@ -18,6 +18,25 @@ PowerShell is Microsoft's cross-platform command shell and scripting language. U
 
 > Works on Windows, macOS, and Linux (PowerShell 7+). VMware PowerCLI requires `Install-Module VMware.PowerCLI`.
 
+```d2
+direction: right
+
+center: "PowerShell" {shape: rectangle}
+script_execution_pipeline: "Script Execution Pipeline" {shape: rectangle}
+files_filesystem: "Files & Filesystem" {shape: rectangle}
+remoting_pssession: "Remoting (PSSession)" {shape: rectangle}
+services_processes: "Services & Processes" {shape: rectangle}
+error_handling: "Error Handling" {shape: rectangle}
+vmware_powercli: "VMware PowerCLI" {shape: rectangle}
+
+center -> script_execution_pipeline
+center -> files_filesystem
+center -> remoting_pssession
+center -> services_processes
+center -> error_handling
+center -> vmware_powercli
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

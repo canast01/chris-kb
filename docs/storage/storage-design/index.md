@@ -10,6 +10,25 @@ tags:
 ![Storage Design Overview](../../assets/storage-design-overview.svg)
 </div>
 
+```d2
+direction: right
+
+center: "Storage Design" {shape: hexagon}
+storage_tier_model: "Storage Tier Model" {shape: rectangle}
+workload_classification: "Workload Classification" {shape: rectangle}
+protocol_selection: "Protocol Selection" {shape: rectangle}
+data_protection_levels: "Data Protection Levels" {shape: rectangle}
+storage_architecture_diagram: "Storage Architecture Diagram" {shape: rectangle}
+dell_storage_platform_placement_guid: "Dell Storage Platform Placement Guidance" {shape: rectangle}
+
+center -> storage_tier_model
+center -> workload_classification
+center -> protocol_selection
+center -> data_protection_levels
+center -> storage_architecture_diagram
+center -> dell_storage_platform_placement_guid
+```
+
 ## Overview
 
 Storage design determines how enterprise data is stored, protected, accessed, and managed across its entire lifecycle. Poor storage design is one of the most common root causes of performance bottlenecks, outages, and cost overruns in data centre infrastructure. A rigorous approach classifies workloads by I/O profile and criticality, selects the appropriate technology tier, designs for redundancy and data protection at every level, and validates capacity and performance assumptions before production deployment.

@@ -31,6 +31,19 @@ Commvault integrates with virtualisation, storage, cloud, and identity platforms
 
 ---
 
+```d2
+direction: right
+
+center: "Commvault" {shape: hexagon}
+component_a: "Component A" {shape: rectangle}
+component_b: "Component B" {shape: rectangle}
+component_c: "Component C" {shape: rectangle}
+
+center -> component_a
+center -> component_b
+center -> component_c
+```
+
 ## See also
 
 - [Commvault — Design Standards](../design-standards/)

@@ -41,6 +41,19 @@ def health_score_report(token: str, threshold: int = 80) -> list:
     return below_threshold
 ```
 
+```d2
+direction: right
+
+center: "Dell AIOps" {shape: rectangle}
+component_a: "Component A" {shape: rectangle}
+component_b: "Component B" {shape: rectangle}
+component_c: "Component C" {shape: rectangle}
+
+center -> component_a
+center -> component_b
+center -> component_c
+```
+
 ## See also
 
 - [Dell AIOps — Overview](../../)

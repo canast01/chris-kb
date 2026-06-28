@@ -19,6 +19,25 @@ Evergreen//One operations: subscription usage monitoring, controller upgrade sch
 
 ![Evergreen//One — Operations — Diagram](../../../../assets/storage-pure-evergreen-one-operations-diagram.svg)
 
+```d2
+direction: right
+
+hub: "Evergreen//One\nOperations" {shape: hexagon}
+daily_checks: "Daily Checks" {shape: rectangle}
+health_check: "Health Check" {shape: rectangle}
+change_readiness: "Change Readiness" {shape: rectangle}
+incident_triage: "Incident Triage" {shape: rectangle}
+maintenance_window: "Maintenance Window" {shape: rectangle}
+postchange_validation: "Post-Change Validation" {shape: rectangle}
+
+hub -> daily_checks
+hub -> health_check
+hub -> change_readiness
+hub -> incident_triage
+hub -> maintenance_window
+hub -> postchange_validation
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

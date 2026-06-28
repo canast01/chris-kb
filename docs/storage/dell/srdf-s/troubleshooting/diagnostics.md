@@ -44,6 +44,32 @@ graph TD
     class M,N escalate
 ```
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+step_1_check_srdf_pair_state: "Step 1 — Check SRDF pair state" {shape: rectangle}
+step_2_measure_wan_roundtrip_time: "Step 2 — Measure WAN round-trip time" {shape: rectangle}
+step_3_check_srdf_event_log: "Step 3 — Check SRDF event log" {shape: rectangle}
+step_4_check_rf_director_ports_and_l: "Step 4 — Check RF director ports and link statistics" {shape: rectangle}
+step_5_collect_diagnostic_bundle_for: "Step 5 — Collect diagnostic bundle for Dell SR" {shape: rectangle}
+verify_resolution: "Verify resolution" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> step_1_check_srdf_pair_state: investigate
+symptom -> step_2_measure_wan_roundtrip_time: investigate
+symptom -> step_3_check_srdf_event_log: investigate
+symptom -> step_4_check_rf_director_ports_and_l: investigate
+symptom -> step_5_collect_diagnostic_bundle_for: investigate
+symptom -> verify_resolution: investigate
+step_1_check_srdf_pair_state -> resolution
+step_2_measure_wan_roundtrip_time -> resolution
+step_3_check_srdf_event_log -> resolution
+step_4_check_rf_director_ports_and_l -> resolution
+step_5_collect_diagnostic_bundle_for -> resolution
+verify_resolution -> resolution
+```
+
 ## Before you begin
 
 - **Access:** Solutions Enabler with gatekeeper LUNs to both PowerMax arrays; Unisphere for PowerMax admin access; network team contact for WAN link investigation

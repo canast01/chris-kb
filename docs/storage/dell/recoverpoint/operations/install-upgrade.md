@@ -20,6 +20,25 @@ Dell RecoverPoint (RP/CL) provides continuous data protection and replication us
 
 ---
 
+```d2
+direction: right
+
+hub: "RecoverPoint\nOperations" {shape: hexagon}
+version_matrix: "Version Matrix" {shape: rectangle}
+architecture_overview: "Architecture Overview" {shape: rectangle}
+splitter_types: "Splitter Types" {shape: rectangle}
+consistency_group_configuration: "Consistency Group Configuration" {shape: rectangle}
+upgrade_procedure: "Upgrade Procedure" {shape: rectangle}
+postupgrade_validation: "Post-Upgrade Validation" {shape: rectangle}
+
+hub -> version_matrix
+hub -> architecture_overview
+hub -> splitter_types
+hub -> consistency_group_configuration
+hub -> upgrade_procedure
+hub -> postupgrade_validation
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

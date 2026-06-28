@@ -14,6 +14,25 @@ Integrations reference covering DD Boost Backup Flow, NetBackup (OST with DD Boo
 ![Data Domain — Integrations](../../../../assets/storage-dell-data-domain-architecture-integrations.svg)
 
 
+```d2
+direction: right
+
+center: "Data Domain" {shape: hexagon}
+dd_boost_backup_flow: "DD Boost Backup Flow" {shape: rectangle}
+commvault_sisl_dd_boost: "CommVault (SISL + DD Boost)" {shape: rectangle}
+avamar_rain_dedup_with_dd: "Avamar (RAIN Dedup with DD)" {shape: rectangle}
+nfs_generic_backup_targets: "NFS — Generic Backup Targets" {shape: rectangle}
+cifssmb_windows_backup_targets: "CIFS/SMB — Windows Backup Targets" {shape: rectangle}
+rest_api: "REST API" {shape: rectangle}
+
+center -> dd_boost_backup_flow
+center -> commvault_sisl_dd_boost
+center -> avamar_rain_dedup_with_dd
+center -> nfs_generic_backup_targets
+center -> cifssmb_windows_backup_targets
+center -> rest_api
+```
+
 ## DD Boost Backup Flow
 
 ```mermaid

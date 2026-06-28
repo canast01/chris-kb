@@ -52,6 +52,32 @@ graph TD
     class Q,R escalate
 ```
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+step_1_get_an_api_token: "Step 1 — Get an API token" {shape: rectangle}
+step_2_check_failed_deployments: "Step 2 — Check failed deployments" {shape: rectangle}
+step_3_check_catalog_request_status: "Step 3 — Check catalog request status" {shape: rectangle}
+step_4_inspect_kubernetes_pod_logs: "Step 4 — Inspect Kubernetes pod logs" {shape: rectangle}
+step_5_check_postgresql_database_hea: "Step 5 — Check PostgreSQL database health" {shape: rectangle}
+step_6_check_abx_action_failures: "Step 6 — Check ABX action failures" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> step_1_get_an_api_token: investigate
+symptom -> step_2_check_failed_deployments: investigate
+symptom -> step_3_check_catalog_request_status: investigate
+symptom -> step_4_inspect_kubernetes_pod_logs: investigate
+symptom -> step_5_check_postgresql_database_hea: investigate
+symptom -> step_6_check_abx_action_failures: investigate
+step_1_get_an_api_token -> resolution
+step_2_check_failed_deployments -> resolution
+step_3_check_catalog_request_status -> resolution
+step_4_inspect_kubernetes_pod_logs -> resolution
+step_5_check_postgresql_database_hea -> resolution
+step_6_check_abx_action_failures -> resolution
+```
+
 ## Before you begin
 
 - **Access:** vRA admin role; SSH to the vRA appliance(s); kubectl access (kubeconfig on the appliance at `/root/.kube/config`)

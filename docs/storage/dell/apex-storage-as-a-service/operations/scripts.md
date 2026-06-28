@@ -17,6 +17,26 @@ APEX STaaS automation scripts: Python REST client for capacity reporting, CloudI
 
 
 ---
+
+```d2
+direction: right
+
+hub: "APEX Storage\nOperations" {shape: hexagon}
+subscription_capacity_monitor: "Subscription Capacity Monitor" {shape: rectangle}
+active_alert_report: "Active Alert Report" {shape: rectangle}
+ansible_apex_health_playbook: "Ansible APEX Health Playbook" {shape: rectangle}
+daily_check_script: "Daily Check Script" {shape: rectangle}
+incident_triage_script: "Incident Triage Script" {shape: rectangle}
+change_precheck_script: "Change Pre-Check Script" {shape: rectangle}
+
+hub -> subscription_capacity_monitor
+hub -> active_alert_report
+hub -> ansible_apex_health_playbook
+hub -> daily_check_script
+hub -> incident_triage_script
+hub -> change_precheck_script
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

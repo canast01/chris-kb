@@ -10,6 +10,21 @@ Quality gates and content standards for the chrisanastasiadis.com knowledge base
 
 Generated: 2026-06-27
 
+```d2
+direction: right
+
+center: "System" {shape: hexagon}
+current_state: "Current state" {shape: rectangle}
+pages_by_section: "Pages by section" {shape: rectangle}
+quality_rules: "Quality rules" {shape: rectangle}
+useful_commands: "Useful commands" {shape: rectangle}
+
+center -> current_state
+center -> pages_by_section
+center -> quality_rules
+center -> useful_commands
+```
+
 ## Current state
 
 | Item | Count |

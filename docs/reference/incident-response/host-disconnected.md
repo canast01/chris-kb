@@ -16,6 +16,31 @@ Response procedure for an ESXi host showing "Not Responding" or "Disconnected" i
 
 > **Severity: P1** if VMs are running on the host and unreachable. **P2** if host is empty or HA has already restarted VMs elsewhere.
 
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+actor "Responder" as A
+participant "Incident Response System" as B
+participant "Dependent System" as C
+
+A -> B: Symptoms
+B --> A: OK
+A -> B: Immediate Triage
+B --> A: OK
+A -> B: Diagnose
+B --> A: OK
+A -> B: Fix  Option A Reconnect from vCenter UI
+B --> A: OK
+A -> B: Fix  Option B Restart Management Agents via SSH
+B --> A: OK
+A -> B: Fix  Option C Reconnect via PowerCLI
+B --> A: OK
+
+@enduml
+```
+
 ## Symptoms
 
 - Host shows "Not Responding" or "Disconnected" in vCenter inventory

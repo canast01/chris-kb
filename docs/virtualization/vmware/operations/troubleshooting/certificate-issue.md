@@ -19,6 +19,33 @@ Diagnosing and resolving certificate errors across the VMware platform — VCSA 
 
 
 ---
+
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+quick_diagnosis: "Quick Diagnosis" {shape: rectangle}
+browser_certificate_warning_on_vcent: "Browser Certificate Warning on vCenter Login" {shape: rectangle}
+login_failure_after_certificate_rene: "Login Failure After Certificate Renewal" {shape: rectangle}
+product_integration_broken_after_cer: "Product Integration Broken After Certificate Change" {shape: rectangle}
+nsx_certificate_thumbprint_mismatch: "NSX Certificate Thumbprint Mismatch" {shape: rectangle}
+esxi_host_certificate_issues: "ESXi Host Certificate Issues" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> quick_diagnosis: investigate
+symptom -> browser_certificate_warning_on_vcent: investigate
+symptom -> login_failure_after_certificate_rene: investigate
+symptom -> product_integration_broken_after_cer: investigate
+symptom -> nsx_certificate_thumbprint_mismatch: investigate
+symptom -> esxi_host_certificate_issues: investigate
+quick_diagnosis -> resolution
+browser_certificate_warning_on_vcent -> resolution
+login_failure_after_certificate_rene -> resolution
+product_integration_broken_after_cer -> resolution
+nsx_certificate_thumbprint_mismatch -> resolution
+esxi_host_certificate_issues -> resolution
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

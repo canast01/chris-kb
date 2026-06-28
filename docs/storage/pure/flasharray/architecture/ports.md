@@ -19,6 +19,25 @@ Firewall port reference for Pure Storage FlashArray. Covers Purity management, i
 
 
 
+```d2
+direction: right
+
+center: "FlashArray" {shape: hexagon}
+inbound_management_traffic: "Inbound — Management Traffic" {shape: rectangle}
+outbound_array_to_external: "Outbound — Array to External" {shape: rectangle}
+pure1_cloud_management_outbound: "Pure1 Cloud Management (Outbound)" {shape: rectangle}
+data_protocols_iscsi: "Data Protocols — iSCSI" {shape: rectangle}
+data_protocols_nvmeoftcp_purity_63: "Data Protocols — NVMe-oF/TCP (Purity 6.3+)" {shape: rectangle}
+activecluster_synchronous_replicatio: "ActiveCluster — Synchronous Replication" {shape: rectangle}
+
+center -> inbound_management_traffic
+center -> outbound_array_to_external
+center -> pure1_cloud_management_outbound
+center -> data_protocols_iscsi
+center -> data_protocols_nvmeoftcp_purity_63
+center -> activecluster_synchronous_replicatio
+```
+
 ## Before you begin
 
 - FlashArray has two network roles: management (mgmt0/mgmt1) and data (iSCSI/NVMe-oF/Fibre Channel ports)

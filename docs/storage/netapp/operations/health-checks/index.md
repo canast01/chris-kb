@@ -14,6 +14,27 @@ Health Checks reference covering Daily Health Check Workflow, AutoSupport Valida
 
 
 
+```d2
+direction: right
+
+begin_checks: "Begin Checks" {shape: oval}
+run_this_routine: "Run This Routine" {shape: rectangle}
+daily_health_check_workflow: "Daily Health Check Workflow" {shape: rectangle}
+autosupport_validation: "AutoSupport Validation" {shape: rectangle}
+prechange_checklist: "Pre-Change Checklist" {shape: rectangle}
+health_summary_table: "Health Summary Table" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+generate_report: "Generate Report" {shape: oval}
+
+begin_checks -> run_this_routine
+run_this_routine -> daily_health_check_workflow
+daily_health_check_workflow -> autosupport_validation
+autosupport_validation -> prechange_checklist
+prechange_checklist -> health_summary_table
+health_summary_table -> verify
+verify -> generate_report
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

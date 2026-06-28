@@ -16,6 +16,25 @@ Integrations reference covering VMware Integration, Backup Integration, CloudIQ 
 
 
 
+```d2
+direction: right
+
+center: "PowerMax" {shape: hexagon}
+vmware_integration: "VMware Integration" {shape: rectangle}
+backup_integration: "Backup Integration" {shape: rectangle}
+cloudiq_monitoring: "CloudIQ Monitoring" {shape: rectangle}
+active_directory_ldap: "Active Directory / LDAP" {shape: rectangle}
+integration_topology: "Integration Topology" {shape: rectangle}
+rest_api: "REST API" {shape: rectangle}
+
+center -> vmware_integration
+center -> backup_integration
+center -> cloudiq_monitoring
+center -> active_directory_ldap
+center -> integration_topology
+center -> rest_api
+```
+
 ## VMware Integration
 
 PowerMax integrates with VMware vSphere via several paths:

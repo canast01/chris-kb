@@ -19,6 +19,23 @@ Catalog of known VCF bugs, error codes, and workarounds covering SDDC Manager, b
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+bringup: "Bring-Up" {shape: rectangle}
+sddc_manager: "SDDC Manager" {shape: rectangle}
+lifecycle_management: "Lifecycle Management" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> bringup: investigate
+symptom -> sddc_manager: investigate
+symptom -> lifecycle_management: investigate
+bringup -> resolution
+sddc_manager -> resolution
+lifecycle_management -> resolution
+```
+
 ## Before you begin
 
 - VCF errors appear in SDDC Manager → Inventory → Workflows; expand failed task for error detail.

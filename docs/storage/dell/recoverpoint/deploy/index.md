@@ -6,6 +6,27 @@ search:
   boost: 1.5
 ---
 
+```d2
+direction: right
+
+plan: "Plan" {shape: oval}
+prerequisites: "Prerequisites" {shape: rectangle}
+deploy_rpa_appliances: "Deploy RPA Appliances" {shape: rectangle}
+initial_rpa_configuration: "Initial RPA Configuration" {shape: rectangle}
+create_the_rpa_cluster: "Create the RPA Cluster" {shape: rectangle}
+attach_storage_arrays: "Attach Storage Arrays" {shape: rectangle}
+create_consistency_groups: "Create Consistency Groups" {shape: rectangle}
+validate: "Validate" {shape: oval}
+
+plan -> prerequisites
+prerequisites -> deploy_rpa_appliances
+deploy_rpa_appliances -> initial_rpa_configuration
+initial_rpa_configuration -> create_the_rpa_cluster
+create_the_rpa_cluster -> attach_storage_arrays
+attach_storage_arrays -> create_consistency_groups
+create_consistency_groups -> validate
+```
+
 ## Before you begin
 
 - **Access:** admin credentials for the target system and any upstream dependencies (DNS, NTP, vCenter, directory services)

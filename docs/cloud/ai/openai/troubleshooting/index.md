@@ -17,6 +17,32 @@ Troubleshooting reference covering Error Code Reference, Rate Limit Troubleshoot
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+error_code_reference: "Error Code Reference" {shape: rectangle}
+rate_limit_troubleshooting: "Rate Limit Troubleshooting" {shape: rectangle}
+token_limit_issues: "Token Limit Issues" {shape: rectangle}
+authentication_issues: "Authentication Issues" {shape: rectangle}
+timeout_and_latency: "Timeout and Latency" {shape: rectangle}
+content_filtering_refusals: "Content Filtering / Refusals" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> error_code_reference: investigate
+symptom -> rate_limit_troubleshooting: investigate
+symptom -> token_limit_issues: investigate
+symptom -> authentication_issues: investigate
+symptom -> timeout_and_latency: investigate
+symptom -> content_filtering_refusals: investigate
+error_code_reference -> resolution
+rate_limit_troubleshooting -> resolution
+token_limit_issues -> resolution
+authentication_issues -> resolution
+timeout_and_latency -> resolution
+content_filtering_refusals -> resolution
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

@@ -14,6 +14,20 @@ Access Control reference covering Least Privilege Access Model, AWS IAM Least Pr
 ![Python Automation — Access Control](../../../../assets/automation-python-security-access-control-index.svg)
 
 
+```d2
+direction: down
+
+root: "Python\nAccess Control" {shape: hexagon}
+least_privilege_access_model: "Least Privilege Access Model" {shape: rectangle}
+access_policies_reference: "Access Policies Reference" {shape: rectangle}
+resources: Protected Resources {shape: cylinder}
+
+root -> least_privilege_access_model: role
+least_privilege_access_model -> resources: scoped
+root -> access_policies_reference: role
+access_policies_reference -> resources: scoped
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

@@ -14,6 +14,27 @@ Routine checks, service validation, and status verification.
 ![Windows Server — Health Checks](../../../../assets/compute-windows-server-operations-health-checks-index.svg)
 
 
+```d2
+direction: right
+
+begin_checks: "Begin Checks" {shape: oval}
+run_this_routine: "Run This Routine" {shape: rectangle}
+system_overview: "System Overview" {shape: rectangle}
+cpu_and_memory: "CPU and Memory" {shape: rectangle}
+disk: "Disk" {shape: rectangle}
+services: "Services" {shape: rectangle}
+event_log_quick_review: "Event Log Quick Review" {shape: rectangle}
+generate_report: "Generate Report" {shape: oval}
+
+begin_checks -> run_this_routine
+run_this_routine -> system_overview
+system_overview -> cpu_and_memory
+cpu_and_memory -> disk
+disk -> services
+services -> event_log_quick_review
+event_log_quick_review -> generate_report
+```
+
 ## Before you begin
 
 - **Access:** Local Administrator or Domain Admin on target hosts

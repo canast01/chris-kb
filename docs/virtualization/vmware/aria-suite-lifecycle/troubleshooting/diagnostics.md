@@ -55,6 +55,32 @@ graph TD
     class S,T escalate
 ```
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+step_1_check_lcm_service_status: "Step 1 — Check LCM service status" {shape: rectangle}
+step_2_inspect_vlcmlog_for_errors: "Step 2 — Inspect vlcm.log for errors" {shape: rectangle}
+step_3_check_certificate_expiry: "Step 3 — Check certificate expiry" {shape: rectangle}
+step_4_check_disk_space: "Step 4 — Check disk space" {shape: rectangle}
+step_5_preoperation_health_check: "Step 5 — Pre-operation health check" {shape: rectangle}
+step_6_check_environment_and_product: "Step 6 — Check environment and product status" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> step_1_check_lcm_service_status: investigate
+symptom -> step_2_inspect_vlcmlog_for_errors: investigate
+symptom -> step_3_check_certificate_expiry: investigate
+symptom -> step_4_check_disk_space: investigate
+symptom -> step_5_preoperation_health_check: investigate
+symptom -> step_6_check_environment_and_product: investigate
+step_1_check_lcm_service_status -> resolution
+step_2_inspect_vlcmlog_for_errors -> resolution
+step_3_check_certificate_expiry -> resolution
+step_4_check_disk_space -> resolution
+step_5_preoperation_health_check -> resolution
+step_6_check_environment_and_product -> resolution
+```
+
 ## Before you begin
 
 - **Access:** SSH to the LCM appliance (`admin` user); LCM admin UI credentials; vCenter credentials (required for some product health checks)

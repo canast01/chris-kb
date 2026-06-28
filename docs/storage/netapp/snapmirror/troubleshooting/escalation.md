@@ -19,6 +19,32 @@ How to escalate NetApp SnapMirror replication issues to NetApp support: what dat
 
 ---
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+preescalation_selfcheck: "Pre-Escalation Self-Check" {shape: rectangle}
+stepbystep_data_collection: "Step-by-Step Data Collection" {shape: rectangle}
+how_to_open_the_sr_on_mysupportnetap: "How to Open the SR on mysupport.netapp.com" {shape: rectangle}
+escalation_path: "Escalation Path" {shape: rectangle}
+what_not_to_do: "What NOT to Do" {shape: rectangle}
+useful_commands_for_case_updates: "Useful Commands for Case Updates" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> preescalation_selfcheck: investigate
+symptom -> stepbystep_data_collection: investigate
+symptom -> how_to_open_the_sr_on_mysupportnetap: investigate
+symptom -> escalation_path: investigate
+symptom -> what_not_to_do: investigate
+symptom -> useful_commands_for_case_updates: investigate
+preescalation_selfcheck -> resolution
+stepbystep_data_collection -> resolution
+how_to_open_the_sr_on_mysupportnetap -> resolution
+escalation_path -> resolution
+what_not_to_do -> resolution
+useful_commands_for_case_updates -> resolution
+```
+
 ## Before you begin
 
 - **Access required:** Cluster admin SSH access to both source and destination ONTAP clusters; NetApp support account at mysupport.netapp.com with both cluster serial numbers registered and active support contracts

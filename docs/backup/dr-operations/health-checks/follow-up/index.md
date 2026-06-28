@@ -13,6 +13,23 @@ Health Check Follow-Up and Open Item Tracking reference covering Overview, Findi
 
 
 
+```d2
+direction: right
+
+center: "DR Operations" {shape: hexagon}
+finding_classification: "Finding Classification" {shape: rectangle}
+creating_followup_tickets: "Creating Follow-Up Tickets" {shape: rectangle}
+owner_assignment: "Owner Assignment" {shape: rectangle}
+tracking_and_reporting: "Tracking and Reporting" {shape: rectangle}
+closure_criteria: "Closure Criteria" {shape: rectangle}
+
+center -> finding_classification
+center -> creating_followup_tickets
+center -> owner_assignment
+center -> tracking_and_reporting
+center -> closure_criteria
+```
+
 ## Overview
 
 Health check findings only have value if they are tracked to resolution. A finding that goes into a log and is never revisited is worse than useless — it creates a false sense that problems are being managed. This page covers how to turn health check output into tracked work items with owners and deadlines.

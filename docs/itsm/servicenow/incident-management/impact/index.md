@@ -15,6 +15,23 @@ Business Impact Assessment reference covering Overview, Impact Dimensions, User 
 
 
 
+```d2
+direction: right
+
+center: "ServiceNow" {shape: hexagon}
+impact_dimensions: "Impact Dimensions" {shape: rectangle}
+user_impact_categories: "User Impact Categories" {shape: rectangle}
+sla_breach_assessment: "SLA Breach Assessment" {shape: rectangle}
+affected_services_inventory: "Affected Services Inventory" {shape: rectangle}
+financial_and_reputational_exposure: "Financial and Reputational Exposure" {shape: rectangle}
+
+center -> impact_dimensions
+center -> user_impact_categories
+center -> sla_breach_assessment
+center -> affected_services_inventory
+center -> financial_and_reputational_exposure
+```
+
 ## Overview
 
 A business impact assessment during an incident quantifies who is affected, which business processes are disrupted, what the financial and reputational exposure is, and whether SLA commitments are at risk. This assessment drives priority setting, escalation decisions, and stakeholder communication.

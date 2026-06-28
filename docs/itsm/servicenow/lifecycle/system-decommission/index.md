@@ -13,6 +13,25 @@ Safely removes a server, VM, or cloud instance from production — preventing or
 ![System Decommission Procedure](../../../../assets/itsm-servicenow-lifecycle-system-decommission-index.svg)
 
 
+```d2
+direction: right
+
+center: "ServiceNow" {shape: hexagon}
+decommission_workflow: "Decommission Workflow" {shape: rectangle}
+4_remove_from_monitoring: "4. Remove from Monitoring" {shape: rectangle}
+5_remove_from_backup: "5. Remove from Backup" {shape: rectangle}
+6_revoke_access_and_credentials: "6. Revoke Access and Credentials" {shape: rectangle}
+7_shutdown_and_delete: "7. Shutdown and Delete" {shape: rectangle}
+8_cmdb_and_ansible_cleanup: "8. CMDB and Ansible Cleanup" {shape: rectangle}
+
+center -> decommission_workflow
+center -> 4_remove_from_monitoring
+center -> 5_remove_from_backup
+center -> 6_revoke_access_and_credentials
+center -> 7_shutdown_and_delete
+center -> 8_cmdb_and_ansible_cleanup
+```
+
 ## Decommission Workflow
 
 ```mermaid

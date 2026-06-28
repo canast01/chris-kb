@@ -25,6 +25,17 @@ Linux — Troubleshooting navigation for Common Issues, Diagnostics, Escalation.
 <a class="kb-card" href="high-cpu/"><strong>High CPU</strong><span>High CPU diagnosis — process-level analysis, run queues, kernel profiling, JVM threads, and remediation on Linux, Windows, and ESXi.</span></a>
 </div>
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+symptom_index: "Symptom Index" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> symptom_index: investigate
+symptom_index -> resolution
+```
+
 ## Symptom Index
 
 | Symptom | Platform | Where to look |

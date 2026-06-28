@@ -6,6 +6,27 @@ search:
   boost: 1.5
 ---
 
+```d2
+direction: right
+
+plan: "Plan" {shape: oval}
+prerequisites: "Prerequisites" {shape: rectangle}
+deploy_nd_ova_3node_cluster: "Deploy ND OVA (3-Node Cluster)" {shape: rectangle}
+cluster_formation: "Cluster Formation" {shape: rectangle}
+install_ndfcndi_services: "Install NDFC/NDI Services" {shape: rectangle}
+add_first_site: "Add First Site" {shape: rectangle}
+validate: "Validate" {shape: rectangle}
+validate: "Validate" {shape: oval}
+
+plan -> prerequisites
+prerequisites -> deploy_nd_ova_3node_cluster
+deploy_nd_ova_3node_cluster -> cluster_formation
+cluster_formation -> install_ndfcndi_services
+install_ndfcndi_services -> add_first_site
+add_first_site -> validate
+validate -> validate
+```
+
 ## Before you begin
 
 - **Access:** admin credentials for the target system and any upstream dependencies (DNS, NTP, vCenter, directory services)

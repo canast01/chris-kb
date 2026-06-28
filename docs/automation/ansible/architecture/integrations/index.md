@@ -110,6 +110,19 @@ switch01 ansible_host=10.0.1.1 ansible_network_os=arista.eos.eos ansible_connect
 
 ---
 
+```d2
+direction: right
+
+center: "Ansible" {shape: hexagon}
+component_a: "Component A" {shape: rectangle}
+component_b: "Component B" {shape: rectangle}
+component_c: "Component C" {shape: rectangle}
+
+center -> component_a
+center -> component_b
+center -> component_c
+```
+
 ## See also
 
 - [Ansible — Design Standards](../design-standards/)

@@ -59,6 +59,32 @@ graph TD
     class V escalate
 ```
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+step_1_check_certificate_expiry_and_: "Step 1 — Check certificate expiry and basic fields" {shape: rectangle}
+step_2_inspect_certificate_fields_an: "Step 2 — Inspect certificate fields and SAN" {shape: rectangle}
+step_3_verify_the_certificate_chain: "Step 3 — Verify the certificate chain" {shape: rectangle}
+step_4_check_ocsp_and_crl: "Step 4 — Check OCSP and CRL" {shape: rectangle}
+step_5_windows_certificate_store_dia: "Step 5 — Windows certificate store diagnostics" {shape: rectangle}
+step_6_add_root_ca_to_linux_trust_st: "Step 6 — Add root CA to Linux trust store" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> step_1_check_certificate_expiry_and_: investigate
+symptom -> step_2_inspect_certificate_fields_an: investigate
+symptom -> step_3_verify_the_certificate_chain: investigate
+symptom -> step_4_check_ocsp_and_crl: investigate
+symptom -> step_5_windows_certificate_store_dia: investigate
+symptom -> step_6_add_root_ca_to_linux_trust_st: investigate
+step_1_check_certificate_expiry_and_ -> resolution
+step_2_inspect_certificate_fields_an -> resolution
+step_3_verify_the_certificate_chain -> resolution
+step_4_check_ocsp_and_crl -> resolution
+step_5_windows_certificate_store_dia -> resolution
+step_6_add_root_ca_to_linux_trust_st -> resolution
+```
+
 ## Before you begin
 
 - **Access:** admin credentials on the servers where certificates are installed; access to the CA (ADCS, Venafi, or public CA) for renewal

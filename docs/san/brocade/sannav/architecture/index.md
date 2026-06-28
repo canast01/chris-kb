@@ -20,6 +20,17 @@ Brocade SANnav is a SAN management platform in two variants: Management Portal (
 <a class="kb-card" href="design-standards/"><strong>Design Standards</strong><span>Sizing guidelines, HA design, and deployment best practices.</span></a>
 </div>
 
+```d2
+direction: right
+
+center: "SANnav" {shape: hexagon}
+vm_sizing: "VM Sizing" {shape: rectangle}
+management_topology: "Management Topology" {shape: rectangle}
+
+center -> vm_sizing
+center -> management_topology
+```
+
 ## VM Sizing
 
 | Variant | Environment | vCPU | RAM | Storage | Max Switches |

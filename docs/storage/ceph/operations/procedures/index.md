@@ -40,6 +40,25 @@ graph TD
     CAP --> ADDNODE[Add new node<br/>ceph orch host add]:::step
 ```
 
+```d2
+direction: right
+
+hub: "Ceph\nOperations" {shape: hexagon}
+add_a_new_osd_single_device: "Add a New OSD (Single Device)" {shape: rectangle}
+replace_a_failed_osd: "Replace a Failed OSD" {shape: rectangle}
+decommission_a_host_remove_all_its_o: "Decommission a Host (Remove All Its OSDs)" {shape: rectangle}
+reweight_osds_to_balance_capacity: "Reweight OSDs to Balance Capacity" {shape: rectangle}
+manage_scrub_operations: "Manage Scrub Operations" {shape: rectangle}
+repair_an_inconsistent_pg: "Repair an Inconsistent PG" {shape: rectangle}
+
+hub -> add_a_new_osd_single_device
+hub -> replace_a_failed_osd
+hub -> decommission_a_host_remove_all_its_o
+hub -> reweight_osds_to_balance_capacity
+hub -> manage_scrub_operations
+hub -> repair_an_inconsistent_pg
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

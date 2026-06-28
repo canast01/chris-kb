@@ -14,6 +14,25 @@ Integrations reference covering Integration Landscape, GitHub Integration, Bitbu
 ![Jira — Integrations](../../../../assets/itsm-jira-architecture-integrations-index.svg)
 
 
+```d2
+direction: right
+
+center: "Jira" {shape: hexagon}
+integration_landscape: "Integration Landscape" {shape: rectangle}
+bitbucket_integration: "Bitbucket Integration" {shape: rectangle}
+cicd_pipeline_integration: "CI/CD Pipeline Integration" {shape: rectangle}
+rest_api_overview: "REST API Overview" {shape: rectangle}
+webhook_configuration: "Webhook Configuration" {shape: rectangle}
+ldap_active_directory_integration: "LDAP / Active Directory Integration" {shape: rectangle}
+
+center -> integration_landscape
+center -> bitbucket_integration
+center -> cicd_pipeline_integration
+center -> rest_api_overview
+center -> webhook_configuration
+center -> ldap_active_directory_integration
+```
+
 ## Integration Landscape
 
 ```mermaid

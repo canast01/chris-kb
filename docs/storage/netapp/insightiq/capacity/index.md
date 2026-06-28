@@ -23,6 +23,15 @@ Quota types in OneFS:
 | Soft Quota | Alerts but does not block | Advisory warnings |
 | Advisory Quota | Reporting only | Visibility into usage trends |
 
+```d2
+direction: right
+
+center: "InsightIQ" {shape: hexagon}
+common_capacity_issues: "Common Capacity Issues" {shape: rectangle}
+
+center -> common_capacity_issues
+```
+
 ## Common Capacity Issues
 
 | Issue | Likely Cause | Fix |

@@ -43,6 +43,19 @@ Network Time Protocol (NTP) synchronises system clocks over UDP port 123 using a
 
 </div>
 
+```d2
+direction: right
+
+center: "NTP" {shape: hexagon}
+quick_reference: "Quick Reference" {shape: rectangle}
+common_commands_config: "Common Commands / Config" {shape: rectangle}
+troubleshooting: "Troubleshooting" {shape: rectangle}
+
+center -> quick_reference
+center -> common_commands_config
+center -> troubleshooting
+```
+
 ## Quick Reference
 
 **Stratum levels:**

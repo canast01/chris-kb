@@ -17,6 +17,19 @@ Aria Operations: Scheduled Reports and PDF Export reference covering Scheduling 
 
 
 
+```d2
+direction: right
+
+hub: "Aria Operations\nOperations" {shape: hexagon}
+report_output_formats: "Report Output Formats" {shape: rectangle}
+common_report_issues: "Common Report Issues" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+hub -> report_output_formats
+hub -> common_report_issues
+hub -> verify
+```
+
 ## Before you begin
 
 - **Access:** vCenter read-only minimum; Administrator role for remediation steps

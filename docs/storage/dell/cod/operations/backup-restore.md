@@ -26,6 +26,15 @@ COD does not manage data backup directly. Key items to protect:
 - **COD inventory record**: maintain and back up the COD inventory tracking spreadsheet or CMDB records for each array including SID, activation dates, and headroom.
 - **SYMCLI audit log exports**: periodically export `symaudit -sid <SID> list` output to a file and retain for compliance purposes.
 
+```d2
+direction: right
+
+hub: "Cloud On Demand\nOperations" {shape: hexagon}
+verify: "Verify" {shape: rectangle}
+
+hub -> verify
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

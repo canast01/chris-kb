@@ -15,6 +15,23 @@ Encryption reference covering Secrets and Encrypted Properties, TLS Certificate 
 ![Aria Automation — Encryption](../../../../assets/virtualization-vmware-aria-automation-security-encryption.svg)
 
 
+```d2
+direction: down
+
+external: External / Untrusted {shape: rectangle}
+secrets_and_encrypted_properties: "Secrets and Encrypted Properties" {shape: rectangle}
+tls_certificate_management: "TLS Certificate Management" {shape: rectangle}
+data_at_rest_encryption: "Data at Rest Encryption" {shape: rectangle}
+kubernetes_secret_management: "Kubernetes Secret Management" {shape: rectangle}
+core: "Aria Automation Core" {shape: hexagon}
+
+external -> secrets_and_encrypted_properties: traffic in
+secrets_and_encrypted_properties -> tls_certificate_management
+tls_certificate_management -> data_at_rest_encryption
+data_at_rest_encryption -> kubernetes_secret_management
+kubernetes_secret_management -> core: secured path
+```
+
 ## Before you begin
 
 - **Access:** vCenter Administrator role

@@ -20,6 +20,25 @@ Install & Upgrade reference covering Evergreen Program Tiers, Software Upgrade (
 
 ---
 
+```d2
+direction: right
+
+hub: "Evergreen\nOperations" {shape: hexagon}
+evergreen_program_tiers: "Evergreen Program Tiers" {shape: rectangle}
+software_upgrade_purity: "Software Upgrade (Purity)" {shape: rectangle}
+drive_replacement: "Drive Replacement" {shape: rectangle}
+controller_refresh_evergreenforever: "Controller Refresh (Evergreen//Forever)" {shape: rectangle}
+lifecycle_timeline: "Lifecycle Timeline" {shape: rectangle}
+endoflife_considerations: "End-of-Life Considerations" {shape: rectangle}
+
+hub -> evergreen_program_tiers
+hub -> software_upgrade_purity
+hub -> drive_replacement
+hub -> controller_refresh_evergreenforever
+hub -> lifecycle_timeline
+hub -> endoflife_considerations
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

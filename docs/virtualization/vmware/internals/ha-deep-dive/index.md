@@ -40,6 +40,25 @@ graph TD
     G -->|No| I
 ```
 
+```d2
+direction: right
+
+center: "Ha Deep Dive" {shape: hexagon}
+slotbased_admission_control: "Slot-Based Admission Control" {shape: rectangle}
+resource_fragmentation_problem: "Resource Fragmentation Problem" {shape: rectangle}
+admission_control_policies: "Admission Control Policies" {shape: rectangle}
+ha_restart_priority: "HA Restart Priority" {shape: rectangle}
+network_isolation_response: "Network Isolation Response" {shape: rectangle}
+apd_vs_pdl: "APD vs PDL" {shape: rectangle}
+
+center -> slotbased_admission_control
+center -> resource_fragmentation_problem
+center -> admission_control_policies
+center -> ha_restart_priority
+center -> network_isolation_response
+center -> apd_vs_pdl
+```
+
 ## Slot-Based Admission Control
 
 A **slot** is the atomic unit of capacity reserved per potential host failure. HA calculates slot size from the highest reservations in the cluster.

@@ -15,6 +15,25 @@ vSphere resource management controls how CPU and memory are allocated to VMs com
 
 ---
 
+```d2
+direction: right
+
+center: "Vsphere Resource Management" {shape: hexagon}
+the_resource_scheduling_model: "The Resource Scheduling Model" {shape: rectangle}
+cpu_reservations_limits_and_overhead: "CPU Reservations, Limits, and Overhead" {shape: rectangle}
+memory_reservations_and_overhead: "Memory Reservations and Overhead" {shape: rectangle}
+resource_pools: "Resource Pools" {shape: rectangle}
+numa_topology_and_vnuma: "NUMA Topology and vNUMA" {shape: rectangle}
+drs_and_resource_management_integrat: "DRS and Resource Management Integration" {shape: rectangle}
+
+center -> the_resource_scheduling_model
+center -> cpu_reservations_limits_and_overhead
+center -> memory_reservations_and_overhead
+center -> resource_pools
+center -> numa_topology_and_vnuma
+center -> drs_and_resource_management_integrat
+```
+
 ## The Resource Scheduling Model
 
 vSphere uses a proportional-share scheduler for CPU and memory. Every VM has three control knobs per resource:

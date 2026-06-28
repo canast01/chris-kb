@@ -28,6 +28,20 @@ Common Eyeglass issues include SyncIQ policies not being detected, low DR readin
 | RPO breach alerts | SyncIQ replication lag exceeding threshold | Check SyncIQ job status on source cluster (`isi sync jobs list`); check network bandwidth between sites |
 | Eyeglass appliance unreachable | VM or network issue | Verify VM is powered on in vCenter; check management network connectivity; check Eyeglass service status via console |
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+diagnostic_flow: "Diagnostic Flow" {shape: rectangle}
+verify_resolution: "Verify resolution" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> diagnostic_flow: investigate
+symptom -> verify_resolution: investigate
+diagnostic_flow -> resolution
+verify_resolution -> resolution
+```
+
 ## Diagnostic Flow
 
 ```mermaid

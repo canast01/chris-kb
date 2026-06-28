@@ -42,6 +42,23 @@ Common causes:
 - Service principal client secret expired
 - Missing API permission or admin consent not granted
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+azure_storage_access_denied: "Azure Storage Access Denied" {shape: rectangle}
+aks_pod_not_starting: "AKS Pod Not Starting" {shape: rectangle}
+app_service_502503: "App Service 502/503" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> azure_storage_access_denied: investigate
+symptom -> aks_pod_not_starting: investigate
+symptom -> app_service_502503: investigate
+azure_storage_access_denied -> resolution
+aks_pod_not_starting -> resolution
+app_service_502503 -> resolution
+```
+
 ## Azure Storage Access Denied
 
 ```bash

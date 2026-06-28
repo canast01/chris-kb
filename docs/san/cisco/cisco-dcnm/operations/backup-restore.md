@@ -72,6 +72,15 @@ gunzip -c /var/backup/dcnm/dcnm-db-20260506-0200.sql.gz | psql -U postgres
 tail -f /var/log/dcnm/server.log
 ```
 
+```d2
+direction: right
+
+hub: "Cisco DCNM\nOperations" {shape: hexagon}
+verify: "Verify" {shape: rectangle}
+
+hub -> verify
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

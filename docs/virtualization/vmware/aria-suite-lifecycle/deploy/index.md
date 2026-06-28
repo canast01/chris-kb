@@ -35,6 +35,27 @@ flowchart TD
     style s7 fill:#2e7d32,color:#fff,stroke:#1b5e20
 ```
 
+```d2
+direction: right
+
+plan: "Plan" {shape: oval}
+phase_1_preflight_checks: "Phase 1 — Pre-Flight Checks" {shape: rectangle}
+phase_2_lcm_ova_deployment: "Phase 2 — LCM OVA Deployment" {shape: rectangle}
+phase_3_certificate_configuration_an: "Phase 3 — Certificate Configuration and Locker Setup" {shape: rectangle}
+phase_4_depot_configuration_and_vcen: "Phase 4 — Depot Configuration and vCenter Integration" {shape: rectangle}
+phase_5_environment_creation_and_pro: "Phase 5 — Environment Creation and Product Deployment" {shape: rectangle}
+phase_6_postdeployment_validation: "Phase 6 — Post-Deployment Validation" {shape: rectangle}
+validate: "Validate" {shape: oval}
+
+plan -> phase_1_preflight_checks
+phase_1_preflight_checks -> phase_2_lcm_ova_deployment
+phase_2_lcm_ova_deployment -> phase_3_certificate_configuration_an
+phase_3_certificate_configuration_an -> phase_4_depot_configuration_and_vcen
+phase_4_depot_configuration_and_vcen -> phase_5_environment_creation_and_pro
+phase_5_environment_creation_and_pro -> phase_6_postdeployment_validation
+phase_6_postdeployment_validation -> validate
+```
+
 ## Before you begin
 
 - **Access:** vCenter Administrator role and SSH access to VCSA/ESXi hosts

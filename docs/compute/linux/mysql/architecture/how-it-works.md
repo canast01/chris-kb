@@ -16,6 +16,23 @@ MySQL architecture — InnoDB storage engine, buffer pool, query execution pipel
 
 
 
+```d2
+direction: right
+
+center: "Linux" {shape: hexagon}
+storage_engine_innodb: "Storage Engine: InnoDB" {shape: rectangle}
+query_execution_pipeline: "Query Execution Pipeline" {shape: rectangle}
+replication_architecture: "Replication Architecture" {shape: rectangle}
+key_configuration_parameters: "Key Configuration Parameters" {shape: rectangle}
+transaction_isolation: "Transaction Isolation" {shape: rectangle}
+
+center -> storage_engine_innodb
+center -> query_execution_pipeline
+center -> replication_architecture
+center -> key_configuration_parameters
+center -> transaction_isolation
+```
+
 ## Storage Engine: InnoDB
 
 InnoDB is the default storage engine. Key components:

@@ -46,6 +46,17 @@ flowchart TD
     N --> P
 ```
 
+```d2
+direction: right
+
+center: "Decision Trees" {shape: hexagon}
+quick_reference: "Quick reference" {shape: rectangle}
+key_rules: "Key rules" {shape: rectangle}
+
+center -> quick_reference
+center -> key_rules
+```
+
 ## Quick reference
 
 | FTT | RAID | Min hosts | Overhead | Use case |

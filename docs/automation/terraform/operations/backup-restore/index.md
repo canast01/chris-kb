@@ -20,6 +20,23 @@ terraform state pull > terraform.tfstate.local-$(date +%Y%m%d)
 ```
 
 
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+participant "Source\n(Backup Restore)" as SRC
+participant "Backup Engine" as ENG
+participant "Target / Vault" as TGT
+
+SRC -> ENG: Verify
+ENG -> TGT: Write
+TGT --> ENG: Confirmed
+ENG --> SRC: Done
+
+@enduml
+```
+
 ## Before you begin
 
 - **Access:** Provider credentials configured (`terraform login` or env vars)

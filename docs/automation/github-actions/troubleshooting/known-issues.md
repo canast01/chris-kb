@@ -18,6 +18,23 @@ Catalog of known GitHub Actions bugs, error codes, and workarounds covering self
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+selfhosted_runners: "Self-Hosted Runners" {shape: rectangle}
+secrets_and_permissions: "Secrets and Permissions" {shape: rectangle}
+workflow_failures: "Workflow Failures" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> selfhosted_runners: investigate
+symptom -> secrets_and_permissions: investigate
+symptom -> workflow_failures: investigate
+selfhosted_runners -> resolution
+secrets_and_permissions -> resolution
+workflow_failures -> resolution
+```
+
 ## Before you begin
 
 - GitHub Actions errors appear in the workflow run UI → expand failed step.

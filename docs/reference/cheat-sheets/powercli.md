@@ -13,6 +13,23 @@ Top-10 PowerCLI one-liners for VM, host, storage, network, and cluster operation
 
 
 
+```d2
+direction: right
+
+center: "Cheat Sheets" {shape: rectangle}
+connection_and_session: "Connection and session" {shape: rectangle}
+vms: "VMs" {shape: rectangle}
+hosts_and_clusters: "Hosts and clusters" {shape: rectangle}
+storage_and_snapshots: "Storage and snapshots" {shape: rectangle}
+networks: "Networks" {shape: rectangle}
+
+center -> connection_and_session
+center -> vms
+center -> hosts_and_clusters
+center -> storage_and_snapshots
+center -> networks
+```
+
 ## Connection and session
 
 ```powershell

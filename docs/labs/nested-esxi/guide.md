@@ -16,6 +16,25 @@ Complete procedure for Lab 1: configure the physical host, create nested ESXi VM
 
 ---
 
+```d2
+direction: right
+
+center: "Nested Esxi" {shape: hexagon}
+phase_1_prepare_the_physical_host: "Phase 1 — Prepare the Physical Host" {shape: rectangle}
+phase_2_create_nested_esxi_vms: "Phase 2 — Create Nested ESXi VMs" {shape: rectangle}
+phase_3_install_esxi_in_nested_vms: "Phase 3 — Install ESXi in Nested VMs" {shape: rectangle}
+phase_4_deploy_vcenter_vcsa: "Phase 4 — Deploy vCenter (VCSA)" {shape: rectangle}
+phase_5_create_a_cluster: "Phase 5 — Create a Cluster" {shape: rectangle}
+known_issues_in_nested_environments: "Known Issues in Nested Environments" {shape: rectangle}
+
+center -> phase_1_prepare_the_physical_host
+center -> phase_2_create_nested_esxi_vms
+center -> phase_3_install_esxi_in_nested_vms
+center -> phase_4_deploy_vcenter_vcsa
+center -> phase_5_create_a_cluster
+center -> known_issues_in_nested_environments
+```
+
 ## Phase 1 — Prepare the Physical Host
 
 **1.1 Verify nested virtualisation support**

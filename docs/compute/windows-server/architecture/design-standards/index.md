@@ -14,6 +14,23 @@ Windows Server design standards: domain join requirements, WSUS patch cadence, s
 ![Windows Server — Standards](../../../../assets/compute-windows-server-architecture-design-standards-index.svg)
 
 
+```d2
+direction: down
+
+group_policy_processing_order: "Group Policy Processing Order" {shape: rectangle}
+winrm_configuration_baseline: "WinRM Configuration Baseline" {shape: rectangle}
+server_build_baseline_checklist: "Server Build Baseline Checklist" {shape: rectangle}
+windows_storage_stack: "Windows Storage Stack" {shape: rectangle}
+group_policy_baseline: "Group Policy Baseline" {shape: rectangle}
+hostname_convention_and_domain_join: "Hostname Convention and Domain Join" {shape: rectangle}
+
+group_policy_processing_order -> winrm_configuration_baseline: hardens
+winrm_configuration_baseline -> server_build_baseline_checklist: hardens
+server_build_baseline_checklist -> windows_storage_stack: hardens
+windows_storage_stack -> group_policy_baseline: hardens
+group_policy_baseline -> hostname_convention_and_domain_join: hardens
+```
+
 ## Group Policy Processing Order
 
 ```mermaid

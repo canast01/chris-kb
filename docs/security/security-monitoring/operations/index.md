@@ -14,6 +14,25 @@ Step-by-step procedures for reviewing SIEM alerts, investigating security events
 
 
 
+```d2
+direction: right
+
+hub: "Operations\nOperations" {shape: hexagon}
+daily_siem_alert_review: "Daily SIEM Alert Review" {shape: rectangle}
+investigate_a_security_alert: "Investigate a Security Alert" {shape: rectangle}
+tune_an_overactive_alert_rule: "Tune an Overactive Alert Rule" {shape: rectangle}
+add_a_new_threat_detection_rule: "Add a New Threat Detection Rule" {shape: rectangle}
+respond_to_a_suspicious_login_alert: "Respond to a Suspicious Login Alert" {shape: rectangle}
+review_failed_authentication_trends: "Review Failed Authentication Trends" {shape: rectangle}
+
+hub -> daily_siem_alert_review
+hub -> investigate_a_security_alert
+hub -> tune_an_overactive_alert_rule
+hub -> add_a_new_threat_detection_rule
+hub -> respond_to_a_suspicious_login_alert
+hub -> review_failed_authentication_trends
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

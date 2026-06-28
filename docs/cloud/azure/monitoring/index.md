@@ -14,6 +14,15 @@ Azure Monitoring articles, operational checks, troubleshooting notes, and refere
 
 
 
+```d2
+direction: right
+
+hub: "Azure\nOperations" {shape: hexagon}
+articles: "Articles" {shape: rectangle}
+
+hub -> articles
+```
+
 ## Articles
 
 <div class="kb-grid kb-grid-3">

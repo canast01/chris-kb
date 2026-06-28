@@ -18,6 +18,26 @@ Common Issues reference covering Incident Triage, Common Symptoms and Resolution
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+diagnostic_flow: "Diagnostic Flow" {shape: rectangle}
+incident_triage: "Incident Triage" {shape: rectangle}
+common_symptoms_and_resolutions: "Common Symptoms and Resolutions" {shape: rectangle}
+verify_resolution: "Verify resolution" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> diagnostic_flow: investigate
+symptom -> incident_triage: investigate
+symptom -> common_symptoms_and_resolutions: investigate
+symptom -> verify_resolution: investigate
+diagnostic_flow -> resolution
+incident_triage -> resolution
+common_symptoms_and_resolutions -> resolution
+verify_resolution -> resolution
+```
+
 ## Diagnostic Flow
 
 ```mermaid

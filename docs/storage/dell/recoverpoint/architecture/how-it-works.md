@@ -14,6 +14,19 @@ How It Works reference covering Overview, Topology, Journal Sizing, Journal Moni
 ![RecoverPoint — How It Works](../../../../assets/storage-dell-recoverpoint-architecture-how-it-works.svg)
 
 
+```d2
+direction: right
+
+center: "RecoverPoint" {shape: hexagon}
+topology: "Topology" {shape: rectangle}
+journal_monitoring_thresholds: "Journal Monitoring Thresholds" {shape: rectangle}
+high_availability: "High Availability" {shape: rectangle}
+
+center -> topology
+center -> journal_monitoring_thresholds
+center -> high_availability
+```
+
 ## Overview
 
 Dell EMC RecoverPoint provides continuous data protection (CDP) and continuous remote replication (CRR) through journal-based replication. RPA (RecoverPoint Appliance) clusters at each site intercept writes via splitters and maintain a rolling journal enabling point-in-time recovery to any point within the journal window. All volumes that must be recovered together are grouped into a Consistency Group (CG).

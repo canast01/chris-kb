@@ -6,6 +6,27 @@ search:
   boost: 1.5
 ---
 
+```d2
+direction: right
+
+plan: "Plan" {shape: oval}
+prerequisites: "Prerequisites" {shape: rectangle}
+install_veeam_backup_replication_ser: "Install Veeam Backup & Replication Server" {shape: rectangle}
+add_vcenter_hypervisor: "Add vCenter / Hypervisor" {shape: rectangle}
+add_backup_proxies: "Add Backup Proxies" {shape: rectangle}
+add_backup_repositories: "Add Backup Repositories" {shape: rectangle}
+create_first_backup_job: "Create First Backup Job" {shape: rectangle}
+validate: "Validate" {shape: oval}
+
+plan -> prerequisites
+prerequisites -> install_veeam_backup_replication_ser
+install_veeam_backup_replication_ser -> add_vcenter_hypervisor
+add_vcenter_hypervisor -> add_backup_proxies
+add_backup_proxies -> add_backup_repositories
+add_backup_repositories -> create_first_backup_job
+create_first_backup_job -> validate
+```
+
 ## Before you begin
 
 - **Access:** admin credentials for the target system and any upstream dependencies (DNS, NTP, vCenter, directory services)

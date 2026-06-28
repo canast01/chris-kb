@@ -6,6 +6,27 @@ search:
   boost: 1.5
 ---
 
+```d2
+direction: right
+
+plan: "Plan" {shape: oval}
+prerequisites: "Prerequisites" {shape: rectangle}
+rack_and_cable: "Rack and Cable" {shape: rectangle}
+initial_switch_configuration: "Initial Switch Configuration" {shape: rectangle}
+set_domain_id_and_fabric_parameters: "Set Domain ID and Fabric Parameters" {shape: rectangle}
+zone_configuration: "Zone Configuration" {shape: rectangle}
+isl_configuration: "ISL Configuration" {shape: rectangle}
+validate: "Validate" {shape: oval}
+
+plan -> prerequisites
+prerequisites -> rack_and_cable
+rack_and_cable -> initial_switch_configuration
+initial_switch_configuration -> set_domain_id_and_fabric_parameters
+set_domain_id_and_fabric_parameters -> zone_configuration
+zone_configuration -> isl_configuration
+isl_configuration -> validate
+```
+
 ## Before you begin
 
 <!-- video-link -->

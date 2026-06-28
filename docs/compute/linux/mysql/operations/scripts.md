@@ -15,6 +15,25 @@ MySQL automation scripts — nightly backup, slow query report, replication lag 
 
 
 
+```d2
+direction: right
+
+hub: "Linux\nOperations" {shape: hexagon}
+nightly_backup_script: "Nightly Backup Script" {shape: rectangle}
+replication_lag_monitor: "Replication Lag Monitor" {shape: rectangle}
+connection_count_report: "Connection Count Report" {shape: rectangle}
+table_size_report: "Table Size Report" {shape: rectangle}
+slow_query_report: "Slow Query Report" {shape: rectangle}
+index_usage_report: "Index Usage Report" {shape: rectangle}
+
+hub -> nightly_backup_script
+hub -> replication_lag_monitor
+hub -> connection_count_report
+hub -> table_size_report
+hub -> slow_query_report
+hub -> index_usage_report
+```
+
 ## Before you begin
 
 - **Access:** root or sudo-capable account on target hosts

@@ -19,6 +19,43 @@ AOS distributed storage fabric, CVM role on every node, AHV hypervisor internals
 
 ---
 
+```d2
+direction: right
+
+cluster: Nutanix HCI Cluster {
+  node1: Node 1 {
+    cvm1: CVM 1 {shape: rectangle}
+    vm1: Guest VMs {shape: rectangle}
+    disk1: Local NVMe/SSD/HDD {shape: cylinder}
+    cvm1 -> disk1: manages
+  }
+  node2: Node 2 {
+    cvm2: CVM 2 {shape: rectangle}
+    vm2: Guest VMs {shape: rectangle}
+    disk2: Local NVMe/SSD/HDD {shape: cylinder}
+    cvm2 -> disk2: manages
+  }
+  node3: Node 3 {
+    cvm3: CVM 3 {shape: rectangle}
+    vm3: Guest VMs {shape: rectangle}
+    disk3: Local NVMe/SSD/HDD {shape: cylinder}
+    cvm3 -> disk3: manages
+  }
+}
+
+prism: Prism Central\n(management) {shape: rectangle}
+ad: Active Directory {shape: rectangle}
+
+prism -> cluster.node1.cvm1: manage
+prism -> cluster.node2.cvm2: manage
+prism -> cluster.node3.cvm3: manage
+prism -> ad: auth
+
+cluster.node1.cvm1 -> cluster.node2.cvm2: DSF replication
+cluster.node2.cvm2 -> cluster.node3.cvm3: DSF replication
+cluster.node1.cvm1 -> cluster.node3.cvm3: DSF replication
+```
+
 ## The Controller VM (CVM)
 
 Every Nutanix node runs a **Controller VM (CVM)** — a privileged VM that owns the local storage devices and runs the AOS storage stack. The CVM:

@@ -19,6 +19,25 @@ Firewall port reference for Dell PowerStore. Covers management API and UI, data 
 
 
 
+```d2
+direction: right
+
+center: "PowerStore" {shape: hexagon}
+inbound_management_traffic: "Inbound — Management Traffic" {shape: rectangle}
+outbound_array_to_external: "Outbound — Array to External" {shape: rectangle}
+data_protocols_nfs: "Data Protocols — NFS" {shape: rectangle}
+data_protocols_smb: "Data Protocols — SMB" {shape: rectangle}
+data_protocols_iscsi: "Data Protocols — iSCSI" {shape: rectangle}
+data_protocols_nvmeoftcp_powerstore_: "Data Protocols — NVMe-oF/TCP (PowerStore 3.6+)" {shape: rectangle}
+
+center -> inbound_management_traffic
+center -> outbound_array_to_external
+center -> data_protocols_nfs
+center -> data_protocols_smb
+center -> data_protocols_iscsi
+center -> data_protocols_nvmeoftcp_powerstore_
+```
+
 ## Before you begin
 
 - PowerStore has two network roles: management (mgmt IP) and data (per-protocol IPs on data interfaces)

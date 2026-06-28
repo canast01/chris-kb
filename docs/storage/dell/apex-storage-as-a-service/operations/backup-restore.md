@@ -28,6 +28,15 @@ Key items to document and protect:
 - **Subscription records**: retain documentation of subscription ID, committed tier, burst ceiling, contract dates, and SLA tier
 - **Monthly usage exports**: export APEX Console billing data monthly and retain for billing reconciliation
 
+```d2
+direction: right
+
+hub: "APEX Storage\nOperations" {shape: hexagon}
+verify: "Verify" {shape: rectangle}
+
+hub -> verify
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

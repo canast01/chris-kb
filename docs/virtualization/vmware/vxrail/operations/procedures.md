@@ -16,6 +16,25 @@ Operational procedures for VxRail cluster administration. Covers node maintenanc
 
 ---
 
+```d2
+direction: right
+
+hub: "VxRail\nOperations" {shape: hexagon}
+change_readiness_checklist: "Change Readiness Checklist" {shape: rectangle}
+node_maintenance_mode_procedure: "Node Maintenance Mode Procedure" {shape: rectangle}
+node_expansion_procedure: "Node Expansion Procedure" {shape: rectangle}
+disk_replacement_procedure: "Disk Replacement Procedure" {shape: rectangle}
+run_vxrail_lcm_upgrade: "Run VxRail LCM Upgrade" {shape: rectangle}
+add_a_node_to_the_vxrail_cluster: "Add a Node to the VxRail Cluster" {shape: rectangle}
+
+hub -> change_readiness_checklist
+hub -> node_maintenance_mode_procedure
+hub -> node_expansion_procedure
+hub -> disk_replacement_procedure
+hub -> run_vxrail_lcm_upgrade
+hub -> add_a_node_to_the_vxrail_cluster
+```
+
 ## Before you begin
 
 - **Access:** vCenter read-only minimum; Administrator role for remediation steps

@@ -16,6 +16,25 @@ Health Checks reference covering Daily Checks, Health Check, Controller Health, 
 
 ![FlashArray — Health Checks — Diagram](../../../../assets/storage-pure-flasharray-operations-health-checks-diagram.svg)
 
+```d2
+direction: right
+
+hub: "FlashArray\nOperations" {shape: hexagon}
+run_this_routine: "Run This Routine" {shape: rectangle}
+daily_checks: "Daily Checks" {shape: rectangle}
+health_check: "Health Check" {shape: rectangle}
+controller_health: "Controller Health" {shape: rectangle}
+drive_health: "Drive Health" {shape: rectangle}
+volume_health: "Volume Health" {shape: rectangle}
+
+hub -> run_this_routine
+hub -> daily_checks
+hub -> health_check
+hub -> controller_health
+hub -> drive_health
+hub -> volume_health
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

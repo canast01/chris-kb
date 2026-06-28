@@ -6,6 +6,27 @@ search:
   boost: 1.5
 ---
 
+```d2
+direction: right
+
+plan: "Plan" {shape: oval}
+prerequisites: "Prerequisites" {shape: rectangle}
+rack_and_cable: "Rack and Cable" {shape: rectangle}
+run_unisphere_initial_configuration_: "Run Unisphere Initial Configuration Wizard" {shape: rectangle}
+configure_network_interfaces: "Configure Network Interfaces" {shape: rectangle}
+create_storage_pools: "Create Storage Pools" {shape: rectangle}
+configure_iscsi_or_fc_host_access: "Configure iSCSI or FC Host Access" {shape: rectangle}
+validate: "Validate" {shape: oval}
+
+plan -> prerequisites
+prerequisites -> rack_and_cable
+rack_and_cable -> run_unisphere_initial_configuration_
+run_unisphere_initial_configuration_ -> configure_network_interfaces
+configure_network_interfaces -> create_storage_pools
+create_storage_pools -> configure_iscsi_or_fc_host_access
+configure_iscsi_or_fc_host_access -> validate
+```
+
 ## Before you begin
 
 <!-- video-link -->

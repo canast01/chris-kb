@@ -13,6 +13,17 @@ Top-10 Tanzu commands for cluster lifecycle, package management, and Kubernetes 
 
 
 
+```d2
+direction: right
+
+center: "Cheat Sheets" {shape: rectangle}
+tanzu_cli: "Tanzu CLI" {shape: rectangle}
+tkgs_vsphere_with_tanzu_supervisor_k: "TKGs (vSphere with Tanzu — Supervisor kubeconfig)" {shape: rectangle}
+
+center -> tanzu_cli
+center -> tkgs_vsphere_with_tanzu_supervisor_k
+```
+
 ## Tanzu CLI
 
 ```bash

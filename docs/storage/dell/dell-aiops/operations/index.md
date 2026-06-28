@@ -14,6 +14,19 @@ Dell AIOps Operations reference covering Daily Checklist, Alert Triage Workflow,
 ![Dell AIOps Operations](../../../../assets/storage-dell-dell-aiops-operations-index.svg)
 
 
+```d2
+direction: right
+
+hub: "Dell AIOps\nOperations" {shape: hexagon}
+daily_checklist: "Daily Checklist" {shape: rectangle}
+alert_triage_workflow: "Alert Triage Workflow" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+hub -> daily_checklist
+hub -> alert_triage_workflow
+hub -> verify
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

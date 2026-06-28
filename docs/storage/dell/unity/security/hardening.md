@@ -16,6 +16,27 @@ Hardening reference covering Hardening Overview, Hardening Checklist, Credential
 
 
 
+```d2
+direction: down
+
+external: External / Untrusted {shape: rectangle}
+hardening_overview: "Hardening Overview" {shape: rectangle}
+hardening_checklist: "Hardening Checklist" {shape: rectangle}
+credentials: "Credentials" {shape: rectangle}
+transport_security: "Transport Security" {shape: rectangle}
+protocol_restrictions: "Protocol Restrictions" {shape: rectangle}
+management_access_restrictions: "Management Access Restrictions" {shape: rectangle}
+core: "Unity XT Core" {shape: hexagon}
+
+external -> hardening_overview: traffic in
+hardening_overview -> hardening_checklist
+hardening_checklist -> credentials
+credentials -> transport_security
+transport_security -> protocol_restrictions
+protocol_restrictions -> management_access_restrictions
+management_access_restrictions -> core: secured path
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

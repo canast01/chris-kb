@@ -20,6 +20,25 @@ Firewall port reference for VMware Aria Operations for Networks (formerly vReali
 
 
 
+```d2
+direction: right
+
+center: "Aria Operations for Networks" {shape: hexagon}
+inbound_client_to_platform_appliance: "Inbound — Client to Platform Appliance" {shape: rectangle}
+collector_to_platform_communication: "Collector to Platform Communication" {shape: rectangle}
+collector_to_vmware_data_sources: "Collector to VMware Data Sources" {shape: rectangle}
+collector_to_physical_infrastructure: "Collector to Physical Infrastructure" {shape: rectangle}
+collector_to_cloud_data_sources_if_c: "Collector to Cloud Data Sources (If Cloud Visibility Configu" {shape: rectangle}
+outbound_platform_appliance_to_exter: "Outbound — Platform Appliance to External Services" {shape: rectangle}
+
+center -> inbound_client_to_platform_appliance
+center -> collector_to_platform_communication
+center -> collector_to_vmware_data_sources
+center -> collector_to_physical_infrastructure
+center -> collector_to_cloud_data_sources_if_c
+center -> outbound_platform_appliance_to_exter
+```
+
 ## Before you begin
 
 - Aria for Networks uses a two-appliance model: Platform (analytics engine, UI) and Collector (data collection proxy)

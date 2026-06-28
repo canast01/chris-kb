@@ -34,6 +34,17 @@ Full VCF management domain using Cloud Builder. Requires 256 GB+ RAM. Most deman
 </a>
 </div>
 
+```d2
+direction: right
+
+center: "Labs" {shape: hexagon}
+hardware_sizing_summary: "Hardware sizing summary" {shape: rectangle}
+common_requirements_for_all_labs: "Common requirements for all labs" {shape: rectangle}
+
+center -> hardware_sizing_summary
+center -> common_requirements_for_all_labs
+```
+
 ## Hardware sizing summary
 
 | Lab | Min RAM | Min vCPU | Min Storage | Builds on |

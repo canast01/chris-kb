@@ -18,6 +18,25 @@ How It Works reference covering Overview, Cluster Topology, Node Roles, Sizing, 
 
 
 
+```d2
+direction: right
+
+center: "Aria Operations" {shape: hexagon}
+cluster_topology: "Cluster Topology" {shape: rectangle}
+node_roles: "Node Roles" {shape: rectangle}
+sizing: "Sizing" {shape: rectangle}
+core_internal_services: "Core Internal Services" {shape: rectangle}
+adapters: "Adapters" {shape: rectangle}
+persistent_storage: "Persistent Storage" {shape: rectangle}
+
+center -> cluster_topology
+center -> node_roles
+center -> sizing
+center -> core_internal_services
+center -> adapters
+center -> persistent_storage
+```
+
 ## Overview
 
 Aria Operations (formerly vRealize Operations) is an analytics cluster that collects metrics, events, and properties from vSphere, NSX, storage, and cloud endpoints. Adapters (solutions/management packs) feed data into the cluster. Remote collectors extend monitoring reach into remote sites or DMZs without requiring firewall holes back to the primary cluster.

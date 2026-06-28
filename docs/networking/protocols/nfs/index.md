@@ -14,6 +14,21 @@ Network File System (NFS) allows hosts to mount remote directories over TCP. Cov
 
 
 
+```d2
+direction: right
+
+center: "NFS" {shape: hexagon}
+nfsv41_session_and_pnfs_data_path: "NFSv4.1 Session and pNFS Data Path" {shape: rectangle}
+quick_reference: "Quick Reference" {shape: rectangle}
+common_commands_config: "Common Commands / Config" {shape: rectangle}
+troubleshooting: "Troubleshooting" {shape: rectangle}
+
+center -> nfsv41_session_and_pnfs_data_path
+center -> quick_reference
+center -> common_commands_config
+center -> troubleshooting
+```
+
 ## NFSv4.1 Session and pNFS Data Path
 
 NFSv4.1 introduces explicit sessions (slot tables replacing per-RPC XIDs) and pNFS, which allows clients to perform I/O directly to data servers without routing data through the metadata server.

@@ -20,6 +20,25 @@ Operations Common Issues reference covering Overview, Switch Not Appearing After
 
 ---
 
+```d2
+direction: right
+
+hub: "SANnav\nOperations" {shape: hexagon}
+switch_not_appearing_after_discovery: "Switch Not Appearing After Discovery" {shape: rectangle}
+zone_change_does_not_take_effect: "Zone Change Does Not Take Effect" {shape: rectangle}
+firmware_upgrade_reported_as_complet: "Firmware Upgrade Reported as Complete but Switch Still on Ol" {shape: rectangle}
+alert_emails_not_being_received: "Alert Emails Not Being Received" {shape: rectangle}
+scheduled_backup_not_running: "Scheduled Backup Not Running" {shape: rectangle}
+san_analytics_data_missing_or_stale: "SAN Analytics Data Missing or Stale" {shape: rectangle}
+
+hub -> switch_not_appearing_after_discovery
+hub -> zone_change_does_not_take_effect
+hub -> firmware_upgrade_reported_as_complet
+hub -> alert_emails_not_being_received
+hub -> scheduled_backup_not_running
+hub -> san_analytics_data_missing_or_stale
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

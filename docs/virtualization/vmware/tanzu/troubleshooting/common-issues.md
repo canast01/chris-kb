@@ -28,6 +28,32 @@ search:
 
 ---
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+diagnostic_flow: "Diagnostic Flow" {shape: rectangle}
+tkg_cluster_create_fails: "TKG Cluster Create Fails" {shape: rectangle}
+pod_stuck_in_pending: "Pod Stuck in Pending" {shape: rectangle}
+imagepullbackoff: "ImagePullBackOff" {shape: rectangle}
+service_type_loadbalancer_pending: "Service Type LoadBalancer Pending" {shape: rectangle}
+verify_resolution: "Verify resolution" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> diagnostic_flow: investigate
+symptom -> tkg_cluster_create_fails: investigate
+symptom -> pod_stuck_in_pending: investigate
+symptom -> imagepullbackoff: investigate
+symptom -> service_type_loadbalancer_pending: investigate
+symptom -> verify_resolution: investigate
+diagnostic_flow -> resolution
+tkg_cluster_create_fails -> resolution
+pod_stuck_in_pending -> resolution
+imagepullbackoff -> resolution
+service_type_loadbalancer_pending -> resolution
+verify_resolution -> resolution
+```
+
 ## Diagnostic Flow
 
 ```mermaid

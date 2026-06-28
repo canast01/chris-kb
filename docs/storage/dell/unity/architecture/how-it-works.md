@@ -16,6 +16,25 @@ How It Works reference covering Overview, Architecture, HA and Write Cache Mirro
 
 
 
+```d2
+direction: right
+
+center: "Unity XT" {shape: hexagon}
+architecture: "Architecture" {shape: rectangle}
+ha_and_write_cache_mirroring: "HA and Write Cache Mirroring" {shape: rectangle}
+hardware_models: "Hardware Models" {shape: rectangle}
+storage_pool_architecture: "Storage Pool Architecture" {shape: rectangle}
+data_services: "Data Services" {shape: rectangle}
+networking: "Networking" {shape: rectangle}
+
+center -> architecture
+center -> ha_and_write_cache_mirroring
+center -> hardware_models
+center -> storage_pool_architecture
+center -> data_services
+center -> networking
+```
+
 ## Overview
 
 Dell Unity XT is a mid-range unified storage platform delivering block (FC, iSCSI) and file (NFS, SMB) from a single system. It uses a dual storage processor (SP A / SP B) active-active architecture with write-cache mirroring. Administration is via Unisphere for Unity (GUI) or `uemcli` (CLI).

@@ -17,6 +17,25 @@ Firewall and NSG port reference for Microsoft Azure infrastructure. Covers manag
 ![Microsoft Azure — Ports and Network Requirements](../../../assets/cloud-azure-architecture-ports.svg)
 
 
+```d2
+direction: right
+
+center: "Azure" {shape: hexagon}
+network_zones: "Network Zones" {shape: rectangle}
+outbound_onpremises_to_azure_apis: "Outbound — On-Premises to Azure APIs" {shape: rectangle}
+vm_management: "VM Management" {shape: rectangle}
+azure_load_balancer_application_gate: "Azure Load Balancer / Application Gateway" {shape: rectangle}
+azure_sql_azure_database: "Azure SQL / Azure Database" {shape: rectangle}
+aks_azure_kubernetes_service: "AKS (Azure Kubernetes Service)" {shape: rectangle}
+
+center -> network_zones
+center -> outbound_onpremises_to_azure_apis
+center -> vm_management
+center -> azure_load_balancer_application_gate
+center -> azure_sql_azure_database
+center -> aks_azure_kubernetes_service
+```
+
 ## Network Zones
 
 ![Microsoft Azure — Ports and Network Requirements — Diagram](../../../assets/cloud-azure-architecture-ports-diagram.svg)

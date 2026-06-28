@@ -35,6 +35,27 @@ flowchart TD
     style s10 fill:#2e7d32,color:#fff,stroke:#1b5e20
 ```
 
+```d2
+direction: right
+
+plan: "Plan" {shape: oval}
+prerequisites: "Prerequisites" {shape: rectangle}
+create_management_group_hierarchy: "Create Management Group Hierarchy" {shape: rectangle}
+configure_azure_policy_at_management: "Configure Azure Policy at Management Group Level" {shape: rectangle}
+configure_microsoft_defender_for_clo: "Configure Microsoft Defender for Cloud" {shape: rectangle}
+set_up_log_analytics_workspace_and_s: "Set Up Log Analytics Workspace and Sentinel" {shape: rectangle}
+configure_entra_id_azure_ad_baseline: "Configure Entra ID (Azure AD) Baseline" {shape: rectangle}
+validate: "Validate" {shape: oval}
+
+plan -> prerequisites
+prerequisites -> create_management_group_hierarchy
+create_management_group_hierarchy -> configure_azure_policy_at_management
+configure_azure_policy_at_management -> configure_microsoft_defender_for_clo
+configure_microsoft_defender_for_clo -> set_up_log_analytics_workspace_and_s
+set_up_log_analytics_workspace_and_s -> configure_entra_id_azure_ad_baseline
+configure_entra_id_azure_ad_baseline -> validate
+```
+
 ## Before you begin
 
 - **Access:** admin credentials for the target system and any upstream dependencies (DNS, NTP, vCenter, directory services)

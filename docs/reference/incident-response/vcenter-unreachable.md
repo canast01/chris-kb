@@ -17,6 +17,31 @@ P1 incident — vCenter Server is not responding to client connections. Follow t
 
 ---
 
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+actor "Responder" as A
+participant "Incident Response System" as B
+participant "Dependent System" as C
+
+A -> B: Symptoms
+B --> A: OK
+A -> B: Immediate Triage (first 5 min)
+B --> A: OK
+A -> B: Isolate
+B --> A: OK
+A -> B: Diagnose
+B --> A: OK
+A -> B: Fix
+B --> A: OK
+A -> B: Verify
+B --> A: OK
+
+@enduml
+```
+
 ## Symptoms
 
 - vSphere Client returns "503 Service Unavailable" or connection timeout

@@ -16,6 +16,17 @@ PowerShell hardening: `Set-ExecutionPolicy AllSigned`, ScriptBlock logging, modu
 
 ---
 
+```d2
+direction: down
+
+powershell_hardening_layers: "PowerShell Hardening Layers" {shape: rectangle}
+audit_and_event_log: "Audit and Event Log" {shape: rectangle}
+hardening_reference: "Hardening Reference" {shape: rectangle}
+
+powershell_hardening_layers -> audit_and_event_log: hardens
+audit_and_event_log -> hardening_reference: hardens
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

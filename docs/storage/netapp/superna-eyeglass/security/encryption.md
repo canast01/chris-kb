@@ -24,6 +24,21 @@ The Eyeglass management console must be accessible only via HTTPS — HTTP acces
 
 API tokens used by automation scripts must be stored in a secrets manager (e.g. CyberArk, HashiCorp Vault) and rotated on a defined schedule. Tokens should not be stored in plaintext in scripts or version control.
 
+```d2
+direction: down
+
+external: External / Untrusted {shape: rectangle}
+perimeter_controls: "Perimeter Controls" {shape: rectangle}
+identity_access: "Identity & Access" {shape: rectangle}
+audit_logging: "Audit & Logging" {shape: rectangle}
+core: "Superna Eyeglass Core" {shape: hexagon}
+
+external -> perimeter_controls: traffic in
+perimeter_controls -> identity_access
+identity_access -> audit_logging
+audit_logging -> core: secured path
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

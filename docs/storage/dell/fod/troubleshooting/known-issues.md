@@ -18,6 +18,17 @@ Dell FOD (Feature on Demand) is a software feature licensing mechanism for Dell 
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+license_activation: "License Activation" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> license_activation: investigate
+license_activation -> resolution
+```
+
 ## Before you begin
 
 - FOD license keys are downloaded from `my.dell.com` or via ESRS.

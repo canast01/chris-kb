@@ -18,6 +18,32 @@ Known issues and resolution steps for frequent CyberArk problems, covering the V
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+diagnostic_flow: "Diagnostic Flow" {shape: rectangle}
+vault_issues: "Vault Issues" {shape: rectangle}
+pvwa_issues: "PVWA Issues" {shape: rectangle}
+psm_issues: "PSM Issues" {shape: rectangle}
+cpm_issues: "CPM Issues" {shape: rectangle}
+general_crosscomponent_issues: "General / Cross-Component Issues" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> diagnostic_flow: investigate
+symptom -> vault_issues: investigate
+symptom -> pvwa_issues: investigate
+symptom -> psm_issues: investigate
+symptom -> cpm_issues: investigate
+symptom -> general_crosscomponent_issues: investigate
+diagnostic_flow -> resolution
+vault_issues -> resolution
+pvwa_issues -> resolution
+psm_issues -> resolution
+cpm_issues -> resolution
+general_crosscomponent_issues -> resolution
+```
+
 ## Diagnostic Flow
 
 ```mermaid

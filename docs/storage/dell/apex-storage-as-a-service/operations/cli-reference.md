@@ -29,6 +29,25 @@ APEX Block Storage surfaces in CloudIQ for performance and health monitoring —
 
 ---
 
+```d2
+direction: right
+
+hub: "APEX Storage\nOperations" {shape: hexagon}
+quickreference_table: "Quick-Reference Table" {shape: rectangle}
+dell_api_authentication: "Dell API Authentication" {shape: rectangle}
+apex_systems_api: "APEX Systems API" {shape: rectangle}
+subscription_api: "Subscription API" {shape: rectangle}
+metrics_api: "Metrics API" {shape: rectangle}
+cloudiq_integration: "CloudIQ Integration" {shape: rectangle}
+
+hub -> quickreference_table
+hub -> dell_api_authentication
+hub -> apex_systems_api
+hub -> subscription_api
+hub -> metrics_api
+hub -> cloudiq_integration
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

@@ -18,6 +18,21 @@ SnapMirror access control: ONTAP RBAC role with `snapmirror-*` privileges, SVM a
 
 ---
 
+```d2
+direction: down
+
+external: External / Untrusted {shape: rectangle}
+rbac: "RBAC" {shape: rectangle}
+destination_volume_protection: "Destination Volume Protection" {shape: rectangle}
+audit_logging: "Audit Logging" {shape: rectangle}
+core: "SnapMirror Core" {shape: hexagon}
+
+external -> rbac: traffic in
+rbac -> destination_volume_protection
+destination_volume_protection -> audit_logging
+audit_logging -> core: secured path
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

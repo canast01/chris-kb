@@ -238,6 +238,15 @@ spaceManager.getAllSpaces().each { space ->
 }
 ```
 
+```d2
+direction: right
+
+center: "Cli Reference" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+center -> verify
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

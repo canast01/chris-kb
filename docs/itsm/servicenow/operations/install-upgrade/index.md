@@ -16,6 +16,25 @@ ServiceNow upgrade management: upgrade scheduling via Now Support, pre-upgrade i
 
 ---
 
+```d2
+direction: right
+
+plan: "Plan" {shape: oval}
+release_cadence: "Release Cadence" {shape: rectangle}
+upgrade_lifecycle: "Upgrade Lifecycle" {shape: rectangle}
+postupgrade_testing_checklist: "Post-Upgrade Testing Checklist" {shape: rectangle}
+rollback_options: "Rollback Options" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+validate: "Validate" {shape: oval}
+
+plan -> release_cadence
+release_cadence -> upgrade_lifecycle
+upgrade_lifecycle -> postupgrade_testing_checklist
+postupgrade_testing_checklist -> rollback_options
+rollback_options -> verify
+verify -> validate
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

@@ -20,6 +20,25 @@ Backup and Restore reference covering What to Back Up, VRA Pre-Upgrade Snapshot,
 
 ---
 
+```d2
+direction: right
+
+hub: "vSphere Replication\nOperations" {shape: hexagon}
+what_to_back_up: "What to Back Up" {shape: rectangle}
+vra_preupgrade_snapshot: "VRA Pre-Upgrade Snapshot" {shape: rectangle}
+vra_configuration_backup_via_ovf_exp: "VRA Configuration Backup via OVF Export" {shape: rectangle}
+recover_a_vm_using_vsphere_replicati: "Recover a VM Using vSphere Replication (Standalone)" {shape: rectangle}
+recovery_point_retention: "Recovery Point Retention" {shape: rectangle}
+restore_vra_from_snapshot: "Restore VRA from Snapshot" {shape: rectangle}
+
+hub -> what_to_back_up
+hub -> vra_preupgrade_snapshot
+hub -> vra_configuration_backup_via_ovf_exp
+hub -> recover_a_vm_using_vsphere_replicati
+hub -> recovery_point_retention
+hub -> restore_vra_from_snapshot
+```
+
 ## Before you begin
 
 - **Access:** vCenter read-only minimum; Administrator role for remediation steps

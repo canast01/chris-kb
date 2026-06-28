@@ -16,6 +16,15 @@ RecoverPoint design standards: RPA cluster sizing, consistency group limits, jou
 
 ---
 
+```d2
+direction: right
+
+center: "RecoverPoint" {shape: hexagon}
+naming_conventions: "Naming Conventions" {shape: rectangle}
+
+center -> naming_conventions
+```
+
 ## Naming Conventions
 
 ### Consistency Groups

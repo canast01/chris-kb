@@ -13,6 +13,25 @@ Adding CA certificates to OS and application trust stores so that TLS connection
 
 
 
+```d2
+direction: right
+
+center: "Certificate Trust" {shape: hexagon}
+ubuntu_debian: "Ubuntu / Debian" {shape: rectangle}
+rhel_rocky_almalinux: "RHEL / Rocky / AlmaLinux" {shape: rectangle}
+windows_local_machine_store: "Windows — Local Machine Store" {shape: rectangle}
+windows_gpo_domain_distribution: "Windows — GPO (Domain Distribution)" {shape: rectangle}
+java_keystore: "Java Keystore" {shape: rectangle}
+verification_commands: "Verification Commands" {shape: rectangle}
+
+center -> ubuntu_debian
+center -> rhel_rocky_almalinux
+center -> windows_local_machine_store
+center -> windows_gpo_domain_distribution
+center -> java_keystore
+center -> verification_commands
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

@@ -16,6 +16,27 @@ Cisco MDS authentication: TACACS+ and RADIUS integration via `aaa group server t
 
 ---
 
+```d2
+direction: down
+
+external: External / Untrusted {shape: rectangle}
+authentication_architecture: "Authentication Architecture" {shape: rectangle}
+management_plane_radius_fallback: "Management Plane: RADIUS (Fallback)" {shape: rectangle}
+local_accounts: "Local Accounts" {shape: rectangle}
+ssh_keybased_authentication: "SSH Key-Based Authentication" {shape: rectangle}
+fcsp_fabriclayer_device_authenticati: "FC-SP: Fabric-Layer Device Authentication" {shape: rectangle}
+ntp_required_for_aaa_and_certificate: "NTP (Required for AAA and Certificate Validity)" {shape: rectangle}
+core: "Cisco MDS Core" {shape: hexagon}
+
+external -> authentication_architecture: traffic in
+authentication_architecture -> management_plane_radius_fallback
+management_plane_radius_fallback -> local_accounts
+local_accounts -> ssh_keybased_authentication
+ssh_keybased_authentication -> fcsp_fabriclayer_device_authenticati
+fcsp_fabriclayer_device_authenticati -> ntp_required_for_aaa_and_certificate
+ntp_required_for_aaa_and_certificate -> core: secured path
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

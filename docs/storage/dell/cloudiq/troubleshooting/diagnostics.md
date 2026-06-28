@@ -44,6 +44,32 @@ graph TD
     class M,N escalate
 ```
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+step_1_check_scg_service_health: "Step 1 — Check SCG service health" {shape: rectangle}
+step_2_test_outbound_connectivity_to: "Step 2 — Test outbound connectivity to CloudIQ" {shape: rectangle}
+step_3_list_and_test_devices: "Step 3 — List and test devices" {shape: rectangle}
+step_4_read_scg_log_files: "Step 4 — Read SCG log files" {shape: rectangle}
+step_5_collect_support_bundle: "Step 5 — Collect support bundle" {shape: rectangle}
+log_locations: "Log locations" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> step_1_check_scg_service_health: investigate
+symptom -> step_2_test_outbound_connectivity_to: investigate
+symptom -> step_3_list_and_test_devices: investigate
+symptom -> step_4_read_scg_log_files: investigate
+symptom -> step_5_collect_support_bundle: investigate
+symptom -> log_locations: investigate
+step_1_check_scg_service_health -> resolution
+step_2_test_outbound_connectivity_to -> resolution
+step_3_list_and_test_devices -> resolution
+step_4_read_scg_log_files -> resolution
+step_5_collect_support_bundle -> resolution
+log_locations -> resolution
+```
+
 ## Before you begin
 
 - **Access:** SSH to the SCG appliance as `admin`; SCG web UI (`https://<scg-ip>`); CloudIQ portal (`cloudiq.dell.com`) with admin role

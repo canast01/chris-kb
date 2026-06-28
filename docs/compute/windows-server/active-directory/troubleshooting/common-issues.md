@@ -18,6 +18,32 @@ AD failures typically trace back to replication, DNS, time sync, or Kerberos. Th
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+diagnostic_flow: "Diagnostic Flow" {shape: rectangle}
+ad_failure_triage_flowchart: "AD Failure Triage Flowchart" {shape: rectangle}
+replication_errors: "Replication Errors" {shape: rectangle}
+common_replication_error_codes: "Common Replication Error Codes" {shape: rectangle}
+dcdiag_tests: "Dcdiag Tests" {shape: rectangle}
+kerberos_failures: "Kerberos Failures" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> diagnostic_flow: investigate
+symptom -> ad_failure_triage_flowchart: investigate
+symptom -> replication_errors: investigate
+symptom -> common_replication_error_codes: investigate
+symptom -> dcdiag_tests: investigate
+symptom -> kerberos_failures: investigate
+diagnostic_flow -> resolution
+ad_failure_triage_flowchart -> resolution
+replication_errors -> resolution
+common_replication_error_codes -> resolution
+dcdiag_tests -> resolution
+kerberos_failures -> resolution
+```
+
 ## Diagnostic Flow
 
 ```mermaid

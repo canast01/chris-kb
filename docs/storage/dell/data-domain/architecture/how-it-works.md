@@ -14,6 +14,23 @@ How It Works reference covering Overview, Architecture, Data Path, Components, H
 ![Data Domain — How It Works](../../../../assets/storage-dell-data-domain-architecture-how-it-works.svg)
 
 
+```d2
+direction: right
+
+center: "Data Domain" {shape: hexagon}
+architecture: "Architecture" {shape: rectangle}
+components: "Components" {shape: rectangle}
+ha_options: "HA Options" {shape: rectangle}
+protocol_access: "Protocol Access" {shape: rectangle}
+key_cli_commands: "Key CLI Commands" {shape: rectangle}
+
+center -> architecture
+center -> components
+center -> ha_options
+center -> protocol_access
+center -> key_cli_commands
+```
+
 ## Overview
 
 Dell PowerProtect DD (Data Domain) is a purpose-built backup appliance built around **inline global deduplication**. All data is deduplicated as it is written using the SISL (Stream-Informed Segment Layout) engine — not in post-processing. Typical deduplication ratios: 20:1 or greater across mixed workloads.

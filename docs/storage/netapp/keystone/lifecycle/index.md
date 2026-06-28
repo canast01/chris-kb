@@ -13,6 +13,21 @@ NetApp Keystone Lifecycle reference covering Subscription Terms and Renewal, Tru
 ![NetApp Keystone Lifecycle](../../../../assets/storage-netapp-keystone-lifecycle-index.svg)
 
 
+```d2
+direction: right
+
+plan: "Plan" {shape: oval}
+subscription_terms_and_renewal: "Subscription Terms and Renewal" {shape: rectangle}
+trueup_process: "True-Up Process" {shape: rectangle}
+subscription_exit_and_migration: "Subscription Exit and Migration" {shape: rectangle}
+validate: "Validate" {shape: oval}
+
+plan -> subscription_terms_and_renewal
+subscription_terms_and_renewal -> trueup_process
+trueup_process -> subscription_exit_and_migration
+subscription_exit_and_migration -> validate
+```
+
 ## Subscription Terms and Renewal
 
 Keystone subscriptions typically run for 1, 2, or 3 years. Longer terms offer more favorable per-TB pricing and committed service-level guarantees. Begin renewal discussions at least 6 months before the subscription expiry date — the process includes capacity planning, commercial negotiation, order processing, and in some cases hardware refresh scheduling.

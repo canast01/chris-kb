@@ -15,6 +15,15 @@ Standards reference covering Naming Convention, Content Pack Standards, Alert Se
 ![Aria Ops for Logs — Standards](../../../../assets/virtualization-vmware-aria-operations-for-logs-architecture-.svg)
 
 
+```d2
+direction: right
+
+center: "Aria Operations for Logs" {shape: hexagon}
+naming_convention: "Naming Convention" {shape: rectangle}
+
+center -> naming_convention
+```
+
 ## Naming Convention
 
 Follow the same naming scheme as other LCM-managed appliances:

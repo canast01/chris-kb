@@ -14,6 +14,25 @@ Health checks for Aria Operations for Logs — cluster node status, disk and ing
 
 
 
+```d2
+direction: right
+
+hub: "Aria Operations for Logs\nOperations" {shape: hexagon}
+run_this_routine: "Run This Routine" {shape: rectangle}
+cluster_node_status_commands: "Cluster Node Status Commands" {shape: rectangle}
+alert_configuration_commands: "Alert Configuration Commands" {shape: rectangle}
+ingestion_and_source_activity: "Ingestion and Source Activity" {shape: rectangle}
+platform_log_checks: "Platform Log Checks" {shape: rectangle}
+cluster_node_health: "Cluster Node Health" {shape: rectangle}
+
+hub -> run_this_routine
+hub -> cluster_node_status_commands
+hub -> alert_configuration_commands
+hub -> ingestion_and_source_activity
+hub -> platform_log_checks
+hub -> cluster_node_health
+```
+
 ## Before you begin
 
 - **Access:** vCenter read-only minimum; Administrator role for remediation steps

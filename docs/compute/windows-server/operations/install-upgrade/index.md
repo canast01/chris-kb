@@ -14,6 +14,21 @@ Windows Server install and upgrade: WDS/MDT deployment, Windows Update via WSUS 
 ![Windows Server — Install & Upgrade](../../../../assets/compute-windows-server-operations-install-upgrade-index.svg)
 
 
+```d2
+direction: right
+
+plan: "Plan" {shape: oval}
+patch_deployment_ring_flow: "Patch Deployment Ring Flow" {shape: rectangle}
+patching: "Patching" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+validate: "Validate" {shape: oval}
+
+plan -> patch_deployment_ring_flow
+patch_deployment_ring_flow -> patching
+patching -> verify
+verify -> validate
+```
+
 ## Before you begin
 
 - **Access:** Local Administrator or Domain Admin on target hosts

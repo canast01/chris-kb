@@ -54,6 +54,32 @@ graph TD
     class S,T escalate
 ```
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+step_1_verify_subscription_context: "Step 1 — Verify subscription context" {shape: rectangle}
+step_2_check_vm_state_and_health: "Step 2 — Check VM state and health" {shape: rectangle}
+step_3_read_boot_diagnostics: "Step 3 — Read boot diagnostics" {shape: rectangle}
+step_4_check_nsg_and_routing: "Step 4 — Check NSG and routing" {shape: rectangle}
+step_5_check_activity_log_for_recent: "Step 5 — Check Activity Log for recent changes" {shape: rectangle}
+step_6_query_log_analytics: "Step 6 — Query Log Analytics" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> step_1_verify_subscription_context: investigate
+symptom -> step_2_check_vm_state_and_health: investigate
+symptom -> step_3_read_boot_diagnostics: investigate
+symptom -> step_4_check_nsg_and_routing: investigate
+symptom -> step_5_check_activity_log_for_recent: investigate
+symptom -> step_6_query_log_analytics: investigate
+step_1_verify_subscription_context -> resolution
+step_2_check_vm_state_and_health -> resolution
+step_3_read_boot_diagnostics -> resolution
+step_4_check_nsg_and_routing -> resolution
+step_5_check_activity_log_for_recent -> resolution
+step_6_query_log_analytics -> resolution
+```
+
 ## Before you begin
 
 - **Access:** Verify your Azure CLI is logged in and targeting the correct subscription before running any commands

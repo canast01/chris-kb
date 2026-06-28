@@ -59,6 +59,15 @@ symrdf -sg PROD_SG failover
 symrdf -sg PROD_SG establish -force
 ```
 
+```d2
+direction: right
+
+hub: "SRDF/S\nOperations" {shape: hexagon}
+verify: "Verify" {shape: rectangle}
+
+hub -> verify
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

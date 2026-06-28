@@ -47,6 +47,32 @@ graph TD
     class O escalate
 ```
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+step_1_check_hostside_storage_connec: "Step 1 — Check host-side storage connectivity" {shape: rectangle}
+step_2_check_apex_console_for_system: "Step 2 — Check APEX Console for system and capacity status" {shape: rectangle}
+step_3_check_scg_telemetry_reporting: "Step 3 — Check SCG telemetry reporting" {shape: rectangle}
+step_4_check_the_underlying_array_un: "Step 4 — Check the underlying array (Unisphere)" {shape: rectangle}
+collect_diagnostic_snapshot_for_dell: "Collect diagnostic snapshot for Dell SR" {shape: rectangle}
+verify_resolution: "Verify resolution" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> step_1_check_hostside_storage_connec: investigate
+symptom -> step_2_check_apex_console_for_system: investigate
+symptom -> step_3_check_scg_telemetry_reporting: investigate
+symptom -> step_4_check_the_underlying_array_un: investigate
+symptom -> collect_diagnostic_snapshot_for_dell: investigate
+symptom -> verify_resolution: investigate
+step_1_check_hostside_storage_connec -> resolution
+step_2_check_apex_console_for_system -> resolution
+step_3_check_scg_telemetry_reporting -> resolution
+step_4_check_the_underlying_array_un -> resolution
+collect_diagnostic_snapshot_for_dell -> resolution
+verify_resolution -> resolution
+```
+
 ## Before you begin
 
 - **Access:** Host OS admin credentials; APEX Console login (admin role); SCG appliance SSH; Unisphere access to the underlying array

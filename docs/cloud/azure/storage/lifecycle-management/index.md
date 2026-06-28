@@ -15,6 +15,25 @@ Azure Storage Lifecycle Management reference covering Overview, Lifecycle Policy
 
 
 
+```d2
+direction: right
+
+center: "Azure" {shape: hexagon}
+lifecycle_policy_evaluation: "Lifecycle Policy Evaluation" {shape: rectangle}
+policy_structure: "Policy Structure" {shape: rectangle}
+tier_transitions: "Tier Transitions" {shape: rectangle}
+filter_sets: "Filter Sets" {shape: rectangle}
+deletion_rules: "Deletion Rules" {shape: rectangle}
+lifecycle_policy_limitations: "Lifecycle Policy Limitations" {shape: rectangle}
+
+center -> lifecycle_policy_evaluation
+center -> policy_structure
+center -> tier_transitions
+center -> filter_sets
+center -> deletion_rules
+center -> lifecycle_policy_limitations
+```
+
 ## Overview
 
 Azure Storage lifecycle management policies automate blob tier transitions and deletion based on object age and conditions. Policies run daily and evaluate blobs against defined rules, applying transitions from Hot to Cool, Cold, or Archive, and deleting objects after a configured number of days.

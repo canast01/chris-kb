@@ -14,6 +14,25 @@ Terraform operational procedures — standard apply workflow, plan and apply str
 ![Terraform — Procedures](../../../../assets/automation-terraform-operations-procedures-index.svg)
 
 
+```d2
+direction: right
+
+hub: "Procedures\nOperations" {shape: hexagon}
+standard_apply_workflow: "Standard Apply Workflow" {shape: rectangle}
+plan_workflows: "Plan Workflows" {shape: rectangle}
+change_readiness: "Change Readiness" {shape: rectangle}
+maintenance_window: "Maintenance Window" {shape: rectangle}
+postchange_validation: "Post-Change Validation" {shape: rectangle}
+incident_triage: "Incident Triage" {shape: rectangle}
+
+hub -> standard_apply_workflow
+hub -> plan_workflows
+hub -> change_readiness
+hub -> maintenance_window
+hub -> postchange_validation
+hub -> incident_triage
+```
+
 ## Before you begin
 
 - **Access:** Provider credentials configured (`terraform login` or env vars)

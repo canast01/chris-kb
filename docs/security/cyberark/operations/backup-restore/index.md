@@ -20,6 +20,43 @@ The CyberArk Vault stores credentials that protect the entire organization. Loss
 
 ---
 
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+participant "Source\n(Backup Restore)" as SRC
+participant "Backup Engine" as ENG
+participant "Target / Vault" as TGT
+
+SRC -> ENG: Backup Architecture Overview
+ENG -> TGT: Write
+TGT --> ENG: Confirmed
+ENG --> SRC: Done
+SRC -> ENG: Server Key Backup
+ENG -> TGT: Write
+TGT --> ENG: Confirmed
+ENG --> SRC: Done
+SRC -> ENG: Safe Backup via PACLI
+ENG -> TGT: Write
+TGT --> ENG: Confirmed
+ENG --> SRC: Done
+SRC -> ENG: Vault Metadata Export
+ENG -> TGT: Write
+TGT --> ENG: Confirmed
+ENG --> SRC: Done
+SRC -> ENG: Disaster Recovery (DR) Vault Configuration
+ENG -> TGT: Write
+TGT --> ENG: Confirmed
+ENG --> SRC: Done
+SRC -> ENG: Full Restore Procedure
+ENG -> TGT: Write
+TGT --> ENG: Confirmed
+ENG --> SRC: Done
+
+@enduml
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

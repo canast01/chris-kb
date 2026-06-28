@@ -140,6 +140,15 @@ sudo ./svc.sh status github-runner
 echo "Runner $RUNNER_NAME registered and started."
 ```
 
+```d2
+direction: right
+
+center: "GitHub Actions" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+center -> verify
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

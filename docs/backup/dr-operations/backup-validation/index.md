@@ -13,6 +13,25 @@ Backup validation is the systematic process of confirming that backup data is in
 
 ---
 
+```d2
+direction: right
+
+center: "DR Operations" {shape: hexagon}
+validation_strategy_automated_vs_man: "Validation Strategy: Automated vs Manual" {shape: rectangle}
+validation_workflow: "Validation Workflow" {shape: rectangle}
+commvault_synthetic_full_verificatio: "Commvault — Synthetic Full Verification" {shape: rectangle}
+netbackup_bpverify_command_reference: "NetBackup — `bpverify` Command Reference" {shape: rectangle}
+validation_schedule: "Validation Schedule" {shape: rectangle}
+test_restore_procedure: "Test Restore Procedure" {shape: rectangle}
+
+center -> validation_strategy_automated_vs_man
+center -> validation_workflow
+center -> commvault_synthetic_full_verificatio
+center -> netbackup_bpverify_command_reference
+center -> validation_schedule
+center -> test_restore_procedure
+```
+
 ## Validation Strategy: Automated vs Manual
 
 | Dimension | Automated Validation | Manual Validation |

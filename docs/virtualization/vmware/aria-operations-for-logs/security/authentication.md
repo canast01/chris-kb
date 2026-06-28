@@ -15,6 +15,27 @@ Authentication reference covering Authentication Methods, Active Directory / LDA
 ![Aria Ops for Logs — Authentication](../../../../assets/virtualization-vmware-aria-operations-for-logs-security-auth.svg)
 
 
+```d2
+direction: down
+
+external: External / Untrusted {shape: rectangle}
+authentication_methods: "Authentication Methods" {shape: rectangle}
+active_directory_ldap_configuration: "Active Directory / LDAP Configuration" {shape: rectangle}
+verify_ldap_authentication_from_cli: "Verify LDAP Authentication from CLI" {shape: rectangle}
+session_policies: "Session Policies" {shape: rectangle}
+forcing_https: "Forcing HTTPS" {shape: rectangle}
+related_reference: "Related Reference" {shape: rectangle}
+core: "Aria Operations for Logs Core" {shape: hexagon}
+
+external -> authentication_methods: traffic in
+authentication_methods -> active_directory_ldap_configuration
+active_directory_ldap_configuration -> verify_ldap_authentication_from_cli
+verify_ldap_authentication_from_cli -> session_policies
+session_policies -> forcing_https
+forcing_https -> related_reference
+related_reference -> core: secured path
+```
+
 ## Before you begin
 
 - **Access:** vCenter Administrator role

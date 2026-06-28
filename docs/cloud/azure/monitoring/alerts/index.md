@@ -15,6 +15,25 @@ Azure Monitor Alerts proactively notify you when conditions in your monitored re
 
 
 
+```d2
+direction: right
+
+center: "Azure" {shape: hexagon}
+alert_flow: "Alert Flow" {shape: rectangle}
+alert_rule_types: "Alert Rule Types" {shape: rectangle}
+creating_alert_rules: "Creating Alert Rules" {shape: rectangle}
+action_groups: "Action Groups" {shape: rectangle}
+alert_processing_rules: "Alert Processing Rules" {shape: rectangle}
+alert_severity_levels: "Alert Severity Levels" {shape: rectangle}
+
+center -> alert_flow
+center -> alert_rule_types
+center -> creating_alert_rules
+center -> action_groups
+center -> alert_processing_rules
+center -> alert_severity_levels
+```
+
 ## Alert Flow
 
 ```mermaid

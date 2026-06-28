@@ -16,6 +16,25 @@ Eyeglass configuration backup preserves replication policies, SyncIQ jobs, share
 
 ---
 
+```d2
+direction: right
+
+hub: "Superna Eyeglass\nOperations" {shape: hexagon}
+what_eyeglass_backs_up: "What Eyeglass Backs Up" {shape: rectangle}
+backup_architecture: "Backup Architecture" {shape: rectangle}
+postrestore_validation: "Post-Restore Validation" {shape: rectangle}
+policy_backup_export_manual: "Policy Backup Export (Manual)" {shape: rectangle}
+backup_verification_testing: "Backup Verification Testing" {shape: rectangle}
+related_pages: "Related Pages" {shape: rectangle}
+
+hub -> what_eyeglass_backs_up
+hub -> backup_architecture
+hub -> postrestore_validation
+hub -> policy_backup_export_manual
+hub -> backup_verification_testing
+hub -> related_pages
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

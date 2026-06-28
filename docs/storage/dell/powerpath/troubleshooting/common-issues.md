@@ -18,6 +18,32 @@ Common Issues reference covering Dead Path Triage Flow, Dead Paths, All Paths De
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+diagnostic_flow: "Diagnostic Flow" {shape: rectangle}
+dead_path_triage_flow: "Dead Path Triage Flow" {shape: rectangle}
+dead_paths: "Dead Paths" {shape: rectangle}
+all_paths_dead_to_a_device: "All Paths Dead to a Device" {shape: rectangle}
+device_not_visible_after_lun_provisi: "Device Not Visible After LUN Provisioning" {shape: rectangle}
+incorrect_path_count: "Incorrect Path Count" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> diagnostic_flow: investigate
+symptom -> dead_path_triage_flow: investigate
+symptom -> dead_paths: investigate
+symptom -> all_paths_dead_to_a_device: investigate
+symptom -> device_not_visible_after_lun_provisi: investigate
+symptom -> incorrect_path_count: investigate
+diagnostic_flow -> resolution
+dead_path_triage_flow -> resolution
+dead_paths -> resolution
+all_paths_dead_to_a_device -> resolution
+device_not_visible_after_lun_provisi -> resolution
+incorrect_path_count -> resolution
+```
+
 ## Diagnostic Flow
 
 ```mermaid

@@ -16,6 +16,25 @@ Exporting vSphere configurations using PowerCLI — VM inventory exports, storag
 
 
 
+```d2
+direction: right
+
+hub: "PowerCLI\nOperations" {shape: hexagon}
+run_this_routine: "Run This Routine" {shape: rectangle}
+export_vm_configuration: "Export VM Configuration" {shape: rectangle}
+export_storage_policies: "Export Storage Policies" {shape: rectangle}
+export_permissions_and_roles: "Export Permissions and Roles" {shape: rectangle}
+export_tags_and_categories: "Export Tags and Categories" {shape: rectangle}
+save_module_inventory: "Save Module Inventory" {shape: rectangle}
+
+hub -> run_this_routine
+hub -> export_vm_configuration
+hub -> export_storage_policies
+hub -> export_permissions_and_roles
+hub -> export_tags_and_categories
+hub -> save_module_inventory
+```
+
 ## Before you begin
 
 - **Access:** vCenter read-only minimum; Administrator role for remediation steps

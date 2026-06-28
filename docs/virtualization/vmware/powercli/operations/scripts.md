@@ -16,6 +16,25 @@ Production-ready PowerCLI scripts for vSphere operations: VM inventory reports, 
 
 
 
+```d2
+direction: right
+
+hub: "PowerCLI\nOperations" {shape: hexagon}
+vm_inventory_report: "VM Inventory Report" {shape: rectangle}
+snapshot_audit_and_cleanup: "Snapshot Audit and Cleanup" {shape: rectangle}
+host_capacity_report: "Host Capacity Report" {shape: rectangle}
+vsan_capacity_and_health_report: "vSAN Capacity and Health Report" {shape: rectangle}
+vmware_vm_health_report: "VMware VM Health Report" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+hub -> vm_inventory_report
+hub -> snapshot_audit_and_cleanup
+hub -> host_capacity_report
+hub -> vsan_capacity_and_health_report
+hub -> vmware_vm_health_report
+hub -> verify
+```
+
 ## Before you begin
 
 - **Access:** vCenter read-only minimum; Administrator role for remediation steps

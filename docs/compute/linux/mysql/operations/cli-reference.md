@@ -15,6 +15,25 @@ MySQL CLI reference — mysql client, mysqladmin, mysqldump, mysqlcheck, mysqlbi
 
 
 
+```d2
+direction: right
+
+hub: "Linux\nOperations" {shape: hexagon}
+mysql_client: "mysql client" {shape: rectangle}
+mysqladmin: "mysqladmin" {shape: rectangle}
+mysqldump: "mysqldump" {shape: rectangle}
+mysqlcheck: "mysqlcheck" {shape: rectangle}
+mysqlbinlog: "mysqlbinlog" {shape: rectangle}
+percona_toolkit: "Percona Toolkit" {shape: rectangle}
+
+hub -> mysql_client
+hub -> mysqladmin
+hub -> mysqldump
+hub -> mysqlcheck
+hub -> mysqlbinlog
+hub -> percona_toolkit
+```
+
 ## Before you begin
 
 - **Access:** root or sudo-capable account on target hosts

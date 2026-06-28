@@ -14,6 +14,25 @@ DNS Resolution Failures reference covering Overview, Failure Classification, Dia
 ![DNS Resolution Failures](../../../assets/networking-troubleshooting-dns-resolution-index.svg)
 
 
+```d2
+direction: right
+
+center: "Dns Resolution" {shape: hexagon}
+failure_classification: "Failure Classification" {shape: rectangle}
+diagnostic_flowchart: "Diagnostic Flowchart" {shape: rectangle}
+dns_server_health_checks: "DNS Server Health Checks" {shape: rectangle}
+zone_transfer_verification: "Zone Transfer Verification" {shape: rectangle}
+conditional_forwarder_testing: "Conditional Forwarder Testing" {shape: rectangle}
+splitbrain_dns_verification: "Split-Brain DNS Verification" {shape: rectangle}
+
+center -> failure_classification
+center -> diagnostic_flowchart
+center -> dns_server_health_checks
+center -> zone_transfer_verification
+center -> conditional_forwarder_testing
+center -> splitbrain_dns_verification
+```
+
 ## Before you begin
 
 - **Access:** Network admin credentials; console or SSH to devices

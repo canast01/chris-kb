@@ -15,6 +15,23 @@ NTP Validation reference covering Validation Checklist, Validation Commands, Pos
 
 Use these checks after configuring NTP on a new system, after a maintenance window, or when time-sensitive services (Kerberos, TLS, log correlation) report failures.
 
+```d2
+direction: right
+
+center: "NTP" {shape: hexagon}
+validation_checklist: "Validation Checklist" {shape: rectangle}
+validation_commands: "Validation Commands" {shape: rectangle}
+postconfig_convergence: "Post-Config Convergence" {shape: rectangle}
+validating_ntp_on_multiple_hosts: "Validating NTP on Multiple Hosts" {shape: rectangle}
+common_validation_failures: "Common Validation Failures" {shape: rectangle}
+
+center -> validation_checklist
+center -> validation_commands
+center -> postconfig_convergence
+center -> validating_ntp_on_multiple_hosts
+center -> common_validation_failures
+```
+
 ## Validation Checklist
 
 | Check | Command | Pass Criteria |

@@ -17,6 +17,25 @@ Integrations reference covering Storage Replication Adapter (SRA) Integration, v
 
 
 
+```d2
+direction: right
+
+center: "Site Recovery Manager" {shape: hexagon}
+storage_replication_adapters: "Storage Replication Adapters" {shape: rectangle}
+vsphere_replication_integration: "vSphere Replication Integration" {shape: rectangle}
+nsxt_integration_for_network_mapping: "NSX-T Integration for Network Mapping" {shape: rectangle}
+active_directory_identity_integratio: "Active Directory / Identity Integration" {shape: rectangle}
+identity_federation_with_vidm_worksp: "Identity Federation with vIDM / Workspace ONE Access" {shape: rectangle}
+srm_and_vsan_integration: "SRM and vSAN Integration" {shape: rectangle}
+
+center -> storage_replication_adapters
+center -> vsphere_replication_integration
+center -> nsxt_integration_for_network_mapping
+center -> active_directory_identity_integratio
+center -> identity_federation_with_vidm_worksp
+center -> srm_and_vsan_integration
+```
+
 ## Storage Replication Adapters
 
 **Array Manager configuration for Pure:**

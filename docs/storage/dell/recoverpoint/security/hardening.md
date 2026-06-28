@@ -19,6 +19,19 @@ Hardening reference covering Hardening Checklist, Network Port Reference.
 
 ---
 
+```d2
+direction: down
+
+external: External / Untrusted {shape: rectangle}
+hardening_checklist: "Hardening Checklist" {shape: rectangle}
+network_port_reference: "Network Port Reference" {shape: rectangle}
+core: "RecoverPoint Core" {shape: hexagon}
+
+external -> hardening_checklist: traffic in
+hardening_checklist -> network_port_reference
+network_port_reference -> core: secured path
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

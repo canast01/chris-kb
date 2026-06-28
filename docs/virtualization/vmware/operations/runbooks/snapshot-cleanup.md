@@ -17,6 +17,31 @@ vSAN Degraded Object Runbook reference covering Confirm vSAN Health State, Ident
 
 Active resync is expected after a host returns from maintenance — wait for it to complete before taking further action.
 
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+actor "Responder" as A
+participant "Runbooks System" as B
+participant "Dependent System" as C
+
+A -> B: Check Capacity
+B --> A: OK
+A -> B: Review Storage Policy
+B --> A: OK
+A -> B: Avoid Unsafe Actions
+B --> A: OK
+A -> B: Engage VMware Support
+B --> A: OK
+A -> B: Validate Object Compliance After Recovery
+B --> A: OK
+A -> B: Verify
+B --> A: OK
+
+@enduml
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

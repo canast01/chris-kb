@@ -57,6 +57,25 @@ flowchart TD
 ```
 
 
+```d2
+direction: right
+
+hub: "SRDF/S\nOperations" {shape: hexagon}
+run_this_routine: "Run This Routine" {shape: rectangle}
+configuration_consistency_check: "Configuration Consistency Check" {shape: rectangle}
+health_check_summary_table: "Health Check Summary Table" {shape: rectangle}
+known_issues_and_field_notes: "Known Issues and Field Notes" {shape: rectangle}
+validation: "Validation" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+hub -> run_this_routine
+hub -> configuration_consistency_check
+hub -> health_check_summary_table
+hub -> known_issues_and_field_notes
+hub -> validation
+hub -> verify
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

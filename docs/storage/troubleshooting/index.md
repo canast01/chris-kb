@@ -19,6 +19,29 @@ Storage troubleshooting — APD/PDL conditions, multipath failures, replication 
 <a class="kb-card" href="storage-latency/"><strong>Storage Latency</strong><span>Storage latency troubleshooting — array queue depth, fabric congestion, and host-side I/O analysis.</span></a>
 </div>
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+symptom_index: "Symptom Index" {shape: rectangle}
+linux_host_io_diagnostics: "Linux Host I/O Diagnostics" {shape: rectangle}
+vmware_apd_recovery: "VMware APD Recovery" {shape: rectangle}
+replication_lag_diagnosis: "Replication Lag Diagnosis" {shape: rectangle}
+array_health_check_commands: "Array Health Check Commands" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> symptom_index: investigate
+symptom -> linux_host_io_diagnostics: investigate
+symptom -> vmware_apd_recovery: investigate
+symptom -> replication_lag_diagnosis: investigate
+symptom -> array_health_check_commands: investigate
+symptom_index -> resolution
+linux_host_io_diagnostics -> resolution
+vmware_apd_recovery -> resolution
+replication_lag_diagnosis -> resolution
+array_health_check_commands -> resolution
+```
+
 ## Symptom Index
 
 | Symptom | Likely Cause | First Command |

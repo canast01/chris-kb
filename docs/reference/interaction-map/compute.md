@@ -13,6 +13,17 @@ How ESXi, vCenter, and PowerCLI interact — vSphere API protocols, hostd, govmo
 
 ![Compute Domain Interaction Map](../../assets/interaction-map-compute.svg)
 
+```d2
+direction: right
+
+center: "Interaction Map" {shape: hexagon}
+integration_summary: "Integration summary" {shape: rectangle}
+key_api_endpoints: "Key API endpoints" {shape: rectangle}
+
+center -> integration_summary
+center -> key_api_endpoints
+```
+
 ## Integration summary
 
 | From | To | Protocol / API | Notes |

@@ -28,6 +28,15 @@ symrdf -g <dgname> -sid <r1_sid> query
 ```
 
 
+```d2
+direction: right
+
+hub: "SRDF/A\nOperations" {shape: hexagon}
+verify: "Verify" {shape: rectangle}
+
+hub -> verify
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

@@ -14,6 +14,23 @@ Zoning restricts which initiators (HBAs) can communicate with which targets (sto
 
 Every production fabric must have active zoning; unzoned fabrics allow all nodes to see each other.
 
+```d2
+direction: right
+
+center: "Fibre Channel" {shape: hexagon}
+zone_types: "Zone Types" {shape: rectangle}
+zoning_standards: "Zoning Standards" {shape: rectangle}
+brocade_fos_zone_commands: "Brocade FOS — Zone Commands" {shape: rectangle}
+cisco_mds_nxos_zone_commands: "Cisco MDS / NX-OS — Zone Commands" {shape: rectangle}
+common_issues: "Common Issues" {shape: rectangle}
+
+center -> zone_types
+center -> zoning_standards
+center -> brocade_fos_zone_commands
+center -> cisco_mds_nxos_zone_commands
+center -> common_issues
+```
+
 ## Zone Types
 
 | Type | Membership | Notes |

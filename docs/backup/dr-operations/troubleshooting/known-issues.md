@@ -18,6 +18,23 @@ Catalog of known issues in DR runbook operations covering failover testing, netw
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+failover_testing: "Failover Testing" {shape: rectangle}
+network_reip: "Network Re-IP" {shape: rectangle}
+storage: "Storage" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> failover_testing: investigate
+symptom -> network_reip: investigate
+symptom -> storage: investigate
+failover_testing -> resolution
+network_reip -> resolution
+storage -> resolution
+```
+
 ## Before you begin
 
 - DR test failures are almost always sequencing or network issues, not storage failures.

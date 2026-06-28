@@ -18,6 +18,32 @@ Azure authentication is managed through Microsoft Entra ID (formerly Azure Activ
 
 ---
 
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+actor "User / Service" as USR
+participant "Azure" as SVC
+participant "Identity Provider\n(LDAP / OIDC / AD)" as IDP
+participant "Token / Session Store" as TOKEN
+
+USR -> SVC: Authentication request
+SVC -> IDP: Validate credentials
+IDP --> SVC: Identity confirmed
+SVC -> TOKEN: Issue session token
+TOKEN --> SVC: Token granted
+SVC --> USR: Access allowed
+
+note over SVC
+  Entra ID Tenants and Subscriptions
+  Multi-Factor Authentication (MFA)
+  Conditional Access Policies
+end note
+
+@enduml
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

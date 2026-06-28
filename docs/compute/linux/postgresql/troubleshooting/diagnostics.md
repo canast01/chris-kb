@@ -49,6 +49,32 @@ graph TD
     class Q escalate
 ```
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+step_1_check_the_error_log: "Step 1 — Check the error log" {shape: rectangle}
+step_2_check_active_sessions_and_blo: "Step 2 — Check active sessions and blocking" {shape: rectangle}
+step_3_find_and_resolve_lock_content: "Step 3 — Find and resolve lock contention" {shape: rectangle}
+step_4_identify_slow_queries: "Step 4 — Identify slow queries" {shape: rectangle}
+step_5_check_autovacuum_and_table_bl: "Step 5 — Check autovacuum and table bloat" {shape: rectangle}
+step_6_check_wal_replication_and_lag: "Step 6 — Check WAL replication and lag" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> step_1_check_the_error_log: investigate
+symptom -> step_2_check_active_sessions_and_blo: investigate
+symptom -> step_3_find_and_resolve_lock_content: investigate
+symptom -> step_4_identify_slow_queries: investigate
+symptom -> step_5_check_autovacuum_and_table_bl: investigate
+symptom -> step_6_check_wal_replication_and_lag: investigate
+step_1_check_the_error_log -> resolution
+step_2_check_active_sessions_and_blo -> resolution
+step_3_find_and_resolve_lock_content -> resolution
+step_4_identify_slow_queries -> resolution
+step_5_check_autovacuum_and_table_bl -> resolution
+step_6_check_wal_replication_and_lag -> resolution
+```
+
 ## Before you begin
 
 - **Access:** `postgres` superuser or a role with `pg_monitor` privileges for diagnostic queries; root/sudo on the OS for log access

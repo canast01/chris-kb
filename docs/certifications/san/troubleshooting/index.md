@@ -17,6 +17,32 @@ SAN Troubleshooting reference covering Diagnostic Scenario Reference, FLOGI Fail
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+diagnostic_scenario_reference: "Diagnostic Scenario Reference" {shape: rectangle}
+flogi_failure_troubleshooting_sequen: "FLOGI Failure — Troubleshooting Sequence" {shape: rectangle}
+zone_not_active_troubleshooting_sequ: "Zone Not Active — Troubleshooting Sequence" {shape: rectangle}
+isl_down_troubleshooting_sequence: "ISL Down — Troubleshooting Sequence" {shape: rectangle}
+key_cli_commands: "Key CLI Commands" {shape: rectangle}
+study_checklist: "Study Checklist" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> diagnostic_scenario_reference: investigate
+symptom -> flogi_failure_troubleshooting_sequen: investigate
+symptom -> zone_not_active_troubleshooting_sequ: investigate
+symptom -> isl_down_troubleshooting_sequence: investigate
+symptom -> key_cli_commands: investigate
+symptom -> study_checklist: investigate
+diagnostic_scenario_reference -> resolution
+flogi_failure_troubleshooting_sequen -> resolution
+zone_not_active_troubleshooting_sequ -> resolution
+isl_down_troubleshooting_sequence -> resolution
+key_cli_commands -> resolution
+study_checklist -> resolution
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

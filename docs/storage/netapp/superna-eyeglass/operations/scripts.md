@@ -16,6 +16,15 @@ Automation scripts for Superna Eyeglass — DR test operations, configuration re
 
 
 
+```d2
+direction: right
+
+hub: "Superna Eyeglass\nOperations" {shape: hexagon}
+verify: "Verify" {shape: rectangle}
+
+hub -> verify
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

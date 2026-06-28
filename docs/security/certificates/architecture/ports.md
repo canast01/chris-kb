@@ -21,6 +21,25 @@ Firewall port reference for PKI and certificate infrastructure. Covers certifica
 
 
 
+```d2
+direction: right
+
+center: "Architecture" {shape: hexagon}
+certificate_enrollment_protocols: "Certificate Enrollment Protocols" {shape: rectangle}
+certificate_revocation_checking_outb: "Certificate Revocation Checking (Outbound from Clients)" {shape: rectangle}
+lets_encrypt_acme_public_ca_automati: "Let's Encrypt / ACME (Public CA Automation)" {shape: rectangle}
+microsoft_adcs_certificate_authority: "Microsoft ADCS — Certificate Authority" {shape: rectangle}
+adcs_ocsp_responder: "ADCS OCSP Responder" {shape: rectangle}
+firewall_zone_summary: "Firewall Zone Summary" {shape: rectangle}
+
+center -> certificate_enrollment_protocols
+center -> certificate_revocation_checking_outb
+center -> lets_encrypt_acme_public_ca_automati
+center -> microsoft_adcs_certificate_authority
+center -> adcs_ocsp_responder
+center -> firewall_zone_summary
+```
+
 ## Before you begin
 
 - OCSP responder and CRL distribution point URLs are **embedded in every issued certificate** (AIA/CDP extensions) — all client zones must reach these URLs or certificate validation will fail silently.

@@ -47,6 +47,17 @@ graph TB
   </a>
 </div>
 
+```d2
+direction: right
+
+center: "PowerScale (Isilon)" {shape: hexagon}
+node_families: "Node Families" {shape: rectangle}
+topology: "Topology" {shape: rectangle}
+
+center -> node_families
+center -> topology
+```
+
 ## Node Families
 
 | Family | Models | Storage Type | Primary Use Case |

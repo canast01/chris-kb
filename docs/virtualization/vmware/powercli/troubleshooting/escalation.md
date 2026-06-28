@@ -20,6 +20,32 @@ How to escalate VMware PowerCLI issues to Broadcom support: what diagnostic data
 
 ---
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+when_to_escalate: "When to Escalate" {shape: rectangle}
+preescalation_selfcheck: "Pre-Escalation Self-Check" {shape: rectangle}
+stepbystep_data_collection: "Step-by-Step Data Collection" {shape: rectangle}
+module_version_compatibility: "Module Version Compatibility" {shape: rectangle}
+common_api_error_codes: "Common API Error Codes" {shape: rectangle}
+how_to_open_the_sr_on_supportbroadco: "How to Open the SR on support.broadcom.com" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> when_to_escalate: investigate
+symptom -> preescalation_selfcheck: investigate
+symptom -> stepbystep_data_collection: investigate
+symptom -> module_version_compatibility: investigate
+symptom -> common_api_error_codes: investigate
+symptom -> how_to_open_the_sr_on_supportbroadco: investigate
+when_to_escalate -> resolution
+preescalation_selfcheck -> resolution
+stepbystep_data_collection -> resolution
+module_version_compatibility -> resolution
+common_api_error_codes -> resolution
+how_to_open_the_sr_on_supportbroadco -> resolution
+```
+
 ## Before you begin
 
 - **Access required:** A PowerShell session with the failing PowerCLI command reproducible; Broadcom support account at support.broadcom.com with active vSphere entitlement (PowerCLI issues are handled under the vSphere product)

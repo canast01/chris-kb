@@ -18,6 +18,23 @@ Catalog of known SRM bugs, error codes, and workarounds covering protection grou
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+recovery_plan_failures: "Recovery Plan Failures" {shape: rectangle}
+vsphere_replication_integration: "vSphere Replication Integration" {shape: rectangle}
+site_pairing: "Site Pairing" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> recovery_plan_failures: investigate
+symptom -> vsphere_replication_integration: investigate
+symptom -> site_pairing: investigate
+recovery_plan_failures -> resolution
+vsphere_replication_integration -> resolution
+site_pairing -> resolution
+```
+
 ## Before you begin
 
 - SRM error codes appear in `Recovery Plan History` → view steps; expand failed step for detail.

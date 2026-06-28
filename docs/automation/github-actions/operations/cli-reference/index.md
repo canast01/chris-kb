@@ -151,6 +151,15 @@ jobs:
         run: docker pull ${{ steps.build.outputs.image-tag }}
 ```
 
+```d2
+direction: right
+
+center: "GitHub Actions" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+center -> verify
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

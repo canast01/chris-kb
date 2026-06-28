@@ -30,6 +30,15 @@ Daily operations begin with logging into the Pure1 dashboard and checking all ar
 - Export capacity forecast report from Pure1 and distribute to team
 - Review Pure1 Meta anomaly and workload recommendations
 
+```d2
+direction: right
+
+hub: "Pure1\nOperations" {shape: hexagon}
+verify: "Verify" {shape: rectangle}
+
+hub -> verify
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

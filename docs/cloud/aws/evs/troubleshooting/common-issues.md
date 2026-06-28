@@ -46,6 +46,32 @@ graph TD
     class L support
 ```
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+diagnostic_flow: "Diagnostic Flow" {shape: rectangle}
+host_stuck_or_failed_state: "Host Stuck or FAILED State" {shape: rectangle}
+vsan_degraded_health: "vSAN Degraded Health" {shape: rectangle}
+hcx_service_mesh_down: "HCX Service Mesh Down" {shape: rectangle}
+nsxt_routing_failure_vm_connectivity: "NSX-T Routing Failure (VM Connectivity)" {shape: rectangle}
+aws_evs_api_errors: "AWS EVS API Errors" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> diagnostic_flow: investigate
+symptom -> host_stuck_or_failed_state: investigate
+symptom -> vsan_degraded_health: investigate
+symptom -> hcx_service_mesh_down: investigate
+symptom -> nsxt_routing_failure_vm_connectivity: investigate
+symptom -> aws_evs_api_errors: investigate
+diagnostic_flow -> resolution
+host_stuck_or_failed_state -> resolution
+vsan_degraded_health -> resolution
+hcx_service_mesh_down -> resolution
+nsxt_routing_failure_vm_connectivity -> resolution
+aws_evs_api_errors -> resolution
+```
+
 ## Diagnostic Flow
 
 ```mermaid

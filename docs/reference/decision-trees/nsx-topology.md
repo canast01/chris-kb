@@ -46,6 +46,17 @@ flowchart TD
     N -->|Higher throughput| P([ECMP Active/Active\n2–8 equal-cost paths\nRequires BGP · stateless DFW])
 ```
 
+```d2
+direction: right
+
+center: "Decision Trees" {shape: hexagon}
+key_design_decisions: "Key design decisions" {shape: rectangle}
+important_constraints: "Important constraints" {shape: rectangle}
+
+center -> key_design_decisions
+center -> important_constraints
+```
+
 ## Key design decisions
 
 | Decision | Option A | Option B | Tiebreaker |

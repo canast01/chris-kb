@@ -14,6 +14,19 @@ Health Checks reference covering Daily Checks, Health Check Checklist, Post-Chan
 
 
 
+```d2
+direction: right
+
+hub: "Brocade Fabric OS\nOperations" {shape: hexagon}
+run_this_routine: "Run This Routine" {shape: rectangle}
+postchange_validation: "Post-Change Validation" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+hub -> run_this_routine
+hub -> postchange_validation
+hub -> verify
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

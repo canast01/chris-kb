@@ -16,6 +16,25 @@ How It Works reference covering Overview, Topology, HA Options, Components, Conn
 
 
 
+```d2
+direction: right
+
+center: "SnapCenter" {shape: hexagon}
+topology: "Topology" {shape: rectangle}
+ha_options: "HA Options" {shape: rectangle}
+components: "Components" {shape: rectangle}
+connectivity: "Connectivity" {shape: rectangle}
+sizing_guidelines: "Sizing Guidelines" {shape: rectangle}
+plugins: "Plugins" {shape: rectangle}
+
+center -> topology
+center -> ha_options
+center -> components
+center -> connectivity
+center -> sizing_guidelines
+center -> plugins
+```
+
 ## Overview
 
 SnapCenter is a Windows-based centralized data protection platform that orchestrates application-consistent ONTAP snapshots across a fleet of hosts and applications. It communicates with ONTAP storage systems via the ONTAP REST API or ZAPI, with application hosts via the SnapCenter Agent (TCP 8145), and exposes a web GUI on port 8146 and a REST API for automation. The architecture separates the control plane (SnapCenter Server), the data plane (ONTAP snapshots), and the agent layer (plugins on protected hosts).

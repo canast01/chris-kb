@@ -17,6 +17,27 @@ Access Control reference covering Built-in Roles, LDAP / Active Directory Integr
 
 ---
 
+```d2
+direction: down
+
+external: External / Untrusted {shape: rectangle}
+builtin_roles: "Built-in Roles" {shape: rectangle}
+ldap_active_directory_integration: "LDAP / Active Directory Integration" {shape: rectangle}
+api_token_management: "API Token Management" {shape: rectangle}
+networklevel_access_control: "Network-Level Access Control" {shape: rectangle}
+vcenter_service_account_minimum_priv: "vCenter Service Account (Minimum Privilege)" {shape: rectangle}
+nsxt_service_account_minimum_privile: "NSX-T Service Account (Minimum Privilege)" {shape: rectangle}
+core: "Aria Operations for Networks Core" {shape: hexagon}
+
+external -> builtin_roles: traffic in
+builtin_roles -> ldap_active_directory_integration
+ldap_active_directory_integration -> api_token_management
+api_token_management -> networklevel_access_control
+networklevel_access_control -> vcenter_service_account_minimum_priv
+vcenter_service_account_minimum_priv -> nsxt_service_account_minimum_privile
+nsxt_service_account_minimum_privile -> core: secured path
+```
+
 ## Before you begin
 
 - **Access:** vCenter Administrator role

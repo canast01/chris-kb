@@ -20,6 +20,17 @@ Fabric OS runs on Brocade/Broadcom FC switches in dual-fabric core-edge topology
 <a class="kb-card" href="design-standards/"><strong>Design Standards</strong><span>Dual-fabric design, zoning model, domain ID, and ISL trunking standards.</span></a>
 </div>
 
+```d2
+direction: right
+
+center: "Brocade Fabric OS" {shape: hexagon}
+platform_reference: "Platform Reference" {shape: rectangle}
+dualfabric_topology: "Dual-Fabric Topology" {shape: rectangle}
+
+center -> platform_reference
+center -> dualfabric_topology
+```
+
 ## Platform Reference
 
 | Platform | Type | Max Ports | Notes |

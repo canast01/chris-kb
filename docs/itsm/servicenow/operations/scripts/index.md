@@ -256,6 +256,15 @@ MID Server Status Report — 2026-05-08 08:00 UTC
 Total MID Servers: 3 | Issues: 1
 ```
 
+```d2
+direction: right
+
+center: "ServiceNow" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+center -> verify
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

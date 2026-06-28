@@ -14,6 +14,15 @@ Python automation integrations: REST API call patterns, retry-with-backoff wrapp
 ![Python Automation — Integrations](../../../../assets/automation-python-architecture-integrations-index.svg)
 
 
+```d2
+direction: right
+
+center: "Python" {shape: hexagon}
+api_call_and_retry_flow: "API Call and Retry Flow" {shape: rectangle}
+
+center -> api_call_and_retry_flow
+```
+
 ## API Call and Retry Flow
 
 ```mermaid

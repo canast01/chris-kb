@@ -20,6 +20,25 @@ Procedures reference covering Incident Triage, Maintenance Window, Operational T
 
 ---
 
+```d2
+direction: right
+
+hub: "APEX Storage\nOperations" {shape: hexagon}
+incident_triage: "Incident Triage" {shape: rectangle}
+maintenance_window: "Maintenance Window" {shape: rectangle}
+operational_tasks: "Operational Tasks" {shape: rectangle}
+request_capacity_expansion: "Request Capacity Expansion" {shape: rectangle}
+open_a_support_case_from_apex_consol: "Open a Support Case from APEX Console" {shape: rectangle}
+configure_data_protection_policy: "Configure Data Protection Policy" {shape: rectangle}
+
+hub -> incident_triage
+hub -> maintenance_window
+hub -> operational_tasks
+hub -> request_capacity_expansion
+hub -> open_a_support_case_from_apex_consol
+hub -> configure_data_protection_policy
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

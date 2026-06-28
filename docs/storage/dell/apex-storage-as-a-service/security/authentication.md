@@ -25,6 +25,17 @@ APEX STaaS authentication: CloudIQ portal SSO with SAML 2.0, API OAuth2 token ge
 - **Underlying platforms**: PowerStore/PowerScale/PowerFlex management authentication is separate and follows each platform's local or LDAP configuration
 ---
 
+```d2
+direction: down
+
+external: External / Untrusted {shape: rectangle}
+related_reference: "Related Reference" {shape: rectangle}
+core: "APEX Storage Core" {shape: hexagon}
+
+external -> related_reference: traffic in
+related_reference -> core: secured path
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

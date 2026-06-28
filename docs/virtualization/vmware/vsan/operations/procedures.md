@@ -16,6 +16,25 @@ Operational how-to guides for day-to-day vSAN management. Each section covers a 
 
 
 
+```d2
+direction: right
+
+hub: "vSAN\nOperations" {shape: hexagon}
+disk_group_management: "Disk Group Management" {shape: rectangle}
+storage_policies: "Storage Policies" {shape: rectangle}
+resync_and_object_health: "Resync and Object Health" {shape: rectangle}
+capacity_management: "Capacity Management" {shape: rectangle}
+stretched_cluster_operations: "Stretched Cluster Operations" {shape: rectangle}
+performance_service: "Performance Service" {shape: rectangle}
+
+hub -> disk_group_management
+hub -> storage_policies
+hub -> resync_and_object_health
+hub -> capacity_management
+hub -> stretched_cluster_operations
+hub -> performance_service
+```
+
 ## Before you begin
 
 - **Access:** vCenter read-only minimum; Administrator role for remediation steps

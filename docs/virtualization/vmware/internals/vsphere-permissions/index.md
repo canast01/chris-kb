@@ -18,6 +18,25 @@ vSphere access control is built on a layered permission model: SSO handles authe
 
 ---
 
+```d2
+direction: right
+
+center: "Vsphere Permissions" {shape: hexagon}
+authentication_layer_sso_and_identit: "Authentication Layer — SSO and Identity Sources" {shape: rectangle}
+the_permission_model: "The Permission Model" {shape: rectangle}
+builtin_roles: "Built-In Roles" {shape: rectangle}
+custom_roles: "Custom Roles" {shape: rectangle}
+permission_propagation_and_inheritan: "Permission Propagation and Inheritance Rules" {shape: rectangle}
+global_permissions: "Global Permissions" {shape: rectangle}
+
+center -> authentication_layer_sso_and_identit
+center -> the_permission_model
+center -> builtin_roles
+center -> custom_roles
+center -> permission_propagation_and_inheritan
+center -> global_permissions
+```
+
 ## Authentication Layer — SSO and Identity Sources
 
 ### vCenter Single Sign-On (SSO)

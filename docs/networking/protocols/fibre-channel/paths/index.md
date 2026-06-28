@@ -14,6 +14,25 @@ A path is a complete end-to-end connection from an HBA port through the fabric t
 ![FC Paths — Diagram](../../../../assets/networking-protocols-fibre-channel-paths-diagram.svg)
 Multipath I/O (MPIO) uses multiple paths simultaneously for redundancy and load distribution.
 
+```d2
+direction: right
+
+center: "Fibre Channel" {shape: hexagon}
+path_architecture: "Path Architecture" {shape: rectangle}
+path_states: "Path States" {shape: rectangle}
+checking_paths: "Checking Paths" {shape: rectangle}
+path_policies: "Path Policies" {shape: rectangle}
+common_path_issues: "Common Path Issues" {shape: rectangle}
+rescanning_for_new_paths: "Re-scanning for New Paths" {shape: rectangle}
+
+center -> path_architecture
+center -> path_states
+center -> checking_paths
+center -> path_policies
+center -> common_path_issues
+center -> rescanning_for_new_paths
+```
+
 ## Path Architecture
 
 ```text

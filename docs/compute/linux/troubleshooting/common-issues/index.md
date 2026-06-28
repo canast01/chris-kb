@@ -20,6 +20,32 @@ Quick reference for common problems and resolutions.
 
 Structured approach to diagnosing common Linux server issues.
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+diagnostic_flow: "Diagnostic Flow" {shape: rectangle}
+network_connectivity_triage: "Network Connectivity Triage" {shape: rectangle}
+high_disk_io_or_latency: "High Disk I/O or Latency" {shape: rectangle}
+network_connectivity_issues: "Network Connectivity Issues" {shape: rectangle}
+service_not_starting: "Service Not Starting" {shape: rectangle}
+ssh_access_denied: "SSH Access Denied" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> diagnostic_flow: investigate
+symptom -> network_connectivity_triage: investigate
+symptom -> high_disk_io_or_latency: investigate
+symptom -> network_connectivity_issues: investigate
+symptom -> service_not_starting: investigate
+symptom -> ssh_access_denied: investigate
+diagnostic_flow -> resolution
+network_connectivity_triage -> resolution
+high_disk_io_or_latency -> resolution
+network_connectivity_issues -> resolution
+service_not_starting -> resolution
+ssh_access_denied -> resolution
+```
+
 ## Diagnostic Flow
 
 ```mermaid

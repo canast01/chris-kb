@@ -17,6 +17,25 @@ Firewall port reference for NetApp SnapMirror. SnapMirror is a replication featu
 ![NetApp SnapMirror — Ports and Network Requirements](../../../../assets/storage-netapp-snapmirror-architecture-ports.svg)
 
 
+```d2
+direction: right
+
+center: "SnapMirror" {shape: hexagon}
+network_zones: "Network Zones" {shape: rectangle}
+intercluster_replication_ports: "Intercluster Replication Ports" {shape: rectangle}
+cloud_snapmirror_snapmirror_to_cloud: "Cloud SnapMirror (SnapMirror to Cloud / S3)" {shape: rectangle}
+ontap_system_manager_snapcenter_mana: "ONTAP System Manager / SnapCenter (Management)" {shape: rectangle}
+firewall_zone_summary: "Firewall Zone Summary" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+center -> network_zones
+center -> intercluster_replication_ports
+center -> cloud_snapmirror_snapmirror_to_cloud
+center -> ontap_system_manager_snapcenter_mana
+center -> firewall_zone_summary
+center -> verify
+```
+
 ## Network Zones
 
 ![NetApp SnapMirror — Ports and Network Requirements — Diagram](../../../../assets/storage-netapp-snapmirror-architecture-ports-diagram.svg)

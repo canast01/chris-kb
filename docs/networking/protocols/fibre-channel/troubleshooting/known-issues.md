@@ -19,6 +19,23 @@ Catalog of known Fibre Channel issues covering HBA, fabric login, zoning, and li
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+hba_and_link: "HBA and Link" {shape: rectangle}
+zoning: "Zoning" {shape: rectangle}
+performance: "Performance" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> hba_and_link: investigate
+symptom -> zoning: investigate
+symptom -> performance: investigate
+hba_and_link -> resolution
+zoning -> resolution
+performance -> resolution
+```
+
 ## Before you begin
 
 - HBA state: `cat /sys/class/fc_host/host*/port_state` (Linux); check HBA management software (QConvergeConsole, OneCommand Manager).

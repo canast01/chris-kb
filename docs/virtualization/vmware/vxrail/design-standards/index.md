@@ -37,6 +37,24 @@ VxRail Design Requirements — Key Standards
 ```
 
 ---
+
+```d2
+direction: down
+
+naming_conventions: "Naming Conventions" {shape: rectangle}
+cluster_sizing_standards: "Cluster Sizing Standards" {shape: rectangle}
+vsan_storage_policy_standards: "vSAN Storage Policy Standards" {shape: rectangle}
+network_vlan_standards: "Network VLAN Standards" {shape: rectangle}
+firmware_and_software_standards: "Firmware and Software Standards" {shape: rectangle}
+change_management_standards: "Change Management Standards" {shape: rectangle}
+
+naming_conventions -> cluster_sizing_standards: hardens
+cluster_sizing_standards -> vsan_storage_policy_standards: hardens
+vsan_storage_policy_standards -> network_vlan_standards: hardens
+network_vlan_standards -> firmware_and_software_standards: hardens
+firmware_and_software_standards -> change_management_standards: hardens
+```
+
 ## Naming Conventions
 
 | Item | Standard | Example |

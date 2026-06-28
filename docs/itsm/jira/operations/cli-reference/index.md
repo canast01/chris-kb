@@ -257,6 +257,15 @@ issuetype = Bug AND labels = regression AND fixVersion in unreleasedVersions()
 project = PROJ AND text ~ "authentication timeout" ORDER BY updated DESC
 ```
 
+```d2
+direction: right
+
+center: "Jira" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+center -> verify
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

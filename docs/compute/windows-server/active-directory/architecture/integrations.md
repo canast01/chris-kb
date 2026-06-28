@@ -17,6 +17,26 @@ Active Directory serves as the central identity provider for the enterprise. Int
 
 
 ---
+
+```d2
+direction: right
+
+center: "Active Directory" {shape: hexagon}
+integration_overview: "Integration Overview" {shape: rectangle}
+ad_integration_hub: "AD Integration Hub" {shape: rectangle}
+service_account_standards: "Service Account Standards" {shape: rectangle}
+vmware_vcenter_ldap_ad_sso_integrati: "VMware vCenter LDAP / AD SSO Integration" {shape: rectangle}
+nsxt_ldap_integration: "NSX-T LDAP Integration" {shape: rectangle}
+linux_sssd_pam_integration: "Linux SSSD / PAM Integration" {shape: rectangle}
+
+center -> integration_overview
+center -> ad_integration_hub
+center -> service_account_standards
+center -> vmware_vcenter_ldap_ad_sso_integrati
+center -> nsxt_ldap_integration
+center -> linux_sssd_pam_integration
+```
+
 ## Integration Overview
 
 | Integration | Method | Notes |

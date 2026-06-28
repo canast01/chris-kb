@@ -145,6 +145,17 @@ ping -M do -s 1472 <destination>    # standard MTU test
 <a class="kb-card" href="dns-resolution/"><strong>DNS Resolution Failures</strong><span>DNS resolution failure diagnosis — resolver, zone, and client-side troubleshooting steps.</span></a>
 </div>
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+protocol_symptom_index: "Protocol Symptom Index" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> protocol_symptom_index: investigate
+protocol_symptom_index -> resolution
+```
+
 ## Protocol Symptom Index
 
 | Symptom | Protocol | First command |

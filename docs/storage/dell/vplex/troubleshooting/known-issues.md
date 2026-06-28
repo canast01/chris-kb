@@ -18,6 +18,23 @@ Catalog of known VPLEX bugs, error codes, and workarounds covering Metro cluster
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+metro_cluster: "Metro Cluster" {shape: rectangle}
+wan_com: "WAN COM" {shape: rectangle}
+host_connectivity: "Host Connectivity" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> metro_cluster: investigate
+symptom -> wan_com: investigate
+symptom -> host_connectivity: investigate
+metro_cluster -> resolution
+wan_com -> resolution
+host_connectivity -> resolution
+```
+
 ## Before you begin
 
 - VPLEX errors appear in the VPLEX Management Console → Alerts.

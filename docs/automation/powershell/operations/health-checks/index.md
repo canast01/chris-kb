@@ -14,6 +14,25 @@ Health Checks reference covering Module Health, Scheduled Tasks, Remoting Connec
 ![PowerShell — Health Checks](../../../../assets/automation-powershell-operations-health-checks-index.svg)
 
 
+```d2
+direction: right
+
+begin_checks: "Begin Checks" {shape: oval}
+run_this_routine: "Run This Routine" {shape: rectangle}
+scheduled_tasks: "Scheduled Tasks" {shape: rectangle}
+remoting_connectivity: "Remoting Connectivity" {shape: rectangle}
+powershell_environment_health_check_: "PowerShell Environment Health Check Flow" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+generate_report: "Generate Report" {shape: oval}
+
+begin_checks -> run_this_routine
+run_this_routine -> scheduled_tasks
+scheduled_tasks -> remoting_connectivity
+remoting_connectivity -> powershell_environment_health_check_
+powershell_environment_health_check_ -> verify
+verify -> generate_report
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

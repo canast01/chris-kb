@@ -18,6 +18,23 @@ Network Inventory reference covering Overview, Distributed Switches, Port Groups
 
 ---
 
+```d2
+direction: right
+
+center: "Inventory" {shape: rectangle}
+distributed_switches: "Distributed Switches" {shape: rectangle}
+port_groups: "Port Groups" {shape: rectangle}
+vmkernel_adapters: "VMkernel Adapters" {shape: rectangle}
+fields_reference: "Fields Reference" {shape: rectangle}
+network_change_checklist: "Network Change Checklist" {shape: rectangle}
+
+center -> distributed_switches
+center -> port_groups
+center -> vmkernel_adapters
+center -> fields_reference
+center -> network_change_checklist
+```
+
 ## Overview
 
 Document all virtual networking components in the vSphere environment — distributed switches, port groups, VLANs, MTU settings, and uplink assignments. Update after any network configuration change.

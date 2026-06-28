@@ -19,6 +19,23 @@ Catalog of known OpenAI API bugs, error codes, and workarounds covering rate lim
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+rate_limits: "Rate Limits" {shape: rectangle}
+api_errors: "API Errors" {shape: rectangle}
+model_availability: "Model Availability" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> rate_limits: investigate
+symptom -> api_errors: investigate
+symptom -> model_availability: investigate
+rate_limits -> resolution
+api_errors -> resolution
+model_availability -> resolution
+```
+
 ## Before you begin
 
 - OpenAI errors appear in API responses as JSON with `error.code` and `error.message`.

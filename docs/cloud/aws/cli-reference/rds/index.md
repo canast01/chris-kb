@@ -14,6 +14,25 @@ RDS reference covering Snapshots, Parameter Groups, Subnet Groups, Events and Ev
 
 
 
+```d2
+direction: right
+
+center: "AWS" {shape: hexagon}
+parameter_groups: "Parameter Groups" {shape: rectangle}
+subnet_groups: "Subnet Groups" {shape: rectangle}
+events_and_event_subscriptions: "Events and Event Subscriptions" {shape: rectangle}
+read_replicas: "Read Replicas" {shape: rectangle}
+aurora_clusters: "Aurora Clusters" {shape: rectangle}
+log_export_and_monitoring: "Log Export and Monitoring" {shape: rectangle}
+
+center -> parameter_groups
+center -> subnet_groups
+center -> events_and_event_subscriptions
+center -> read_replicas
+center -> aurora_clusters
+center -> log_export_and_monitoring
+```
+
 ## Parameter Groups
 
 ```bash

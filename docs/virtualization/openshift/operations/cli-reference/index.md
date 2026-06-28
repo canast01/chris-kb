@@ -28,6 +28,25 @@ graph LR
     classDef image fill:#b45309,color:#fff
 ```
 
+```d2
+direction: right
+
+center: "OpenShift" {shape: rectangle}
+authentication_context: "Authentication & Context" {shape: rectangle}
+resource_management: "Resource Management" {shape: rectangle}
+resource_watching: "Resource Watching" {shape: rectangle}
+patching_resources: "Patching Resources" {shape: rectangle}
+output_formats: "Output Formats" {shape: rectangle}
+labels_selectors: "Labels & Selectors" {shape: rectangle}
+
+center -> authentication_context
+center -> resource_management
+center -> resource_watching
+center -> patching_resources
+center -> output_formats
+center -> labels_selectors
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

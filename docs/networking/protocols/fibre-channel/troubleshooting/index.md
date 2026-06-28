@@ -16,6 +16,32 @@ FC Troubleshooting reference covering Diagnostic Flow, Quick Diagnostics, Common
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+diagnostic_flow: "Diagnostic Flow" {shape: rectangle}
+quick_diagnostics: "Quick Diagnostics" {shape: rectangle}
+common_issues_reference: "Common Issues Reference" {shape: rectangle}
+error_counter_interpretation_brocade: "Error Counter Interpretation (Brocade)" {shape: rectangle}
+log_locations: "Log Locations" {shape: rectangle}
+verify_resolution: "Verify resolution" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> diagnostic_flow: investigate
+symptom -> quick_diagnostics: investigate
+symptom -> common_issues_reference: investigate
+symptom -> error_counter_interpretation_brocade: investigate
+symptom -> log_locations: investigate
+symptom -> verify_resolution: investigate
+diagnostic_flow -> resolution
+quick_diagnostics -> resolution
+common_issues_reference -> resolution
+error_counter_interpretation_brocade -> resolution
+log_locations -> resolution
+verify_resolution -> resolution
+```
+
 ## Before you begin
 
 - **Access:** Network admin credentials; console or SSH to devices

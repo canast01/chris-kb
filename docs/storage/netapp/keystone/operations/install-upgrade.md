@@ -16,6 +16,25 @@ Install & Upgrade reference covering Keystone Collector Deployment, Upgrade Keys
 
 
 
+```d2
+direction: right
+
+hub: "Keystone STaaS\nOperations" {shape: hexagon}
+keystone_collector_deployment: "Keystone Collector Deployment" {shape: rectangle}
+upgrade_keystone_collector: "Upgrade Keystone Collector" {shape: rectangle}
+add_a_new_ontap_array_to_keystone: "Add a New ONTAP Array to Keystone" {shape: rectangle}
+remove_an_array_from_keystone: "Remove an Array from Keystone" {shape: rectangle}
+postupgrade_validation: "Post-Upgrade Validation" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+hub -> keystone_collector_deployment
+hub -> upgrade_keystone_collector
+hub -> add_a_new_ontap_array_to_keystone
+hub -> remove_an_array_from_keystone
+hub -> postupgrade_validation
+hub -> verify
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

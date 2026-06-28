@@ -30,6 +30,25 @@ graph LR
     classDef pod fill:#164e63,color:#fff
 ```
 
+```d2
+direction: right
+
+center: "OpenShift" {shape: rectangle}
+clusterhealthchecksh: "cluster-health-check.sh" {shape: rectangle}
+autoapprovecsrssh: "auto-approve-csrs.sh" {shape: rectangle}
+etcdbackupsh: "etcd-backup.sh" {shape: rectangle}
+nodedrainsh: "node-drain.sh" {shape: rectangle}
+podrestartdetectorsh: "pod-restart-detector.sh" {shape: rectangle}
+csrapprovesh: "csr-approve.sh" {shape: rectangle}
+
+center -> clusterhealthchecksh
+center -> autoapprovecsrssh
+center -> etcdbackupsh
+center -> nodedrainsh
+center -> podrestartdetectorsh
+center -> csrapprovesh
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

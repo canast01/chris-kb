@@ -15,6 +15,19 @@ Document post-upgrade findings to improve future upgrade runbooks. Complete this
 
 
 
+```d2
+direction: right
+
+plan: "Plan" {shape: oval}
+template: "Template" {shape: rectangle}
+common_lessons_by_component: "Common Lessons by Component" {shape: rectangle}
+validate: "Validate" {shape: oval}
+
+plan -> template
+template -> common_lessons_by_component
+common_lessons_by_component -> validate
+```
+
 ## Template
 
 Copy this template to a new entry in your team's wiki or knowledge base after each significant upgrade.

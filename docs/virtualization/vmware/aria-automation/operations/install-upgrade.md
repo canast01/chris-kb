@@ -15,6 +15,25 @@ Install & Upgrade reference covering Version Matrix, Initial Deployment (New Env
 ![Aria Automation — Install & Upgrade](../../../../assets/virtualization-vmware-aria-automation-operations-install-upg.svg)
 
 
+```d2
+direction: right
+
+hub: "Aria Automation\nOperations" {shape: hexagon}
+version_matrix: "Version Matrix" {shape: rectangle}
+initial_deployment_new_environment: "Initial Deployment (New Environment)" {shape: rectangle}
+preupgrade_checklist: "Pre-Upgrade Checklist" {shape: rectangle}
+postupgrade_validation: "Post-Upgrade Validation" {shape: rectangle}
+eol_tracking: "EOL Tracking" {shape: rectangle}
+patch_cadence: "Patch Cadence" {shape: rectangle}
+
+hub -> version_matrix
+hub -> initial_deployment_new_environment
+hub -> preupgrade_checklist
+hub -> postupgrade_validation
+hub -> eol_tracking
+hub -> patch_cadence
+```
+
 ## Before you begin
 
 - **Access:** vCenter read-only minimum; Administrator role for remediation steps

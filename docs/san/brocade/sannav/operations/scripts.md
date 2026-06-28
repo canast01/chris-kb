@@ -194,6 +194,15 @@ req = urllib.request.Request(HOST + "/rest/logout", method="DELETE",
 urllib.request.urlopen(req, context=ctx).close()
 ```
 
+```d2
+direction: right
+
+hub: "SANnav\nOperations" {shape: hexagon}
+verify: "Verify" {shape: rectangle}
+
+hub -> verify
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

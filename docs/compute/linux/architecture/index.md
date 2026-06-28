@@ -32,6 +32,17 @@ Linux server infrastructure running RHEL and Ubuntu — systemd service manageme
   </a>
 </div>
 
+```d2
+direction: right
+
+center: "Linux" {shape: hexagon}
+server_roles: "Server Roles" {shape: rectangle}
+topology: "Topology" {shape: rectangle}
+
+center -> server_roles
+center -> topology
+```
+
 ## Server Roles
 
 | Role | Typical OS | vCPU | RAM | Notes |

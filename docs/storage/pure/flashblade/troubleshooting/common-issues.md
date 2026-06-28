@@ -21,6 +21,23 @@ FlashBlade Common Issues reference covering NFS/SMB mount problems, S3 403 error
 
 ![FlashBlade — Common Issues — Diagram](../../../../assets/storage-pure-flashblade-troubleshooting-common-issues-diagram.svg)
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+diagnostic_flow: "Diagnostic Flow" {shape: rectangle}
+common_issues: "Common Issues" {shape: rectangle}
+verify_resolution: "Verify resolution" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> diagnostic_flow: investigate
+symptom -> common_issues: investigate
+symptom -> verify_resolution: investigate
+diagnostic_flow -> resolution
+common_issues -> resolution
+verify_resolution -> resolution
+```
+
 ## Diagnostic Flow
 
 ```mermaid

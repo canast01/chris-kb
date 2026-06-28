@@ -16,6 +16,25 @@ Standards reference covering Naming Conventions, Build Baseline, Configuration C
 
 
 
+```d2
+direction: right
+
+center: "Aria Automation" {shape: hexagon}
+naming_conventions: "Naming Conventions" {shape: rectangle}
+build_baseline: "Build Baseline" {shape: rectangle}
+configuration_checklist: "Configuration Checklist" {shape: rectangle}
+blueprint_template_standards: "Blueprint / Template Standards" {shape: rectangle}
+project_standards: "Project Standards" {shape: rectangle}
+related_sections: "Related Sections" {shape: rectangle}
+
+center -> naming_conventions
+center -> build_baseline
+center -> configuration_checklist
+center -> blueprint_template_standards
+center -> project_standards
+center -> related_sections
+```
+
 ## Naming Conventions
 
 | Object | Convention | Example |

@@ -12,6 +12,25 @@ Procedures reference covering Change Readiness, Maintenance Window, Filesystem C
 *Applies to: Data Domain DD OS 7.x*
 </div>
 
+```d2
+direction: right
+
+hub: "Data Domain\nOperations" {shape: hexagon}
+change_readiness: "Change Readiness" {shape: rectangle}
+maintenance_window: "Maintenance Window" {shape: rectangle}
+filesystem_cleaning: "Filesystem Cleaning" {shape: rectangle}
+add_a_replication_context_dd_boost: "Add a Replication Context (DD Boost)" {shape: rectangle}
+configure_nfs_export: "Configure NFS Export" {shape: rectangle}
+configure_cifs_share: "Configure CIFS Share" {shape: rectangle}
+
+hub -> change_readiness
+hub -> maintenance_window
+hub -> filesystem_cleaning
+hub -> add_a_replication_context_dd_boost
+hub -> configure_nfs_export
+hub -> configure_cifs_share
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

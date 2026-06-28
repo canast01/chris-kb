@@ -23,6 +23,25 @@ Canonical SAML 2.0 SSO reference for all KB-covered products. Covers SP/IdP conc
 
 ---
 
+```d2
+direction: right
+
+center: "Saml Configuration" {shape: hexagon}
+standard_field_reference: "Standard Field Reference" {shape: rectangle}
+azure_ad_entra_id_setup: "Azure AD (Entra ID) Setup" {shape: rectangle}
+okta_setup: "Okta Setup" {shape: rectangle}
+security_requirements: "Security Requirements" {shape: rectangle}
+certificate_lifecycle: "Certificate Lifecycle" {shape: rectangle}
+common_issues: "Common Issues" {shape: rectangle}
+
+center -> standard_field_reference
+center -> azure_ad_entra_id_setup
+center -> okta_setup
+center -> security_requirements
+center -> certificate_lifecycle
+center -> common_issues
+```
+
 ## Standard Field Reference
 
 These fields are configured on both sides — the IdP and the SP. Collect all values before starting configuration on either end.

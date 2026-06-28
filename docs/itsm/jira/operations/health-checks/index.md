@@ -14,6 +14,27 @@ Health Checks reference covering Health Check Overview, 2. Log Review, 3. Disk S
 ![Jira — Health Checks](../../../../assets/itsm-jira-operations-health-checks-index.svg)
 
 
+```d2
+direction: right
+
+begin_checks: "Begin Checks" {shape: oval}
+health_check_overview: "Health Check Overview" {shape: rectangle}
+run_this_routine: "Run This Routine" {shape: rectangle}
+2_log_review: "2. Log Review" {shape: rectangle}
+3_disk_space: "3. Disk Space" {shape: rectangle}
+4_database_connectivity: "4. Database Connectivity" {shape: rectangle}
+5_search_index_status: "5. Search Index Status" {shape: rectangle}
+generate_report: "Generate Report" {shape: oval}
+
+begin_checks -> health_check_overview
+health_check_overview -> run_this_routine
+run_this_routine -> 2_log_review
+2_log_review -> 3_disk_space
+3_disk_space -> 4_database_connectivity
+4_database_connectivity -> 5_search_index_status
+5_search_index_status -> generate_report
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

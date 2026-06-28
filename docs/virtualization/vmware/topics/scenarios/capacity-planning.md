@@ -19,6 +19,25 @@ procurement decision.
 
 
 
+```d2
+direction: right
+
+center: "Scenarios" {shape: hexagon}
+products_involved: "Products Involved" {shape: rectangle}
+1_check_vsan_storage_headroom: "1. Check vSAN Storage Headroom" {shape: rectangle}
+2_check_compute_headroom_cpu_and_ram: "2. Check Compute Headroom (CPU and RAM)" {shape: rectangle}
+3_aria_operations_capacity_view: "3. Aria Operations Capacity View" {shape: rectangle}
+4_trending_90day_growth_analysis: "4. Trending — 90-Day Growth Analysis" {shape: rectangle}
+5_check_reclaimable_resources_before: "5. Check Reclaimable Resources Before Ordering Hardware" {shape: rectangle}
+
+center -> products_involved
+center -> 1_check_vsan_storage_headroom
+center -> 2_check_compute_headroom_cpu_and_ram
+center -> 3_aria_operations_capacity_view
+center -> 4_trending_90day_growth_analysis
+center -> 5_check_reclaimable_resources_before
+```
+
 ## Products Involved
 
 | Product | Role in This Scenario |

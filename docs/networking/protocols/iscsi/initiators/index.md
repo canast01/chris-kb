@@ -13,6 +13,25 @@ An iSCSI initiator is the client-side component — typically software on a serv
 
 
 
+```d2
+direction: right
+
+center: "iSCSI" {shape: hexagon}
+iqn_format: "IQN Format" {shape: rectangle}
+linux_software_initiator_openiscsi: "Linux Software Initiator (open-iscsi)" {shape: rectangle}
+windows_iscsi_initiator: "Windows iSCSI Initiator" {shape: rectangle}
+vmware_esxi_software_iscsi: "VMware ESXi Software iSCSI" {shape: rectangle}
+initiator_standards: "Initiator Standards" {shape: rectangle}
+common_issues: "Common Issues" {shape: rectangle}
+
+center -> iqn_format
+center -> linux_software_initiator_openiscsi
+center -> windows_iscsi_initiator
+center -> vmware_esxi_software_iscsi
+center -> initiator_standards
+center -> common_issues
+```
+
 ## IQN Format
 
 ![iSCSI Initiators — Diagram](../../../../assets/networking-protocols-iscsi-initiators-diagram.svg)

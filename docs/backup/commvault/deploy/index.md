@@ -6,6 +6,27 @@ search:
   boost: 1.5
 ---
 
+```d2
+direction: right
+
+plan: "Plan" {shape: oval}
+prerequisites: "Prerequisites" {shape: rectangle}
+install_commserve_primary_server: "Install CommServe (Primary Server)" {shape: rectangle}
+install_mediaagent: "Install MediaAgent" {shape: rectangle}
+configure_a_storage_library: "Configure a Storage Library" {shape: rectangle}
+install_client_agents: "Install Client Agents" {shape: rectangle}
+create_a_storage_policy: "Create a Storage Policy" {shape: rectangle}
+validate: "Validate" {shape: oval}
+
+plan -> prerequisites
+prerequisites -> install_commserve_primary_server
+install_commserve_primary_server -> install_mediaagent
+install_mediaagent -> configure_a_storage_library
+configure_a_storage_library -> install_client_agents
+install_client_agents -> create_a_storage_policy
+create_a_storage_policy -> validate
+```
+
 ## Before you begin
 
 - **Access:** admin credentials for the target system and any upstream dependencies (DNS, NTP, vCenter, directory services)

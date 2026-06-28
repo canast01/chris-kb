@@ -18,6 +18,17 @@ Hardening reference covering Management API Security, Operational Hardening Chec
 
 ---
 
+```d2
+direction: down
+
+external: External / Untrusted {shape: rectangle}
+operational_hardening_checklist: "Operational Hardening Checklist" {shape: rectangle}
+core: "SRDF/S Core" {shape: hexagon}
+
+external -> operational_hardening_checklist: traffic in
+operational_hardening_checklist -> core: secured path
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

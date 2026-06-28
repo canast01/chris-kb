@@ -53,6 +53,32 @@ graph TD
     class Q,R escalate
 ```
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+step_1_check_vsan_skyline_health: "Step 1 — Check vSAN Skyline Health" {shape: rectangle}
+step_2_performance_diagnostics: "Step 2 — Performance diagnostics" {shape: rectangle}
+step_3_object_and_component_diagnost: "Step 3 — Object and component diagnostics" {shape: rectangle}
+step_4_network_diagnostics: "Step 4 — Network diagnostics" {shape: rectangle}
+step_5_disk_and_disk_group_diagnosti: "Step 5 — Disk and disk group diagnostics" {shape: rectangle}
+step_6_advanced_diagnostics_vsish_an: "Step 6 — Advanced diagnostics (vsish and RVC)" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> step_1_check_vsan_skyline_health: investigate
+symptom -> step_2_performance_diagnostics: investigate
+symptom -> step_3_object_and_component_diagnost: investigate
+symptom -> step_4_network_diagnostics: investigate
+symptom -> step_5_disk_and_disk_group_diagnosti: investigate
+symptom -> step_6_advanced_diagnostics_vsish_an: investigate
+step_1_check_vsan_skyline_health -> resolution
+step_2_performance_diagnostics -> resolution
+step_3_object_and_component_diagnost -> resolution
+step_4_network_diagnostics -> resolution
+step_5_disk_and_disk_group_diagnosti -> resolution
+step_6_advanced_diagnostics_vsish_an -> resolution
+```
+
 ## Before you begin
 
 - **Access:** vSphere Client with cluster admin privileges; SSH to ESXi hosts as root; SSH to VCSA as root

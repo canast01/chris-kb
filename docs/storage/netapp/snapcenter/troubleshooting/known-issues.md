@@ -18,6 +18,23 @@ Catalog of known SnapCenter bugs, error codes, and workarounds covering plugin d
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+plugin_deployment: "Plugin Deployment" {shape: rectangle}
+backup_jobs: "Backup Jobs" {shape: rectangle}
+restore: "Restore" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> plugin_deployment: investigate
+symptom -> backup_jobs: investigate
+symptom -> restore: investigate
+plugin_deployment -> resolution
+backup_jobs -> resolution
+restore -> resolution
+```
+
 ## Before you begin
 
 - SnapCenter job errors appear in `Monitor → Jobs`; click the failed job for step-by-step detail.

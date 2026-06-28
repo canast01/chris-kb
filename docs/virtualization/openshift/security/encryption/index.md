@@ -34,6 +34,23 @@ graph TD
     class I result
 ```
 
+```d2
+direction: down
+
+encryption_options_reference: "Encryption Options Reference" {shape: rectangle}
+enable_etcd_encryption_at_rest: "Enable etcd Encryption at Rest" {shape: rectangle}
+custom_ingress_wildcard_certificate: "Custom Ingress (Wildcard) Certificate" {shape: rectangle}
+custom_api_server_certificate: "Custom API Server Certificate" {shape: rectangle}
+add_custom_ca_trust_bundle: "Add Custom CA Trust Bundle" {shape: rectangle}
+secret_management_with_vault: "Secret Management with Vault" {shape: rectangle}
+
+encryption_options_reference -> enable_etcd_encryption_at_rest: hardens
+enable_etcd_encryption_at_rest -> custom_ingress_wildcard_certificate: hardens
+custom_ingress_wildcard_certificate -> custom_api_server_certificate: hardens
+custom_api_server_certificate -> add_custom_ca_trust_bundle: hardens
+add_custom_ca_trust_bundle -> secret_management_with_vault: hardens
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

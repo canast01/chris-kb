@@ -18,6 +18,20 @@ Catalog of known issues related to SAN certification exam preparation — coveri
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+lab_environment_issues: "Lab Environment Issues" {shape: rectangle}
+exam_preparation: "Exam Preparation" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> lab_environment_issues: investigate
+symptom -> exam_preparation: investigate
+lab_environment_issues -> resolution
+exam_preparation -> resolution
+```
+
 ## Before you begin
 
 - SAN certification labs require access to physical or virtual FC switch environments — GNS3 / EVE-NG do not emulate FC.

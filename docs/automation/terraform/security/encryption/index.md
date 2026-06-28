@@ -14,6 +14,17 @@ Encryption reference covering Secrets and Encryption Architecture, Secrets Manag
 ![Terraform — Encryption](../../../../assets/automation-terraform-security-encryption-index.svg)
 
 
+```d2
+direction: down
+
+secrets_and_encryption_architecture: "Secrets and Encryption Architecture" {shape: rectangle}
+sensitive_variable_handling: "Sensitive Variable Handling" {shape: rectangle}
+encryption_reference: "Encryption Reference" {shape: rectangle}
+
+secrets_and_encryption_architecture -> sensitive_variable_handling: hardens
+sensitive_variable_handling -> encryption_reference: hardens
+```
+
 ## Before you begin
 
 - **Access:** Provider credentials configured (`terraform login` or env vars)

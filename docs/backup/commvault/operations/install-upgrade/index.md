@@ -15,6 +15,25 @@ Install & Upgrade reference covering Release Cadence, Upgrade Order, CommVault t
 
 
 
+```d2
+direction: right
+
+plan: "Plan" {shape: oval}
+release_cadence: "Release Cadence" {shape: rectangle}
+upgrade_order: "Upgrade Order" {shape: rectangle}
+commvault_to_metallic_saas_migration: "CommVault to Metallic SaaS Migration" {shape: rectangle}
+eol_tracking: "EOL Tracking" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+validate: "Validate" {shape: oval}
+
+plan -> release_cadence
+release_cadence -> upgrade_order
+upgrade_order -> commvault_to_metallic_saas_migration
+commvault_to_metallic_saas_migration -> eol_tracking
+eol_tracking -> verify
+verify -> validate
+```
+
 ## Before you begin
 
 - **Access:** Backup admin role on backup server; target system credentials

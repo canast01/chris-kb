@@ -19,6 +19,25 @@ Security Audit Procedure reference covering Audit Types, Scope Definition, Confi
   </a>
 </div>
 
+```d2
+direction: right
+
+center: "Security Audit" {shape: hexagon}
+audit_types: "Audit Types" {shape: rectangle}
+scope_definition: "Scope Definition" {shape: rectangle}
+configuration_audit_checks: "Configuration Audit Checks" {shape: rectangle}
+patch_compliance_check: "Patch Compliance Check" {shape: rectangle}
+vulnerability_scan_review: "Vulnerability Scan Review" {shape: rectangle}
+audit_evidence_collection: "Audit Evidence Collection" {shape: rectangle}
+
+center -> audit_types
+center -> scope_definition
+center -> configuration_audit_checks
+center -> patch_compliance_check
+center -> vulnerability_scan_review
+center -> audit_evidence_collection
+```
+
 ## Audit Types
 
 | Type | Frequency | Scope |

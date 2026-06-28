@@ -19,6 +19,25 @@ preventing snapshot sprawl through SPBM policy and backup integration.
 
 
 
+```d2
+direction: right
+
+center: "Scenarios" {shape: hexagon}
+products_involved: "Products Involved" {shape: rectangle}
+1_identify_all_affected_vms: "1. Identify All Affected VMs" {shape: rectangle}
+2_check_snapshot_manager_and_datasto: "2. Check Snapshot Manager and Datastore Disk Usage" {shape: rectangle}
+3_attempt_vcenter_consolidation: "3. Attempt vCenter Consolidation" {shape: rectangle}
+4_diagnose_consolidation_failures: "4. Diagnose Consolidation Failures" {shape: rectangle}
+5_manual_vmkfstools_consolidation_ad: "5. Manual vmkfstools Consolidation (Advanced)" {shape: rectangle}
+
+center -> products_involved
+center -> 1_identify_all_affected_vms
+center -> 2_check_snapshot_manager_and_datasto
+center -> 3_attempt_vcenter_consolidation
+center -> 4_diagnose_consolidation_failures
+center -> 5_manual_vmkfstools_consolidation_ad
+```
+
 ## Products Involved
 
 | Product | Role in This Scenario |

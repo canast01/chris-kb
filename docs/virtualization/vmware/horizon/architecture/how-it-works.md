@@ -15,6 +15,23 @@ How It Works reference covering Component Overview, Connection Flow, Blast Extre
 ![Horizon — How It Works](../../../../assets/virtualization-vmware-horizon-architecture-how-it-works.svg)
 
 
+```d2
+direction: right
+
+center: "Horizon" {shape: hexagon}
+component_overview: "Component Overview" {shape: rectangle}
+blast_extreme_vs_pcoip: "Blast Extreme vs PCoIP" {shape: rectangle}
+session_broker_role: "Session Broker Role" {shape: rectangle}
+security_server_deprecation: "Security Server Deprecation" {shape: rectangle}
+instant_clone_technology_detail: "Instant Clone Technology Detail" {shape: rectangle}
+
+center -> component_overview
+center -> blast_extreme_vs_pcoip
+center -> session_broker_role
+center -> security_server_deprecation
+center -> instant_clone_technology_detail
+```
+
 ## Component Overview
 
 VMware Horizon is a broker-based VDI and published application delivery platform. The core components and their relationships:

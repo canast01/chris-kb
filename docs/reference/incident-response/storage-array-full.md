@@ -17,6 +17,31 @@ P1/P2 incident — a datastore or storage array volume has hit capacity. VMs may
 
 ---
 
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+actor "Responder" as A
+participant "Incident Response System" as B
+participant "Dependent System" as C
+
+A -> B: Symptoms
+B --> A: OK
+A -> B: Immediate Triage (first 510 min)
+B --> A: OK
+A -> B: Stop the Bleeding
+B --> A: OK
+A -> B: Diagnose
+B --> A: OK
+A -> B: Fix
+B --> A: OK
+A -> B: ONTAP-Specific Checks
+B --> A: OK
+
+@enduml
+```
+
 ## Symptoms
 
 - VMs in vCenter show "Virtual machine disk consolidation is needed" warning

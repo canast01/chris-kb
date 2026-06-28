@@ -34,6 +34,27 @@ flowchart TD
     style s7 fill:#2e7d32,color:#fff,stroke:#1b5e20
 ```
 
+```d2
+direction: right
+
+plan: "Plan" {shape: oval}
+prerequisites: "Prerequisites" {shape: rectangle}
+connect_storage_arrays: "Connect Storage Arrays" {shape: rectangle}
+enable_aipowered_recommendations: "Enable AI-Powered Recommendations" {shape: rectangle}
+configure_dashboards: "Configure Dashboards" {shape: rectangle}
+set_capacity_alert_thresholds: "Set Capacity Alert Thresholds" {shape: rectangle}
+validate_telemetry_and_recommendatio: "Validate Telemetry and Recommendations" {shape: rectangle}
+validate: "Validate" {shape: oval}
+
+plan -> prerequisites
+prerequisites -> connect_storage_arrays
+connect_storage_arrays -> enable_aipowered_recommendations
+enable_aipowered_recommendations -> configure_dashboards
+configure_dashboards -> set_capacity_alert_thresholds
+set_capacity_alert_thresholds -> validate_telemetry_and_recommendatio
+validate_telemetry_and_recommendatio -> validate
+```
+
 ## Before you begin
 
 - **Access:** admin credentials for the target system and any upstream dependencies (DNS, NTP, vCenter, directory services)

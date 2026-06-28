@@ -23,12 +23,22 @@ SDDC Manager → Administration → Syslog → Add Syslog Server
 → Protocol: TLS (recommended) or UDP/TCP → Port: 6514 or 514
 ```
 ```powershell
+
+```d2
+direction: right
+
+center: "VMware Cloud Foundation" {shape: hexagon}
+configure_syslog_forwarding_on_all_e: "Configure syslog forwarding on all ESXi hosts in a cluster" {shape: rectangle}
+
+center -> configure_syslog_forwarding_on_all_e
+```
+
 ## Configure syslog forwarding on all ESXi hosts in a cluster
 Get-Cluster "ClusterName" | Get-VMHost | ForEach-Object {
   Set-VMHostSysLogServer -VMHost $_ -SysLogServer "udp://<siem-ip>:514"
   Restart-VMHostService -VMHost $_ -Key "syslog" -Confirm:$false
 }
-```
+```text
 
 ## See also
 

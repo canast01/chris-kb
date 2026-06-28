@@ -43,6 +43,27 @@ graph TD
     class M,N escalate
 ```
 
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+actor "On-Call Engineer" as ENG
+participant "OpenShift\nSystem" as SYS
+participant "Vendor Support" as SUP
+
+ENG -> SYS: Severity Levels and SLA
+SYS --> ENG: Output
+ENG -> SYS: Red Hat Support Case Checklist
+SYS --> ENG: Output
+ENG -> SYS: Knowledge Base Search
+SYS --> ENG: Output
+ENG -> SUP: Escalate with diagnostic bundle
+SUP --> ENG: Case / resolution path
+
+@enduml
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

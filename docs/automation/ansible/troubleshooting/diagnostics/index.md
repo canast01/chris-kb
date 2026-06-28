@@ -52,6 +52,32 @@ graph TD
     class R escalate
 ```
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+step_1_validate_playbook_and_invento: "Step 1 — Validate playbook and inventory" {shape: rectangle}
+step_2_test_connectivity: "Step 2 — Test connectivity" {shape: rectangle}
+step_3_increase_verbosity: "Step 3 — Increase verbosity" {shape: rectangle}
+step_4_inspect_variables_and_facts: "Step 4 — Inspect variables and facts" {shape: rectangle}
+step_5_dry_run_and_diff: "Step 5 — Dry run and diff" {shape: rectangle}
+step_6_awx_aap_job_diagnostics: "Step 6 — AWX / AAP job diagnostics" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> step_1_validate_playbook_and_invento: investigate
+symptom -> step_2_test_connectivity: investigate
+symptom -> step_3_increase_verbosity: investigate
+symptom -> step_4_inspect_variables_and_facts: investigate
+symptom -> step_5_dry_run_and_diff: investigate
+symptom -> step_6_awx_aap_job_diagnostics: investigate
+step_1_validate_playbook_and_invento -> resolution
+step_2_test_connectivity -> resolution
+step_3_increase_verbosity -> resolution
+step_4_inspect_variables_and_facts -> resolution
+step_5_dry_run_and_diff -> resolution
+step_6_awx_aap_job_diagnostics -> resolution
+```
+
 ## Before you begin
 
 - **Access:** SSH key or service account with sudo on managed hosts; Ansible control node access; AWX admin credentials if using AWX/AAP

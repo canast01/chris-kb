@@ -16,6 +16,25 @@ Standards reference covering Sizing and Capacity Model, Sizing by Workload, Netw
 
 
 
+```d2
+direction: right
+
+center: "ECS" {shape: hexagon}
+sizing_and_capacity_model: "Sizing and Capacity Model" {shape: rectangle}
+sizing_by_workload: "Sizing by Workload" {shape: rectangle}
+network_sizing: "Network Sizing" {shape: rectangle}
+naming_conventions: "Naming Conventions" {shape: rectangle}
+build_and_deployment_baseline: "Build and Deployment Baseline" {shape: rectangle}
+replication_group_design: "Replication Group Design" {shape: rectangle}
+
+center -> sizing_and_capacity_model
+center -> sizing_by_workload
+center -> network_sizing
+center -> naming_conventions
+center -> build_and_deployment_baseline
+center -> replication_group_design
+```
+
 ## Sizing and Capacity Model
 
 ECS nodes are standardised appliance configurations (ECS U-Series, CX-Series). Raw capacity is converted to usable capacity after erasure coding overhead (approximately 1.33× raw for 12+4 EC) and a 30% overhead reservation for metadata, journals, and rebuild workspace.

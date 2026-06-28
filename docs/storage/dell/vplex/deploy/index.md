@@ -34,6 +34,27 @@ flowchart TD
     style s9 fill:#2e7d32,color:#fff,stroke:#1b5e20
 ```
 
+```d2
+direction: right
+
+plan: "Plan" {shape: oval}
+prerequisites: "Prerequisites" {shape: rectangle}
+rack_and_cable: "Rack and Cable" {shape: rectangle}
+vplex_management_cli_initial_setup: "VPLEX Management CLI Initial Setup" {shape: rectangle}
+connect_backend_storage_arrays: "Connect Backend Storage Arrays" {shape: rectangle}
+create_storage_volumes_and_extents: "Create Storage Volumes and Extents" {shape: rectangle}
+create_virtual_volumes: "Create Virtual Volumes" {shape: rectangle}
+validate: "Validate" {shape: oval}
+
+plan -> prerequisites
+prerequisites -> rack_and_cable
+rack_and_cable -> vplex_management_cli_initial_setup
+vplex_management_cli_initial_setup -> connect_backend_storage_arrays
+connect_backend_storage_arrays -> create_storage_volumes_and_extents
+create_storage_volumes_and_extents -> create_virtual_volumes
+create_virtual_volumes -> validate
+```
+
 ## Before you begin
 
 - **Access:** admin credentials for the target system and any upstream dependencies (DNS, NTP, vCenter, directory services)

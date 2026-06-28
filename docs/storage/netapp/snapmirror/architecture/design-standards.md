@@ -18,6 +18,19 @@ SnapMirror design standards: async vs. sync policy selection, RPO and retention 
 
 ---
 
+```d2
+direction: right
+
+center: "SnapMirror" {shape: hexagon}
+naming_conventions: "Naming Conventions" {shape: rectangle}
+replication_policy_baseline: "Replication Policy Baseline" {shape: rectangle}
+configuration_checklist: "Configuration Checklist" {shape: rectangle}
+
+center -> naming_conventions
+center -> replication_policy_baseline
+center -> configuration_checklist
+```
+
 ## Naming Conventions
 
 | Object | Pattern | Example |

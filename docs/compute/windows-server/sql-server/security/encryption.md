@@ -15,6 +15,23 @@ SQL Server encryption — Transparent Data Encryption (TDE), Always Encrypted, c
 
 
 
+```d2
+direction: down
+
+external: External / Untrusted {shape: rectangle}
+transparent_data_encryption_tde: "Transparent Data Encryption (TDE)" {shape: rectangle}
+always_encrypted: "Always Encrypted" {shape: rectangle}
+tls_for_client_connections: "TLS for Client Connections" {shape: rectangle}
+backup_encryption: "Backup Encryption" {shape: rectangle}
+core: "SQL Server Core" {shape: hexagon}
+
+external -> transparent_data_encryption_tde: traffic in
+transparent_data_encryption_tde -> always_encrypted
+always_encrypted -> tls_for_client_connections
+tls_for_client_connections -> backup_encryption
+backup_encryption -> core: secured path
+```
+
 ## Before you begin
 
 - **Access:** Local Administrator or Domain Admin on target hosts

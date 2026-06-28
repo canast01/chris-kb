@@ -18,6 +18,25 @@ Alert thresholds:
 - > 75% used: review and plan expansion
 - > 85% used: immediate action — thin provisioned disks may fail to inflate
 
+```d2
+direction: right
+
+begin_checks: "Begin Checks" {shape: oval}
+vsan_capacity: "vSAN Capacity" {shape: rectangle}
+snapshot_growth: "Snapshot Growth" {shape: rectangle}
+thin_provisioning_risk: "Thin Provisioning Risk" {shape: rectangle}
+backup_repository_usage: "Backup Repository Usage" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+generate_report: "Generate Report" {shape: oval}
+
+begin_checks -> vsan_capacity
+vsan_capacity -> snapshot_growth
+snapshot_growth -> thin_provisioning_risk
+thin_provisioning_risk -> backup_repository_usage
+backup_repository_usage -> verify
+verify -> generate_report
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

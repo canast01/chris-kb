@@ -15,6 +15,21 @@ Capacity reference covering Capacity via Pure1 API, Capacity Alerts, Capacity Pl
 
 
 
+```d2
+direction: right
+
+center: "Pure1" {shape: hexagon}
+capacity_alerts: "Capacity Alerts" {shape: rectangle}
+capacity_planning: "Capacity Planning" {shape: rectangle}
+snapshot_space_management: "Snapshot Space Management" {shape: rectangle}
+common_capacity_issues: "Common Capacity Issues" {shape: rectangle}
+
+center -> capacity_alerts
+center -> capacity_planning
+center -> snapshot_space_management
+center -> common_capacity_issues
+```
+
 ## Capacity Alerts
 
 Pure1 raises automatic capacity alerts at these thresholds:

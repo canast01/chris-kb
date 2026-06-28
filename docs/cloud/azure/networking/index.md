@@ -15,6 +15,15 @@ Azure Networking articles, operational checks, troubleshooting notes, and refere
 
 
 
+```d2
+direction: right
+
+center: "Azure" {shape: hexagon}
+articles: "Articles" {shape: rectangle}
+
+center -> articles
+```
+
 ## Articles
 
 <div class="kb-grid kb-grid-3">

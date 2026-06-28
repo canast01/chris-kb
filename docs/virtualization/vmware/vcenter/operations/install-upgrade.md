@@ -17,6 +17,25 @@ Install & Upgrade reference covering vCenter Upgrade Procedure (VCSA), vSphere L
 
 
 
+```d2
+direction: right
+
+hub: "vCenter Server\nOperations" {shape: hexagon}
+vcenter_upgrade_procedure_vcsa: "vCenter Upgrade Procedure (VCSA)" {shape: rectangle}
+vsphere_lifecycle_manager_vlcm: "vSphere Lifecycle Manager (vLCM)" {shape: rectangle}
+interoperability_matrix: "Interoperability Matrix" {shape: rectangle}
+patch_cadence: "Patch Cadence" {shape: rectangle}
+eol_planning: "EOL Planning" {shape: rectangle}
+rollback_considerations: "Rollback Considerations" {shape: rectangle}
+
+hub -> vcenter_upgrade_procedure_vcsa
+hub -> vsphere_lifecycle_manager_vlcm
+hub -> interoperability_matrix
+hub -> patch_cadence
+hub -> eol_planning
+hub -> rollback_considerations
+```
+
 ## Before you begin
 
 - **Access:** vCenter read-only minimum; Administrator role for remediation steps

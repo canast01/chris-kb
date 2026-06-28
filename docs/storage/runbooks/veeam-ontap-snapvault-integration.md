@@ -19,6 +19,29 @@ Cross-product runbook for integrating Veeam Backup &amp; Replication with NetApp
 
 ![Veeam Backup with ONTAP SnapVault Integration — Diagram](../../assets/storage-runbooks-veeam-ontap-snapvault-integration-diagram.svg)
 
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+actor "Responder" as A
+participant "Runbooks System" as B
+participant "Dependent System" as C
+
+A -> B: Phase 1 ONTAP SnapVault Configuration
+B --> A: OK
+A -> B: Phase 2 Veeam Configuration
+B --> A: OK
+A -> B: Phase 3 Restore Testing
+B --> A: OK
+A -> B: RPO / RTO Reference
+B --> A: OK
+A -> B: Rollback
+B --> A: OK
+
+@enduml
+```
+
 ## Before You Begin
 
 **Prerequisites:**

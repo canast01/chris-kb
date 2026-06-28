@@ -35,6 +35,27 @@ flowchart TD
     style s7 fill:#2e7d32,color:#fff,stroke:#1b5e20
 ```
 
+```d2
+direction: right
+
+plan: "Plan" {shape: oval}
+phase_1_prerequisites: "Phase 1 — Prerequisites" {shape: rectangle}
+phase_2_connection_server_pod: "Phase 2 — Connection Server Pod" {shape: rectangle}
+phase_3_unified_access_gateway_uag: "Phase 3 — Unified Access Gateway (UAG)" {shape: rectangle}
+phase_4_desktop_pools_and_rdsh_farms: "Phase 4 — Desktop Pools and RDSH Farms" {shape: rectangle}
+phase_5_app_volumes_and_dynamic_envi: "Phase 5 — App Volumes and Dynamic Environment Manager" {shape: rectangle}
+phase_6_validation: "Phase 6 — Validation" {shape: rectangle}
+validate: "Validate" {shape: oval}
+
+plan -> phase_1_prerequisites
+phase_1_prerequisites -> phase_2_connection_server_pod
+phase_2_connection_server_pod -> phase_3_unified_access_gateway_uag
+phase_3_unified_access_gateway_uag -> phase_4_desktop_pools_and_rdsh_farms
+phase_4_desktop_pools_and_rdsh_farms -> phase_5_app_volumes_and_dynamic_envi
+phase_5_app_volumes_and_dynamic_envi -> phase_6_validation
+phase_6_validation -> validate
+```
+
 ## Before you begin
 
 - **Access:** vCenter Administrator role and SSH access to VCSA/ESXi hosts

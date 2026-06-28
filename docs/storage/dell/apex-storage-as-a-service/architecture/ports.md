@@ -20,6 +20,21 @@ Firewall port reference for Dell APEX Storage as a Service (STaaS). APEX Storage
 
 
 
+```d2
+direction: right
+
+center: "APEX Storage" {shape: hexagon}
+apex_cloud_management_outbound_requi: "APEX Cloud Management (Outbound — Required)" {shape: rectangle}
+data_access_protocols_same_as_underl: "Data Access Protocols (Same as Underlying Array)" {shape: rectangle}
+admin_access_to_apex_portal_saas: "Admin Access to APEX Portal (SaaS)" {shape: rectangle}
+firewall_summary: "Firewall Summary" {shape: rectangle}
+
+center -> apex_cloud_management_outbound_requi
+center -> data_access_protocols_same_as_underl
+center -> admin_access_to_apex_portal_saas
+center -> firewall_summary
+```
+
 ## APEX Cloud Management (Outbound — Required)
 
 | Port | Protocol | Source | Destination | Purpose |

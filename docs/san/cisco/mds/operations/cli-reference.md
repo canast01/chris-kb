@@ -314,6 +314,15 @@ show snmp community
 snmp-server user <user> <group> v3 auth sha <auth_pass> priv aes 128 <priv_pass>
 ```
 
+```d2
+direction: right
+
+hub: "Cisco MDS\nOperations" {shape: hexagon}
+verify: "Verify" {shape: rectangle}
+
+hub -> verify
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

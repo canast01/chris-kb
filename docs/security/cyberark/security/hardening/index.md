@@ -22,6 +22,19 @@ The Digital Vault server must follow the CyberArk-supplied Windows Server harden
 | PVWA TLS | TLS 1.2+ only; valid internal CA certificate |
 | Master Policy review | Quarterly review of base policy and platform-specific overrides |
 
+```d2
+direction: down
+
+network_controls: "Network Controls" {shape: rectangle}
+os_hardening: "OS Hardening" {shape: rectangle}
+application_security: "Application Security" {shape: rectangle}
+audit_monitoring: "Audit & Monitoring" {shape: rectangle}
+
+network_controls -> os_hardening: hardens
+os_hardening -> application_security: hardens
+application_security -> audit_monitoring: hardens
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

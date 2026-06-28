@@ -16,6 +16,26 @@ Access Control reference covering NetBackup Access Control (NBAC).
 
 
 
+```d2
+direction: down
+
+root: "NetBackup\nAccess Control" {shape: hexagon}
+administrator: "Administrator" {shape: rectangle}
+operator: "Operator" {shape: rectangle}
+auditor: "Auditor" {shape: rectangle}
+readonly: "Read-Only" {shape: rectangle}
+resources: Protected Resources {shape: cylinder}
+
+root -> administrator: role
+administrator -> resources: scoped
+root -> operator: role
+operator -> resources: scoped
+root -> auditor: role
+auditor -> resources: scoped
+root -> readonly: role
+readonly -> resources: scoped
+```
+
 ## Before you begin
 
 - **Access:** Backup admin role on backup server; target system credentials

@@ -73,6 +73,21 @@ Administration > Outbound Settings > Add Plugin > REST Notification Plugin
 Administration > Solutions > Log Insight Adapter
 ```
 
+```d2
+direction: right
+
+center: "Aria Operations" {shape: hexagon}
+vcenter_integration: "vCenter Integration" {shape: rectangle}
+aria_logs_integration: "Aria Logs Integration" {shape: rectangle}
+thirdparty_management_pack_summary: "Third-Party Management Pack Summary" {shape: rectangle}
+credential_management: "Credential Management" {shape: rectangle}
+
+center -> vcenter_integration
+center -> aria_logs_integration
+center -> thirdparty_management_pack_summary
+center -> credential_management
+```
+
 ## Overview
 
 Aria Operations ingests telemetry from VMware infrastructure and third-party platforms via management packs (adapters). Outbound integrations route alerts and reports to ITSM, notification, and log platforms.

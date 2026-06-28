@@ -16,6 +16,23 @@ Standards reference covering Pool Design Decision Tree, Sizing Guidelines, Namin
 
 
 
+```d2
+direction: right
+
+center: "Unity XT" {shape: hexagon}
+pool_design_decision_tree: "Pool Design Decision Tree" {shape: rectangle}
+sizing_guidelines: "Sizing Guidelines" {shape: rectangle}
+naming_conventions: "Naming Conventions" {shape: rectangle}
+build_baseline: "Build Baseline" {shape: rectangle}
+configuration_checklist: "Configuration Checklist" {shape: rectangle}
+
+center -> pool_design_decision_tree
+center -> sizing_guidelines
+center -> naming_conventions
+center -> build_baseline
+center -> configuration_checklist
+```
+
 ## Pool Design Decision Tree
 
 ```mermaid

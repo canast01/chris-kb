@@ -57,6 +57,32 @@ graph TD
     class U,V escalate
 ```
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+step_1_check_environmental_sensors_a: "Step 1 — Check environmental sensors and switch health" {shape: rectangle}
+step_2_port_diagnostics: "Step 2 — Port diagnostics" {shape: rectangle}
+step_3_fabriclevel_diagnostics: "Step 3 — Fabric-level diagnostics" {shape: rectangle}
+step_4_buffer_credit_diagnostics: "Step 4 — Buffer credit diagnostics" {shape: rectangle}
+step_5_collect_tac_support_bundle: "Step 5 — Collect TAC support bundle" {shape: rectangle}
+log_locations: "Log locations" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> step_1_check_environmental_sensors_a: investigate
+symptom -> step_2_port_diagnostics: investigate
+symptom -> step_3_fabriclevel_diagnostics: investigate
+symptom -> step_4_buffer_credit_diagnostics: investigate
+symptom -> step_5_collect_tac_support_bundle: investigate
+symptom -> log_locations: investigate
+step_1_check_environmental_sensors_a -> resolution
+step_2_port_diagnostics -> resolution
+step_3_fabriclevel_diagnostics -> resolution
+step_4_buffer_credit_diagnostics -> resolution
+step_5_collect_tac_support_bundle -> resolution
+log_locations -> resolution
+```
+
 ## Before you begin
 
 - **Access:** SSH to the Fabric OS switch as admin; serial console access for unresponsive switches; SCP server or USB drive accessible for `supportsave`

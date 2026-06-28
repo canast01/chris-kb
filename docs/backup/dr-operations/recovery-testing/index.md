@@ -13,6 +13,25 @@ Recovery testing validates that systems, data, and services can be restored to a
 
 ---
 
+```d2
+direction: right
+
+center: "DR Operations" {shape: hexagon}
+testing_types: "Testing Types" {shape: rectangle}
+annual_testing_calendar: "Annual Testing Calendar" {shape: rectangle}
+test_scenario_library: "Test Scenario Library" {shape: rectangle}
+test_execution_procedure: "Test Execution Procedure" {shape: rectangle}
+commvault_intellisnap_applicationcon: "Commvault IntelliSnap — Application-Consistent Recovery Test" {shape: rectangle}
+regulatory_requirements_for_dr_testi: "Regulatory Requirements for DR Testing" {shape: rectangle}
+
+center -> testing_types
+center -> annual_testing_calendar
+center -> test_scenario_library
+center -> test_execution_procedure
+center -> commvault_intellisnap_applicationcon
+center -> regulatory_requirements_for_dr_testi
+```
+
 ## Testing Types
 
 | Test Type | Scope | Frequency | Duration | Disruption | Primary Objective |

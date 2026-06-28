@@ -13,6 +13,25 @@ Health Checks reference covering Health Check Decision Flow, Daily Checks, Healt
 </div>
 
 
+```d2
+direction: right
+
+hub: "NetApp ONTAP\nOperations" {shape: hexagon}
+run_this_routine: "Run This Routine" {shape: rectangle}
+health_check_decision_flow: "Health Check Decision Flow" {shape: rectangle}
+daily_checks: "Daily Checks" {shape: rectangle}
+health_check: "Health Check" {shape: rectangle}
+cluster_health: "Cluster Health" {shape: rectangle}
+prechange_checklist: "Pre-Change Checklist" {shape: rectangle}
+
+hub -> run_this_routine
+hub -> health_check_decision_flow
+hub -> daily_checks
+hub -> health_check
+hub -> cluster_health
+hub -> prechange_checklist
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

@@ -19,6 +19,27 @@ How to escalate Windows Server issues to Microsoft support: what data to collect
 
 ---
 
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+actor "On-Call Engineer" as ENG
+participant "Windows Server\nSystem" as SYS
+participant "Vendor Support" as SUP
+
+ENG -> SYS: Pre-Escalation Self-Check
+SYS --> ENG: Output
+ENG -> SYS: Step-by-Step Data Collection
+SYS --> ENG: Output
+ENG -> SYS: How to Open the SR on support.microsoft.com
+SYS --> ENG: Output
+ENG -> SUP: Escalate with diagnostic bundle
+SUP --> ENG: Case / resolution path
+
+@enduml
+```
+
 ## Before you begin
 
 - **Access required:** Local Administrator or Domain Admin on the affected server; Microsoft 365 admin account or Premier contract access on support.microsoft.com

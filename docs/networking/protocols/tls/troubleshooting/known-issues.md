@@ -19,6 +19,23 @@ Catalog of known TLS issues covering handshake failures, certificate validation 
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+handshake_failures: "Handshake Failures" {shape: rectangle}
+certificate_errors: "Certificate Errors" {shape: rectangle}
+tls_version_compatibility: "TLS Version Compatibility" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> handshake_failures: investigate
+symptom -> certificate_errors: investigate
+symptom -> tls_version_compatibility: investigate
+handshake_failures -> resolution
+certificate_errors -> resolution
+tls_version_compatibility -> resolution
+```
+
 ## Before you begin
 
 - Diagnose with: `openssl s_client -connect <host>:443 -showcerts` — shows full certificate chain and TLS negotiation.

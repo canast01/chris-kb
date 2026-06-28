@@ -34,6 +34,27 @@ flowchart TD
     style s8 fill:#2e7d32,color:#fff,stroke:#1b5e20
 ```
 
+```d2
+direction: right
+
+plan: "Plan" {shape: oval}
+install_powershell_core_crossplatfor: "Install PowerShell Core (Cross-Platform)" {shape: rectangle}
+install_required_modules: "Install Required Modules" {shape: rectangle}
+configure_powershell_profile: "Configure PowerShell Profile" {shape: rectangle}
+configure_execution_policy: "Configure Execution Policy" {shape: rectangle}
+set_up_remote_management_winrm: "Set Up Remote Management (WinRM)" {shape: rectangle}
+configure_logging_and_transcripts: "Configure Logging and Transcripts" {shape: rectangle}
+validate: "Validate" {shape: oval}
+
+plan -> install_powershell_core_crossplatfor
+install_powershell_core_crossplatfor -> install_required_modules
+install_required_modules -> configure_powershell_profile
+configure_powershell_profile -> configure_execution_policy
+configure_execution_policy -> set_up_remote_management_winrm
+set_up_remote_management_winrm -> configure_logging_and_transcripts
+configure_logging_and_transcripts -> validate
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

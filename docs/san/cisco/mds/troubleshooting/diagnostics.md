@@ -212,6 +212,17 @@ show tech-support > bootflash:tech-support-<hostname>-<date>.txt
 copy bootflash:tech-support-<hostname>-<date>.txt scp://<user>@<server>/<path>/
 ```
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+verify_resolution: "Verify resolution" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> verify_resolution: investigate
+verify_resolution -> resolution
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

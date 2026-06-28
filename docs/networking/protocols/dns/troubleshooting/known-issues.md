@@ -18,6 +18,23 @@ Catalog of known DNS bugs, error codes, and workarounds covering resolution fail
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+resolution_failures: "Resolution Failures" {shape: rectangle}
+adintegrated_dns: "AD-Integrated DNS" {shape: rectangle}
+ttl_and_caching: "TTL and Caching" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> resolution_failures: investigate
+symptom -> adintegrated_dns: investigate
+symptom -> ttl_and_caching: investigate
+resolution_failures -> resolution
+adintegrated_dns -> resolution
+ttl_and_caching -> resolution
+```
+
 ## Before you begin
 
 - `nslookup <name> <dns-server>` and `dig @<dns-server> <name>` for resolution testing.

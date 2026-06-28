@@ -14,6 +14,25 @@ Step-by-step procedures for conducting, documenting, and remediating periodic ac
 
 
 
+```d2
+direction: right
+
+hub: "Operations\nOperations" {shape: hexagon}
+run_quarterly_access_review: "Run Quarterly Access Review" {shape: rectangle}
+export_ad_group_membership_report: "Export AD Group Membership Report" {shape: rectangle}
+remove_stale_accounts: "Remove Stale Accounts" {shape: rectangle}
+review_service_account_access: "Review Service Account Access" {shape: rectangle}
+review_privileged_group_membership: "Review Privileged Group Membership" {shape: rectangle}
+document_access_review_evidence: "Document Access Review Evidence" {shape: rectangle}
+
+hub -> run_quarterly_access_review
+hub -> export_ad_group_membership_report
+hub -> remove_stale_accounts
+hub -> review_service_account_access
+hub -> review_privileged_group_membership
+hub -> document_access_review_evidence
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

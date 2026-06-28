@@ -28,6 +28,15 @@ Integrations reference covering Notes on APEX Management Boundaries.
 | Secure Connect Gateway (SCG) | Telemetry pipeline from on-premises hardware to CloudIQ and Dell support |
 | Dell field service | Hardware replacement and capacity additions are Dell-managed via APEX Console service requests |
 
+```d2
+direction: right
+
+center: "APEX Storage" {shape: hexagon}
+notes_on_apex_management_boundaries: "Notes on APEX Management Boundaries" {shape: rectangle}
+
+center -> notes_on_apex_management_boundaries
+```
+
 ## Notes on APEX Management Boundaries
 
 | Task | Interface |

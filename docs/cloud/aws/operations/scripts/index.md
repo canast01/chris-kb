@@ -655,6 +655,15 @@ cd C:\Users\YourName\Desktop
 .\aws-s3-inventory.ps1
 ```
 
+```d2
+direction: right
+
+center: "AWS" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+center -> verify
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

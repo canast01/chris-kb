@@ -16,6 +16,21 @@ Install & Upgrade reference covering Initial Setup, Software Upgrade, Appliance 
 
 
 
+```d2
+direction: right
+
+hub: "PowerStore\nOperations" {shape: hexagon}
+initial_setup: "Initial Setup" {shape: rectangle}
+software_upgrade: "Software Upgrade" {shape: rectangle}
+appliance_lifecycle: "Appliance Lifecycle" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+hub -> initial_setup
+hub -> software_upgrade
+hub -> appliance_lifecycle
+hub -> verify
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

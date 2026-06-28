@@ -19,6 +19,17 @@ show version
 ```
 
 
+```d2
+direction: right
+
+hub: "Cisco MDS\nOperations" {shape: hexagon}
+run_this_routine: "Run This Routine" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+hub -> run_this_routine
+hub -> verify
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

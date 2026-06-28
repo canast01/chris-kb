@@ -22,6 +22,27 @@ See also: [Backup & DR](../../backup-dr/index.md) for full Azure Backup and Azur
 
 ---
 
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+participant "Source\n(Azure)" as SRC
+participant "Backup Engine" as ENG
+participant "Target / Vault" as TGT
+
+SRC -> ENG: Quick Reference
+ENG -> TGT: Write
+TGT --> ENG: Confirmed
+ENG --> SRC: Done
+SRC -> ENG: Verify
+ENG -> TGT: Write
+TGT --> ENG: Confirmed
+ENG --> SRC: Done
+
+@enduml
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

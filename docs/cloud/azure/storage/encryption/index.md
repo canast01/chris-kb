@@ -15,6 +15,23 @@ Azure Storage Encryption reference covering Overview, Storage Encryption Key Mod
 
 
 
+```d2
+direction: down
+
+storage_encryption_key_model: "Storage Encryption Key Model" {shape: rectangle}
+encryption_key_options: "Encryption Key Options" {shape: rectangle}
+checking_encryption_status: "Checking Encryption Status" {shape: rectangle}
+enabling_customermanaged_keys_cmk: "Enabling Customer-Managed Keys (CMK)" {shape: rectangle}
+key_rotation: "Key Rotation" {shape: rectangle}
+infrastructure_encryption: "Infrastructure Encryption" {shape: rectangle}
+
+storage_encryption_key_model -> encryption_key_options: hardens
+encryption_key_options -> checking_encryption_status: hardens
+checking_encryption_status -> enabling_customermanaged_keys_cmk: hardens
+enabling_customermanaged_keys_cmk -> key_rotation: hardens
+key_rotation -> infrastructure_encryption: hardens
+```
+
 ## Overview
 
 All Azure Storage data is encrypted at rest by default using Storage Service Encryption (SSE). Encryption uses AES-256 and is transparent to applications. Key management options include Platform-Managed Keys (PMK), Customer-Managed Keys (CMK) via Azure Key Vault, and Customer-Provided Keys (CPK) for per-request encryption.

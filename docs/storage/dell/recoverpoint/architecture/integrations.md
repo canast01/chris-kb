@@ -16,6 +16,23 @@ RecoverPoint integrations: vSphere plugin registration, VMAX and XtremIO product
 
 ---
 
+```d2
+direction: right
+
+center: "RecoverPoint" {shape: hexagon}
+splitter_topology: "Splitter Topology" {shape: rectangle}
+vmware_srm_integration: "VMware SRM Integration" {shape: rectangle}
+storage_array_integration: "Storage Array Integration" {shape: rectangle}
+aria_operations_integration: "Aria Operations Integration" {shape: rectangle}
+api_integration: "API Integration" {shape: rectangle}
+
+center -> splitter_topology
+center -> vmware_srm_integration
+center -> storage_array_integration
+center -> aria_operations_integration
+center -> api_integration
+```
+
 ## Splitter Topology
 
 ```mermaid

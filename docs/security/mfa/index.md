@@ -26,6 +26,19 @@ Multi-Factor Authentication (MFA) reference covering Overview, MFA Authenticatio
   </a>
 </div>
 
+```d2
+direction: right
+
+center: "Mfa" {shape: hexagon}
+daily_checks: "Daily Checks" {shape: rectangle}
+health_commands: "Health Commands" {shape: rectangle}
+upgrade_workflow: "Upgrade Workflow" {shape: rectangle}
+
+center -> daily_checks
+center -> health_commands
+center -> upgrade_workflow
+```
+
 ## Overview
 
 MFA adds an additional authentication factor beyond passwords to protect accounts and systems from unauthorized access.

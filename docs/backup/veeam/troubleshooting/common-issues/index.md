@@ -18,6 +18,32 @@ Most Veeam job failures fall into a small set of categories: VMware snapshot iss
 
  The first step for any failure is to open the job statistics view in the console — the task-level error message and reason field usually point to the root cause without needing to open log files.
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+diagnostic_flow: "Diagnostic Flow" {shape: rectangle}
+triage_decision_tree: "Triage Decision Tree" {shape: rectangle}
+repository_out_of_space: "Repository Out of Space" {shape: rectangle}
+instant_vm_recovery_vm_not_starting: "Instant VM Recovery — VM Not Starting" {shape: rectangle}
+vbr_service_crash_instability: "VBR Service Crash / Instability" {shape: rectangle}
+backup_copy_job_never_completes: "Backup Copy Job Never Completes" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> diagnostic_flow: investigate
+symptom -> triage_decision_tree: investigate
+symptom -> repository_out_of_space: investigate
+symptom -> instant_vm_recovery_vm_not_starting: investigate
+symptom -> vbr_service_crash_instability: investigate
+symptom -> backup_copy_job_never_completes: investigate
+diagnostic_flow -> resolution
+triage_decision_tree -> resolution
+repository_out_of_space -> resolution
+instant_vm_recovery_vm_not_starting -> resolution
+vbr_service_crash_instability -> resolution
+backup_copy_job_never_completes -> resolution
+```
+
 ## Diagnostic Flow
 
 ```mermaid

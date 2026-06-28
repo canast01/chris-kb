@@ -16,6 +16,25 @@ How It Works reference covering Forest and Domain Hierarchy, Core Components, FS
 
 
 
+```d2
+direction: right
+
+center: "Active Directory" {shape: hexagon}
+forest_and_domain_hierarchy: "Forest and Domain Hierarchy" {shape: rectangle}
+core_components: "Core Components" {shape: rectangle}
+fsmo_role_placement: "FSMO Role Placement" {shape: rectangle}
+key_services_and_ports: "Key Services and Ports" {shape: rectangle}
+replication_topology: "Replication Topology" {shape: rectangle}
+dc_high_availability_design: "DC High Availability Design" {shape: rectangle}
+
+center -> forest_and_domain_hierarchy
+center -> core_components
+center -> fsmo_role_placement
+center -> key_services_and_ports
+center -> replication_topology
+center -> dc_high_availability_design
+```
+
 ## Forest and Domain Hierarchy
 
 Active Directory is organised in a Forest → Domain → OU hierarchy:

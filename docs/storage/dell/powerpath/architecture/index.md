@@ -37,6 +37,17 @@ graph LR
 <a class="kb-card" href="design-standards/"><strong>Design Standards</strong><span>Path count requirements, CLAROpt policy standards, and installation best practices.</span></a>
 </div>
 
+```d2
+direction: right
+
+center: "PowerPath" {shape: hexagon}
+loadbalancing_policies: "Load-Balancing Policies" {shape: rectangle}
+hostside_mpio_stack: "Host-Side MPIO Stack" {shape: rectangle}
+
+center -> loadbalancing_policies
+center -> hostside_mpio_stack
+```
+
 ## Load-Balancing Policies
 
 | Policy | Code | Description |

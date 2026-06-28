@@ -14,6 +14,23 @@ Common questions about Dell APEX Storage as a Service operations, configuration,
 
 ![Dell APEX Storage as a Service FAQ](../../../../assets/storage-dell-apex-storage-as-a-service-operations-faq.svg)
 
+```d2
+direction: right
+
+hub: "APEX Storage\nOperations" {shape: hexagon}
+general: "General" {shape: rectangle}
+configuration: "Configuration" {shape: rectangle}
+operations: "Operations" {shape: rectangle}
+troubleshooting: "Troubleshooting" {shape: rectangle}
+backup_and_recovery: "Backup and Recovery" {shape: rectangle}
+
+hub -> general
+hub -> configuration
+hub -> operations
+hub -> troubleshooting
+hub -> backup_and_recovery
+```
+
 ## General
 
 **Q: How do I check the current APEX Storage firmware version?**

@@ -18,6 +18,23 @@ Catalog of known PowerStore bugs, error codes, and workarounds covering NAS, SAN
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+host_connectivity: "Host Connectivity" {shape: rectangle}
+replication: "Replication" {shape: rectangle}
+powerstore_manager: "PowerStore Manager" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> host_connectivity: investigate
+symptom -> replication: investigate
+symptom -> powerstore_manager: investigate
+host_connectivity -> resolution
+replication -> resolution
+powerstore_manager -> resolution
+```
+
 ## Before you begin
 
 - PowerStore alerts appear in PowerStore Manager → Infrastructure → Events.

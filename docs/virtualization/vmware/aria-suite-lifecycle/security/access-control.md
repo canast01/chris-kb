@@ -21,6 +21,19 @@ Assign the minimum role required for the automation task — use `LCM_CONTENT_DE
 
 ---
 
+```d2
+direction: down
+
+external: External / Untrusted {shape: rectangle}
+separation_of_duties: "Separation of Duties" {shape: rectangle}
+auditing_access: "Auditing Access" {shape: rectangle}
+core: "Aria Suite Lifecycle Core" {shape: hexagon}
+
+external -> separation_of_duties: traffic in
+separation_of_duties -> auditing_access
+auditing_access -> core: secured path
+```
+
 ## Before you begin
 
 - **Access:** vCenter Administrator role

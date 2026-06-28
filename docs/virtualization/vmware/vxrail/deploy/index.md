@@ -36,6 +36,27 @@ flowchart TD
     style s8 fill:#2e7d32,color:#fff,stroke:#1b5e20
 ```
 
+```d2
+direction: right
+
+plan: "Plan" {shape: oval}
+phase_1_physical_readiness: "Phase 1: Physical Readiness" {shape: rectangle}
+phase_2_first_run_wizard: "Phase 2: First Run Wizard" {shape: rectangle}
+phase_3_vsan_configuration: "Phase 3: vSAN Configuration" {shape: rectangle}
+phase_4_network_validation: "Phase 4: Network Validation" {shape: rectangle}
+phase_5_supportassist_and_omivv: "Phase 5: SupportAssist and OMIVV" {shape: rectangle}
+phase_6_postdeploy_hardening_and_bas: "Phase 6: Post-Deploy Hardening and Baseline" {shape: rectangle}
+validate: "Validate" {shape: oval}
+
+plan -> phase_1_physical_readiness
+phase_1_physical_readiness -> phase_2_first_run_wizard
+phase_2_first_run_wizard -> phase_3_vsan_configuration
+phase_3_vsan_configuration -> phase_4_network_validation
+phase_4_network_validation -> phase_5_supportassist_and_omivv
+phase_5_supportassist_and_omivv -> phase_6_postdeploy_hardening_and_bas
+phase_6_postdeploy_hardening_and_bas -> validate
+```
+
 ## Before you begin
 
 - **Access:** vCenter Administrator role and SSH access to VCSA/ESXi hosts

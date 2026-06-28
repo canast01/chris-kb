@@ -16,6 +16,23 @@ Confluence integrates with a wide range of external systems. This page covers th
 
 ---
 
+```d2
+direction: right
+
+center: "Integrations" {shape: hexagon}
+jira_integration: "Jira Integration" {shape: rectangle}
+ldap_active_directory_authentication: "LDAP / Active Directory Authentication" {shape: rectangle}
+smtp_email_configuration: "SMTP Email Configuration" {shape: rectangle}
+webhooks: "Webhooks" {shape: rectangle}
+rest_api_overview: "REST API Overview" {shape: rectangle}
+
+center -> jira_integration
+center -> ldap_active_directory_authentication
+center -> smtp_email_configuration
+center -> webhooks
+center -> rest_api_overview
+```
+
 ## Jira Integration
 
 The Confluence–Jira integration is Atlassian's flagship integration and runs bidirectionally over the **Confluence–Jira Application Links** framework.

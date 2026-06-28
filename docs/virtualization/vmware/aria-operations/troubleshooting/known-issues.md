@@ -18,6 +18,23 @@ Catalog of known Aria Operations (vROps) bugs, error codes, and workarounds cove
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+adapters_and_collectors: "Adapters and Collectors" {shape: rectangle}
+alerting_and_dashboards: "Alerting and Dashboards" {shape: rectangle}
+cluster: "Cluster" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> adapters_and_collectors: investigate
+symptom -> alerting_and_dashboards: investigate
+symptom -> cluster: investigate
+adapters_and_collectors -> resolution
+alerting_and_dashboards -> resolution
+cluster -> resolution
+```
+
 ## Before you begin
 
 - Aria Operations errors appear in `Administration → Management → Collector Groups` and `Administration → Management → Solutions`.

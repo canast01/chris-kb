@@ -27,6 +27,25 @@ Management is via **SYMCLI** (Solutions Enabler) for local array queries and the
 
 ---
 
+```d2
+direction: right
+
+hub: "Flex On Demand\nOperations" {shape: hexagon}
+quickreference_command_table: "Quick-Reference Command Table" {shape: rectangle}
+symcli_burst_usage_and_allocations: "SYMCLI — Burst Usage and Allocations" {shape: rectangle}
+unisphere_rest_api: "Unisphere REST API" {shape: rectangle}
+monitoring_burst_threshold: "Monitoring Burst Threshold" {shape: rectangle}
+license_key_management: "License Key Management" {shape: rectangle}
+monthly_usage_tracking_and_reporting: "Monthly Usage Tracking and Reporting" {shape: rectangle}
+
+hub -> quickreference_command_table
+hub -> symcli_burst_usage_and_allocations
+hub -> unisphere_rest_api
+hub -> monitoring_burst_threshold
+hub -> license_key_management
+hub -> monthly_usage_tracking_and_reporting
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

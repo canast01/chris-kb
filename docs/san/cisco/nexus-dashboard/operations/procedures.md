@@ -18,6 +18,25 @@ Nexus Dashboard and NDFC procedures — site registration, SAN fabric discovery,
 
 ---
 
+```d2
+direction: right
+
+hub: "Nexus Dashboard\nOperations" {shape: hexagon}
+1_registering_a_new_site_fabric: "1. Registering a New Site (Fabric)" {shape: rectangle}
+2_discovering_a_new_san_fabric_ndfc: "2. Discovering a New SAN Fabric (NDFC)" {shape: rectangle}
+3_vsan_management_ndfc: "3. VSAN Management (NDFC)" {shape: rectangle}
+4_zoning_add_a_host_zone_ndfc: "4. Zoning — Add a Host Zone (NDFC)" {shape: rectangle}
+5_mds_firmware_upgrade_via_ndfc: "5. MDS Firmware Upgrade via NDFC" {shape: rectangle}
+6_ndi_anomaly_investigation: "6. NDI Anomaly Investigation" {shape: rectangle}
+
+hub -> 1_registering_a_new_site_fabric
+hub -> 2_discovering_a_new_san_fabric_ndfc
+hub -> 3_vsan_management_ndfc
+hub -> 4_zoning_add_a_host_zone_ndfc
+hub -> 5_mds_firmware_upgrade_via_ndfc
+hub -> 6_ndi_anomaly_investigation
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

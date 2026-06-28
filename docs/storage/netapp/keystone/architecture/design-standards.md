@@ -19,6 +19,19 @@ Standards reference covering Service Level Selection, Naming Conventions, Capaci
 
 ---
 
+```d2
+direction: right
+
+center: "Keystone STaaS" {shape: hexagon}
+service_level_selection: "Service Level Selection" {shape: rectangle}
+naming_conventions: "Naming Conventions" {shape: rectangle}
+capacity_management: "Capacity Management" {shape: rectangle}
+
+center -> service_level_selection
+center -> naming_conventions
+center -> capacity_management
+```
+
 ## Service Level Selection
 
 - Map each application tier to the appropriate Keystone service tier before provisioning: Extreme for databases and high-IOPS workloads, Premium for virtualization and mixed workloads, Standard for file and backup

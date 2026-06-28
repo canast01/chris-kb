@@ -45,6 +45,32 @@ graph TD
     class N escalate
 ```
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+step_1_check_relationship_health_and: "Step 1 — Check relationship health and lag" {shape: rectangle}
+step_2_check_transfer_history: "Step 2 — Check transfer history" {shape: rectangle}
+step_3_check_intercluster_lifs: "Step 3 — Check intercluster LIFs" {shape: rectangle}
+step_4_check_ontap_ems_for_snapmirro: "Step 4 — Check ONTAP EMS for SnapMirror events" {shape: rectangle}
+step_5_smbc_specific_diagnostics: "Step 5 — SM-BC specific diagnostics" {shape: rectangle}
+step_6_collect_autosupport_and_ems_f: "Step 6 — Collect AutoSupport and EMS for NetApp SR" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> step_1_check_relationship_health_and: investigate
+symptom -> step_2_check_transfer_history: investigate
+symptom -> step_3_check_intercluster_lifs: investigate
+symptom -> step_4_check_ontap_ems_for_snapmirro: investigate
+symptom -> step_5_smbc_specific_diagnostics: investigate
+symptom -> step_6_collect_autosupport_and_ems_f: investigate
+step_1_check_relationship_health_and -> resolution
+step_2_check_transfer_history -> resolution
+step_3_check_intercluster_lifs -> resolution
+step_4_check_ontap_ems_for_snapmirro -> resolution
+step_5_smbc_specific_diagnostics -> resolution
+step_6_collect_autosupport_and_ems_f -> resolution
+```
+
 ## Before you begin
 
 - **Access:** Cluster admin credentials on both source and destination ONTAP clusters; SSH or NetApp System Manager access

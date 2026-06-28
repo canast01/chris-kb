@@ -14,6 +14,23 @@ Scripts reference covering Purpose, Multi-Workspace Deploy Pipeline, Windows: Te
 ![Terraform — Scripts](../../../../assets/automation-terraform-operations-scripts-index.svg)
 
 
+```d2
+direction: right
+
+center: "Scripts" {shape: rectangle}
+purpose: "Purpose" {shape: rectangle}
+multiworkspace_deploy_pipeline: "Multi-Workspace Deploy Pipeline" {shape: rectangle}
+windows_terraform_plan_and_apply_cmd: "Windows: Terraform Plan and Apply (CMD Batch)" {shape: rectangle}
+windows_terraform_state_audit_powers: "Windows: Terraform State Audit (PowerShell)" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+center -> purpose
+center -> multiworkspace_deploy_pipeline
+center -> windows_terraform_plan_and_apply_cmd
+center -> windows_terraform_state_audit_powers
+center -> verify
+```
+
 ## Before you begin
 
 - **Access:** Provider credentials configured (`terraform login` or env vars)

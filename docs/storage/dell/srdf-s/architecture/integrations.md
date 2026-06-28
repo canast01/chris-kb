@@ -16,6 +16,17 @@ SRDF/S integrations: SRDF/Star three-site topology, Microsoft Cluster Services w
 
 ---
 
+```d2
+direction: right
+
+center: "SRDF/S" {shape: hexagon}
+vmsc_and_srm_integration_topology: "vMSC and SRM Integration Topology" {shape: rectangle}
+backup_from_r2: "Backup from R2" {shape: rectangle}
+
+center -> vmsc_and_srm_integration_topology
+center -> backup_from_r2
+```
+
 ## vMSC and SRM Integration Topology
 
 ```mermaid

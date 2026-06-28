@@ -18,6 +18,23 @@ Access Standard reference covering Overview, Core Principles, vCenter Role Defin
 
 ---
 
+```d2
+direction: down
+
+core_principles: "Core Principles" {shape: rectangle}
+vcenter_role_definitions: "vCenter Role Definitions" {shape: rectangle}
+ad_group_mapping: "AD Group Mapping" {shape: rectangle}
+service_accounts: "Service Accounts" {shape: rectangle}
+esxi_host_access: "ESXi Host Access" {shape: rectangle}
+breakglass_access: "Break-Glass Access" {shape: rectangle}
+
+core_principles -> vcenter_role_definitions: hardens
+vcenter_role_definitions -> ad_group_mapping: hardens
+ad_group_mapping -> service_accounts: hardens
+service_accounts -> esxi_host_access: hardens
+esxi_host_access -> breakglass_access: hardens
+```
+
 ## Overview
 
 This standard defines how access to the vSphere environment is granted, managed, and reviewed. The principle of least privilege applies. All access is granted via AD group membership mapped to vCenter roles — no direct user-to-object permission assignments.

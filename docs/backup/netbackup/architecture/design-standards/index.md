@@ -15,6 +15,21 @@ NetBackup Standards reference covering Naming Conventions, Retention Schedule, B
 
 
 
+```d2
+direction: down
+
+naming_conventions: "Naming Conventions" {shape: rectangle}
+retention_schedule: "Retention Schedule" {shape: rectangle}
+backup_policy_to_job_flow: "Backup Policy to Job Flow" {shape: rectangle}
+encryption_standard: "Encryption Standard" {shape: rectangle}
+test_restore_standard: "Test Restore Standard" {shape: rectangle}
+
+naming_conventions -> retention_schedule: hardens
+retention_schedule -> backup_policy_to_job_flow: hardens
+backup_policy_to_job_flow -> encryption_standard: hardens
+encryption_standard -> test_restore_standard: hardens
+```
+
 ## Naming Conventions
 
 | Object | Convention | Example |

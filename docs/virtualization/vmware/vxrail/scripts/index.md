@@ -16,6 +16,26 @@ VxRail automation scripts: PowerShell and Python wrappers for VxRail Manager RES
 
 
 ---
+
+```d2
+direction: right
+
+center: "VxRail" {shape: rectangle}
+vxrail_cluster_health_check_powershe: "VxRail Cluster Health Check (PowerShell / PowerCLI)" {shape: rectangle}
+lcm_upgrade_readiness_check_bash: "LCM Upgrade Readiness Check (Bash)" {shape: rectangle}
+node_hardware_status_bash: "Node Hardware Status (Bash)" {shape: rectangle}
+ansible_vxrail_health_playbook: "Ansible VxRail Health Playbook" {shape: rectangle}
+windows_vxrail_cluster_health_via_re: "Windows: VxRail Cluster Health via REST API (PowerShell)" {shape: rectangle}
+windows_vxrail_node_status_via_plink: "Windows: VxRail Node Status via Plink (CMD)" {shape: rectangle}
+
+center -> vxrail_cluster_health_check_powershe
+center -> lcm_upgrade_readiness_check_bash
+center -> node_hardware_status_bash
+center -> ansible_vxrail_health_playbook
+center -> windows_vxrail_cluster_health_via_re
+center -> windows_vxrail_node_status_via_plink
+```
+
 ## VxRail Cluster Health Check (PowerShell / PowerCLI)
 
 Connect to vCenter managing VxRail and query the VxRail Manager REST API to report cluster health, node states, and active faults.

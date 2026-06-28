@@ -13,6 +13,25 @@ Storage Practice Notes reference covering RAID Level Quick Reference, Thin vs Th
 
 
 
+```d2
+direction: right
+
+center: "Practice Notes" {shape: hexagon}
+raid_level_quick_reference: "RAID Level Quick Reference" {shape: rectangle}
+thin_vs_thick_provisioning: "Thin vs Thick Provisioning" {shape: rectangle}
+deduplication_vs_compression: "Deduplication vs Compression" {shape: rectangle}
+replication_types: "Replication Types" {shape: rectangle}
+snapshot_vs_clone: "Snapshot vs Clone" {shape: rectangle}
+study_checklist: "Study Checklist" {shape: rectangle}
+
+center -> raid_level_quick_reference
+center -> thin_vs_thick_provisioning
+center -> deduplication_vs_compression
+center -> replication_types
+center -> snapshot_vs_clone
+center -> study_checklist
+```
+
 ## RAID Level Quick Reference
 
 | RAID Level | Min Disks | Fault Tolerance | Overhead | Performance | Use Case |

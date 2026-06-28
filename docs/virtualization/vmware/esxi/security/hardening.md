@@ -22,6 +22,27 @@ Configure via vCenter: **Host → Configure → Security Profile → Lockdown Mo
 
 ---
 
+```d2
+direction: down
+
+external: External / Untrusted {shape: rectangle}
+firewall_hardening: "Firewall Hardening" {shape: rectangle}
+advanced_security_settings: "Advanced Security Settings" {shape: rectangle}
+secure_boot: "Secure Boot" {shape: rectangle}
+audit_logging: "Audit Logging" {shape: rectangle}
+host_profile_enforcement: "Host Profile Enforcement" {shape: rectangle}
+vib_acceptance_level_policy: "VIB Acceptance Level Policy" {shape: rectangle}
+core: "ESXi Core" {shape: hexagon}
+
+external -> firewall_hardening: traffic in
+firewall_hardening -> advanced_security_settings
+advanced_security_settings -> secure_boot
+secure_boot -> audit_logging
+audit_logging -> host_profile_enforcement
+host_profile_enforcement -> vib_acceptance_level_policy
+vib_acceptance_level_policy -> core: secured path
+```
+
 ## Before you begin
 
 - **Access:** vCenter Administrator role

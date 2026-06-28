@@ -26,6 +26,19 @@ logger -p local0.info -t dcnm "Test message"
 
 ---
 
+```d2
+direction: right
+
+center: "Cisco DCNM" {shape: hexagon}
+component_a: "Component A" {shape: rectangle}
+component_b: "Component B" {shape: rectangle}
+component_c: "Component C" {shape: rectangle}
+
+center -> component_a
+center -> component_b
+center -> component_c
+```
+
 ## See also
 
 - [Cisco Dcnm — How It Works](how-it-works/)

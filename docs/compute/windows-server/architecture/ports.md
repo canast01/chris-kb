@@ -18,6 +18,25 @@ Firewall port reference for Windows Server in a managed enterprise environment. 
 
 
 
+```d2
+direction: right
+
+center: "Windows Server" {shape: hexagon}
+inbound_remote_management: "Inbound — Remote Management" {shape: rectangle}
+inbound_monitoring_agents: "Inbound — Monitoring Agents" {shape: rectangle}
+outbound_monitoring_and_event_report: "Outbound — Monitoring and Event Reporting" {shape: rectangle}
+outbound_domain_time_and_updates: "Outbound — Domain, Time, and Updates" {shape: rectangle}
+outbound_backup_agent: "Outbound — Backup Agent" {shape: rectangle}
+firewall_zone_summary: "Firewall Zone Summary" {shape: rectangle}
+
+center -> inbound_remote_management
+center -> inbound_monitoring_agents
+center -> outbound_monitoring_and_event_report
+center -> outbound_domain_time_and_updates
+center -> outbound_backup_agent
+center -> firewall_zone_summary
+```
+
 ## Before you begin
 
 - RDP (3389) must only be reachable from jump hosts — never expose directly to the internet

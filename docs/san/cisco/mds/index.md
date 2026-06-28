@@ -45,6 +45,17 @@ Cisco MDS 9000 series switches knowledge base covering fabric architecture, zoni
 
 ---
 
+```d2
+direction: right
+
+center: "Cisco MDS" {shape: hexagon}
+upgrade_workflow_summary: "Upgrade Workflow Summary" {shape: rectangle}
+operational_reference: "Operational Reference" {shape: rectangle}
+
+center -> upgrade_workflow_summary
+center -> operational_reference
+```
+
 ## Upgrade Workflow Summary
 
 1. Confirm both fabrics are healthy: `show interface brief`, `show flogi database`

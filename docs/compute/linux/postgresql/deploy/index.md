@@ -35,6 +35,27 @@ flowchart TD
     style s8 fill:#2e7d32,color:#fff,stroke:#1b5e20
 ```
 
+```d2
+direction: right
+
+plan: "Plan" {shape: oval}
+install_on_rhel_rocky: "Install on RHEL / Rocky" {shape: rectangle}
+install_on_ubuntu: "Install on Ubuntu" {shape: rectangle}
+initial_configuration_postgresqlconf: "Initial Configuration (`postgresql.conf`)" {shape: rectangle}
+pghbaconf_access_control: "`pg_hba.conf` Access Control" {shape: rectangle}
+firewall: "Firewall" {shape: rectangle}
+create_application_user_and_database: "Create Application User and Database" {shape: rectangle}
+validate: "Validate" {shape: oval}
+
+plan -> install_on_rhel_rocky
+install_on_rhel_rocky -> install_on_ubuntu
+install_on_ubuntu -> initial_configuration_postgresqlconf
+initial_configuration_postgresqlconf -> pghbaconf_access_control
+pghbaconf_access_control -> firewall
+firewall -> create_application_user_and_database
+create_application_user_and_database -> validate
+```
+
 ## Before you begin
 
 - **Access:** root or sudo-capable account on target hosts

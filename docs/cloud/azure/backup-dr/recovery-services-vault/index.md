@@ -17,6 +17,25 @@ The Recovery Services Vault is the top-level management container for both Azure
 
 ---
 
+```d2
+direction: right
+
+center: "Azure" {shape: hexagon}
+recovery_services_vault_structure: "Recovery Services Vault Structure" {shape: rectangle}
+vault_creation: "Vault Creation" {shape: rectangle}
+storage_redundancy_settings: "Storage Redundancy Settings" {shape: rectangle}
+soft_delete: "Soft Delete" {shape: rectangle}
+crossregion_restore: "Cross-Region Restore" {shape: rectangle}
+access_control: "Access Control" {shape: rectangle}
+
+center -> recovery_services_vault_structure
+center -> vault_creation
+center -> storage_redundancy_settings
+center -> soft_delete
+center -> crossregion_restore
+center -> access_control
+```
+
 ## Recovery Services Vault Structure
 
 ```mermaid

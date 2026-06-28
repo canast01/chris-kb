@@ -37,6 +37,27 @@ flowchart TD
     style s7 fill:#2e7d32,color:#fff,stroke:#1b5e20
 ```
 
+```d2
+direction: right
+
+plan: "Plan" {shape: oval}
+cluster_initial_setup: "Cluster Initial Setup" {shape: rectangle}
+svm_creation: "SVM Creation" {shape: rectangle}
+volume_provisioning: "Volume Provisioning" {shape: rectangle}
+host_connectivity: "Host Connectivity" {shape: rectangle}
+snapmirror: "SnapMirror" {shape: rectangle}
+monitoring_setup: "Monitoring Setup" {shape: rectangle}
+validate: "Validate" {shape: oval}
+
+plan -> cluster_initial_setup
+cluster_initial_setup -> svm_creation
+svm_creation -> volume_provisioning
+volume_provisioning -> host_connectivity
+host_connectivity -> snapmirror
+snapmirror -> monitoring_setup
+monitoring_setup -> validate
+```
+
 ## Before you begin
 
 <!-- video-link -->

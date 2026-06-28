@@ -20,6 +20,19 @@ Firewall port reference for Dell FOD (Feature on Demand). FOD enables software f
 
 
 
+```d2
+direction: right
+
+center: "Flex On Demand" {shape: hexagon}
+feature_activation_esrs_dell_support: "Feature Activation (ESRS / Dell Support Portal)" {shape: rectangle}
+array_management_ui_license_activati: "Array Management UI (License Activation)" {shape: rectangle}
+firewall_summary: "Firewall Summary" {shape: rectangle}
+
+center -> feature_activation_esrs_dell_support
+center -> array_management_ui_license_activati
+center -> firewall_summary
+```
+
 ## Feature Activation (ESRS / Dell Support Portal)
 
 | Port | Protocol | Source | Destination | Purpose |

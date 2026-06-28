@@ -15,6 +15,25 @@ Enterprise applications in Microsoft Entra ID represent the service principal fo
 
 
 
+```d2
+direction: right
+
+center: "Azure" {shape: hexagon}
+enterprise_application_sso_flow: "Enterprise Application SSO Flow" {shape: rectangle}
+viewing_and_managing_enterprise_appl: "Viewing and Managing Enterprise Applications" {shape: rectangle}
+sso_configuration: "SSO Configuration" {shape: rectangle}
+user_assignment: "User Assignment" {shape: rectangle}
+provisioning: "Provisioning" {shape: rectangle}
+app_roles: "App Roles" {shape: rectangle}
+
+center -> enterprise_application_sso_flow
+center -> viewing_and_managing_enterprise_appl
+center -> sso_configuration
+center -> user_assignment
+center -> provisioning
+center -> app_roles
+```
+
 ## Enterprise Application SSO Flow
 
 ```mermaid

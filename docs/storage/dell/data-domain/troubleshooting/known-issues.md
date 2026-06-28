@@ -18,6 +18,23 @@ Catalog of known Data Domain bugs, error codes, and workarounds covering DD Boos
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+dd_boost_backup_integration: "DD Boost (Backup Integration)" {shape: rectangle}
+replication: "Replication" {shape: rectangle}
+filesystem: "Filesystem" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> dd_boost_backup_integration: investigate
+symptom -> replication: investigate
+symptom -> filesystem: investigate
+dd_boost_backup_integration -> resolution
+replication -> resolution
+filesystem -> resolution
+```
+
 ## Before you begin
 
 - Data Domain alerts appear in DD System Manager → Health → Alerts.

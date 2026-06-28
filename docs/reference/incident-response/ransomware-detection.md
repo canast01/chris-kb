@@ -16,6 +16,31 @@ P0 incident response for ransomware or crypto-locker activity detected on infras
 
 > **Severity: P0** — Engage security team and management immediately. Contact cyber insurance before taking any recovery actions.
 
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+actor "Responder" as A
+participant "Incident Response System" as B
+participant "Dependent System" as C
+
+A -> B: Symptoms
+B --> A: OK
+A -> B: Immediate Response (First 15 Minutes)
+B --> A: OK
+A -> B: Isolate  Determine Scope
+B --> A: OK
+A -> B: Preserve Evidence
+B --> A: OK
+A -> B: Assess Clean Backups
+B --> A: OK
+A -> B: Recovery Options
+B --> A: OK
+
+@enduml
+```
+
 ## Symptoms
 
 - Mass file rename or encryption across shared datastores

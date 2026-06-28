@@ -19,6 +19,25 @@ Firewall port reference for VMware Aria Suite Lifecycle Manager (formerly vReali
 
 
 
+```d2
+direction: right
+
+center: "Aria Suite Lifecycle" {shape: hexagon}
+inbound_client_to_aria_suite_lifecyc: "Inbound — Client to Aria Suite Lifecycle" {shape: rectangle}
+outbound_aria_lc_to_vcenter: "Outbound — Aria LC to vCenter" {shape: rectangle}
+outbound_aria_lc_to_managed_aria_pro: "Outbound — Aria LC to Managed Aria Products" {shape: rectangle}
+outbound_product_bundle_downloads: "Outbound — Product Bundle Downloads" {shape: rectangle}
+outbound_active_directory_integratio: "Outbound — Active Directory Integration" {shape: rectangle}
+firewall_zone_summary: "Firewall Zone Summary" {shape: rectangle}
+
+center -> inbound_client_to_aria_suite_lifecyc
+center -> outbound_aria_lc_to_vcenter
+center -> outbound_aria_lc_to_managed_aria_pro
+center -> outbound_product_bundle_downloads
+center -> outbound_active_directory_integratio
+center -> firewall_zone_summary
+```
+
 ## Before you begin
 
 - Aria Suite Lifecycle is a single appliance (no HA cluster); open ports to its single IP

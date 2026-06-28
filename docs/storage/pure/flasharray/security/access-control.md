@@ -20,6 +20,27 @@ FlashArray uses a role-based access control (RBAC) model with four built-in role
 
 ---
 
+```d2
+direction: down
+
+external: External / Untrusted {shape: rectangle}
+rbac_and_access_model: "RBAC and Access Model" {shape: rectangle}
+builtin_roles: "Built-in Roles" {shape: rectangle}
+assigning_roles_to_local_accounts: "Assigning Roles to Local Accounts" {shape: rectangle}
+assigning_roles_to_directory_service: "Assigning Roles to Directory Service Groups" {shape: rectangle}
+api_token_access_control: "API Token Access Control" {shape: rectangle}
+least_privilege_implementation: "Least Privilege Implementation" {shape: rectangle}
+core: "FlashArray Core" {shape: hexagon}
+
+external -> rbac_and_access_model: traffic in
+rbac_and_access_model -> builtin_roles
+builtin_roles -> assigning_roles_to_local_accounts
+assigning_roles_to_local_accounts -> assigning_roles_to_directory_service
+assigning_roles_to_directory_service -> api_token_access_control
+api_token_access_control -> least_privilege_implementation
+least_privilege_implementation -> core: secured path
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

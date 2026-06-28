@@ -16,6 +16,25 @@ SnapCenter procedures: adding storage systems, configuring policies and resource
 
 ---
 
+```d2
+direction: right
+
+hub: "SnapCenter\nOperations" {shape: hexagon}
+change_readiness: "Change Readiness" {shape: rectangle}
+maintenance_window: "Maintenance Window" {shape: rectangle}
+postchange_validation: "Post-Change Validation" {shape: rectangle}
+backup_jobs: "Backup Jobs" {shape: rectangle}
+policies: "Policies" {shape: rectangle}
+add_a_host_to_snapcenter: "Add a Host to SnapCenter" {shape: rectangle}
+
+hub -> change_readiness
+hub -> maintenance_window
+hub -> postchange_validation
+hub -> backup_jobs
+hub -> policies
+hub -> add_a_host_to_snapcenter
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

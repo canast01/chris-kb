@@ -14,6 +14,25 @@ Step-by-step procedures for assessing controls against CIS, ISO 27001, NIST, and
 
 
 
+```d2
+direction: right
+
+hub: "Operations\nOperations" {shape: hexagon}
+run_cis_benchmark_assessment: "Run CIS Benchmark Assessment" {shape: rectangle}
+map_controls_to_frameworks_isonistpc: "Map Controls to Frameworks (ISO/NIST/PCI)" {shape: rectangle}
+collect_evidence_for_audit: "Collect Evidence for Audit" {shape: rectangle}
+track_control_exceptions: "Track Control Exceptions" {shape: rectangle}
+close_a_control_gap: "Close a Control Gap" {shape: rectangle}
+prepare_for_external_audit: "Prepare for External Audit" {shape: rectangle}
+
+hub -> run_cis_benchmark_assessment
+hub -> map_controls_to_frameworks_isonistpc
+hub -> collect_evidence_for_audit
+hub -> track_control_exceptions
+hub -> close_a_control_gap
+hub -> prepare_for_external_audit
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

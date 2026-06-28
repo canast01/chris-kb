@@ -18,6 +18,25 @@ Ansible is an agentless IT automation engine that automates provisioning, config
 
 ---
 
+```d2
+direction: right
+
+center: "Ansible" {shape: hexagon}
+the_agentless_model: "The Agentless Model" {shape: rectangle}
+module_execution: "Module Execution" {shape: rectangle}
+roles: "Roles" {shape: rectangle}
+collections: "Collections" {shape: rectangle}
+execution_flow: "Execution Flow" {shape: rectangle}
+ansible_cli_vs_awx_vs_aap: "Ansible CLI vs AWX vs AAP" {shape: rectangle}
+
+center -> the_agentless_model
+center -> module_execution
+center -> roles
+center -> collections
+center -> execution_flow
+center -> ansible_cli_vs_awx_vs_aap
+```
+
 ## The Agentless Model
 
 | Property | Agentless (Ansible) | Agent-Based (Puppet/Chef) |

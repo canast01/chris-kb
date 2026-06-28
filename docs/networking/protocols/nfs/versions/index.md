@@ -14,6 +14,25 @@ NFS Versions reference covering Version Comparison, Recommended Version, Checkin
         NFSv3 vs NFSv4 vs NFSv4.1 COMPARISON
 
 
+```d2
+direction: right
+
+center: "NFS" {shape: hexagon}
+nfsv41_session_model_and_pnfs_data_p: "NFSv4.1 Session Model and pNFS Data Path" {shape: rectangle}
+version_comparison: "Version Comparison" {shape: rectangle}
+recommended_version: "Recommended Version" {shape: rectangle}
+checking_nfs_version_in_use: "Checking NFS Version in Use" {shape: rectangle}
+configuring_nfs_version: "Configuring NFS Version" {shape: rectangle}
+nfsv4_id_mapping: "NFSv4 ID Mapping" {shape: rectangle}
+
+center -> nfsv41_session_model_and_pnfs_data_p
+center -> version_comparison
+center -> recommended_version
+center -> checking_nfs_version_in_use
+center -> configuring_nfs_version
+center -> nfsv4_id_mapping
+```
+
 ## NFSv4.1 Session Model and pNFS Data Path
 
 NFSv4.1 introduces a formal session abstraction (replacing the stateless NFSv3 model) and pNFS, which separates metadata operations from bulk data I/O. The Metadata Server (MDS) handles namespace, locking, and layout grants; Data Servers (DS) serve actual file data directly to the client.

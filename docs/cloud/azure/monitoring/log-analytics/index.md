@@ -15,6 +15,25 @@ Azure Log Analytics is the primary platform for collecting, querying, and alerti
 
 
 
+```d2
+direction: right
+
+center: "Azure" {shape: hexagon}
+log_analytics_data_flow: "Log Analytics Data Flow" {shape: rectangle}
+workspace_configuration: "Workspace Configuration" {shape: rectangle}
+running_kql_queries: "Running KQL Queries" {shape: rectangle}
+common_kql_patterns: "Common KQL Patterns" {shape: rectangle}
+table_retention_settings: "Table Retention Settings" {shape: rectangle}
+retention_tiers: "Retention Tiers" {shape: rectangle}
+
+center -> log_analytics_data_flow
+center -> workspace_configuration
+center -> running_kql_queries
+center -> common_kql_patterns
+center -> table_retention_settings
+center -> retention_tiers
+```
+
 ## Log Analytics Data Flow
 
 ```mermaid

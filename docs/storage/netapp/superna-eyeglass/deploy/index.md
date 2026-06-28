@@ -6,6 +6,27 @@ search:
   boost: 1.5
 ---
 
+```d2
+direction: right
+
+plan: "Plan" {shape: oval}
+prerequisites: "Prerequisites" {shape: rectangle}
+deploy_the_eyeglass_appliance: "Deploy the Eyeglass Appliance" {shape: rectangle}
+connect_to_source_cluster: "Connect to Source Cluster" {shape: rectangle}
+connect_to_dr_cluster: "Connect to DR Cluster" {shape: rectangle}
+configure_replication_jobs: "Configure Replication Jobs" {shape: rectangle}
+configure_user_and_group_sync: "Configure User and Group Sync" {shape: rectangle}
+validate: "Validate" {shape: oval}
+
+plan -> prerequisites
+prerequisites -> deploy_the_eyeglass_appliance
+deploy_the_eyeglass_appliance -> connect_to_source_cluster
+connect_to_source_cluster -> connect_to_dr_cluster
+connect_to_dr_cluster -> configure_replication_jobs
+configure_replication_jobs -> configure_user_and_group_sync
+configure_user_and_group_sync -> validate
+```
+
 ## Before you begin
 
 - **Access:** admin credentials for the target system and any upstream dependencies (DNS, NTP, vCenter, directory services)

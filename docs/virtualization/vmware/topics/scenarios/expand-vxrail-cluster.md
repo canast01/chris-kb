@@ -20,6 +20,25 @@ LCM upgrades and voids the support configuration.
 
 
 
+```d2
+direction: right
+
+center: "Scenarios" {shape: hexagon}
+products_involved: "Products Involved" {shape: rectangle}
+1_hardware_prechecks_and_idrac: "1. Hardware Pre-Checks and iDRAC" {shape: rectangle}
+2_network_prechecks: "2. Network Pre-Checks" {shape: rectangle}
+3_discover_the_new_node_in_vxrail_ma: "3. Discover the New Node in VxRail Manager" {shape: rectangle}
+4_run_the_expansion_wizard: "4. Run the Expansion Wizard" {shape: rectangle}
+5_firmware_bundle_check_and_update: "5. Firmware Bundle Check and Update" {shape: rectangle}
+
+center -> products_involved
+center -> 1_hardware_prechecks_and_idrac
+center -> 2_network_prechecks
+center -> 3_discover_the_new_node_in_vxrail_ma
+center -> 4_run_the_expansion_wizard
+center -> 5_firmware_bundle_check_and_update
+```
+
 ## Products Involved
 
 | Product | Role in This Scenario |

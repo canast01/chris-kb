@@ -13,6 +13,25 @@ AI Platforms reference covering AWS Bedrock, Azure OpenAI Service, Google Vertex
 
 
 
+```d2
+direction: right
+
+center: "Platforms" {shape: hexagon}
+aws_bedrock: "AWS Bedrock" {shape: rectangle}
+azure_openai_service: "Azure OpenAI Service" {shape: rectangle}
+google_vertex_ai: "Google Vertex AI" {shape: rectangle}
+hugging_face: "Hugging Face" {shape: rectangle}
+platform_comparison_table: "Platform Comparison Table" {shape: rectangle}
+study_checklist: "Study Checklist" {shape: rectangle}
+
+center -> aws_bedrock
+center -> azure_openai_service
+center -> google_vertex_ai
+center -> hugging_face
+center -> platform_comparison_table
+center -> study_checklist
+```
+
 ## AWS Bedrock
 
 Amazon Bedrock is a fully managed service providing access to foundation models via API without managing infrastructure.

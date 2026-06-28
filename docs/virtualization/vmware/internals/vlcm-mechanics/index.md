@@ -44,6 +44,25 @@ graph TD
     REJOIN -->|Next host| MM
 ```
 
+```d2
+direction: right
+
+center: "Vlcm Mechanics" {shape: hexagon}
+imagebased_vs_baselinebased_manageme: "Image-Based vs Baseline-Based Management" {shape: rectangle}
+cluster_image_components: "Cluster Image Components" {shape: rectangle}
+depot_configuration: "Depot Configuration" {shape: rectangle}
+compliance_scan_and_drift_detection: "Compliance Scan and Drift Detection" {shape: rectangle}
+remediation_coordination_with_drs: "Remediation Coordination with DRS" {shape: rectangle}
+rolling_remediation: "Rolling Remediation" {shape: rectangle}
+
+center -> imagebased_vs_baselinebased_manageme
+center -> cluster_image_components
+center -> depot_configuration
+center -> compliance_scan_and_drift_detection
+center -> remediation_coordination_with_drs
+center -> rolling_remediation
+```
+
 ## Image-Based vs Baseline-Based Management
 
 | Aspect | vLCM Image (recommended) | VUM Baseline (legacy) |

@@ -17,6 +17,17 @@ Index of storage product known issues and error codes. This top-level page links
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+storage_product_knownissues_pages: "Storage Product Known-Issues Pages" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> storage_product_knownissues_pages: investigate
+storage_product_knownissues_pages -> resolution
+```
+
 ## Before you begin
 
 Storage issues often surface as application errors (I/O timeout, permission denied) — identify the protocol layer (NFS, iSCSI, FC, S3) before diving into array-specific known issues.

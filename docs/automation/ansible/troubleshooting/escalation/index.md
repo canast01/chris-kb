@@ -24,6 +24,27 @@ flowchart LR
     L3 --> Vendor[Red Hat Support\nor GitHub issue]
 ```
 
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+actor "On-Call Engineer" as ENG
+participant "Ansible\nSystem" as SYS
+participant "Vendor Support" as SUP
+
+ENG -> SYS: Severity Levels
+SYS --> ENG: Output
+ENG -> SYS: Pre-Escalation Triage Checklist
+SYS --> ENG: Output
+ENG -> SYS: Step-by-Step Data Collection
+SYS --> ENG: Output
+ENG -> SUP: Escalate with diagnostic bundle
+SUP --> ENG: Case / resolution path
+
+@enduml
+```
+
 ## Before you begin
 
 - **Access:** SSH key or service account with sudo on managed hosts; Ansible control node or AWX admin access

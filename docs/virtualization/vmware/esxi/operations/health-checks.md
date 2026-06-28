@@ -16,6 +16,25 @@ Daily and weekly health runbook for ESXi hosts: hardware sensors, service status
 
 
 
+```d2
+direction: right
+
+hub: "ESXi\nOperations" {shape: hexagon}
+run_this_routine: "Run This Routine" {shape: rectangle}
+hardware_health: "Hardware Health" {shape: rectangle}
+network_health: "Network Health" {shape: rectangle}
+storage_health: "Storage Health" {shape: rectangle}
+capacity_and_performance: "Capacity and Performance" {shape: rectangle}
+vib_and_patch_compliance: "VIB and Patch Compliance" {shape: rectangle}
+
+hub -> run_this_routine
+hub -> hardware_health
+hub -> network_health
+hub -> storage_health
+hub -> capacity_and_performance
+hub -> vib_and_patch_compliance
+```
+
 ## Before you begin
 
 - **Access:** vCenter read-only minimum; Administrator role for remediation steps

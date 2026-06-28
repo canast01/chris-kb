@@ -15,6 +15,23 @@ MySQL/MariaDB troubleshooting: replication broken, lock waits, `Too many connect
 ![MySQL / MariaDB — Common Issues](../../../../assets/compute-linux-mysql-troubleshooting-common-issues.svg)
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+diagnostic_flow: "Diagnostic Flow" {shape: rectangle}
+database_performance_troubleshooting: "Database — Performance Troubleshooting" {shape: rectangle}
+verify_resolution: "Verify resolution" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> diagnostic_flow: investigate
+symptom -> database_performance_troubleshooting: investigate
+symptom -> verify_resolution: investigate
+diagnostic_flow -> resolution
+database_performance_troubleshooting -> resolution
+verify_resolution -> resolution
+```
+
 ## Diagnostic Flow
 
 ```mermaid

@@ -19,6 +19,27 @@ Hardening reference covering Windows Hardening of Connection Server, UAG Hardeni
 
 ---
 
+```d2
+direction: down
+
+external: External / Untrusted {shape: rectangle}
+uag_hardening: "UAG Hardening" {shape: rectangle}
+usb_redirection_policy: "USB Redirection Policy" {shape: rectangle}
+clipboard_direction_restriction: "Clipboard Direction Restriction" {shape: rectangle}
+drive_mapping_restriction: "Drive Mapping Restriction" {shape: rectangle}
+disable_direct_console_access: "Disable Direct Console Access" {shape: rectangle}
+monitor_admin_events: "Monitor Admin Events" {shape: rectangle}
+core: "Horizon Core" {shape: hexagon}
+
+external -> uag_hardening: traffic in
+uag_hardening -> usb_redirection_policy
+usb_redirection_policy -> clipboard_direction_restriction
+clipboard_direction_restriction -> drive_mapping_restriction
+drive_mapping_restriction -> disable_direct_console_access
+disable_direct_console_access -> monitor_admin_events
+monitor_admin_events -> core: secured path
+```
+
 ## Before you begin
 
 - **Access:** vCenter Administrator role

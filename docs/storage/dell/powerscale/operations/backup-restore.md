@@ -16,6 +16,25 @@ Backup configuration, restore procedures, and validation for Dell PowerScale.
 
 
 
+```d2
+direction: right
+
+hub: "PowerScale (Isilon)\nOperations" {shape: hexagon}
+snapshotiq_local_snapshots: "SnapshotIQ — Local Snapshots" {shape: rectangle}
+synciq_replicationbased_recovery: "SyncIQ — Replication-Based Recovery" {shape: rectangle}
+ndmp_network_data_management_protoco: "NDMP — Network Data Management Protocol" {shape: rectangle}
+veeam_nas_backup_integration: "Veeam NAS Backup Integration" {shape: rectangle}
+backup_validation: "Backup Validation" {shape: rectangle}
+backup_design_decisions: "Backup Design Decisions" {shape: rectangle}
+
+hub -> snapshotiq_local_snapshots
+hub -> synciq_replicationbased_recovery
+hub -> ndmp_network_data_management_protoco
+hub -> veeam_nas_backup_integration
+hub -> backup_validation
+hub -> backup_design_decisions
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

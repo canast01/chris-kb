@@ -7,6 +7,16 @@ tags:
 
 
 ```markdown
+
+```d2
+direction: right
+
+center: "ServiceNow" {shape: hexagon}
+application_payments_api: "Application: Payments API" {shape: rectangle}
+
+center -> application_payments_api
+```
+
 ## Application: Payments API
 
 **Tier:** Production

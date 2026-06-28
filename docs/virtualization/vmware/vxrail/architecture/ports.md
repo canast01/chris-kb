@@ -19,6 +19,25 @@ Firewall port reference for Dell VxRail. VxRail runs the full vSphere stack, so 
 
 
 
+```d2
+direction: right
+
+center: "VxRail" {shape: hexagon}
+vxrail_manager_vm: "VxRail Manager VM" {shape: rectangle}
+idrac_integrated_dell_remote_access_: "iDRAC (Integrated Dell Remote Access Controller)" {shape: rectangle}
+lcm_and_update_access_outbound: "LCM and Update Access (Outbound)" {shape: rectangle}
+rasr_recovery: "RASR Recovery" {shape: rectangle}
+firewall_zone_summary: "Firewall Zone Summary" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+center -> vxrail_manager_vm
+center -> idrac_integrated_dell_remote_access_
+center -> lcm_and_update_access_outbound
+center -> rasr_recovery
+center -> firewall_zone_summary
+center -> verify
+```
+
 ## Before you begin
 
 - VxRail requires all standard vSphere ports: see [vCenter](../../vcenter/architecture/ports/), [ESXi](../../esxi/architecture/ports/), [vSAN](../../vsan/architecture/ports/), and [NSX](../../nsx/architecture/ports/) port pages

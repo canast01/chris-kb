@@ -15,6 +15,23 @@ VMware Snapshot Standards reference covering Snapshots Are Temporary, Approved U
 
 
 
+```d2
+direction: down
+
+snapshots_are_temporary: "Snapshots Are Temporary" {shape: rectangle}
+approved_use_cases: "Approved Use Cases" {shape: rectangle}
+maximum_snapshot_age: "Maximum Snapshot Age" {shape: rectangle}
+snapshot_size_monitoring: "Snapshot Size Monitoring" {shape: rectangle}
+cleanup_responsibility: "Cleanup Responsibility" {shape: rectangle}
+alerting_for_old_snapshots: "Alerting for Old Snapshots" {shape: rectangle}
+
+snapshots_are_temporary -> approved_use_cases: hardens
+approved_use_cases -> maximum_snapshot_age: hardens
+maximum_snapshot_age -> snapshot_size_monitoring: hardens
+snapshot_size_monitoring -> cleanup_responsibility: hardens
+cleanup_responsibility -> alerting_for_old_snapshots: hardens
+```
+
 ## Snapshots Are Temporary
 
 Snapshots are not backups. They should be used for short-term protection during changes and removed after validation.

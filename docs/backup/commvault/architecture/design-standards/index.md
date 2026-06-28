@@ -15,6 +15,19 @@ Standards reference covering Naming Conventions, Retention Schedule, VMware vSph
 
 
 
+```d2
+direction: down
+
+naming_conventions: "Naming Conventions" {shape: rectangle}
+retention_schedule: "Retention Schedule" {shape: rectangle}
+vmware_vsphere_standards: "VMware vSphere Standards" {shape: rectangle}
+encryption_standard: "Encryption Standard" {shape: rectangle}
+
+naming_conventions -> retention_schedule: hardens
+retention_schedule -> vmware_vsphere_standards: hardens
+vmware_vsphere_standards -> encryption_standard: hardens
+```
+
 ## Naming Conventions
 
 | Object | Convention | Example |

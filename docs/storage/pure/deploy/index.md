@@ -29,6 +29,27 @@ flowchart TD
     style s6 fill:#2e7d32,color:#fff,stroke:#1b5e20
 ```
 
+```d2
+direction: right
+
+plan: "Plan" {shape: oval}
+flasharray_initial_config: "FlashArray Initial Config" {shape: rectangle}
+host_connectivity: "Host Connectivity" {shape: rectangle}
+protection_groups: "Protection Groups" {shape: rectangle}
+pure1_setup: "Pure1 Setup" {shape: rectangle}
+flashblade_initial_config: "FlashBlade Initial Config" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+validate: "Validate" {shape: oval}
+
+plan -> flasharray_initial_config
+flasharray_initial_config -> host_connectivity
+host_connectivity -> protection_groups
+protection_groups -> pure1_setup
+pure1_setup -> flashblade_initial_config
+flashblade_initial_config -> verify
+verify -> validate
+```
+
 ## Before you begin
 
 <!-- video-link -->

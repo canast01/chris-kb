@@ -16,6 +16,21 @@ FabricOS install and upgrade: `firmwaredownload` from SCP/FTP, firmware commit p
 
 ---
 
+```d2
+direction: right
+
+hub: "Brocade Fabric OS\nOperations" {shape: hexagon}
+firmware_upgrade_sequence_ha_directo: "Firmware Upgrade Sequence (HA Director)" {shape: rectangle}
+switch_replacement: "Switch Replacement" {shape: rectangle}
+firmware: "Firmware" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+hub -> firmware_upgrade_sequence_ha_directo
+hub -> switch_replacement
+hub -> firmware
+hub -> verify
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

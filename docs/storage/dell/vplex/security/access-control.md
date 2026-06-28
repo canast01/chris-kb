@@ -36,6 +36,23 @@ flowchart LR
     storView --> virtVol
 ```
 
+```d2
+direction: down
+
+external: External / Untrusted {shape: rectangle}
+management_plane_roles: "Management Plane Roles" {shape: rectangle}
+data_plane_access_control_storage_vi: "Data Plane Access Control — Storage Views" {shape: rectangle}
+san_fabric_zoning: "SAN Fabric Zoning" {shape: rectangle}
+privileged_access_management: "Privileged Access Management" {shape: rectangle}
+core: "VPLEX Core" {shape: hexagon}
+
+external -> management_plane_roles: traffic in
+management_plane_roles -> data_plane_access_control_storage_vi
+data_plane_access_control_storage_vi -> san_fabric_zoning
+san_fabric_zoning -> privileged_access_management
+privileged_access_management -> core: secured path
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

@@ -17,6 +17,25 @@ Ollama automatically uses the GPU when drivers and CUDA/ROCm are installed. This
 
 
 
+```d2
+direction: right
+
+center: "Ollama" {shape: hexagon}
+confirming_gpu_usage: "Confirming GPU Usage" {shape: rectangle}
+cuda_setup: "CUDA Setup" {shape: rectangle}
+rocm_amd_gpu_setup: "ROCm (AMD GPU) Setup" {shape: rectangle}
+vram_requirements_by_model_size: "VRAM Requirements by Model Size" {shape: rectangle}
+controlling_gpu_layer_count: "Controlling GPU Layer Count" {shape: rectangle}
+multigpu_configuration: "Multi-GPU Configuration" {shape: rectangle}
+
+center -> confirming_gpu_usage
+center -> cuda_setup
+center -> rocm_amd_gpu_setup
+center -> vram_requirements_by_model_size
+center -> controlling_gpu_layer_count
+center -> multigpu_configuration
+```
+
 ## Confirming GPU Usage
 
 ```bash

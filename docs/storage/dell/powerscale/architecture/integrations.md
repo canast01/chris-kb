@@ -16,6 +16,23 @@ Integrations reference covering VMware Integration, Backup Integration, CloudIQ 
 
 
 
+```d2
+direction: right
+
+center: "PowerScale (Isilon)" {shape: hexagon}
+vmware_integration: "VMware Integration" {shape: rectangle}
+backup_integration: "Backup Integration" {shape: rectangle}
+cloudiq_monitoring: "CloudIQ Monitoring" {shape: rectangle}
+active_directory_ldap: "Active Directory / LDAP" {shape: rectangle}
+rest_api: "REST API" {shape: rectangle}
+
+center -> vmware_integration
+center -> backup_integration
+center -> cloudiq_monitoring
+center -> active_directory_ldap
+center -> rest_api
+```
+
 ## VMware Integration
 
 PowerScale integrates with VMware vSphere in several ways:

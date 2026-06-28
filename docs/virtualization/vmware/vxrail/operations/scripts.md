@@ -18,6 +18,25 @@ PowerCLI and bash scripts for VxRail automation. Includes vSAN health summary, c
 
 ---
 
+```d2
+direction: right
+
+hub: "VxRail\nOperations" {shape: hexagon}
+prerequisites: "Prerequisites" {shape: rectangle}
+script_1_vsan_health_summary: "Script 1 — vSAN Health Summary" {shape: rectangle}
+script_2_cluster_capacity_report: "Script 2 — Cluster Capacity Report" {shape: rectangle}
+script_3_preupgrade_validation: "Script 3 — Pre-Upgrade Validation" {shape: rectangle}
+script_4_node_firmware_version_repor: "Script 4 — Node Firmware Version Report" {shape: rectangle}
+script_5_alert_on_vsan_capacity_thre: "Script 5 — Alert on vSAN Capacity Threshold" {shape: rectangle}
+
+hub -> prerequisites
+hub -> script_1_vsan_health_summary
+hub -> script_2_cluster_capacity_report
+hub -> script_3_preupgrade_validation
+hub -> script_4_node_firmware_version_repor
+hub -> script_5_alert_on_vsan_capacity_thre
+```
+
 ## Before you begin
 
 - **Access:** vCenter Administrator; ESXi SSH access; iDRAC credentials for hardware health scripts

@@ -18,6 +18,25 @@ Firewall port reference for ServiceNow. ServiceNow is a SaaS platform — the pr
 
 
 
+```d2
+direction: right
+
+center: "ServiceNow" {shape: hexagon}
+inbound_users_to_servicenow_saas_no_: "Inbound — Users to ServiceNow (SaaS — No On-Prem Rules Neede" {shape: rectangle}
+mid_server_outbound_to_servicenow_cl: "MID Server — Outbound to ServiceNow Cloud" {shape: rectangle}
+mid_server_outbound_to_managed_targe: "MID Server — Outbound to Managed Targets" {shape: rectangle}
+mid_server_outbound_for_cmdb_event_s: "MID Server — Outbound for CMDB / Event Sources" {shape: rectangle}
+servicenow_inbound_integrations_webh: "ServiceNow Inbound Integrations (Webhooks)" {shape: rectangle}
+firewall_zone_summary: "Firewall Zone Summary" {shape: rectangle}
+
+center -> inbound_users_to_servicenow_saas_no_
+center -> mid_server_outbound_to_servicenow_cl
+center -> mid_server_outbound_to_managed_targe
+center -> mid_server_outbound_for_cmdb_event_s
+center -> servicenow_inbound_integrations_webh
+center -> firewall_zone_summary
+```
+
 ## Before you begin
 
 - ServiceNow is SaaS — no on-premise server to configure for user access; browsers connect directly to `<instance>.service-now.com`

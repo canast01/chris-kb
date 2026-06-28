@@ -22,6 +22,32 @@ SRDF/S issues typically manifest as pair state transitions away from `Synchroniz
 
 Always collect `symrdf query -g <group> -v` and array event logs before engaging Dell support.
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+diagnostic_flow: "Diagnostic Flow" {shape: rectangle}
+linkdown_recovery_decision_tree: "Link-Down Recovery Decision Tree" {shape: rectangle}
+pair_in_invalid_state: "Pair in `Invalid` State" {shape: rectangle}
+pair_in_split_state: "Pair in `Split` State" {shape: rectangle}
+isl_fcip_link_failure: "ISL / FCIP Link Failure" {shape: rectangle}
+unintended_failover_during_maintenan: "Unintended Failover During Maintenance" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> diagnostic_flow: investigate
+symptom -> linkdown_recovery_decision_tree: investigate
+symptom -> pair_in_invalid_state: investigate
+symptom -> pair_in_split_state: investigate
+symptom -> isl_fcip_link_failure: investigate
+symptom -> unintended_failover_during_maintenan: investigate
+diagnostic_flow -> resolution
+linkdown_recovery_decision_tree -> resolution
+pair_in_invalid_state -> resolution
+pair_in_split_state -> resolution
+isl_fcip_link_failure -> resolution
+unintended_failover_during_maintenan -> resolution
+```
+
 ## Diagnostic Flow
 
 ```mermaid

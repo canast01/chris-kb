@@ -16,6 +16,28 @@ VxRail vendor support: Dell SupportAssist case creation, `mystic` diagnostic bun
 
 
 ---
+
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+actor "On-Call Engineer" as ENG
+participant "VxRail\nSystem" as SYS
+participant "Vendor Support" as SUP
+
+ENG -> SYS: Opening a Support Request
+SYS --> ENG: Output
+ENG -> SYS: Collecting the VxRail Support Bundle
+SYS --> ENG: Output
+ENG -> SYS: SRS / SupportAssist
+SYS --> ENG: Output
+ENG -> SUP: Escalate with diagnostic bundle
+SUP --> ENG: Case / resolution path
+
+@enduml
+```
+
 ## Opening a Support Request
 
 Dell support for VxRail is accessed via the Dell support portal. Service requests are opened against the cluster service tag or an individual node service tag.

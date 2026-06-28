@@ -16,6 +16,32 @@ LDAP Troubleshooting reference covering Overview, Bind Failure Diagnostics, Cert
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+bind_failure_diagnostics: "Bind Failure Diagnostics" {shape: rectangle}
+certificate_errors: "Certificate Errors" {shape: rectangle}
+using_ldpexe_windows_gui_tool: "Using ldp.exe (Windows GUI Tool)" {shape: rectangle}
+ldap_referrals: "LDAP Referrals" {shape: rectangle}
+event_log_and_debug_logging: "Event Log and Debug Logging" {shape: rectangle}
+verify_resolution: "Verify resolution" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> bind_failure_diagnostics: investigate
+symptom -> certificate_errors: investigate
+symptom -> using_ldpexe_windows_gui_tool: investigate
+symptom -> ldap_referrals: investigate
+symptom -> event_log_and_debug_logging: investigate
+symptom -> verify_resolution: investigate
+bind_failure_diagnostics -> resolution
+certificate_errors -> resolution
+using_ldpexe_windows_gui_tool -> resolution
+ldap_referrals -> resolution
+event_log_and_debug_logging -> resolution
+verify_resolution -> resolution
+```
+
 ## Before you begin
 
 - **Access:** Network admin credentials; console or SSH to devices

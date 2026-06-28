@@ -17,6 +17,25 @@ Commonly used ESXi shell and PowerCLI commands for managing and troubleshooting 
 
 
 
+```d2
+direction: right
+
+hub: "vSAN\nOperations" {shape: hexagon}
+quick_reference: "Quick Reference" {shape: rectangle}
+skyline_health: "Skyline Health" {shape: rectangle}
+health_diagnostics: "Health & Diagnostics" {shape: rectangle}
+disk_groups: "Disk Groups" {shape: rectangle}
+networking_vsan_vmkernel: "Networking (vSAN VMkernel)" {shape: rectangle}
+powercli_vsan: "PowerCLI — vSAN" {shape: rectangle}
+
+hub -> quick_reference
+hub -> skyline_health
+hub -> health_diagnostics
+hub -> disk_groups
+hub -> networking_vsan_vmkernel
+hub -> powercli_vsan
+```
+
 ## Before you begin
 
 - **Access:** vCenter read-only minimum; Administrator role for remediation steps

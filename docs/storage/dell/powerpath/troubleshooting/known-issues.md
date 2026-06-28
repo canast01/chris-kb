@@ -18,6 +18,23 @@ Catalog of known PowerPath bugs, error codes, and workarounds covering path mana
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+path_management: "Path Management" {shape: rectangle}
+installation_and_licensing: "Installation and Licensing" {shape: rectangle}
+ppma_powerpath_management_appliance: "PPMA (PowerPath Management Appliance)" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> path_management: investigate
+symptom -> installation_and_licensing: investigate
+symptom -> ppma_powerpath_management_appliance: investigate
+path_management -> resolution
+installation_and_licensing -> resolution
+ppma_powerpath_management_appliance -> resolution
+```
+
 ## Before you begin
 
 - PowerPath is a kernel-level multipath driver — issues often appear as host I/O errors, not PowerPath messages.

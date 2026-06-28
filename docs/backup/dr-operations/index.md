@@ -12,6 +12,17 @@ Cross-product disaster recovery governance and operations — DR design, runbook
 
 
 
+```d2
+direction: right
+
+center: "DR Operations" {shape: hexagon}
+governance_design: "Governance & Design" {shape: rectangle}
+operational: "Operational" {shape: rectangle}
+
+center -> governance_design
+center -> operational
+```
+
 ## Governance & Design
 
 <div class="kb-grid kb-grid-3">

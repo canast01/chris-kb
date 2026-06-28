@@ -20,6 +20,25 @@ Procedures reference covering COD Activation Procedure, Incident Triage.
 
 ---
 
+```d2
+direction: right
+
+hub: "Cloud On Demand\nOperations" {shape: hexagon}
+cod_activation_procedure: "COD Activation Procedure" {shape: rectangle}
+incident_triage: "Incident Triage" {shape: rectangle}
+create_an_object_storage_bucket: "Create an Object Storage Bucket" {shape: rectangle}
+configure_bucket_lifecycle_policy: "Configure Bucket Lifecycle Policy" {shape: rectangle}
+create_access_keys_for_an_applicatio: "Create Access Keys for an Application" {shape: rectangle}
+enable_bucket_replication: "Enable Bucket Replication" {shape: rectangle}
+
+hub -> cod_activation_procedure
+hub -> incident_triage
+hub -> create_an_object_storage_bucket
+hub -> configure_bucket_lifecycle_policy
+hub -> create_access_keys_for_an_applicatio
+hub -> enable_bucket_replication
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

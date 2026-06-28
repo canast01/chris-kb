@@ -31,6 +31,25 @@ Backup and Restore reference covering Verify the Backup, App Volumes Manager Dat
 - Event database (SQL — backed up separately)
 - Connection Server service account passwords (re-entered at restore time)
 
+```d2
+direction: right
+
+hub: "Horizon\nOperations" {shape: hexagon}
+verify_the_backup: "Verify the Backup" {shape: rectangle}
+app_volumes_manager_database_backup: "App Volumes Manager Database Backup" {shape: rectangle}
+dem_config_share_backup: "DEM Config Share Backup" {shape: rectangle}
+appstack_vmdk_backup: "AppStack VMDK Backup" {shape: rectangle}
+golden_image_snapshot_management: "Golden Image Snapshot Management" {shape: rectangle}
+connection_server_restore_procedure: "Connection Server Restore Procedure" {shape: rectangle}
+
+hub -> verify_the_backup
+hub -> app_volumes_manager_database_backup
+hub -> dem_config_share_backup
+hub -> appstack_vmdk_backup
+hub -> golden_image_snapshot_management
+hub -> connection_server_restore_procedure
+```
+
 ## Before you begin
 
 - **Access:** vCenter read-only minimum; Administrator role for remediation steps

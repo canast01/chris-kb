@@ -6,6 +6,27 @@ search:
   boost: 1.5
 ---
 
+```d2
+direction: right
+
+plan: "Plan" {shape: oval}
+prerequisites: "Prerequisites" {shape: rectangle}
+rack_cable_and_power_on: "Rack, Cable, and Power On" {shape: rectangle}
+run_powerstore_manager_setup_wizard: "Run PowerStore Manager Setup Wizard" {shape: rectangle}
+configure_network: "Configure Network" {shape: rectangle}
+create_first_volume: "Create First Volume" {shape: rectangle}
+configure_host_connectivity: "Configure Host Connectivity" {shape: rectangle}
+validate: "Validate" {shape: oval}
+
+plan -> prerequisites
+prerequisites -> rack_cable_and_power_on
+rack_cable_and_power_on -> run_powerstore_manager_setup_wizard
+run_powerstore_manager_setup_wizard -> configure_network
+configure_network -> create_first_volume
+create_first_volume -> configure_host_connectivity
+configure_host_connectivity -> validate
+```
+
 ## Before you begin
 
 <!-- video-link -->

@@ -15,6 +15,23 @@ Asset Ownership and Accountability reference covering Overview, Ownership Model,
 
 
 
+```d2
+direction: right
+
+center: "ServiceNow" {shape: hexagon}
+ownership_model: "Ownership Model" {shape: rectangle}
+ownership_assignment_process: "Ownership Assignment Process" {shape: rectangle}
+ownership_handover: "Ownership Handover" {shape: rectangle}
+cost_allocation: "Cost Allocation" {shape: rectangle}
+accountability_and_compliance: "Accountability and Compliance" {shape: rectangle}
+
+center -> ownership_model
+center -> ownership_assignment_process
+center -> ownership_handover
+center -> cost_allocation
+center -> accountability_and_compliance
+```
+
 ## Overview
 
 Every CI in the CMDB must have a named owner. Ownership determines who approves changes, who is accountable during incidents, who carries the cost, and who authorises decommission. Unowned assets are a governance risk and a common source of audit findings.

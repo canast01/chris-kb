@@ -14,6 +14,19 @@ What to do in your first hour with a new Veeam Backup & Replication environment.
 
 ---
 
+```d2
+direction: right
+
+center: "Quick Start" {shape: hexagon}
+1_orient: "1. Orient" {shape: rectangle}
+2_first_health_checks: "2. First Health Checks" {shape: rectangle}
+3_common_first_tasks: "3. Common First Tasks" {shape: rectangle}
+
+center -> 1_orient
+center -> 2_first_health_checks
+center -> 3_common_first_tasks
+```
+
 ## 1. Orient
 
 Open the Veeam Backup & Replication console and build a map of the environment.

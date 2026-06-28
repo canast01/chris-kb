@@ -13,6 +13,19 @@ SQL Server procedures: index rebuild and statistics update, user and role manage
 ![SQL Server — Procedures](../../../../assets/compute-windows-server-sql-server-operations-procedures.svg)
 
 
+```d2
+direction: right
+
+hub: "SQL Server\nOperations" {shape: hexagon}
+database_maintenance_procedures: "Database — Maintenance Procedures" {shape: rectangle}
+sql_server_maintenance: "SQL Server Maintenance" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+hub -> database_maintenance_procedures
+hub -> sql_server_maintenance
+hub -> verify
+```
+
 ## Before you begin
 
 - **Access:** Local Administrator or Domain Admin on target hosts

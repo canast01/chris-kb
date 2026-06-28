@@ -15,6 +15,25 @@ AWS CLI commands for EVS cluster and host management, PowerCLI for vSphere opera
 
 
 
+```d2
+direction: right
+
+hub: "AWS EVS\nOperations" {shape: hexagon}
+evs_cli_quick_reference: "EVS CLI Quick Reference" {shape: rectangle}
+aws_evs_cli: "AWS EVS CLI" {shape: rectangle}
+vsphere_powercli: "vSphere PowerCLI" {shape: rectangle}
+nsxt_api: "NSX-T API" {shape: rectangle}
+hcx_api: "HCX API" {shape: rectangle}
+esxcli_esxi_host_diagnostics: "esxcli — ESXi Host Diagnostics" {shape: rectangle}
+
+hub -> evs_cli_quick_reference
+hub -> aws_evs_cli
+hub -> vsphere_powercli
+hub -> nsxt_api
+hub -> hcx_api
+hub -> esxcli_esxi_host_diagnostics
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

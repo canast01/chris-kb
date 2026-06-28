@@ -19,6 +19,23 @@ Catalog of known AWS EVS bugs and workarounds. EVS runs VMware vSphere, vSAN, an
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+aws_control_plane: "AWS Control Plane" {shape: rectangle}
+networking: "Networking" {shape: rectangle}
+vmware_layer: "VMware Layer" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> aws_control_plane: investigate
+symptom -> networking: investigate
+symptom -> vmware_layer: investigate
+aws_control_plane -> resolution
+networking -> resolution
+vmware_layer -> resolution
+```
+
 ## Before you begin
 
 - AWS EVS control plane issues: check AWS Health Dashboard and `evs.<region>.amazonaws.com` API.

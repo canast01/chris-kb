@@ -15,6 +15,15 @@ Hardening reference covering Network Security, Security Hardening Checklist.
 
 
 
+```d2
+direction: down
+
+network_security: "Network Security" {shape: rectangle}
+security_hardening_checklist: "Security Hardening Checklist" {shape: rectangle}
+
+network_security -> security_hardening_checklist: hardens
+```
+
 ## Before you begin
 
 - **Access:** Backup admin role on backup server; target system credentials

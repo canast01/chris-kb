@@ -15,6 +15,17 @@ Support reference covering Diagnostic Bundle Collection, Severity Definitions, E
 
 
 
+```d2
+direction: right
+
+center: "Pure1" {shape: hexagon}
+escalation_path: "Escalation Path" {shape: rectangle}
+common_support_scenarios: "Common Support Scenarios" {shape: rectangle}
+
+center -> escalation_path
+center -> common_support_scenarios
+```
+
 ## Escalation Path
 
 ```text

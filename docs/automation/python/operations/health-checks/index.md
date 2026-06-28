@@ -14,6 +14,27 @@ Health Checks reference covering Environment Health, Package Management, Schedul
 ![Python Automation — Health Checks](../../../../assets/automation-python-operations-health-checks-index.svg)
 
 
+```d2
+direction: right
+
+begin_checks: "Begin Checks" {shape: oval}
+run_this_routine: "Run This Routine" {shape: rectangle}
+package_management: "Package Management" {shape: rectangle}
+scheduled_scripts: "Scheduled Scripts" {shape: rectangle}
+python_automation_health_check_flow: "Python Automation Health Check Flow" {shape: rectangle}
+incident_triage: "Incident Triage" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+generate_report: "Generate Report" {shape: oval}
+
+begin_checks -> run_this_routine
+run_this_routine -> package_management
+package_management -> scheduled_scripts
+scheduled_scripts -> python_automation_health_check_flow
+python_automation_health_check_flow -> incident_triage
+incident_triage -> verify
+verify -> generate_report
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

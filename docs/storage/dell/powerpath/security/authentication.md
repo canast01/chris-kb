@@ -16,6 +16,27 @@ Authentication reference covering Overview, Linux Authentication, Windows Authen
 
 
 
+```d2
+direction: down
+
+external: External / Untrusted {shape: rectangle}
+linux_authentication: "Linux Authentication" {shape: rectangle}
+windows_authentication: "Windows Authentication" {shape: rectangle}
+aix_authentication: "AIX Authentication" {shape: rectangle}
+automation_and_service_accounts: "Automation and Service Accounts" {shape: rectangle}
+audit_trail: "Audit Trail" {shape: rectangle}
+powerpath_management_suite_ppms_auth: "PowerPath Management Suite (PPMS) Authentication" {shape: rectangle}
+core: "PowerPath Core" {shape: hexagon}
+
+external -> linux_authentication: traffic in
+linux_authentication -> windows_authentication
+windows_authentication -> aix_authentication
+aix_authentication -> automation_and_service_accounts
+automation_and_service_accounts -> audit_trail
+audit_trail -> powerpath_management_suite_ppms_auth
+powerpath_management_suite_ppms_auth -> core: secured path
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

@@ -16,6 +16,23 @@ VxRail Node Health Review reference covering Overview, Pre-Checks, Steps, Valida
 
 
 
+```d2
+direction: right
+
+hub: "VxRail\nOperations" {shape: hexagon}
+prechecks: "Pre-Checks" {shape: rectangle}
+steps: "Steps" {shape: rectangle}
+validation: "Validation" {shape: rectangle}
+rollback: "Rollback" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+hub -> prechecks
+hub -> steps
+hub -> validation
+hub -> rollback
+hub -> verify
+```
+
 ## Before you begin
 
 - **Access:** vCenter read-only minimum; Administrator role for remediation steps

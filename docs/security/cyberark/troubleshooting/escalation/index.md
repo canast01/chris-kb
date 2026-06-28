@@ -17,6 +17,27 @@ CyberArk PAM support escalation: how to run the DiagnosticTool, collect componen
 
 
 
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+actor "On-Call Engineer" as ENG
+participant "Escalation\nSystem" as SYS
+participant "Vendor Support" as SUP
+
+ENG -> SYS: Severity Levels
+SYS --> ENG: Output
+ENG -> SYS: Pre-Escalation Triage Checklist
+SYS --> ENG: Output
+ENG -> SYS: Step-by-Step Data Collection
+SYS --> ENG: Output
+ENG -> SUP: Escalate with diagnostic bundle
+SUP --> ENG: Case / resolution path
+
+@enduml
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials to PVWA (`Administrator` account or equivalent); RDP/local access to the Vault server

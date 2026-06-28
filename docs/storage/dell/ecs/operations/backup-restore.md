@@ -16,6 +16,25 @@ Backup & Restore reference covering Overview, Data Durability Model, Configurati
 
 
 
+```d2
+direction: right
+
+hub: "ECS\nOperations" {shape: hexagon}
+data_durability_model: "Data Durability Model" {shape: rectangle}
+configuration_backup: "Configuration Backup" {shape: rectangle}
+restoring_object_data: "Restoring Object Data" {shape: rectangle}
+veeam_backup_integration: "Veeam Backup Integration" {shape: rectangle}
+validation_after_restore_or_failover: "Validation After Restore or Failover" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+hub -> data_durability_model
+hub -> configuration_backup
+hub -> restoring_object_data
+hub -> veeam_backup_integration
+hub -> validation_after_restore_or_failover
+hub -> verify
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

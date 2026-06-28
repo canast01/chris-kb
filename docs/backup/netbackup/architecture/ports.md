@@ -18,6 +18,25 @@ Firewall port reference for Veritas NetBackup. Covers the Primary Server (former
 
 
 
+```d2
+direction: right
+
+center: "NetBackup" {shape: hexagon}
+inbound_admin_to_netbackup_primary_s: "Inbound — Admin to NetBackup Primary Server" {shape: rectangle}
+primary_server_to_media_servers: "Primary Server to Media Servers" {shape: rectangle}
+primary_server_to_clients: "Primary Server to Clients" {shape: rectangle}
+client_to_primary_server_and_media_s: "Client to Primary Server and Media Servers" {shape: rectangle}
+media_server_to_netbackup_storage_di: "Media Server to NetBackup Storage (Disk Pools, OST, Tape)" {shape: rectangle}
+vmware_backup_vsa_vadp_proxy: "VMware Backup — VSA (VADP Proxy)" {shape: rectangle}
+
+center -> inbound_admin_to_netbackup_primary_s
+center -> primary_server_to_media_servers
+center -> primary_server_to_clients
+center -> client_to_primary_server_and_media_s
+center -> media_server_to_netbackup_storage_di
+center -> vmware_backup_vsa_vadp_proxy
+```
+
 ## Before you begin
 
 - All inter-component communication in modern NetBackup (10.x) flows through port 1556 (VNETD / PBX — Process Bus eXchange)

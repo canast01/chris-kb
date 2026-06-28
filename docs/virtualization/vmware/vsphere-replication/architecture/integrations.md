@@ -17,6 +17,25 @@ Integrations reference covering vCenter Integration, SRM Integration, Network Re
 
 
 
+```d2
+direction: right
+
+center: "vSphere Replication" {shape: hexagon}
+vcenter_integration: "vCenter Integration" {shape: rectangle}
+srm_integration: "SRM Integration" {shape: rectangle}
+network_requirements: "Network Requirements" {shape: rectangle}
+crossvcenter_replication: "Cross-vCenter Replication" {shape: rectangle}
+multitarget_replication_fanout: "Multi-Target Replication (Fan-Out)" {shape: rectangle}
+storage_compatibility: "Storage Compatibility" {shape: rectangle}
+
+center -> vcenter_integration
+center -> srm_integration
+center -> network_requirements
+center -> crossvcenter_replication
+center -> multitarget_replication_fanout
+center -> storage_compatibility
+```
+
 ## vCenter Integration
 
 The VRA registers itself as a vCenter extension (plugin) during initial setup. This registration installs the vSphere Replication plugin in the vCenter UI (Site Recovery section) and grants the VRA API access to vCenter objects (VMs, datastores, hosts, clusters).

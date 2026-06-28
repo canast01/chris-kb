@@ -15,6 +15,25 @@ Authentication reference covering Authentication Architecture, Active Directory 
 ![Aria Automation — Authentication](../../../../assets/virtualization-vmware-aria-automation-security-authenticatio.svg)
 
 
+```d2
+direction: down
+
+external: External / Untrusted {shape: rectangle}
+authentication_architecture: "Authentication Architecture" {shape: rectangle}
+api_service_account: "API Service Account" {shape: rectangle}
+session_and_token_policies: "Session and Token Policies" {shape: rectangle}
+certificate_trust_for_api_clients: "Certificate Trust for API Clients" {shape: rectangle}
+related_reference: "Related Reference" {shape: rectangle}
+core: "Aria Automation Core" {shape: hexagon}
+
+external -> authentication_architecture: traffic in
+authentication_architecture -> api_service_account
+api_service_account -> session_and_token_policies
+session_and_token_policies -> certificate_trust_for_api_clients
+certificate_trust_for_api_clients -> related_reference
+related_reference -> core: secured path
+```
+
 ## Before you begin
 
 - **Access:** vCenter Administrator role

@@ -14,6 +14,19 @@ Event Correlation reference covering Correlation Workflow, Building a Correlatio
 
 
 
+```d2
+direction: right
+
+center: "Event Correlation" {shape: hexagon}
+dependency_map_template: "Dependency Map (template)" {shape: rectangle}
+crossplatform_log_locations: "Cross-Platform Log Locations" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+center -> dependency_map_template
+center -> crossplatform_log_locations
+center -> verify
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

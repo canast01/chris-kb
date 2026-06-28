@@ -11,6 +11,25 @@ Cisco DCNM (Data Center Network Manager) is the management and automation platfo
 
 ---
 
+```d2
+direction: right
+
+hub: "Cisco DCNM\nOperations" {shape: hexagon}
+discover_a_fabric_in_dcnm: "Discover a Fabric in DCNM" {shape: rectangle}
+add_a_switch_to_an_existing_fabric: "Add a Switch to an Existing Fabric" {shape: rectangle}
+deploy_a_configuration_change: "Deploy a Configuration Change" {shape: rectangle}
+configure_vrf_and_l3_gateway: "Configure VRF and L3 Gateway" {shape: rectangle}
+run_fabric_compliance_check: "Run Fabric Compliance Check" {shape: rectangle}
+collect_techsupport_bundle: "Collect Tech-Support Bundle" {shape: rectangle}
+
+hub -> discover_a_fabric_in_dcnm
+hub -> add_a_switch_to_an_existing_fabric
+hub -> deploy_a_configuration_change
+hub -> configure_vrf_and_l3_gateway
+hub -> run_fabric_compliance_check
+hub -> collect_techsupport_bundle
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

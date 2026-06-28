@@ -20,6 +20,25 @@ Protecting Active Directory requires regular System State backups of every Domai
 
 ---
 
+```d2
+direction: right
+
+hub: "Active Directory\nOperations" {shape: hexagon}
+backup_strategy_overview: "Backup Strategy Overview" {shape: rectangle}
+windows_server_backup_system_state: "Windows Server Backup — System State" {shape: rectangle}
+restore_decision_flowchart: "Restore Decision Flowchart" {shape: rectangle}
+nonauthoritative_restore: "Non-Authoritative Restore" {shape: rectangle}
+authoritative_restore_deleted_object: "Authoritative Restore (Deleted Object Recovery)" {shape: rectangle}
+ad_recycle_bin_recovery: "AD Recycle Bin Recovery" {shape: rectangle}
+
+hub -> backup_strategy_overview
+hub -> windows_server_backup_system_state
+hub -> restore_decision_flowchart
+hub -> nonauthoritative_restore
+hub -> authoritative_restore_deleted_object
+hub -> ad_recycle_bin_recovery
+```
+
 ## Before you begin
 
 - **Access:** Local Administrator or Domain Admin on target hosts

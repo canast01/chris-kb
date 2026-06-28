@@ -14,6 +14,23 @@ InsightIQ Standards reference covering Appliance Sizing Standards, Data Retentio
 
 
 
+```d2
+direction: down
+
+appliance_sizing_standards: "Appliance Sizing Standards" {shape: rectangle}
+data_retention_policy: "Data Retention Policy" {shape: rectangle}
+cluster_connection_standards: "Cluster Connection Standards" {shape: rectangle}
+alert_thresholds: "Alert Thresholds" {shape: rectangle}
+dashboard_standards: "Dashboard Standards" {shape: rectangle}
+report_schedule: "Report Schedule" {shape: rectangle}
+
+appliance_sizing_standards -> data_retention_policy: hardens
+data_retention_policy -> cluster_connection_standards: hardens
+cluster_connection_standards -> alert_thresholds: hardens
+alert_thresholds -> dashboard_standards: hardens
+dashboard_standards -> report_schedule: hardens
+```
+
 ## Appliance Sizing Standards
 
 InsightIQ appliance sizing is based on the number of monitored clusters and the desired data retention period.

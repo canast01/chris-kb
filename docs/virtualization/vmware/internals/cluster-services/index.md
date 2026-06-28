@@ -11,6 +11,25 @@ vSphere cluster services are the group of features that collectively make a clus
 
 ---
 
+```d2
+direction: right
+
+center: "Cluster Services" {shape: hexagon}
+overview_how_the_services_relate: "Overview — How the Services Relate" {shape: rectangle}
+vsphere_ha: "vSphere HA" {shape: rectangle}
+vsphere_drs: "vSphere DRS" {shape: rectangle}
+fault_tolerance_ft: "Fault Tolerance (FT)" {shape: rectangle}
+vsphere_cluster_services_vcls: "vSphere Cluster Services (vCLS)" {shape: rectangle}
+resource_pools_detailed_reference: "Resource Pools — Detailed Reference" {shape: rectangle}
+
+center -> overview_how_the_services_relate
+center -> vsphere_ha
+center -> vsphere_drs
+center -> fault_tolerance_ft
+center -> vsphere_cluster_services_vcls
+center -> resource_pools_detailed_reference
+```
+
 ## Overview — How the Services Relate
 
 

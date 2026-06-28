@@ -18,6 +18,26 @@ Catalog of known Horizon bugs, error codes, and workarounds covering Blast Extre
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+connection_and_authentication: "Connection and Authentication" {shape: rectangle}
+display_protocols: "Display Protocols" {shape: rectangle}
+desktop_pools_and_provisioning: "Desktop Pools and Provisioning" {shape: rectangle}
+connection_server: "Connection Server" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> connection_and_authentication: investigate
+symptom -> display_protocols: investigate
+symptom -> desktop_pools_and_provisioning: investigate
+symptom -> connection_server: investigate
+connection_and_authentication -> resolution
+display_protocols -> resolution
+desktop_pools_and_provisioning -> resolution
+connection_server -> resolution
+```
+
 ## Before you begin
 
 - Horizon error codes appear in the Horizon Console event log and the Horizon Administrator → Events tab.

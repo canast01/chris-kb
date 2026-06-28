@@ -17,6 +17,25 @@ Standards reference covering Naming Conventions, Build Baseline, Configuration C
 
 
 
+```d2
+direction: right
+
+center: "Aria Operations" {shape: hexagon}
+naming_conventions: "Naming Conventions" {shape: rectangle}
+build_baseline: "Build Baseline" {shape: rectangle}
+configuration_checklist: "Configuration Checklist" {shape: rectangle}
+alert_policy_standards: "Alert Policy Standards" {shape: rectangle}
+related_sections: "Related Sections" {shape: rectangle}
+alert_naming_convention: "Alert Naming Convention" {shape: rectangle}
+
+center -> naming_conventions
+center -> build_baseline
+center -> configuration_checklist
+center -> alert_policy_standards
+center -> related_sections
+center -> alert_naming_convention
+```
+
 ## Naming Conventions
 
 | Object | Convention | Example |

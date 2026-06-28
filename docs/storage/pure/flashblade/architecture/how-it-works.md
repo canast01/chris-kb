@@ -16,6 +16,25 @@ How It Works reference covering Overview, Scale-Out Architecture, HA Topology, C
 
 
 
+```d2
+direction: right
+
+center: "FlashBlade" {shape: hexagon}
+scaleout_architecture: "Scale-Out Architecture" {shape: rectangle}
+ha_topology: "HA Topology" {shape: rectangle}
+connectivity: "Connectivity" {shape: rectangle}
+file_services: "File Services" {shape: rectangle}
+object_services_s3: "Object Services (S3)" {shape: rectangle}
+purityfb_data_services: "Purity//FB Data Services" {shape: rectangle}
+
+center -> scaleout_architecture
+center -> ha_topology
+center -> connectivity
+center -> file_services
+center -> object_services_s3
+center -> purityfb_data_services
+```
+
 ## Overview
 
 Pure Storage FlashBlade is a scale-out all-flash storage platform running Purity//FB OS, purpose-built for unstructured data workloads: AI/ML training data, analytics, high-performance computing, backup repositories, and large-scale file storage. Unlike FlashArray's fixed dual-controller appliance, FlashBlade uses a disaggregated scale-out architecture where both compute and flash capacity scale together by adding blades to a chassis.

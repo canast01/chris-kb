@@ -55,6 +55,32 @@ graph TD
     class R,S escalate
 ```
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+step_1_check_disk_partitions_and_ser: "Step 1 — Check disk partitions and service health" {shape: rectangle}
+step_2_review_key_log_files: "Step 2 — Review key log files" {shape: rectangle}
+step_3_validate_dns_and_ntp: "Step 3 — Validate DNS and NTP" {shape: rectangle}
+step_4_check_certificate_expiry: "Step 4 — Check certificate expiry" {shape: rectangle}
+step_5_diagnose_sso_and_identity_sou: "Step 5 — Diagnose SSO and identity source" {shape: rectangle}
+step_6_query_vcenter_rest_api_health: "Step 6 — Query vCenter REST API health" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> step_1_check_disk_partitions_and_ser: investigate
+symptom -> step_2_review_key_log_files: investigate
+symptom -> step_3_validate_dns_and_ntp: investigate
+symptom -> step_4_check_certificate_expiry: investigate
+symptom -> step_5_diagnose_sso_and_identity_sou: investigate
+symptom -> step_6_query_vcenter_rest_api_health: investigate
+step_1_check_disk_partitions_and_ser -> resolution
+step_2_review_key_log_files -> resolution
+step_3_validate_dns_and_ntp -> resolution
+step_4_check_certificate_expiry -> resolution
+step_5_diagnose_sso_and_identity_sou -> resolution
+step_6_query_vcenter_rest_api_health -> resolution
+```
+
 ## Before you begin
 
 - **Access:** SSH to the VCSA appliance (root or administrator); vSphere Client admin credentials; VAMI access at `https://<vcenter>:5480`

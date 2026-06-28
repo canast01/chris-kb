@@ -16,6 +16,23 @@ How It Works reference covering Overview, Metering Model, Supported Platforms, U
 
 
 
+```d2
+direction: right
+
+center: "Flex On Demand" {shape: hexagon}
+fod_licence_lifecycle: "FOD Licence Lifecycle" {shape: rectangle}
+metering_model: "Metering Model" {shape: rectangle}
+supported_platforms: "Supported Platforms" {shape: rectangle}
+use_cases: "Use Cases" {shape: rectangle}
+best_practices: "Best Practices" {shape: rectangle}
+
+center -> fod_licence_lifecycle
+center -> metering_model
+center -> supported_platforms
+center -> use_cases
+center -> best_practices
+```
+
 ## Overview
 
 Dell Flex on Demand (FOD) is a consumption-based capacity model in which additional storage capacity is pre-installed in the array but metered — you pay only for what you use above the committed baseline. Usage is reported monthly via the CloudIQ telemetry pipeline, and burst consumption above the committed tier is billed at a per-TiB rate. FOD is available on PowerMax, PowerStore, and PowerScale platforms.

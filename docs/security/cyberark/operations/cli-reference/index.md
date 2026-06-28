@@ -16,6 +16,25 @@ CyberArk's primary programmatic interface is the PVWA REST API v2. The `psPAS` P
 
 
 
+```d2
+direction: right
+
+center: "Cli Reference" {shape: rectangle}
+api_interface_hierarchy: "API Interface Hierarchy" {shape: rectangle}
+rest_api_authentication: "REST API — Authentication" {shape: rectangle}
+rest_api_accounts: "REST API — Accounts" {shape: rectangle}
+rest_api_safes: "REST API — Safes" {shape: rectangle}
+pspas_powershell_module: "psPAS PowerShell Module" {shape: rectangle}
+pacli_legacy_vault_cli: "PACLI (Legacy Vault CLI)" {shape: rectangle}
+
+center -> api_interface_hierarchy
+center -> rest_api_authentication
+center -> rest_api_accounts
+center -> rest_api_safes
+center -> pspas_powershell_module
+center -> pacli_legacy_vault_cli
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

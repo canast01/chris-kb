@@ -18,6 +18,23 @@ VM Standard reference covering Overview, Templates, VMware Tools, Hardware Versi
 
 ---
 
+```d2
+direction: down
+
+templates: "Templates" {shape: rectangle}
+vmware_tools: "VMware Tools" {shape: rectangle}
+hardware_version: "Hardware Version" {shape: rectangle}
+cpu: "CPU" {shape: rectangle}
+memory: "Memory" {shape: rectangle}
+disk: "Disk" {shape: rectangle}
+
+templates -> vmware_tools: hardens
+vmware_tools -> hardware_version: hardens
+hardware_version -> cpu: hardens
+cpu -> memory: hardens
+memory -> disk: hardens
+```
+
 ## Overview
 
 This standard defines how virtual machines are built, sized, and configured in the vSphere environment. All new VMs deployed from a template or built manually must comply with these requirements.

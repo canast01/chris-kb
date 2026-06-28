@@ -14,6 +14,27 @@ Health Checks reference covering Runner Health, Workflow Failures, Secrets and C
 ![GitHub Actions — Health Checks](../../../../assets/automation-github-actions-operations-health-checks-index.svg)
 
 
+```d2
+direction: right
+
+begin_checks: "Begin Checks" {shape: oval}
+run_this_routine: "Run This Routine" {shape: rectangle}
+workflow_failures: "Workflow Failures" {shape: rectangle}
+secrets_and_credentials: "Secrets and Credentials" {shape: rectangle}
+runner_resources: "Runner Resources" {shape: rectangle}
+daily_checks: "Daily Checks" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+generate_report: "Generate Report" {shape: oval}
+
+begin_checks -> run_this_routine
+run_this_routine -> workflow_failures
+workflow_failures -> secrets_and_credentials
+secrets_and_credentials -> runner_resources
+runner_resources -> daily_checks
+daily_checks -> verify
+verify -> generate_report
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

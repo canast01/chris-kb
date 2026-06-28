@@ -12,6 +12,25 @@ InsightIQ Lifecycle reference covering Compatibility Validation, Pre-Upgrade Che
 ![InsightIQ Lifecycle](../../../../assets/storage-netapp-insightiq-lifecycle-index.svg)
 
 
+```d2
+direction: right
+
+plan: "Plan" {shape: oval}
+compatibility_validation: "Compatibility Validation" {shape: rectangle}
+preupgrade_checklist: "Pre-Upgrade Checklist" {shape: rectangle}
+cluster_registration: "Cluster Registration" {shape: rectangle}
+cluster_removal: "Cluster Removal" {shape: rectangle}
+eol_tracking: "EOL Tracking" {shape: rectangle}
+validate: "Validate" {shape: oval}
+
+plan -> compatibility_validation
+compatibility_validation -> preupgrade_checklist
+preupgrade_checklist -> cluster_registration
+cluster_registration -> cluster_removal
+cluster_removal -> eol_tracking
+eol_tracking -> validate
+```
+
 ## Compatibility Validation
 
 Before any InsightIQ upgrade, or before upgrading a monitored OneFS cluster, validate compatibility using the [NetApp Interoperability Matrix Tool (IMT)](https://imt.netapp.com/matrix/imt.html).

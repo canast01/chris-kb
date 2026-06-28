@@ -21,6 +21,31 @@ tags:
 | Estimated time | 20–45 minutes |
 | Impact | No downtime expected; log deletion may affect audit trails |
 
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+actor "Responder" as A
+participant "Linux System" as B
+participant "Dependent System" as C
+
+A -> B: Process Flow
+B --> A: OK
+A -> B: Step 3  Package Cache
+B --> A: OK
+A -> B: Step 4  Old Kernels (Linux)
+B --> A: OK
+A -> B: Step 5  Temp Files and Core Dumps
+B --> A: OK
+A -> B: Windows Disk Cleanup
+B --> A: OK
+A -> B: Step 6  Validate
+B --> A: OK
+
+@enduml
+```
+
 ## Before you begin
 
 - **Access:** root or sudo-capable account on target hosts

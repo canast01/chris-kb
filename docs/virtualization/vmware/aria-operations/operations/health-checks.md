@@ -14,6 +14,25 @@ Health checks for Aria Operations — cluster node status, adapter collection he
 
 
 
+```d2
+direction: right
+
+hub: "Aria Operations\nOperations" {shape: hexagon}
+run_this_routine: "Run This Routine" {shape: rectangle}
+adapter_collection_commands: "Adapter Collection Commands" {shape: rectangle}
+check_the_collector_service_log_for_: "Check the collector service log for adapter errors" {shape: rectangle}
+restart_an_adapter_that_is_stuck_in_: "Restart an adapter that is stuck in 'Not Collecting'" {shape: rectangle}
+ui_administration_solutions_select_a: "UI: Administration → Solutions → select adapter → Restart In" {shape: rectangle}
+or_via_api: "Or via API:" {shape: rectangle}
+
+hub -> run_this_routine
+hub -> adapter_collection_commands
+hub -> check_the_collector_service_log_for_
+hub -> restart_an_adapter_that_is_stuck_in_
+hub -> ui_administration_solutions_select_a
+hub -> or_via_api
+```
+
 ## Before you begin
 
 - **Access:** vCenter read-only minimum; Administrator role for remediation steps

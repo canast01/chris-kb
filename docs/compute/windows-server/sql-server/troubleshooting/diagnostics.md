@@ -53,6 +53,32 @@ graph TD
     class S escalate
 ```
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+step_1_check_the_error_log: "Step 1 — Check the error log" {shape: rectangle}
+step_2_check_active_requests_and_blo: "Step 2 — Check active requests and blocking" {shape: rectangle}
+step_3_check_availability_group_heal: "Step 3 — Check Availability Group health" {shape: rectangle}
+step_4_check_tempdb_contention: "Step 4 — Check tempdb contention" {shape: rectangle}
+step_5_check_log_file_growth_and_tru: "Step 5 — Check log file growth and truncation" {shape: rectangle}
+step_6_query_store_for_plan_regressi: "Step 6 — Query Store for plan regressions" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> step_1_check_the_error_log: investigate
+symptom -> step_2_check_active_requests_and_blo: investigate
+symptom -> step_3_check_availability_group_heal: investigate
+symptom -> step_4_check_tempdb_contention: investigate
+symptom -> step_5_check_log_file_growth_and_tru: investigate
+symptom -> step_6_query_store_for_plan_regressi: investigate
+step_1_check_the_error_log -> resolution
+step_2_check_active_requests_and_blo -> resolution
+step_3_check_availability_group_heal -> resolution
+step_4_check_tempdb_contention -> resolution
+step_5_check_log_file_growth_and_tru -> resolution
+step_6_query_store_for_plan_regressi -> resolution
+```
+
 ## Before you begin
 
 - **Access:** `sysadmin` fixed server role or `VIEW SERVER STATE` permission for DMV queries; Windows admin for event log and service management

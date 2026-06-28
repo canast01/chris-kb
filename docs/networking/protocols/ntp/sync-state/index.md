@@ -15,6 +15,25 @@ NTP Sync State reference covering Reading `chronyc tracking` (Linux), Reading `t
 
 The sync state tells you whether a system's clock is actively tracking an NTP source and how closely. A drifting or unsynchronised clock causes authentication failures, log correlation errors, and Kerberos breakage.
 
+```d2
+direction: right
+
+center: "NTP" {shape: hexagon}
+reading_chronyc_tracking_linux: "Reading `chronyc tracking` (Linux)" {shape: rectangle}
+reading_timedatectl_linux_systemdtim: "Reading `timedatectl` (Linux — systemd-timesyncd)" {shape: rectangle}
+windows_w32tm: "Windows — w32tm" {shape: rectangle}
+network_devices: "Network Devices" {shape: rectangle}
+states_and_meanings: "States and Meanings" {shape: rectangle}
+force_immediate_sync: "Force Immediate Sync" {shape: rectangle}
+
+center -> reading_chronyc_tracking_linux
+center -> reading_timedatectl_linux_systemdtim
+center -> windows_w32tm
+center -> network_devices
+center -> states_and_meanings
+center -> force_immediate_sync
+```
+
 ## Reading `chronyc tracking` (Linux)
 
 ```bash

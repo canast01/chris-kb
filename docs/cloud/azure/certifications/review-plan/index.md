@@ -14,6 +14,27 @@ Azure Certification Review Plan reference covering Recommended Study Path, 8-Wee
 
 
 
+```d2
+direction: right
+
+begin_checks: "Begin Checks" {shape: oval}
+recommended_study_path: "Recommended Study Path" {shape: rectangle}
+8week_az104_study_schedule: "8-Week AZ-104 Study Schedule" {shape: rectangle}
+microsoft_learn_resources: "Microsoft Learn Resources" {shape: rectangle}
+sandbox_and_lab_options: "Sandbox and Lab Options" {shape: rectangle}
+practice_assessment_resources: "Practice Assessment Resources" {shape: rectangle}
+study_checklist: "Study Checklist" {shape: rectangle}
+generate_report: "Generate Report" {shape: oval}
+
+begin_checks -> recommended_study_path
+recommended_study_path -> 8week_az104_study_schedule
+8week_az104_study_schedule -> microsoft_learn_resources
+microsoft_learn_resources -> sandbox_and_lab_options
+sandbox_and_lab_options -> practice_assessment_resources
+practice_assessment_resources -> study_checklist
+study_checklist -> generate_report
+```
+
 ## Recommended Study Path
 
 | Stage | Exam | Prerequisites | Suggested Duration |

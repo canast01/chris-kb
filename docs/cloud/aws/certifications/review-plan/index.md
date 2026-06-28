@@ -14,6 +14,27 @@ AWS Certification Review Plan reference covering Target Exam and Study Timeline,
 
 
 
+```d2
+direction: right
+
+begin_checks: "Begin Checks" {shape: oval}
+target_exam_and_study_timeline: "Target Exam and Study Timeline" {shape: rectangle}
+aws_skill_builder: "AWS Skill Builder" {shape: rectangle}
+key_whitepapers: "Key Whitepapers" {shape: rectangle}
+practice_exam_resources: "Practice Exam Resources" {shape: rectangle}
+aws_labs: "AWS Labs" {shape: rectangle}
+study_checklist: "Study Checklist" {shape: rectangle}
+generate_report: "Generate Report" {shape: oval}
+
+begin_checks -> target_exam_and_study_timeline
+target_exam_and_study_timeline -> aws_skill_builder
+aws_skill_builder -> key_whitepapers
+key_whitepapers -> practice_exam_resources
+practice_exam_resources -> aws_labs
+aws_labs -> study_checklist
+study_checklist -> generate_report
+```
+
 ## Target Exam and Study Timeline
 
 Recommended plan for AWS Solutions Architect Associate (SAA-C03):

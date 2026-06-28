@@ -16,6 +16,15 @@ GitHub Actions encryption: encrypted secrets storage, environment-level secret s
 
 ---
 
+```d2
+direction: down
+
+secrets_management: "Secrets Management" {shape: rectangle}
+masking_dynamic_values: "Masking Dynamic Values" {shape: rectangle}
+
+secrets_management -> masking_dynamic_values: hardens
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

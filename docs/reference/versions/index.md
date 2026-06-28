@@ -21,6 +21,25 @@ Jump: [Compute / HA / DRS](#compute--ha--drs) · [Storage / vSAN](#storage--vsan
 
 ---
 
+```d2
+direction: right
+
+center: "Versions" {shape: hexagon}
+compute_ha_drs: "Compute / HA / DRS" {shape: rectangle}
+storage_vsan: "Storage / vSAN" {shape: rectangle}
+nsx_networking: "NSX / Networking" {shape: rectangle}
+vcf: "VCF" {shape: rectangle}
+aria_suite: "Aria Suite" {shape: rectangle}
+tanzu: "Tanzu" {shape: rectangle}
+
+center -> compute_ha_drs
+center -> storage_vsan
+center -> nsx_networking
+center -> vcf
+center -> aria_suite
+center -> tanzu
+```
+
 ## Compute / HA / DRS
 
 Minimum **ESXi** and **vCenter** version required. Both must meet the minimum unless noted.

@@ -18,6 +18,26 @@ Catalog of known Veeam bugs, error codes, and workarounds covering backup jobs, 
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+vmware_backup: "VMware Backup" {shape: rectangle}
+restore: "Restore" {shape: rectangle}
+scaleout_backup_repository_sobr: "Scale-Out Backup Repository (SOBR)" {shape: rectangle}
+ports: "Ports" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> vmware_backup: investigate
+symptom -> restore: investigate
+symptom -> scaleout_backup_repository_sobr: investigate
+symptom -> ports: investigate
+vmware_backup -> resolution
+restore -> resolution
+scaleout_backup_repository_sobr -> resolution
+ports -> resolution
+```
+
 ## Before you begin
 
 - Veeam job errors appear in the job session details — double-click the session for step-by-step log.

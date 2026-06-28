@@ -145,6 +145,19 @@ aws rds describe-db-instances \
   --output table
 ```
 
+```d2
+direction: down
+
+network_controls: "Network Controls" {shape: rectangle}
+os_hardening: "OS Hardening" {shape: rectangle}
+application_security: "Application Security" {shape: rectangle}
+audit_monitoring: "Audit & Monitoring" {shape: rectangle}
+
+network_controls -> os_hardening: hardens
+os_hardening -> application_security: hardens
+application_security -> audit_monitoring: hardens
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

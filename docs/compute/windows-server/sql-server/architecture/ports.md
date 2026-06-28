@@ -20,6 +20,25 @@ Firewall port reference for Microsoft SQL Server. Covers the default instance, n
 
 
 
+```d2
+direction: right
+
+center: "SQL Server" {shape: hexagon}
+inbound_client_application_connectio: "Inbound — Client / Application Connections" {shape: rectangle}
+inbound_remote_management_ssms_power: "Inbound — Remote Management (SSMS, PowerShell)" {shape: rectangle}
+always_on_availability_groups_ag: "Always On Availability Groups (AG)" {shape: rectangle}
+sql_server_replication_and_linked_se: "SQL Server Replication and Linked Servers" {shape: rectangle}
+sql_agent_mail_database_mail: "SQL Agent Mail (Database Mail)" {shape: rectangle}
+sql_server_integration_services_ssis: "SQL Server Integration Services (SSIS)" {shape: rectangle}
+
+center -> inbound_client_application_connectio
+center -> inbound_remote_management_ssms_power
+center -> always_on_availability_groups_ag
+center -> sql_server_replication_and_linked_se
+center -> sql_agent_mail_database_mail
+center -> sql_server_integration_services_ssis
+```
+
 ## Before you begin
 
 - SQL Server default instance listens on TCP 1433 — this is the standard port for all client connections

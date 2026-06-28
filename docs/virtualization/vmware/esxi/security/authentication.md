@@ -20,6 +20,27 @@ ESXi Authentication Paths
 
 
 
+```d2
+direction: down
+
+external: External / Untrusted {shape: rectangle}
+local_account_management: "Local Account Management" {shape: rectangle}
+password_policy: "Password Policy" {shape: rectangle}
+active_directory_integration: "Active Directory Integration" {shape: rectangle}
+authentication_hardening: "Authentication Hardening" {shape: rectangle}
+login_banner: "Login Banner" {shape: rectangle}
+authentication_audit: "Authentication Audit" {shape: rectangle}
+core: "ESXi Core" {shape: hexagon}
+
+external -> local_account_management: traffic in
+local_account_management -> password_policy
+password_policy -> active_directory_integration
+active_directory_integration -> authentication_hardening
+authentication_hardening -> login_banner
+login_banner -> authentication_audit
+authentication_audit -> core: secured path
+```
+
 ## Local Account Management
 
 ### List and Remove Unused Local Accounts

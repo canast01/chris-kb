@@ -18,6 +18,29 @@ Cross-platform storage operational runbooks — volume expansion, LUN provisioni
 <a class="kb-card" href="vsan-stretched-cluster-setup/"><strong>vSAN Stretched Cluster Setup and Validation</strong><span>End-to-end runbook for deploying a vSAN stretched cluster across two sites with a third-site witness — fault domains, SPBM storage policy, network validation, failover simulation, and optional SRM integration.</span></a>
 </div>
 
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+actor "Responder" as A
+participant "Runbooks System" as B
+participant "Dependent System" as C
+
+A -> B: LUN Provisioning Runbook
+B --> A: OK
+A -> B: Snapshot Schedule Review
+B --> A: OK
+A -> B: Replication Failover Runbook (Generic)
+B --> A: OK
+A -> B: Capacity Expansion
+B --> A: OK
+A -> B: Host Connectivity Validation
+B --> A: OK
+
+@enduml
+```
+
 ## LUN Provisioning Runbook
 
 ```text

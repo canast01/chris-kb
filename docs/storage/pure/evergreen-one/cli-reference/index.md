@@ -17,6 +17,23 @@ Pure Evergreen//One CLI reference: `purearray list`, `purevolume list`, `purejob
 
 ![Pure Evergreen//One CLI Reference — Diagram](../../../../assets/storage-pure-evergreen-one-cli-reference-diagram.svg)
 
+```d2
+direction: right
+
+center: "Evergreen//One" {shape: rectangle}
+pure1_rest_api_subscription: "Pure1 REST API — Subscription" {shape: rectangle}
+burst_usage_tracking: "Burst Usage Tracking" {shape: rectangle}
+perarray_check_flasharray_cli: "Per-Array Check (FlashArray CLI)" {shape: rectangle}
+sla_and_tier_information: "SLA and Tier Information" {shape: rectangle}
+alerts_and_health: "Alerts and Health" {shape: rectangle}
+
+center -> pure1_rest_api_subscription
+center -> burst_usage_tracking
+center -> perarray_check_flasharray_cli
+center -> sla_and_tier_information
+center -> alerts_and_health
+```
+
 ## Overview
 
 Pure Evergreen//One is Pure Storage's as-a-service (STaaS) subscription. Capacity is consumed against a reserved tier and may enter burst above that level. There is no standalone CLI — management is via the **Pure1 REST API**, the **Pure1 portal**, and the **per-array FlashArray CLI** for physical checks.

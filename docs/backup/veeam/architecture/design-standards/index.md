@@ -15,6 +15,23 @@ Standards reference covering Job Naming Convention, Retention Schedule, Backup J
 
 
 
+```d2
+direction: down
+
+job_naming_convention: "Job Naming Convention" {shape: rectangle}
+retention_schedule: "Retention Schedule" {shape: rectangle}
+backup_job_configuration_standards: "Backup Job Configuration Standards" {shape: rectangle}
+encryption_standard: "Encryption Standard" {shape: rectangle}
+proxy_standards: "Proxy Standards" {shape: rectangle}
+repository_standards: "Repository Standards" {shape: rectangle}
+
+job_naming_convention -> retention_schedule: hardens
+retention_schedule -> backup_job_configuration_standards: hardens
+backup_job_configuration_standards -> encryption_standard: hardens
+encryption_standard -> proxy_standards: hardens
+proxy_standards -> repository_standards: hardens
+```
+
 ## Job Naming Convention
 
 | Object | Convention | Example |

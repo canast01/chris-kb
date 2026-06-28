@@ -16,6 +16,25 @@ PostgreSQL access control — roles, GRANT/REVOKE, row-level security, schema pe
 
 
 
+```d2
+direction: down
+
+external: External / Untrusted {shape: rectangle}
+role_management: "Role Management" {shape: rectangle}
+database_and_schema_permissions: "Database and Schema Permissions" {shape: rectangle}
+pghbaconf_connection_rules: "pg_hba.conf — Connection Rules" {shape: rectangle}
+rowlevel_security: "Row-Level Security" {shape: rectangle}
+auditing_current_privileges: "Auditing Current Privileges" {shape: rectangle}
+core: "PostgreSQL Core" {shape: hexagon}
+
+external -> role_management: traffic in
+role_management -> database_and_schema_permissions
+database_and_schema_permissions -> pghbaconf_connection_rules
+pghbaconf_connection_rules -> rowlevel_security
+rowlevel_security -> auditing_current_privileges
+auditing_current_privileges -> core: secured path
+```
+
 ## Before you begin
 
 - **Access:** root or sudo-capable account on target hosts

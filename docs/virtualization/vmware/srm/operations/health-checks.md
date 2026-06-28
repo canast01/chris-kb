@@ -16,6 +16,25 @@ SRM health checks: `Get-SrmRecoveryPlan`, site pair connectivity test, VM protec
 
 
 
+```d2
+direction: right
+
+hub: "Site Recovery Manager\nOperations" {shape: hexagon}
+run_this_routine: "Run This Routine" {shape: rectangle}
+rpo_compliance_check: "RPO Compliance Check" {shape: rectangle}
+sra_status_arraybased_replication: "SRA Status (Array-Based Replication)" {shape: rectangle}
+placeholder_vms_at_recovery_site: "Placeholder VMs at Recovery Site" {shape: rectangle}
+recovery_plan_precheck: "Recovery Plan Pre-Check" {shape: rectangle}
+certificate_expiry: "Certificate Expiry" {shape: rectangle}
+
+hub -> run_this_routine
+hub -> rpo_compliance_check
+hub -> sra_status_arraybased_replication
+hub -> placeholder_vms_at_recovery_site
+hub -> recovery_plan_precheck
+hub -> certificate_expiry
+```
+
 ## Before you begin
 
 - **Access:** vCenter read-only minimum; Administrator role for remediation steps

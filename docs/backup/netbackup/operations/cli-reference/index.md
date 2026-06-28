@@ -14,6 +14,23 @@ NetBackup CLI Reference reference covering Master → Media → Client Topology,
 ![NetBackup CLI Reference](../../../../assets/backup-netbackup-operations-cli-reference-index.svg)
 
 
+```d2
+direction: right
+
+center: "NetBackup" {shape: rectangle}
+master_media_client_topology: "Master → Media → Client Topology" {shape: rectangle}
+catalog_media: "Catalog & Media" {shape: rectangle}
+client_policy_management: "Client & Policy Management" {shape: rectangle}
+error_log_analysis: "Error & Log Analysis" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+center -> master_media_client_topology
+center -> catalog_media
+center -> client_policy_management
+center -> error_log_analysis
+center -> verify
+```
+
 ## Before you begin
 
 - **Access:** Backup admin role on backup server; target system credentials

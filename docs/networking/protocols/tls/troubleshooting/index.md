@@ -15,6 +15,32 @@ TLS troubleshooting — certificate chain validation failures, handshake timeout
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+quick_diagnosis: "Quick Diagnosis" {shape: rectangle}
+common_errors_and_fixes: "Common Errors and Fixes" {shape: rectangle}
+certificate_chain_validation: "Certificate Chain Validation" {shape: rectangle}
+sni_issues: "SNI Issues" {shape: rectangle}
+mtls_troubleshooting: "mTLS Troubleshooting" {shape: rectangle}
+verify_resolution: "Verify resolution" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> quick_diagnosis: investigate
+symptom -> common_errors_and_fixes: investigate
+symptom -> certificate_chain_validation: investigate
+symptom -> sni_issues: investigate
+symptom -> mtls_troubleshooting: investigate
+symptom -> verify_resolution: investigate
+quick_diagnosis -> resolution
+common_errors_and_fixes -> resolution
+certificate_chain_validation -> resolution
+sni_issues -> resolution
+mtls_troubleshooting -> resolution
+verify_resolution -> resolution
+```
+
 ## Before you begin
 
 - **Access:** Network admin credentials; console or SSH to devices

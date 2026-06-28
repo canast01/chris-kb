@@ -15,6 +15,25 @@ Support Cases reference covering Opening a Support Case, Case Severity Levels, G
 
 
 
+```d2
+direction: right
+
+center: "Support Cases" {shape: hexagon}
+opening_a_support_case: "Opening a Support Case" {shape: rectangle}
+case_severity_levels: "Case Severity Levels" {shape: rectangle}
+generating_a_support_bundle: "Generating a Support Bundle" {shape: rectangle}
+information_to_include_in_a_case: "Information to Include in a Case" {shape: rectangle}
+keystonespecific_cases: "Keystone-Specific Cases" {shape: rectangle}
+escalating_a_case: "Escalating a Case" {shape: rectangle}
+
+center -> opening_a_support_case
+center -> case_severity_levels
+center -> generating_a_support_bundle
+center -> information_to_include_in_a_case
+center -> keystonespecific_cases
+center -> escalating_a_case
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

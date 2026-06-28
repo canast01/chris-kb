@@ -108,6 +108,15 @@ curl -s -X DELETE "${BASE}/tags/${TAG_ID}" \
   -H "${AUTH}"
 ```
 
+```d2
+direction: right
+
+hub: "CloudIQ\nOperations" {shape: hexagon}
+verify: "Verify" {shape: rectangle}
+
+hub -> verify
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

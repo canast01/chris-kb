@@ -14,6 +14,23 @@ Linux architecture standards: kernel version and patch cadence requirements, NTP
 ![Linux — Standards](../../../../assets/compute-linux-architecture-design-standards-index.svg)
 
 
+```d2
+direction: down
+
+naming_convention: "Naming Convention" {shape: rectangle}
+ntp_configuration: "NTP Configuration" {shape: rectangle}
+syslog_forwarding: "Syslog Forwarding" {shape: rectangle}
+package_repository_policy: "Package Repository Policy" {shape: rectangle}
+os_component_stack: "OS Component Stack" {shape: rectangle}
+software_installation_policy: "Software Installation Policy" {shape: rectangle}
+
+naming_convention -> ntp_configuration: hardens
+ntp_configuration -> syslog_forwarding: hardens
+syslog_forwarding -> package_repository_policy: hardens
+package_repository_policy -> os_component_stack: hardens
+os_component_stack -> software_installation_policy: hardens
+```
+
 ## Naming Convention
 
 

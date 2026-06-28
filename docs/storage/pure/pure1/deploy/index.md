@@ -32,6 +32,27 @@ flowchart TD
     style s7 fill:#2e7d32,color:#fff,stroke:#1b5e20
 ```
 
+```d2
+direction: right
+
+plan: "Plan" {shape: oval}
+prerequisites: "Prerequisites" {shape: rectangle}
+enable_phone_home_on_flasharray: "Enable Phone Home on FlashArray" {shape: rectangle}
+enable_phone_home_on_flashblade: "Enable Phone Home on FlashBlade" {shape: rectangle}
+verify_array_appears_in_pure1: "Verify Array Appears in Pure1" {shape: rectangle}
+configure_user_access: "Configure User Access" {shape: rectangle}
+configure_alert_notifications: "Configure Alert Notifications" {shape: rectangle}
+validate: "Validate" {shape: oval}
+
+plan -> prerequisites
+prerequisites -> enable_phone_home_on_flasharray
+enable_phone_home_on_flasharray -> enable_phone_home_on_flashblade
+enable_phone_home_on_flashblade -> verify_array_appears_in_pure1
+verify_array_appears_in_pure1 -> configure_user_access
+configure_user_access -> configure_alert_notifications
+configure_alert_notifications -> validate
+```
+
 ## Before you begin
 
 - **Access:** admin credentials for the target system and any upstream dependencies (DNS, NTP, vCenter, directory services)

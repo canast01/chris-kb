@@ -13,6 +13,26 @@ Access Control reference covering Emergency Revocation Sequence, Audit Logging, 
 
 
 
+```d2
+direction: down
+
+root: "Access Control\nAccess Control" {shape: hexagon}
+emergency_revocation_sequence: "Emergency Revocation Sequence" {shape: rectangle}
+audit_logging: "Audit Logging" {shape: rectangle}
+certificate_pinning: "Certificate Pinning" {shape: rectangle}
+revocation_emergency_procedure: "Revocation Emergency Procedure" {shape: rectangle}
+resources: Protected Resources {shape: cylinder}
+
+root -> emergency_revocation_sequence: role
+emergency_revocation_sequence -> resources: scoped
+root -> audit_logging: role
+audit_logging -> resources: scoped
+root -> certificate_pinning: role
+certificate_pinning -> resources: scoped
+root -> revocation_emergency_procedure: role
+revocation_emergency_procedure -> resources: scoped
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

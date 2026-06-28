@@ -19,6 +19,31 @@ Cross-product runbook integrating Pure Storage FlashArray, Veeam Backup and Repl
 
 ![Pure Storage FlashArray with Veeam and Pure Protection — Diagram](../../assets/storage-runbooks-flasharray-veeam-pure-protection-diagram.svg)
 
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+actor "Responder" as A
+participant "Runbooks System" as B
+participant "Dependent System" as C
+
+A -> B: Architecture Overview
+B --> A: OK
+A -> B: Phase 1 FlashArray Preparation
+B --> A: OK
+A -> B: Phase 2 Veeam Integration
+B --> A: OK
+A -> B: Phase 3 SafeMode Verification
+B --> A: OK
+A -> B: Phase 4 Restore Testing
+B --> A: OK
+A -> B: Rollback
+B --> A: OK
+
+@enduml
+```
+
 ## Before You Begin
 
 **Prerequisites:**

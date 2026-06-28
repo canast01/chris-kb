@@ -15,6 +15,25 @@ Install & Upgrade reference covering Release Cadence, Upgrade Order, Migration: 
 
 
 
+```d2
+direction: right
+
+plan: "Plan" {shape: oval}
+release_cadence: "Release Cadence" {shape: rectangle}
+upgrade_order: "Upgrade Order" {shape: rectangle}
+migration_physical_master_to_applian: "Migration: Physical Master to Appliance" {shape: rectangle}
+license_lifecycle: "License Lifecycle" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+validate: "Validate" {shape: oval}
+
+plan -> release_cadence
+release_cadence -> upgrade_order
+upgrade_order -> migration_physical_master_to_applian
+migration_physical_master_to_applian -> license_lifecycle
+license_lifecycle -> verify
+verify -> validate
+```
+
 ## Before you begin
 
 - **Access:** Backup admin role on backup server; target system credentials

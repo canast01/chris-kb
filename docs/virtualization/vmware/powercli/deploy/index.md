@@ -35,6 +35,27 @@ flowchart TD
     style s9 fill:#2e7d32,color:#fff,stroke:#1b5e20
 ```
 
+```d2
+direction: right
+
+plan: "Plan" {shape: oval}
+prerequisites: "Prerequisites" {shape: rectangle}
+install_from_powershell_gallery: "Install from PowerShell Gallery" {shape: rectangle}
+offline_install_airgapped_environmen: "Offline Install (Air-Gapped Environments)" {shape: rectangle}
+first_connection: "First Connection" {shape: rectangle}
+service_account_setup: "Service Account Setup" {shape: rectangle}
+certificate_configuration: "Certificate Configuration" {shape: rectangle}
+validate: "Validate" {shape: oval}
+
+plan -> prerequisites
+prerequisites -> install_from_powershell_gallery
+install_from_powershell_gallery -> offline_install_airgapped_environmen
+offline_install_airgapped_environmen -> first_connection
+first_connection -> service_account_setup
+service_account_setup -> certificate_configuration
+certificate_configuration -> validate
+```
+
 ## Before you begin
 
 - **Access:** local administrator rights to install the module; vCenter read-only minimum for connections; internet access or a pre-staged offline package for Gallery install

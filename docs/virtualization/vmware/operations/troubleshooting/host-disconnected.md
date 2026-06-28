@@ -19,6 +19,33 @@ Diagnosing ESXi hosts showing disconnected or not responding in vCenter — mana
 
 
 ---
+
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+quick_triage: "Quick Triage" {shape: rectangle}
+host_disconnected_in_vcenter: "Host Disconnected in vCenter" {shape: rectangle}
+management_agent_reset: "Management Agent Reset" {shape: rectangle}
+management_network_down: "Management Network Down" {shape: rectangle}
+host_not_responding_psod_or_hung_ker: "Host Not Responding (PSOD or Hung Kernel)" {shape: rectangle}
+host_cannot_enter_maintenance_mode: "Host Cannot Enter Maintenance Mode" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> quick_triage: investigate
+symptom -> host_disconnected_in_vcenter: investigate
+symptom -> management_agent_reset: investigate
+symptom -> management_network_down: investigate
+symptom -> host_not_responding_psod_or_hung_ker: investigate
+symptom -> host_cannot_enter_maintenance_mode: investigate
+quick_triage -> resolution
+host_disconnected_in_vcenter -> resolution
+management_agent_reset -> resolution
+management_network_down -> resolution
+host_not_responding_psod_or_hung_ker -> resolution
+host_cannot_enter_maintenance_mode -> resolution
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

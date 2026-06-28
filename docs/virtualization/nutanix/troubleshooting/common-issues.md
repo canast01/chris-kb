@@ -20,6 +20,32 @@ Troubleshooting guide for the most frequent Nutanix problems: CVM down or unreac
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+diagnostic_flow: "Diagnostic Flow" {shape: rectangle}
+cvm_down_unreachable: "CVM Down / Unreachable" {shape: rectangle}
+ncc_health_check_failures: "NCC Health Check Failures" {shape: rectangle}
+storage_degraded_or_critical: "Storage Degraded or Critical" {shape: rectangle}
+vm_stuck_powering_onoff: "VM Stuck Powering On/Off" {shape: rectangle}
+vm_cannot_connect_to_network: "VM Cannot Connect to Network" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> diagnostic_flow: investigate
+symptom -> cvm_down_unreachable: investigate
+symptom -> ncc_health_check_failures: investigate
+symptom -> storage_degraded_or_critical: investigate
+symptom -> vm_stuck_powering_onoff: investigate
+symptom -> vm_cannot_connect_to_network: investigate
+diagnostic_flow -> resolution
+cvm_down_unreachable -> resolution
+ncc_health_check_failures -> resolution
+storage_degraded_or_critical -> resolution
+vm_stuck_powering_onoff -> resolution
+vm_cannot_connect_to_network -> resolution
+```
+
 ## Diagnostic Flow
 
 ```mermaid

@@ -19,6 +19,21 @@ ESXi Install & Upgrade reference covering vSphere Update Manager (VUM) — Legac
 
 
 
+```d2
+direction: right
+
+hub: "ESXi\nOperations" {shape: hexagon}
+upgrade_and_patching_readiness_check: "Upgrade and Patching Readiness Checklist" {shape: rectangle}
+driver_and_firmware_lifecycle: "Driver and Firmware Lifecycle" {shape: rectangle}
+rollback_considerations: "Rollback Considerations" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+hub -> upgrade_and_patching_readiness_check
+hub -> driver_and_firmware_lifecycle
+hub -> rollback_considerations
+hub -> verify
+```
+
 ## Before you begin
 
 - **Access:** vCenter read-only minimum; Administrator role for remediation steps

@@ -44,6 +44,32 @@ services.sh restart
 
 ---
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+diagnostic_flow: "Diagnostic Flow" {shape: rectangle}
+all_paths_down_apd_storage: "All Paths Down (APD) — Storage" {shape: rectangle}
+high_cpu_ready_time: "High CPU Ready Time" {shape: rectangle}
+high_memory_ballooning_or_swapping: "High Memory Ballooning or Swapping" {shape: rectangle}
+psod_purple_screen_of_death: "PSOD (Purple Screen of Death)" {shape: rectangle}
+vmfs_datastore_inaccessible: "VMFS Datastore Inaccessible" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> diagnostic_flow: investigate
+symptom -> all_paths_down_apd_storage: investigate
+symptom -> high_cpu_ready_time: investigate
+symptom -> high_memory_ballooning_or_swapping: investigate
+symptom -> psod_purple_screen_of_death: investigate
+symptom -> vmfs_datastore_inaccessible: investigate
+diagnostic_flow -> resolution
+all_paths_down_apd_storage -> resolution
+high_cpu_ready_time -> resolution
+high_memory_ballooning_or_swapping -> resolution
+psod_purple_screen_of_death -> resolution
+vmfs_datastore_inaccessible -> resolution
+```
+
 ## Diagnostic Flow
 
 ```mermaid

@@ -35,6 +35,17 @@ PAM platform with Digital Vault as the encrypted credential store, CPM for autom
 
 </div>
 
+```d2
+direction: right
+
+center: "Architecture" {shape: hexagon}
+component_overview: "Component Overview" {shape: rectangle}
+pam_component_topology: "PAM Component Topology" {shape: rectangle}
+
+center -> component_overview
+center -> pam_component_topology
+```
+
 ## Component Overview
 
 | Component | Role | Typical Count |

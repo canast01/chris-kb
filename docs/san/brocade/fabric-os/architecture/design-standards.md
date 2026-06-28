@@ -16,6 +16,19 @@ FabricOS design standards: ISL oversubscription limits, trunking requirements, f
 
 ---
 
+```d2
+direction: right
+
+center: "Brocade Fabric OS" {shape: hexagon}
+switch_naming: "Switch Naming" {shape: rectangle}
+security_standards: "Security Standards" {shape: rectangle}
+firmware_standards: "Firmware Standards" {shape: rectangle}
+
+center -> switch_naming
+center -> security_standards
+center -> firmware_standards
+```
+
 ## Switch Naming
 
 

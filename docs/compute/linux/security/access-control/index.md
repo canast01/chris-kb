@@ -255,6 +255,26 @@ awk -F: '$3 == 0 { print $1 }' /etc/passwd
 awk -F: '$2 == "" { print $1 }' /etc/shadow
 ```
 
+```d2
+direction: down
+
+root: "Linux\nAccess Control" {shape: hexagon}
+administrator: "Administrator" {shape: rectangle}
+operator: "Operator" {shape: rectangle}
+auditor: "Auditor" {shape: rectangle}
+readonly: "Read-Only" {shape: rectangle}
+resources: Protected Resources {shape: cylinder}
+
+root -> administrator: role
+administrator -> resources: scoped
+root -> operator: role
+operator -> resources: scoped
+root -> auditor: role
+auditor -> resources: scoped
+root -> readonly: role
+readonly -> resources: scoped
+```
+
 ## Before you begin
 
 - **Access:** root or sudo-capable account on target hosts

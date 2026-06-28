@@ -13,6 +13,17 @@ Encryption reference covering CA Key Protection Hierarchy, CA Key Protection, CR
 
 
 
+```d2
+direction: down
+
+ca_key_protection_hierarchy: "CA Key Protection Hierarchy" {shape: rectangle}
+ca_key_protection: "CA Key Protection" {shape: rectangle}
+crl_availability: "CRL Availability" {shape: rectangle}
+
+ca_key_protection_hierarchy -> ca_key_protection: hardens
+ca_key_protection -> crl_availability: hardens
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

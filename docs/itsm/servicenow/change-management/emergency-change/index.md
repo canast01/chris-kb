@@ -13,6 +13,23 @@ Emergency changes bypass the standard CAB cycle to address active outages or cri
 ![Emergency Change Procedure](../../../../assets/itsm-servicenow-change-management-emergency-change-index.svg)
 
 
+```d2
+direction: right
+
+center: "ServiceNow" {shape: hexagon}
+trigger_conditions: "Trigger Conditions" {shape: rectangle}
+preimplementation_30_minutes: "Pre-Implementation (< 30 minutes)" {shape: rectangle}
+ecab_minimum_approval: "eCAB — Minimum Approval" {shape: rectangle}
+implementation: "Implementation" {shape: rectangle}
+guardrails: "Guardrails" {shape: rectangle}
+
+center -> trigger_conditions
+center -> preimplementation_30_minutes
+center -> ecab_minimum_approval
+center -> implementation
+center -> guardrails
+```
+
 ## Trigger Conditions
 
 | Condition | Example |

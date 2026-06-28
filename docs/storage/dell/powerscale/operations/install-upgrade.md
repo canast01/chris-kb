@@ -16,6 +16,23 @@ Install & Upgrade reference covering Software Version Matrix, Upgrade Paths, Ref
 
 
 
+```d2
+direction: right
+
+hub: "PowerScale (Isilon)\nOperations" {shape: hexagon}
+software_version_matrix: "Software Version Matrix" {shape: rectangle}
+upgrade_paths: "Upgrade Paths" {shape: rectangle}
+refresh_planning: "Refresh Planning" {shape: rectangle}
+eol_tracking: "EOL Tracking" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+hub -> software_version_matrix
+hub -> upgrade_paths
+hub -> refresh_planning
+hub -> eol_tracking
+hub -> verify
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

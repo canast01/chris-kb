@@ -14,6 +14,17 @@ Encryption reference covering Secrets and Encryption Architecture, Encrypting Lo
 ![Python Automation — Encryption](../../../../assets/automation-python-security-encryption-index.svg)
 
 
+```d2
+direction: down
+
+secrets_and_encryption_architecture: "Secrets and Encryption Architecture" {shape: rectangle}
+encrypting_local_files_with_cryptogr: "Encrypting Local Files with cryptography" {shape: rectangle}
+encryption_reference: "Encryption Reference" {shape: rectangle}
+
+secrets_and_encryption_architecture -> encrypting_local_files_with_cryptogr: hardens
+encrypting_local_files_with_cryptogr -> encryption_reference: hardens
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

@@ -14,6 +14,27 @@ Azure daily health checks — runnable CLI routine covering service health incid
 ![Azure — Health Checks](../../../../assets/cloud-azure-operations-health-checks-index.svg)
 
 
+```d2
+direction: right
+
+begin_checks: "Begin Checks" {shape: oval}
+run_this_routine: "Run This Routine" {shape: rectangle}
+vm_health: "VM Health" {shape: rectangle}
+network_health: "Network Health" {shape: rectangle}
+storage_health: "Storage Health" {shape: rectangle}
+identity_and_security: "Identity and Security" {shape: rectangle}
+cost_optimization: "Cost Optimization" {shape: rectangle}
+generate_report: "Generate Report" {shape: oval}
+
+begin_checks -> run_this_routine
+run_this_routine -> vm_health
+vm_health -> network_health
+network_health -> storage_health
+storage_health -> identity_and_security
+identity_and_security -> cost_optimization
+cost_optimization -> generate_report
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

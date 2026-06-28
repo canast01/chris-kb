@@ -14,6 +14,23 @@ Common questions about VMware vSphere Replication operations, configuration, and
 
 ![VMware vSphere Replication FAQ](../../../../assets/virtualization-vmware-vsphere-replication-operations-faq.svg)
 
+```d2
+direction: right
+
+hub: "vSphere Replication\nOperations" {shape: hexagon}
+general: "General" {shape: rectangle}
+configuration: "Configuration" {shape: rectangle}
+operations: "Operations" {shape: rectangle}
+troubleshooting: "Troubleshooting" {shape: rectangle}
+backup_and_recovery: "Backup and Recovery" {shape: rectangle}
+
+hub -> general
+hub -> configuration
+hub -> operations
+hub -> troubleshooting
+hub -> backup_and_recovery
+```
+
 ## General
 
 **Q: What vSphere Replication version is recommended?**

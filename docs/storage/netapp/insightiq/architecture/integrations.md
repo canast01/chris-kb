@@ -15,6 +15,15 @@ InsightIQ integrates exclusively with PowerScale (Isilon) clusters via the OneFS
 
 
 
+```d2
+direction: right
+
+center: "InsightIQ" {shape: hexagon}
+scope_limitation: "Scope Limitation" {shape: rectangle}
+
+center -> scope_limitation
+```
+
 ## Scope Limitation
 
 - InsightIQ monitors **PowerScale only** — it does not support PowerStore, Unity, or PowerMax

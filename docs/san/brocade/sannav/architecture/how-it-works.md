@@ -15,6 +15,25 @@ How It Works reference covering Overview, Deployment Topology, Supported Hardwar
 
 
 
+```d2
+direction: right
+
+center: "SANnav" {shape: hexagon}
+deployment_topology: "Deployment Topology" {shape: rectangle}
+supported_hardware: "Supported Hardware" {shape: rectangle}
+network_requirements: "Network Requirements" {shape: rectangle}
+vm_sizing: "VM Sizing" {shape: rectangle}
+internal_services: "Internal Services" {shape: rectangle}
+integrations: "Integrations" {shape: rectangle}
+
+center -> deployment_topology
+center -> supported_hardware
+center -> network_requirements
+center -> vm_sizing
+center -> internal_services
+center -> integrations
+```
+
 ## Overview
 
 Brocade SANnav is a SAN management platform delivered in two variants:

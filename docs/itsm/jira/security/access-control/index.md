@@ -18,6 +18,32 @@ Jira's access control model is layered: global permissions govern what users can
 
 ---
 
+```d2
+direction: down
+
+root: "Jira\nAccess Control" {shape: hexagon}
+access_control_architecture: "Access Control Architecture" {shape: rectangle}
+project_roles: "Project Roles" {shape: rectangle}
+issue_security_schemes: "Issue Security Schemes" {shape: rectangle}
+group_management: "Group Management" {shape: rectangle}
+access_audit_and_review: "Access Audit and Review" {shape: rectangle}
+automation_and_integration_access: "Automation and Integration Access" {shape: rectangle}
+resources: Protected Resources {shape: cylinder}
+
+root -> access_control_architecture: role
+access_control_architecture -> resources: scoped
+root -> project_roles: role
+project_roles -> resources: scoped
+root -> issue_security_schemes: role
+issue_security_schemes -> resources: scoped
+root -> group_management: role
+group_management -> resources: scoped
+root -> access_audit_and_review: role
+access_audit_and_review -> resources: scoped
+root -> automation_and_integration_access: role
+automation_and_integration_access -> resources: scoped
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

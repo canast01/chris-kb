@@ -20,6 +20,17 @@ ESXi Backup & Restore Flow
 
 The configuration bundle includes network settings, storage policies, service state, and advanced settings. It does not include VMFS datastores or VM data.
 
+```d2
+direction: right
+
+hub: "ESXi\nOperations" {shape: hexagon}
+vmlevel_backup: "VM-Level Backup" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+hub -> vmlevel_backup
+hub -> verify
+```
+
 ## Before you begin
 
 - **Access:** vCenter read-only minimum; Administrator role for remediation steps

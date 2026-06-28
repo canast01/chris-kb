@@ -16,6 +16,25 @@ Backup & Restore reference covering Overview, Configuration File Location, Confi
 
 
 
+```d2
+direction: right
+
+hub: "PowerPath\nOperations" {shape: hexagon}
+configuration_file_location: "Configuration File Location" {shape: rectangle}
+configuration_backup: "Configuration Backup" {shape: rectangle}
+configuration_restore: "Configuration Restore" {shape: rectangle}
+postrestore_validation: "Post-Restore Validation" {shape: rectangle}
+backup_frequency_and_retention: "Backup Frequency and Retention" {shape: rectangle}
+disaster_recovery_consideration: "Disaster Recovery Consideration" {shape: rectangle}
+
+hub -> configuration_file_location
+hub -> configuration_backup
+hub -> configuration_restore
+hub -> postrestore_validation
+hub -> backup_frequency_and_retention
+hub -> disaster_recovery_consideration
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

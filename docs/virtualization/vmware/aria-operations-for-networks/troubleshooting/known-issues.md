@@ -18,6 +18,23 @@ Catalog of known Aria Operations for Networks (vRNI) bugs, error codes, and work
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+data_sources: "Data Sources" {shape: rectangle}
+flow_analysis: "Flow Analysis" {shape: rectangle}
+platform: "Platform" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> data_sources: investigate
+symptom -> flow_analysis: investigate
+symptom -> platform: investigate
+data_sources -> resolution
+flow_analysis -> resolution
+platform -> resolution
+```
+
 ## Before you begin
 
 - vRNI errors appear in `Settings → Infrastructure and Support → Data Sources`.

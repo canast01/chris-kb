@@ -37,6 +37,15 @@ acs backup status
 acs system logs --component backup --tail 50
 ```
 
+```d2
+direction: right
+
+hub: "Nexus Dashboard\nOperations" {shape: hexagon}
+verify: "Verify" {shape: rectangle}
+
+hub -> verify
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

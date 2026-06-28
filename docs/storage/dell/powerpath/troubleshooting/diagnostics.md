@@ -47,6 +47,32 @@ graph TD
     class P escalate
 ```
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+step_1_initial_diagnostic_commands: "Step 1 — Initial diagnostic commands" {shape: rectangle}
+step_2_linuxspecific_diagnostics: "Step 2 — Linux-specific diagnostics" {shape: rectangle}
+step_3_windowsspecific_diagnostics: "Step 3 — Windows-specific diagnostics" {shape: rectangle}
+step_4_san_fabric_diagnostics: "Step 4 — SAN fabric diagnostics" {shape: rectangle}
+step_5_arrayside_diagnostics: "Step 5 — Array-side diagnostics" {shape: rectangle}
+step_6_support_bundle_collection: "Step 6 — Support bundle collection" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> step_1_initial_diagnostic_commands: investigate
+symptom -> step_2_linuxspecific_diagnostics: investigate
+symptom -> step_3_windowsspecific_diagnostics: investigate
+symptom -> step_4_san_fabric_diagnostics: investigate
+symptom -> step_5_arrayside_diagnostics: investigate
+symptom -> step_6_support_bundle_collection: investigate
+step_1_initial_diagnostic_commands -> resolution
+step_2_linuxspecific_diagnostics -> resolution
+step_3_windowsspecific_diagnostics -> resolution
+step_4_san_fabric_diagnostics -> resolution
+step_5_arrayside_diagnostics -> resolution
+step_6_support_bundle_collection -> resolution
+```
+
 ## Before you begin
 
 - **Access:** Root on the affected Linux host, or Administrator on Windows; SSH or console access to FC switches for fabric-level diagnostics; storage array admin account (Unisphere, Unisphere for PowerMax) for array-side checks

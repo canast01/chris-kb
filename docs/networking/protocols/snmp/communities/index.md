@@ -18,6 +18,25 @@ Community strings provide no encryption.
 !!! warning "SNMPv2c security"
     Community strings are transmitted in plaintext and are visible in packet captures. Treat them as secrets and use SNMPv3 for any environment with compliance requirements or sensitive data. SNMPv2c is acceptable only on isolated management VLANs with strict ACLs.
 
+```d2
+direction: right
+
+center: "SNMP" {shape: hexagon}
+community_types: "Community Types" {shape: rectangle}
+configuring_communities_linux_snmpd: "Configuring Communities — Linux (snmpd)" {shape: rectangle}
+cisco_ios: "Cisco IOS" {shape: rectangle}
+arista_eos: "Arista EOS" {shape: rectangle}
+brocade_fos: "Brocade FOS" {shape: rectangle}
+testing_community_access: "Testing Community Access" {shape: rectangle}
+
+center -> community_types
+center -> configuring_communities_linux_snmpd
+center -> cisco_ios
+center -> arista_eos
+center -> brocade_fos
+center -> testing_community_access
+```
+
 ## Community Types
 
 | Community | Access | Typical name | Risk |

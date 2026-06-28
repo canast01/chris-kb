@@ -14,6 +14,23 @@ GitHub Actions design standards: workflow file structure, reusable workflow patt
 ![GitHub Actions — Standards](../../../../assets/automation-github-actions-architecture-design-standards-inde.svg)
 
 
+```d2
+direction: down
+
+workflow_file_structure: "Workflow File Structure" {shape: rectangle}
+reusable_workflows: "Reusable Workflows" {shape: rectangle}
+composite_actions: "Composite Actions" {shape: rectangle}
+runner_standards: "Runner Standards" {shape: rectangle}
+action_version_pinning: "Action Version Pinning" {shape: rectangle}
+caching: "Caching" {shape: rectangle}
+
+workflow_file_structure -> reusable_workflows: hardens
+reusable_workflows -> composite_actions: hardens
+composite_actions -> runner_standards: hardens
+runner_standards -> action_version_pinning: hardens
+action_version_pinning -> caching: hardens
+```
+
 ## Workflow File Structure
 
 

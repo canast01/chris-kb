@@ -35,6 +35,27 @@ flowchart TD
     style s8 fill:#2e7d32,color:#fff,stroke:#1b5e20
 ```
 
+```d2
+direction: right
+
+plan: "Plan" {shape: oval}
+phase_1_physical_host_readiness: "Phase 1: Physical Host Readiness" {shape: rectangle}
+phase_2_esxi_installation: "Phase 2: ESXi Installation" {shape: rectangle}
+phase_3_network_configuration: "Phase 3: Network Configuration" {shape: rectangle}
+phase_4_storage_configuration: "Phase 4: Storage Configuration" {shape: rectangle}
+phase_5_add_host_to_vcenter: "Phase 5: Add Host to vCenter" {shape: rectangle}
+phase_6_hardening_baseline: "Phase 6: Hardening & Baseline" {shape: rectangle}
+validate: "Validate" {shape: oval}
+
+plan -> phase_1_physical_host_readiness
+phase_1_physical_host_readiness -> phase_2_esxi_installation
+phase_2_esxi_installation -> phase_3_network_configuration
+phase_3_network_configuration -> phase_4_storage_configuration
+phase_4_storage_configuration -> phase_5_add_host_to_vcenter
+phase_5_add_host_to_vcenter -> phase_6_hardening_baseline
+phase_6_hardening_baseline -> validate
+```
+
 ## Before you begin
 
 <!-- video-link -->

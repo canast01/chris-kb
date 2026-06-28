@@ -36,6 +36,25 @@ flowchart LR
     unisphere -->|"LDAP bind\ngroup-to-role mapping"| ldap
 ```
 
+```d2
+direction: down
+
+external: External / Untrusted {shape: rectangle}
+local_accounts: "Local Accounts" {shape: rectangle}
+ldap_active_directory_integration: "LDAP / Active Directory Integration" {shape: rectangle}
+audit_logging: "Audit Logging" {shape: rectangle}
+session_management: "Session Management" {shape: rectangle}
+related_reference: "Related Reference" {shape: rectangle}
+core: "VPLEX Core" {shape: hexagon}
+
+external -> local_accounts: traffic in
+local_accounts -> ldap_active_directory_integration
+ldap_active_directory_integration -> audit_logging
+audit_logging -> session_management
+session_management -> related_reference
+related_reference -> core: secured path
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

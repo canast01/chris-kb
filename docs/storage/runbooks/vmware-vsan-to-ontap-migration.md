@@ -19,6 +19,29 @@ Cross-product runbook for migrating virtual machine workloads from VMware vSAN t
 
 ![Migrate VM Workloads from vSAN to ONTAP NFS — Diagram](../../assets/storage-runbooks-vmware-vsan-to-ontap-migration-diagram.svg)
 
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+actor "Responder" as A
+participant "Runbooks System" as B
+participant "Dependent System" as C
+
+A -> B: Phase 1 ONTAP Preparation
+B --> A: OK
+A -> B: Phase 2 VM Migration
+B --> A: OK
+A -> B: Phase 3 Validation
+B --> A: OK
+A -> B: Phase 4 Cutover
+B --> A: OK
+A -> B: Rollback
+B --> A: OK
+
+@enduml
+```
+
 ## Before You Begin
 
 **Prerequisites:**

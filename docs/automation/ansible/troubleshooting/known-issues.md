@@ -18,6 +18,26 @@ Catalog of known Ansible Automation Platform bugs, error codes, and workarounds 
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+ssh_connectivity: "SSH Connectivity" {shape: rectangle}
+become_sudo: "Become / Sudo" {shape: rectangle}
+execution_nodes_receptor: "Execution Nodes (Receptor)" {shape: rectangle}
+winrm_windows: "WinRM (Windows)" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> ssh_connectivity: investigate
+symptom -> become_sudo: investigate
+symptom -> execution_nodes_receptor: investigate
+symptom -> winrm_windows: investigate
+ssh_connectivity -> resolution
+become_sudo -> resolution
+execution_nodes_receptor -> resolution
+winrm_windows -> resolution
+```
+
 ## Before you begin
 
 - AAP job errors appear in Automation Controller → Jobs — click the failed job for detailed output.

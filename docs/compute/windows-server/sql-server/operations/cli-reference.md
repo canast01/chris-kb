@@ -15,6 +15,25 @@ SQL Server CLI reference — sqlcmd, PowerShell SqlServer module, BCP, SQLCMD sc
 
 
 
+```d2
+direction: right
+
+hub: "SQL Server\nOperations" {shape: hexagon}
+sqlcmd: "sqlcmd" {shape: rectangle}
+powershell_sqlserver_module: "PowerShell SqlServer Module" {shape: rectangle}
+bcp_bulk_copy_program: "BCP (Bulk Copy Program)" {shape: rectangle}
+key_operational_dmv_queries: "Key Operational DMV Queries" {shape: rectangle}
+sql_agent_job_control: "SQL Agent Job Control" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+hub -> sqlcmd
+hub -> powershell_sqlserver_module
+hub -> bcp_bulk_copy_program
+hub -> key_operational_dmv_queries
+hub -> sql_agent_job_control
+hub -> verify
+```
+
 ## Before you begin
 
 - **Access:** Local Administrator or Domain Admin on target hosts

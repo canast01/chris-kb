@@ -19,6 +19,25 @@ Reference for managing ESXi host lifecycle at scale. Covers vSphere Lifecycle Ma
 
 ---
 
+```d2
+direction: right
+
+center: "Vsphere Lifecycle" {shape: hexagon}
+vsphere_lifecycle_manager_vlcm: "vSphere Lifecycle Manager (vLCM)" {shape: rectangle}
+cluster_images: "Cluster Images" {shape: rectangle}
+update_planner: "Update Planner" {shape: rectangle}
+quick_boot: "Quick Boot" {shape: rectangle}
+secure_boot_for_esxi: "Secure Boot for ESXi" {shape: rectangle}
+host_profiles: "Host Profiles" {shape: rectangle}
+
+center -> vsphere_lifecycle_manager_vlcm
+center -> cluster_images
+center -> update_planner
+center -> quick_boot
+center -> secure_boot_for_esxi
+center -> host_profiles
+```
+
 ## vSphere Lifecycle Manager (vLCM)
 
 vSphere Lifecycle Manager (vLCM), introduced in vSphere 7.0, replaces the older Update Manager (VUM) baseline approach with a **desired state model** for cluster-level management. vLCM ensures every host in a cluster runs the same software image.

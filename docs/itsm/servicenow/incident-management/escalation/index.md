@@ -15,6 +15,27 @@ Incident Escalation reference covering Overview, Priority Definitions, Escalatio
 
 
 
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+actor "On-Call Engineer" as ENG
+participant "ServiceNow\nSystem" as SYS
+participant "Vendor Support" as SUP
+
+ENG -> SYS: Priority Definitions
+SYS --> ENG: Output
+ENG -> SYS: Escalation Matrix
+SYS --> ENG: Output
+ENG -> SYS: P1/P2 Escalation Checklist
+SYS --> ENG: Output
+ENG -> SUP: Escalate with diagnostic bundle
+SUP --> ENG: Case / resolution path
+
+@enduml
+```
+
 ## Overview
 
 Escalation ensures that incidents get the right people involved at the right time. Failing to escalate promptly extends outage duration and can breach SLAs. Over-escalating creates alert fatigue and burns out senior staff on minor issues. The matrix below provides clear criteria for when and how to escalate.

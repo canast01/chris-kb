@@ -17,6 +17,28 @@ Venafi TPP manages the full certificate lifecycle — discovery, policy enforcem
 
 
 ---
+
+```d2
+direction: right
+
+plan: "Plan" {shape: oval}
+machine_identity_discovery_topology: "Machine Identity Discovery Topology" {shape: rectangle}
+certificate_discovery: "Certificate Discovery" {shape: rectangle}
+policy_enforcement: "Policy Enforcement" {shape: rectangle}
+automated_renewal_sequence: "Automated Renewal Sequence" {shape: rectangle}
+renewal_automation: "Renewal Automation" {shape: rectangle}
+expiry_alerting: "Expiry Alerting" {shape: rectangle}
+validate: "Validate" {shape: oval}
+
+plan -> machine_identity_discovery_topology
+machine_identity_discovery_topology -> certificate_discovery
+certificate_discovery -> policy_enforcement
+policy_enforcement -> automated_renewal_sequence
+automated_renewal_sequence -> renewal_automation
+renewal_automation -> expiry_alerting
+expiry_alerting -> validate
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

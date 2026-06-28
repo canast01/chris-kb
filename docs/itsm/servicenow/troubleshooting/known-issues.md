@@ -18,6 +18,23 @@ Catalog of known ServiceNow bugs, error codes, and workarounds covering MID Serv
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+mid_server: "MID Server" {shape: rectangle}
+integrations: "Integrations" {shape: rectangle}
+performance: "Performance" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> mid_server: investigate
+symptom -> integrations: investigate
+symptom -> performance: investigate
+mid_server -> resolution
+integrations -> resolution
+performance -> resolution
+```
+
 ## Before you begin
 
 - ServiceNow errors appear in `System Log → All` in the instance UI.

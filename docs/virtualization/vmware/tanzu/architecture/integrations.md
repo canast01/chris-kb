@@ -17,6 +17,25 @@ Integrations reference covering vCenter Integration, NSX-T Integration, AVI (NSX
 
 
 
+```d2
+direction: right
+
+center: "Tanzu" {shape: hexagon}
+vcenter_integration: "vCenter Integration" {shape: rectangle}
+nsxt_integration: "NSX-T Integration" {shape: rectangle}
+avi_nsx_advanced_load_balancer_integ: "AVI (NSX Advanced Load Balancer) Integration" {shape: rectangle}
+vsan_integration: "vSAN Integration" {shape: rectangle}
+active_directory_ldap_integration: "Active Directory / LDAP Integration" {shape: rectangle}
+harbor_registry_integration: "Harbor Registry Integration" {shape: rectangle}
+
+center -> vcenter_integration
+center -> nsxt_integration
+center -> avi_nsx_advanced_load_balancer_integ
+center -> vsan_integration
+center -> active_directory_ldap_integration
+center -> harbor_registry_integration
+```
+
 ## vCenter Integration
 
 Workload Management is a vCenter Server feature. The Supervisor cluster lifecycle — enable, upgrade, configure — is managed entirely through vCenter APIs or the vSphere UI.

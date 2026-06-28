@@ -33,6 +33,27 @@ flowchart TD
     style s7 fill:#2e7d32,color:#fff,stroke:#1b5e20
 ```
 
+```d2
+direction: right
+
+plan: "Plan" {shape: oval}
+preinstall_checklist: "Pre-Install Checklist" {shape: rectangle}
+installation: "Installation" {shape: rectangle}
+postinstall_configuration: "Post-Install Configuration" {shape: rectangle}
+tempdb_configuration: "tempdb Configuration" {shape: rectangle}
+firewall: "Firewall" {shape: rectangle}
+validation: "Validation" {shape: rectangle}
+validate: "Validate" {shape: oval}
+
+plan -> preinstall_checklist
+preinstall_checklist -> installation
+installation -> postinstall_configuration
+postinstall_configuration -> tempdb_configuration
+tempdb_configuration -> firewall
+firewall -> validation
+validation -> validate
+```
+
 ## Before you begin
 
 - **Access:** Local Administrator or Domain Admin on target hosts

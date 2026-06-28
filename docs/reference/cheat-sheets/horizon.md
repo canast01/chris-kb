@@ -13,6 +13,17 @@ Top-10 Horizon commands for desktop pool management, agent control, and session 
 
 
 
+```d2
+direction: right
+
+center: "Cheat Sheets" {shape: rectangle}
+vdmadmin_connection_server_command_l: "vdmadmin (Connection Server command line)" {shape: rectangle}
+powershell_vmwarehvhelper_module: "PowerShell (VMware.Hv.Helper module)" {shape: rectangle}
+
+center -> vdmadmin_connection_server_command_l
+center -> powershell_vmwarehvhelper_module
+```
+
 ## vdmadmin (Connection Server command line)
 
 ```bash

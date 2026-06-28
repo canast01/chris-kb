@@ -13,6 +13,25 @@ DHCP Failover reference covering Overview, Configuring Failover, Checking Failov
 
 
 
+```d2
+direction: right
+
+center: "DHCP" {shape: hexagon}
+configuring_failover: "Configuring Failover" {shape: rectangle}
+checking_failover_state: "Checking Failover State" {shape: rectangle}
+failover_states_reference: "Failover States Reference" {shape: rectangle}
+split_scope_pre2012_fallback: "Split Scope (Pre-2012 Fallback)" {shape: rectangle}
+removing_and_modifying_failover: "Removing and Modifying Failover" {shape: rectangle}
+known_issues: "Known Issues" {shape: rectangle}
+
+center -> configuring_failover
+center -> checking_failover_state
+center -> failover_states_reference
+center -> split_scope_pre2012_fallback
+center -> removing_and_modifying_failover
+center -> known_issues
+```
+
 ## Overview
 
 DHCP failover on Windows Server allows two DHCP servers to share responsibility for a scope, providing redundancy. The two modes are **Hot Standby** (one active, one passive) and **Load Balance** (both serve leases simultaneously, split by percentage).

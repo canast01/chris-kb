@@ -16,6 +16,43 @@ Veeam Backup & Replication provides comprehensive recovery options ranging from 
 
 ---
 
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+participant "Source\n(Veeam)" as SRC
+participant "Backup Engine" as ENG
+participant "Target / Vault" as TGT
+
+SRC -> ENG: Restore Type Decision Tree
+ENG -> TGT: Write
+TGT --> ENG: Confirmed
+ENG --> SRC: Done
+SRC -> ENG: Full VM Restore
+ENG -> TGT: Write
+TGT --> ENG: Confirmed
+ENG --> SRC: Done
+SRC -> ENG: File-Level Recovery
+ENG -> TGT: Write
+TGT --> ENG: Confirmed
+ENG --> SRC: Done
+SRC -> ENG: Application-Item Recovery
+ENG -> TGT: Write
+TGT --> ENG: Confirmed
+ENG --> SRC: Done
+SRC -> ENG: Veeam DataLabs  Restore Testing
+ENG -> TGT: Write
+TGT --> ENG: Confirmed
+ENG --> SRC: Done
+SRC -> ENG: Restore Validation Checklist
+ENG -> TGT: Write
+TGT --> ENG: Confirmed
+ENG --> SRC: Done
+
+@enduml
+```
+
 ## Before you begin
 
 - **Access:** Backup admin role on backup server; target system credentials

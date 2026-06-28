@@ -39,6 +39,19 @@ The OpenAI API provides REST access to GPT-4o, embedding, image generation, and 
 
 </div>
 
+```d2
+direction: right
+
+center: "OpenAI API" {shape: hexagon}
+quick_reference: "Quick Reference" {shape: rectangle}
+common_operations: "Common Operations" {shape: rectangle}
+key_considerations: "Key Considerations" {shape: rectangle}
+
+center -> quick_reference
+center -> common_operations
+center -> key_considerations
+```
+
 ## Quick Reference
 
 ### Model Catalog

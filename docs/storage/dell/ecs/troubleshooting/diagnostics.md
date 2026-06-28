@@ -44,6 +44,32 @@ graph TD
     class M escalate
 ```
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+step_1_management_api_health_check: "Step 1 — Management API health check" {shape: rectangle}
+step_2_s3_api_diagnostics: "Step 2 — S3 API diagnostics" {shape: rectangle}
+step_3_nodelevel_ssh_diagnostics: "Step 3 — Node-level SSH diagnostics" {shape: rectangle}
+step_4_georeplication_diagnostics: "Step 4 — Geo-replication diagnostics" {shape: rectangle}
+step_5_support_bundle_collection: "Step 5 — Support bundle collection" {shape: rectangle}
+log_locations: "Log locations" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> step_1_management_api_health_check: investigate
+symptom -> step_2_s3_api_diagnostics: investigate
+symptom -> step_3_nodelevel_ssh_diagnostics: investigate
+symptom -> step_4_georeplication_diagnostics: investigate
+symptom -> step_5_support_bundle_collection: investigate
+symptom -> log_locations: investigate
+step_1_management_api_health_check -> resolution
+step_2_s3_api_diagnostics -> resolution
+step_3_nodelevel_ssh_diagnostics -> resolution
+step_4_georeplication_diagnostics -> resolution
+step_5_support_bundle_collection -> resolution
+log_locations -> resolution
+```
+
 ## Before you begin
 
 - **Access:** Management REST API at `https://<ecs-node>:4443` (authenticate first to get a session token); SSH to ECS nodes as `admin`; ECS Portal admin account; S3 credentials (access key and secret key) for data path tests

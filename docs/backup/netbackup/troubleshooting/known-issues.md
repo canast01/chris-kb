@@ -18,6 +18,26 @@ Catalog of known NetBackup bugs, error codes, and workarounds covering backup po
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+common_error_codes: "Common Error Codes" {shape: rectangle}
+vmware_integration: "VMware Integration" {shape: rectangle}
+dd_boost: "DD Boost" {shape: rectangle}
+certificates_nbu_8x: "Certificates (NBU 8.x+)" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> common_error_codes: investigate
+symptom -> vmware_integration: investigate
+symptom -> dd_boost: investigate
+symptom -> certificates_nbu_8x: investigate
+common_error_codes -> resolution
+vmware_integration -> resolution
+dd_boost -> resolution
+certificates_nbu_8x -> resolution
+```
+
 ## Before you begin
 
 - NetBackup error codes are documented at `veritas.com/support` — most codes have a dedicated KB article.

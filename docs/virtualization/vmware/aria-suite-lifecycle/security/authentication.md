@@ -34,6 +34,27 @@ After registration, the LCM login page shows a "Log In with Workspace ONE" butto
 
 ---
 
+```d2
+direction: down
+
+external: External / Untrusted {shape: rectangle}
+active_directory_group_sync_via_vidm: "Active Directory Group Sync via VIDM" {shape: rectangle}
+api_authentication: "API Authentication" {shape: rectangle}
+local_accounts: "Local Accounts" {shape: rectangle}
+certificate_trust_for_api_clients: "Certificate Trust for API Clients" {shape: rectangle}
+session_and_token_policies: "Session and Token Policies" {shape: rectangle}
+related_reference: "Related Reference" {shape: rectangle}
+core: "Aria Suite Lifecycle Core" {shape: hexagon}
+
+external -> active_directory_group_sync_via_vidm: traffic in
+active_directory_group_sync_via_vidm -> api_authentication
+api_authentication -> local_accounts
+local_accounts -> certificate_trust_for_api_clients
+certificate_trust_for_api_clients -> session_and_token_policies
+session_and_token_policies -> related_reference
+related_reference -> core: secured path
+```
+
 ## Before you begin
 
 - **Access:** vCenter Administrator role

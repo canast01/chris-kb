@@ -14,6 +14,25 @@ PowerScale (Isilon) procedures — NFS export and SMB share management, snapshot
 
 
 
+```d2
+direction: right
+
+hub: "PowerScale (Isilon)\nOperations" {shape: hexagon}
+change_readiness: "Change Readiness" {shape: rectangle}
+maintenance_window: "Maintenance Window" {shape: rectangle}
+postchange_validation: "Post-Change Validation" {shape: rectangle}
+nfs_export_management: "NFS Export Management" {shape: rectangle}
+smb_share_management: "SMB Share Management" {shape: rectangle}
+snapshot_management: "Snapshot Management" {shape: rectangle}
+
+hub -> change_readiness
+hub -> maintenance_window
+hub -> postchange_validation
+hub -> nfs_export_management
+hub -> smb_share_management
+hub -> snapshot_management
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

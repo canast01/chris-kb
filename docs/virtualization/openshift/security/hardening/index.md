@@ -34,6 +34,23 @@ graph TD
     class I result
 ```
 
+```d2
+direction: down
+
+security_context_constraints: "Security Context Constraints" {shape: rectangle}
+rhcos_node_hardening: "RHCOS Node Hardening" {shape: rectangle}
+compliance_operator: "Compliance Operator" {shape: rectangle}
+pod_security_admission_labels: "Pod Security Admission Labels" {shape: rectangle}
+networkpolicy_defaults: "NetworkPolicy Defaults" {shape: rectangle}
+image_security: "Image Security" {shape: rectangle}
+
+security_context_constraints -> rhcos_node_hardening: hardens
+rhcos_node_hardening -> compliance_operator: hardens
+compliance_operator -> pod_security_admission_labels: hardens
+pod_security_admission_labels -> networkpolicy_defaults: hardens
+networkpolicy_defaults -> image_security: hardens
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

@@ -16,6 +16,27 @@ TLS certificate management and data encryption for Dell PowerScale.
 
 
 
+```d2
+direction: down
+
+external: External / Untrusted {shape: rectangle}
+encryption_layers: "Encryption Layers" {shape: rectangle}
+data_at_rest_selfencrypting_drives_s: "Data at Rest — Self-Encrypting Drives (SED)" {shape: rectangle}
+synciq_replication_encryption: "SyncIQ — Replication Encryption" {shape: rectangle}
+smb_encryption: "SMB Encryption" {shape: rectangle}
+nfs_encryption_kerberos_krb5p: "NFS Encryption (Kerberos krb5p)" {shape: rectangle}
+management_interface_encryption_http: "Management Interface Encryption (HTTPS / TLS)" {shape: rectangle}
+core: "PowerScale (Isilon) Core" {shape: hexagon}
+
+external -> encryption_layers: traffic in
+encryption_layers -> data_at_rest_selfencrypting_drives_s
+data_at_rest_selfencrypting_drives_s -> synciq_replication_encryption
+synciq_replication_encryption -> smb_encryption
+smb_encryption -> nfs_encryption_kerberos_krb5p
+nfs_encryption_kerberos_krb5p -> management_interface_encryption_http
+management_interface_encryption_http -> core: secured path
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

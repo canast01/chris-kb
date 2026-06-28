@@ -19,6 +19,23 @@ Catalog of known Fabric OS bugs, error codes, and workarounds covering switch he
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+switch_and_port_health: "Switch and Port Health" {shape: rectangle}
+zoning: "Zoning" {shape: rectangle}
+isl_trunking: "ISL / Trunking" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> switch_and_port_health: investigate
+symptom -> zoning: investigate
+symptom -> isl_trunking: investigate
+switch_and_port_health -> resolution
+zoning -> resolution
+isl_trunking -> resolution
+```
+
 ## Before you begin
 
 - Run `switchshow` for port status; `fabricshow` for fabric topology.

@@ -15,6 +15,25 @@ Selecting the right GPU — and the right number of them — depends on model si
 
 
 
+```d2
+direction: right
+
+center: "GPU Compute" {shape: hexagon}
+training_vs_inference_requirements: "Training vs Inference Requirements" {shape: rectangle}
+vram_sizing_guide: "VRAM Sizing Guide" {shape: rectangle}
+gpu_specifications_reference: "GPU Specifications Reference" {shape: rectangle}
+estimating_tokens_per_second: "Estimating Tokens Per Second" {shape: rectangle}
+cloud_instance_selection: "Cloud Instance Selection" {shape: rectangle}
+multigpu_strategies: "Multi-GPU Strategies" {shape: rectangle}
+
+center -> training_vs_inference_requirements
+center -> vram_sizing_guide
+center -> gpu_specifications_reference
+center -> estimating_tokens_per_second
+center -> cloud_instance_selection
+center -> multigpu_strategies
+```
+
 ## Training vs Inference Requirements
 
 | Aspect | Training | Inference |

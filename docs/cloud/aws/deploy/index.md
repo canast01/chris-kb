@@ -6,6 +6,27 @@ search:
   boost: 1.5
 ---
 
+```d2
+direction: right
+
+plan: "Plan" {shape: oval}
+prerequisites: "Prerequisites" {shape: rectangle}
+create_aws_organization_and_enable_a: "Create AWS Organization and Enable AWS SSO" {shape: rectangle}
+create_accounts_and_ous: "Create Accounts and OUs" {shape: rectangle}
+configure_cloudtrail_all_regions: "Configure CloudTrail (All Regions)" {shape: rectangle}
+configure_aws_config: "Configure AWS Config" {shape: rectangle}
+set_up_vpc_and_networking: "Set Up VPC and Networking" {shape: rectangle}
+validate: "Validate" {shape: oval}
+
+plan -> prerequisites
+prerequisites -> create_aws_organization_and_enable_a
+create_aws_organization_and_enable_a -> create_accounts_and_ous
+create_accounts_and_ous -> configure_cloudtrail_all_regions
+configure_cloudtrail_all_regions -> configure_aws_config
+configure_aws_config -> set_up_vpc_and_networking
+set_up_vpc_and_networking -> validate
+```
+
 ## Before you begin
 
 - **Access:** admin credentials for the target system and any upstream dependencies (DNS, NTP, vCenter, directory services)

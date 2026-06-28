@@ -6,6 +6,27 @@ search:
   boost: 1.5
 ---
 
+```d2
+direction: right
+
+plan: "Plan" {shape: oval}
+prerequisites: "Prerequisites" {shape: rectangle}
+rack_and_power_on: "Rack and Power On" {shape: rectangle}
+initial_array_configuration_srdf_por: "Initial Array Configuration (SRDF Ports, FC Directors)" {shape: rectangle}
+connect_to_unisphere: "Connect to Unisphere" {shape: rectangle}
+discover_and_configure_storage_pools: "Discover and Configure Storage Pools" {shape: rectangle}
+create_first_storage_group_and_maski: "Create First Storage Group and Masking View" {shape: rectangle}
+validate: "Validate" {shape: oval}
+
+plan -> prerequisites
+prerequisites -> rack_and_power_on
+rack_and_power_on -> initial_array_configuration_srdf_por
+initial_array_configuration_srdf_por -> connect_to_unisphere
+connect_to_unisphere -> discover_and_configure_storage_pools
+discover_and_configure_storage_pools -> create_first_storage_group_and_maski
+create_first_storage_group_and_maski -> validate
+```
+
 ## Before you begin
 
 <!-- video-link -->

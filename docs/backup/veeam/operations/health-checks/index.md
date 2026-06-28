@@ -14,6 +14,23 @@ The primary review surface is the **Home** view in the VBR console, which shows 
 ![Veeam — Health Checks](../../../../assets/backup-veeam-operations-health-checks-index.svg)
 
 
+```d2
+direction: right
+
+begin_checks: "Begin Checks" {shape: oval}
+surebackup_verification_sequence: "SureBackup Verification Sequence" {shape: rectangle}
+run_this_routine: "Run This Routine" {shape: rectangle}
+weekly_checks: "Weekly Checks" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+generate_report: "Generate Report" {shape: oval}
+
+begin_checks -> surebackup_verification_sequence
+surebackup_verification_sequence -> run_this_routine
+run_this_routine -> weekly_checks
+weekly_checks -> verify
+verify -> generate_report
+```
+
 ## Before you begin
 
 - **Access:** Backup admin role on backup server; target system credentials

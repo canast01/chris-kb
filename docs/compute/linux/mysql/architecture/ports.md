@@ -20,6 +20,23 @@ Firewall port reference for MySQL and MySQL InnoDB Cluster. Covers client connec
 
 
 
+```d2
+direction: right
+
+center: "Linux" {shape: hexagon}
+inbound_client_connections: "Inbound — Client Connections" {shape: rectangle}
+mysql_innodb_cluster_group_replicati: "MySQL InnoDB Cluster / Group Replication (Node-to-Node)" {shape: rectangle}
+monitoring: "Monitoring" {shape: rectangle}
+firewall_zone_summary: "Firewall Zone Summary" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+center -> inbound_client_connections
+center -> mysql_innodb_cluster_group_replicati
+center -> monitoring
+center -> firewall_zone_summary
+center -> verify
+```
+
 ## Inbound — Client Connections
 
 | Port | Protocol | Source | Purpose |

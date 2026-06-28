@@ -41,6 +41,27 @@ flowchart TD
     style s10 fill:#2e7d32,color:#fff,stroke:#1b5e20
 ```
 
+```d2
+direction: right
+
+plan: "Plan" {shape: oval}
+install_the_os: "Install the OS" {shape: rectangle}
+configure_network: "Configure Network" {shape: rectangle}
+configure_ntp: "Configure NTP" {shape: rectangle}
+configure_windows_update_wsus_or_dir: "Configure Windows Update (WSUS or Direct)" {shape: rectangle}
+join_the_domain: "Join the Domain" {shape: rectangle}
+configure_windows_firewall: "Configure Windows Firewall" {shape: rectangle}
+validate: "Validate" {shape: oval}
+
+plan -> install_the_os
+install_the_os -> configure_network
+configure_network -> configure_ntp
+configure_ntp -> configure_windows_update_wsus_or_dir
+configure_windows_update_wsus_or_dir -> join_the_domain
+join_the_domain -> configure_windows_firewall
+configure_windows_firewall -> validate
+```
+
 ## Before you begin
 
 - **Access:** Local Administrator or Domain Admin on target hosts

@@ -18,6 +18,23 @@ Catalog of known SQL Server bugs, error codes, and workarounds covering connecti
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+connectivity: "Connectivity" {shape: rectangle}
+availability_groups: "Availability Groups" {shape: rectangle}
+performance: "Performance" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> connectivity: investigate
+symptom -> availability_groups: investigate
+symptom -> performance: investigate
+connectivity -> resolution
+availability_groups -> resolution
+performance -> resolution
+```
+
 ## Before you begin
 
 - SQL Server errors appear in SQL Server Management Studio (SSMS) → Management → SQL Server Logs.

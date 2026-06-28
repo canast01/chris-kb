@@ -16,6 +16,25 @@ Day-2 procedures for VMware Aria Operations for Networks — data source managem
 
 ---
 
+```d2
+direction: right
+
+hub: "Aria Operations for Networks\nOperations" {shape: hexagon}
+data_sources_and_collection: "Data Sources and Collection" {shape: rectangle}
+add_a_vcenter_data_source: "Add a vCenter Data Source" {shape: rectangle}
+add_an_nsxt_data_source: "Add an NSX-T Data Source" {shape: rectangle}
+add_a_physical_switch_netflowipfix: "Add a Physical Switch (NetFlow/IPFIX)" {shape: rectangle}
+add_an_aws_vpc_flow_log_source: "Add an AWS VPC Flow Log Source" {shape: rectangle}
+configure_ipfix_export_from_nsxt: "Configure IPFIX Export from NSX-T" {shape: rectangle}
+
+hub -> data_sources_and_collection
+hub -> add_a_vcenter_data_source
+hub -> add_an_nsxt_data_source
+hub -> add_a_physical_switch_netflowipfix
+hub -> add_an_aws_vpc_flow_log_source
+hub -> configure_ipfix_export_from_nsxt
+```
+
 ## Before you begin
 
 - **Access:** vCenter read-only minimum; Administrator role for remediation steps

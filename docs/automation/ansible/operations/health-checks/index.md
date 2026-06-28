@@ -14,6 +14,27 @@ Health Checks reference covering Inventory Health, Connectivity, Vault and Secre
 ![Ansible — Health Checks](../../../../assets/automation-ansible-operations-health-checks-index.svg)
 
 
+```d2
+direction: right
+
+begin_checks: "Begin Checks" {shape: oval}
+run_this_routine: "Run This Routine" {shape: rectangle}
+connectivity: "Connectivity" {shape: rectangle}
+vault_and_secrets: "Vault and Secrets" {shape: rectangle}
+awx_automation_platform: "AWX / Automation Platform" {shape: rectangle}
+ansible_health_check_flow: "Ansible Health Check Flow" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+generate_report: "Generate Report" {shape: oval}
+
+begin_checks -> run_this_routine
+run_this_routine -> connectivity
+connectivity -> vault_and_secrets
+vault_and_secrets -> awx_automation_platform
+awx_automation_platform -> ansible_health_check_flow
+ansible_health_check_flow -> verify
+verify -> generate_report
+```
+
 ## Before you begin
 
 - **Access:** SSH key or service account with sudo on managed hosts; Ansible control node

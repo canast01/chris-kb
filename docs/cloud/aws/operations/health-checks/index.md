@@ -7,6 +7,27 @@ tags:
 ![AWS — Health Checks](../../../../assets/cloud-aws-operations-health-checks-index.svg)
 
 
+```d2
+direction: right
+
+begin_checks: "Begin Checks" {shape: oval}
+run_this_routine: "Run This Routine" {shape: rectangle}
+network_health: "Network Health" {shape: rectangle}
+storage_health: "Storage Health" {shape: rectangle}
+iam_and_security: "IAM and Security" {shape: rectangle}
+cost_and_billing_alerts: "Cost and Billing Alerts" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+generate_report: "Generate Report" {shape: oval}
+
+begin_checks -> run_this_routine
+run_this_routine -> network_health
+network_health -> storage_health
+storage_health -> iam_and_security
+iam_and_security -> cost_and_billing_alerts
+cost_and_billing_alerts -> verify
+verify -> generate_report
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

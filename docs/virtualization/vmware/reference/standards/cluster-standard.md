@@ -18,6 +18,23 @@ Cluster Standard reference covering Overview, Minimum Host Count, vSphere HA, DR
 
 ---
 
+```d2
+direction: down
+
+minimum_host_count: "Minimum Host Count" {shape: rectangle}
+vsphere_ha: "vSphere HA" {shape: rectangle}
+drs: "DRS" {shape: rectangle}
+evc_enhanced_vmotion_compatibility: "EVC (Enhanced vMotion Compatibility)" {shape: rectangle}
+vsan_for_vsanenabled_clusters: "vSAN (for vSAN-enabled clusters)" {shape: rectangle}
+resource_pools: "Resource Pools" {shape: rectangle}
+
+minimum_host_count -> vsphere_ha: hardens
+vsphere_ha -> drs: hardens
+drs -> evc_enhanced_vmotion_compatibility: hardens
+evc_enhanced_vmotion_compatibility -> vsan_for_vsanenabled_clusters: hardens
+vsan_for_vsanenabled_clusters -> resource_pools: hardens
+```
+
 ## Overview
 
 This standard defines the minimum required configuration for all vSphere clusters in the production environment. Any new cluster must meet these requirements before workloads are placed on it.

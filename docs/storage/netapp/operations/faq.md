@@ -14,6 +14,23 @@ Common questions about NetApp operations, configuration, and troubleshooting. Fo
 
 ![NetApp FAQ](../../../assets/storage-netapp-operations-faq.svg)
 
+```d2
+direction: right
+
+hub: "Operations\nOperations" {shape: hexagon}
+general: "General" {shape: rectangle}
+configuration: "Configuration" {shape: rectangle}
+operations: "Operations" {shape: rectangle}
+troubleshooting: "Troubleshooting" {shape: rectangle}
+backup_and_recovery: "Backup and Recovery" {shape: rectangle}
+
+hub -> general
+hub -> configuration
+hub -> operations
+hub -> troubleshooting
+hub -> backup_and_recovery
+```
+
 ## General
 
 **Q: How do I determine which NetApp products are deployed and their versions?**

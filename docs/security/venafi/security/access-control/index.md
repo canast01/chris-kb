@@ -21,6 +21,29 @@ Least-privilege role assignment must be enforced, with service account permissio
 
 ---
 
+```d2
+direction: down
+
+root: "Access Control\nAccess Control" {shape: hexagon}
+rbac_roles: "RBAC Roles" {shape: rectangle}
+policy_folder_permission_model: "Policy Folder Permission Model" {shape: rectangle}
+service_account_configuration: "Service Account Configuration" {shape: rectangle}
+api_key_permission_scopes: "API Key Permission Scopes" {shape: rectangle}
+quarterly_access_review_procedure: "Quarterly Access Review Procedure" {shape: rectangle}
+resources: Protected Resources {shape: cylinder}
+
+root -> rbac_roles: role
+rbac_roles -> resources: scoped
+root -> policy_folder_permission_model: role
+policy_folder_permission_model -> resources: scoped
+root -> service_account_configuration: role
+service_account_configuration -> resources: scoped
+root -> api_key_permission_scopes: role
+api_key_permission_scopes -> resources: scoped
+root -> quarterly_access_review_procedure: role
+quarterly_access_review_procedure -> resources: scoped
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

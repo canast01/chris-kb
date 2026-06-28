@@ -14,6 +14,25 @@ Step-by-step procedures for connecting, configuring, and troubleshooting LDAP id
 
 
 
+```d2
+direction: right
+
+hub: "Operations\nOperations" {shape: hexagon}
+test_ldap_connectivity: "Test LDAP Connectivity" {shape: rectangle}
+configure_ldap_bind_account: "Configure LDAP Bind Account" {shape: rectangle}
+add_ldap_identity_source_to_vcenter: "Add LDAP Identity Source to vCenter" {shape: rectangle}
+configure_ldap_in_aria_operations: "Configure LDAP in Aria Operations" {shape: rectangle}
+troubleshoot_ldap_authentication_fai: "Troubleshoot LDAP Authentication Failures" {shape: rectangle}
+rotate_ldap_bind_account_password: "Rotate LDAP Bind Account Password" {shape: rectangle}
+
+hub -> test_ldap_connectivity
+hub -> configure_ldap_bind_account
+hub -> add_ldap_identity_source_to_vcenter
+hub -> configure_ldap_in_aria_operations
+hub -> troubleshoot_ldap_authentication_fai
+hub -> rotate_ldap_bind_account_password
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

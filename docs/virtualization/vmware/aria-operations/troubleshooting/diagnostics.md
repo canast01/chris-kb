@@ -52,6 +52,32 @@ graph TD
     class Q,R escalate
 ```
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+step_1_check_cluster_service_status: "Step 1 — Check cluster service status" {shape: rectangle}
+step_2_query_rest_api_health: "Step 2 — Query REST API health" {shape: rectangle}
+step_3_inspect_log_files: "Step 3 — Inspect log files" {shape: rectangle}
+step_4_check_adapter_collection_stat: "Step 4 — Check adapter collection status" {shape: rectangle}
+step_5_check_vrops_cluster_node_heal: "Step 5 — Check vROps cluster node health" {shape: rectangle}
+step_6_check_disk_space_and_performa: "Step 6 — Check disk space and performance" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> step_1_check_cluster_service_status: investigate
+symptom -> step_2_query_rest_api_health: investigate
+symptom -> step_3_inspect_log_files: investigate
+symptom -> step_4_check_adapter_collection_stat: investigate
+symptom -> step_5_check_vrops_cluster_node_heal: investigate
+symptom -> step_6_check_disk_space_and_performa: investigate
+step_1_check_cluster_service_status -> resolution
+step_2_query_rest_api_health -> resolution
+step_3_inspect_log_files -> resolution
+step_4_check_adapter_collection_stat -> resolution
+step_5_check_vrops_cluster_node_heal -> resolution
+step_6_check_disk_space_and_performa -> resolution
+```
+
 ## Before you begin
 
 - **Access:** vROps admin UI credentials; SSH to the master node (`admin` user); VAMI access at port 5480

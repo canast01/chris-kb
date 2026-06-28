@@ -20,6 +20,25 @@ How It Works reference covering API Surfaces, Transport Nodes, Geneve Encapsulat
 
 
 
+```d2
+direction: right
+
+center: "NSX-T" {shape: hexagon}
+control_and_data_plane: "Control and Data Plane" {shape: rectangle}
+geneve_encapsulation: "Geneve Encapsulation" {shape: rectangle}
+transport_zones: "Transport Zones" {shape: rectangle}
+gateway_architecture_t0_and_t1: "Gateway Architecture — T0 and T1" {shape: rectangle}
+edge_cluster: "Edge Cluster" {shape: rectangle}
+distributed_firewall_dfw: "Distributed Firewall (DFW)" {shape: rectangle}
+
+center -> control_and_data_plane
+center -> geneve_encapsulation
+center -> transport_zones
+center -> gateway_architecture_t0_and_t1
+center -> edge_cluster
+center -> distributed_firewall_dfw
+```
+
 ## Control and Data Plane
 
 ### NSX 3-Plane Architecture

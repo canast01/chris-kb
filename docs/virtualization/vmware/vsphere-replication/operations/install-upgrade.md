@@ -20,6 +20,25 @@ Install and Upgrade reference covering Prerequisites, VRA OVA Deployment, Regist
 
 ---
 
+```d2
+direction: right
+
+hub: "vSphere Replication\nOperations" {shape: hexagon}
+prerequisites: "Prerequisites" {shape: rectangle}
+vra_ova_deployment: "VRA OVA Deployment" {shape: rectangle}
+register_vra_with_vcenter: "Register VRA with vCenter" {shape: rectangle}
+deploy_vrs_scaleout_server: "Deploy VRS (Scale-Out Server)" {shape: rectangle}
+pair_sites: "Pair Sites" {shape: rectangle}
+upgrade_process: "Upgrade Process" {shape: rectangle}
+
+hub -> prerequisites
+hub -> vra_ova_deployment
+hub -> register_vra_with_vcenter
+hub -> deploy_vrs_scaleout_server
+hub -> pair_sites
+hub -> upgrade_process
+```
+
 ## Before you begin
 
 - **Access:** vCenter Administrator at both protected and recovery sites; access to the VR appliance VAMI (`https://<vra-ip>:5480`)

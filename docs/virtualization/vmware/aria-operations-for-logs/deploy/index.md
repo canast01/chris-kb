@@ -35,6 +35,27 @@ flowchart TD
     style s7 fill:#2e7d32,color:#fff,stroke:#1b5e20
 ```
 
+```d2
+direction: right
+
+plan: "Plan" {shape: oval}
+phase_1_predeployment_prerequisites: "Phase 1 — Pre-Deployment Prerequisites" {shape: rectangle}
+phase_2_master_node_deployment: "Phase 2 — Master Node Deployment" {shape: rectangle}
+phase_3_worker_node_deployment: "Phase 3 — Worker Node Deployment" {shape: rectangle}
+phase_4_log_sources_and_agent_instal: "Phase 4 — Log Sources and Agent Installation" {shape: rectangle}
+phase_5_content_packs_alerts_and_for: "Phase 5 — Content Packs, Alerts, and Forwarding" {shape: rectangle}
+phase_6_endtoend_validation: "Phase 6 — End-to-End Validation" {shape: rectangle}
+validate: "Validate" {shape: oval}
+
+plan -> phase_1_predeployment_prerequisites
+phase_1_predeployment_prerequisites -> phase_2_master_node_deployment
+phase_2_master_node_deployment -> phase_3_worker_node_deployment
+phase_3_worker_node_deployment -> phase_4_log_sources_and_agent_instal
+phase_4_log_sources_and_agent_instal -> phase_5_content_packs_alerts_and_for
+phase_5_content_packs_alerts_and_for -> phase_6_endtoend_validation
+phase_6_endtoend_validation -> validate
+```
+
 ## Before you begin
 
 - **Access:** vCenter Administrator role and SSH access to VCSA/ESXi hosts

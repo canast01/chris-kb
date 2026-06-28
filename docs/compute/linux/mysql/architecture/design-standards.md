@@ -15,6 +15,23 @@ MySQL design standards — HA topology choices, replication sizing, InnoDB tunin
 
 
 
+```d2
+direction: right
+
+center: "Linux" {shape: hexagon}
+highavailability_topologies: "High-Availability Topologies" {shape: rectangle}
+sizing_guidelines: "Sizing Guidelines" {shape: rectangle}
+naming_conventions: "Naming Conventions" {shape: rectangle}
+backup_strategy_requirements: "Backup Strategy Requirements" {shape: rectangle}
+schema_design_rules: "Schema Design Rules" {shape: rectangle}
+
+center -> highavailability_topologies
+center -> sizing_guidelines
+center -> naming_conventions
+center -> backup_strategy_requirements
+center -> schema_design_rules
+```
+
 ## High-Availability Topologies
 
 | Pattern | Description | Use case |

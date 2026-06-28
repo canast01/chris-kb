@@ -18,6 +18,23 @@ Catalog of known SMB issues covering access denied, share enumeration, signing, 
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+access_denied: "Access Denied" {shape: rectangle}
+connectivity: "Connectivity" {shape: rectangle}
+smb_version_and_signing: "SMB Version and Signing" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> access_denied: investigate
+symptom -> connectivity: investigate
+symptom -> smb_version_and_signing: investigate
+access_denied -> resolution
+connectivity -> resolution
+smb_version_and_signing -> resolution
+```
+
 ## Before you begin
 
 - Windows SMB errors appear in Event Viewer → System (event IDs 30801–30812 for SMB client).

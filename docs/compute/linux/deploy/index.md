@@ -41,6 +41,27 @@ flowchart TD
     style s10 fill:#2e7d32,color:#fff,stroke:#1b5e20
 ```
 
+```d2
+direction: right
+
+plan: "Plan" {shape: oval}
+install_the_os: "Install the OS" {shape: rectangle}
+configure_network_static_ip: "Configure Network (Static IP)" {shape: rectangle}
+configure_ntp: "Configure NTP" {shape: rectangle}
+register_with_subscription_manager_r: "Register with Subscription Manager (RHEL)" {shape: rectangle}
+apply_security_baseline: "Apply Security Baseline" {shape: rectangle}
+configure_ssh_hardening: "Configure SSH Hardening" {shape: rectangle}
+validate: "Validate" {shape: oval}
+
+plan -> install_the_os
+install_the_os -> configure_network_static_ip
+configure_network_static_ip -> configure_ntp
+configure_ntp -> register_with_subscription_manager_r
+register_with_subscription_manager_r -> apply_security_baseline
+apply_security_baseline -> configure_ssh_hardening
+configure_ssh_hardening -> validate
+```
+
 ## Before you begin
 
 - **Access:** root or sudo-capable account on target hosts

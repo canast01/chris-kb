@@ -27,6 +27,23 @@ Standards reference covering Pre-Deployment Checklist, Deployment Size Reference
 
 Node numbering: `-01`, `-02`, `-03` for clustered deployments.
 
+```d2
+direction: right
+
+center: "Aria Suite Lifecycle" {shape: hexagon}
+predeployment_checklist: "Pre-Deployment Checklist" {shape: rectangle}
+deployment_size_reference: "Deployment Size Reference" {shape: rectangle}
+certificate_standards: "Certificate Standards" {shape: rectangle}
+upgrade_sequence_rules: "Upgrade Sequence Rules" {shape: rectangle}
+version_matrix_compliance: "Version Matrix Compliance" {shape: rectangle}
+
+center -> predeployment_checklist
+center -> deployment_size_reference
+center -> certificate_standards
+center -> upgrade_sequence_rules
+center -> version_matrix_compliance
+```
+
 ## Pre-Deployment Checklist
 
 Before running Easy Installer or deploying any managed product:

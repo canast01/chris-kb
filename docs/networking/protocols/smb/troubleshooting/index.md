@@ -16,6 +16,32 @@ SMB Troubleshooting reference covering Overview, Access Denied Diagnostics, SMB1
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+access_denied_diagnostics: "Access Denied Diagnostics" {shape: rectangle}
+smb1_disabled_issues: "SMB1 Disabled Issues" {shape: rectangle}
+kerberos_vs_ntlm_authentication: "Kerberos vs NTLM Authentication" {shape: rectangle}
+signing_mismatch: "Signing Mismatch" {shape: rectangle}
+performance_and_connectivity_tests: "Performance and Connectivity Tests" {shape: rectangle}
+verify_resolution: "Verify resolution" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> access_denied_diagnostics: investigate
+symptom -> smb1_disabled_issues: investigate
+symptom -> kerberos_vs_ntlm_authentication: investigate
+symptom -> signing_mismatch: investigate
+symptom -> performance_and_connectivity_tests: investigate
+symptom -> verify_resolution: investigate
+access_denied_diagnostics -> resolution
+smb1_disabled_issues -> resolution
+kerberos_vs_ntlm_authentication -> resolution
+signing_mismatch -> resolution
+performance_and_connectivity_tests -> resolution
+verify_resolution -> resolution
+```
+
 ## Before you begin
 
 - **Access:** Network admin credentials; console or SSH to devices

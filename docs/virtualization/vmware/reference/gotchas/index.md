@@ -19,6 +19,25 @@ Known pitfalls, unexpected behaviours, and non-obvious operational traps across 
 
 ---
 
+```d2
+direction: right
+
+center: "Gotchas" {shape: hexagon}
+vsan_clomrepairdelay_catches_admins_: "vSAN — clomRepairDelay Catches Admins Off Guard" {shape: rectangle}
+vsan_esa_and_osa_are_mutually_exclus: "vSAN — ESA and OSA Are Mutually Exclusive per Disk Group" {shape: rectangle}
+vsan_stretched_cluster_witness_must_: "vSAN — Stretched Cluster Witness Must Not Be Domain-Joined" {shape: rectangle}
+nsx_dfw_policy_must_be_published_to_: "NSX — DFW Policy Must Be Published to Take Effect" {shape: rectangle}
+nsx_transport_node_reboot_required_a: "NSX — Transport Node Reboot Required After Host Profile Appl" {shape: rectangle}
+nsx_edge_vm_cpu_must_be_pinned_to_a_: "NSX — Edge VM CPU Must Be Pinned to a Dedicated NUMA Node fo" {shape: rectangle}
+
+center -> vsan_clomrepairdelay_catches_admins_
+center -> vsan_esa_and_osa_are_mutually_exclus
+center -> vsan_stretched_cluster_witness_must_
+center -> nsx_dfw_policy_must_be_published_to_
+center -> nsx_transport_node_reboot_required_a
+center -> nsx_edge_vm_cpu_must_be_pinned_to_a_
+```
+
 ## vSAN — clomRepairDelay Catches Admins Off Guard
 
 **Symptom:** A host goes down during maintenance; no rebuild starts for 60 minutes. Alerts fire. Team panics.

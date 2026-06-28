@@ -16,6 +16,23 @@ AWS architecture design standards: multi-account landing zone layout, VPC CIDR a
 
 ---
 
+```d2
+direction: down
+
+tagging_policy: "Tagging Policy" {shape: rectangle}
+naming_convention: "Naming Convention" {shape: rectangle}
+iam_policy_standards: "IAM Policy Standards" {shape: rectangle}
+s3_object_lifecycle: "S3 Object Lifecycle" {shape: rectangle}
+security_standards: "Security Standards" {shape: rectangle}
+approved_regions: "Approved Regions" {shape: rectangle}
+
+tagging_policy -> naming_convention: hardens
+naming_convention -> iam_policy_standards: hardens
+iam_policy_standards -> s3_object_lifecycle: hardens
+s3_object_lifecycle -> security_standards: hardens
+security_standards -> approved_regions: hardens
+```
+
 ## Tagging Policy
 
 All AWS resources must carry these mandatory tags (enforced via AWS Config + SCPs):

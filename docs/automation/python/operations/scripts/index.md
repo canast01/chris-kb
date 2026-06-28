@@ -14,6 +14,19 @@ Scripts reference covering Purpose, Windows Python Environment Setup Flow.
 ![Python Automation — Scripts](../../../../assets/automation-python-operations-scripts-index.svg)
 
 
+```d2
+direction: right
+
+center: "Python" {shape: rectangle}
+purpose: "Purpose" {shape: rectangle}
+windows_python_environment_setup_flo: "Windows Python Environment Setup Flow" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+center -> purpose
+center -> windows_python_environment_setup_flo
+center -> verify
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

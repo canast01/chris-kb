@@ -18,6 +18,17 @@ Access Control reference covering Solutions Enabler RBAC, Preventing Accidental 
 
 ---
 
+```d2
+direction: down
+
+external: External / Untrusted {shape: rectangle}
+preventing_accidental_resync: "Preventing Accidental Resync" {shape: rectangle}
+core: "SRDF/A Core" {shape: hexagon}
+
+external -> preventing_accidental_resync: traffic in
+preventing_accidental_resync -> core: secured path
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

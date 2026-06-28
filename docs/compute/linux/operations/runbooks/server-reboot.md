@@ -21,6 +21,31 @@ tags:
 | Estimated time | 15–30 minutes (excludes application validation) |
 | Impact | Server and hosted services unavailable during reboot |
 
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+actor "Responder" as A
+participant "Linux System" as B
+participant "Dependent System" as C
+
+A -> B: Process Flow
+B --> A: OK
+A -> B: Step 3  Reboot
+B --> A: OK
+A -> B: Step 4  Post-Reboot Validation
+B --> A: OK
+A -> B: Step 5  Application Health Confirmation
+B --> A: OK
+A -> B: Rollback
+B --> A: OK
+A -> B: Checklist
+B --> A: OK
+
+@enduml
+```
+
 ## Before you begin
 
 - **Access:** root or sudo-capable account on target hosts

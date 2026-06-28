@@ -18,6 +18,23 @@ Azure encrypts all data at rest by default using platform-managed keys (PMK). Cu
 
 ---
 
+```d2
+direction: down
+
+encryption_coverage_by_service: "Encryption Coverage by Service" {shape: rectangle}
+azure_key_vault: "Azure Key Vault" {shape: rectangle}
+customermanaged_keys_for_storage: "Customer-Managed Keys for Storage" {shape: rectangle}
+customermanaged_keys_for_managed_dis: "Customer-Managed Keys for Managed Disks" {shape: rectangle}
+azure_disk_encryption_ade: "Azure Disk Encryption (ADE)" {shape: rectangle}
+tls_enforcement: "TLS Enforcement" {shape: rectangle}
+
+encryption_coverage_by_service -> azure_key_vault: hardens
+azure_key_vault -> customermanaged_keys_for_storage: hardens
+customermanaged_keys_for_storage -> customermanaged_keys_for_managed_dis: hardens
+customermanaged_keys_for_managed_dis -> azure_disk_encryption_ade: hardens
+azure_disk_encryption_ade -> tls_enforcement: hardens
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

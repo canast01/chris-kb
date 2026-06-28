@@ -51,6 +51,32 @@ graph TD
     class O escalate
 ```
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+step_1_first_response: "Step 1 — First response" {shape: rectangle}
+step_2_cluster_and_node_diagnostics: "Step 2 — Cluster and node diagnostics" {shape: rectangle}
+step_3_storage_aggregate_and_disk_di: "Step 3 — Storage — aggregate and disk diagnostics" {shape: rectangle}
+step_4_volume_diagnostics: "Step 4 — Volume diagnostics" {shape: rectangle}
+step_5_network_diagnostics: "Step 5 — Network diagnostics" {shape: rectangle}
+step_6_protocolspecific_diagnostics: "Step 6 — Protocol-specific diagnostics" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> step_1_first_response: investigate
+symptom -> step_2_cluster_and_node_diagnostics: investigate
+symptom -> step_3_storage_aggregate_and_disk_di: investigate
+symptom -> step_4_volume_diagnostics: investigate
+symptom -> step_5_network_diagnostics: investigate
+symptom -> step_6_protocolspecific_diagnostics: investigate
+step_1_first_response -> resolution
+step_2_cluster_and_node_diagnostics -> resolution
+step_3_storage_aggregate_and_disk_di -> resolution
+step_4_volume_diagnostics -> resolution
+step_5_network_diagnostics -> resolution
+step_6_protocolspecific_diagnostics -> resolution
+```
+
 ## Before you begin
 
 - **Access:** SSH to cluster management IP or node management IP as admin; node shell (`system node run -node <node>`) for advanced per-node commands; SP/BMC console for unresponsive nodes

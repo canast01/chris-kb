@@ -15,6 +15,25 @@ Virtualization Glossary reference covering HA, DRS, vMotion, Storage vMotion, Sn
 
 
 
+```d2
+direction: right
+
+center: "Quick Reference" {shape: rectangle}
+ha: "HA" {shape: rectangle}
+drs: "DRS" {shape: rectangle}
+vmotion: "vMotion" {shape: rectangle}
+storage_vmotion: "Storage vMotion" {shape: rectangle}
+snapshot: "Snapshot" {shape: rectangle}
+datastore_latency: "Datastore Latency" {shape: rectangle}
+
+center -> ha
+center -> drs
+center -> vmotion
+center -> storage_vmotion
+center -> snapshot
+center -> datastore_latency
+```
+
 ## HA
 High Availability. Automatically restarts VMs after host failure.
 

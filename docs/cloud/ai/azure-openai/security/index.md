@@ -15,6 +15,27 @@ Azure OpenAI security covers authentication methods, role-based access control (
 
 
 
+```d2
+direction: down
+
+external: External / Untrusted {shape: rectangle}
+rbac_roles: "RBAC Roles" {shape: rectangle}
+managed_identity_authentication: "Managed Identity Authentication" {shape: rectangle}
+customermanaged_keys: "Customer-Managed Keys" {shape: rectangle}
+content_filters: "Content Filters" {shape: rectangle}
+disabling_api_keys: "Disabling API Keys" {shape: rectangle}
+security_checklist: "Security Checklist" {shape: rectangle}
+core: "Azure OpenAI Core" {shape: hexagon}
+
+external -> rbac_roles: traffic in
+rbac_roles -> managed_identity_authentication
+managed_identity_authentication -> customermanaged_keys
+customermanaged_keys -> content_filters
+content_filters -> disabling_api_keys
+disabling_api_keys -> security_checklist
+security_checklist -> core: secured path
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

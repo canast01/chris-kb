@@ -18,6 +18,25 @@ CLI Reference reference covering Session Management, vdmexport / vdmimport, UAG 
   Horizon CLI Tools
 
 
+```d2
+direction: right
+
+hub: "Horizon\nOperations" {shape: hexagon}
+hvconfig_cli: "hvconfig CLI" {shape: rectangle}
+vdmexport_vdmimport: "vdmexport / vdmimport" {shape: rectangle}
+uag_cli_hzedge: "UAG CLI (hzedge)" {shape: rectangle}
+powershell_vmwarehvhelper: "PowerShell — VMware.Hv.Helper" {shape: rectangle}
+horizon_rest_api: "Horizon REST API" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+hub -> hvconfig_cli
+hub -> vdmexport_vdmimport
+hub -> uag_cli_hzedge
+hub -> powershell_vmwarehvhelper
+hub -> horizon_rest_api
+hub -> verify
+```
+
 ## hvconfig CLI
 
 ### Desktop and Pool Operations

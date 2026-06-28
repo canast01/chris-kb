@@ -44,6 +44,27 @@ flowchart TD
     style s16 fill:#2e7d32,color:#fff,stroke:#1b5e20
 ```
 
+```d2
+direction: right
+
+plan: "Plan" {shape: oval}
+phase_1_prerequisites: "Phase 1 — Prerequisites" {shape: rectangle}
+phase_2_srm_appliance_deployment: "Phase 2 — SRM Appliance Deployment" {shape: rectangle}
+phase_3_site_pairing_and_inventory_m: "Phase 3 — Site Pairing and Inventory Mappings" {shape: rectangle}
+phase_4_replication_configuration: "Phase 4 — Replication Configuration" {shape: rectangle}
+phase_5_protection_groups: "Phase 5 — Protection Groups" {shape: rectangle}
+phase_6_recovery_plans_and_test_fail: "Phase 6 — Recovery Plans and Test Failover" {shape: rectangle}
+validate: "Validate" {shape: oval}
+
+plan -> phase_1_prerequisites
+phase_1_prerequisites -> phase_2_srm_appliance_deployment
+phase_2_srm_appliance_deployment -> phase_3_site_pairing_and_inventory_m
+phase_3_site_pairing_and_inventory_m -> phase_4_replication_configuration
+phase_4_replication_configuration -> phase_5_protection_groups
+phase_5_protection_groups -> phase_6_recovery_plans_and_test_fail
+phase_6_recovery_plans_and_test_fail -> validate
+```
+
 ## Before you begin
 
 - **Access:** vCenter Administrator and SRM Administrator at both the protected and recovery sites

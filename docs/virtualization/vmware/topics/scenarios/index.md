@@ -15,6 +15,17 @@ Cross-product VMware scenarios: reactive troubleshooting and planned operational
 
 
 
+```d2
+direction: right
+
+center: "Scenarios" {shape: hexagon}
+issues: "Issues" {shape: rectangle}
+tasks: "Tasks" {shape: rectangle}
+
+center -> issues
+center -> tasks
+```
+
 ## Issues
 
 <div class="kb-grid kb-grid-5">

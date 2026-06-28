@@ -16,6 +16,27 @@ Routine health checks detect degradation before users are impacted. This page de
 
 ---
 
+```d2
+direction: right
+
+begin_checks: "Begin Checks" {shape: oval}
+health_check_decision_flow: "Health Check Decision Flow" {shape: rectangle}
+run_this_routine: "Run This Routine" {shape: rectangle}
+4_scheduled_job_health: "4. Scheduled Job Health" {shape: rectangle}
+5_mid_server_health: "5. MID Server Health" {shape: rectangle}
+6_ecc_queue_error_review: "6. ECC Queue Error Review" {shape: rectangle}
+7_ldap_directory_sync_status: "7. LDAP / Directory Sync Status" {shape: rectangle}
+generate_report: "Generate Report" {shape: oval}
+
+begin_checks -> health_check_decision_flow
+health_check_decision_flow -> run_this_routine
+run_this_routine -> 4_scheduled_job_health
+4_scheduled_job_health -> 5_mid_server_health
+5_mid_server_health -> 6_ecc_queue_error_review
+6_ecc_queue_error_review -> 7_ldap_directory_sync_status
+7_ldap_directory_sync_status -> generate_report
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

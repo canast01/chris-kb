@@ -32,6 +32,32 @@ graph TD
     G --> D
 ```
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+health_code_reference: "Health Code Reference" {shape: rectangle}
+crash_collection: "Crash Collection" {shape: rectangle}
+osd_daemon_diagnostics: "OSD Daemon Diagnostics" {shape: rectangle}
+osd_log_analysis: "OSD Log Analysis" {shape: rectangle}
+log_levels_debugging: "Log Levels (Debugging)" {shape: rectangle}
+crash_dump_analysis: "Crash Dump Analysis" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> health_code_reference: investigate
+symptom -> crash_collection: investigate
+symptom -> osd_daemon_diagnostics: investigate
+symptom -> osd_log_analysis: investigate
+symptom -> log_levels_debugging: investigate
+symptom -> crash_dump_analysis: investigate
+health_code_reference -> resolution
+crash_collection -> resolution
+osd_daemon_diagnostics -> resolution
+osd_log_analysis -> resolution
+log_levels_debugging -> resolution
+crash_dump_analysis -> resolution
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

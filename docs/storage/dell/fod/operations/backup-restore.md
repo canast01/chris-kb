@@ -26,6 +26,15 @@ FOD does not manage data backup directly. Key items to protect:
 - **Monthly usage reports**: export and retain monthly consumption reports from the APEX Console for billing reconciliation and dispute resolution.
 - **Contracted baseline documentation**: retain records of the contracted base and burst ceiling values, contract dates, and any baseline adjustment requests.
 
+```d2
+direction: right
+
+hub: "Flex On Demand\nOperations" {shape: hexagon}
+verify: "Verify" {shape: rectangle}
+
+hub -> verify
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

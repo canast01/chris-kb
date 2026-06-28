@@ -19,6 +19,25 @@ Compliance Standards reference covering Framework Overview, ISO 27001 — Key Co
   </a>
 </div>
 
+```d2
+direction: right
+
+center: "Compliance Standards" {shape: hexagon}
+framework_overview: "Framework Overview" {shape: rectangle}
+iso_27001_key_control_areas: "ISO 27001 — Key Control Areas" {shape: rectangle}
+pcidss_infra_control_checklist: "PCI-DSS — Infra Control Checklist" {shape: rectangle}
+cis_controls_priority_implementation: "CIS Controls — Priority Implementation" {shape: rectangle}
+evidence_collection_for_audits: "Evidence Collection for Audits" {shape: rectangle}
+gap_assessment_template: "Gap Assessment Template" {shape: rectangle}
+
+center -> framework_overview
+center -> iso_27001_key_control_areas
+center -> pcidss_infra_control_checklist
+center -> cis_controls_priority_implementation
+center -> evidence_collection_for_audits
+center -> gap_assessment_template
+```
+
 ## Framework Overview
 
 | Framework | Focus | Typical Audience |

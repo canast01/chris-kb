@@ -15,6 +15,25 @@ Azure resource tags are key-value pairs applied to resources and resource groups
 
 
 
+```d2
+direction: right
+
+center: "Azure" {shape: hexagon}
+tag_governance_flow: "Tag Governance Flow" {shape: rectangle}
+required_tags: "Required Tags" {shape: rectangle}
+applying_tags_via_cli: "Applying Tags via CLI" {shape: rectangle}
+tag_enforcement_with_policy: "Tag Enforcement with Policy" {shape: rectangle}
+tag_inheritance: "Tag Inheritance" {shape: rectangle}
+reporting_on_tag_coverage: "Reporting on Tag Coverage" {shape: rectangle}
+
+center -> tag_governance_flow
+center -> required_tags
+center -> applying_tags_via_cli
+center -> tag_enforcement_with_policy
+center -> tag_inheritance
+center -> reporting_on_tag_coverage
+```
+
 ## Tag Governance Flow
 
 ```mermaid

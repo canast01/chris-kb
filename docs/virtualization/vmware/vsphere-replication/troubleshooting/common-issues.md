@@ -19,6 +19,23 @@ search:
 
 ---
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+diagnostic_flow: "Diagnostic Flow" {shape: rectangle}
+replication_fails_with_connection_re: "Replication Fails with 'Connection Refused' / 'Connection Ti" {shape: rectangle}
+verify_resolution: "Verify resolution" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> diagnostic_flow: investigate
+symptom -> replication_fails_with_connection_re: investigate
+symptom -> verify_resolution: investigate
+diagnostic_flow -> resolution
+replication_fails_with_connection_re -> resolution
+verify_resolution -> resolution
+```
+
 ## Diagnostic Flow
 
 ```mermaid

@@ -19,6 +19,32 @@ Catalog of known vCenter / VCSA bugs, error codes, and workarounds. Each entry i
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+authentication_and_sso: "Authentication and SSO" {shape: rectangle}
+certificate_management: "Certificate Management" {shape: rectangle}
+host_connectivity: "Host Connectivity" {shape: rectangle}
+storage: "Storage" {shape: rectangle}
+upgrade_and_migration: "Upgrade and Migration" {shape: rectangle}
+disk_space: "Disk Space" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> authentication_and_sso: investigate
+symptom -> certificate_management: investigate
+symptom -> host_connectivity: investigate
+symptom -> storage: investigate
+symptom -> upgrade_and_migration: investigate
+symptom -> disk_space: investigate
+authentication_and_sso -> resolution
+certificate_management -> resolution
+host_connectivity -> resolution
+storage -> resolution
+upgrade_and_migration -> resolution
+disk_space -> resolution
+```
+
 ## Before you begin
 
 - Cross-reference VMware KB articles at `kb.vmware.com` using the KB ID listed below.

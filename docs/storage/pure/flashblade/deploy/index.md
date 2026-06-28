@@ -6,6 +6,27 @@ search:
   boost: 1.5
 ---
 
+```d2
+direction: right
+
+plan: "Plan" {shape: oval}
+prerequisites: "Prerequisites" {shape: rectangle}
+rack_and_cable_chassis: "Rack and Cable Chassis" {shape: rectangle}
+run_purityfb_initial_setup: "Run Purity//FB Initial Setup" {shape: rectangle}
+configure_network_interfaces: "Configure Network Interfaces" {shape: rectangle}
+create_first_file_system_nfs_or_buck: "Create First File System (NFS) or Bucket (S3)" {shape: rectangle}
+configure_replication: "Configure Replication" {shape: rectangle}
+validate: "Validate" {shape: oval}
+
+plan -> prerequisites
+prerequisites -> rack_and_cable_chassis
+rack_and_cable_chassis -> run_purityfb_initial_setup
+run_purityfb_initial_setup -> configure_network_interfaces
+configure_network_interfaces -> create_first_file_system_nfs_or_buck
+create_first_file_system_nfs_or_buck -> configure_replication
+configure_replication -> validate
+```
+
 ## Before you begin
 
 - **Access:** admin credentials for the target system and any upstream dependencies (DNS, NTP, vCenter, directory services)

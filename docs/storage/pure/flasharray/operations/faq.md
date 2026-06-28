@@ -14,6 +14,23 @@ Common questions about Pure Storage FlashArray operations, configuration, and tr
 
 ![Pure Storage FlashArray FAQ](../../../../assets/storage-pure-flasharray-operations-faq.svg)
 
+```d2
+direction: right
+
+hub: "FlashArray\nOperations" {shape: hexagon}
+general: "General" {shape: rectangle}
+configuration: "Configuration" {shape: rectangle}
+operations: "Operations" {shape: rectangle}
+troubleshooting: "Troubleshooting" {shape: rectangle}
+backup_and_recovery: "Backup and Recovery" {shape: rectangle}
+
+hub -> general
+hub -> configuration
+hub -> operations
+hub -> troubleshooting
+hub -> backup_and_recovery
+```
+
 ## General
 
 **Q: What Purity//FA version is recommended?**

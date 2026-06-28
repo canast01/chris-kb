@@ -15,6 +15,25 @@ Azure Reserved Instances (RIs) offer significant discounts (up to 72%) over pay-
 
 
 
+```d2
+direction: right
+
+center: "Azure" {shape: hexagon}
+reservation_discount_application: "Reservation Discount Application" {shape: rectangle}
+ri_purchasing: "RI Purchasing" {shape: rectangle}
+reservation_scope: "Reservation Scope" {shape: rectangle}
+exchange_and_refund: "Exchange and Refund" {shape: rectangle}
+utilisation_monitoring: "Utilisation Monitoring" {shape: rectangle}
+reservation_best_practices: "Reservation Best Practices" {shape: rectangle}
+
+center -> reservation_discount_application
+center -> ri_purchasing
+center -> reservation_scope
+center -> exchange_and_refund
+center -> utilisation_monitoring
+center -> reservation_best_practices
+```
+
 ## Reservation Discount Application
 
 ```mermaid

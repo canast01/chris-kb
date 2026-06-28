@@ -14,6 +14,27 @@ Linux install and upgrade: kickstart/preseed PXE setup, OS patching with `yum up
 ![Linux — Install & Upgrade](../../../../assets/compute-linux-operations-install-upgrade-index.svg)
 
 
+```d2
+direction: right
+
+plan: "Plan" {shape: oval}
+linux_boot_sequence: "Linux Boot Sequence" {shape: rectangle}
+inplace_upgrade_rhel_8_9: "In-Place Upgrade (RHEL 8 → 9)" {shape: rectangle}
+server_lifecycle: "Server Lifecycle" {shape: rectangle}
+decommission_checklist: "Decommission Checklist" {shape: rectangle}
+patching: "Patching" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+validate: "Validate" {shape: oval}
+
+plan -> linux_boot_sequence
+linux_boot_sequence -> inplace_upgrade_rhel_8_9
+inplace_upgrade_rhel_8_9 -> server_lifecycle
+server_lifecycle -> decommission_checklist
+decommission_checklist -> patching
+patching -> verify
+verify -> validate
+```
+
 ## Before you begin
 
 - **Access:** root or sudo-capable account on target hosts

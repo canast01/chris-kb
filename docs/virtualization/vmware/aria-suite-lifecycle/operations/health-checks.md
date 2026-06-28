@@ -15,6 +15,25 @@ Health Checks reference covering Cluster Node Health via API, Locker Health Chec
 
   LCM Health Check Chain
 
+```d2
+direction: right
+
+hub: "Aria Suite Lifecycle\nOperations" {shape: hexagon}
+run_this_routine: "Run This Routine" {shape: rectangle}
+locker_health_checks: "Locker Health Checks" {shape: rectangle}
+preupgrade_health_gate: "Pre-Upgrade Health Gate" {shape: rectangle}
+checking_product_health_via_lcm_api: "Checking Product Health via LCM API" {shape: rectangle}
+log_file_locations: "Log File Locations" {shape: rectangle}
+environment_deployment_health: "Environment Deployment Health" {shape: rectangle}
+
+hub -> run_this_routine
+hub -> locker_health_checks
+hub -> preupgrade_health_gate
+hub -> checking_product_health_via_lcm_api
+hub -> log_file_locations
+hub -> environment_deployment_health
+```
+
 ## Before you begin
 
 - **Access:** vCenter read-only minimum; Administrator role for remediation steps

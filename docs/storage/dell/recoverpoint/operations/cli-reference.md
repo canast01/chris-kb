@@ -16,6 +16,21 @@ RecoverPoint CLI reference: `get_all_rpas`, `get_rp_system_settings`, `fail_over
 
 ---
 
+```d2
+direction: right
+
+hub: "RecoverPoint\nOperations" {shape: hexagon}
+image_access_flow: "Image Access Flow" {shape: rectangle}
+rpapi_rest: "RPAPI REST" {shape: rectangle}
+key_operational_scenarios: "Key Operational Scenarios" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+hub -> image_access_flow
+hub -> rpapi_rest
+hub -> key_operational_scenarios
+hub -> verify
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

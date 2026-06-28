@@ -11,6 +11,28 @@ tags:
 
 
 ```bash
+
+```d2
+direction: down
+
+external: External / Untrusted {shape: rectangle}
+option_1_via_uag_admin_ui_port_9443_: "Option 1: Via UAG Admin UI (port 9443) → SSL Server Certific" {shape: rectangle}
+upload_pkcs12_pfx_or_pem_cert_key: "Upload PKCS12 (.pfx) or PEM (cert + key)" {shape: rectangle}
+option_2_via_uag_rest_api: "Option 2: Via UAG REST API" {shape: rectangle}
+restrict_tls_on_connection_server_to: "Restrict TLS on Connection Server to 1.2 and 1.3 only" {shape: rectangle}
+edit_lockedproperties_file: "Edit locked.properties file:" {shape: rectangle}
+restart_connection_server_service: "Restart Connection Server service" {shape: rectangle}
+core: "Horizon Core" {shape: hexagon}
+
+external -> option_1_via_uag_admin_ui_port_9443_: traffic in
+option_1_via_uag_admin_ui_port_9443_ -> upload_pkcs12_pfx_or_pem_cert_key
+upload_pkcs12_pfx_or_pem_cert_key -> option_2_via_uag_rest_api
+option_2_via_uag_rest_api -> restrict_tls_on_connection_server_to
+restrict_tls_on_connection_server_to -> edit_lockedproperties_file
+edit_lockedproperties_file -> restart_connection_server_service
+restart_connection_server_service -> core: secured path
+```
+
 ## Before you begin
 
 - **Access:** vCenter Administrator role

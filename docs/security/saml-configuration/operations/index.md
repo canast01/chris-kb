@@ -14,6 +14,25 @@ Step-by-step procedures for configuring SAML SSO with Azure Entra ID and Okta, m
 
 
 
+```d2
+direction: right
+
+hub: "Operations\nOperations" {shape: hexagon}
+configure_saml_sso_with_azure_entra_: "Configure SAML SSO with Azure Entra ID" {shape: rectangle}
+configure_saml_sso_with_okta: "Configure SAML SSO with Okta" {shape: rectangle}
+add_a_new_saml_attribute_mapping: "Add a New SAML Attribute Mapping" {shape: rectangle}
+rotate_saml_signing_certificate: "Rotate SAML Signing Certificate" {shape: rectangle}
+test_saml_authentication_flow: "Test SAML Authentication Flow" {shape: rectangle}
+troubleshoot_saml_assertion_failures: "Troubleshoot SAML Assertion Failures" {shape: rectangle}
+
+hub -> configure_saml_sso_with_azure_entra_
+hub -> configure_saml_sso_with_okta
+hub -> add_a_new_saml_attribute_mapping
+hub -> rotate_saml_signing_certificate
+hub -> test_saml_authentication_flow
+hub -> troubleshoot_saml_assertion_failures
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

@@ -14,6 +14,27 @@ Review Plan reference covering Purpose, Common checks, Incident notes, Change no
 
 
 
+```d2
+direction: right
+
+begin_checks: "Begin Checks" {shape: oval}
+purpose: "Purpose" {shape: rectangle}
+common_checks: "Common checks" {shape: rectangle}
+incident_notes: "Incident notes" {shape: rectangle}
+change_notes: "Change notes" {shape: rectangle}
+useful_commands_or_references: "Useful commands or references" {shape: rectangle}
+known_issues: "Known issues" {shape: rectangle}
+generate_report: "Generate Report" {shape: oval}
+
+begin_checks -> purpose
+purpose -> common_checks
+common_checks -> incident_notes
+incident_notes -> change_notes
+change_notes -> useful_commands_or_references
+useful_commands_or_references -> known_issues
+known_issues -> generate_report
+```
+
 ## Purpose
 
 Use this page for practical VMware Review Plan notes, checks, troubleshooting, commands, standards, and field references.

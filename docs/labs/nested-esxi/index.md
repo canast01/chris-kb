@@ -14,6 +14,19 @@ Deploy two nested ESXi VMs and a vCenter appliance on a single physical host. Th
 
 
 
+```d2
+direction: right
+
+center: "Nested Esxi" {shape: hexagon}
+prerequisites: "Prerequisites" {shape: rectangle}
+lab_topology_suggested_ips: "Lab topology (suggested IPs)" {shape: rectangle}
+phases: "Phases" {shape: rectangle}
+
+center -> prerequisites
+center -> lab_topology_suggested_ips
+center -> phases
+```
+
 ## Prerequisites
 
 | Requirement | Minimum | Recommended |

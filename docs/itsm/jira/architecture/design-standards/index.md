@@ -14,6 +14,21 @@ Architecture Standards reference covering Project Naming Conventions, Workflow S
 ![Jira — Architecture Standards](../../../../assets/itsm-jira-architecture-design-standards-index.svg)
 
 
+```d2
+direction: down
+
+project_naming_conventions: "Project Naming Conventions" {shape: rectangle}
+field_configuration_standards: "Field Configuration Standards" {shape: rectangle}
+permission_scheme_standards: "Permission Scheme Standards" {shape: rectangle}
+notification_scheme_standards: "Notification Scheme Standards" {shape: rectangle}
+dashboard_standards: "Dashboard Standards" {shape: rectangle}
+
+project_naming_conventions -> field_configuration_standards: hardens
+field_configuration_standards -> permission_scheme_standards: hardens
+permission_scheme_standards -> notification_scheme_standards: hardens
+notification_scheme_standards -> dashboard_standards: hardens
+```
+
 ## Project Naming Conventions
 
 Consistent project keys and names reduce confusion, simplify JQL queries, and enable automation rules that target predictable patterns.

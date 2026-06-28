@@ -16,6 +16,25 @@ Install & Upgrade reference covering Version and Release Matrix, Pre-Upgrade Che
 
 
 
+```d2
+direction: right
+
+hub: "ECS\nOperations" {shape: hexagon}
+version_and_release_matrix: "Version and Release Matrix" {shape: rectangle}
+preupgrade_checks: "Pre-Upgrade Checks" {shape: rectangle}
+upgrade_and_update_paths: "Upgrade and Update Paths" {shape: rectangle}
+adding_a_new_node_to_an_existing_vdc: "Adding a New Node to an Existing VDC" {shape: rectangle}
+disk_replacement: "Disk Replacement" {shape: rectangle}
+node_replacement: "Node Replacement" {shape: rectangle}
+
+hub -> version_and_release_matrix
+hub -> preupgrade_checks
+hub -> upgrade_and_update_paths
+hub -> adding_a_new_node_to_an_existing_vdc
+hub -> disk_replacement
+hub -> node_replacement
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

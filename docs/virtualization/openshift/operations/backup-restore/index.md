@@ -29,6 +29,43 @@ graph TD
     classDef ok fill:#2563eb,color:#fff
 ```
 
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+participant "Source\n(OpenShift)" as SRC
+participant "Backup Engine" as ENG
+participant "Target / Vault" as TGT
+
+SRC -> ENG: What etcd Backup Covers
+ENG -> TGT: Write
+TGT --> ENG: Confirmed
+ENG --> SRC: Done
+SRC -> ENG: Backup Methods Comparison
+ENG -> TGT: Write
+TGT --> ENG: Confirmed
+ENG --> SRC: Done
+SRC -> ENG: etcd Backup Procedure
+ENG -> TGT: Write
+TGT --> ENG: Confirmed
+ENG --> SRC: Done
+SRC -> ENG: Automate etcd Backup with CronJob
+ENG -> TGT: Write
+TGT --> ENG: Confirmed
+ENG --> SRC: Done
+SRC -> ENG: etcd Restore Procedure (Full DR  Quorum Lost)
+ENG -> TGT: Write
+TGT --> ENG: Confirmed
+ENG --> SRC: Done
+SRC -> ENG: Replace Single etcd Member
+ENG -> TGT: Write
+TGT --> ENG: Confirmed
+ENG --> SRC: Done
+
+@enduml
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

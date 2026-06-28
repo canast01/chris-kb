@@ -15,6 +15,21 @@ Tags are the primary mechanism for attributing Azure costs to teams, projects, e
 
 
 
+```d2
+direction: right
+
+center: "Azure" {shape: hexagon}
+enforcement_with_policy: "Enforcement with Policy" {shape: rectangle}
+cost_allocation_rules: "Cost Allocation Rules" {shape: rectangle}
+tag_inheritance: "Tag Inheritance" {shape: rectangle}
+reporting_on_tag_coverage: "Reporting on Tag Coverage" {shape: rectangle}
+
+center -> enforcement_with_policy
+center -> cost_allocation_rules
+center -> tag_inheritance
+center -> reporting_on_tag_coverage
+```
+
 ## Enforcement with Policy
 
 Use Azure Policy to enforce tag presence and valid values. The built-in `Require a tag on resources` and `Require a tag and its value on resources` policies cover most cases.

@@ -14,6 +14,25 @@ SNMP polling is the process of an NMS periodically querying devices to collect m
 
 Unlike traps, polling is initiated by the manager on a schedule.
 
+```d2
+direction: right
+
+center: "SNMP" {shape: hexagon}
+poll_operations: "Poll Operations" {shape: rectangle}
+common_cli_polling_commands: "Common CLI Polling Commands" {shape: rectangle}
+common_oids_for_polling: "Common OIDs for Polling" {shape: rectangle}
+polling_intervals: "Polling Intervals" {shape: rectangle}
+zabbix_snmp_polling_config: "Zabbix SNMP Polling Config" {shape: rectangle}
+prometheus_snmp_exporter: "Prometheus + SNMP Exporter" {shape: rectangle}
+
+center -> poll_operations
+center -> common_cli_polling_commands
+center -> common_oids_for_polling
+center -> polling_intervals
+center -> zabbix_snmp_polling_config
+center -> prometheus_snmp_exporter
+```
+
 ## Poll Operations
 
 | Operation | Version | Description |

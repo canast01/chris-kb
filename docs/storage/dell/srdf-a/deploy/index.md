@@ -6,6 +6,27 @@ search:
   boost: 1.5
 ---
 
+```d2
+direction: right
+
+plan: "Plan" {shape: oval}
+prerequisites: "Prerequisites" {shape: rectangle}
+zone_the_srdf_ports: "Zone the SRDF Ports" {shape: rectangle}
+create_the_srdf_group: "Create the SRDF Group" {shape: rectangle}
+add_devices_to_the_srdf_group: "Add Devices to the SRDF Group" {shape: rectangle}
+start_replication: "Start Replication" {shape: rectangle}
+verify_initial_sync: "Verify Initial Sync" {shape: rectangle}
+validate: "Validate" {shape: oval}
+
+plan -> prerequisites
+prerequisites -> zone_the_srdf_ports
+zone_the_srdf_ports -> create_the_srdf_group
+create_the_srdf_group -> add_devices_to_the_srdf_group
+add_devices_to_the_srdf_group -> start_replication
+start_replication -> verify_initial_sync
+verify_initial_sync -> validate
+```
+
 ## Before you begin
 
 <!-- video-link -->

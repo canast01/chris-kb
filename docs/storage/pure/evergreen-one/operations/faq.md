@@ -14,6 +14,23 @@ Common questions about Pure Storage Evergreen//One operations, configuration, an
 
 ![Pure Storage Evergreen//One FAQ](../../../../assets/storage-pure-evergreen-one-operations-faq.svg)
 
+```d2
+direction: right
+
+hub: "Evergreen//One\nOperations" {shape: hexagon}
+general: "General" {shape: rectangle}
+configuration: "Configuration" {shape: rectangle}
+operations: "Operations" {shape: rectangle}
+troubleshooting: "Troubleshooting" {shape: rectangle}
+backup_and_recovery: "Backup and Recovery" {shape: rectangle}
+
+hub -> general
+hub -> configuration
+hub -> operations
+hub -> troubleshooting
+hub -> backup_and_recovery
+```
+
 ## General
 
 **Q: How do I check my Evergreen//One consumption and service level?**

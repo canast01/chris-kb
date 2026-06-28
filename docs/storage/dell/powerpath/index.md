@@ -38,6 +38,25 @@ Host-based multipath I/O software — automatic path failover, dynamic load bala
 
 </div>
 
+```d2
+direction: right
+
+center: "PowerPath" {shape: hexagon}
+where_it_fits: "Where It Fits" {shape: rectangle}
+daily_checks: "Daily Checks" {shape: rectangle}
+health_commands: "Health Commands" {shape: rectangle}
+common_issues: "Common Issues" {shape: rectangle}
+operational_tasks: "Operational Tasks" {shape: rectangle}
+upgrade_notes: "Upgrade Notes" {shape: rectangle}
+
+center -> where_it_fits
+center -> daily_checks
+center -> health_commands
+center -> common_issues
+center -> operational_tasks
+center -> upgrade_notes
+```
+
 ## Overview
 
 Dell PowerPath is host-based multipath I/O software that manages multiple physical paths between a host and storage arrays from Dell/EMC, providing automatic path failover and dynamic load balancing. It runs on Linux, Windows, AIX, HP-UX, and Solaris, and is controlled via the `powermt` CLI. PowerPath presents a single pseudo device per LUN to the OS, abstracting the underlying physical paths.

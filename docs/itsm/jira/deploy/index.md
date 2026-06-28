@@ -34,6 +34,27 @@ flowchart TD
     style s9 fill:#2e7d32,color:#fff,stroke:#1b5e20
 ```
 
+```d2
+direction: right
+
+plan: "Plan" {shape: oval}
+prerequisites: "Prerequisites" {shape: rectangle}
+download_and_install_jira: "Download and Install Jira" {shape: rectangle}
+configure_database_connection: "Configure Database Connection" {shape: rectangle}
+configure_application_properties: "Configure Application Properties" {shape: rectangle}
+create_first_project: "Create First Project" {shape: rectangle}
+configure_user_authentication_ldapss: "Configure User Authentication (LDAP/SSO)" {shape: rectangle}
+validate: "Validate" {shape: oval}
+
+plan -> prerequisites
+prerequisites -> download_and_install_jira
+download_and_install_jira -> configure_database_connection
+configure_database_connection -> configure_application_properties
+configure_application_properties -> create_first_project
+create_first_project -> configure_user_authentication_ldapss
+configure_user_authentication_ldapss -> validate
+```
+
 ## Before you begin
 
 - **Access:** admin credentials for the target system and any upstream dependencies (DNS, NTP, vCenter, directory services)

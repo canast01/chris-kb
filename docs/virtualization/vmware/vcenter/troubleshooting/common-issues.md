@@ -20,6 +20,32 @@ Common Issues reference covering Issue Summary, vCenter Services Not Starting, C
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+vpxd_service_failure: "vpxd Service Failure" {shape: rectangle}
+diagnostic_flow: "Diagnostic Flow" {shape: rectangle}
+certificate_errors: "Certificate Errors" {shape: rectangle}
+esxi_host_disconnected_or_not_respon: "ESXi Host Disconnected or Not Responding" {shape: rectangle}
+sso_authentication_failures: "SSO / Authentication Failures" {shape: rectangle}
+vami_inaccessible_port_5480: "VAMI Inaccessible (Port 5480)" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> vpxd_service_failure: investigate
+symptom -> diagnostic_flow: investigate
+symptom -> certificate_errors: investigate
+symptom -> esxi_host_disconnected_or_not_respon: investigate
+symptom -> sso_authentication_failures: investigate
+symptom -> vami_inaccessible_port_5480: investigate
+vpxd_service_failure -> resolution
+diagnostic_flow -> resolution
+certificate_errors -> resolution
+esxi_host_disconnected_or_not_respon -> resolution
+sso_authentication_failures -> resolution
+vami_inaccessible_port_5480 -> resolution
+```
+
 ## vpxd Service Failure
 
 ### Resolution

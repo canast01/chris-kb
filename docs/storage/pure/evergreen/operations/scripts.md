@@ -16,6 +16,23 @@ Script Reference reference covering Subscription Capacity Report, Alert Configur
 
 ![Evergreen — Script Reference — Diagram](../../../../assets/storage-pure-evergreen-operations-scripts-diagram.svg)
 
+```d2
+direction: right
+
+hub: "Evergreen\nOperations" {shape: hexagon}
+subscription_capacity_report: "Subscription Capacity Report" {shape: rectangle}
+alert_configuration_audit: "Alert Configuration Audit" {shape: rectangle}
+evergreenone_sla_consumption_tracker: "Evergreen//One SLA Consumption Tracker" {shape: rectangle}
+protection_group_replication_status: "Protection Group Replication Status" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+hub -> subscription_capacity_report
+hub -> alert_configuration_audit
+hub -> evergreenone_sla_consumption_tracker
+hub -> protection_group_replication_status
+hub -> verify
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

@@ -16,6 +16,25 @@ AWS Bedrock requires explicit model access to be enabled per AWS account and reg
 
 
 
+```d2
+direction: right
+
+center: "AWS Bedrock" {shape: hexagon}
+enabling_model_access: "Enabling Model Access" {shape: rectangle}
+ondemand_vs_provisioned_throughput: "On-Demand vs Provisioned Throughput" {shape: rectangle}
+provisioned_throughput_setup: "Provisioned Throughput Setup" {shape: rectangle}
+invoking_models: "Invoking Models" {shape: rectangle}
+service_quotas: "Service Quotas" {shape: rectangle}
+crossregion_inference_profiles: "Cross-Region Inference Profiles" {shape: rectangle}
+
+center -> enabling_model_access
+center -> ondemand_vs_provisioned_throughput
+center -> provisioned_throughput_setup
+center -> invoking_models
+center -> service_quotas
+center -> crossregion_inference_profiles
+```
+
 ## Enabling Model Access
 
 Model access is granted through the Bedrock console under **Model access** or via the API. Access requests for third-party models (Anthropic, Meta, Mistral) may take minutes to hours depending on the provider.

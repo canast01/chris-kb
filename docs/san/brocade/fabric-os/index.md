@@ -45,6 +45,15 @@ Brocade Fabric OS knowledge base covering switch architecture, zoning, ISLs, por
 
 ---
 
+```d2
+direction: right
+
+center: "Brocade Fabric OS" {shape: hexagon}
+platform_summary: "Platform Summary" {shape: rectangle}
+
+center -> platform_summary
+```
+
 ## Platform Summary
 
 | Platform | Type | Max FC Ports | FC Speed | Notes |

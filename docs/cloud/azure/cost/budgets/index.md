@@ -15,6 +15,25 @@ Azure Cost Management budgets let you set spending thresholds and trigger alerts
 
 
 
+```d2
+direction: right
+
+center: "Azure" {shape: hexagon}
+budget_alert_flow: "Budget Alert Flow" {shape: rectangle}
+creating_a_budget: "Creating a Budget" {shape: rectangle}
+scope_options: "Scope Options" {shape: rectangle}
+alert_thresholds: "Alert Thresholds" {shape: rectangle}
+action_groups: "Action Groups" {shape: rectangle}
+budget_best_practices: "Budget Best Practices" {shape: rectangle}
+
+center -> budget_alert_flow
+center -> creating_a_budget
+center -> scope_options
+center -> alert_thresholds
+center -> action_groups
+center -> budget_best_practices
+```
+
 ## Budget Alert Flow
 
 ```mermaid

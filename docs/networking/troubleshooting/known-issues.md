@@ -17,6 +17,17 @@ Index of protocol-specific known issues and error codes for networking component
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+protocol_knownissues_pages: "Protocol Known-Issues Pages" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> protocol_knownissues_pages: investigate
+protocol_knownissues_pages -> resolution
+```
+
 ## Before you begin
 
 For network issues, identify the protocol layer first before looking up specific errors:

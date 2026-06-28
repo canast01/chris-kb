@@ -37,6 +37,23 @@ graph TB
     class C1,D1,D2,D3 pool
 ```
 
+```d2
+direction: down
+
+cluster_sizing_tiers: "Cluster Sizing Tiers" {shape: rectangle}
+node_sizing_reference: "Node Sizing Reference" {shape: rectangle}
+infrastructure_nodes: "Infrastructure Nodes" {shape: rectangle}
+etcd_disk_sizing_and_validation: "etcd Disk Sizing and Validation" {shape: rectangle}
+network_cidr_planning: "Network CIDR Planning" {shape: rectangle}
+storageclass_standards: "StorageClass Standards" {shape: rectangle}
+
+cluster_sizing_tiers -> node_sizing_reference: hardens
+node_sizing_reference -> infrastructure_nodes: hardens
+infrastructure_nodes -> etcd_disk_sizing_and_validation: hardens
+etcd_disk_sizing_and_validation -> network_cidr_planning: hardens
+network_cidr_planning -> storageclass_standards: hardens
+```
+
 ## Cluster Sizing Tiers
 
 | Tier | Control plane | Workers | Use case |

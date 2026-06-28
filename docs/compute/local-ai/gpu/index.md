@@ -37,6 +37,19 @@ GPU compute for AI/ML workloads runs on the NVIDIA CUDA platform (driver, CUDA t
 
 </div>
 
+```d2
+direction: right
+
+center: "GPU Compute" {shape: hexagon}
+quick_reference: "Quick Reference" {shape: rectangle}
+common_operations: "Common Operations" {shape: rectangle}
+key_considerations: "Key Considerations" {shape: rectangle}
+
+center -> quick_reference
+center -> common_operations
+center -> key_considerations
+```
+
 ## Quick Reference
 
 ### GPU Family Reference

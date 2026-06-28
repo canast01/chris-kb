@@ -20,6 +20,21 @@ Firewall port reference for Dell AIOps (AI-driven operations platform for Dell i
 
 
 
+```d2
+direction: right
+
+center: "Dell AIOps" {shape: hexagon}
+how_it_works: "How It Works" {shape: rectangle}
+outbound_infrastructure_to_dell_clou: "Outbound — Infrastructure to Dell Cloud (Required)" {shape: rectangle}
+admin_access_saas: "Admin Access (SaaS)" {shape: rectangle}
+firewall_summary: "Firewall Summary" {shape: rectangle}
+
+center -> how_it_works
+center -> outbound_infrastructure_to_dell_clou
+center -> admin_access_saas
+center -> firewall_summary
+```
+
 ## How It Works
 
 Dell AIOps is a cloud-delivered (SaaS) analytics layer built on top of CloudIQ and ESRS telemetry. On-premise components send data outbound to Dell's cloud — no on-premise AIOps server is deployed.

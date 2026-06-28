@@ -34,6 +34,27 @@ flowchart TD
     style s8 fill:#2e7d32,color:#fff,stroke:#1b5e20
 ```
 
+```d2
+direction: right
+
+plan: "Plan" {shape: oval}
+install_python: "Install Python" {shape: rectangle}
+create_a_project_virtual_environment: "Create a Project Virtual Environment" {shape: rectangle}
+install_project_dependencies: "Install Project Dependencies" {shape: rectangle}
+configure_environment_variables: "Configure Environment Variables" {shape: rectangle}
+set_up_ide_integration_vs_code: "Set Up IDE Integration (VS Code)" {shape: rectangle}
+configure_a_ci_pipeline_for_python_s: "Configure a CI Pipeline for Python Scripts" {shape: rectangle}
+validate: "Validate" {shape: oval}
+
+plan -> install_python
+install_python -> create_a_project_virtual_environment
+create_a_project_virtual_environment -> install_project_dependencies
+install_project_dependencies -> configure_environment_variables
+configure_environment_variables -> set_up_ide_integration_vs_code
+set_up_ide_integration_vs_code -> configure_a_ci_pipeline_for_python_s
+configure_a_ci_pipeline_for_python_s -> validate
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

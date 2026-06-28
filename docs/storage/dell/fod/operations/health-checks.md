@@ -13,6 +13,25 @@ Dell FoD health checks: SCG connectivity status, entitlement consumption review 
 </div>
 
 
+```d2
+direction: right
+
+hub: "Flex On Demand\nOperations" {shape: hexagon}
+run_this_routine: "Run This Routine" {shape: rectangle}
+daily_checks: "Daily Checks" {shape: rectangle}
+health_check_commands: "Health Check Commands" {shape: rectangle}
+change_readiness: "Change Readiness" {shape: rectangle}
+postchange_validation: "Post-Change Validation" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+hub -> run_this_routine
+hub -> daily_checks
+hub -> health_check_commands
+hub -> change_readiness
+hub -> postchange_validation
+hub -> verify
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

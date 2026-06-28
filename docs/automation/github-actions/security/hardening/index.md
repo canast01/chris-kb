@@ -16,6 +16,17 @@ GitHub Actions hardening: pinning actions to commit SHAs, restricting workflow t
 
 ---
 
+```d2
+direction: down
+
+minimal_permissions: "Minimal Permissions" {shape: rectangle}
+branch_protection: "Branch Protection" {shape: rectangle}
+hardening_reference: "Hardening Reference" {shape: rectangle}
+
+minimal_permissions -> branch_protection: hardens
+branch_protection -> hardening_reference: hardens
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

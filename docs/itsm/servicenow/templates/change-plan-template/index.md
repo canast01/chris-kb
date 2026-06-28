@@ -15,6 +15,23 @@ Change Plan Template reference covering Overview, Change Summary, Pre-Change Che
 
 
 
+```d2
+direction: right
+
+center: "ServiceNow" {shape: hexagon}
+change_summary: "Change Summary" {shape: rectangle}
+prechange_checklist: "Pre-Change Checklist" {shape: rectangle}
+implementation_steps: "Implementation Steps" {shape: rectangle}
+validation_steps: "Validation Steps" {shape: rectangle}
+rollback_plan: "Rollback Plan" {shape: rectangle}
+
+center -> change_summary
+center -> prechange_checklist
+center -> implementation_steps
+center -> validation_steps
+center -> rollback_plan
+```
+
 ## Overview
 
 This template provides a structured format for planning infrastructure or application changes in production environments.

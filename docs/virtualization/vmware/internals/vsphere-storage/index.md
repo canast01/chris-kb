@@ -11,6 +11,25 @@ vSphere supports a broad set of storage protocols and datastore types. Choosing 
 
 ---
 
+```d2
+direction: right
+
+center: "Vsphere Storage" {shape: hexagon}
+storage_protocol_overview: "Storage Protocol Overview" {shape: rectangle}
+datastore_types: "Datastore Types" {shape: rectangle}
+storage_policies_spbm: "Storage Policies — SPBM" {shape: rectangle}
+vaai_and_vasa: "VAAI and VASA" {shape: rectangle}
+multipathing: "Multipathing" {shape: rectangle}
+sioc_storage_io_control: "SIOC — Storage I/O Control" {shape: rectangle}
+
+center -> storage_protocol_overview
+center -> datastore_types
+center -> storage_policies_spbm
+center -> vaai_and_vasa
+center -> multipathing
+center -> sioc_storage_io_control
+```
+
 ## Storage Protocol Overview
 
 vSphere can present storage to VMs through five main protocol stacks. The choice of protocol determines latency characteristics, cabling requirements, management complexity, and which datastore types are available.

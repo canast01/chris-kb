@@ -18,6 +18,27 @@ ONTAP provides encryption at rest via NetApp Volume Encryption (NVE) and NetApp 
 
  Key management is handled by the Onboard Key Manager (OKM) or an external KMIP key manager.
 
+```d2
+direction: down
+
+external: External / Untrusted {shape: rectangle}
+encryption_layer_architecture: "Encryption Layer Architecture" {shape: rectangle}
+encryption_architecture_overview: "Encryption Architecture Overview" {shape: rectangle}
+netapp_volume_encryption_nve: "NetApp Volume Encryption (NVE)" {shape: rectangle}
+netapp_aggregate_encryption_nae: "NetApp Aggregate Encryption (NAE)" {shape: rectangle}
+netapp_storage_encryption_nse_selfen: "NetApp Storage Encryption (NSE) — Self-Encrypting Drives" {shape: rectangle}
+key_management: "Key Management" {shape: rectangle}
+core: "NetApp ONTAP Core" {shape: hexagon}
+
+external -> encryption_layer_architecture: traffic in
+encryption_layer_architecture -> encryption_architecture_overview
+encryption_architecture_overview -> netapp_volume_encryption_nve
+netapp_volume_encryption_nve -> netapp_aggregate_encryption_nae
+netapp_aggregate_encryption_nae -> netapp_storage_encryption_nse_selfen
+netapp_storage_encryption_nse_selfen -> key_management
+key_management -> core: secured path
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

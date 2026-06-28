@@ -15,6 +15,25 @@ Understanding what normal recovery looks like prevents unnecessary intervention 
 
 
 
+```d2
+direction: right
+
+center: "Recovery Behavior" {shape: hexagon}
+after_host_failure: "After Host Failure" {shape: rectangle}
+after_storage_failure: "After Storage Failure" {shape: rectangle}
+after_network_failure: "After Network Failure" {shape: rectangle}
+after_vsan_component_failure: "After vSAN Component Failure" {shape: rectangle}
+recovery_performance_impact: "Recovery Performance Impact" {shape: rectangle}
+when_to_escalate: "When to Escalate" {shape: rectangle}
+
+center -> after_host_failure
+center -> after_storage_failure
+center -> after_network_failure
+center -> after_vsan_component_failure
+center -> recovery_performance_impact
+center -> when_to_escalate
+```
+
 ## After Host Failure
 
 | Phase | Expected Behavior | Timeframe |

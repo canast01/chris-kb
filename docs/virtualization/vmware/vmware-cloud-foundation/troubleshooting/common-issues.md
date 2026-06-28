@@ -20,6 +20,23 @@ Common Issues reference covering Common Issues, Technical Deep Dive.
 VCF Common Failure Points — Quick Reference
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+general_troubleshooting: "General Troubleshooting" {shape: rectangle}
+diagnostic_flow: "Diagnostic Flow" {shape: rectangle}
+verify_resolution: "Verify resolution" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> general_troubleshooting: investigate
+symptom -> diagnostic_flow: investigate
+symptom -> verify_resolution: investigate
+general_troubleshooting -> resolution
+diagnostic_flow -> resolution
+verify_resolution -> resolution
+```
+
 ## General Troubleshooting
 
 ### Common Failure Points

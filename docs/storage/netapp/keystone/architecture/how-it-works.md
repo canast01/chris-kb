@@ -14,6 +14,25 @@ How It Works reference covering Overview, STaaS Consumption Model, Capacity Mana
 ![Keystone — How It Works](../../../../assets/storage-netapp-keystone-architecture-how-it-works.svg)
 
 
+```d2
+direction: right
+
+center: "Keystone STaaS" {shape: hexagon}
+staas_consumption_model: "STaaS Consumption Model" {shape: rectangle}
+service_tiers_and_performance_slas: "Service Tiers and Performance SLAs" {shape: rectangle}
+consumption_and_billing_model: "Consumption and Billing Model" {shape: rectangle}
+keystone_collector_and_telemetry: "Keystone Collector and Telemetry" {shape: rectangle}
+data_management_with_bluexp: "Data Management with BlueXP" {shape: rectangle}
+evergreen_storage_hardware_refresh: "Evergreen Storage (Hardware Refresh)" {shape: rectangle}
+
+center -> staas_consumption_model
+center -> service_tiers_and_performance_slas
+center -> consumption_and_billing_model
+center -> keystone_collector_and_telemetry
+center -> data_management_with_bluexp
+center -> evergreen_storage_hardware_refresh
+```
+
 ## Overview
 
 NetApp Keystone is a Storage as a Service (STaaS) subscription that delivers on-premises NetApp hardware — AFF/FAS for block and file, StorageGRID for object — on an OpEx consumption model. NetApp installs, owns, and manages the hardware at the customer's data center or colocation facility. The customer commits to a minimum capacity per service tier and pays for committed capacity plus burst usage above the commitment. A Keystone Collector agent reports consumption telemetry to NetApp for billing.

@@ -20,6 +20,25 @@ ESXi Automation Scripts — Tool Selection
 
 ---
 
+```d2
+direction: right
+
+hub: "ESXi\nOperations" {shape: hexagon}
+storage_path_health_check_bash_esxcl: "Storage Path Health Check (Bash / esxcli)" {shape: rectangle}
+esxi_syslog_and_event_collector_pyth: "ESXi Syslog and Event Collector (Python)" {shape: rectangle}
+ntp_configuration_audit_bash: "NTP Configuration Audit (Bash)" {shape: rectangle}
+ansible_esxi_configuration_playbook: "Ansible ESXi Configuration Playbook" {shape: rectangle}
+windows_esxi_host_health_via_rest_ap: "Windows: ESXi Host Health via REST API (PowerShell)" {shape: rectangle}
+windows_esxi_esxcli_commands_via_pli: "Windows: ESXi ESXCLI Commands via Plink (CMD)" {shape: rectangle}
+
+hub -> storage_path_health_check_bash_esxcl
+hub -> esxi_syslog_and_event_collector_pyth
+hub -> ntp_configuration_audit_bash
+hub -> ansible_esxi_configuration_playbook
+hub -> windows_esxi_host_health_via_rest_ap
+hub -> windows_esxi_esxcli_commands_via_pli
+```
+
 ## Before you begin
 
 - **Access:** vCenter read-only minimum; Administrator role for remediation steps

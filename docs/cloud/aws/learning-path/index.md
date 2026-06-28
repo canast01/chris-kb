@@ -31,6 +31,21 @@ graph LR
 
 ---
 
+```d2
+direction: right
+
+stage_1_architecture: "Stage 1 — Architecture" {shape: rectangle}
+stage_2_deployment: "Stage 2 — Deployment" {shape: rectangle}
+stage_3_operations: "Stage 3 — Operations" {shape: rectangle}
+stage_4_security: "Stage 4 — Security" {shape: rectangle}
+stage_5_troubleshooting: "Stage 5 — Troubleshooting" {shape: rectangle}
+
+stage_1_architecture -> stage_2_deployment: next
+stage_2_deployment -> stage_3_operations: next
+stage_3_operations -> stage_4_security: next
+stage_4_security -> stage_5_troubleshooting: next
+```
+
 ## Stage 1 — Architecture
 
 **Goal**: Understand AWS's global infrastructure model, core service relationships, and how accounts, VPCs, and IAM interact before touching anything in the console.

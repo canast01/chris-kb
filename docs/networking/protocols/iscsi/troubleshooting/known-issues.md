@@ -18,6 +18,23 @@ Catalog of known iSCSI issues covering initiator discovery, session stability, m
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+discovery_and_login: "Discovery and Login" {shape: rectangle}
+multipath: "Multipath" {shape: rectangle}
+performance: "Performance" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> discovery_and_login: investigate
+symptom -> multipath: investigate
+symptom -> performance: investigate
+discovery_and_login -> resolution
+multipath -> resolution
+performance -> resolution
+```
+
 ## Before you begin
 
 - Linux iSCSI: `iscsiadm -m session` for active sessions; `/var/log/syslog` or `dmesg` for errors.

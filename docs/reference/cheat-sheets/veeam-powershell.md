@@ -13,6 +13,25 @@ Essential Veeam Backup &amp; Replication PowerShell cmdlets for server connectio
 
 ![Veeam PowerShell Cheat Sheet](../../assets/reference-cheat-sheets-veeam-powershell.svg)
 
+```d2
+direction: right
+
+center: "Cheat Sheets" {shape: rectangle}
+connect_setup: "Connect & Setup" {shape: rectangle}
+jobs: "Jobs" {shape: rectangle}
+backup_repositories: "Backup Repositories" {shape: rectangle}
+restore: "Restore" {shape: rectangle}
+backup_copy: "Backup Copy" {shape: rectangle}
+tape: "Tape" {shape: rectangle}
+
+center -> connect_setup
+center -> jobs
+center -> backup_repositories
+center -> restore
+center -> backup_copy
+center -> tape
+```
+
 ## Connect & Setup
 
 | Command | Description | Example |

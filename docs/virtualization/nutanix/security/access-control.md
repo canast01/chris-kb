@@ -21,6 +21,27 @@ Nutanix RBAC in Prism Central — custom roles, categories-based VM access, proj
 
 ---
 
+```d2
+direction: down
+
+external: External / Untrusted {shape: rectangle}
+access_control_models: "Access Control Models" {shape: rectangle}
+prism_element_builtin_roles: "Prism Element Built-In Roles" {shape: rectangle}
+prism_central_custom_roles_finegrain: "Prism Central Custom Roles (Fine-Grained RBAC)" {shape: rectangle}
+categories_tagbased_access_control: "Categories (Tag-Based Access Control)" {shape: rectangle}
+projects_selfservice_workspaces: "Projects (Self-Service Workspaces)" {shape: rectangle}
+audit_logging: "Audit Logging" {shape: rectangle}
+core: "Nutanix AHV Core" {shape: hexagon}
+
+external -> access_control_models: traffic in
+access_control_models -> prism_element_builtin_roles
+prism_element_builtin_roles -> prism_central_custom_roles_finegrain
+prism_central_custom_roles_finegrain -> categories_tagbased_access_control
+categories_tagbased_access_control -> projects_selfservice_workspaces
+projects_selfservice_workspaces -> audit_logging
+audit_logging -> core: secured path
+```
+
 ## Before you begin
 
 - **Access:** Prism Central admin (for custom roles, categories, projects); Prism Element admin (for PE built-in role mappings)

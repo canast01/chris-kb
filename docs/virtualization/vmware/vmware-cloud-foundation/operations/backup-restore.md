@@ -19,6 +19,25 @@ VMware Cloud Foundation backup protects the management plane components: SDDC Ma
 
 ---
 
+```d2
+direction: right
+
+hub: "VMware Cloud Foundation\nOperations" {shape: hexagon}
+management_plane_backup_overview: "Management Plane Backup Overview" {shape: rectangle}
+backup_architecture: "Backup Architecture" {shape: rectangle}
+nsx_manager_backup: "NSX Manager Backup" {shape: rectangle}
+vcenter_server_filebased_backup_fbb: "vCenter Server File-Based Backup (FBB)" {shape: rectangle}
+vsan_configuration_backup: "vSAN Configuration Backup" {shape: rectangle}
+restore_procedure: "Restore Procedure" {shape: rectangle}
+
+hub -> management_plane_backup_overview
+hub -> backup_architecture
+hub -> nsx_manager_backup
+hub -> vcenter_server_filebased_backup_fbb
+hub -> vsan_configuration_backup
+hub -> restore_procedure
+```
+
 ## Before you begin
 
 - **Access:** vCenter read-only minimum; Administrator role for remediation steps

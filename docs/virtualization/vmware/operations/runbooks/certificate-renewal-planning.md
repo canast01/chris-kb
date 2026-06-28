@@ -17,6 +17,25 @@ VMware Certificate Renewal Runbook reference covering Identify the Expiring Cert
 
 Only restart services after confirming the new certificate is applied.
 
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+actor "Responder" as A
+participant "Runbooks System" as B
+participant "Dependent System" as C
+
+A -> B: Validate Integrations
+B --> A: OK
+A -> B: Document Final Expiration Date
+B --> A: OK
+A -> B: Verify
+B --> A: OK
+
+@enduml
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

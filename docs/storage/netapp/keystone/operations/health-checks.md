@@ -13,6 +13,25 @@ NetApp Keystone health checks: subscription capacity consumption review via Keys
 </div>
 
 
+```d2
+direction: right
+
+hub: "Keystone STaaS\nOperations" {shape: hexagon}
+run_this_routine: "Run This Routine" {shape: rectangle}
+daily_checks: "Daily Checks" {shape: rectangle}
+health_check_criteria: "Health Check Criteria" {shape: rectangle}
+collector_health_commands: "Collector Health Commands" {shape: rectangle}
+ontap_health_commands: "ONTAP Health Commands" {shape: rectangle}
+capacity_and_burst_health: "Capacity and Burst Health" {shape: rectangle}
+
+hub -> run_this_routine
+hub -> daily_checks
+hub -> health_check_criteria
+hub -> collector_health_commands
+hub -> ontap_health_commands
+hub -> capacity_and_burst_health
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

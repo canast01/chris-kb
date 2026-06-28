@@ -30,6 +30,19 @@ vmkfstools -P /vmfs/volumes/<datastore>
 
 VAAI primitives (XCOPY, WRITE_SAME, ATS) significantly reduce ESXi CPU overhead during cloning and provisioning.
 
+```d2
+direction: right
+
+center: "ESXi" {shape: hexagon}
+network_integration: "Network Integration" {shape: rectangle}
+backup_integration: "Backup Integration" {shape: rectangle}
+monitoring_integration: "Monitoring Integration" {shape: rectangle}
+
+center -> network_integration
+center -> backup_integration
+center -> monitoring_integration
+```
+
 ## Network Integration
 
 ESXi networking uses either Standard vSwitch (vSS) or Distributed vSwitch (vDS). vDS is managed from vCenter and provides advanced features including LACP, LLDP, NetFlow, and port mirroring.

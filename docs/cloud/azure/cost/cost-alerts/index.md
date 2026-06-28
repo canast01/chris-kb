@@ -15,6 +15,25 @@ Azure Cost Management supports multiple alert types to notify teams of unexpecte
 
 
 
+```d2
+direction: right
+
+center: "Azure" {shape: hexagon}
+cost_alert_types_overview: "Cost Alert Types Overview" {shape: rectangle}
+alert_types: "Alert Types" {shape: rectangle}
+anomaly_alerts: "Anomaly Alerts" {shape: rectangle}
+budget_alerts: "Budget Alerts" {shape: rectangle}
+alert_channels: "Alert Channels" {shape: rectangle}
+threshold_configuration: "Threshold Configuration" {shape: rectangle}
+
+center -> cost_alert_types_overview
+center -> alert_types
+center -> anomaly_alerts
+center -> budget_alerts
+center -> alert_channels
+center -> threshold_configuration
+```
+
 ## Cost Alert Types Overview
 
 ```mermaid

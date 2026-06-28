@@ -14,6 +14,21 @@ Install & Upgrade reference covering Release Cadence, Decommission Procedure.
 ![Veeam — Install & Upgrade](../../../../assets/backup-veeam-operations-install-upgrade-index.svg)
 
 
+```d2
+direction: right
+
+plan: "Plan" {shape: oval}
+release_cadence: "Release Cadence" {shape: rectangle}
+decommission_procedure: "Decommission Procedure" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+validate: "Validate" {shape: oval}
+
+plan -> release_cadence
+release_cadence -> decommission_procedure
+decommission_procedure -> verify
+verify -> validate
+```
+
 ## Before you begin
 
 - **Access:** Backup admin role on backup server; target system credentials

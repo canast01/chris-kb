@@ -31,6 +31,19 @@ Features on Demand integration with PowerMax/Unity management platforms and stor
 
 ---
 
+```d2
+direction: right
+
+center: "Flex On Demand" {shape: hexagon}
+component_a: "Component A" {shape: rectangle}
+component_b: "Component B" {shape: rectangle}
+component_c: "Component C" {shape: rectangle}
+
+center -> component_a
+center -> component_b
+center -> component_c
+```
+
 ## See also
 
 - [Fod — How It Works](how-it-works/)

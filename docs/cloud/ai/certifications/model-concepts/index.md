@@ -13,6 +13,25 @@ AI Model Concepts reference covering Transformers and Attention Mechanisms, Embe
 
 
 
+```d2
+direction: right
+
+center: "Model Concepts" {shape: hexagon}
+transformers_and_attention_mechanism: "Transformers and Attention Mechanisms" {shape: rectangle}
+embeddings: "Embeddings" {shape: rectangle}
+tokens_and_tokenization: "Tokens and Tokenization" {shape: rectangle}
+finetuning_vs_rag_vs_prompting: "Fine-Tuning vs. RAG vs. Prompting" {shape: rectangle}
+generation_parameters: "Generation Parameters" {shape: rectangle}
+study_checklist: "Study Checklist" {shape: rectangle}
+
+center -> transformers_and_attention_mechanism
+center -> embeddings
+center -> tokens_and_tokenization
+center -> finetuning_vs_rag_vs_prompting
+center -> generation_parameters
+center -> study_checklist
+```
+
 ## Transformers and Attention Mechanisms
 
 The Transformer architecture underpins virtually all modern LLMs. Key components tested on AI certification exams:

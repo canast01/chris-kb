@@ -18,6 +18,23 @@ Catalog of known RecoverPoint bugs, error codes, and workarounds covering RPA cl
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+replication_groups: "Replication Groups" {shape: rectangle}
+rpa_cluster: "RPA Cluster" {shape: rectangle}
+failover: "Failover" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> replication_groups: investigate
+symptom -> rpa_cluster: investigate
+symptom -> failover: investigate
+replication_groups -> resolution
+rpa_cluster -> resolution
+failover -> resolution
+```
+
 ## Before you begin
 
 - RecoverPoint errors appear in Unisphere for RecoverPoint → Alerts.

@@ -16,6 +16,25 @@ Venafi is managed via the `vcert` CLI (Trust Protection Platform and Venafi as a
 
 
 
+```d2
+direction: right
+
+center: "Cli Reference" {shape: rectangle}
+vcert_cli_workflow: "vcert CLI Workflow" {shape: rectangle}
+vcert_cli_authentication: "vcert CLI — Authentication" {shape: rectangle}
+certificate_requests: "Certificate Requests" {shape: rectangle}
+certificate_renewal: "Certificate Renewal" {shape: rectangle}
+certificate_retrieval: "Certificate Retrieval" {shape: rectangle}
+tpp_rest_api: "TPP REST API" {shape: rectangle}
+
+center -> vcert_cli_workflow
+center -> vcert_cli_authentication
+center -> certificate_requests
+center -> certificate_renewal
+center -> certificate_retrieval
+center -> tpp_rest_api
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

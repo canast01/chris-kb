@@ -53,6 +53,32 @@ graph TD
     class S escalate
 ```
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+step_1_check_cluster_and_node_health: "Step 1 — Check cluster and node health" {shape: rectangle}
+step_2_check_cluster_event_log: "Step 2 — Check cluster event log" {shape: rectangle}
+step_3_check_synciq_replication_stat: "Step 3 — Check SyncIQ replication status" {shape: rectangle}
+step_4_check_quotas: "Step 4 — Check quotas" {shape: rectangle}
+step_5_check_storage_capacity_and_pe: "Step 5 — Check storage capacity and performance statistics" {shape: rectangle}
+step_6_check_network_and_smartconnec: "Step 6 — Check network and SmartConnect" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> step_1_check_cluster_and_node_health: investigate
+symptom -> step_2_check_cluster_event_log: investigate
+symptom -> step_3_check_synciq_replication_stat: investigate
+symptom -> step_4_check_quotas: investigate
+symptom -> step_5_check_storage_capacity_and_pe: investigate
+symptom -> step_6_check_network_and_smartconnec: investigate
+step_1_check_cluster_and_node_health -> resolution
+step_2_check_cluster_event_log -> resolution
+step_3_check_synciq_replication_stat -> resolution
+step_4_check_quotas -> resolution
+step_5_check_storage_capacity_and_pe -> resolution
+step_6_check_network_and_smartconnec -> resolution
+```
+
 ## Before you begin
 
 - **Access:** PowerScale cluster admin (SSH to any node, or via web admin UI); read-only access for live statistics

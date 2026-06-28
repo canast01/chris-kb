@@ -31,6 +31,19 @@ SELECT db_name(database_id), encryption_state, percent_complete
 FROM sys.dm_database_encryption_keys;
 ```
 
+```d2
+direction: right
+
+center: "Data Encryption" {shape: hexagon}
+component_a: "Component A" {shape: rectangle}
+component_b: "Component B" {shape: rectangle}
+component_c: "Component C" {shape: rectangle}
+
+center -> component_a
+center -> component_b
+center -> component_c
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

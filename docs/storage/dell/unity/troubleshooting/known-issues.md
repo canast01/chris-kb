@@ -18,6 +18,23 @@ Catalog of known Unity XT bugs, error codes, and workarounds covering Unisphere 
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+host_connectivity: "Host Connectivity" {shape: rectangle}
+replication: "Replication" {shape: rectangle}
+unisphere_for_unity: "Unisphere for Unity" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> host_connectivity: investigate
+symptom -> replication: investigate
+symptom -> unisphere_for_unity: investigate
+host_connectivity -> resolution
+replication -> resolution
+unisphere_for_unity -> resolution
+```
+
 ## Before you begin
 
 - Unity alerts appear in Unisphere for Unity → Alerts.

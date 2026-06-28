@@ -15,6 +15,25 @@ Azure Blob Storage reference covering Overview, Blob Lifecycle Management Flow, 
 
 
 
+```d2
+direction: right
+
+center: "Azure" {shape: hexagon}
+blob_lifecycle_management_flow: "Blob Lifecycle Management Flow" {shape: rectangle}
+access_tiers: "Access Tiers" {shape: rectangle}
+lifecycle_rules: "Lifecycle Rules" {shape: rectangle}
+sas_tokens: "SAS Tokens" {shape: rectangle}
+blob_versioning: "Blob Versioning" {shape: rectangle}
+soft_delete_and_recovery: "Soft Delete and Recovery" {shape: rectangle}
+
+center -> blob_lifecycle_management_flow
+center -> access_tiers
+center -> lifecycle_rules
+center -> sas_tokens
+center -> blob_versioning
+center -> soft_delete_and_recovery
+```
+
 ## Overview
 
 Azure Blob Storage is Microsoft's object store for unstructured data. Blobs are organised into containers within Storage Accounts. Three access tiers (Hot, Cool, Archive) control cost versus retrieval latency. Blob versioning, soft delete, and lifecycle management provide data protection and cost control.

@@ -20,6 +20,32 @@ SRDF/A troubleshooting: DSE overflow, cycle time violations, SRDF/A suspended du
 
 Common SRDF/A issues: link failures, increasing cycle times, suspended consistency groups, and volume capacity mismatches. Always collect `symrdf query -g <group> -v` and array event logs before engaging Dell support. Correlate with network monitoring timestamps to distinguish storage-side from WAN-side causes.
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+diagnostic_flow: "Diagnostic Flow" {shape: rectangle}
+lag_alert_triage_decision_tree: "Lag Alert Triage Decision Tree" {shape: rectangle}
+consistency_group_suspended_automati: "Consistency Group Suspended Automatically" {shape: rectangle}
+target_volume_capacity_mismatch_thin: "Target Volume Capacity Mismatch / Thin Pool Exhaustion" {shape: rectangle}
+invalid_pair_state: "`Invalid` Pair State" {shape: rectangle}
+verify_resolution: "Verify resolution" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> diagnostic_flow: investigate
+symptom -> lag_alert_triage_decision_tree: investigate
+symptom -> consistency_group_suspended_automati: investigate
+symptom -> target_volume_capacity_mismatch_thin: investigate
+symptom -> invalid_pair_state: investigate
+symptom -> verify_resolution: investigate
+diagnostic_flow -> resolution
+lag_alert_triage_decision_tree -> resolution
+consistency_group_suspended_automati -> resolution
+target_volume_capacity_mismatch_thin -> resolution
+invalid_pair_state -> resolution
+verify_resolution -> resolution
+```
+
 ## Diagnostic Flow
 
 ```mermaid

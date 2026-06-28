@@ -13,6 +13,19 @@ EVS health check routine: cluster and host status via AWS CLI, vSAN and vCenter 
 
 
 
+```d2
+direction: right
+
+hub: "AWS EVS\nOperations" {shape: hexagon}
+run_this_routine: "Run This Routine" {shape: rectangle}
+manual_checks: "Manual Checks" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+hub -> run_this_routine
+hub -> manual_checks
+hub -> verify
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

@@ -20,6 +20,25 @@ on HCI deployments.
 
 
 
+```d2
+direction: right
+
+center: "Scenarios" {shape: hexagon}
+products_involved: "Products Involved" {shape: rectangle}
+1_identify_the_alarm_skyline_health: "1. Identify the Alarm — Skyline Health" {shape: rectangle}
+2_identify_the_failed_component: "2. Identify the Failed Component" {shape: rectangle}
+3_assess_the_risk_window: "3. Assess the Risk Window" {shape: rectangle}
+4_check_physical_disk_health: "4. Check Physical Disk Health" {shape: rectangle}
+5_initiate_or_monitor_rebuild: "5. Initiate or Monitor Rebuild" {shape: rectangle}
+
+center -> products_involved
+center -> 1_identify_the_alarm_skyline_health
+center -> 2_identify_the_failed_component
+center -> 3_assess_the_risk_window
+center -> 4_check_physical_disk_health
+center -> 5_initiate_or_monitor_rebuild
+```
+
 ## Products Involved
 
 | Product | Role in This Scenario |

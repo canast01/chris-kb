@@ -20,6 +20,17 @@ Standards reference covering Upgrade Notes, Design Standards.
 
 ---
 
+```d2
+direction: right
+
+center: "APEX Storage" {shape: hexagon}
+upgrade_notes: "Upgrade Notes" {shape: rectangle}
+design_standards: "Design Standards" {shape: rectangle}
+
+center -> upgrade_notes
+center -> design_standards
+```
+
 ## Upgrade Notes
 
 | Step | Action |

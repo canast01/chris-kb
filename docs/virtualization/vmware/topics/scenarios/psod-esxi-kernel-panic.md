@@ -20,6 +20,25 @@ and identifying driver/firmware mismatch as the most common production cause.
 
 
 
+```d2
+direction: right
+
+center: "Scenarios" {shape: hexagon}
+products_involved: "Products Involved" {shape: rectangle}
+1_confirm_ha_is_restarting_vms: "1. Confirm HA Is Restarting VMs" {shape: rectangle}
+2_capture_the_psod_screen: "2. Capture the PSOD Screen" {shape: rectangle}
+3_check_idrac_ilo_hardware_event_log: "3. Check iDRAC / iLO Hardware Event Log" {shape: rectangle}
+4_retrieve_logs_after_host_reboots: "4. Retrieve Logs After Host Reboots" {shape: rectangle}
+5_generate_a_vmsupport_bundle: "5. Generate a vm-support Bundle" {shape: rectangle}
+
+center -> products_involved
+center -> 1_confirm_ha_is_restarting_vms
+center -> 2_capture_the_psod_screen
+center -> 3_check_idrac_ilo_hardware_event_log
+center -> 4_retrieve_logs_after_host_reboots
+center -> 5_generate_a_vmsupport_bundle
+```
+
 ## Products Involved
 
 | Product | Role in This Scenario |

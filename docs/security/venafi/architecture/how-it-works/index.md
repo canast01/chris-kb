@@ -20,6 +20,25 @@ Venafi Trust Protection Platform (TPP) is the enterprise certificate lifecycle m
 
 ---
 
+```d2
+direction: right
+
+center: "How It Works" {shape: hexagon}
+component_overview: "Component Overview" {shape: rectangle}
+trust_protection_platform_topology: "Trust Protection Platform Topology" {shape: rectangle}
+policy_tree_structure: "Policy Tree Structure" {shape: rectangle}
+ca_connectors: "CA Connectors" {shape: rectangle}
+certificate_lifecycle_flow: "Certificate Lifecycle Flow" {shape: rectangle}
+high_availability: "High Availability" {shape: rectangle}
+
+center -> component_overview
+center -> trust_protection_platform_topology
+center -> policy_tree_structure
+center -> ca_connectors
+center -> certificate_lifecycle_flow
+center -> high_availability
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

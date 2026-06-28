@@ -14,6 +14,21 @@ SCG prerequisites, configuration baselines, alert acknowledgement workflow, and 
 
 
 
+```d2
+direction: right
+
+center: "Dell AIOps" {shape: hexagon}
+prerequisites: "Prerequisites" {shape: rectangle}
+recommendation_acknowledgement_workf: "Recommendation Acknowledgement Workflow" {shape: rectangle}
+alert_threshold_baselines: "Alert Threshold Baselines" {shape: rectangle}
+configuration_checklist: "Configuration Checklist" {shape: rectangle}
+
+center -> prerequisites
+center -> recommendation_acknowledgement_workf
+center -> alert_threshold_baselines
+center -> configuration_checklist
+```
+
 ## Prerequisites
 
 Dell AIOps capability is delivered through the CloudIQ platform — no separate AIOps appliance is deployed. The prerequisites mirror the CloudIQ SCG deployment:

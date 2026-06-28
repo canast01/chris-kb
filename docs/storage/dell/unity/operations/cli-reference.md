@@ -20,6 +20,25 @@ Commonly used `uemcli` commands for managing Dell Unity storage systems. Unity i
 
 ---
 
+```d2
+direction: right
+
+hub: "Unity XT\nOperations" {shape: hexagon}
+system_status: "System & Status" {shape: rectangle}
+storage_pools: "Storage Pools" {shape: rectangle}
+luns: "LUNs" {shape: rectangle}
+file_systems_nas: "File Systems (NAS)" {shape: rectangle}
+hosts_access: "Hosts & Access" {shape: rectangle}
+network_interfaces: "Network Interfaces" {shape: rectangle}
+
+hub -> system_status
+hub -> storage_pools
+hub -> luns
+hub -> file_systems_nas
+hub -> hosts_access
+hub -> network_interfaces
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

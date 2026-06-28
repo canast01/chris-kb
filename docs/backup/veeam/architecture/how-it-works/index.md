@@ -15,6 +15,23 @@ How It Works reference covering Overview, Architecture, Supported Platforms, Ret
 
 
 
+```d2
+direction: right
+
+center: "Veeam" {shape: hexagon}
+architecture: "Architecture" {shape: rectangle}
+supported_platforms: "Supported Platforms" {shape: rectangle}
+retention_schedule: "Retention Schedule" {shape: rectangle}
+sizing_guidelines: "Sizing Guidelines" {shape: rectangle}
+instant_vm_recovery_rto_targets: "Instant VM Recovery RTO Targets" {shape: rectangle}
+
+center -> architecture
+center -> supported_platforms
+center -> retention_schedule
+center -> sizing_guidelines
+center -> instant_vm_recovery_rto_targets
+```
+
 ## Overview
 
 Veeam Backup & Replication provides backup, replication, recovery, and disaster recovery for virtual, physical, and cloud workloads. The Backup Server manages scheduling and configuration. Backup Proxies perform data movement via VMware VADP or agent-based reads. The Scale-Out Backup Repository (SOBR) provides tiered storage — fast disk for short-term, object storage for long-term.

@@ -35,6 +35,27 @@ flowchart TD
     style s9 fill:#2e7d32,color:#fff,stroke:#1b5e20
 ```
 
+```d2
+direction: right
+
+plan: "Plan" {shape: oval}
+enable_github_actions_on_a_repositor: "Enable GitHub Actions on a Repository" {shape: rectangle}
+create_the_workflow_directory: "Create the Workflow Directory" {shape: rectangle}
+write_a_basic_ci_workflow: "Write a Basic CI Workflow" {shape: rectangle}
+set_up_repository_secrets: "Set Up Repository Secrets" {shape: rectangle}
+configure_environments_prodstaging: "Configure Environments (Prod/Staging)" {shape: rectangle}
+set_up_a_selfhosted_runner: "Set Up a Self-Hosted Runner" {shape: rectangle}
+validate: "Validate" {shape: oval}
+
+plan -> enable_github_actions_on_a_repositor
+enable_github_actions_on_a_repositor -> create_the_workflow_directory
+create_the_workflow_directory -> write_a_basic_ci_workflow
+write_a_basic_ci_workflow -> set_up_repository_secrets
+set_up_repository_secrets -> configure_environments_prodstaging
+configure_environments_prodstaging -> set_up_a_selfhosted_runner
+set_up_a_selfhosted_runner -> validate
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

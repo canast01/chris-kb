@@ -14,6 +14,25 @@ How It Works reference covering Overview, Capacity Model, Object Storage Data Mo
 ![Capacity on Demand — How It Works](../../../../assets/storage-dell-cod-architecture-how-it-works.svg)
 
 
+```d2
+direction: right
+
+center: "Cloud On Demand" {shape: hexagon}
+capacity_model: "Capacity Model" {shape: rectangle}
+object_storage_data_model: "Object Storage Data Model" {shape: rectangle}
+data_protection_architecture: "Data Protection Architecture" {shape: rectangle}
+multisite_and_geo_replication: "Multi-Site and Geo Replication" {shape: rectangle}
+access_control_and_authentication: "Access Control and Authentication" {shape: rectangle}
+namespace_and_metadata_service: "Namespace and Metadata Service" {shape: rectangle}
+
+center -> capacity_model
+center -> object_storage_data_model
+center -> data_protection_architecture
+center -> multisite_and_geo_replication
+center -> access_control_and_authentication
+center -> namespace_and_metadata_service
+```
+
 ## Overview
 
 Capacity on Demand (COD) is a software-defined capacity licensing model for Dell PowerMax and VMAX arrays. Physical drives are installed in the array chassis at the factory but the capacity is logically locked at the array controller level until a COD license is applied. No truck roll or hardware change is required — activation is entirely software-driven through SYMCLI or Unisphere.

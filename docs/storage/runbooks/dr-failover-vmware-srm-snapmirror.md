@@ -20,6 +20,31 @@ Cross-product runbook for executing a DR failover and failback using VMware Site
 
 ![DR Failover: VMware SRM with NetApp SnapMirror — Diagram](../../assets/storage-runbooks-dr-failover-vmware-srm-snapmirror-diagram.svg)
 
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+actor "Responder" as A
+participant "Runbooks System" as B
+participant "Dependent System" as C
+
+A -> B: Pre-Failover Checks
+B --> A: OK
+A -> B: Phase 1 Declare DR
+B --> A: OK
+A -> B: Phase 2 SRM Failover
+B --> A: OK
+A -> B: Phase 3 Validate
+B --> A: OK
+A -> B: Phase 4 Failback
+B --> A: OK
+A -> B: Rollback
+B --> A: OK
+
+@enduml
+```
+
 ## Before You Begin
 
 **Architecture prerequisites:**

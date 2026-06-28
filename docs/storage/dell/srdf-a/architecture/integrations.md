@@ -15,6 +15,16 @@ SRDF/A integrations: coexistence with TimeFinder snapshots, RecoverPoint on VMAX
 
 
 ---
+
+```d2
+direction: right
+
+center: "SRDF/A" {shape: hexagon}
+srm_integration_topology: "SRM Integration Topology" {shape: rectangle}
+
+center -> srm_integration_topology
+```
+
 ## SRM Integration Topology
 
 ```mermaid

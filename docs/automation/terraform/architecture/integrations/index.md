@@ -385,6 +385,19 @@ terraform {
 
 ---
 
+```d2
+direction: right
+
+center: "Integrations" {shape: hexagon}
+component_a: "Component A" {shape: rectangle}
+component_b: "Component B" {shape: rectangle}
+component_c: "Component C" {shape: rectangle}
+
+center -> component_a
+center -> component_b
+center -> component_c
+```
+
 ## See also
 
 - [Terraform — Design Standards](../design-standards/)

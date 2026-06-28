@@ -20,6 +20,32 @@ Concrete troubleshooting steps for the most frequent VxRail operational problems
 
 ---
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+diagnostic_flow: "Diagnostic Flow" {shape: rectangle}
+vxrail_plugin_unavailable_in_vcenter: "VxRail Plugin Unavailable in vCenter" {shape: rectangle}
+lcm_precheck_failures: "LCM Pre-Check Failures" {shape: rectangle}
+lcm_upgrade_stuck_or_failed: "LCM Upgrade Stuck or Failed" {shape: rectangle}
+vsan_health_check_failures: "vSAN Health Check Failures" {shape: rectangle}
+vsan_degraded_and_absent_objects: "vSAN Degraded and Absent Objects" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> diagnostic_flow: investigate
+symptom -> vxrail_plugin_unavailable_in_vcenter: investigate
+symptom -> lcm_precheck_failures: investigate
+symptom -> lcm_upgrade_stuck_or_failed: investigate
+symptom -> vsan_health_check_failures: investigate
+symptom -> vsan_degraded_and_absent_objects: investigate
+diagnostic_flow -> resolution
+vxrail_plugin_unavailable_in_vcenter -> resolution
+lcm_precheck_failures -> resolution
+lcm_upgrade_stuck_or_failed -> resolution
+vsan_health_check_failures -> resolution
+vsan_degraded_and_absent_objects -> resolution
+```
+
 ## Diagnostic Flow
 
 ```mermaid

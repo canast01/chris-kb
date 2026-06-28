@@ -76,6 +76,25 @@ AWS CLI Reference reference covering EC2 — Instances, EC2 — Images, Volumes 
 
 ---
 
+```d2
+direction: right
+
+center: "AWS" {shape: rectangle}
+s3: "S3" {shape: rectangle}
+vpc_networking: "VPC & Networking" {shape: rectangle}
+cloudwatch: "CloudWatch" {shape: rectangle}
+cloudformation: "CloudFormation" {shape: rectangle}
+rds: "RDS" {shape: rectangle}
+eks: "EKS" {shape: rectangle}
+
+center -> s3
+center -> vpc_networking
+center -> cloudwatch
+center -> cloudformation
+center -> rds
+center -> eks
+```
+
 ## S3
 
 S3 (Simple Storage Service) is AWS's object storage — it stores files (objects) in containers (buckets). Unlike a filesystem, there are no folders — just keys (paths) that look like folder structures. S3 is extremely durable and cheap.

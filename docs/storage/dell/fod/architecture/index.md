@@ -35,6 +35,17 @@ graph TB
 <a class="kb-card" href="design-standards/"><strong>Design Standards</strong><span>Baseline configuration, burst monitoring, and SCG redundancy practices.</span></a>
 </div>
 
+```d2
+direction: right
+
+center: "Flex On Demand" {shape: hexagon}
+metering_model: "Metering Model" {shape: rectangle}
+fod_data_flow: "FOD Data Flow" {shape: rectangle}
+
+center -> metering_model
+center -> fod_data_flow
+```
+
 ## Metering Model
 
 | Tier | Description |

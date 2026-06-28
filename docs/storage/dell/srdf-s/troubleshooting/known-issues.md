@@ -18,6 +18,20 @@ Catalog of known SRDF/S (Synchronous) bugs, error codes, and workarounds. SRDF/S
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+link_and_latency: "Link and Latency" {shape: rectangle}
+failover: "Failover" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> link_and_latency: investigate
+symptom -> failover: investigate
+link_and_latency -> resolution
+failover -> resolution
+```
+
 ## Before you begin
 
 - SRDF/S requires consistent ≤5ms RTT between sites — latency above this directly increases production host I/O response time.

@@ -18,6 +18,32 @@ Escalation reference covering Support Portal, Opening a Case, Information to Col
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+support_portal: "Support Portal" {shape: rectangle}
+opening_a_case: "Opening a Case" {shape: rectangle}
+information_to_collect: "Information to Collect" {shape: rectangle}
+sla_tiers: "SLA Tiers" {shape: rectangle}
+escalation_path: "Escalation Path" {shape: rectangle}
+verify_resolution: "Verify resolution" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> support_portal: investigate
+symptom -> opening_a_case: investigate
+symptom -> information_to_collect: investigate
+symptom -> sla_tiers: investigate
+symptom -> escalation_path: investigate
+symptom -> verify_resolution: investigate
+support_portal -> resolution
+opening_a_case -> resolution
+information_to_collect -> resolution
+sla_tiers -> resolution
+escalation_path -> resolution
+verify_resolution -> resolution
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

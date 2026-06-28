@@ -13,6 +13,25 @@ Health Checks reference covering Health Check Layers, Daily Checks, Pre-Change H
 </div>
 
 
+```d2
+direction: right
+
+hub: "ECS\nOperations" {shape: hexagon}
+run_this_routine: "Run This Routine" {shape: rectangle}
+health_check_layers: "Health Check Layers" {shape: rectangle}
+daily_checks: "Daily Checks" {shape: rectangle}
+prechange_health_check: "Pre-Change Health Check" {shape: rectangle}
+health_check_commands: "Health Check Commands" {shape: rectangle}
+nodelevel_diagnostic_checks: "Node-Level Diagnostic Checks" {shape: rectangle}
+
+hub -> run_this_routine
+hub -> health_check_layers
+hub -> daily_checks
+hub -> prechange_health_check
+hub -> health_check_commands
+hub -> nodelevel_diagnostic_checks
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

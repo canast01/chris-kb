@@ -15,6 +15,23 @@ Environment Baseline reference covering Core Platform, Networking, Storage, Back
 
 
 
+```d2
+direction: right
+
+center: "Quick Reference" {shape: rectangle}
+core_platform: "Core Platform" {shape: rectangle}
+networking: "Networking" {shape: rectangle}
+storage: "Storage" {shape: rectangle}
+backup: "Backup" {shape: rectangle}
+monitoring: "Monitoring" {shape: rectangle}
+
+center -> core_platform
+center -> networking
+center -> storage
+center -> backup
+center -> monitoring
+```
+
 ## Core Platform
 
 vCenter version  

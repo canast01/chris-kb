@@ -33,6 +33,23 @@ graph TD
     H --> K([SSE-C\nClient-provided key]):::detail
 ```
 
+```d2
+direction: down
+
+osd_encryption_at_rest_dmcrypt_cepha: "OSD Encryption at Rest (dmcrypt / cephadm)" {shape: rectangle}
+dmcrypt_key_management: "dm-crypt Key Management" {shape: rectangle}
+verify_osd_encryption_status: "Verify OSD Encryption Status" {shape: rectangle}
+rbd_image_encryption: "RBD Image Encryption" {shape: rectangle}
+rgw_serverside_encryption_sse: "RGW Server-Side Encryption (SSE)" {shape: rectangle}
+encryption_options_summary: "Encryption Options Summary" {shape: rectangle}
+
+osd_encryption_at_rest_dmcrypt_cepha -> dmcrypt_key_management: hardens
+dmcrypt_key_management -> verify_osd_encryption_status: hardens
+verify_osd_encryption_status -> rbd_image_encryption: hardens
+rbd_image_encryption -> rgw_serverside_encryption_sse: hardens
+rgw_serverside_encryption_sse -> encryption_options_summary: hardens
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

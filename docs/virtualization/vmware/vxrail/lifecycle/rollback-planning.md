@@ -16,6 +16,27 @@ VxRail Node Replacement Checklist reference covering Confirm the Issue, Capture 
 Rollback Decision Tree
 
 
+```d2
+direction: right
+
+plan: "Plan" {shape: oval}
+confirm_the_issue: "Confirm the Issue" {shape: rectangle}
+capture_current_node_details: "Capture Current Node Details" {shape: rectangle}
+validate_cluster_health_before_repla: "Validate Cluster Health Before Replacement" {shape: rectangle}
+maintenance_mode: "Maintenance Mode" {shape: rectangle}
+dell_replacement_workflow: "Dell Replacement Workflow" {shape: rectangle}
+validate_node_rejoin: "Validate Node Rejoin" {shape: rectangle}
+validate: "Validate" {shape: oval}
+
+plan -> confirm_the_issue
+confirm_the_issue -> capture_current_node_details
+capture_current_node_details -> validate_cluster_health_before_repla
+validate_cluster_health_before_repla -> maintenance_mode
+maintenance_mode -> dell_replacement_workflow
+dell_replacement_workflow -> validate_node_rejoin
+validate_node_rejoin -> validate
+```
+
 ## Confirm the Issue
 
 - Confirm the failed node or part with Dell support

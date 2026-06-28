@@ -15,6 +15,27 @@ Alert Health Check reference covering Active Alerts Review, Aria Operations Aler
 
 
 
+```d2
+direction: right
+
+begin_checks: "Begin Checks" {shape: oval}
+active_alerts_review: "Active Alerts Review" {shape: rectangle}
+aria_operations_alerts: "Aria Operations Alerts" {shape: rectangle}
+hardware_alerts: "Hardware Alerts" {shape: rectangle}
+backup_alerts: "Backup Alerts" {shape: rectangle}
+repeat_alerts: "Repeat Alerts" {shape: rectangle}
+false_positives_and_stale_alerts: "False Positives and Stale Alerts" {shape: rectangle}
+generate_report: "Generate Report" {shape: oval}
+
+begin_checks -> active_alerts_review
+active_alerts_review -> aria_operations_alerts
+aria_operations_alerts -> hardware_alerts
+hardware_alerts -> backup_alerts
+backup_alerts -> repeat_alerts
+repeat_alerts -> false_positives_and_stale_alerts
+false_positives_and_stale_alerts -> generate_report
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

@@ -73,6 +73,17 @@ VxRail architecture overview — node hardware, HCI cluster topology, vSAN disk 
 <a class="kb-card" href="../design-standards/"><strong>Design Standards</strong><span>Sizing, VMkernel network design, vSAN policy, and cluster configuration best practices.</span></a>
 </div>
 
+```d2
+direction: right
+
+center: "VxRail" {shape: hexagon}
+cluster_topology: "Cluster Topology" {shape: rectangle}
+hci_node_cluster: "HCI Node Cluster" {shape: rectangle}
+
+center -> cluster_topology
+center -> hci_node_cluster
+```
+
 ## Cluster Topology
 
 | Parameter | Value |

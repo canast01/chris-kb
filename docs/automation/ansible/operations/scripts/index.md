@@ -16,6 +16,25 @@ Ansible automation scripts: wrapper scripts for playbook execution, dynamic inve
 
 ---
 
+```d2
+direction: right
+
+center: "Ansible" {shape: rectangle}
+secret_rotation_workflow: "Secret Rotation Workflow" {shape: rectangle}
+rolling_update_playbook: "Rolling Update Playbook" {shape: rectangle}
+inventory_validation_playbook: "Inventory Validation Playbook" {shape: rectangle}
+secret_rotation_with_vault_bash_ansi: "Secret Rotation with Vault (Bash + Ansible)" {shape: rectangle}
+windows_run_ansible_playbooks_from_w: "Windows: Run Ansible Playbooks from Windows via WSL (CMD Bat" {shape: rectangle}
+windows_ansible_inventory_ping_test_: "Windows: Ansible Inventory Ping Test (PowerShell + WSL)" {shape: rectangle}
+
+center -> secret_rotation_workflow
+center -> rolling_update_playbook
+center -> inventory_validation_playbook
+center -> secret_rotation_with_vault_bash_ansi
+center -> windows_run_ansible_playbooks_from_w
+center -> windows_ansible_inventory_ping_test_
+```
+
 ## Before you begin
 
 - **Access:** SSH key or service account with sudo on managed hosts; Ansible control node

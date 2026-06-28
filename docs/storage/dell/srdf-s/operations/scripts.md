@@ -16,6 +16,15 @@ Scripts reference covering Available Scripts, Script Pattern — State Check.
 
 
 
+```d2
+direction: right
+
+hub: "SRDF/S\nOperations" {shape: hexagon}
+verify: "Verify" {shape: rectangle}
+
+hub -> verify
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

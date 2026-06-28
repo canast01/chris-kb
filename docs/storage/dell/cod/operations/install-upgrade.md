@@ -13,6 +13,23 @@ Lifecycle reference covering Entitlement Lifecycle, COD Entitlement Review Caden
 ![COD — Lifecycle](../../../../assets/storage-dell-cod-operations-install-upgrade.svg)
 
 
+```d2
+direction: right
+
+hub: "Cloud On Demand\nOperations" {shape: hexagon}
+entitlement_lifecycle: "Entitlement Lifecycle" {shape: rectangle}
+cod_entitlement_review_cadence: "COD Entitlement Review Cadence" {shape: rectangle}
+frame_decommission_cod_implications: "Frame Decommission — COD Implications" {shape: rectangle}
+cod_vs_standard_capacity_purchase: "COD vs. Standard Capacity Purchase" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+hub -> entitlement_lifecycle
+hub -> cod_entitlement_review_cadence
+hub -> frame_decommission_cod_implications
+hub -> cod_vs_standard_capacity_purchase
+hub -> verify
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

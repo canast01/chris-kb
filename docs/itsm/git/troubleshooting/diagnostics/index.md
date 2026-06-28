@@ -70,6 +70,32 @@ graph TD
     class W,X escalate
 ```
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+step_1_enable_trace_logging: "Step 1 — Enable trace logging" {shape: rectangle}
+step_2_verify_remote_connectivity: "Step 2 — Verify remote connectivity" {shape: rectangle}
+step_3_inspect_git_configuration: "Step 3 — Inspect git configuration" {shape: rectangle}
+step_4_diagnose_ssh_authentication: "Step 4 — Diagnose SSH authentication" {shape: rectangle}
+step_5_diagnose_https_authentication: "Step 5 — Diagnose HTTPS authentication and proxy" {shape: rectangle}
+step_6_recover_lost_work: "Step 6 — Recover lost work" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> step_1_enable_trace_logging: investigate
+symptom -> step_2_verify_remote_connectivity: investigate
+symptom -> step_3_inspect_git_configuration: investigate
+symptom -> step_4_diagnose_ssh_authentication: investigate
+symptom -> step_5_diagnose_https_authentication: investigate
+symptom -> step_6_recover_lost_work: investigate
+step_1_enable_trace_logging -> resolution
+step_2_verify_remote_connectivity -> resolution
+step_3_inspect_git_configuration -> resolution
+step_4_diagnose_ssh_authentication -> resolution
+step_5_diagnose_https_authentication -> resolution
+step_6_recover_lost_work -> resolution
+```
+
 ## Before you begin
 
 - **Access:** terminal access on the affected workstation; SSH key files in `~/.ssh/`; git config at `~/.gitconfig`; admin access to the remote Git platform (GitHub, GitLab, Bitbucket) to verify key registration and permissions

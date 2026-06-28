@@ -14,6 +14,21 @@ Security reference: Standard LDAP Integration, Standard SAML Configuration, Acti
 ![Security — Diagram](../assets/security-diagram.svg)
 
 
+```d2
+direction: down
+
+external: External / Untrusted {shape: rectangle}
+shared_reference: "Shared Reference" {shape: rectangle}
+platforms: "Platforms" {shape: rectangle}
+operations: "Operations" {shape: rectangle}
+core: "Security Core" {shape: hexagon}
+
+external -> shared_reference: traffic in
+shared_reference -> platforms
+platforms -> operations
+operations -> core: secured path
+```
+
 ## Shared Reference
 
 <div class="kb-grid kb-grid-3">

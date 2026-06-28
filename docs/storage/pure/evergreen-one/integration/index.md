@@ -15,6 +15,23 @@ Pure Storage Evergreen//One Integration reference covering Pure1 Integration, Ca
 
 ![Pure Storage Evergreen//One Integration — Diagram](../../../../assets/storage-pure-evergreen-one-integration-diagram.svg)
 
+```d2
+direction: right
+
+center: "Evergreen//One" {shape: hexagon}
+pure1_integration: "Pure1 Integration" {shape: rectangle}
+capacity_trueup_integration_with_fin: "Capacity True-Up Integration with Finance" {shape: rectangle}
+vmware_integration: "VMware Integration" {shape: rectangle}
+backup_integration: "Backup Integration" {shape: rectangle}
+rest_api: "REST API" {shape: rectangle}
+
+center -> pure1_integration
+center -> capacity_trueup_integration_with_fin
+center -> vmware_integration
+center -> backup_integration
+center -> rest_api
+```
+
 ## Pure1 Integration
 
 Pure1 (https://pure1.purestorage.com) is the central management and reporting platform for all Evergreen//One deployments. Unlike standard Evergreen where Pure1 is a monitoring complement to local array management, for Evergreen//One Pure1 is the primary operational interface for the customer. All capacity reporting, SLA compliance tracking, billing data, and lifecycle management flow through Pure1.

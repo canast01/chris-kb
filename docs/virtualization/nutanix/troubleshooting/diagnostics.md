@@ -54,6 +54,32 @@ graph TD
     class R,S escalate
 ```
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+step_1_run_ncc_health_checks: "Step 1 — Run NCC health checks" {shape: rectangle}
+step_2_check_cluster_and_host_health: "Step 2 — Check cluster and host health" {shape: rectangle}
+step_3_check_alerts_and_events: "Step 3 — Check alerts and events" {shape: rectangle}
+step_4_run_allssh_for_clusterwide_cv: "Step 4 — Run allssh for cluster-wide CVM diagnostics" {shape: rectangle}
+step_5_check_storage_capacity_and_pr: "Step 5 — Check storage capacity and protection domains" {shape: rectangle}
+step_6_advanced_service_diagnostics: "Step 6 — Advanced service diagnostics" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> step_1_run_ncc_health_checks: investigate
+symptom -> step_2_check_cluster_and_host_health: investigate
+symptom -> step_3_check_alerts_and_events: investigate
+symptom -> step_4_run_allssh_for_clusterwide_cv: investigate
+symptom -> step_5_check_storage_capacity_and_pr: investigate
+symptom -> step_6_advanced_service_diagnostics: investigate
+step_1_run_ncc_health_checks -> resolution
+step_2_check_cluster_and_host_health -> resolution
+step_3_check_alerts_and_events -> resolution
+step_4_run_allssh_for_clusterwide_cv -> resolution
+step_5_check_storage_capacity_and_pr -> resolution
+step_6_advanced_service_diagnostics -> resolution
+```
+
 ## Before you begin
 
 - **Access:** SSH to any CVM as the `nutanix` user; Prism Element admin credentials; IPMI access for hardware-layer issues

@@ -506,6 +506,15 @@ backup manual
 get backup history
 ```
 
+```d2
+direction: right
+
+hub: "NSX-T\nOperations" {shape: hexagon}
+verify: "Verify" {shape: rectangle}
+
+hub -> verify
+```
+
 ## Before you begin
 
 - **Access:** vCenter read-only minimum; Administrator role for remediation steps

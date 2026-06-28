@@ -34,6 +34,24 @@ flowchart LR
 ```
 
 ---
+
+```d2
+direction: right
+
+hub: "VPLEX\nOperations" {shape: hexagon}
+distributed_device_health_check: "Distributed Device Health Check" {shape: rectangle}
+metro_consistency_group_monitor: "Metro Consistency Group Monitor" {shape: rectangle}
+daily_check_script: "Daily Check Script" {shape: rectangle}
+prechange_validation_script: "Pre-Change Validation Script" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+hub -> distributed_device_health_check
+hub -> metro_consistency_group_monitor
+hub -> daily_check_script
+hub -> prechange_validation_script
+hub -> verify
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

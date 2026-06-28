@@ -15,6 +15,21 @@ Command Cheat Sheet reference covering ESXi Host Commands, vSAN Commands, Networ
 
 
 
+```d2
+direction: right
+
+center: "Quick Reference" {shape: rectangle}
+esxi_host_commands: "ESXi Host Commands" {shape: rectangle}
+vsan_commands: "vSAN Commands" {shape: rectangle}
+network_checks: "Network Checks" {shape: rectangle}
+log_locations: "Log Locations" {shape: rectangle}
+
+center -> esxi_host_commands
+center -> vsan_commands
+center -> network_checks
+center -> log_locations
+```
+
 ## ESXi Host Commands
 
 ```bash

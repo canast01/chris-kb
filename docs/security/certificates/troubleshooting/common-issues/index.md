@@ -16,6 +16,32 @@ Common Issues reference covering Certificate Issue Triage Flow, Common checks, I
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+diagnostic_flow: "Diagnostic Flow" {shape: rectangle}
+certificate_issue_triage_flow: "Certificate Issue Triage Flow" {shape: rectangle}
+common_checks: "Common checks" {shape: rectangle}
+incident_notes: "Incident notes" {shape: rectangle}
+change_notes: "Change notes" {shape: rectangle}
+known_issues: "Known issues" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> diagnostic_flow: investigate
+symptom -> certificate_issue_triage_flow: investigate
+symptom -> common_checks: investigate
+symptom -> incident_notes: investigate
+symptom -> change_notes: investigate
+symptom -> known_issues: investigate
+diagnostic_flow -> resolution
+certificate_issue_triage_flow -> resolution
+common_checks -> resolution
+incident_notes -> resolution
+change_notes -> resolution
+known_issues -> resolution
+```
+
 ## Diagnostic Flow
 
 ```mermaid

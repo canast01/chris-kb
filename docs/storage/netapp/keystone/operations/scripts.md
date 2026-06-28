@@ -16,6 +16,21 @@ Script Reference reference covering Subscription Utilization Report, ONTAP Volum
 
 
 
+```d2
+direction: right
+
+hub: "Keystone STaaS\nOperations" {shape: hexagon}
+subscription_utilization_report: "Subscription Utilization Report" {shape: rectangle}
+ontap_volume_usage_snapshot: "ONTAP Volume Usage Snapshot" {shape: rectangle}
+keystone_collector_health_monitor: "Keystone Collector Health Monitor" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+hub -> subscription_utilization_report
+hub -> ontap_volume_usage_snapshot
+hub -> keystone_collector_health_monitor
+hub -> verify
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

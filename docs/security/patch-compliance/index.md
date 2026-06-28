@@ -19,6 +19,25 @@ Patch Compliance Monitoring reference covering Patch Classification, Windows Pat
   </a>
 </div>
 
+```d2
+direction: right
+
+center: "Patch Compliance" {shape: hexagon}
+patch_classification: "Patch Classification" {shape: rectangle}
+windows_patch_compliance: "Windows Patch Compliance" {shape: rectangle}
+linux_patch_compliance: "Linux Patch Compliance" {shape: rectangle}
+sccm_endpoint_manager_windows_fleet: "SCCM / Endpoint Manager (Windows fleet)" {shape: rectangle}
+patch_reporting: "Patch Reporting" {shape: rectangle}
+compliance_checks_by_tool: "Compliance Checks by Tool" {shape: rectangle}
+
+center -> patch_classification
+center -> windows_patch_compliance
+center -> linux_patch_compliance
+center -> sccm_endpoint_manager_windows_fleet
+center -> patch_reporting
+center -> compliance_checks_by_tool
+```
+
 ## Patch Classification
 
 | Severity | Definition | Deployment SLA |

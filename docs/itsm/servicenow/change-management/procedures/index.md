@@ -14,6 +14,21 @@ ServiceNow change request lifecycle — raising, categorising, routing for CAB a
 
 
 
+```d2
+direction: right
+
+hub: "ServiceNow\nOperations" {shape: hexagon}
+routine_checks: "Routine Checks" {shape: rectangle}
+configuration: "Configuration" {shape: rectangle}
+monitoring: "Monitoring" {shape: rectangle}
+maintenance: "Maintenance" {shape: rectangle}
+
+hub -> routine_checks
+hub -> configuration
+hub -> monitoring
+hub -> maintenance
+```
+
 ## See also
 
 - [ServiceNow — Overview](../../)

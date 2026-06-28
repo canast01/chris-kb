@@ -51,6 +51,32 @@ flowchart TD
     class P,Q escalate
 ```
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+step_1_check_venafi_windows_services: "Step 1 — Check Venafi Windows services" {shape: rectangle}
+step_2_test_sql_server_connectivity: "Step 2 — Test SQL Server connectivity" {shape: rectangle}
+step_3_check_the_certificate_object_: "Step 3 — Check the certificate object for errors" {shape: rectangle}
+step_4_check_ca_connector_status: "Step 4 — Check CA connector status" {shape: rectangle}
+step_5_inspect_tpp_log_files: "Step 5 — Inspect TPP log files" {shape: rectangle}
+step_6_test_certificate_issuance_via: "Step 6 — Test certificate issuance via REST API" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> step_1_check_venafi_windows_services: investigate
+symptom -> step_2_test_sql_server_connectivity: investigate
+symptom -> step_3_check_the_certificate_object_: investigate
+symptom -> step_4_check_ca_connector_status: investigate
+symptom -> step_5_inspect_tpp_log_files: investigate
+symptom -> step_6_test_certificate_issuance_via: investigate
+step_1_check_venafi_windows_services -> resolution
+step_2_test_sql_server_connectivity -> resolution
+step_3_check_the_certificate_object_ -> resolution
+step_4_check_ca_connector_status -> resolution
+step_5_inspect_tpp_log_files -> resolution
+step_6_test_certificate_issuance_via -> resolution
+```
+
 ## Before you begin
 
 - **Access:** Venafi TPP admin role; Windows admin on the TPP server; SQL Server read access to the VenafiDB

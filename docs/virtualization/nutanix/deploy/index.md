@@ -33,6 +33,27 @@ flowchart TD
     s0 --> s1 --> s2 --> s3 --> s4 --> s5 --> s6
 ```
 
+```d2
+direction: right
+
+plan: "Plan" {shape: oval}
+phase_1_preflight_checks: "Phase 1 — Pre-flight Checks" {shape: rectangle}
+phase_2_foundation_imaging: "Phase 2 — Foundation Imaging" {shape: rectangle}
+phase_3_cluster_creation: "Phase 3 — Cluster Creation" {shape: rectangle}
+phase_4_initial_configuration: "Phase 4 — Initial Configuration" {shape: rectangle}
+phase_5_postdeploy_validation: "Phase 5 — Post-Deploy Validation" {shape: rectangle}
+prism_central_registration_optional: "Prism Central Registration (Optional)" {shape: rectangle}
+validate: "Validate" {shape: oval}
+
+plan -> phase_1_preflight_checks
+phase_1_preflight_checks -> phase_2_foundation_imaging
+phase_2_foundation_imaging -> phase_3_cluster_creation
+phase_3_cluster_creation -> phase_4_initial_configuration
+phase_4_initial_configuration -> phase_5_postdeploy_validation
+phase_5_postdeploy_validation -> prism_central_registration_optional
+prism_central_registration_optional -> validate
+```
+
 ## Before you begin
 
 - **Access:** IPMI/iDRAC/iLO credentials for all nodes; network switch admin access

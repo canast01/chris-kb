@@ -20,6 +20,17 @@ Software-defined capacity licensing for Dell PowerMax and VMAX arrays. Physical 
 <a class="kb-card" href="design-standards/"><strong>Design Standards</strong><span>COD activation workflow, DR site pre-install patterns, and license management.</span></a>
 </div>
 
+```d2
+direction: right
+
+center: "Cloud On Demand" {shape: hexagon}
+capacity_states: "Capacity States" {shape: rectangle}
+cod_model: "COD Model" {shape: rectangle}
+
+center -> capacity_states
+center -> cod_model
+```
+
 ## Capacity States
 
 | State | Description |

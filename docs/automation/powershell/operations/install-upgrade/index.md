@@ -30,6 +30,17 @@ Get-Module -ListAvailable | Where-Object { $_.RepositorySourceLocation } |
     }
 ```
 
+```d2
+direction: right
+
+plan: "Plan" {shape: oval}
+verify: "Verify" {shape: rectangle}
+validate: "Validate" {shape: oval}
+
+plan -> verify
+verify -> validate
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

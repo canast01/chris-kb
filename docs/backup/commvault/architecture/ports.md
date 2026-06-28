@@ -18,6 +18,25 @@ Firewall port reference for Commvault Complete Backup & Recovery. Covers CommSer
 
 
 
+```d2
+direction: right
+
+center: "Commvault" {shape: hexagon}
+inbound_admin_access_to_commserve_co: "Inbound — Admin Access to CommServe / Command Center" {shape: rectangle}
+commserve_to_media_agents: "CommServe to Media Agents" {shape: rectangle}
+commserve_to_clients_push_install_jo: "CommServe to Clients (Push Install / Job Control)" {shape: rectangle}
+client_to_media_agent_backup_data_tr: "Client to Media Agent (Backup Data Transfer)" {shape: rectangle}
+vsa_proxy_for_vmware: "VSA Proxy for VMware" {shape: rectangle}
+media_agent_to_backup_repository_tap: "Media Agent to Backup Repository / Tape / Cloud" {shape: rectangle}
+
+center -> inbound_admin_access_to_commserve_co
+center -> commserve_to_media_agents
+center -> commserve_to_clients_push_install_jo
+center -> client_to_media_agent_backup_data_tr
+center -> vsa_proxy_for_vmware
+center -> media_agent_to_backup_repository_tap
+```
+
 ## Before you begin
 
 - Commvault uses TCP 8400 as its primary inter-component port (CommServe → Media Agent, CommServe → client push, Media Agent ↔ Media Agent)

@@ -47,6 +47,32 @@ graph TD
     class O ok
 ```
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+step_1_validate_and_format: "Step 1 — Validate and format" {shape: rectangle}
+step_2_enable_debug_logging: "Step 2 — Enable debug logging" {shape: rectangle}
+step_3_debug_provider_authentication: "Step 3 — Debug provider authentication" {shape: rectangle}
+step_4_inspect_and_audit_state: "Step 4 — Inspect and audit state" {shape: rectangle}
+step_5_diagnose_backend_connectivity: "Step 5 — Diagnose backend connectivity" {shape: rectangle}
+step_6_state_lock_recovery_caution: "Step 6 — State lock recovery (caution)" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> step_1_validate_and_format: investigate
+symptom -> step_2_enable_debug_logging: investigate
+symptom -> step_3_debug_provider_authentication: investigate
+symptom -> step_4_inspect_and_audit_state: investigate
+symptom -> step_5_diagnose_backend_connectivity: investigate
+symptom -> step_6_state_lock_recovery_caution: investigate
+step_1_validate_and_format -> resolution
+step_2_enable_debug_logging -> resolution
+step_3_debug_provider_authentication -> resolution
+step_4_inspect_and_audit_state -> resolution
+step_5_diagnose_backend_connectivity -> resolution
+step_6_state_lock_recovery_caution -> resolution
+```
+
 ## Before you begin
 
 - **Access:** Provider credentials configured (env vars, credential file, or `terraform login`); read access to the backend (S3 bucket, Azure container, Terraform Cloud workspace)

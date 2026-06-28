@@ -50,6 +50,17 @@ graph TB
   </a>
 </div>
 
+```d2
+direction: right
+
+center: "PowerStore" {shape: hexagon}
+families: "Families" {shape: rectangle}
+topology: "Topology" {shape: rectangle}
+
+center -> families
+center -> topology
+```
+
 ## Families
 
 | Family | Models | Key Differentiator |

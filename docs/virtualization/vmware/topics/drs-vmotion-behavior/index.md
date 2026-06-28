@@ -15,6 +15,25 @@ DRS and vMotion Behavior reference covering DRS Modes, vMotion Requirements, EVC
 
 
 
+```d2
+direction: right
+
+center: "Drs Vmotion Behavior" {shape: hexagon}
+drs_modes: "DRS Modes" {shape: rectangle}
+vmotion_requirements: "vMotion Requirements" {shape: rectangle}
+evc_enhanced_vmotion_compatibility: "EVC (Enhanced vMotion Compatibility)" {shape: rectangle}
+vmotion_validation: "vMotion Validation" {shape: rectangle}
+common_vmotion_failure_causes: "Common vMotion Failure Causes" {shape: rectangle}
+drs_antiaffinity_affinity_rules: "DRS Anti-Affinity / Affinity Rules" {shape: rectangle}
+
+center -> drs_modes
+center -> vmotion_requirements
+center -> evc_enhanced_vmotion_compatibility
+center -> vmotion_validation
+center -> common_vmotion_failure_causes
+center -> drs_antiaffinity_affinity_rules
+```
+
 ## DRS Modes
 
 | Mode | Behavior |

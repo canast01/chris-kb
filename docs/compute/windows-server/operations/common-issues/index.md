@@ -18,6 +18,32 @@ Quick reference for common problems and resolutions.
 
 Structured approach to diagnosing common Windows Server issues.
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+triage_order: "Triage Order" {shape: rectangle}
+high_memory: "High Memory" {shape: rectangle}
+disk_full_or_high_latency: "Disk Full or High Latency" {shape: rectangle}
+network_connectivity_issues: "Network Connectivity Issues" {shape: rectangle}
+service_not_starting: "Service Not Starting" {shape: rectangle}
+rdp_remote_access_issues: "RDP / Remote Access Issues" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> triage_order: investigate
+symptom -> high_memory: investigate
+symptom -> disk_full_or_high_latency: investigate
+symptom -> network_connectivity_issues: investigate
+symptom -> service_not_starting: investigate
+symptom -> rdp_remote_access_issues: investigate
+triage_order -> resolution
+high_memory -> resolution
+disk_full_or_high_latency -> resolution
+network_connectivity_issues -> resolution
+service_not_starting -> resolution
+rdp_remote_access_issues -> resolution
+```
+
 ## Before you begin
 
 - **Access:** Local Administrator or Domain Admin on target hosts

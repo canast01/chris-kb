@@ -26,6 +26,25 @@ Commonly used `purefb` commands for managing Pure Storage FlashBlade arrays. Fla
 
 ---
 
+```d2
+direction: right
+
+hub: "FlashBlade\nOperations" {shape: hexagon}
+array_hardware: "Array Hardware" {shape: rectangle}
+file_systems_nfs_smb: "File Systems (NFS / SMB)" {shape: rectangle}
+network: "Network" {shape: rectangle}
+object_store_s3: "Object Store (S3)" {shape: rectangle}
+replication_activedr: "Replication (ActiveDR)" {shape: rectangle}
+snapshots: "Snapshots" {shape: rectangle}
+
+hub -> array_hardware
+hub -> file_systems_nfs_smb
+hub -> network
+hub -> object_store_s3
+hub -> replication_activedr
+hub -> snapshots
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

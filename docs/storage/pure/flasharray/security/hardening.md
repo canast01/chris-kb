@@ -22,6 +22,21 @@ This page covers the ordered hardening steps to apply on every new FlashArray be
 
 ---
 
+```d2
+direction: down
+
+external: External / Untrusted {shape: rectangle}
+hardening_checklist: "Hardening Checklist" {shape: rectangle}
+stepbystep_controls: "Step-by-Step Controls" {shape: rectangle}
+posthardening_verification: "Post-Hardening Verification" {shape: rectangle}
+core: "FlashArray Core" {shape: hexagon}
+
+external -> hardening_checklist: traffic in
+hardening_checklist -> stepbystep_controls
+stepbystep_controls -> posthardening_verification
+posthardening_verification -> core: secured path
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

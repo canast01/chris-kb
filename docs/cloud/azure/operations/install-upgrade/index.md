@@ -18,6 +18,27 @@ VM image management, patching via Azure Update Manager, and service upgrades.
 
 ---
 
+```d2
+direction: right
+
+plan: "Plan" {shape: oval}
+azure_vm_patching_workflow: "Azure VM Patching Workflow" {shape: rectangle}
+vm_patching: "VM Patching" {shape: rectangle}
+aks_upgrade: "AKS Upgrade" {shape: rectangle}
+service_retirement_tracking: "Service Retirement Tracking" {shape: rectangle}
+subscription_lifecycle: "Subscription Lifecycle" {shape: rectangle}
+resource_group_expiry_nonproduction: "Resource Group Expiry (Non-Production)" {shape: rectangle}
+validate: "Validate" {shape: oval}
+
+plan -> azure_vm_patching_workflow
+azure_vm_patching_workflow -> vm_patching
+vm_patching -> aks_upgrade
+aks_upgrade -> service_retirement_tracking
+service_retirement_tracking -> subscription_lifecycle
+subscription_lifecycle -> resource_group_expiry_nonproduction
+resource_group_expiry_nonproduction -> validate
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

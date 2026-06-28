@@ -18,6 +18,23 @@ Catalog of known vSphere Replication bugs, error codes, and workarounds covering
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+replication_configuration: "Replication Configuration" {shape: rectangle}
+rpo_and_sync: "RPO and Sync" {shape: rectangle}
+appliance: "Appliance" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> replication_configuration: investigate
+symptom -> rpo_and_sync: investigate
+symptom -> appliance: investigate
+replication_configuration -> resolution
+rpo_and_sync -> resolution
+appliance -> resolution
+```
+
 ## Before you begin
 
 - vSphere Replication errors appear in the vSphere Client under `vSphere Replication → VMs` — expand the replication entry for status.

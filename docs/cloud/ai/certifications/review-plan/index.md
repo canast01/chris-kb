@@ -13,6 +13,27 @@ AI Certification Review Plan reference covering Target Exams and Timeline, 6-Wee
 
 
 
+```d2
+direction: right
+
+begin_checks: "Begin Checks" {shape: oval}
+target_exams_and_timeline: "Target Exams and Timeline" {shape: rectangle}
+6week_study_schedule_template: "6-Week Study Schedule Template" {shape: rectangle}
+key_study_resources: "Key Study Resources" {shape: rectangle}
+practice_exam_links: "Practice Exam Links" {shape: rectangle}
+weak_area_focus: "Weak Area Focus" {shape: rectangle}
+study_checklist: "Study Checklist" {shape: rectangle}
+generate_report: "Generate Report" {shape: oval}
+
+begin_checks -> target_exams_and_timeline
+target_exams_and_timeline -> 6week_study_schedule_template
+6week_study_schedule_template -> key_study_resources
+key_study_resources -> practice_exam_links
+practice_exam_links -> weak_area_focus
+weak_area_focus -> study_checklist
+study_checklist -> generate_report
+```
+
 ## Target Exams and Timeline
 
 | Exam | Code | Duration | Questions | Passing Score |

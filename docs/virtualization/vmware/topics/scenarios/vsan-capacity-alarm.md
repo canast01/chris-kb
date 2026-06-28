@@ -21,6 +21,25 @@ capacity additions.
 
 
 
+```d2
+direction: right
+
+center: "Scenarios" {shape: hexagon}
+products_involved: "Products Involved" {shape: rectangle}
+1_confirm_the_alarm_and_headroom: "1. Confirm the Alarm and Headroom" {shape: rectangle}
+2_break_down_capacity_usage: "2. Break Down Capacity Usage" {shape: rectangle}
+3_remove_snapshot_waste: "3. Remove Snapshot Waste" {shape: rectangle}
+4_move_or_reclaim_data: "4. Move or Reclaim Data" {shape: rectangle}
+5_prevent_recurrence: "5. Prevent Recurrence" {shape: rectangle}
+
+center -> products_involved
+center -> 1_confirm_the_alarm_and_headroom
+center -> 2_break_down_capacity_usage
+center -> 3_remove_snapshot_waste
+center -> 4_move_or_reclaim_data
+center -> 5_prevent_recurrence
+```
+
 ## Products Involved
 
 | Product | Role in This Scenario |

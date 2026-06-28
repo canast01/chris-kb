@@ -18,6 +18,17 @@ Evergreen//One is Pure Storage's STaaS offering — on-premises Pure hardware ma
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+connectivity_and_metering: "Connectivity and Metering" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> connectivity_and_metering: investigate
+connectivity_and_metering -> resolution
+```
+
 ## Before you begin
 
 - For hardware faults or array operational issues, contact **Pure Storage support directly** — the array is Pure-managed under Evergreen//One.

@@ -14,6 +14,21 @@ How It Works reference covering Overview, Kernel Subsystem Architecture, LVM Sta
 ![Linux — How It Works](../../../../assets/compute-linux-architecture-how-it-works-index.svg)
 
 
+```d2
+direction: right
+
+center: "Linux" {shape: hexagon}
+kernel_subsystem_architecture: "Kernel Subsystem Architecture" {shape: rectangle}
+storage_stack: "Storage Stack" {shape: rectangle}
+network_stack: "Network Stack" {shape: rectangle}
+key_cli_commands: "Key CLI Commands" {shape: rectangle}
+
+center -> kernel_subsystem_architecture
+center -> storage_stack
+center -> network_stack
+center -> key_cli_commands
+```
+
 ## Overview
 
 Linux servers run RHEL, Ubuntu, or SLES as the base OS. All services are managed by **systemd**, storage is managed via **LVM2** (with dm-multipath for SAN), and security is enforced by **SELinux** (RHEL) or **AppArmor** (Ubuntu). Network configuration uses NetworkManager (`nmcli`) on RHEL and Netplan on Ubuntu.

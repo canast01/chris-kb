@@ -16,6 +16,23 @@ Known Issues reference covering Quick Reference, Incident Triage, Performance Is
 
 ![FlashArray — Known Issues — Diagram](../../../../assets/storage-pure-flasharray-operations-common-issues-diagram.svg)
 
+```d2
+direction: right
+
+hub: "FlashArray\nOperations" {shape: hexagon}
+quick_reference: "Quick Reference" {shape: rectangle}
+incident_triage: "Incident Triage" {shape: rectangle}
+performance_issues: "Performance Issues" {shape: rectangle}
+latency_targets: "Latency Targets" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+hub -> quick_reference
+hub -> incident_triage
+hub -> performance_issues
+hub -> latency_targets
+hub -> verify
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

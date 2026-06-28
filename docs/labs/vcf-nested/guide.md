@@ -17,6 +17,25 @@ Complete procedure: prepare nested ESXi hosts, fill in the VCF configuration wor
 
 ---
 
+```d2
+direction: right
+
+center: "Vcf Nested" {shape: hexagon}
+phase_1_prepare_four_nested_esxi_hos: "Phase 1 — Prepare Four Nested ESXi Hosts" {shape: rectangle}
+phase_2_fill_in_the_vcf_configuratio: "Phase 2 — Fill In the VCF Configuration Workbook" {shape: rectangle}
+phase_3_deploy_cloud_builder: "Phase 3 — Deploy Cloud Builder" {shape: rectangle}
+phase_4_run_predeployment_validation: "Phase 4 — Run Pre-Deployment Validation" {shape: rectangle}
+phase_5_deploy_the_management_domain: "Phase 5 — Deploy the Management Domain" {shape: rectangle}
+phase_6_postdeployment: "Phase 6 — Post-Deployment" {shape: rectangle}
+
+center -> phase_1_prepare_four_nested_esxi_hos
+center -> phase_2_fill_in_the_vcf_configuratio
+center -> phase_3_deploy_cloud_builder
+center -> phase_4_run_predeployment_validation
+center -> phase_5_deploy_the_management_domain
+center -> phase_6_postdeployment
+```
+
 ## Phase 1 — Prepare Four Nested ESXi Hosts
 
 Build four nested ESXi VMs using the same process as Lab 1 (Phase 2–3). VCF requires exactly 4 hosts for the initial management domain.

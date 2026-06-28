@@ -16,6 +16,25 @@ How It Works reference covering Overview, Deployment Models, Storage Object Hier
 
 
 
+```d2
+direction: right
+
+center: "VPLEX" {shape: hexagon}
+deployment_models: "Deployment Models" {shape: rectangle}
+storage_object_hierarchy: "Storage Object Hierarchy" {shape: rectangle}
+vplex_metro_topology: "VPLEX Metro Topology" {shape: rectangle}
+director_architecture: "Director Architecture" {shape: rectangle}
+metro_write_path: "Metro Write Path" {shape: rectangle}
+witness_quorum_arbitrator: "Witness (Quorum Arbitrator)" {shape: rectangle}
+
+center -> deployment_models
+center -> storage_object_hierarchy
+center -> vplex_metro_topology
+center -> director_architecture
+center -> metro_write_path
+center -> witness_quorum_arbitrator
+```
+
 ## Overview
 
 Dell VPLEX is a storage federation and virtualisation platform that decouples physical storage from the host view, presenting virtual volumes to hosts regardless of which back-end array holds the data. VPLEX Local, Metro, and Geo represent progressively wider federation scopes.

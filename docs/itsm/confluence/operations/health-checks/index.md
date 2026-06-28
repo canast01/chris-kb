@@ -16,6 +16,27 @@ This page defines the daily health check procedure for Confluence Data Center. R
 
 ---
 
+```d2
+direction: right
+
+begin_checks: "Begin Checks" {shape: oval}
+health_check_flow: "Health Check Flow" {shape: rectangle}
+run_this_routine: "Run This Routine" {shape: rectangle}
+2_log_checks: "2. Log Checks" {shape: rectangle}
+3_disk_space: "3. Disk Space" {shape: rectangle}
+4_database_connectivity_and_latency: "4. Database Connectivity and Latency" {shape: rectangle}
+5_search_index_status: "5. Search Index Status" {shape: rectangle}
+generate_report: "Generate Report" {shape: oval}
+
+begin_checks -> health_check_flow
+health_check_flow -> run_this_routine
+run_this_routine -> 2_log_checks
+2_log_checks -> 3_disk_space
+3_disk_space -> 4_database_connectivity_and_latency
+4_database_connectivity_and_latency -> 5_search_index_status
+5_search_index_status -> generate_report
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

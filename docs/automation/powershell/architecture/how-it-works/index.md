@@ -16,6 +16,23 @@ PowerShell is a cross-platform task automation shell built on .NET. This page co
 
 ---
 
+```d2
+direction: right
+
+center: "PowerShell" {shape: hexagon}
+powershell_core_vs_windows_powershel: "PowerShell Core vs Windows PowerShell" {shape: rectangle}
+execution_engine: "Execution Engine" {shape: rectangle}
+module_system: "Module System" {shape: rectangle}
+runspace_model: "Runspace Model" {shape: rectangle}
+key_automatic_variables: "Key Automatic Variables" {shape: rectangle}
+
+center -> powershell_core_vs_windows_powershel
+center -> execution_engine
+center -> module_system
+center -> runspace_model
+center -> key_automatic_variables
+```
+
 ## PowerShell Core vs Windows PowerShell
 
 | Attribute | Windows PowerShell | PowerShell Core / PowerShell 7+ |

@@ -18,6 +18,26 @@ Catalog of known MySQL bugs, error codes, and workarounds covering replication, 
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+connectivity: "Connectivity" {shape: rectangle}
+replication: "Replication" {shape: rectangle}
+innodb: "InnoDB" {shape: rectangle}
+group_replication: "Group Replication" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> connectivity: investigate
+symptom -> replication: investigate
+symptom -> innodb: investigate
+symptom -> group_replication: investigate
+connectivity -> resolution
+replication -> resolution
+innodb -> resolution
+group_replication -> resolution
+```
+
 ## Before you begin
 
 - MySQL errors: `SHOW GLOBAL STATUS LIKE 'Last_Error'`; error log: `/var/log/mysql/error.log`.

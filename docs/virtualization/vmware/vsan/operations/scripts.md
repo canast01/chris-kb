@@ -40,6 +40,25 @@ Any test in yellow appears in yellow text, red tests in red. The script exits wi
 
 ---
 
+```d2
+direction: right
+
+hub: "vSAN\nOperations" {shape: hexagon}
+disk_group_capacity_report_powershel: "Disk Group Capacity Report (PowerShell / PowerCLI)" {shape: rectangle}
+vsan_object_health_check_python_pyvm: "vSAN Object Health Check (Python / pyVmomi)" {shape: rectangle}
+performance_baseline_check_powershel: "Performance Baseline Check (PowerShell / PowerCLI)" {shape: rectangle}
+ansible_vsan_health_playbook: "Ansible vSAN Health Playbook" {shape: rectangle}
+windows_vsan_health_check_via_powerc: "Windows: vSAN Health Check via PowerCLI (PowerShell)" {shape: rectangle}
+windows_vsan_disk_group_status_via_p: "Windows: vSAN Disk Group Status via Plink (CMD)" {shape: rectangle}
+
+hub -> disk_group_capacity_report_powershel
+hub -> vsan_object_health_check_python_pyvm
+hub -> performance_baseline_check_powershel
+hub -> ansible_vsan_health_playbook
+hub -> windows_vsan_health_check_via_powerc
+hub -> windows_vsan_disk_group_status_via_p
+```
+
 ## Before you begin
 
 - **Access:** vCenter read-only minimum; Administrator role for remediation steps

@@ -16,6 +16,25 @@ Backup & Restore reference covering Overview, SnapVX Architecture, Creating and 
 
 
 
+```d2
+direction: right
+
+hub: "PowerMax\nOperations" {shape: hexagon}
+snapvx_architecture: "SnapVX Architecture" {shape: rectangle}
+creating_and_managing_snapshots: "Creating and Managing Snapshots" {shape: rectangle}
+linking_snapshots_for_backup_or_rest: "Linking Snapshots for Backup or Restore" {shape: rectangle}
+restore_procedure: "Restore Procedure" {shape: rectangle}
+integration_with_veeam_backup_replic: "Integration with Veeam Backup & Replication" {shape: rectangle}
+integration_with_veritas_netbackup: "Integration with Veritas NetBackup" {shape: rectangle}
+
+hub -> snapvx_architecture
+hub -> creating_and_managing_snapshots
+hub -> linking_snapshots_for_backup_or_rest
+hub -> restore_procedure
+hub -> integration_with_veeam_backup_replic
+hub -> integration_with_veritas_netbackup
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

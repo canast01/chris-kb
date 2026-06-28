@@ -16,6 +16,27 @@ This procedure covers a full VMware platform upgrade including vCenter, ESXi, vS
 
 
 
+```d2
+direction: right
+
+plan: "Plan" {shape: oval}
+roles_and_responsibilities: "Roles and Responsibilities" {shape: rectangle}
+phase_1_planning: "Phase 1: Planning" {shape: rectangle}
+phase_2_preupgrade_checks: "Phase 2: Pre-Upgrade Checks" {shape: rectangle}
+phase_3_vcenter_upgrade: "Phase 3: vCenter Upgrade" {shape: rectangle}
+phase_4_nsx_upgrade: "Phase 4: NSX Upgrade" {shape: rectangle}
+phase_5_esxi_host_upgrade: "Phase 5: ESXi Host Upgrade" {shape: rectangle}
+validate: "Validate" {shape: oval}
+
+plan -> roles_and_responsibilities
+roles_and_responsibilities -> phase_1_planning
+phase_1_planning -> phase_2_preupgrade_checks
+phase_2_preupgrade_checks -> phase_3_vcenter_upgrade
+phase_3_vcenter_upgrade -> phase_4_nsx_upgrade
+phase_4_nsx_upgrade -> phase_5_esxi_host_upgrade
+phase_5_esxi_host_upgrade -> validate
+```
+
 ## Roles and Responsibilities
 
 | Role | Responsibility |

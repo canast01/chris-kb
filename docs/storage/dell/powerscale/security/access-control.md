@@ -16,6 +16,23 @@ Roles, permissions, and least privilege access for Dell PowerScale.
 
 
 
+```d2
+direction: down
+
+external: External / Untrusted {shape: rectangle}
+rbac: "RBAC" {shape: rectangle}
+access_zones: "Access Zones" {shape: rectangle}
+audit_logging: "Audit Logging" {shape: rectangle}
+compliance_notes: "Compliance Notes" {shape: rectangle}
+core: "PowerScale (Isilon) Core" {shape: hexagon}
+
+external -> rbac: traffic in
+rbac -> access_zones
+access_zones -> audit_logging
+audit_logging -> compliance_notes
+compliance_notes -> core: secured path
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

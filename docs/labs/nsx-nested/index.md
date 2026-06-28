@@ -14,6 +14,19 @@ Deploy NSX Manager into the Lab 1 nested environment, prepare ESXi transport nod
 
 
 
+```d2
+direction: right
+
+center: "Nsx Nested" {shape: hexagon}
+prerequisites: "Prerequisites" {shape: rectangle}
+what_this_lab_builds: "What this lab builds" {shape: rectangle}
+phases: "Phases" {shape: rectangle}
+
+center -> prerequisites
+center -> what_this_lab_builds
+center -> phases
+```
+
 ## Prerequisites
 
 | Requirement | Value |

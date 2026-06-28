@@ -30,6 +30,15 @@ snmpconfig --set trapdest -index <n> -trapdest 0.0.0.0   # clear trap destinatio
 userconfig --delete sannav_svc
 ```
 
+```d2
+direction: right
+
+hub: "SANnav\nOperations" {shape: hexagon}
+verify: "Verify" {shape: rectangle}
+
+hub -> verify
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

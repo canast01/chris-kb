@@ -47,6 +47,27 @@ VirtualMachine.Config.Network
 
 ---
 
+```d2
+direction: down
+
+external: External / Untrusted {shape: rectangle}
+sso_domain_and_identity_sources: "SSO Domain and Identity Sources" {shape: rectangle}
+audit_logging_access_events: "Audit Logging — Access Events" {shape: rectangle}
+powercli_permission_management: "PowerCLI — Permission Management" {shape: rectangle}
+service_account_inventory: "Service Account Inventory" {shape: rectangle}
+access_review_procedure: "Access Review Procedure" {shape: rectangle}
+lockout_and_breakglass: "Lockout and Break-Glass" {shape: rectangle}
+core: "vCenter Server Core" {shape: hexagon}
+
+external -> sso_domain_and_identity_sources: traffic in
+sso_domain_and_identity_sources -> audit_logging_access_events
+audit_logging_access_events -> powercli_permission_management
+powercli_permission_management -> service_account_inventory
+service_account_inventory -> access_review_procedure
+access_review_procedure -> lockout_and_breakglass
+lockout_and_breakglass -> core: secured path
+```
+
 ## Before you begin
 
 - **Access:** vCenter Administrator role

@@ -15,6 +15,25 @@ An app registration in Microsoft Entra ID creates an identity for an application
 
 
 
+```d2
+direction: right
+
+center: "Azure" {shape: hexagon}
+app_registration_to_service_principa: "App Registration to Service Principal Model" {shape: rectangle}
+creating_an_app_registration: "Creating an App Registration" {shape: rectangle}
+client_secrets: "Client Secrets" {shape: rectangle}
+certificates: "Certificates" {shape: rectangle}
+api_permissions: "API Permissions" {shape: rectangle}
+application_manifest: "Application Manifest" {shape: rectangle}
+
+center -> app_registration_to_service_principa
+center -> creating_an_app_registration
+center -> client_secrets
+center -> certificates
+center -> api_permissions
+center -> application_manifest
+```
+
 ## App Registration to Service Principal Model
 
 ```mermaid

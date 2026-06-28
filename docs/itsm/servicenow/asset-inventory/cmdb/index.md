@@ -15,6 +15,23 @@ CMDB Data Quality and Management reference covering Overview, Core Data Quality 
 
 
 
+```d2
+direction: right
+
+center: "ServiceNow" {shape: hexagon}
+core_data_quality_dimensions: "Core Data Quality Dimensions" {shape: rectangle}
+ci_relationships: "CI Relationships" {shape: rectangle}
+import_sources_and_integration: "Import Sources and Integration" {shape: rectangle}
+servicenow_integration_notes: "ServiceNow Integration Notes" {shape: rectangle}
+governance_and_review_cadence: "Governance and Review Cadence" {shape: rectangle}
+
+center -> core_data_quality_dimensions
+center -> ci_relationships
+center -> import_sources_and_integration
+center -> servicenow_integration_notes
+center -> governance_and_review_cadence
+```
+
 ## Overview
 
 A CMDB is only valuable if the data in it is trusted. Poor data quality leads to failed changes, missed impact assessments, and incorrect billing. This page covers the practices that keep CI records accurate, relationships meaningful, and import processes reliable.

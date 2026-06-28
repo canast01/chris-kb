@@ -22,6 +22,32 @@ How to escalate Nutanix cluster issues to Nutanix Global Support Services (GSS):
 
 ---
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+when_to_escalate_immediately: "When to Escalate Immediately" {shape: rectangle}
+preescalation_selfcheck: "Pre-Escalation Self-Check" {shape: rectangle}
+stepbystep_data_collection: "Step-by-Step Data Collection" {shape: rectangle}
+how_to_open_the_case_on_portalnutani: "How to Open the Case on portal.nutanix.com" {shape: rectangle}
+escalation_path: "Escalation Path" {shape: rectangle}
+enabling_remote_access_for_gss_pulse: "Enabling Remote Access for GSS (Pulse)" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> when_to_escalate_immediately: investigate
+symptom -> preescalation_selfcheck: investigate
+symptom -> stepbystep_data_collection: investigate
+symptom -> how_to_open_the_case_on_portalnutani: investigate
+symptom -> escalation_path: investigate
+symptom -> enabling_remote_access_for_gss_pulse: investigate
+when_to_escalate_immediately -> resolution
+preescalation_selfcheck -> resolution
+stepbystep_data_collection -> resolution
+how_to_open_the_case_on_portalnutani -> resolution
+escalation_path -> resolution
+enabling_remote_access_for_gss_pulse -> resolution
+```
+
 ## Before you begin
 
 - **Access required:** Nutanix Portal account linked to your support contract (portal.nutanix.com); SSH access to any CVM in the cluster (default user: `nutanix`); Prism Element admin access

@@ -9,6 +9,25 @@ tags:
 ![Disaster Recovery Design Overview](../../../assets/disaster-recovery-design-overview.svg)
 </div>
 
+```d2
+direction: right
+
+center: "DR Operations" {shape: hexagon}
+rto_rpo_matrix_by_service_tier: "RTO / RPO Matrix by Service Tier" {shape: rectangle}
+dr_strategy_selection: "DR Strategy Selection" {shape: rectangle}
+network_considerations_for_dr: "Network Considerations for DR" {shape: rectangle}
+dr_runbook_structure: "DR Runbook Structure" {shape: rectangle}
+dr_testing_schedule: "DR Testing Schedule" {shape: rectangle}
+common_dr_design_pitfalls: "Common DR Design Pitfalls" {shape: rectangle}
+
+center -> rto_rpo_matrix_by_service_tier
+center -> dr_strategy_selection
+center -> network_considerations_for_dr
+center -> dr_runbook_structure
+center -> dr_testing_schedule
+center -> common_dr_design_pitfalls
+```
+
 ## Overview
 
 Disaster Recovery (DR) design defines how business services are restored after a major disruptive event — site-level failure, ransomware, catastrophic data corruption, or any scenario that renders the primary environment unusable. DR is the complement to HA: while HA prevents or masks individual component failures, DR handles scenarios where an entire site, facility, or system is lost.

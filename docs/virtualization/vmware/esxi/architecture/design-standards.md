@@ -20,6 +20,25 @@ ESXi Host Design Checklist — Standard Layout
 
 ---
 
+```d2
+direction: right
+
+center: "ESXi" {shape: hexagon}
+ntp_configuration: "NTP Configuration" {shape: rectangle}
+vib_acceptance_levels: "VIB Acceptance Levels" {shape: rectangle}
+storage_path_configuration: "Storage Path Configuration" {shape: rectangle}
+host_profile_baseline: "Host Profile Baseline" {shape: rectangle}
+esxi_shell_and_ssh_policy: "ESXi Shell and SSH Policy" {shape: rectangle}
+cluster_sizing_reference: "Cluster Sizing Reference" {shape: rectangle}
+
+center -> ntp_configuration
+center -> vib_acceptance_levels
+center -> storage_path_configuration
+center -> host_profile_baseline
+center -> esxi_shell_and_ssh_policy
+center -> cluster_sizing_reference
+```
+
 ## NTP Configuration
 
 All ESXi hosts must synchronise to the same NTP sources as vCenter. Clock skew > 5 minutes causes authentication failures.

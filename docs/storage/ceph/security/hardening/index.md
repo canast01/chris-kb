@@ -29,6 +29,23 @@ graph TD
     F --> G[Audit logging\nauth_debug + ops log]:::detail
 ```
 
+```d2
+direction: down
+
+network_isolation: "Network Isolation" {shape: rectangle}
+firewall_rules: "Firewall Rules" {shape: rectangle}
+disable_insecure_msgr1: "Disable Insecure msgr1" {shape: rectangle}
+dashboard_security: "Dashboard Security" {shape: rectangle}
+disable_unnecessary_mgr_modules: "Disable Unnecessary MGR Modules" {shape: rectangle}
+audit_logging: "Audit Logging" {shape: rectangle}
+
+network_isolation -> firewall_rules: hardens
+firewall_rules -> disable_insecure_msgr1: hardens
+disable_insecure_msgr1 -> dashboard_security: hardens
+dashboard_security -> disable_unnecessary_mgr_modules: hardens
+disable_unnecessary_mgr_modules -> audit_logging: hardens
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

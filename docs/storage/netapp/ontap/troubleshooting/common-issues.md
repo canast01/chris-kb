@@ -18,6 +18,32 @@ Common Issues reference covering Incident Triage Decision Tree, Quick Reference,
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+diagnostic_flow: "Diagnostic Flow" {shape: rectangle}
+incident_triage_decision_tree: "Incident Triage Decision Tree" {shape: rectangle}
+quick_reference: "Quick Reference" {shape: rectangle}
+volume_full_write_errors: "Volume Full / Write Errors" {shape: rectangle}
+aggregate_capacity_critical: "Aggregate Capacity Critical" {shape: rectangle}
+snapmirror_lag_unhealthy_relationshi: "SnapMirror Lag / Unhealthy Relationship" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> diagnostic_flow: investigate
+symptom -> incident_triage_decision_tree: investigate
+symptom -> quick_reference: investigate
+symptom -> volume_full_write_errors: investigate
+symptom -> aggregate_capacity_critical: investigate
+symptom -> snapmirror_lag_unhealthy_relationshi: investigate
+diagnostic_flow -> resolution
+incident_triage_decision_tree -> resolution
+quick_reference -> resolution
+volume_full_write_errors -> resolution
+aggregate_capacity_critical -> resolution
+snapmirror_lag_unhealthy_relationshi -> resolution
+```
+
 ## Diagnostic Flow
 
 ```mermaid

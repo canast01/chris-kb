@@ -14,6 +14,25 @@ ONTAP day-2 procedures — change readiness, rolling node upgrades, volume and L
 
 
 
+```d2
+direction: right
+
+hub: "NetApp ONTAP\nOperations" {shape: hexagon}
+svm_volume_lun_hierarchy: "SVM / Volume / LUN Hierarchy" {shape: rectangle}
+change_readiness: "Change Readiness" {shape: rectangle}
+rolling_node_upgrade_sequence: "Rolling Node Upgrade Sequence" {shape: rectangle}
+maintenance_window: "Maintenance Window" {shape: rectangle}
+postchange_validation: "Post-Change Validation" {shape: rectangle}
+incident_triage: "Incident Triage" {shape: rectangle}
+
+hub -> svm_volume_lun_hierarchy
+hub -> change_readiness
+hub -> rolling_node_upgrade_sequence
+hub -> maintenance_window
+hub -> postchange_validation
+hub -> incident_triage
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

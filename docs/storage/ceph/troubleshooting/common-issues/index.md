@@ -40,6 +40,32 @@ graph TD
     L -- No --> N([Escalate to diagnostics/]):::ok
 ```
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+diagnostic_flow: "Diagnostic Flow" {shape: rectangle}
+osd_down: "OSD Down" {shape: rectangle}
+healtherr_osd_full: "HEALTH_ERR: OSD Full" {shape: rectangle}
+slow_ops_high_latency: "Slow Ops / High Latency" {shape: rectangle}
+pg_degraded_undersized_stuck: "PG Degraded / Undersized / Stuck" {shape: rectangle}
+clock_skew: "Clock Skew" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> diagnostic_flow: investigate
+symptom -> osd_down: investigate
+symptom -> healtherr_osd_full: investigate
+symptom -> slow_ops_high_latency: investigate
+symptom -> pg_degraded_undersized_stuck: investigate
+symptom -> clock_skew: investigate
+diagnostic_flow -> resolution
+osd_down -> resolution
+healtherr_osd_full -> resolution
+slow_ops_high_latency -> resolution
+pg_degraded_undersized_stuck -> resolution
+clock_skew -> resolution
+```
+
 ## Diagnostic Flow
 
 ```mermaid

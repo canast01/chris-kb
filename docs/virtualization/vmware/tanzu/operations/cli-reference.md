@@ -19,6 +19,25 @@ CLI Reference reference covering tanzu CLI, Tanzu Cluster Operations, kubectl fo
 
 ---
 
+```d2
+direction: right
+
+hub: "Tanzu\nOperations" {shape: hexagon}
+tanzu_cli: "tanzu CLI" {shape: rectangle}
+tanzu_cluster_operations: "Tanzu Cluster Operations" {shape: rectangle}
+kubectl_for_supervisor_vsphere_with_: "kubectl for Supervisor (vSphere with Tanzu)" {shape: rectangle}
+kubectl_workload_cluster_operations: "kubectl Workload Cluster Operations" {shape: rectangle}
+carvel_tools_used_by_tanzu: "Carvel Tools (used by Tanzu)" {shape: rectangle}
+harbor_cli: "Harbor CLI" {shape: rectangle}
+
+hub -> tanzu_cli
+hub -> tanzu_cluster_operations
+hub -> kubectl_for_supervisor_vsphere_with_
+hub -> kubectl_workload_cluster_operations
+hub -> carvel_tools_used_by_tanzu
+hub -> harbor_cli
+```
+
 ## Before you begin
 
 - **Access:** vCenter read-only minimum; Administrator role for remediation steps

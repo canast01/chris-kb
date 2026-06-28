@@ -17,6 +17,23 @@ Azure Serial Console provides out-of-band terminal access to a VM's serial port.
 
 ---
 
+```d2
+direction: right
+
+center: "Azure" {shape: hexagon}
+accessing_the_serial_console: "Accessing the Serial Console" {shape: rectangle}
+linux_serial_console: "Linux Serial Console" {shape: rectangle}
+windows_serial_console_sac: "Windows Serial Console — SAC" {shape: rectangle}
+enabling_sac_on_windows_if_not_preen: "Enabling SAC on Windows (if not pre-enabled)" {shape: rectangle}
+troubleshooting_common_scenarios: "Troubleshooting Common Scenarios" {shape: rectangle}
+
+center -> accessing_the_serial_console
+center -> linux_serial_console
+center -> windows_serial_console_sac
+center -> enabling_sac_on_windows_if_not_preen
+center -> troubleshooting_common_scenarios
+```
+
 ## Accessing the Serial Console
 
 Serial Console is accessed exclusively through the Azure portal:

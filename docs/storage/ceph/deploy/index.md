@@ -18,6 +18,27 @@ Ceph deployment with cephadm: bootstrap on first node, add MONs and OSDs, create
 
 
 
+```d2
+direction: right
+
+plan: "Plan" {shape: oval}
+prerequisites: "Prerequisites" {shape: rectangle}
+bootstrap: "Bootstrap" {shape: rectangle}
+add_hosts: "Add Hosts" {shape: rectangle}
+add_osds: "Add OSDs" {shape: rectangle}
+enable_rbd_pool: "Enable RBD Pool" {shape: rectangle}
+enable_cephfs: "Enable CephFS" {shape: rectangle}
+validate: "Validate" {shape: oval}
+
+plan -> prerequisites
+prerequisites -> bootstrap
+bootstrap -> add_hosts
+add_hosts -> add_osds
+add_osds -> enable_rbd_pool
+enable_rbd_pool -> enable_cephfs
+enable_cephfs -> validate
+```
+
 ## Before you begin
 
 - **Access:** admin credentials for the target system and any upstream dependencies (DNS, NTP, vCenter, directory services)

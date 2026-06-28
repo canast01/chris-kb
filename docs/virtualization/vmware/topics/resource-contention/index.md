@@ -15,6 +15,25 @@ Resource Contention Modeling reference covering CPU Contention, Memory Contentio
 
 
 
+```d2
+direction: right
+
+center: "Resource Contention" {shape: hexagon}
+cpu_contention: "CPU Contention" {shape: rectangle}
+memory_contention: "Memory Contention" {shape: rectangle}
+storage_latency: "Storage Latency" {shape: rectangle}
+network_contention: "Network Contention" {shape: rectangle}
+contention_response_actions: "Contention Response Actions" {shape: rectangle}
+drs_imbalance_score: "DRS Imbalance Score" {shape: rectangle}
+
+center -> cpu_contention
+center -> memory_contention
+center -> storage_latency
+center -> network_contention
+center -> contention_response_actions
+center -> drs_imbalance_score
+```
+
 ## CPU Contention
 
 **CPU Ready** is the primary indicator: time a vCPU waited in the run queue because the physical CPU was busy.

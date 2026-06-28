@@ -17,6 +17,25 @@ Monitoring ASR replication health is critical for validating that DR protection 
 
 ---
 
+```d2
+direction: right
+
+center: "Azure" {shape: hexagon}
+replication_health_monitoring_flow: "Replication Health Monitoring Flow" {shape: rectangle}
+health_states_and_meanings: "Health States and Meanings" {shape: rectangle}
+checking_replication_health_via_rest: "Checking Replication Health via REST" {shape: rectangle}
+rpo_warnings: "RPO Warnings" {shape: rectangle}
+triggering_a_resync: "Triggering a Resync" {shape: rectangle}
+monitoring_via_azure_monitor_alerts: "Monitoring via Azure Monitor Alerts" {shape: rectangle}
+
+center -> replication_health_monitoring_flow
+center -> health_states_and_meanings
+center -> checking_replication_health_via_rest
+center -> rpo_warnings
+center -> triggering_a_resync
+center -> monitoring_via_azure_monitor_alerts
+```
+
 ## Replication Health Monitoring Flow
 
 ```mermaid

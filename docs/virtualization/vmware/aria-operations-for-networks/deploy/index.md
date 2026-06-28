@@ -35,6 +35,27 @@ flowchart TD
     style s7 fill:#2e7d32,color:#fff,stroke:#1b5e20
 ```
 
+```d2
+direction: right
+
+plan: "Plan" {shape: oval}
+phase_1_preflight_checks: "Phase 1 — Pre-Flight Checks" {shape: rectangle}
+phase_2_platform_node_ova_deployment: "Phase 2 — Platform Node OVA Deployment" {shape: rectangle}
+phase_3_proxy_collector_node_deploym: "Phase 3 — Proxy / Collector Node Deployment" {shape: rectangle}
+phase_4_data_source_configuration: "Phase 4 — Data Source Configuration" {shape: rectangle}
+phase_5_ipfix_flow_collection: "Phase 5 — IPFIX Flow Collection" {shape: rectangle}
+phase_6_postdeployment_validation: "Phase 6 — Post-Deployment Validation" {shape: rectangle}
+validate: "Validate" {shape: oval}
+
+plan -> phase_1_preflight_checks
+phase_1_preflight_checks -> phase_2_platform_node_ova_deployment
+phase_2_platform_node_ova_deployment -> phase_3_proxy_collector_node_deploym
+phase_3_proxy_collector_node_deploym -> phase_4_data_source_configuration
+phase_4_data_source_configuration -> phase_5_ipfix_flow_collection
+phase_5_ipfix_flow_collection -> phase_6_postdeployment_validation
+phase_6_postdeployment_validation -> validate
+```
+
 ## Before you begin
 
 - **Access:** vCenter Administrator role and SSH access to VCSA/ESXi hosts

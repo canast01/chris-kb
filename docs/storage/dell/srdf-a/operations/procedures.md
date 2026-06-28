@@ -14,6 +14,25 @@ SRDF/A procedures: establishing SRDF/A groups, cycle time tuning, DSE (Delta Set
 
 ---
 
+```d2
+direction: right
+
+hub: "SRDF/A\nOperations" {shape: hexagon}
+change_readiness: "Change Readiness" {shape: rectangle}
+maintenance_window: "Maintenance Window" {shape: rectangle}
+failover_procedure: "Failover Procedure" {shape: rectangle}
+incident_triage: "Incident Triage" {shape: rectangle}
+query_srdfa_group_status: "Query SRDF/A Group Status" {shape: rectangle}
+suspend_and_resume_replication: "Suspend and Resume Replication" {shape: rectangle}
+
+hub -> change_readiness
+hub -> maintenance_window
+hub -> failover_procedure
+hub -> incident_triage
+hub -> query_srdfa_group_status
+hub -> suspend_and_resume_replication
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

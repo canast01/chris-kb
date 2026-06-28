@@ -48,6 +48,19 @@ for alert in alerts.items:
     print(alert.summary, alert.severity)
 ```
 
+```d2
+direction: right
+
+center: "Pure1" {shape: rectangle}
+component_a: "Component A" {shape: rectangle}
+component_b: "Component B" {shape: rectangle}
+component_c: "Component C" {shape: rectangle}
+
+center -> component_a
+center -> component_b
+center -> component_c
+```
+
 ## See also
 
 - [Pure1 — Overview](../../)

@@ -15,6 +15,17 @@ Dell AIOps: AI-Generated Alerts, Anomaly Detection, and Correlation reference co
 
 
 
+```d2
+direction: right
+
+center: "Dell AIOps" {shape: hexagon}
+acknowledging_and_dismissing_ai_aler: "Acknowledging and Dismissing AI Alerts" {shape: rectangle}
+common_ai_alert_issues: "Common AI Alert Issues" {shape: rectangle}
+
+center -> acknowledging_and_dismissing_ai_aler
+center -> common_ai_alert_issues
+```
+
 ## Acknowledging and Dismissing AI Alerts
 
 ```bash

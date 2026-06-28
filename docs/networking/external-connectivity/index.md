@@ -13,6 +13,23 @@ Covers infrastructure paths for internet egress, WAN/MPLS, cloud direct connecti
 
 ---
 
+```d2
+direction: right
+
+center: "External Connectivity" {shape: hexagon}
+onpremises_to_cloud_network_topology: "On-Premises to Cloud — Network Topology" {shape: rectangle}
+connectivity_paths: "Connectivity Paths" {shape: rectangle}
+health_check_commands: "Health Check Commands" {shape: rectangle}
+firewall_rule_verification: "Firewall Rule Verification" {shape: rectangle}
+troubleshooting: "Troubleshooting" {shape: rectangle}
+
+center -> onpremises_to_cloud_network_topology
+center -> connectivity_paths
+center -> health_check_commands
+center -> firewall_rule_verification
+center -> troubleshooting
+```
+
 ## On-Premises to Cloud — Network Topology
 
 How traffic flows from an ESXi host through your core network out to AWS or Azure over a VPN tunnel.

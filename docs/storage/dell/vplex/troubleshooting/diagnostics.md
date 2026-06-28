@@ -59,6 +59,32 @@ graph TD
     class V,W escalate
 ```
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+step_1_initial_triage_sequence: "Step 1 — Initial triage sequence" {shape: rectangle}
+step_2_distributed_device_diagnostic: "Step 2 — Distributed device diagnostics" {shape: rectangle}
+step_3_director_diagnostics: "Step 3 — Director diagnostics" {shape: rectangle}
+step_4_icl_diagnostics_metro: "Step 4 — ICL diagnostics (Metro)" {shape: rectangle}
+step_5_storage_view_diagnostics: "Step 5 — Storage view diagnostics" {shape: rectangle}
+step_6_log_analysis: "Step 6 — Log analysis" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> step_1_initial_triage_sequence: investigate
+symptom -> step_2_distributed_device_diagnostic: investigate
+symptom -> step_3_director_diagnostics: investigate
+symptom -> step_4_icl_diagnostics_metro: investigate
+symptom -> step_5_storage_view_diagnostics: investigate
+symptom -> step_6_log_analysis: investigate
+step_1_initial_triage_sequence -> resolution
+step_2_distributed_device_diagnostic -> resolution
+step_3_director_diagnostics -> resolution
+step_4_icl_diagnostics_metro -> resolution
+step_5_storage_view_diagnostics -> resolution
+step_6_log_analysis -> resolution
+```
+
 ## Before you begin
 
 - **Access:** SSH to VMS as `service` user (`ssh service@<VMS_IP>`); vplexcli is available from the VMS shell; Unisphere for VPLEX web UI credentials; host-side access (SSH to Linux host or vSphere for ESXi)

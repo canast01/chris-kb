@@ -18,6 +18,23 @@ Catalog of known Cisco MDS SAN switch bugs, error codes, and workarounds coverin
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+fc_ports: "FC Ports" {shape: rectangle}
+zoning: "Zoning" {shape: rectangle}
+vsan: "VSAN" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> fc_ports: investigate
+symptom -> zoning: investigate
+symptom -> vsan: investigate
+fc_ports -> resolution
+zoning -> resolution
+vsan -> resolution
+```
+
 ## Before you begin
 
 - `show interface fc1/1` for port status; `show flogi database` for logged-in devices.

@@ -16,6 +16,21 @@ Access Control reference covering Tiered Administration Model, Core Security Con
 
 
 
+```d2
+direction: down
+
+external: External / Untrusted {shape: rectangle}
+tiered_administration_model: "Tiered Administration Model" {shape: rectangle}
+core_security_controls: "Core Security Controls" {shape: rectangle}
+adminsdholder_monitoring: "AdminSDHolder Monitoring" {shape: rectangle}
+core: "Active Directory Core" {shape: hexagon}
+
+external -> tiered_administration_model: traffic in
+tiered_administration_model -> core_security_controls
+core_security_controls -> adminsdholder_monitoring
+adminsdholder_monitoring -> core: secured path
+```
+
 ## Before you begin
 
 - **Access:** Local Administrator or Domain Admin on target hosts

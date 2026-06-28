@@ -12,6 +12,19 @@ How vSAN, vSphere Replication, and VxRail integrate — kernel modules, SPBM pol
 
 ![Storage Domain Interaction Map](../../assets/interaction-map-storage.svg)
 
+```d2
+direction: right
+
+center: "Interaction Map" {shape: hexagon}
+integration_summary: "Integration summary" {shape: rectangle}
+vsan_object_storage_model: "vSAN object storage model" {shape: rectangle}
+vxrail_vs_standalone_vsan: "VxRail vs standalone vSAN" {shape: rectangle}
+
+center -> integration_summary
+center -> vsan_object_storage_model
+center -> vxrail_vs_standalone_vsan
+```
+
 ## Integration summary
 
 | From | To | Protocol / API | Notes |

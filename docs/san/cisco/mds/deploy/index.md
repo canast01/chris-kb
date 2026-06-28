@@ -6,6 +6,27 @@ search:
   boost: 1.5
 ---
 
+```d2
+direction: right
+
+plan: "Plan" {shape: oval}
+prerequisites: "Prerequisites" {shape: rectangle}
+rack_and_cable: "Rack and Cable" {shape: rectangle}
+initial_nxos_setup: "Initial NX-OS Setup" {shape: rectangle}
+configure_vsan_and_port_channels: "Configure VSAN and Port Channels" {shape: rectangle}
+zone_configuration: "Zone Configuration" {shape: rectangle}
+ndfc_integration: "NDFC Integration" {shape: rectangle}
+validate: "Validate" {shape: oval}
+
+plan -> prerequisites
+prerequisites -> rack_and_cable
+rack_and_cable -> initial_nxos_setup
+initial_nxos_setup -> configure_vsan_and_port_channels
+configure_vsan_and_port_channels -> zone_configuration
+zone_configuration -> ndfc_integration
+ndfc_integration -> validate
+```
+
 ## Before you begin
 
 - **Access:** admin credentials for the target system and any upstream dependencies (DNS, NTP, vCenter, directory services)

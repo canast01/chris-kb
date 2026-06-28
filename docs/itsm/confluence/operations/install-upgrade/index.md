@@ -157,6 +157,17 @@ pg_restore \
 curl -s "https://confluence.example.com/status" | jq '.state'
 ```
 
+```d2
+direction: right
+
+plan: "Plan" {shape: oval}
+verify: "Verify" {shape: rectangle}
+validate: "Validate" {shape: oval}
+
+plan -> verify
+verify -> validate
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

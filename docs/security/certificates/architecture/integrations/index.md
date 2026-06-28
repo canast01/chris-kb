@@ -14,6 +14,25 @@ Venafi TPP (or TLS Protect Cloud) provides the centralised policy and automation
 
 
 
+```d2
+direction: right
+
+center: "Integrations" {shape: hexagon}
+certificate_integration_topology: "Certificate Integration Topology" {shape: rectangle}
+integration_map: "Integration Map" {shape: rectangle}
+venafi_tpp_adcs_ca_integration: "Venafi TPP — ADCS CA Integration" {shape: rectangle}
+hashicorp_vault_pki: "HashiCorp Vault PKI" {shape: rectangle}
+kubernetes_certmanager: "Kubernetes cert-manager" {shape: rectangle}
+lets_encrypt_acme_dns01_challenge: "Let's Encrypt ACME (DNS-01 Challenge)" {shape: rectangle}
+
+center -> certificate_integration_topology
+center -> integration_map
+center -> venafi_tpp_adcs_ca_integration
+center -> hashicorp_vault_pki
+center -> kubernetes_certmanager
+center -> lets_encrypt_acme_dns01_challenge
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

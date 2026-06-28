@@ -56,6 +56,32 @@ graph TD
     class S,T escalate
 ```
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+step_1_check_log_files: "Step 1 — Check log files" {shape: rectangle}
+step_2_check_live_storage_state: "Step 2 — Check live storage state" {shape: rectangle}
+step_3_check_network_state: "Step 3 — Check network state" {shape: rectangle}
+step_4_performance_diagnostics_with_: "Step 4 — Performance diagnostics with esxtop" {shape: rectangle}
+step_5_troubleshoot_host_disconnecti: "Step 5 — Troubleshoot host disconnection from vCenter" {shape: rectangle}
+step_6_validate_storage_and_network_: "Step 6 — Validate storage and network before maintenance" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> step_1_check_log_files: investigate
+symptom -> step_2_check_live_storage_state: investigate
+symptom -> step_3_check_network_state: investigate
+symptom -> step_4_performance_diagnostics_with_: investigate
+symptom -> step_5_troubleshoot_host_disconnecti: investigate
+symptom -> step_6_validate_storage_and_network_: investigate
+step_1_check_log_files -> resolution
+step_2_check_live_storage_state -> resolution
+step_3_check_network_state -> resolution
+step_4_performance_diagnostics_with_ -> resolution
+step_5_troubleshoot_host_disconnecti -> resolution
+step_6_validate_storage_and_network_ -> resolution
+```
+
 ## Before you begin
 
 - **Access:** SSH to the ESXi host (root); vSphere Client access to view events and alarms; the host management IP address

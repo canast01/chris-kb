@@ -18,6 +18,23 @@ Catalog of known SnapMirror bugs, error codes, and workarounds. SnapMirror is an
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+relationship_errors: "Relationship Errors" {shape: rectangle}
+initialization: "Initialization" {shape: rectangle}
+snapmirror_to_cloud: "SnapMirror to Cloud" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> relationship_errors: investigate
+symptom -> initialization: investigate
+symptom -> snapmirror_to_cloud: investigate
+relationship_errors -> resolution
+initialization -> resolution
+snapmirror_to_cloud -> resolution
+```
+
 ## Before you begin
 
 - Run `snapmirror show -fields state,healthy,lag-time` for relationship status.

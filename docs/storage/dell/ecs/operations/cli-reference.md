@@ -24,6 +24,25 @@ ECS administration is split across three interfaces: the **ECS Management Shell*
 
 ---
 
+```d2
+direction: right
+
+hub: "ECS\nOperations" {shape: hexagon}
+quickreference_command_table: "Quick-Reference Command Table" {shape: rectangle}
+ecs_management_shell_ecscli: "ECS Management Shell (ecscli)" {shape: rectangle}
+s3_api_aws_cli_s3cmd: "S3 API (aws cli / s3cmd)" {shape: rectangle}
+object_store_admin_api_curl: "Object Store Admin API (curl)" {shape: rectangle}
+system_cli_ssh_nodelevel_access: "System CLI (SSH — Node-Level Access)" {shape: rectangle}
+common_troubleshooting_commands: "Common Troubleshooting Commands" {shape: rectangle}
+
+hub -> quickreference_command_table
+hub -> ecs_management_shell_ecscli
+hub -> s3_api_aws_cli_s3cmd
+hub -> object_store_admin_api_curl
+hub -> system_cli_ssh_nodelevel_access
+hub -> common_troubleshooting_commands
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

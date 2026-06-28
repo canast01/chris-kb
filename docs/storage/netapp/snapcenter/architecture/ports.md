@@ -20,6 +20,25 @@ Firewall port reference for NetApp SnapCenter. SnapCenter provides application-a
 
 
 
+```d2
+direction: right
+
+center: "SnapCenter" {shape: hexagon}
+inbound_admin_to_snapcenter_server: "Inbound — Admin to SnapCenter Server" {shape: rectangle}
+snapcenter_server_to_plugin_hosts: "SnapCenter Server to Plugin Hosts" {shape: rectangle}
+snapcenter_plugin_hosts_to_netapp_st: "SnapCenter / Plugin Hosts to NetApp Storage" {shape: rectangle}
+plugin_host_to_snapcenter_server_res: "Plugin Host to SnapCenter Server (Result Reporting)" {shape: rectangle}
+firewall_zone_summary: "Firewall Zone Summary" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+center -> inbound_admin_to_snapcenter_server
+center -> snapcenter_server_to_plugin_hosts
+center -> snapcenter_plugin_hosts_to_netapp_st
+center -> plugin_host_to_snapcenter_server_res
+center -> firewall_zone_summary
+center -> verify
+```
+
 ## Inbound — Admin to SnapCenter Server
 
 | Port | Protocol | Source | Purpose |

@@ -17,6 +17,25 @@ cause and apply the correct fix — CPU, memory, storage, or network.
 
 
 
+```d2
+direction: right
+
+center: "Scenarios" {shape: hexagon}
+products_involved: "Products Involved" {shape: rectangle}
+1_start_in_aria_operations_triage_th: "1. Start in Aria Operations — Triage the Alert" {shape: rectangle}
+2_esxi_layer_run_esxtop_on_the_host: "2. ESXi Layer — Run esxtop on the Host" {shape: rectangle}
+3_vsan_layer_check_storage_performan: "3. vSAN Layer — Check Storage Performance" {shape: rectangle}
+4_nsx_dfw_layer_rule_overhead_on_net: "4. NSX DFW Layer — Rule Overhead on Network Traffic" {shape: rectangle}
+5_powercli_pull_historical_performan: "5. PowerCLI — Pull Historical Performance Stats" {shape: rectangle}
+
+center -> products_involved
+center -> 1_start_in_aria_operations_triage_th
+center -> 2_esxi_layer_run_esxtop_on_the_host
+center -> 3_vsan_layer_check_storage_performan
+center -> 4_nsx_dfw_layer_rule_overhead_on_net
+center -> 5_powercli_pull_historical_performan
+```
+
 ## Products Involved
 
 | Product | Role in This Scenario |

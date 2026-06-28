@@ -14,6 +14,19 @@ System Inventory Management reference covering Overview, Required Fields, Daily 
 
 
 
+```d2
+direction: right
+
+center: "ServiceNow" {shape: hexagon}
+required_fields: "Required Fields" {shape: rectangle}
+daily_checks: "Daily Checks" {shape: rectangle}
+workflow: "Workflow" {shape: rectangle}
+
+center -> required_fields
+center -> daily_checks
+center -> workflow
+```
+
 ## Overview
 
 System inventory management tracks servers, storage, network devices, and infrastructure components across environments.

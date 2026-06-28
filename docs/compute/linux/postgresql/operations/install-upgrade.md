@@ -15,6 +15,23 @@ PostgreSQL upgrade procedures — minor version (in-place), major version (pg_up
 
 
 
+```d2
+direction: right
+
+hub: "PostgreSQL\nOperations" {shape: hexagon}
+version_upgrade_path: "Version Upgrade Path" {shape: rectangle}
+minor_version_upgrade_rhel: "Minor Version Upgrade (RHEL)" {shape: rectangle}
+major_version_upgrade_with_pgupgrade: "Major Version Upgrade with `pg_upgrade`" {shape: rectangle}
+postupgrade_steps: "Post-Upgrade Steps" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+hub -> version_upgrade_path
+hub -> minor_version_upgrade_rhel
+hub -> major_version_upgrade_with_pgupgrade
+hub -> postupgrade_steps
+hub -> verify
+```
+
 ## Before you begin
 
 - **Access:** root or sudo-capable account on target hosts

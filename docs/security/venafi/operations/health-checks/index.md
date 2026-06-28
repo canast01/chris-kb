@@ -15,6 +15,27 @@ Daily operations centre on the Venafi Policy Server dashboard: review certificat
 
 
 
+```d2
+direction: right
+
+begin_checks: "Begin Checks" {shape: oval}
+run_this_routine: "Run This Routine" {shape: rectangle}
+daily_health_check_flow: "Daily Health Check Flow" {shape: rectangle}
+daily_checklist: "Daily Checklist" {shape: rectangle}
+weekly_checklist: "Weekly Checklist" {shape: rectangle}
+certificate_inventory: "Certificate Inventory" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+generate_report: "Generate Report" {shape: oval}
+
+begin_checks -> run_this_routine
+run_this_routine -> daily_health_check_flow
+daily_health_check_flow -> daily_checklist
+daily_checklist -> weekly_checklist
+weekly_checklist -> certificate_inventory
+certificate_inventory -> verify
+verify -> generate_report
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

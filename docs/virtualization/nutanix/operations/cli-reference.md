@@ -22,6 +22,25 @@ Complete reference for Nutanix CLIs: ncli (cluster management), acli (AHV VM man
 
 ---
 
+```d2
+direction: right
+
+hub: "Nutanix AHV\nOperations" {shape: hexagon}
+cli_access: "CLI Access" {shape: rectangle}
+ncli_cluster_management: "ncli — Cluster Management" {shape: rectangle}
+acli_ahv_vm_management: "acli — AHV VM Management" {shape: rectangle}
+ncc_nutanix_cluster_check: "ncc — Nutanix Cluster Check" {shape: rectangle}
+allssh_multicvm_commands: "allssh — Multi-CVM Commands" {shape: rectangle}
+genesis_aos_service_manager: "genesis — AOS Service Manager" {shape: rectangle}
+
+hub -> cli_access
+hub -> ncli_cluster_management
+hub -> acli_ahv_vm_management
+hub -> ncc_nutanix_cluster_check
+hub -> allssh_multicvm_commands
+hub -> genesis_aos_service_manager
+```
+
 ## Before you begin
 
 - **Access:** SSH to any CVM as `nutanix` user

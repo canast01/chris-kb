@@ -45,6 +45,32 @@ flowchart TD
     class M,N escalate
 ```
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+step_1_check_vault_service_status: "Step 1 — Check Vault service status" {shape: rectangle}
+step_2_test_vault_connectivity_from_: "Step 2 — Test Vault connectivity from each component" {shape: rectangle}
+step_3_check_pvwa_password_vault_web: "Step 3 — Check PVWA (Password Vault Web Access)" {shape: rectangle}
+step_4_check_cpm_password_rotation_f: "Step 4 — Check CPM (password rotation failures)" {shape: rectangle}
+step_5_check_psm_session_launch_fail: "Step 5 — Check PSM (session launch failures)" {shape: rectangle}
+step_6_check_ldap_and_mfa_authentica: "Step 6 — Check LDAP and MFA authentication" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> step_1_check_vault_service_status: investigate
+symptom -> step_2_test_vault_connectivity_from_: investigate
+symptom -> step_3_check_pvwa_password_vault_web: investigate
+symptom -> step_4_check_cpm_password_rotation_f: investigate
+symptom -> step_5_check_psm_session_launch_fail: investigate
+symptom -> step_6_check_ldap_and_mfa_authentica: investigate
+step_1_check_vault_service_status -> resolution
+step_2_test_vault_connectivity_from_ -> resolution
+step_3_check_pvwa_password_vault_web -> resolution
+step_4_check_cpm_password_rotation_f -> resolution
+step_5_check_psm_session_launch_fail -> resolution
+step_6_check_ldap_and_mfa_authentica -> resolution
+```
+
 ## Before you begin
 
 - **Access:** Windows admin access on the Vault, PVWA, CPM, and PSM servers; PVWA admin role for audit log review

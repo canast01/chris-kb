@@ -34,6 +34,27 @@ graph TD
     G -- No --> I([Config / fix applied\ncase resolved]):::step
 ```
 
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+actor "On-Call Engineer" as ENG
+participant "Ceph\nSystem" as SYS
+participant "Vendor Support" as SUP
+
+ENG -> SYS: Escalation Severity Table
+SYS --> ENG: Output
+ENG -> SYS: Red Hat Ceph Storage (RHCS) Support
+SYS --> ENG: Output
+ENG -> SYS: Must-Gather for ODF / OpenShift
+SYS --> ENG: Output
+ENG -> SUP: Escalate with diagnostic bundle
+SUP --> ENG: Case / resolution path
+
+@enduml
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

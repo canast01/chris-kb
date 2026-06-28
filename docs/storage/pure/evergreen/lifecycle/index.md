@@ -18,6 +18,28 @@ Pure Storage Evergreen Lifecycle reference covering Evergreen Program Tiers, Sof
 ![Pure Storage Evergreen Lifecycle — Diagram](../../../../assets/storage-pure-evergreen-lifecycle-diagram.svg)
 
 The Evergreen program guarantees that Pure FlashArray and FlashBlade platforms never become obsolete — hardware and software are refreshed non-disruptively as technology evolves.
+
+```d2
+direction: right
+
+plan: "Plan" {shape: oval}
+evergreen_program_tiers: "Evergreen Program Tiers" {shape: rectangle}
+software_upgrade_purity: "Software Upgrade (Purity)" {shape: rectangle}
+drive_replacement: "Drive Replacement" {shape: rectangle}
+controller_refresh_evergreenforever: "Controller Refresh (Evergreen//Forever)" {shape: rectangle}
+endoflife_considerations: "End-of-Life Considerations" {shape: rectangle}
+lifecycle_timeline: "Lifecycle Timeline" {shape: rectangle}
+validate: "Validate" {shape: oval}
+
+plan -> evergreen_program_tiers
+evergreen_program_tiers -> software_upgrade_purity
+software_upgrade_purity -> drive_replacement
+drive_replacement -> controller_refresh_evergreenforever
+controller_refresh_evergreenforever -> endoflife_considerations
+endoflife_considerations -> lifecycle_timeline
+lifecycle_timeline -> validate
+```
+
 ## Evergreen Program Tiers
 
 | Program | Model | Refresh Included |

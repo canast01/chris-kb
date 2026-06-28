@@ -16,6 +16,21 @@ Standards reference covering Naming Conventions, Build Baseline, Sizing Guidelin
 
 
 
+```d2
+direction: right
+
+center: "NetApp ONTAP" {shape: hexagon}
+naming_conventions: "Naming Conventions" {shape: rectangle}
+build_baseline: "Build Baseline" {shape: rectangle}
+sizing_guidelines: "Sizing Guidelines" {shape: rectangle}
+configuration_checklist: "Configuration Checklist" {shape: rectangle}
+
+center -> naming_conventions
+center -> build_baseline
+center -> sizing_guidelines
+center -> configuration_checklist
+```
+
 ## Naming Conventions
 
 | Object | Pattern | Example |

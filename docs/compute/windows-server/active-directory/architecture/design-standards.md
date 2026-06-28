@@ -17,6 +17,26 @@ Organisational standards for OU structure, naming conventions, group policy desi
 
 
 ---
+
+```d2
+direction: right
+
+center: "Active Directory" {shape: hexagon}
+ou_and_gpo_hierarchy: "OU and GPO Hierarchy" {shape: rectangle}
+ou_structure: "OU Structure" {shape: rectangle}
+naming_conventions: "Naming Conventions" {shape: rectangle}
+group_policy_standards: "Group Policy Standards" {shape: rectangle}
+password_policy_standards: "Password Policy Standards" {shape: rectangle}
+kerberos_settings: "Kerberos Settings" {shape: rectangle}
+
+center -> ou_and_gpo_hierarchy
+center -> ou_structure
+center -> naming_conventions
+center -> group_policy_standards
+center -> password_policy_standards
+center -> kerberos_settings
+```
+
 ## OU and GPO Hierarchy
 
 ```mermaid

@@ -17,6 +17,23 @@ A failure domain is the blast radius of a single fault: the set of hosts, storag
 
 ---
 
+```d2
+direction: right
+
+center: "Cluster Failure Domains" {shape: hexagon}
+failure_domain_taxonomy: "Failure Domain Taxonomy" {shape: rectangle}
+vsan_ftt_and_raid_policy_mapping: "vSAN FTT and RAID Policy Mapping" {shape: rectangle}
+vsan_fault_domain_configuration: "vSAN Fault Domain Configuration" {shape: rectangle}
+vmhost_affinity_and_antiaffinity_rul: "VM-Host Affinity and Anti-Affinity Rules" {shape: rectangle}
+failure_domain_verification_table: "Failure Domain Verification Table" {shape: rectangle}
+
+center -> failure_domain_taxonomy
+center -> vsan_ftt_and_raid_policy_mapping
+center -> vsan_fault_domain_configuration
+center -> vmhost_affinity_and_antiaffinity_rul
+center -> failure_domain_verification_table
+```
+
 ## Failure Domain Taxonomy
 
 | Domain Level | What It Covers | Impact of Single Failure | Mitigation |

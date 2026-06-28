@@ -18,6 +18,25 @@ Scripts reference covering Array Health Check (Python), ActiveCluster Pod Status
 
 ![FlashArray — Scripts — Diagram](../../../../assets/storage-pure-flasharray-operations-scripts-diagram.svg)
 
+```d2
+direction: right
+
+hub: "FlashArray\nOperations" {shape: hexagon}
+array_health_check_python: "Array Health Check (Python)" {shape: rectangle}
+activecluster_pod_status_monitor_pyt: "ActiveCluster Pod Status Monitor (Python)" {shape: rectangle}
+volume_and_snapshot_report_bash: "Volume and Snapshot Report (Bash)" {shape: rectangle}
+drive_failure_alert_bash: "Drive Failure Alert (Bash)" {shape: rectangle}
+ansible_flasharray_health_playbook: "Ansible FlashArray Health Playbook" {shape: rectangle}
+windows_flasharray_health_check_via_: "Windows: FlashArray Health Check via REST API (PowerShell)" {shape: rectangle}
+
+hub -> array_health_check_python
+hub -> activecluster_pod_status_monitor_pyt
+hub -> volume_and_snapshot_report_bash
+hub -> drive_failure_alert_bash
+hub -> ansible_flasharray_health_playbook
+hub -> windows_flasharray_health_check_via_
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

@@ -18,6 +18,17 @@ Evergreen is a commercial subscription program — it has no dedicated software 
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+upgrade_process_issues: "Upgrade Process Issues" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> upgrade_process_issues: investigate
+upgrade_process_issues -> resolution
+```
+
 ## Before you begin
 
 - Evergreen is a subscription program — all operational port/software issues are tracked against the underlying FlashArray or FlashBlade hardware.

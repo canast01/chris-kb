@@ -35,6 +35,27 @@ flowchart TD
     style s7 fill:#2e7d32,color:#fff,stroke:#1b5e20
 ```
 
+```d2
+direction: right
+
+plan: "Plan" {shape: oval}
+phase_1_prerequisites: "Phase 1 — Prerequisites" {shape: rectangle}
+phase_2_enable_workload_management_s: "Phase 2 — Enable Workload Management (Supervisor)" {shape: rectangle}
+phase_3_vsphere_namespace_configurat: "Phase 3 — vSphere Namespace Configuration" {shape: rectangle}
+phase_4_tkg_workload_cluster_provisi: "Phase 4 — TKG Workload Cluster Provisioning" {shape: rectangle}
+phase_5_harbor_container_registry: "Phase 5 — Harbor Container Registry" {shape: rectangle}
+phase_6_endtoend_validation: "Phase 6 — End-to-End Validation" {shape: rectangle}
+validate: "Validate" {shape: oval}
+
+plan -> phase_1_prerequisites
+phase_1_prerequisites -> phase_2_enable_workload_management_s
+phase_2_enable_workload_management_s -> phase_3_vsphere_namespace_configurat
+phase_3_vsphere_namespace_configurat -> phase_4_tkg_workload_cluster_provisi
+phase_4_tkg_workload_cluster_provisi -> phase_5_harbor_container_registry
+phase_5_harbor_container_registry -> phase_6_endtoend_validation
+phase_6_endtoend_validation -> validate
+```
+
 ## Before you begin
 
 - **Access:** vCenter Administrator role and SSH access to VCSA/ESXi hosts

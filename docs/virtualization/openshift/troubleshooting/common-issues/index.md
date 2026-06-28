@@ -39,6 +39,32 @@ graph TD
     class D,E,F issue
 ```
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+diagnostic_flow: "Diagnostic Flow" {shape: rectangle}
+crashloopbackoff: "CrashLoopBackOff" {shape: rectangle}
+imagepullbackoff: "ImagePullBackOff" {shape: rectangle}
+pending_pods_not_scheduling: "Pending Pods (Not Scheduling)" {shape: rectangle}
+oomkilled: "OOMKilled" {shape: rectangle}
+node_notready: "Node NotReady" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> diagnostic_flow: investigate
+symptom -> crashloopbackoff: investigate
+symptom -> imagepullbackoff: investigate
+symptom -> pending_pods_not_scheduling: investigate
+symptom -> oomkilled: investigate
+symptom -> node_notready: investigate
+diagnostic_flow -> resolution
+crashloopbackoff -> resolution
+imagepullbackoff -> resolution
+pending_pods_not_scheduling -> resolution
+oomkilled -> resolution
+node_notready -> resolution
+```
+
 ## Diagnostic Flow
 
 ```mermaid

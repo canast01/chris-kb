@@ -16,6 +16,17 @@ FlashArray provides encryption at rest (hardware-based, always-on) and encryptio
 
 ---
 
+```d2
+direction: down
+
+external: External / Untrusted {shape: rectangle}
+encryption_at_rest: "Encryption at Rest" {shape: rectangle}
+core: "FlashArray Core" {shape: hexagon}
+
+external -> encryption_at_rest: traffic in
+encryption_at_rest -> core: secured path
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

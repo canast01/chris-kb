@@ -18,6 +18,23 @@ Catalog of known CyberArk PAM bugs, error codes, and workarounds covering Vault,
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+vault_connectivity: "Vault Connectivity" {shape: rectangle}
+password_management: "Password Management" {shape: rectangle}
+psm_privileged_session_manager: "PSM (Privileged Session Manager)" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> vault_connectivity: investigate
+symptom -> password_management: investigate
+symptom -> psm_privileged_session_manager: investigate
+vault_connectivity -> resolution
+password_management -> resolution
+psm_privileged_session_manager -> resolution
+```
+
 ## Before you begin
 
 - CyberArk errors appear in the PVWA → Monitoring → Session Management, or in Vault audit logs.

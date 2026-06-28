@@ -13,6 +13,27 @@ VxRail Health Checks reference covering Overview, Where It Fits, Daily Checks, H
 
 
 
+```d2
+direction: right
+
+begin_checks: "Begin Checks" {shape: oval}
+run_this_routine: "Run This Routine" {shape: rectangle}
+where_it_fits: "Where It Fits" {shape: rectangle}
+daily_checks: "Daily Checks" {shape: rectangle}
+health_commands: "Health Commands" {shape: rectangle}
+common_issues: "Common Issues" {shape: rectangle}
+operational_tasks: "Operational Tasks" {shape: rectangle}
+generate_report: "Generate Report" {shape: oval}
+
+begin_checks -> run_this_routine
+run_this_routine -> where_it_fits
+where_it_fits -> daily_checks
+daily_checks -> health_commands
+health_commands -> common_issues
+common_issues -> operational_tasks
+operational_tasks -> generate_report
+```
+
 ## Run This Routine
 
 Run these steps in order for every daily check, pre-change validation, or post-incident review of the VxRail cluster.

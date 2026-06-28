@@ -9,6 +9,15 @@ tags:
 
 
 
+```d2
+direction: right
+
+center: "VxRail" {shape: hexagon}
+hci_node_cluster: "HCI Node Cluster" {shape: rectangle}
+
+center -> hci_node_cluster
+```
+
 ## Overview
 
 VxRail is a hyper-converged infrastructure (HCI) appliance built on Dell PowerEdge nodes running VMware vSphere and vSAN. Each node contributes local compute (CPU, RAM), NVMe flash cache, and capacity storage to a unified cluster. VxRail Manager orchestrates all lifecycle and configuration operations by communicating with vCenter.

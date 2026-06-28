@@ -17,6 +17,25 @@ How It Works reference covering Overview, Controller Refresh Model, HA Topology,
 Evergreen — What's Included vs. Customer-Managed
 
 
+```d2
+direction: right
+
+center: "Evergreen" {shape: hexagon}
+controller_refresh_model: "Controller Refresh Model" {shape: rectangle}
+ha_topology: "HA Topology" {shape: rectangle}
+controllers_ct0_ct1: "Controllers (CT0 / CT1)" {shape: rectangle}
+directflash_modules_dfm: "DirectFlash Modules (DFM)" {shape: rectangle}
+nvram_write_cache: "NVRAM (Write Cache)" {shape: rectangle}
+host_connectivity: "Host Connectivity" {shape: rectangle}
+
+center -> controller_refresh_model
+center -> ha_topology
+center -> controllers_ct0_ct1
+center -> directflash_modules_dfm
+center -> nvram_write_cache
+center -> host_connectivity
+```
+
 ## Overview
 
 Evergreen is Pure Storage's hardware subscription model for the FlashArray platform (//X, //C, and //E series). Rather than purchasing hardware outright, customers subscribe to a capacity and performance tier — with controller hardware refreshes, Purity software upgrades, and support included in the subscription cost. The defining principle is no forklift upgrades: when controllers reach end of generation, Pure replaces them non-disruptively while data remains on the existing NVMe drive shelf — hosts stay connected and I/O continues during the swap.

@@ -16,6 +16,25 @@ How It Works reference covering Overview, Key Hosted Applications, Deployment To
 
 
 
+```d2
+direction: right
+
+center: "Nexus Dashboard" {shape: hexagon}
+software_versioning: "Software Versioning" {shape: rectangle}
+multisite_fabric_management: "Multi-Site Fabric Management" {shape: rectangle}
+nexus_dashboard_fabric_controller_nd: "Nexus Dashboard Fabric Controller (NDFC)" {shape: rectangle}
+nexus_dashboard_insights: "Nexus Dashboard Insights" {shape: rectangle}
+nexus_dashboard_orchestrator: "Nexus Dashboard Orchestrator" {shape: rectangle}
+high_availability_architecture: "High Availability Architecture" {shape: rectangle}
+
+center -> software_versioning
+center -> multisite_fabric_management
+center -> nexus_dashboard_fabric_controller_nd
+center -> nexus_dashboard_insights
+center -> nexus_dashboard_orchestrator
+center -> high_availability_architecture
+```
+
 ## Software Versioning
 
 Nexus Dashboard uses independent version streams for the platform and hosted applications. Check the Cisco compatibility matrix before any upgrade to confirm ND platform version compatibility with each installed application version.

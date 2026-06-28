@@ -17,6 +17,27 @@ GitHub Actions escalation: when to escalate to GitHub Enterprise Support, how to
 
 
 
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+actor "On-Call Engineer" as ENG
+participant "GitHub Actions\nSystem" as SYS
+participant "Vendor Support" as SUP
+
+ENG -> SYS: Severity Levels
+SYS --> ENG: Output
+ENG -> SYS: Pre-Escalation Triage Checklist
+SYS --> ENG: Output
+ENG -> SYS: Step-by-Step Data Collection
+SYS --> ENG: Output
+ENG -> SUP: Escalate with diagnostic bundle
+SUP --> ENG: Case / resolution path
+
+@enduml
+```
+
 ## Before you begin
 
 - **Access:** Repository admin or org owner access; for Enterprise support, account admin access to the GitHub Enterprise contract

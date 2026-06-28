@@ -17,6 +17,27 @@ Version lifecycle and End of General Support (EOGS) / End of Technical Guidance 
 
 
 
+```d2
+direction: right
+
+plan: "Plan" {shape: oval}
+lifecycle_phase_definitions: "Lifecycle Phase Definitions" {shape: rectangle}
+vsphere_esxi_vcenter: "vSphere (ESXi + vCenter)" {shape: rectangle}
+vsan: "vSAN" {shape: rectangle}
+nsxt_nsx: "NSX-T / NSX" {shape: rectangle}
+vmware_cloud_foundation_vcf: "VMware Cloud Foundation (VCF)" {shape: rectangle}
+aria_suite: "Aria Suite" {shape: rectangle}
+validate: "Validate" {shape: oval}
+
+plan -> lifecycle_phase_definitions
+lifecycle_phase_definitions -> vsphere_esxi_vcenter
+vsphere_esxi_vcenter -> vsan
+vsan -> nsxt_nsx
+nsxt_nsx -> vmware_cloud_foundation_vcf
+vmware_cloud_foundation_vcf -> aria_suite
+aria_suite -> validate
+```
+
 ## Lifecycle Phase Definitions
 
 | Phase | What it means |

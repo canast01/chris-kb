@@ -15,6 +15,15 @@ Hardening reference covering NetBackup Security Architecture, Firewall Ports.
 
 
 
+```d2
+direction: down
+
+netbackup_security_architecture: "NetBackup Security Architecture" {shape: rectangle}
+firewall_ports: "Firewall Ports" {shape: rectangle}
+
+netbackup_security_architecture -> firewall_ports: hardens
+```
+
 ## Before you begin
 
 - **Access:** Backup admin role on backup server; target system credentials

@@ -52,6 +52,32 @@ graph TD
     class Q,R escalate
 ```
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+step_1_check_cluster_and_appliance_h: "Step 1 — Check cluster and appliance health via REST API" {shape: rectangle}
+step_2_check_recent_critical_events: "Step 2 — Check recent critical events" {shape: rectangle}
+step_3_check_volume_and_host_connect: "Step 3 — Check volume and host connectivity" {shape: rectangle}
+step_4_check_fc_and_ethernet_port_he: "Step 4 — Check FC and Ethernet port health" {shape: rectangle}
+step_5_check_nas_server_and_file_sys: "Step 5 — Check NAS server and file system health" {shape: rectangle}
+step_6_check_replication_sessions: "Step 6 — Check replication sessions" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> step_1_check_cluster_and_appliance_h: investigate
+symptom -> step_2_check_recent_critical_events: investigate
+symptom -> step_3_check_volume_and_host_connect: investigate
+symptom -> step_4_check_fc_and_ethernet_port_he: investigate
+symptom -> step_5_check_nas_server_and_file_sys: investigate
+symptom -> step_6_check_replication_sessions: investigate
+step_1_check_cluster_and_appliance_h -> resolution
+step_2_check_recent_critical_events -> resolution
+step_3_check_volume_and_host_connect -> resolution
+step_4_check_fc_and_ethernet_port_he -> resolution
+step_5_check_nas_server_and_file_sys -> resolution
+step_6_check_replication_sessions -> resolution
+```
+
 ## Before you begin
 
 - **Access:** PowerStore Manager admin credentials (HTTPS on port 443); SSH access requires Dell service account and is only used by Dell Support

@@ -18,6 +18,23 @@ SnapMirror integrations: SnapCenter backup chain extension, SnapVault for long-t
 
 ---
 
+```d2
+direction: right
+
+center: "SnapMirror" {shape: hexagon}
+snapcenter_orchestration: "SnapCenter Orchestration" {shape: rectangle}
+svmdr_for_nas_failover: "SVM-DR for NAS Failover" {shape: rectangle}
+smbc_for_transparent_host_failover: "SMBC for Transparent Host Failover" {shape: rectangle}
+cloud_volumes_ontap: "Cloud Volumes ONTAP" {shape: rectangle}
+rest_api: "REST API" {shape: rectangle}
+
+center -> snapcenter_orchestration
+center -> svmdr_for_nas_failover
+center -> smbc_for_transparent_host_failover
+center -> cloud_volumes_ontap
+center -> rest_api
+```
+
 ## SnapCenter Orchestration
 
 SnapCenter uses SnapMirror to replicate application-consistent snapshots to a DR site. SnapCenter manages the full workflow: application quiesce, snapshot creation, SnapMirror update, and snapshot catalog registration. For DR failover, SnapCenter orchestrates `snapmirror break` on the destination, mounts the destination volume, and presents it to hosts — enabling application-consistent failover without manual intervention. SnapCenter also manages the resync and failback sequence post-recovery.

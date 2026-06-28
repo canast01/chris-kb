@@ -20,6 +20,27 @@ ESXi Encryption Stack
 
 The VM must be powered off or in a compatible state. Encryption processes each VMDK in-place.
 
+```d2
+direction: down
+
+external: External / Untrusted {shape: rectangle}
+vm_encryption_operations: "VM Encryption Operations" {shape: rectangle}
+vsan_encryption: "vSAN Encryption" {shape: rectangle}
+esxi_host_encryption_secure_boot_and: "ESXi Host Encryption — Secure Boot and TPM" {shape: rectangle}
+esxi_ssltls_certificate_management: "ESXi SSL/TLS Certificate Management" {shape: rectangle}
+encrypted_vmotion: "Encrypted vMotion" {shape: rectangle}
+encryption_checklist: "Encryption Checklist" {shape: rectangle}
+core: "ESXi Core" {shape: hexagon}
+
+external -> vm_encryption_operations: traffic in
+vm_encryption_operations -> vsan_encryption
+vsan_encryption -> esxi_host_encryption_secure_boot_and
+esxi_host_encryption_secure_boot_and -> esxi_ssltls_certificate_management
+esxi_ssltls_certificate_management -> encrypted_vmotion
+encrypted_vmotion -> encryption_checklist
+encryption_checklist -> core: secured path
+```
+
 ## VM Encryption Operations
 
 ### Verify VM Encryption Status

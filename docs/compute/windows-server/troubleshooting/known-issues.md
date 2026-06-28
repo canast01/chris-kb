@@ -17,6 +17,23 @@ Catalog of known Windows Server bugs, error codes, and workarounds covering WinR
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+remote_management: "Remote Management" {shape: rectangle}
+patching: "Patching" {shape: rectangle}
+storage: "Storage" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> remote_management: investigate
+symptom -> patching: investigate
+symptom -> storage: investigate
+remote_management -> resolution
+patching -> resolution
+storage -> resolution
+```
+
 ## Before you begin
 
 - Windows Event Viewer (System, Application, Security logs) is the primary diagnostic source.

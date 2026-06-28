@@ -18,6 +18,23 @@ Datastore Standard reference covering Overview, Naming, VMFS Version, Maximum Da
 
 ---
 
+```d2
+direction: down
+
+naming: "Naming" {shape: rectangle}
+vmfs_version: "VMFS Version" {shape: rectangle}
+maximum_datastore_size: "Maximum Datastore Size" {shape: rectangle}
+mounting: "Mounting" {shape: rectangle}
+backup_tagging: "Backup Tagging" {shape: rectangle}
+capacity_management: "Capacity Management" {shape: rectangle}
+
+naming -> vmfs_version: hardens
+vmfs_version -> maximum_datastore_size: hardens
+maximum_datastore_size -> mounting: hardens
+mounting -> backup_tagging: hardens
+backup_tagging -> capacity_management: hardens
+```
+
 ## Overview
 
 This standard governs how datastores are named, created, presented, and managed across the vSphere environment. All new datastores must follow this standard before VMs are placed on them.

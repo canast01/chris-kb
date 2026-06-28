@@ -15,6 +15,27 @@ Rollback options differ significantly by component. Establish the rollback path 
 
 
 
+```d2
+direction: right
+
+plan: "Plan" {shape: oval}
+rollback_readiness_by_component: "Rollback Readiness by Component" {shape: rectangle}
+vcenter_rollback_filebased_backup: "vCenter Rollback (File-Based Backup)" {shape: rectangle}
+esxi_bootbank_rollback: "ESXi Bootbank Rollback" {shape: rectangle}
+nsx_backup_before_upgrade: "NSX Backup Before Upgrade" {shape: rectangle}
+aria_product_rollback_snapshots: "Aria Product Rollback (Snapshots)" {shape: rectangle}
+go_nogo_decision_framework: "Go / No-Go Decision Framework" {shape: rectangle}
+validate: "Validate" {shape: oval}
+
+plan -> rollback_readiness_by_component
+rollback_readiness_by_component -> vcenter_rollback_filebased_backup
+vcenter_rollback_filebased_backup -> esxi_bootbank_rollback
+esxi_bootbank_rollback -> nsx_backup_before_upgrade
+nsx_backup_before_upgrade -> aria_product_rollback_snapshots
+aria_product_rollback_snapshots -> go_nogo_decision_framework
+go_nogo_decision_framework -> validate
+```
+
 ## Rollback Readiness by Component
 
 | Component | Rollback Method | Practical Rollback? | Notes |

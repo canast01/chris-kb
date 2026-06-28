@@ -39,6 +39,26 @@ graph TD
     ACT -->|replaced while active| STA
     STA -->|garbage collected\nby CLOM| ACT
 ```
+
+```d2
+direction: right
+
+center: "Vsan Cluster Health" {shape: hexagon}
+health_checks_taxonomy: "Health Checks Taxonomy" {shape: rectangle}
+component_state_machine: "Component State Machine" {shape: rectangle}
+rebuild_trigger_clomdegradedstatedel: "Rebuild Trigger: `clom.degradedStateDelay`" {shape: rectangle}
+resync_throttle: "Resync Throttle" {shape: rectangle}
+object_health_inspection: "Object Health Inspection" {shape: rectangle}
+disk_group_health: "Disk Group Health" {shape: rectangle}
+
+center -> health_checks_taxonomy
+center -> component_state_machine
+center -> rebuild_trigger_clomdegradedstatedel
+center -> resync_throttle
+center -> object_health_inspection
+center -> disk_group_health
+```
+
 ## Health Checks Taxonomy
 
 vSAN Health Service categorizes checks across five domains, accessible via **vSAN → Monitor → Health Service**:

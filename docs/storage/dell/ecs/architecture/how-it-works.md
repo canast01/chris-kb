@@ -16,6 +16,25 @@ How It Works reference covering Overview, Scale-Out Object Storage Topology, Era
 
 
 
+```d2
+direction: right
+
+center: "ECS" {shape: hexagon}
+scaleout_object_storage_topology: "Scale-Out Object Storage Topology" {shape: rectangle}
+erasure_coding: "Erasure Coding" {shape: rectangle}
+virtual_data_centers_vdc: "Virtual Data Centers (VDC)" {shape: rectangle}
+replication_groups_and_geodistributi: "Replication Groups and Geo-Distribution" {shape: rectangle}
+namespace_and_bucket_hierarchy: "Namespace and Bucket Hierarchy" {shape: rectangle}
+supported_api_protocols: "Supported API Protocols" {shape: rectangle}
+
+center -> scaleout_object_storage_topology
+center -> erasure_coding
+center -> virtual_data_centers_vdc
+center -> replication_groups_and_geodistributi
+center -> namespace_and_bucket_hierarchy
+center -> supported_api_protocols
+```
+
 ## Overview
 
 Dell ECS (Enterprise Content Storage) is a scale-out, software-defined object storage platform built on commodity x86 nodes. It exposes S3, Swift, Atmos, and CAS APIs over HTTPS. The software stack runs entirely on commodity hardware and provides geo-distribution across sites via Virtual Data Centers (VDCs) linked into replication groups.

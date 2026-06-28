@@ -18,6 +18,29 @@ Security operational runbooks — certificate renewal, PAM credential rotation, 
 <a class="kb-card" href="certificate-renewal/"><strong>Certificate Renewal</strong><span>Certificate renewal runbook — expiry scanning, CSR generation, CA submission, and deployment validation.</span></a>
 </div>
 
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+actor "Responder" as A
+participant "Runbooks System" as B
+participant "Dependent System" as C
+
+A -> B: Certificate Renewal Runbook
+B --> A: OK
+A -> B: CyberArk Password Rotation Check
+B --> A: OK
+A -> B: Monthly Access Recertification
+B --> A: OK
+A -> B: Weekly Firewall Rule Review
+B --> A: OK
+A -> B: Hardening Check Schedule
+B --> A: OK
+
+@enduml
+```
+
 ## Certificate Renewal Runbook
 
 ```bash

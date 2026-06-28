@@ -19,6 +19,31 @@ Cross-product runbook for deploying NSX-T microsegmentation backed by Active Dir
 
 ![NSX-T Microsegmentation with Active Directory Integration — Diagram](../../assets/storage-runbooks-nsxt-microsegmentation-ad-integration-diagram.svg)
 
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+actor "Responder" as A
+participant "Runbooks System" as B
+participant "Dependent System" as C
+
+A -> B: Phase 1 Connect NSX Manager to Active Directory
+B --> A: OK
+A -> B: Phase 2 Create NSX Security Groups
+B --> A: OK
+A -> B: Phase 3 Distributed Firewall Rules
+B --> A: OK
+A -> B: Phase 4 Identity-Based Firewall Rules (IDFW)
+B --> A: OK
+A -> B: Phase 5 Validation
+B --> A: OK
+A -> B: Rollback
+B --> A: OK
+
+@enduml
+```
+
 ## Before You Begin
 
 **Prerequisites:**

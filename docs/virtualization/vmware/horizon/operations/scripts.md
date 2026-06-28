@@ -19,6 +19,25 @@ Scripts reference covering Get Session Count by Pool, Force Logoff Disconnected 
 
 ---
 
+```d2
+direction: right
+
+hub: "Horizon\nOperations" {shape: hexagon}
+force_logoff_disconnected_sessions_o: "Force Logoff Disconnected Sessions Older Than N Hours" {shape: rectangle}
+get_all_desktops_in_error_state: "Get All Desktops in Error State" {shape: rectangle}
+rebalance_instant_clone_pool: "Rebalance Instant Clone Pool" {shape: rectangle}
+export_entitlement_report: "Export Entitlement Report" {shape: rectangle}
+bulkadd_ad_group_entitlements: "Bulk-Add AD Group Entitlements" {shape: rectangle}
+get_app_volumes_assignment_report: "Get App Volumes Assignment Report" {shape: rectangle}
+
+hub -> force_logoff_disconnected_sessions_o
+hub -> get_all_desktops_in_error_state
+hub -> rebalance_instant_clone_pool
+hub -> export_entitlement_report
+hub -> bulkadd_ad_group_entitlements
+hub -> get_app_volumes_assignment_report
+```
+
 ## Before you begin
 
 - **Access:** vCenter read-only minimum; Administrator role for remediation steps

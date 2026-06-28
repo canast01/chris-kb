@@ -17,6 +17,25 @@ Evergreen//One automation scripts: Python examples for subscription consumption 
 
 ![Evergreen//One — Scripts — Diagram](../../../../assets/storage-pure-evergreen-one-scripts-diagram.svg)
 
+```d2
+direction: right
+
+center: "Evergreen//One" {shape: rectangle}
+consumption_usage_report_python: "Consumption Usage Report (Python)" {shape: rectangle}
+sla_compliance_check_python: "SLA Compliance Check (Python)" {shape: rectangle}
+burst_alert_script_bash: "Burst Alert Script (Bash)" {shape: rectangle}
+windows_evergreenone_subscription_ch: "Windows: Evergreen//One Subscription Check via Pure1 API (Po" {shape: rectangle}
+daily_check_script_python: "Daily Check Script (Python)" {shape: rectangle}
+incident_triage_script_python: "Incident Triage Script (Python)" {shape: rectangle}
+
+center -> consumption_usage_report_python
+center -> sla_compliance_check_python
+center -> burst_alert_script_bash
+center -> windows_evergreenone_subscription_ch
+center -> daily_check_script_python
+center -> incident_triage_script_python
+```
+
 ## Consumption Usage Report (Python)
 
 Authenticate to the Pure1 REST API using a JWT signed with your private key, fetch subscription asset usage metrics, and print a table showing committed vs. consumed vs. burst per array. Warns if any array is consuming more than 90% of committed capacity.

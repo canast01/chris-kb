@@ -53,6 +53,32 @@ graph TD
     class K,N,S escalate
 ```
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+step_1_firstresponse_sequence: "Step 1 — First-response sequence" {shape: rectangle}
+step_2_alert_triage: "Step 2 — Alert triage" {shape: rectangle}
+step_3_controller_diagnostics: "Step 3 — Controller diagnostics" {shape: rectangle}
+step_4_drive_diagnostics: "Step 4 — Drive diagnostics" {shape: rectangle}
+step_5_port_and_connectivity_diagnos: "Step 5 — Port and connectivity diagnostics" {shape: rectangle}
+step_6_host_and_volume_connectivity: "Step 6 — Host and volume connectivity" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> step_1_firstresponse_sequence: investigate
+symptom -> step_2_alert_triage: investigate
+symptom -> step_3_controller_diagnostics: investigate
+symptom -> step_4_drive_diagnostics: investigate
+symptom -> step_5_port_and_connectivity_diagnos: investigate
+symptom -> step_6_host_and_volume_connectivity: investigate
+step_1_firstresponse_sequence -> resolution
+step_2_alert_triage -> resolution
+step_3_controller_diagnostics -> resolution
+step_4_drive_diagnostics -> resolution
+step_5_port_and_connectivity_diagnos -> resolution
+step_6_host_and_volume_connectivity -> resolution
+```
+
 ## Before you begin
 
 - **Access:** SSH to the FlashArray management IP as `pureuser` or cluster admin; Pure1 portal access for historical analytics and AI recommendations

@@ -42,6 +42,18 @@ graph TD
     class C,E,G,I,K,L action
     class M escalate
 ```
+
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+subpage_index: "Sub-Page Index" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> subpage_index: investigate
+subpage_index -> resolution
+```
+
 ## Sub-Page Index
 
 | Symptom | Go To |

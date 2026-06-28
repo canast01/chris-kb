@@ -16,6 +16,27 @@ Authentication reference covering Authentication Methods, Local Account Manageme
 
 
 
+```d2
+direction: down
+
+external: External / Untrusted {shape: rectangle}
+authentication_methods: "Authentication Methods" {shape: rectangle}
+local_account_management: "Local Account Management" {shape: rectangle}
+ldap_active_directory_integration: "LDAP / Active Directory Integration" {shape: rectangle}
+rest_api_token_authentication: "REST API Token Authentication" {shape: rectangle}
+certificatebased_api_access: "Certificate-Based API Access" {shape: rectangle}
+session_management: "Session Management" {shape: rectangle}
+core: "PowerStore Core" {shape: hexagon}
+
+external -> authentication_methods: traffic in
+authentication_methods -> local_account_management
+local_account_management -> ldap_active_directory_integration
+ldap_active_directory_integration -> rest_api_token_authentication
+rest_api_token_authentication -> certificatebased_api_access
+certificatebased_api_access -> session_management
+session_management -> core: secured path
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

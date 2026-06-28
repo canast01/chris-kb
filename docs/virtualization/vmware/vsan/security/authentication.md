@@ -18,6 +18,27 @@ vSAN does not have its own authentication system. All access to vSAN management 
 
 ---
 
+```d2
+direction: down
+
+external: External / Untrusted {shape: rectangle}
+authentication_stack: "Authentication Stack" {shape: rectangle}
+service_accounts: "Service Accounts" {shape: rectangle}
+session_and_token_management: "Session and Token Management" {shape: rectangle}
+esxi_host_authentication: "ESXi Host Authentication" {shape: rectangle}
+certificatebased_authentication: "Certificate-Based Authentication" {shape: rectangle}
+related_reference: "Related Reference" {shape: rectangle}
+core: "vSAN Core" {shape: hexagon}
+
+external -> authentication_stack: traffic in
+authentication_stack -> service_accounts
+service_accounts -> session_and_token_management
+session_and_token_management -> esxi_host_authentication
+esxi_host_authentication -> certificatebased_authentication
+certificatebased_authentication -> related_reference
+related_reference -> core: secured path
+```
+
 ## Before you begin
 
 - **Access:** vCenter Administrator role

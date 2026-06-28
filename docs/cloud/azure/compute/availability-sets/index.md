@@ -17,6 +17,25 @@ Availability Sets provide high availability for Azure VMs by distributing them a
 
 ---
 
+```d2
+direction: right
+
+center: "Azure" {shape: hexagon}
+core_concepts: "Core Concepts" {shape: rectangle}
+creating_an_availability_set: "Creating an Availability Set" {shape: rectangle}
+deploying_vms_into_an_availability_s: "Deploying VMs into an Availability Set" {shape: rectangle}
+fault_domain_and_update_domain_distr: "Fault Domain and Update Domain Distribution" {shape: rectangle}
+availability_sets_vs_availability_zo: "Availability Sets vs Availability Zones vs VMSS" {shape: rectangle}
+limitations: "Limitations" {shape: rectangle}
+
+center -> core_concepts
+center -> creating_an_availability_set
+center -> deploying_vms_into_an_availability_s
+center -> fault_domain_and_update_domain_distr
+center -> availability_sets_vs_availability_zo
+center -> limitations
+```
+
 ## Core Concepts
 
 | Concept | Description |

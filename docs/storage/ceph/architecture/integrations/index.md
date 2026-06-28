@@ -32,6 +32,25 @@ graph LR
     CEPH --> NFS[NFS Ganesha\nCephFS NFS export\nceph nfs cluster]:::nfs
 ```
 
+```d2
+direction: right
+
+center: "Ceph" {shape: hexagon}
+openshift_odf: "OpenShift ODF" {shape: rectangle}
+kubernetes_rookceph: "Kubernetes / Rook-Ceph" {shape: rectangle}
+openstack_integration: "OpenStack Integration" {shape: rectangle}
+prometheus_integration: "Prometheus Integration" {shape: rectangle}
+rgw_s3compatible_object_storage: "RGW (S3-Compatible Object Storage)" {shape: rectangle}
+cephfs_shared_filesystem: "CephFS (Shared Filesystem)" {shape: rectangle}
+
+center -> openshift_odf
+center -> kubernetes_rookceph
+center -> openstack_integration
+center -> prometheus_integration
+center -> rgw_s3compatible_object_storage
+center -> cephfs_shared_filesystem
+```
+
 ## OpenShift ODF
 
 OpenShift Data Foundation (ODF) is Red Hat's converged storage layer for OpenShift. It deploys Ceph internally via the Rook operator in the `openshift-storage` namespace.

@@ -17,6 +17,19 @@ Aria Operations: Capacity Analytics and Rightsizing reference covering Rightsizi
 
 
 
+```d2
+direction: right
+
+hub: "Aria Operations\nOperations" {shape: hexagon}
+capacity_planning_reports: "Capacity Planning Reports" {shape: rectangle}
+common_capacity_issues: "Common Capacity Issues" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+hub -> capacity_planning_reports
+hub -> common_capacity_issues
+hub -> verify
+```
+
 ## Before you begin
 
 - **Access:** vCenter read-only minimum; Administrator role for remediation steps

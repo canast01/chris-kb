@@ -19,6 +19,19 @@ Aria Operations: Alert Definitions and Policies reference covering Alert Policie
 
 Suppression rules can also be set at the policy level to automatically suppress alerts for objects placed in maintenance mode.
 
+```d2
+direction: right
+
+hub: "Aria Operations\nOperations" {shape: hexagon}
+notification_rules_and_outbound_plug: "Notification Rules and Outbound Plugins" {shape: rectangle}
+common_alert_issues: "Common Alert Issues" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+hub -> notification_rules_and_outbound_plug
+hub -> common_alert_issues
+hub -> verify
+```
+
 ## Before you begin
 
 - **Access:** vCenter read-only minimum; Administrator role for remediation steps

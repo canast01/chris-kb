@@ -36,6 +36,27 @@ flowchart TD
     style s7 fill:#2e7d32,color:#fff,stroke:#1b5e20
 ```
 
+```d2
+direction: right
+
+plan: "Plan" {shape: oval}
+phase_1_prerequisites: "Phase 1 — Prerequisites" {shape: rectangle}
+phase_2_nsx_manager_cluster: "Phase 2 — NSX Manager Cluster" {shape: rectangle}
+phase_3_transport_zones_and_profiles: "Phase 3 — Transport Zones and Profiles" {shape: rectangle}
+phase_4_host_transport_node_preparat: "Phase 4 — Host Transport Node Preparation" {shape: rectangle}
+phase_5_edge_cluster_and_t0_gateway: "Phase 5 — Edge Cluster and T0 Gateway" {shape: rectangle}
+phase_6_logical_networking_and_valid: "Phase 6 — Logical Networking and Validation" {shape: rectangle}
+validate: "Validate" {shape: oval}
+
+plan -> phase_1_prerequisites
+phase_1_prerequisites -> phase_2_nsx_manager_cluster
+phase_2_nsx_manager_cluster -> phase_3_transport_zones_and_profiles
+phase_3_transport_zones_and_profiles -> phase_4_host_transport_node_preparat
+phase_4_host_transport_node_preparat -> phase_5_edge_cluster_and_t0_gateway
+phase_5_edge_cluster_and_t0_gateway -> phase_6_logical_networking_and_valid
+phase_6_logical_networking_and_valid -> validate
+```
+
 ## Before you begin
 
 <!-- video-link -->

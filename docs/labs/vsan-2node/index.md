@@ -14,6 +14,19 @@ Add vSAN shared storage to the Lab 1 cluster. Configures a 2-node vSAN cluster w
 
 
 
+```d2
+direction: right
+
+center: "Vsan 2Node" {shape: hexagon}
+prerequisites: "Prerequisites" {shape: rectangle}
+how_vsan_2node_works: "How vSAN 2-node works" {shape: rectangle}
+phases: "Phases" {shape: rectangle}
+
+center -> prerequisites
+center -> how_vsan_2node_works
+center -> phases
+```
+
 ## Prerequisites
 
 | Requirement | Value |

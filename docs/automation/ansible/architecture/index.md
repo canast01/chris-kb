@@ -33,6 +33,17 @@ Agentless IT automation over SSH/WinRM; the control node pushes modules to manag
 
 </div>
 
+```d2
+direction: right
+
+center: "Ansible" {shape: hexagon}
+core_components: "Core Components" {shape: rectangle}
+agentless_execution_model: "Agentless Execution Model" {shape: rectangle}
+
+center -> core_components
+center -> agentless_execution_model
+```
+
 ## Core Components
 
 | Component | Purpose |

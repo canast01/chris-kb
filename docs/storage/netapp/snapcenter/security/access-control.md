@@ -18,6 +18,21 @@ SnapCenter access control: RBAC role assignment for App Backup Admin and Backup 
 
 ---
 
+```d2
+direction: down
+
+external: External / Untrusted {shape: rectangle}
+rbac: "RBAC" {shape: rectangle}
+ontap_service_account_security: "ONTAP Service Account Security" {shape: rectangle}
+audit_logging: "Audit Logging" {shape: rectangle}
+core: "SnapCenter Core" {shape: hexagon}
+
+external -> rbac: traffic in
+rbac -> ontap_service_account_security
+ontap_service_account_security -> audit_logging
+audit_logging -> core: secured path
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

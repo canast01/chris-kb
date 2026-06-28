@@ -14,6 +14,25 @@ Azure Practice Notes reference covering ARM vs Bicep vs Terraform, RBAC Scope Hi
 
 
 
+```d2
+direction: right
+
+center: "Azure" {shape: hexagon}
+arm_vs_bicep_vs_terraform: "ARM vs Bicep vs Terraform" {shape: rectangle}
+rbac_scope_hierarchy: "RBAC Scope Hierarchy" {shape: rectangle}
+policy_vs_initiative: "Policy vs Initiative" {shape: rectangle}
+common_scenario_mappings: "Common Scenario Mappings" {shape: rectangle}
+azure_ad_entra_id_key_concepts: "Azure AD / Entra ID Key Concepts" {shape: rectangle}
+study_checklist: "Study Checklist" {shape: rectangle}
+
+center -> arm_vs_bicep_vs_terraform
+center -> rbac_scope_hierarchy
+center -> policy_vs_initiative
+center -> common_scenario_mappings
+center -> azure_ad_entra_id_key_concepts
+center -> study_checklist
+```
+
 ## ARM vs Bicep vs Terraform
 
 | Feature | ARM Templates | Bicep | Terraform |

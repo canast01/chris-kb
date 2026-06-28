@@ -18,6 +18,23 @@ Catalog of known Aria Suite Lifecycle (LCM) bugs, error codes, and workarounds c
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+product_deployment: "Product Deployment" {shape: rectangle}
+certificate_management: "Certificate Management" {shape: rectangle}
+upgrade: "Upgrade" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> product_deployment: investigate
+symptom -> certificate_management: investigate
+symptom -> upgrade: investigate
+product_deployment -> resolution
+certificate_management -> resolution
+upgrade -> resolution
+```
+
 ## Before you begin
 
 - Aria LCM errors appear in `Lifecycle Operations → Requests`.

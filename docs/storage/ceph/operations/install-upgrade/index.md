@@ -34,6 +34,27 @@ graph TD
 
 
 
+```d2
+direction: right
+
+plan: "Plan" {shape: oval}
+version_compatibility: "Version Compatibility" {shape: rectangle}
+preupgrade_checklist: "Pre-Upgrade Checklist" {shape: rectangle}
+upgrade_with_cephadm: "Upgrade with cephadm" {shape: rectangle}
+rolling_upgrade_behaviour: "Rolling Upgrade Behaviour" {shape: rectangle}
+majorversion_upgrade_requirements: "Major-Version Upgrade Requirements" {shape: rectangle}
+postupgrade_validation: "Post-Upgrade Validation" {shape: rectangle}
+validate: "Validate" {shape: oval}
+
+plan -> version_compatibility
+version_compatibility -> preupgrade_checklist
+preupgrade_checklist -> upgrade_with_cephadm
+upgrade_with_cephadm -> rolling_upgrade_behaviour
+rolling_upgrade_behaviour -> majorversion_upgrade_requirements
+majorversion_upgrade_requirements -> postupgrade_validation
+postupgrade_validation -> validate
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

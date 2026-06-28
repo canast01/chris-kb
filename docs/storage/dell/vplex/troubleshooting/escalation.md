@@ -18,6 +18,32 @@ Vendor escalation procedures, support contacts, and information requirements for
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+support_portal: "Support Portal" {shape: rectangle}
+opening_a_case: "Opening a Case" {shape: rectangle}
+severity_levels: "Severity Levels" {shape: rectangle}
+diagnostic_information_to_provide: "Diagnostic Information to Provide" {shape: rectangle}
+escalation_path: "Escalation Path" {shape: rectangle}
+what_dell_support_will_typically_ask: "What Dell Support Will Typically Ask" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> support_portal: investigate
+symptom -> opening_a_case: investigate
+symptom -> severity_levels: investigate
+symptom -> diagnostic_information_to_provide: investigate
+symptom -> escalation_path: investigate
+symptom -> what_dell_support_will_typically_ask: investigate
+support_portal -> resolution
+opening_a_case -> resolution
+severity_levels -> resolution
+diagnostic_information_to_provide -> resolution
+escalation_path -> resolution
+what_dell_support_will_typically_ask -> resolution
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

@@ -14,6 +14,25 @@ tags:
 
 ---
 
+```d2
+direction: right
+
+center: "FlashBlade" {shape: hexagon}
+vmware_integration: "VMware Integration" {shape: rectangle}
+backup_integration: "Backup Integration" {shape: rectangle}
+pure1_monitoring: "Pure1 Monitoring" {shape: rectangle}
+log_in_and_obtain_a_session_token: "Log in and obtain a session token" {shape: rectangle}
+use_the_session_cookie_for_subsequen: "Use the session cookie for subsequent requests" {shape: rectangle}
+alternatively_use_an_api_token_prefe: "Alternatively, use an API token (preferred for automation)" {shape: rectangle}
+
+center -> vmware_integration
+center -> backup_integration
+center -> pure1_monitoring
+center -> log_in_and_obtain_a_session_token
+center -> use_the_session_cookie_for_subsequen
+center -> alternatively_use_an_api_token_prefe
+```
+
 ## VMware Integration
 
 FlashBlade integrates with VMware primarily as an NFS datastore and backup target — it is not a block storage device and does not use VMFS or vVols in the same way as FlashArray.

@@ -15,6 +15,25 @@ Microsoft Entra ID (formerly Azure Active Directory) is the cloud-based identity
 
 
 
+```d2
+direction: right
+
+center: "Azure" {shape: hexagon}
+entra_id_identity_architecture: "Entra ID Identity Architecture" {shape: rectangle}
+tenant_overview: "Tenant Overview" {shape: rectangle}
+user_management: "User Management" {shape: rectangle}
+group_management: "Group Management" {shape: rectangle}
+hybrid_identity_and_connect_sync: "Hybrid Identity and Connect Sync" {shape: rectangle}
+domain_management: "Domain Management" {shape: rectangle}
+
+center -> entra_id_identity_architecture
+center -> tenant_overview
+center -> user_management
+center -> group_management
+center -> hybrid_identity_and_connect_sync
+center -> domain_management
+```
+
 ## Entra ID Identity Architecture
 
 ```mermaid

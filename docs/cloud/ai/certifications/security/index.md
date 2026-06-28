@@ -14,6 +14,27 @@ AI Security and Responsible AI reference covering Responsible AI Pillars, AI Saf
 
 
 
+```d2
+direction: down
+
+external: External / Untrusted {shape: rectangle}
+responsible_ai_pillars: "Responsible AI Pillars" {shape: rectangle}
+ai_safety_concepts: "AI Safety Concepts" {shape: rectangle}
+data_privacy_in_the_ml_lifecycle: "Data Privacy in the ML Lifecycle" {shape: rectangle}
+bias_types_and_mitigations: "Bias Types and Mitigations" {shape: rectangle}
+ai_governance_frameworks: "AI Governance Frameworks" {shape: rectangle}
+study_checklist: "Study Checklist" {shape: rectangle}
+core: "Security Core" {shape: hexagon}
+
+external -> responsible_ai_pillars: traffic in
+responsible_ai_pillars -> ai_safety_concepts
+ai_safety_concepts -> data_privacy_in_the_ml_lifecycle
+data_privacy_in_the_ml_lifecycle -> bias_types_and_mitigations
+bias_types_and_mitigations -> ai_governance_frameworks
+ai_governance_frameworks -> study_checklist
+study_checklist -> core: secured path
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

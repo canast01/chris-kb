@@ -19,6 +19,26 @@ Catalog of known VxRail bugs, error codes, and workarounds covering LCM upgrades
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+lcm_upgrade: "LCM / Upgrade" {shape: rectangle}
+vxrail_manager: "VxRail Manager" {shape: rectangle}
+hardware_idrac: "Hardware / iDRAC" {shape: rectangle}
+vsphere_integration: "vSphere Integration" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> lcm_upgrade: investigate
+symptom -> vxrail_manager: investigate
+symptom -> hardware_idrac: investigate
+symptom -> vsphere_integration: investigate
+lcm_upgrade -> resolution
+vxrail_manager -> resolution
+hardware_idrac -> resolution
+vsphere_integration -> resolution
+```
+
 ## Before you begin
 
 - VxRail issues are tracked at `dell.com/support` and in the VxRail Release Notes for your specific appliance type.

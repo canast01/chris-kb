@@ -42,6 +42,15 @@ show flogi database
 # Step 5 — Update CMDB and domain ID register
 ```
 
+```d2
+direction: right
+
+hub: "Cisco MDS\nOperations" {shape: hexagon}
+verify: "Verify" {shape: rectangle}
+
+hub -> verify
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

@@ -14,6 +14,45 @@ How It Works reference covering Overview, SAN Fabric Topology, Principal Switch 
 ![Brocade Fabric OS — How It Works](../../../../assets/san-brocade-fabric-os-architecture-how-it-works.svg)
 
 
+```d2
+direction: right
+
+hosts: Servers {
+  h1: Server 1 (dual HBA) {shape: rectangle}
+  h2: Server 2 (dual HBA) {shape: rectangle}
+  h3: Server 3 (dual HBA) {shape: rectangle}
+}
+
+fabric_a: Fabric A (primary) {
+  sw1: Switch A1\n(principal) {shape: rectangle}
+  sw2: Switch A2 {shape: rectangle}
+  sw1 -> sw2: ISL (E_Port)
+}
+
+fabric_b: Fabric B (redundant) {
+  sw3: Switch B1\n(principal) {shape: rectangle}
+  sw4: Switch B2 {shape: rectangle}
+  sw3 -> sw4: ISL (E_Port)
+}
+
+storage: Storage Arrays {
+  arr1: Array 1 (target ports) {shape: cylinder}
+  arr2: Array 2 (target ports) {shape: cylinder}
+}
+
+hosts.h1 -> fabric_a.sw1: F_Port
+hosts.h1 -> fabric_b.sw3: F_Port
+hosts.h2 -> fabric_a.sw2: F_Port
+hosts.h2 -> fabric_b.sw4: F_Port
+hosts.h3 -> fabric_a.sw1: F_Port
+hosts.h3 -> fabric_b.sw3: F_Port
+
+fabric_a.sw1 -> storage.arr1: F_Port
+fabric_a.sw2 -> storage.arr2: F_Port
+fabric_b.sw3 -> storage.arr1: F_Port
+fabric_b.sw4 -> storage.arr2: F_Port
+```
+
 ## Overview
 
 Fabric OS (FOS) runs on Brocade/Broadcom SAN switches. Fabrics are deployed in a core-edge topology with ISLs (trunked) connecting edge switches to core directors. One switch per fabric is elected as the **principal switch**, which owns the fabric name server and manages domain ID assignments.

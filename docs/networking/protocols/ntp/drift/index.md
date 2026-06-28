@@ -15,6 +15,25 @@ NTP Drift reference covering Drift Concepts, Reading Drift Values, Drift File, I
 
 Clock drift is the natural tendency of a system clock to run fast or slow relative to real time. NTP continuously corrects drift by applying small frequency adjustments (slewing) to keep the clock accurate.
 
+```d2
+direction: right
+
+center: "NTP" {shape: hexagon}
+drift_concepts: "Drift Concepts" {shape: rectangle}
+reading_drift_values: "Reading Drift Values" {shape: rectangle}
+drift_file: "Drift File" {shape: rectangle}
+interpreting_drift_history: "Interpreting Drift History" {shape: rectangle}
+drift_after_vm_operations: "Drift After VM Operations" {shape: rectangle}
+windows_drift: "Windows Drift" {shape: rectangle}
+
+center -> drift_concepts
+center -> reading_drift_values
+center -> drift_file
+center -> interpreting_drift_history
+center -> drift_after_vm_operations
+center -> windows_drift
+```
+
 ## Drift Concepts
 
 | Term | Definition |

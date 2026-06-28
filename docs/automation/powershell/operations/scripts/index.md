@@ -21,6 +21,25 @@ See also:
 
 ---
 
+```d2
+direction: right
+
+center: "PowerShell" {shape: rectangle}
+daily_check_script: "Daily Check Script" {shape: rectangle}
+incident_triage_script: "Incident Triage Script" {shape: rectangle}
+change_precheck_script: "Change Pre-Check Script" {shape: rectangle}
+postchange_validation_script: "Post-Change Validation Script" {shape: rectangle}
+health_check_script: "Health Check Script" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+center -> daily_check_script
+center -> incident_triage_script
+center -> change_precheck_script
+center -> postchange_validation_script
+center -> health_check_script
+center -> verify
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

@@ -20,6 +20,23 @@ Firewall port reference for GitHub Actions with self-hosted runners. GitHub-host
 
 
 
+```d2
+direction: right
+
+center: "GitHub Actions" {shape: hexagon}
+selfhosted_runner_outbound_to_github: "Self-Hosted Runner — Outbound to GitHub" {shape: rectangle}
+selfhosted_runner_deployment_targets: "Self-Hosted Runner — Deployment Targets (Job-Specific)" {shape: rectangle}
+inbound_webhook_receiver_if_repo_is_: "Inbound — Webhook Receiver (if repo is self-hosted GitHub En" {shape: rectangle}
+firewall_zone_summary: "Firewall Zone Summary" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+center -> selfhosted_runner_outbound_to_github
+center -> selfhosted_runner_deployment_targets
+center -> inbound_webhook_receiver_if_repo_is_
+center -> firewall_zone_summary
+center -> verify
+```
+
 ## Self-Hosted Runner — Outbound to GitHub
 
 Self-hosted runners connect **outbound** to GitHub — no inbound from GitHub to the runner is required.

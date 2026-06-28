@@ -16,6 +16,17 @@ ServiceNow is delivered as a multi-instance SaaS platform running on dedicated i
 
 ---
 
+```d2
+direction: right
+
+center: "ServiceNow" {shape: hexagon}
+multiinstance_cloud_model: "Multi-Instance Cloud Model" {shape: rectangle}
+instance_hierarchy: "Instance Hierarchy" {shape: rectangle}
+
+center -> multiinstance_cloud_model
+center -> instance_hierarchy
+```
+
 ## Multi-Instance Cloud Model
 
 | Characteristic | Detail |

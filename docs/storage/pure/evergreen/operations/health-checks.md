@@ -20,6 +20,25 @@ Health Checks reference covering Quick Health Check (5 minutes), Full Health Che
 
 ---
 
+```d2
+direction: right
+
+hub: "Evergreen\nOperations" {shape: hexagon}
+run_this_routine: "Run This Routine" {shape: rectangle}
+quick_health_check_5_minutes: "Quick Health Check (5 minutes)" {shape: rectangle}
+full_health_check_20_minutes: "Full Health Check (20 minutes)" {shape: rectangle}
+health_check_checklist_template: "Health Check Checklist Template" {shape: rectangle}
+evergreen_subscription_checks: "Evergreen Subscription Checks" {shape: rectangle}
+common_issues_during_health_checks: "Common Issues During Health Checks" {shape: rectangle}
+
+hub -> run_this_routine
+hub -> quick_health_check_5_minutes
+hub -> full_health_check_20_minutes
+hub -> health_check_checklist_template
+hub -> evergreen_subscription_checks
+hub -> common_issues_during_health_checks
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

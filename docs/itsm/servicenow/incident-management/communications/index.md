@@ -15,6 +15,23 @@ Incident Communications reference covering Overview, Communication Principles, U
 
 
 
+```d2
+direction: right
+
+center: "ServiceNow" {shape: hexagon}
+communication_principles: "Communication Principles" {shape: rectangle}
+update_cadence: "Update Cadence" {shape: rectangle}
+communication_templates: "Communication Templates" {shape: rectangle}
+stakeholder_distribution: "Stakeholder Distribution" {shape: rectangle}
+major_incident_bridge: "Major Incident Bridge" {shape: rectangle}
+
+center -> communication_principles
+center -> update_cadence
+center -> communication_templates
+center -> stakeholder_distribution
+center -> major_incident_bridge
+```
+
 ## Overview
 
 Effective incident communication keeps stakeholders informed, reduces inbound noise to the response team, and builds trust with users and leadership. Poor communications during an incident — silence, vague updates, or contradictory messages — often cause as much damage as the incident itself.

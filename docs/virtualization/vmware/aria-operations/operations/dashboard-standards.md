@@ -17,6 +17,19 @@ Monitoring Dashboard Standards reference covering Grafana — Dashboard as Code,
 
 
 
+```d2
+direction: right
+
+hub: "Aria Operations\nOperations" {shape: hexagon}
+validation_checklist: "Validation Checklist" {shape: rectangle}
+dashboard_review_cadence: "Dashboard Review Cadence" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+hub -> validation_checklist
+hub -> dashboard_review_cadence
+hub -> verify
+```
+
 ## Before you begin
 
 - **Access:** vCenter read-only minimum; Administrator role for remediation steps

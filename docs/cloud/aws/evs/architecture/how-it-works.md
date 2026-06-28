@@ -39,6 +39,25 @@ graph LR
     T1 --> WL
 ```
 
+```d2
+direction: right
+
+center: "AWS EVS" {shape: hexagon}
+baremetal_host_model: "Bare-Metal Host Model" {shape: rectangle}
+vpc_integration: "VPC Integration" {shape: rectangle}
+vsan_architecture: "vSAN Architecture" {shape: rectangle}
+nsxt_overlay_network: "NSX-T Overlay Network" {shape: rectangle}
+vcf_management_stack: "VCF Management Stack" {shape: rectangle}
+vcf_component_versions: "VCF Component Versions" {shape: rectangle}
+
+center -> baremetal_host_model
+center -> vpc_integration
+center -> vsan_architecture
+center -> nsxt_overlay_network
+center -> vcf_management_stack
+center -> vcf_component_versions
+```
+
 ## Bare-Metal Host Model
 
 EVS allocates dedicated physical EC2 bare-metal instances (i3en.metal or i4i.metal) to the cluster. These instances use the AWS dedicated tenancy model — the physical server is never shared with another AWS customer, which satisfies VMware's bare-metal licensing and hypervisor certification requirements.

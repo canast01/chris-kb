@@ -19,6 +19,17 @@ Pure1 is Pure Storage's cloud-based management and analytics platform for FlashA
 
 ---
 
+```d2
+direction: right
+
+center: "Pure1" {shape: hexagon}
+architecture: "Architecture" {shape: rectangle}
+high_availability: "High Availability" {shape: rectangle}
+
+center -> architecture
+center -> high_availability
+```
+
 ## Architecture
 
 ```mermaid

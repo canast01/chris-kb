@@ -30,6 +30,23 @@ graph TB
     TIERS --> EC[Erasure Coded\nCost-efficient bulk\nk=4 m=2 → 1.5x overhead\nNo RBD overwrite support]:::ec
 ```
 
+```d2
+direction: down
+
+cluster_sizing: "Cluster Sizing" {shape: rectangle}
+node_hardware_recommendations: "Node Hardware Recommendations" {shape: rectangle}
+replication_vs_erasure_coding: "Replication vs Erasure Coding" {shape: rectangle}
+crush_map_design: "CRUSH Map Design" {shape: rectangle}
+pg_count_formula: "PG Count Formula" {shape: rectangle}
+network_design: "Network Design" {shape: rectangle}
+
+cluster_sizing -> node_hardware_recommendations: hardens
+node_hardware_recommendations -> replication_vs_erasure_coding: hardens
+replication_vs_erasure_coding -> crush_map_design: hardens
+crush_map_design -> pg_count_formula: hardens
+pg_count_formula -> network_design: hardens
+```
+
 ## Cluster Sizing
 
 | Scale | OSD Nodes | Total OSDs | MONs | MGRs | Notes |

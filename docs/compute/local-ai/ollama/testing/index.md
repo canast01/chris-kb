@@ -17,6 +17,25 @@ This page covers testing Ollama with the CLI and REST API, benchmarking inferenc
 
 
 
+```d2
+direction: right
+
+center: "Ollama" {shape: hexagon}
+basic_cli_testing: "Basic CLI Testing" {shape: rectangle}
+rest_api_testing_with_curl: "REST API Testing with curl" {shape: rectangle}
+streaming_responses: "Streaming Responses" {shape: rectangle}
+benchmarking_throughput: "Benchmarking Throughput" {shape: rectangle}
+model_comparison_script: "Model Comparison Script" {shape: rectangle}
+performance_reference_table: "Performance Reference Table" {shape: rectangle}
+
+center -> basic_cli_testing
+center -> rest_api_testing_with_curl
+center -> streaming_responses
+center -> benchmarking_throughput
+center -> model_comparison_script
+center -> performance_reference_table
+```
+
 ## Basic CLI Testing
 
 ```bash

@@ -16,6 +16,27 @@ IPI vs UPI vs agent-based installation methods, install-config.yaml structure fo
 
 ![OpenShift — Deploy — Diagram](../../../assets/virtualization-openshift-deploy-diagram.svg)
 
+```d2
+direction: right
+
+plan: "Plan" {shape: oval}
+ipi_install_sequence: "IPI Install Sequence" {shape: rectangle}
+dns_requirements: "DNS Requirements" {shape: rectangle}
+installconfigyaml_vsphere_ipi_full_e: "install-config.yaml (vSphere IPI — Full Example)" {shape: rectangle}
+ipi_installation_procedure: "IPI Installation Procedure" {shape: rectangle}
+upi_baremetal_procedure: "UPI Bare-Metal Procedure" {shape: rectangle}
+agentbased_install: "Agent-Based Install" {shape: rectangle}
+validate: "Validate" {shape: oval}
+
+plan -> ipi_install_sequence
+ipi_install_sequence -> dns_requirements
+dns_requirements -> installconfigyaml_vsphere_ipi_full_e
+installconfigyaml_vsphere_ipi_full_e -> ipi_installation_procedure
+ipi_installation_procedure -> upi_baremetal_procedure
+upi_baremetal_procedure -> agentbased_install
+agentbased_install -> validate
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

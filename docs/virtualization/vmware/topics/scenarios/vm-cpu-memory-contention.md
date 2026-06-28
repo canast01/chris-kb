@@ -42,6 +42,25 @@ graph TD
     ACTION2 --> RESOLVE2[Reduce vCPU count<br/>or migrate VM]:::ok
 ```
 
+```d2
+direction: right
+
+center: "Scenarios" {shape: hexagon}
+symptoms: "Symptoms" {shape: rectangle}
+1_identify_balloon_and_swap_in_esxto: "1. Identify Balloon and Swap in ESXtop" {shape: rectangle}
+2_collect_hostlevel_statistics_via_p: "2. Collect Host-Level Statistics via PowerCLI" {shape: rectangle}
+3_check_drs_migration_history: "3. Check DRS Migration History" {shape: rectangle}
+4_identify_a_specific_vms_memory_pro: "4. Identify a Specific VM's Memory Profile" {shape: rectangle}
+5_resolution: "5. Resolution" {shape: rectangle}
+
+center -> symptoms
+center -> 1_identify_balloon_and_swap_in_esxto
+center -> 2_collect_hostlevel_statistics_via_p
+center -> 3_check_drs_migration_history
+center -> 4_identify_a_specific_vms_memory_pro
+center -> 5_resolution
+```
+
 ## Symptoms
 
 | Indicator | Detail |

@@ -15,6 +15,17 @@ Pure Storage Evergreen//One Standards reference covering Naming Conventions, Bui
 
 ![Pure Storage Evergreen//One Standards — Diagram](../../../../assets/storage-pure-evergreen-one-standards-diagram.svg)
 
+```d2
+direction: down
+
+naming_conventions: "Naming Conventions" {shape: rectangle}
+build_baseline: "Build Baseline" {shape: rectangle}
+service_agreement_checklist: "Service Agreement Checklist" {shape: rectangle}
+
+naming_conventions -> build_baseline: hardens
+build_baseline -> service_agreement_checklist: hardens
+```
+
 ## Naming Conventions
 
 Naming standards for Evergreen//One follow the same conventions as standard FlashArray and FlashBlade deployments. Consistent naming is important for capacity reporting, billing validation, and audit.

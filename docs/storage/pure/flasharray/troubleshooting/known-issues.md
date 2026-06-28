@@ -18,6 +18,23 @@ Catalog of known FlashArray bugs, error codes, and workarounds covering host con
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+host_connectivity: "Host Connectivity" {shape: rectangle}
+replication_activedr_activecluster: "Replication (ActiveDR / ActiveCluster)" {shape: rectangle}
+array_health: "Array Health" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> host_connectivity: investigate
+symptom -> replication_activedr_activecluster: investigate
+symptom -> array_health: investigate
+host_connectivity -> resolution
+replication_activedr_activecluster -> resolution
+array_health -> resolution
+```
+
 ## Before you begin
 
 - FlashArray alerts appear in the web UI under `Health → Alerts` and via email if configured.

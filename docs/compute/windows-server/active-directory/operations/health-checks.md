@@ -15,6 +15,17 @@ Daily operations centre on replication health and authentication event monitorin
 
 
 
+```d2
+direction: right
+
+hub: "Active Directory\nOperations" {shape: hexagon}
+run_this_routine: "Run This Routine" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+hub -> run_this_routine
+hub -> verify
+```
+
 ## Before you begin
 
 - **Access:** Local Administrator or Domain Admin on target hosts

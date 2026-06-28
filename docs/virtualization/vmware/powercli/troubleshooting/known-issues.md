@@ -18,6 +18,23 @@ Catalog of known PowerCLI bugs, error codes, and workarounds covering module loa
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+connection_and_authentication: "Connection and Authentication" {shape: rectangle}
+module_loading: "Module Loading" {shape: rectangle}
+api_and_cmdlet: "API and Cmdlet" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> connection_and_authentication: investigate
+symptom -> module_loading: investigate
+symptom -> api_and_cmdlet: investigate
+connection_and_authentication -> resolution
+module_loading -> resolution
+api_and_cmdlet -> resolution
+```
+
 ## Before you begin
 
 - Run `Get-Module -Name VMware* -ListAvailable` to check installed module versions.

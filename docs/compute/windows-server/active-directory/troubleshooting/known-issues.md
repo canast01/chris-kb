@@ -18,6 +18,26 @@ Catalog of known Active Directory bugs, error codes, and workarounds covering re
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+replication: "Replication" {shape: rectangle}
+authentication: "Authentication" {shape: rectangle}
+dns: "DNS" {shape: rectangle}
+fsmo_roles: "FSMO Roles" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> replication: investigate
+symptom -> authentication: investigate
+symptom -> dns: investigate
+symptom -> fsmo_roles: investigate
+replication -> resolution
+authentication -> resolution
+dns -> resolution
+fsmo_roles -> resolution
+```
+
 ## Before you begin
 
 - `dcdiag /test:all` runs all DC health checks — address all failures before further troubleshooting.

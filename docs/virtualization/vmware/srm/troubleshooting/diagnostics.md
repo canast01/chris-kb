@@ -42,6 +42,32 @@ graph TD
     class K escalate
 ```
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+step_1_collect_the_srm_support_bundl: "Step 1 — Collect the SRM support bundle" {shape: rectangle}
+step_2_parse_the_srm_main_log_for_pl: "Step 2 — Parse the SRM main log for plan failures" {shape: rectangle}
+step_3_check_vsphere_replication_app: "Step 3 — Check vSphere Replication appliance logs" {shape: rectangle}
+step_4_check_sra_and_arrayside_repli: "Step 4 — Check SRA and array-side replication" {shape: rectangle}
+step_5_verify_site_pairing_and_servi: "Step 5 — Verify site pairing and service health" {shape: rectangle}
+log_locations: "Log locations" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> step_1_collect_the_srm_support_bundl: investigate
+symptom -> step_2_parse_the_srm_main_log_for_pl: investigate
+symptom -> step_3_check_vsphere_replication_app: investigate
+symptom -> step_4_check_sra_and_arrayside_repli: investigate
+symptom -> step_5_verify_site_pairing_and_servi: investigate
+symptom -> log_locations: investigate
+step_1_collect_the_srm_support_bundl -> resolution
+step_2_parse_the_srm_main_log_for_pl -> resolution
+step_3_check_vsphere_replication_app -> resolution
+step_4_check_sra_and_arrayside_repli -> resolution
+step_5_verify_site_pairing_and_servi -> resolution
+log_locations -> resolution
+```
+
 ## Before you begin
 
 - **Access:** SRM Administrator role in vSphere Client (SRM plugin); RDP or local access to the SRM Server Windows VM

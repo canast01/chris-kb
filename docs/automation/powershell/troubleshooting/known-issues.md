@@ -18,6 +18,23 @@ Catalog of known PowerShell and WinRM bugs, error codes, and workarounds coverin
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+remoting_winrm: "Remoting (WinRM)" {shape: rectangle}
+execution_policy: "Execution Policy" {shape: rectangle}
+module_loading: "Module Loading" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> remoting_winrm: investigate
+symptom -> execution_policy: investigate
+symptom -> module_loading: investigate
+remoting_winrm -> resolution
+execution_policy -> resolution
+module_loading -> resolution
+```
+
 ## Before you begin
 
 - Most PowerShell issues are execution policy, WinRM configuration, or TLS version mismatches.

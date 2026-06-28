@@ -15,6 +15,21 @@ How It Works reference covering Overview, Data Pipeline Topology, How It Works, 
 
 
 
+```d2
+direction: right
+
+center: "CloudIQ" {shape: hexagon}
+data_pipeline_topology: "Data Pipeline Topology" {shape: rectangle}
+how_it_works: "How It Works" {shape: rectangle}
+supported_platforms: "Supported Platforms" {shape: rectangle}
+key_capabilities: "Key Capabilities" {shape: rectangle}
+
+center -> data_pipeline_topology
+center -> how_it_works
+center -> supported_platforms
+center -> key_capabilities
+```
+
 ## Overview
 
 Dell CloudIQ is a cloud-native AIOps SaaS platform hosted by Dell. It receives telemetry from on-premises Dell infrastructure via the Secure Connect Gateway (SCG) and processes it through machine-learning models to produce health scores, capacity forecasts, and anomaly alerts. CloudIQ requires no on-premises compute beyond the SCG appliance — all analytics run in Dell's cloud.

@@ -15,6 +15,25 @@ AWS IAM permissions for EVS cluster management, vSphere RBAC roles for VMs and i
 
 
 
+```d2
+direction: down
+
+external: External / Untrusted {shape: rectangle}
+aws_iam_for_evs: "AWS IAM for EVS" {shape: rectangle}
+iam_policy_design: "IAM Policy Design" {shape: rectangle}
+vsphere_rbac_roles: "vSphere RBAC Roles" {shape: rectangle}
+sddc_manager_roles: "SDDC Manager Roles" {shape: rectangle}
+principle_of_least_privilege: "Principle of Least Privilege" {shape: rectangle}
+core: "AWS EVS Core" {shape: hexagon}
+
+external -> aws_iam_for_evs: traffic in
+aws_iam_for_evs -> iam_policy_design
+iam_policy_design -> vsphere_rbac_roles
+vsphere_rbac_roles -> sddc_manager_roles
+sddc_manager_roles -> principle_of_least_privilege
+principle_of_least_privilege -> core: secured path
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

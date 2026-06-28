@@ -15,6 +15,21 @@ How It Works reference covering Deployment Model, Application Discovery Mechanis
 ![Aria Operations for Networks — How It Works](../../../../assets/virtualization-vmware-aria-operations-for-networks-architect.svg)
 
 
+```d2
+direction: right
+
+center: "Aria Operations for Networks" {shape: hexagon}
+deployment_model: "Deployment Model" {shape: rectangle}
+application_discovery_mechanism: "Application Discovery Mechanism" {shape: rectangle}
+flow_data_retention_defaults: "Flow Data Retention Defaults" {shape: rectangle}
+internal_service_architecture: "Internal Service Architecture" {shape: rectangle}
+
+center -> deployment_model
+center -> application_discovery_mechanism
+center -> flow_data_retention_defaults
+center -> internal_service_architecture
+```
+
 ## Deployment Model
 
 Aria Operations for Networks (AON, formerly vRealize Network Insight / VRNi) consists of two distinct VM roles deployed from separate OVAs:

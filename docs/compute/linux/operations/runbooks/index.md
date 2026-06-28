@@ -21,6 +21,31 @@ Linux operational runbooks — routine maintenance, service recovery, backup val
 <a class="kb-card" href="server-reboot/"><strong>Server Reboot</strong><span>Planned server reboot runbook — service shutdown order, post-reboot checks, and sign-off.</span></a>
 </div>
 
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+actor "Responder" as A
+participant "Linux System" as B
+participant "Dependent System" as C
+
+A -> B: Routine Daily Checks
+B --> A: OK
+A -> B: Service Recovery Runbook
+B --> A: OK
+A -> B: Disk Space Emergency
+B --> A: OK
+A -> B: Backup Validation
+B --> A: OK
+A -> B: Kernel and Package Update Runbook
+B --> A: OK
+A -> B: Verify
+B --> A: OK
+
+@enduml
+```
+
 ## Routine Daily Checks
 
 | Check | Command | Pass Criteria |

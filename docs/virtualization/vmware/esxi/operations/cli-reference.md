@@ -29,6 +29,25 @@ vim-cmd hostsvc/maintenance_mode_enter
 vim-cmd hostsvc/maintenance_mode_exit
 ```
 
+```d2
+direction: right
+
+hub: "ESXi\nOperations" {shape: hexagon}
+network: "Network" {shape: rectangle}
+storage_devices_paths: "Storage — Devices & Paths" {shape: rectangle}
+datastores_vmdk: "Datastores & VMDK" {shape: rectangle}
+san_connectivity_iscsi_fc: "SAN Connectivity (iSCSI / FC)" {shape: rectangle}
+vm_management_vimcmd: "VM Management (vim-cmd)" {shape: rectangle}
+vsan_commands: "vSAN Commands" {shape: rectangle}
+
+hub -> network
+hub -> storage_devices_paths
+hub -> datastores_vmdk
+hub -> san_connectivity_iscsi_fc
+hub -> vm_management_vimcmd
+hub -> vsan_commands
+```
+
 ## Before you begin
 
 - **Access:** vCenter read-only minimum; Administrator role for remediation steps

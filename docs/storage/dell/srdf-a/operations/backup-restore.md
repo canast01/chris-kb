@@ -93,6 +93,15 @@ symrdf -g PROD_RDF_GROUP verify -consistent
 symrdf -g PROD_RDF_GROUP query | grep -E "RPO|Mode"
 ```
 
+```d2
+direction: right
+
+hub: "SRDF/A\nOperations" {shape: hexagon}
+verify: "Verify" {shape: rectangle}
+
+hub -> verify
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

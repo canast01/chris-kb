@@ -15,6 +15,23 @@ MySQL authentication — auth plugins (caching_sha2, mysql_native_password, auth
 
 
 
+```d2
+direction: down
+
+external: External / Untrusted {shape: rectangle}
+authentication_plugins: "Authentication Plugins" {shape: rectangle}
+password_policy: "Password Policy" {shape: rectangle}
+ssltls_client_certificate_authentica: "SSL/TLS Client Certificate Authentication" {shape: rectangle}
+account_locking: "Account Locking" {shape: rectangle}
+core: "Linux Core" {shape: hexagon}
+
+external -> authentication_plugins: traffic in
+authentication_plugins -> password_policy
+password_policy -> ssltls_client_certificate_authentica
+ssltls_client_certificate_authentica -> account_locking
+account_locking -> core: secured path
+```
+
 ## Before you begin
 
 - **Access:** root or sudo-capable account on target hosts

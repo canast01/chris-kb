@@ -20,6 +20,25 @@ Firewall port reference for VMware NSX-T / NSX. Covers NSX Manager API, manageme
 
 
 
+```d2
+direction: right
+
+center: "NSX-T" {shape: hexagon}
+inbound_client_vcenter_to_nsx_manage: "Inbound — Client / vCenter to NSX Manager" {shape: rectangle}
+nsx_manager_to_transport_nodes_esxi_: "NSX Manager to Transport Nodes (ESXi and Bare Metal)" {shape: rectangle}
+nsx_manager_cluster_internal: "NSX Manager Cluster (Internal)" {shape: rectangle}
+geneve_overlay_tep_to_tep: "Geneve Overlay — TEP to TEP" {shape: rectangle}
+bgp_t0_gateway_external_uplinks: "BGP (T0 Gateway External Uplinks)" {shape: rectangle}
+nsx_gateway_vpn_ipsec: "NSX Gateway VPN (IPsec)" {shape: rectangle}
+
+center -> inbound_client_vcenter_to_nsx_manage
+center -> nsx_manager_to_transport_nodes_esxi_
+center -> nsx_manager_cluster_internal
+center -> geneve_overlay_tep_to_tep
+center -> bgp_t0_gateway_external_uplinks
+center -> nsx_gateway_vpn_ipsec
+```
+
 ## Before you begin
 
 - NSX Manager runs as a 3-node cluster — all three manager IPs and the cluster VIP must be reachable on 443 from admin clients and from ESXi/Edge nodes

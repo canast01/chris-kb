@@ -15,6 +15,25 @@ Installing and maintaining NVIDIA drivers correctly is critical for GPU workload
 
 
 
+```d2
+direction: right
+
+center: "GPU Compute" {shape: hexagon}
+checking_current_state: "Checking Current State" {shape: rectangle}
+installing_drivers_on_ubuntudebian: "Installing Drivers on Ubuntu/Debian" {shape: rectangle}
+installing_drivers_on_rhelrocky_linu: "Installing Drivers on RHEL/Rocky Linux" {shape: rectangle}
+cuda_toolkit_installation: "CUDA Toolkit Installation" {shape: rectangle}
+driver_and_cuda_compatibility_matrix: "Driver and CUDA Compatibility Matrix" {shape: rectangle}
+updating_drivers: "Updating Drivers" {shape: rectangle}
+
+center -> checking_current_state
+center -> installing_drivers_on_ubuntudebian
+center -> installing_drivers_on_rhelrocky_linu
+center -> cuda_toolkit_installation
+center -> driver_and_cuda_compatibility_matrix
+center -> updating_drivers
+```
+
 ## Checking Current State
 
 ```bash

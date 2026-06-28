@@ -18,6 +18,25 @@ SnapMirror backup and restore: `snapmirror initialize`, `snapmirror update`, `sn
 
 ---
 
+```d2
+direction: right
+
+hub: "SnapMirror\nOperations" {shape: hexagon}
+how_snapmirror_fits_into_backup_and_: "How SnapMirror Fits into Backup and Restore" {shape: rectangle}
+restore_from_a_snapmirror_destinatio: "Restore from a SnapMirror Destination (DR Failover)" {shape: rectangle}
+restore_from_a_snapshot_on_the_desti: "Restore from a Snapshot on the Destination Volume (Point-in-" {shape: rectangle}
+restore_from_a_snapvault_xdp_vault_r: "Restore from a SnapVault (XDP Vault) Relationship" {shape: rectangle}
+svmdr_failover_and_failback: "SVM-DR Failover and Failback" {shape: rectangle}
+postrestore_validation: "Post-Restore Validation" {shape: rectangle}
+
+hub -> how_snapmirror_fits_into_backup_and_
+hub -> restore_from_a_snapmirror_destinatio
+hub -> restore_from_a_snapshot_on_the_desti
+hub -> restore_from_a_snapvault_xdp_vault_r
+hub -> svmdr_failover_and_failback
+hub -> postrestore_validation
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

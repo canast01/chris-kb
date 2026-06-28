@@ -17,6 +17,27 @@ NetBackup support escalation: how to collect the nbsu log bundle, open a Veritas
 
 
 
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+actor "On-Call Engineer" as ENG
+participant "NetBackup\nSystem" as SYS
+participant "Vendor Support" as SUP
+
+ENG -> SYS: Severity Levels
+SYS --> ENG: Output
+ENG -> SYS: Pre-Escalation Triage Checklist
+SYS --> ENG: Output
+ENG -> SYS: Step-by-Step Data Collection
+SYS --> ENG: Output
+ENG -> SUP: Escalate with diagnostic bundle
+SUP --> ENG: Case / resolution path
+
+@enduml
+```
+
 ## Before you begin
 
 - **Access:** NetBackup admin account on the master server; root/Administrator on master and affected media servers

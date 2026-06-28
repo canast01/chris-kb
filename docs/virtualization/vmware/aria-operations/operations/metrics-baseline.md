@@ -29,6 +29,21 @@ purecli array get --mirrored
 purecli volume list --performance    # per-volume latency, IOPS, BW
 ```
 
+```d2
+direction: right
+
+hub: "Aria Operations\nOperations" {shape: hexagon}
+documenting_the_baseline: "Documenting the Baseline" {shape: rectangle}
+setting_thresholds_from_baseline: "Setting Thresholds from Baseline" {shape: rectangle}
+baseline_review_cadence: "Baseline Review Cadence" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+hub -> documenting_the_baseline
+hub -> setting_thresholds_from_baseline
+hub -> baseline_review_cadence
+hub -> verify
+```
+
 ## Before you begin
 
 - **Access:** vCenter read-only minimum; Administrator role for remediation steps

@@ -36,6 +36,17 @@ Which Aria product fits your need — monitoring, logging, automation, network v
 
 ---
 
+```d2
+direction: right
+
+center: "Decision Trees" {shape: hexagon}
+product_comparison_tables: "Product Comparison Tables" {shape: rectangle}
+usecase_to_product_recommendation_gu: "Use-Case to Product Recommendation Guide" {shape: rectangle}
+
+center -> product_comparison_tables
+center -> usecase_to_product_recommendation_gu
+```
+
 ## Product Comparison Tables
 
 ### vSAN vs ONTAP vs PowerStore vs FlashArray

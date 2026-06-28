@@ -15,6 +15,25 @@ A policy assignment connects a policy definition or initiative (policy set) to a
 
 
 
+```d2
+direction: right
+
+center: "Azure" {shape: hexagon}
+policy_assignment_scope_hierarchy: "Policy Assignment Scope Hierarchy" {shape: rectangle}
+creating_a_policy_assignment: "Creating a Policy Assignment" {shape: rectangle}
+assignment_scope: "Assignment Scope" {shape: rectangle}
+parameters: "Parameters" {shape: rectangle}
+exemptions: "Exemptions" {shape: rectangle}
+assignment_managed_identity: "Assignment Managed Identity" {shape: rectangle}
+
+center -> policy_assignment_scope_hierarchy
+center -> creating_a_policy_assignment
+center -> assignment_scope
+center -> parameters
+center -> exemptions
+center -> assignment_managed_identity
+```
+
 ## Policy Assignment Scope Hierarchy
 
 ```mermaid

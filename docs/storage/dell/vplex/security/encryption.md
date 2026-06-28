@@ -34,6 +34,25 @@ flowchart LR
     host -->|"HTTPS TLS — encrypted"| vms
 ```
 
+```d2
+direction: down
+
+external: External / Untrusted {shape: rectangle}
+encryption_scope_summary: "Encryption Scope Summary" {shape: rectangle}
+data_at_rest: "Data at Rest" {shape: rectangle}
+management_traffic_encryption: "Management Traffic Encryption" {shape: rectangle}
+fibre_channel_layer_encryption: "Fibre Channel Layer Encryption" {shape: rectangle}
+icl_encryption_metro: "ICL Encryption (Metro)" {shape: rectangle}
+core: "VPLEX Core" {shape: hexagon}
+
+external -> encryption_scope_summary: traffic in
+encryption_scope_summary -> data_at_rest
+data_at_rest -> management_traffic_encryption
+management_traffic_encryption -> fibre_channel_layer_encryption
+fibre_channel_layer_encryption -> icl_encryption_metro
+icl_encryption_metro -> core: secured path
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

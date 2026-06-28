@@ -14,6 +14,25 @@ Authentication Failures Troubleshooting reference covering Overview, Symptom Cla
 ![Authentication Failures Troubleshooting](../../../assets/security-troubleshooting-authentication-failures-index.svg)
 
 
+```d2
+direction: right
+
+center: "Authentication Failures" {shape: hexagon}
+symptom_classification: "Symptom Classification" {shape: rectangle}
+diagnostic_flowchart: "Diagnostic Flowchart" {shape: rectangle}
+ad_account_lockout_investigation: "AD Account Lockout Investigation" {shape: rectangle}
+ldap_bind_failure_diagnosis: "LDAP Bind Failure Diagnosis" {shape: rectangle}
+certificatebased_authentication_fail: "Certificate-Based Authentication Failures" {shape: rectangle}
+kerberos_error_code_reference: "Kerberos Error Code Reference" {shape: rectangle}
+
+center -> symptom_classification
+center -> diagnostic_flowchart
+center -> ad_account_lockout_investigation
+center -> ldap_bind_failure_diagnosis
+center -> certificatebased_authentication_fail
+center -> kerberos_error_code_reference
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

@@ -37,6 +37,23 @@ Troubleshooting reference covering S3 Access Denied, IAM Permission Denied, RDS 
 
 </div>
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+rds_connection_issues: "RDS Connection Issues" {shape: rectangle}
+vpc_flow_logs_analysing_traffic: "VPC Flow Logs — Analysing Traffic" {shape: rectangle}
+lambda_timeout_issues: "Lambda Timeout Issues" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> rds_connection_issues: investigate
+symptom -> vpc_flow_logs_analysing_traffic: investigate
+symptom -> lambda_timeout_issues: investigate
+rds_connection_issues -> resolution
+vpc_flow_logs_analysing_traffic -> resolution
+lambda_timeout_issues -> resolution
+```
+
 ## RDS Connection Issues
 
 ```bash

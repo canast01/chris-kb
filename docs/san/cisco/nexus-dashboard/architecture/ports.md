@@ -20,6 +20,25 @@ Firewall port reference for Cisco Nexus Dashboard (ND). Nexus Dashboard is the m
 
 
 
+```d2
+direction: right
+
+center: "Nexus Dashboard" {shape: hexagon}
+inbound_admin_to_nexus_dashboard: "Inbound — Admin to Nexus Dashboard" {shape: rectangle}
+nexus_dashboard_to_managed_devices: "Nexus Dashboard to Managed Devices" {shape: rectangle}
+inbound_from_managed_devices_to_nd: "Inbound — From Managed Devices to ND" {shape: rectangle}
+nexus_dashboard_cluster_nodetonode: "Nexus Dashboard Cluster (Node-to-Node)" {shape: rectangle}
+firewall_zone_summary: "Firewall Zone Summary" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+center -> inbound_admin_to_nexus_dashboard
+center -> nexus_dashboard_to_managed_devices
+center -> inbound_from_managed_devices_to_nd
+center -> nexus_dashboard_cluster_nodetonode
+center -> firewall_zone_summary
+center -> verify
+```
+
 ## Inbound — Admin to Nexus Dashboard
 
 | Port | Protocol | Source | Purpose |

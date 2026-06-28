@@ -20,6 +20,17 @@ Cisco DCNM 11.x is the last standalone SAN management appliance for Cisco MDS en
 <a class="kb-card" href="design-standards/"><strong>Design Standards</strong><span>Deployment model selection, sizing, and HA configuration standards.</span></a>
 </div>
 
+```d2
+direction: right
+
+center: "Cisco DCNM" {shape: hexagon}
+deployment_models: "Deployment Models" {shape: rectangle}
+management_topology: "Management Topology" {shape: rectangle}
+
+center -> deployment_models
+center -> management_topology
+```
+
 ## Deployment Models
 
 | Model | Description | HA |

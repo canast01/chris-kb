@@ -18,6 +18,21 @@ Datastore Inventory reference covering Overview, Datastore Inventory Table, Fiel
 
 ---
 
+```d2
+direction: right
+
+center: "Inventory" {shape: rectangle}
+datastore_inventory_table: "Datastore Inventory Table" {shape: rectangle}
+fields_reference: "Fields Reference" {shape: rectangle}
+capacity_thresholds: "Capacity Thresholds" {shape: rectangle}
+datastore_checklist: "Datastore Checklist" {shape: rectangle}
+
+center -> datastore_inventory_table
+center -> fields_reference
+center -> capacity_thresholds
+center -> datastore_checklist
+```
+
 ## Overview
 
 Track all datastores presented to the vSphere environment. Update this inventory after any datastore creation, expansion, removal, or re-presentation event.

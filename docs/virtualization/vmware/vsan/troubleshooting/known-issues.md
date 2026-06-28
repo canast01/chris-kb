@@ -19,6 +19,29 @@ Catalog of known vSAN bugs, error codes, and workarounds including degraded comp
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+degraded_objects_and_resync: "Degraded Objects and Resync" {shape: rectangle}
+health_check_false_positives: "Health Check False Positives" {shape: rectangle}
+capacity_and_encryption: "Capacity and Encryption" {shape: rectangle}
+file_services: "File Services" {shape: rectangle}
+stretched_cluster: "Stretched Cluster" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> degraded_objects_and_resync: investigate
+symptom -> health_check_false_positives: investigate
+symptom -> capacity_and_encryption: investigate
+symptom -> file_services: investigate
+symptom -> stretched_cluster: investigate
+degraded_objects_and_resync -> resolution
+health_check_false_positives -> resolution
+capacity_and_encryption -> resolution
+file_services -> resolution
+stretched_cluster -> resolution
+```
+
 ## Before you begin
 
 - Check `esxcli vsan health cluster list` for active health alarms before assuming a known bug.

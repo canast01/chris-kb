@@ -16,6 +16,25 @@ Complete procedure: add virtual disks to nested ESXi VMs, mark disks as SSD, dep
 
 ---
 
+```d2
+direction: right
+
+center: "Vsan 2Node" {shape: hexagon}
+phase_1_add_virtual_disks_to_nested_: "Phase 1 — Add Virtual Disks to Nested ESXi VMs" {shape: rectangle}
+phase_2_deploy_the_witness_appliance: "Phase 2 — Deploy the Witness Appliance" {shape: rectangle}
+phase_3_enable_vsan_on_the_2node_clu: "Phase 3 — Enable vSAN on the 2-node Cluster" {shape: rectangle}
+phase_4_create_a_vsan_storage_policy: "Phase 4 — Create a vSAN Storage Policy" {shape: rectangle}
+phase_5_verify_vsan_health: "Phase 5 — Verify vSAN Health" {shape: rectangle}
+known_issues_in_nested_environments: "Known Issues in Nested Environments" {shape: rectangle}
+
+center -> phase_1_add_virtual_disks_to_nested_
+center -> phase_2_deploy_the_witness_appliance
+center -> phase_3_enable_vsan_on_the_2node_clu
+center -> phase_4_create_a_vsan_storage_policy
+center -> phase_5_verify_vsan_health
+center -> known_issues_in_nested_environments
+```
+
 ## Phase 1 — Add Virtual Disks to Nested ESXi VMs
 
 On the **physical host's vSphere client**, add virtual disks to each nested ESXi VM. Do this for both ESXi-01 and ESXi-02.

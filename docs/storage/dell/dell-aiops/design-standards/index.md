@@ -14,6 +14,23 @@ Dell AIOps Standards reference covering System Tagging Requirements, Recommendat
 
 
 
+```d2
+direction: down
+
+system_tagging_requirements: "System Tagging Requirements" {shape: rectangle}
+recommendation_priority_and_response: "Recommendation Priority and Response SLA" {shape: rectangle}
+alert_routing: "Alert Routing" {shape: rectangle}
+change_management_requirements: "Change Management Requirements" {shape: rectangle}
+deferral_policy: "Deferral Policy" {shape: rectangle}
+sensitivity_configuration: "Sensitivity Configuration" {shape: rectangle}
+
+system_tagging_requirements -> recommendation_priority_and_response: hardens
+recommendation_priority_and_response -> alert_routing: hardens
+alert_routing -> change_management_requirements: hardens
+change_management_requirements -> deferral_policy: hardens
+deferral_policy -> sensitivity_configuration: hardens
+```
+
 ## System Tagging Requirements
 
 Every storage system managed by Dell AIOps must carry the three mandatory tags. Tags are applied in CloudIQ and propagate to AIOps recommendation filtering and reporting.

@@ -20,6 +20,19 @@ Encryption reference covering Encryption Controls, Key Points.
 
 ---
 
+```d2
+direction: down
+
+external: External / Untrusted {shape: rectangle}
+encryption_controls: "Encryption Controls" {shape: rectangle}
+key_points: "Key Points" {shape: rectangle}
+core: "Flex On Demand Core" {shape: hexagon}
+
+external -> encryption_controls: traffic in
+encryption_controls -> key_points
+key_points -> core: secured path
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

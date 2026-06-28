@@ -34,6 +34,17 @@ cluster quorum check
 ```
 
 
+```d2
+direction: right
+
+hub: "RecoverPoint\nOperations" {shape: hexagon}
+run_this_routine: "Run This Routine" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+hub -> run_this_routine
+hub -> verify
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

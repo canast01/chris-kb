@@ -16,6 +16,23 @@ Daily and weekly health check routine for VxRail clusters. Covers VxRail Plugin 
 
 ---
 
+```d2
+direction: right
+
+hub: "VxRail\nOperations" {shape: hexagon}
+alert_threshold_table: "Alert Threshold Table" {shape: rectangle}
+daily_health_checks: "Daily Health Checks" {shape: rectangle}
+weekly_health_checks: "Weekly Health Checks" {shape: rectangle}
+run_this_routine: "Run This Routine" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+hub -> alert_threshold_table
+hub -> daily_health_checks
+hub -> weekly_health_checks
+hub -> run_this_routine
+hub -> verify
+```
+
 ## Before you begin
 
 - **Access:** vCenter read-only minimum; Administrator role for remediation steps

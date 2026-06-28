@@ -20,6 +20,27 @@ What to collect before opening a support case and how to engage Microsoft suppor
 
 ---
 
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+actor "On-Call Engineer" as ENG
+participant "Azure\nSystem" as SYS
+participant "Vendor Support" as SUP
+
+ENG -> SYS: Azure Vendor Support
+SYS --> ENG: Output
+ENG -> SYS: Before Opening a Support Ticket
+SYS --> ENG: Output
+ENG -> SYS: Verify resolution
+SYS --> ENG: Output
+ENG -> SUP: Escalate with diagnostic bundle
+SUP --> ENG: Case / resolution path
+
+@enduml
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

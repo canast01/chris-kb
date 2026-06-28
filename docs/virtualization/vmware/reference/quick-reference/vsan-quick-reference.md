@@ -17,6 +17,21 @@ vSAN Quick Reference reference covering Fast Health Checks, Common Commands, Pin
 
 
 
+```d2
+direction: right
+
+center: "Quick Reference" {shape: rectangle}
+fast_health_checks: "Fast Health Checks" {shape: rectangle}
+common_commands: "Common Commands" {shape: rectangle}
+ping_vsan_vmkernel_between_hosts: "Ping vSAN VMkernel Between Hosts" {shape: rectangle}
+common_issues: "Common Issues" {shape: rectangle}
+
+center -> fast_health_checks
+center -> common_commands
+center -> ping_vsan_vmkernel_between_hosts
+center -> common_issues
+```
+
 ## Fast Health Checks
 
 - vSAN Skyline Health → vCenter → Cluster → vSAN → Skyline Health

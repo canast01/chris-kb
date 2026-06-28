@@ -17,6 +17,27 @@ Python automation escalation: when to file a CPython bug, how to report a librar
 
 
 
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+actor "On-Call Engineer" as ENG
+participant "Python\nSystem" as SYS
+participant "Vendor Support" as SUP
+
+ENG -> SYS: Severity Levels (Internal)
+SYS --> ENG: Output
+ENG -> SYS: Pre-Escalation Triage Checklist
+SYS --> ENG: Output
+ENG -> SYS: Step-by-Step Data Collection
+SYS --> ENG: Output
+ENG -> SUP: Escalate with diagnostic bundle
+SUP --> ENG: Case / resolution path
+
+@enduml
+```
+
 ## Before you begin
 
 - **Access:** Access to the script execution environment and its log output; pip/package manager access to check installed versions

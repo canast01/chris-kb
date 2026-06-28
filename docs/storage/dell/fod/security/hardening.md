@@ -20,6 +20,19 @@ Hardening reference covering Hardening Checklist, Network Requirements Summary.
 
 ---
 
+```d2
+direction: down
+
+external: External / Untrusted {shape: rectangle}
+hardening_checklist: "Hardening Checklist" {shape: rectangle}
+network_requirements_summary: "Network Requirements Summary" {shape: rectangle}
+core: "Flex On Demand Core" {shape: hexagon}
+
+external -> hardening_checklist: traffic in
+hardening_checklist -> network_requirements_summary
+network_requirements_summary -> core: secured path
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

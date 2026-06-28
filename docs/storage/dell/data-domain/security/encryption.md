@@ -14,6 +14,27 @@ Encryption reference covering Overview, Key Management, Key Rotation, FIPS Mode,
 ![Data Domain — Encryption](../../../../assets/storage-dell-data-domain-security-encryption.svg)
 
 
+```d2
+direction: down
+
+external: External / Untrusted {shape: rectangle}
+key_management: "Key Management" {shape: rectangle}
+key_rotation: "Key Rotation" {shape: rectangle}
+fips_mode: "FIPS Mode" {shape: rectangle}
+encryption_in_transit_tls: "Encryption in Transit (TLS)" {shape: rectangle}
+encryption_considerations_for_cloud_: "Encryption Considerations for Cloud Tier" {shape: rectangle}
+disk_disposal_and_data_sanitisation: "Disk Disposal and Data Sanitisation" {shape: rectangle}
+core: "Data Domain Core" {shape: hexagon}
+
+external -> key_management: traffic in
+key_management -> key_rotation
+key_rotation -> fips_mode
+fips_mode -> encryption_in_transit_tls
+encryption_in_transit_tls -> encryption_considerations_for_cloud_
+encryption_considerations_for_cloud_ -> disk_disposal_and_data_sanitisation
+disk_disposal_and_data_sanitisation -> core: secured path
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

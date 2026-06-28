@@ -18,6 +18,25 @@ PowerStore management uses the PowerStore Manager web UI, REST API, and the `pst
 
 ---
 
+```d2
+direction: right
+
+hub: "PowerStore\nOperations" {shape: hexagon}
+connection: "Connection" {shape: rectangle}
+array_system_management: "Array & System Management" {shape: rectangle}
+volume_operations: "Volume Operations" {shape: rectangle}
+host_management: "Host Management" {shape: rectangle}
+snapshots_protection: "Snapshots & Protection" {shape: rectangle}
+capacity_performance: "Capacity & Performance" {shape: rectangle}
+
+hub -> connection
+hub -> array_system_management
+hub -> volume_operations
+hub -> host_management
+hub -> snapshots_protection
+hub -> capacity_performance
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

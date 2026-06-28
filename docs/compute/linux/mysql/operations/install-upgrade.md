@@ -15,6 +15,25 @@ MySQL install and upgrade procedures — major version upgrade path, in-place up
 
 
 
+```d2
+direction: right
+
+hub: "Linux\nOperations" {shape: hexagon}
+version_upgrade_path: "Version Upgrade Path" {shape: rectangle}
+preupgrade_checklist: "Pre-Upgrade Checklist" {shape: rectangle}
+inplace_upgrade_rhel_rocky: "In-Place Upgrade (RHEL / Rocky)" {shape: rectangle}
+inplace_upgrade_ubuntu: "In-Place Upgrade (Ubuntu)" {shape: rectangle}
+postupgrade_validation: "Post-Upgrade Validation" {shape: rectangle}
+rolling_upgrade_replicated_setup: "Rolling Upgrade (Replicated Setup)" {shape: rectangle}
+
+hub -> version_upgrade_path
+hub -> preupgrade_checklist
+hub -> inplace_upgrade_rhel_rocky
+hub -> inplace_upgrade_ubuntu
+hub -> postupgrade_validation
+hub -> rolling_upgrade_replicated_setup
+```
+
 ## Before you begin
 
 - **Access:** root or sudo-capable account on target hosts

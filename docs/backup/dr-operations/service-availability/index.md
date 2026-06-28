@@ -11,6 +11,21 @@ Service Availability Monitoring reference covering Availability Calculation, Upt
 ![Service Availability Monitoring](../../../assets/backup-dr-operations-service-availability-index.svg)
 
 
+```d2
+direction: right
+
+center: "DR Operations" {shape: hexagon}
+availability_calculation: "Availability Calculation" {shape: rectangle}
+aws_route_53_health_checks: "AWS Route 53 Health Checks" {shape: rectangle}
+availability_incident_tracking: "Availability Incident Tracking" {shape: rectangle}
+reporting: "Reporting" {shape: rectangle}
+
+center -> availability_calculation
+center -> aws_route_53_health_checks
+center -> availability_incident_tracking
+center -> reporting
+```
+
 ## Availability Calculation
 
 

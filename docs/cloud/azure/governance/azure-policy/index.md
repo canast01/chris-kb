@@ -15,6 +15,25 @@ Azure Policy evaluates resources against defined rules and enforces organisation
 
 
 
+```d2
+direction: right
+
+center: "Azure" {shape: hexagon}
+builtin_policies: "Built-in Policies" {shape: rectangle}
+custom_policy_definitions: "Custom Policy Definitions" {shape: rectangle}
+policy_effects: "Policy Effects" {shape: rectangle}
+policy_rule_structure: "Policy Rule Structure" {shape: rectangle}
+evaluating_compliance: "Evaluating Compliance" {shape: rectangle}
+azure_policy_evaluation_flow: "Azure Policy Evaluation Flow" {shape: rectangle}
+
+center -> builtin_policies
+center -> custom_policy_definitions
+center -> policy_effects
+center -> policy_rule_structure
+center -> evaluating_compliance
+center -> azure_policy_evaluation_flow
+```
+
 ## Built-in Policies
 
 Azure provides hundreds of built-in policy definitions covering security, compliance, cost, and operational standards. Use them before authoring custom policies.

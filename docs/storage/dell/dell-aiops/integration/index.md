@@ -12,6 +12,21 @@ Dell AIOps Integration reference covering Overview, CloudIQ / SCG (Inbound Telem
 ![Dell AIOps Integration](../../../../assets/storage-dell-dell-aiops-integration-index.svg)
 
 
+```d2
+direction: right
+
+center: "Dell AIOps" {shape: hexagon}
+cloudiq_scg_inbound_telemetry: "CloudIQ / SCG (Inbound Telemetry)" {shape: rectangle}
+siem_integration: "SIEM Integration" {shape: rectangle}
+integration_summary: "Integration Summary" {shape: rectangle}
+integration_health_checks: "Integration Health Checks" {shape: rectangle}
+
+center -> cloudiq_scg_inbound_telemetry
+center -> siem_integration
+center -> integration_summary
+center -> integration_health_checks
+```
+
 ## Overview
 
 Dell AIOps is integrated into the broader operational toolchain via CloudIQ's notification and API layers. All telemetry flows inbound through the Secure Connect Gateway; alerts and recommendations flow outbound to ITSM, notification, and observability platforms.

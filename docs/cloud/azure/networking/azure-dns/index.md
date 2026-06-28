@@ -16,6 +16,25 @@ Azure DNS hosts DNS zones and provides name resolution using the Azure infrastru
 
 
 
+```d2
+direction: right
+
+center: "Azure" {shape: hexagon}
+azure_dns_resolution_flow: "Azure DNS Resolution Flow" {shape: rectangle}
+public_dns_zones: "Public DNS Zones" {shape: rectangle}
+record_types_and_cli_commands: "Record Types and CLI Commands" {shape: rectangle}
+alias_records: "Alias Records" {shape: rectangle}
+supported_record_types: "Supported Record Types" {shape: rectangle}
+private_dns_zones: "Private DNS Zones" {shape: rectangle}
+
+center -> azure_dns_resolution_flow
+center -> public_dns_zones
+center -> record_types_and_cli_commands
+center -> alias_records
+center -> supported_record_types
+center -> private_dns_zones
+```
+
 ## Azure DNS Resolution Flow
 
 ```mermaid

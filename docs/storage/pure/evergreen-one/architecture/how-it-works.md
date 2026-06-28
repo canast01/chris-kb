@@ -16,6 +16,23 @@ How It Works reference covering STaaS Delivery Model, Components, HA Topology, C
 
 
 
+```d2
+direction: right
+
+center: "Evergreen//One" {shape: hexagon}
+staas_delivery_model: "STaaS Delivery Model" {shape: rectangle}
+components: "Components" {shape: rectangle}
+ha_topology: "HA Topology" {shape: rectangle}
+connectivity: "Connectivity" {shape: rectangle}
+sizing_and_capacity_model: "Sizing and Capacity Model" {shape: rectangle}
+
+center -> staas_delivery_model
+center -> components
+center -> ha_topology
+center -> connectivity
+center -> sizing_and_capacity_model
+```
+
 ## STaaS Delivery Model
 
 ```mermaid

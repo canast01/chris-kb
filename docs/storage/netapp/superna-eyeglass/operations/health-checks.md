@@ -12,6 +12,25 @@ Health Checks reference covering Overview, SyncIQ Replication Health, PowerScale
 *Applies to: Superna Eyeglass*
 </div>
 
+```d2
+direction: right
+
+hub: "Superna Eyeglass\nOperations" {shape: hexagon}
+run_this_routine: "Run This Routine" {shape: rectangle}
+powerscale_cluster_health: "PowerScale Cluster Health" {shape: rectangle}
+weekly_dr_readiness_check: "Weekly DR Readiness Check" {shape: rectangle}
+health_check_summary_table: "Health Check Summary Table" {shape: rectangle}
+validation: "Validation" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+hub -> run_this_routine
+hub -> powerscale_cluster_health
+hub -> weekly_dr_readiness_check
+hub -> health_check_summary_table
+hub -> validation
+hub -> verify
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

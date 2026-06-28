@@ -14,6 +14,27 @@ Authentication reference covering Overview, Active Directory Integration, Disabl
 ![Data Domain — Authentication](../../../../assets/storage-dell-data-domain-security-authentication.svg)
 
 
+```d2
+direction: down
+
+external: External / Untrusted {shape: rectangle}
+active_directory_integration: "Active Directory Integration" {shape: rectangle}
+disable_local_admin_when_ldapad_is_o: "Disable Local Admin When LDAP/AD Is Operational" {shape: rectangle}
+local_user_management: "Local User Management" {shape: rectangle}
+password_policy: "Password Policy" {shape: rectangle}
+ssh_public_key_authentication: "SSH Public Key Authentication" {shape: rectangle}
+session_management: "Session Management" {shape: rectangle}
+core: "Data Domain Core" {shape: hexagon}
+
+external -> active_directory_integration: traffic in
+active_directory_integration -> disable_local_admin_when_ldapad_is_o
+disable_local_admin_when_ldapad_is_o -> local_user_management
+local_user_management -> password_policy
+password_policy -> ssh_public_key_authentication
+ssh_public_key_authentication -> session_management
+session_management -> core: secured path
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

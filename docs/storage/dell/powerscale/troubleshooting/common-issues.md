@@ -18,6 +18,26 @@ Common Issues reference covering Quick Reference, Incident Triage.
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+diagnostic_flow: "Diagnostic Flow" {shape: rectangle}
+quick_reference: "Quick Reference" {shape: rectangle}
+incident_triage: "Incident Triage" {shape: rectangle}
+verify_resolution: "Verify resolution" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> diagnostic_flow: investigate
+symptom -> quick_reference: investigate
+symptom -> incident_triage: investigate
+symptom -> verify_resolution: investigate
+diagnostic_flow -> resolution
+quick_reference -> resolution
+incident_triage -> resolution
+verify_resolution -> resolution
+```
+
 ## Diagnostic Flow
 
 ```mermaid

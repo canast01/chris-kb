@@ -13,6 +13,17 @@ Top-10 Aria Logs (Log Insight) commands for agent control, syslog configuration,
 
 
 
+```d2
+direction: right
+
+center: "Cheat Sheets" {shape: rectangle}
+log_insight_agent_liagent: "Log Insight Agent (liagent)" {shape: rectangle}
+rest_api: "REST API" {shape: rectangle}
+
+center -> log_insight_agent_liagent
+center -> rest_api
+```
+
 ## Log Insight Agent (liagent)
 
 ```bash

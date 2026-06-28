@@ -15,6 +15,23 @@ SQL Server troubleshooting: AG synchronization failures, blocking queries, `msdb
 ![SQL Server — Common Issues](../../../../assets/compute-windows-server-sql-server-troubleshooting-common-iss.svg)
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+diagnostic_flow: "Diagnostic Flow" {shape: rectangle}
+database_performance_troubleshooting: "Database — Performance Troubleshooting" {shape: rectangle}
+verify_resolution: "Verify resolution" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> diagnostic_flow: investigate
+symptom -> database_performance_troubleshooting: investigate
+symptom -> verify_resolution: investigate
+diagnostic_flow -> resolution
+database_performance_troubleshooting -> resolution
+verify_resolution -> resolution
+```
+
 ## Diagnostic Flow
 
 ```mermaid

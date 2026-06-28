@@ -36,6 +36,25 @@ acs health
 acs nodes list
 ```
 
+```d2
+direction: right
+
+hub: "Nexus Dashboard\nOperations" {shape: hexagon}
+upgrade_overview: "Upgrade Overview" {shape: rectangle}
+compatibility_matrix: "Compatibility Matrix" {shape: rectangle}
+preupgrade_checklist: "Pre-Upgrade Checklist" {shape: rectangle}
+backup_and_restore: "Backup and Restore" {shape: rectangle}
+eol_tracking: "EOL Tracking" {shape: rectangle}
+version_cadence: "Version Cadence" {shape: rectangle}
+
+hub -> upgrade_overview
+hub -> compatibility_matrix
+hub -> preupgrade_checklist
+hub -> backup_and_restore
+hub -> eol_tracking
+hub -> version_cadence
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

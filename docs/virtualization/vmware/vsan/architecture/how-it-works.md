@@ -16,6 +16,33 @@ How It Works reference covering Storage Architecture Modes, Objects and Componen
 ![vSAN — How It Works](../../../../assets/virtualization-vmware-vsan-architecture-how-it-works.svg)
 
 
+```d2
+direction: right
+
+cluster: vSAN Cluster {
+  host1: ESXi Host 1 {
+    dg1: "Cache SSD + 3× Capacity" {shape: cylinder}
+  }
+  host2: ESXi Host 2 {
+    dg2: "Cache SSD + 3× Capacity" {shape: cylinder}
+  }
+  host3: ESXi Host 3 {
+    dg3: "Cache SSD + 3× Capacity" {shape: cylinder}
+  }
+}
+
+vcenter: vCenter Server {shape: rectangle}
+witness: Witness Appliance\n(stretched only) {shape: diamond}
+
+vcenter -> cluster.host1: ESXi management
+vcenter -> cluster.host2: ESXi management
+vcenter -> cluster.host3: ESXi management
+
+cluster.host1 -> cluster.host2: vSAN VMkernel (UDP 2233)
+cluster.host2 -> cluster.host3: vSAN VMkernel (UDP 2233)
+cluster.host1 -> cluster.host3: vSAN VMkernel (UDP 2233)
+```
+
 ## Storage Architecture Modes
 
 ### Original Storage Architecture (OSA) — vSAN 6.x / 7.x
@@ -48,6 +75,31 @@ Erasure Coding (RAID-5/6) is supported on All-Flash and ESA only.
 ---
 
 ## Write Path
+
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+actor "VM / App" as VM
+participant "vSAN Kernel\n(local host)" as KERNEL
+participant "Object Manager\n(OM)" as OM
+participant "CLOM\n(cluster placement)" as CLOM
+participant "DOM\n(distributed I/O)" as DOM
+participant "Cache Tier\n(SSD)" as CACHE
+participant "Capacity Tier\n(HDD / NVMe)" as CAP
+
+VM -> KERNEL: Write I/O
+KERNEL -> OM: Policy-based placement
+OM -> CLOM: FTT compliance check
+CLOM -> DOM: Distribute components across hosts
+DOM -> CACHE: Write to cache (SSD)
+CACHE --> DOM: ACK (write acknowledged to VM)
+DOM --> VM: Write complete
+...async destage...
+CACHE -> CAP: Destage to capacity tier
+@enduml
+```
 
 **OSA write path:**
 

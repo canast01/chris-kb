@@ -12,6 +12,19 @@ How NSX and vSphere networking (vDS) interact — GENEVE overlay, BGP uplinks to
 
 ![Network Domain Interaction Map](../../assets/interaction-map-network.svg)
 
+```d2
+direction: right
+
+center: "Interaction Map" {shape: hexagon}
+integration_summary: "Integration summary" {shape: rectangle}
+geneve_encapsulation_path: "GENEVE encapsulation path" {shape: rectangle}
+bgp_uplink_topology: "BGP uplink topology" {shape: rectangle}
+
+center -> integration_summary
+center -> geneve_encapsulation_path
+center -> bgp_uplink_topology
+```
+
 ## Integration summary
 
 | From | To | Protocol / API | Notes |

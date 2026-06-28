@@ -25,6 +25,15 @@ scp /opt/sannav/backups/sannav-backup-20260506.tar.gz \
 ```
 
 
+```d2
+direction: right
+
+hub: "SANnav\nOperations" {shape: hexagon}
+verify: "Verify" {shape: rectangle}
+
+hub -> verify
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

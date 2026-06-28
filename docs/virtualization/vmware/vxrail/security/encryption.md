@@ -18,6 +18,27 @@ Encryption reference for VxRail in the VMware product context. Covers vSAN data-
 
 ---
 
+```d2
+direction: down
+
+external: External / Untrusted {shape: rectangle}
+vsan_dataatrest_encryption: "vSAN Data-at-Rest Encryption" {shape: rectangle}
+vsan_dataintransit_encryption: "vSAN Data-in-Transit Encryption" {shape: rectangle}
+idrac_https_enforcement: "iDRAC HTTPS Enforcement" {shape: rectangle}
+secure_boot_on_esxi_nodes: "Secure Boot on ESXi Nodes" {shape: rectangle}
+vxrail_manager_tls: "VxRail Manager TLS" {shape: rectangle}
+native_key_provider_backup: "Native Key Provider Backup" {shape: rectangle}
+core: "VxRail Core" {shape: hexagon}
+
+external -> vsan_dataatrest_encryption: traffic in
+vsan_dataatrest_encryption -> vsan_dataintransit_encryption
+vsan_dataintransit_encryption -> idrac_https_enforcement
+idrac_https_enforcement -> secure_boot_on_esxi_nodes
+secure_boot_on_esxi_nodes -> vxrail_manager_tls
+vxrail_manager_tls -> native_key_provider_backup
+native_key_provider_backup -> core: secured path
+```
+
 ## Before you begin
 
 - **Access:** vCenter Administrator role

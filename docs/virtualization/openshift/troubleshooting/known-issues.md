@@ -18,6 +18,26 @@ Catalog of known OpenShift bugs, error codes, and workarounds covering cluster o
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+cluster_operators: "Cluster Operators" {shape: rectangle}
+networking_ovnkubernetes: "Networking (OVN-Kubernetes)" {shape: rectangle}
+image_registry_and_builds: "Image Registry and Builds" {shape: rectangle}
+upgrades: "Upgrades" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> cluster_operators: investigate
+symptom -> networking_ovnkubernetes: investigate
+symptom -> image_registry_and_builds: investigate
+symptom -> upgrades: investigate
+cluster_operators -> resolution
+networking_ovnkubernetes -> resolution
+image_registry_and_builds -> resolution
+upgrades -> resolution
+```
+
 ## Before you begin
 
 - Check all cluster operator status: `oc get co` — any `Degraded=True` blocks upgrades.

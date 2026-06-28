@@ -20,6 +20,23 @@ SnapMirror troubleshooting: `snapmirror show -fields status,health` for broken r
 
 ---
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+diagnostic_flow: "Diagnostic Flow" {shape: rectangle}
+common_issues_reference: "Common Issues Reference" {shape: rectangle}
+verify_resolution: "Verify resolution" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> diagnostic_flow: investigate
+symptom -> common_issues_reference: investigate
+symptom -> verify_resolution: investigate
+diagnostic_flow -> resolution
+common_issues_reference -> resolution
+verify_resolution -> resolution
+```
+
 ## Diagnostic Flow
 
 ```mermaid

@@ -19,6 +19,33 @@ Troubleshooting vCenter and ESXi login failures — SSO token errors, locked AD 
 
 
 ---
+
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+cannot_log_into_vcenter: "Cannot Log Into vCenter" {shape: rectangle}
+ad_users_cannot_log_in: "AD Users Cannot Log In" {shape: rectangle}
+local_admin_works_ad_users_cannot_lo: "Local Admin Works, AD Users Cannot Log In" {shape: rectangle}
+permission_denied: "Permission Denied" {shape: rectangle}
+session_timeout_constant_relogin_pro: "Session Timeout / Constant Re-Login Prompt" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> cannot_log_into_vcenter: investigate
+symptom -> ad_users_cannot_log_in: investigate
+symptom -> local_admin_works_ad_users_cannot_lo: investigate
+symptom -> permission_denied: investigate
+symptom -> session_timeout_constant_relogin_pro: investigate
+symptom -> verify: investigate
+cannot_log_into_vcenter -> resolution
+ad_users_cannot_log_in -> resolution
+local_admin_works_ad_users_cannot_lo -> resolution
+permission_denied -> resolution
+session_timeout_constant_relogin_pro -> resolution
+verify -> resolution
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

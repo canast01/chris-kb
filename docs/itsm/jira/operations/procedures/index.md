@@ -14,6 +14,25 @@ Jira operational procedures — story and epic creation, sprint management, back
 ![Jira — Procedures](../../../../assets/itsm-jira-operations-procedures-index.svg)
 
 
+```d2
+direction: right
+
+hub: "Jira\nOperations" {shape: hexagon}
+stories: "Stories" {shape: rectangle}
+story_structure: "Story Structure" {shape: rectangle}
+epics: "Epics" {shape: rectangle}
+story_splitting: "Story Splitting" {shape: rectangle}
+tasks: "Tasks" {shape: rectangle}
+creating_tasks: "Creating Tasks" {shape: rectangle}
+
+hub -> stories
+hub -> story_structure
+hub -> epics
+hub -> story_splitting
+hub -> tasks
+hub -> creating_tasks
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

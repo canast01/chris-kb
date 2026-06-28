@@ -33,6 +33,17 @@ graph TB
 <a class="kb-card" href="design-standards/"><strong>Design Standards</strong><span>VDC sizing, replication group design, namespace and bucket configuration standards.</span></a>
 </div>
 
+```d2
+direction: right
+
+center: "ECS" {shape: hexagon}
+erasure_coding_schemes: "Erasure Coding Schemes" {shape: rectangle}
+scaleout_object_storage_topology: "Scale-Out Object Storage Topology" {shape: rectangle}
+
+center -> erasure_coding_schemes
+center -> scaleout_object_storage_topology
+```
+
 ## Erasure Coding Schemes
 
 | EC Scheme | Data + Parity | Min Nodes | Tolerated Failures |

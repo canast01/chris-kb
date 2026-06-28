@@ -19,6 +19,21 @@ Hardening reference covering SSH Hardening on the LCM Appliance, TLS Configurati
 
 ---
 
+```d2
+direction: down
+
+external: External / Untrusted {shape: rectangle}
+tls_configuration: "TLS Configuration" {shape: rectangle}
+firewall_rules_for_lcm: "Firewall Rules for LCM" {shape: rectangle}
+hardening_checklist: "Hardening Checklist" {shape: rectangle}
+core: "Aria Suite Lifecycle Core" {shape: hexagon}
+
+external -> tls_configuration: traffic in
+tls_configuration -> firewall_rules_for_lcm
+firewall_rules_for_lcm -> hardening_checklist
+hardening_checklist -> core: secured path
+```
+
 ## Before you begin
 
 - **Access:** vCenter Administrator role

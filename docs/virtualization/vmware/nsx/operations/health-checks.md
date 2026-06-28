@@ -15,6 +15,25 @@ Health checks for NSX — Manager cluster status, transport node health, Edge BG
 
 
 
+```d2
+direction: right
+
+hub: "NSX-T\nOperations" {shape: hexagon}
+run_this_routine: "Run This Routine" {shape: rectangle}
+nsx_manager_cli_quick_reference: "NSX Manager CLI Quick Reference" {shape: rectangle}
+alarm_review: "Alarm Review" {shape: rectangle}
+certificate_expiry_check: "Certificate Expiry Check" {shape: rectangle}
+ip_pool_utilisation: "IP Pool Utilisation" {shape: rectangle}
+postchange_verification: "Post-Change Verification" {shape: rectangle}
+
+hub -> run_this_routine
+hub -> nsx_manager_cli_quick_reference
+hub -> alarm_review
+hub -> certificate_expiry_check
+hub -> ip_pool_utilisation
+hub -> postchange_verification
+```
+
 ## Before you begin
 
 - **Access:** vCenter read-only minimum; Administrator role for remediation steps

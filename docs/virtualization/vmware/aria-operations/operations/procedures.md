@@ -16,6 +16,25 @@ Day-2 operational procedures for Aria Operations — adding adapters, configurin
 
 ---
 
+```d2
+direction: right
+
+hub: "Aria Operations\nOperations" {shape: hexagon}
+add_an_adapter_instance: "Add an Adapter Instance" {shape: rectangle}
+update_adapter_credentials: "Update Adapter Credentials" {shape: rectangle}
+add_a_remote_collector: "Add a Remote Collector" {shape: rectangle}
+configure_an_alert_policy: "Configure an Alert Policy" {shape: rectangle}
+create_a_custom_group: "Create a Custom Group" {shape: rectangle}
+configure_smtp_notifications: "Configure SMTP Notifications" {shape: rectangle}
+
+hub -> add_an_adapter_instance
+hub -> update_adapter_credentials
+hub -> add_a_remote_collector
+hub -> configure_an_alert_policy
+hub -> create_a_custom_group
+hub -> configure_smtp_notifications
+```
+
 ## Before you begin
 
 - **Access:** vCenter read-only minimum; Administrator role for remediation steps

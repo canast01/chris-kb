@@ -24,6 +24,31 @@ tags:
 !!! warning
     Snapshots are **not backups**. Delta disks grow continuously and degrade performance. Remove within **24–72 hours** — never leave snapshots over a weekend.
 
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+actor "Responder" as A
+participant "Runbooks System" as B
+participant "Dependent System" as C
+
+A -> B: Process Flow
+B --> A: OK
+A -> B: Step 2  Create Snapshot
+B --> A: OK
+A -> B: Step 3  Revert to Snapshot (if change fails)
+B --> A: OK
+A -> B: Step 4  Remove Snapshot (after successful change)
+B --> A: OK
+A -> B: Common Issues
+B --> A: OK
+A -> B: Checklist
+B --> A: OK
+
+@enduml
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

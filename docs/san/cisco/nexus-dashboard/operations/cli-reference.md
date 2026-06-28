@@ -207,6 +207,15 @@ for s in data: w.writerow(s)
 " > ndfc-switches-$(date +%Y%m%d).csv
 ```
 
+```d2
+direction: right
+
+hub: "Nexus Dashboard\nOperations" {shape: hexagon}
+verify: "Verify" {shape: rectangle}
+
+hub -> verify
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

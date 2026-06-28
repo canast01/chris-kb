@@ -16,6 +16,25 @@ ServiceNow is designed as an integration hub as much as an ITSM platform. Integr
 
 ---
 
+```d2
+direction: right
+
+center: "ServiceNow" {shape: hexagon}
+integration_architecture_overview: "Integration Architecture Overview" {shape: rectangle}
+soap_web_services: "SOAP Web Services" {shape: rectangle}
+mid_server_architecture: "MID Server Architecture" {shape: rectangle}
+ldap_active_directory_integration: "LDAP / Active Directory Integration" {shape: rectangle}
+email_integration: "Email Integration" {shape: rectangle}
+monitoring_tool_integrations: "Monitoring Tool Integrations" {shape: rectangle}
+
+center -> integration_architecture_overview
+center -> soap_web_services
+center -> mid_server_architecture
+center -> ldap_active_directory_integration
+center -> email_integration
+center -> monitoring_tool_integrations
+```
+
 ## Integration Architecture Overview
 
 ```mermaid

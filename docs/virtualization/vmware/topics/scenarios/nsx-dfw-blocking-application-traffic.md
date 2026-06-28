@@ -20,6 +20,25 @@ opening broad exceptions — using Traceflow, hit count analysis, and packet cap
 
 
 
+```d2
+direction: right
+
+center: "Scenarios" {shape: hexagon}
+products_involved: "Products Involved" {shape: rectangle}
+1_confirm_dfw_is_the_cause: "1. Confirm DFW Is the Cause" {shape: rectangle}
+2_identify_the_blocking_rule: "2. Identify the Blocking Rule" {shape: rectangle}
+3_check_group_membership: "3. Check Group Membership" {shape: rectangle}
+4_resolve_rule_group_or_tag_fix: "4. Resolve: Rule, Group, or Tag Fix" {shape: rectangle}
+5_packet_capture_at_vnic_level: "5. Packet Capture at vNIC Level" {shape: rectangle}
+
+center -> products_involved
+center -> 1_confirm_dfw_is_the_cause
+center -> 2_identify_the_blocking_rule
+center -> 3_check_group_membership
+center -> 4_resolve_rule_group_or_tag_fix
+center -> 5_packet_capture_at_vnic_level
+```
+
 ## Products Involved
 
 | Product | Role in This Scenario |

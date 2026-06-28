@@ -19,6 +19,33 @@ Diagnosing VM performance degradation across the VMware stack — CPU ready, mem
 
 
 ---
+
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+vm_will_not_power_on: "VM Will Not Power On" {shape: rectangle}
+vm_is_slow_cpu: "VM Is Slow — CPU" {shape: rectangle}
+vm_is_slow_memory: "VM Is Slow — Memory" {shape: rectangle}
+vm_is_slow_disk: "VM Is Slow — Disk" {shape: rectangle}
+vm_lost_network: "VM Lost Network" {shape: rectangle}
+vm_disk_full_guest_os_level: "VM Disk Full (Guest OS Level)" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> vm_will_not_power_on: investigate
+symptom -> vm_is_slow_cpu: investigate
+symptom -> vm_is_slow_memory: investigate
+symptom -> vm_is_slow_disk: investigate
+symptom -> vm_lost_network: investigate
+symptom -> vm_disk_full_guest_os_level: investigate
+vm_will_not_power_on -> resolution
+vm_is_slow_cpu -> resolution
+vm_is_slow_memory -> resolution
+vm_is_slow_disk -> resolution
+vm_lost_network -> resolution
+vm_disk_full_guest_os_level -> resolution
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

@@ -35,6 +35,27 @@ flowchart TD
     style s9 fill:#2e7d32,color:#fff,stroke:#1b5e20
 ```
 
+```d2
+direction: right
+
+plan: "Plan" {shape: oval}
+request_development_instance: "Request Development Instance" {shape: rectangle}
+configure_admin_account: "Configure Admin Account" {shape: rectangle}
+connect_ldapactive_directory: "Connect LDAP/Active Directory" {shape: rectangle}
+import_users_and_groups: "Import Users and Groups" {shape: rectangle}
+configure_email_smtp: "Configure Email (SMTP)" {shape: rectangle}
+install_required_plugins: "Install Required Plugins" {shape: rectangle}
+validate: "Validate" {shape: oval}
+
+plan -> request_development_instance
+request_development_instance -> configure_admin_account
+configure_admin_account -> connect_ldapactive_directory
+connect_ldapactive_directory -> import_users_and_groups
+import_users_and_groups -> configure_email_smtp
+configure_email_smtp -> install_required_plugins
+install_required_plugins -> validate
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

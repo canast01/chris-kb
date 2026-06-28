@@ -17,6 +17,32 @@ AWS support escalation for EVS: severity levels, required data for support cases
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+case_routing_matrix: "Case Routing Matrix" {shape: rectangle}
+severity_levels: "Severity Levels" {shape: rectangle}
+aws_support_case_requirements: "AWS Support Case Requirements" {shape: rectangle}
+vmware_support_case_requirements: "VMware Support Case Requirements" {shape: rectangle}
+tam_and_account_team_escalation: "TAM and Account Team Escalation" {shape: rectangle}
+escalation_path: "Escalation Path" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> case_routing_matrix: investigate
+symptom -> severity_levels: investigate
+symptom -> aws_support_case_requirements: investigate
+symptom -> vmware_support_case_requirements: investigate
+symptom -> tam_and_account_team_escalation: investigate
+symptom -> escalation_path: investigate
+case_routing_matrix -> resolution
+severity_levels -> resolution
+aws_support_case_requirements -> resolution
+vmware_support_case_requirements -> resolution
+tam_and_account_team_escalation -> resolution
+escalation_path -> resolution
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

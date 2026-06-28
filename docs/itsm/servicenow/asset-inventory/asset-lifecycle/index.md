@@ -15,6 +15,23 @@ Asset Lifecycle Management reference covering Overview, Lifecycle Stages, Refres
 
 
 
+```d2
+direction: right
+
+center: "ServiceNow" {shape: hexagon}
+lifecycle_stages: "Lifecycle Stages" {shape: rectangle}
+refresh_cycles: "Refresh Cycles" {shape: rectangle}
+eol_tracking: "EOL Tracking" {shape: rectangle}
+budget_planning: "Budget Planning" {shape: rectangle}
+roles_and_responsibilities: "Roles and Responsibilities" {shape: rectangle}
+
+center -> lifecycle_stages
+center -> refresh_cycles
+center -> eol_tracking
+center -> budget_planning
+center -> roles_and_responsibilities
+```
+
 ## Overview
 
 Every asset moves through a predictable set of stages from procurement to disposal. Tracking these stages in the CMDB enables proactive refresh planning, accurate budgeting, and timely EOL management — avoiding the risk of running unsupported hardware or software in production.

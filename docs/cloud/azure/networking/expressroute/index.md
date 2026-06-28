@@ -16,6 +16,25 @@ Azure ExpressRoute provides dedicated private connectivity between on-premises n
 
 
 
+```d2
+direction: right
+
+center: "Azure" {shape: hexagon}
+expressroute_connectivity_model: "ExpressRoute Connectivity Model" {shape: rectangle}
+circuit_creation: "Circuit Creation" {shape: rectangle}
+peering_types: "Peering Types" {shape: rectangle}
+connecting_to_a_virtual_network_gate: "Connecting to a Virtual Network Gateway" {shape: rectangle}
+redundancy: "Redundancy" {shape: rectangle}
+sku_and_bandwidth_options: "SKU and Bandwidth Options" {shape: rectangle}
+
+center -> expressroute_connectivity_model
+center -> circuit_creation
+center -> peering_types
+center -> connecting_to_a_virtual_network_gate
+center -> redundancy
+center -> sku_and_bandwidth_options
+```
+
 ## ExpressRoute Connectivity Model
 
 ```mermaid

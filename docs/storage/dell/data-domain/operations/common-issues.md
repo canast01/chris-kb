@@ -14,6 +14,25 @@ Common Issues (Operations) reference covering Overview, Incident Triage — Firs
 ![Data Domain — Common Issues (Operations)](../../../../assets/storage-dell-data-domain-operations-common-issues.svg)
 
 
+```d2
+direction: right
+
+hub: "Data Domain\nOperations" {shape: hexagon}
+incident_triage_first_response: "Incident Triage — First Response" {shape: rectangle}
+issue_replication_lag_growing: "Issue: Replication Lag Growing" {shape: rectangle}
+issue_ddboost_client_authentication_: "Issue: DDBoost Client Authentication Failure" {shape: rectangle}
+issue_low_deduplication_ratio: "Issue: Low Deduplication Ratio" {shape: rectangle}
+issue_filesystem_disabled_after_rebo: "Issue: Filesystem Disabled After Reboot" {shape: rectangle}
+issue_vtl_tape_import_failure: "Issue: VTL Tape Import Failure" {shape: rectangle}
+
+hub -> incident_triage_first_response
+hub -> issue_replication_lag_growing
+hub -> issue_ddboost_client_authentication_
+hub -> issue_low_deduplication_ratio
+hub -> issue_filesystem_disabled_after_rebo
+hub -> issue_vtl_tape_import_failure
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

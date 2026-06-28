@@ -13,6 +13,25 @@ Azure Integration reference covering Azure VM Deployment Flow, Azure AD Connect 
 ![Azure Integration](../../../../assets/cloud-azure-architecture-integrations-index.svg)
 
 
+```d2
+direction: right
+
+center: "Azure" {shape: hexagon}
+azure_vm_deployment_flow: "Azure VM Deployment Flow" {shape: rectangle}
+azure_ad_connect_hybrid_identity: "Azure AD Connect (Hybrid Identity)" {shape: rectangle}
+azure_monitor_siem: "Azure Monitor → SIEM" {shape: rectangle}
+github_actions_oidc_federation: "GitHub Actions + OIDC Federation" {shape: rectangle}
+terraform_remote_state: "Terraform Remote State" {shape: rectangle}
+azure_backup: "Azure Backup" {shape: rectangle}
+
+center -> azure_vm_deployment_flow
+center -> azure_ad_connect_hybrid_identity
+center -> azure_monitor_siem
+center -> github_actions_oidc_federation
+center -> terraform_remote_state
+center -> azure_backup
+```
+
 ## Azure VM Deployment Flow
 
 ```mermaid

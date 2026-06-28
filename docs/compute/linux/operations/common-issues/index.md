@@ -18,6 +18,32 @@ Quick reference for common problems and resolutions.
 
 Structured approach to diagnosing common Linux server issues.
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+triage_order: "Triage Order" {shape: rectangle}
+high_disk_io_or_latency: "High Disk I/O or Latency" {shape: rectangle}
+network_connectivity_issues: "Network Connectivity Issues" {shape: rectangle}
+service_not_starting: "Service Not Starting" {shape: rectangle}
+ssh_access_denied: "SSH Access Denied" {shape: rectangle}
+disk_full_emergency: "Disk Full — Emergency" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> triage_order: investigate
+symptom -> high_disk_io_or_latency: investigate
+symptom -> network_connectivity_issues: investigate
+symptom -> service_not_starting: investigate
+symptom -> ssh_access_denied: investigate
+symptom -> disk_full_emergency: investigate
+triage_order -> resolution
+high_disk_io_or_latency -> resolution
+network_connectivity_issues -> resolution
+service_not_starting -> resolution
+ssh_access_denied -> resolution
+disk_full_emergency -> resolution
+```
+
 ## Before you begin
 
 - **Access:** root or sudo-capable account on target hosts

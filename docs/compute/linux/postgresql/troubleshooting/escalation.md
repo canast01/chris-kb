@@ -19,6 +19,32 @@ How to escalate PostgreSQL issues to vendor support (EDB, Percona, or Crunchy Da
 
 ---
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+when_to_escalate_immediately: "When to Escalate Immediately" {shape: rectangle}
+preescalation_selfcheck: "Pre-Escalation Self-Check" {shape: rectangle}
+stepbystep_data_collection: "Step-by-Step Data Collection" {shape: rectangle}
+how_to_open_the_case: "How to Open the Case" {shape: rectangle}
+escalation_path: "Escalation Path" {shape: rectangle}
+what_not_to_do: "What NOT to Do" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> when_to_escalate_immediately: investigate
+symptom -> preescalation_selfcheck: investigate
+symptom -> stepbystep_data_collection: investigate
+symptom -> how_to_open_the_case: investigate
+symptom -> escalation_path: investigate
+symptom -> what_not_to_do: investigate
+when_to_escalate_immediately -> resolution
+preescalation_selfcheck -> resolution
+stepbystep_data_collection -> resolution
+how_to_open_the_case -> resolution
+escalation_path -> resolution
+what_not_to_do -> resolution
+```
+
 ## Before you begin
 
 - **Access required:** `postgres` OS user or `sudo` access; PostgreSQL superuser role; vendor support account at your PostgreSQL support provider (EDB, Percona, or Crunchy Data)

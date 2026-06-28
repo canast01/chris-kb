@@ -51,6 +51,32 @@ graph TD
     class Q escalate
 ```
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+step_1_check_failed_jobs: "Step 1 — Check failed jobs" {shape: rectangle}
+step_2_check_storage_unit_and_pool_c: "Step 2 — Check storage unit and pool capacity" {shape: rectangle}
+step_3_check_policy_and_client_confi: "Step 3 — Check policy and client configuration" {shape: rectangle}
+step_4_check_media_server_status_and: "Step 4 — Check media server status and catalog" {shape: rectangle}
+step_5_read_vxul_logs: "Step 5 — Read VxUL logs" {shape: rectangle}
+step_6_increase_verbose_logging_temp: "Step 6 — Increase verbose logging temporarily" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> step_1_check_failed_jobs: investigate
+symptom -> step_2_check_storage_unit_and_pool_c: investigate
+symptom -> step_3_check_policy_and_client_confi: investigate
+symptom -> step_4_check_media_server_status_and: investigate
+symptom -> step_5_read_vxul_logs: investigate
+symptom -> step_6_increase_verbose_logging_temp: investigate
+step_1_check_failed_jobs -> resolution
+step_2_check_storage_unit_and_pool_c -> resolution
+step_3_check_policy_and_client_confi -> resolution
+step_4_check_media_server_status_and -> resolution
+step_5_read_vxul_logs -> resolution
+step_6_increase_verbose_logging_temp -> resolution
+```
+
 ## Before you begin
 
 - **Access:** NetBackup admin role on the master server; root or sudo on Linux master/media servers

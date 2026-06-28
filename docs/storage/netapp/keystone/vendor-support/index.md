@@ -14,6 +14,27 @@ NetApp Keystone Vendor Support reference covering Keystone Success Manager, Supp
 
 
 
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+actor "On-Call Engineer" as ENG
+participant "Keystone STaaS\nSystem" as SYS
+participant "Vendor Support" as SUP
+
+ENG -> SYS: Keystone Success Manager
+SYS --> ENG: Output
+ENG -> SYS: Support Portal
+SYS --> ENG: Output
+ENG -> SYS: Opening a Case
+SYS --> ENG: Output
+ENG -> SUP: Escalate with diagnostic bundle
+SUP --> ENG: Case / resolution path
+
+@enduml
+```
+
 ## Keystone Success Manager
 
 Every Keystone subscription includes a dedicated Keystone Success Manager (KSM). The KSM is the primary NetApp contact for:

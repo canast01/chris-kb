@@ -42,6 +42,32 @@ graph TD
     class L,M ok
 ```
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+step_1_check_current_license_state: "Step 1 — Check current license state" {shape: rectangle}
+step_2_inspect_the_cod_key_file: "Step 2 — Inspect the COD key file" {shape: rectangle}
+step_3_dryrun_the_key_installation: "Step 3 — Dry-run the key installation" {shape: rectangle}
+step_4_install_the_key_and_verify_ca: "Step 4 — Install the key and verify capacity" {shape: rectangle}
+step_5_add_new_drives_to_a_thin_pool: "Step 5 — Add new drives to a thin pool" {shape: rectangle}
+step_6_audit_cod_activation_history: "Step 6 — Audit COD activation history" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> step_1_check_current_license_state: investigate
+symptom -> step_2_inspect_the_cod_key_file: investigate
+symptom -> step_3_dryrun_the_key_installation: investigate
+symptom -> step_4_install_the_key_and_verify_ca: investigate
+symptom -> step_5_add_new_drives_to_a_thin_pool: investigate
+symptom -> step_6_audit_cod_activation_history: investigate
+step_1_check_current_license_state -> resolution
+step_2_inspect_the_cod_key_file -> resolution
+step_3_dryrun_the_key_installation -> resolution
+step_4_install_the_key_and_verify_ca -> resolution
+step_5_add_new_drives_to_a_thin_pool -> resolution
+step_6_audit_cod_activation_history -> resolution
+```
+
 ## Before you begin
 
 - **Access:** Solutions Enabler access to the PowerMax array (gatekeeper LUNs configured); Unisphere for PowerMax admin access

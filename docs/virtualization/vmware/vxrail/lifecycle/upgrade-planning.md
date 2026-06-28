@@ -11,6 +11,22 @@ tags:
 ```bash
 
 ---
+
+```d2
+direction: right
+
+plan: "Plan" {shape: oval}
+phase_1_planning: "Phase 1: Planning" {shape: rectangle}
+phase_2_preupgrade_health_checks: "Phase 2: Pre-Upgrade Health Checks" {shape: rectangle}
+phase_3_preupgrade_support_bundle: "Phase 3: Pre-Upgrade Support Bundle" {shape: rectangle}
+validate: "Validate" {shape: oval}
+
+plan -> phase_1_planning
+phase_1_planning -> phase_2_preupgrade_health_checks
+phase_2_preupgrade_health_checks -> phase_3_preupgrade_support_bundle
+phase_3_preupgrade_support_bundle -> validate
+```
+
 ## Phase 1: Planning
 
 ### Capture Current State

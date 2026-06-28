@@ -18,6 +18,23 @@ Catalog of known Venafi TPP bugs, error codes, and workarounds covering certific
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+certificate_issuance: "Certificate Issuance" {shape: rectangle}
+discovery: "Discovery" {shape: rectangle}
+satellite_and_agents: "Satellite and Agents" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> certificate_issuance: investigate
+symptom -> discovery: investigate
+symptom -> satellite_and_agents: investigate
+certificate_issuance -> resolution
+discovery -> resolution
+satellite_and_agents -> resolution
+```
+
 ## Before you begin
 
 - Venafi errors appear in TPP UI → Monitor → Log.

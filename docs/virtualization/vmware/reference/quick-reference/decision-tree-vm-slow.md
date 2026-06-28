@@ -38,6 +38,15 @@ VM slow decision tree: branching logic covering CPU ready, memory balloon, stora
                                          └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+```d2
+direction: right
+
+center: "Quick Reference" {shape: rectangle}
+first_decision: "First Decision" {shape: rectangle}
+
+center -> first_decision
+```
+
 ## First Decision
 
 

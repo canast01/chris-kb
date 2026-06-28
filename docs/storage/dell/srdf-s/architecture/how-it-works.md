@@ -14,6 +14,19 @@ How It Works reference covering Overview, Write Commit Model, RTT Requirements, 
 ![SRDF/S — How It Works](../../../../assets/storage-dell-srdf-s-architecture-how-it-works.svg)
 
 
+```d2
+direction: right
+
+center: "SRDF/S" {shape: hexagon}
+write_commit_model: "Write Commit Model" {shape: rectangle}
+rtt_requirements: "RTT Requirements" {shape: rectangle}
+recovery_time_standards: "Recovery Time Standards" {shape: rectangle}
+
+center -> write_commit_model
+center -> rtt_requirements
+center -> recovery_time_standards
+```
+
 ## Overview
 
 SRDF/S (Synchronous) provides zero-data-loss replication between two PowerMax arrays. Every host write is committed to both the source (R1) and target (R2) before an acknowledgement is returned to the host. This guarantees RPO = 0 at the cost of write latency, which is directly proportional to inter-site round-trip time (RTT). Use case: financial transaction systems, active-active cluster workloads, and DR configurations where RPO = 0 is contractually required.

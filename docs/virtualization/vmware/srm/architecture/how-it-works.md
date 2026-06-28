@@ -17,6 +17,32 @@ How It Works (VMware Platform) reference covering Site Topology, Test Failover W
 
 ## Site Topology
 
+```d2
+direction: right
+
+protected: Protected Site {
+  vc_p: vCenter Server {shape: rectangle}
+  srm_p: SRM Server {shape: rectangle}
+  vms: Protected VMs {shape: rectangle}
+  storage_p: Production Storage {shape: cylinder}
+  vc_p -> srm_p
+  srm_p -> vms: protect
+  vms -> storage_p
+}
+
+recovery: Recovery Site {
+  vc_r: vCenter Server {shape: rectangle}
+  srm_r: SRM Server {shape: rectangle}
+  placeholders: Placeholder VMs {shape: rectangle}
+  storage_r: Recovery Storage {shape: cylinder}
+  vc_r -> srm_r
+  srm_r -> placeholders
+}
+
+protected.srm_p -> recovery.srm_r: SRM pairing (TCP 443)
+protected.storage_p -> recovery.storage_r: Replication (SRA / vSphere Replication)
+```
+
 SRM operates across two paired sites: a **protected site** (production) and a **recovery site** (DR). Each site requires:
 
 - vCenter Server
@@ -118,6 +144,30 @@ Planned migration is fully reversible via **Failback** once you have re-protecte
 ---
 
 ## Disaster Recovery Failover
+
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+actor "SRM Admin" as Admin
+participant "SRM\n(Protected Site)" as SRM_P
+participant "SRM\n(Recovery Site)" as SRM_R
+participant "Storage SRA" as SRA
+participant "vCenter\n(Recovery)" as VC_R
+participant "Recovered VMs" as VMS
+
+Admin -> SRM_R: Execute Recovery Plan
+SRM_R -> SRM_P: Notify protected site (if reachable)
+SRM_R -> SRA: Invoke failover snapshot
+SRA --> SRM_R: Storage volumes ready
+SRM_R -> VC_R: Remove placeholder VMs
+SRM_R -> VC_R: Register recovered VMs (priority order)
+VC_R -> VMS: Power on — highest priority first
+VMS --> SRM_R: VM heartbeat OK
+SRM_R -> Admin: Recovery report (RPO achieved)
+@enduml
+```
 
 Used when the protected site is unavailable (power failure, network loss, site disaster).
 

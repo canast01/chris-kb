@@ -20,6 +20,21 @@ CLI Reference reference covering Overview, Pure1 REST API, FlashArray CLI (per-a
 
 ---
 
+```d2
+direction: right
+
+hub: "Evergreen\nOperations" {shape: hexagon}
+pure1_rest_api: "Pure1 REST API" {shape: rectangle}
+flasharray_cli_perarray: "FlashArray CLI (per-array)" {shape: rectangle}
+alerts: "Alerts" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+hub -> pure1_rest_api
+hub -> flasharray_cli_perarray
+hub -> alerts
+hub -> verify
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

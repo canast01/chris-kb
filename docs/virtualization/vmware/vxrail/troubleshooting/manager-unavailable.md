@@ -17,6 +17,32 @@ VxRail Manager Unavailable reference covering Overview, Where It Fits, Daily Che
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+where_it_fits: "Where It Fits" {shape: rectangle}
+daily_checks: "Daily Checks" {shape: rectangle}
+health_commands: "Health Commands" {shape: rectangle}
+common_issues: "Common Issues" {shape: rectangle}
+operational_tasks: "Operational Tasks" {shape: rectangle}
+upgrade_notes: "Upgrade Notes" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> where_it_fits: investigate
+symptom -> daily_checks: investigate
+symptom -> health_commands: investigate
+symptom -> common_issues: investigate
+symptom -> operational_tasks: investigate
+symptom -> upgrade_notes: investigate
+where_it_fits -> resolution
+daily_checks -> resolution
+health_commands -> resolution
+common_issues -> resolution
+operational_tasks -> resolution
+upgrade_notes -> resolution
+```
+
 ## Before you begin
 
 - **Access:** SSH to vCenter Shell and ESXi hosts; vSphere Client read access

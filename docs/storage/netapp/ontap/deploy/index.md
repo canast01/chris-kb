@@ -35,6 +35,27 @@ flowchart TD
     style s8 fill:#2e7d32,color:#fff,stroke:#1b5e20
 ```
 
+```d2
+direction: right
+
+plan: "Plan" {shape: oval}
+phase_1_physical_layer: "Phase 1 — Physical Layer" {shape: rectangle}
+phase_2_initial_cluster_setup: "Phase 2 — Initial Cluster Setup" {shape: rectangle}
+phase_3_cluster_configuration: "Phase 3 — Cluster Configuration" {shape: rectangle}
+phase_4_network_configuration: "Phase 4 — Network Configuration" {shape: rectangle}
+phase_5_storage_provisioning: "Phase 5 — Storage Provisioning" {shape: rectangle}
+phase_6_data_protection: "Phase 6 — Data Protection" {shape: rectangle}
+validate: "Validate" {shape: oval}
+
+plan -> phase_1_physical_layer
+phase_1_physical_layer -> phase_2_initial_cluster_setup
+phase_2_initial_cluster_setup -> phase_3_cluster_configuration
+phase_3_cluster_configuration -> phase_4_network_configuration
+phase_4_network_configuration -> phase_5_storage_provisioning
+phase_5_storage_provisioning -> phase_6_data_protection
+phase_6_data_protection -> validate
+```
+
 ## Before you begin
 
 - **Access:** Root/admin access to both nodes via serial console (Node 1 first), and SSH access to the cluster management LIF after initial setup. Out-of-band management access (BMC/SP) must be configured and reachable before any cluster work begins.

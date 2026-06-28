@@ -17,6 +17,32 @@ Superna Eyeglass support escalation: how to collect the support bundle via igls 
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+severity_levels: "Severity Levels" {shape: rectangle}
+preescalation_triage_checklist: "Pre-Escalation Triage Checklist" {shape: rectangle}
+stepbystep_data_collection: "Step-by-Step Data Collection" {shape: rectangle}
+how_to_open_a_superna_support_case: "How to Open a Superna Support Case" {shape: rectangle}
+escalation_path: "Escalation Path" {shape: rectangle}
+what_not_to_do: "What NOT to Do" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> severity_levels: investigate
+symptom -> preescalation_triage_checklist: investigate
+symptom -> stepbystep_data_collection: investigate
+symptom -> how_to_open_a_superna_support_case: investigate
+symptom -> escalation_path: investigate
+symptom -> what_not_to_do: investigate
+severity_levels -> resolution
+preescalation_triage_checklist -> resolution
+stepbystep_data_collection -> resolution
+how_to_open_a_superna_support_case -> resolution
+escalation_path -> resolution
+what_not_to_do -> resolution
+```
+
 ## Before you begin
 
 - **Access:** Eyeglass Admin UI (admin user); SSH access to the Eyeglass appliance; PowerScale admin access to both production and DR clusters

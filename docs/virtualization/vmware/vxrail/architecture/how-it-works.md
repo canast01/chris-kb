@@ -23,6 +23,25 @@ VxRail is a jointly engineered product between Dell Technologies and Broadcom (V
 
 ---
 
+```d2
+direction: right
+
+center: "VxRail" {shape: hexagon}
+architecture_overview: "Architecture Overview" {shape: rectangle}
+key_components: "Key Components" {shape: rectangle}
+node_architecture: "Node Architecture" {shape: rectangle}
+vsan_integration: "vSAN Integration" {shape: rectangle}
+network_architecture: "Network Architecture" {shape: rectangle}
+deployment_models: "Deployment Models" {shape: rectangle}
+
+center -> architecture_overview
+center -> key_components
+center -> node_architecture
+center -> vsan_integration
+center -> network_architecture
+center -> deployment_models
+```
+
 ## Architecture Overview
 
 ```mermaid

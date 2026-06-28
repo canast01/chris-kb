@@ -20,6 +20,27 @@ CVM OS hardening, AHV hypervisor hardening, Prism Element/Central security confi
 
 ---
 
+```d2
+direction: down
+
+external: External / Untrusted {shape: rectangle}
+cvm_password_policy: "CVM Password Policy" {shape: rectangle}
+ssh_hardening: "SSH Hardening" {shape: rectangle}
+tls_ssl_configuration: "TLS / SSL Configuration" {shape: rectangle}
+port_exposure_lockdown: "Port Exposure Lockdown" {shape: rectangle}
+prism_element_security_settings: "Prism Element Security Settings" {shape: rectangle}
+network_segmentation: "Network Segmentation" {shape: rectangle}
+core: "Nutanix AHV Core" {shape: hexagon}
+
+external -> cvm_password_policy: traffic in
+cvm_password_policy -> ssh_hardening
+ssh_hardening -> tls_ssl_configuration
+tls_ssl_configuration -> port_exposure_lockdown
+port_exposure_lockdown -> prism_element_security_settings
+prism_element_security_settings -> network_segmentation
+network_segmentation -> core: secured path
+```
+
 ## Before you begin
 
 - **Access:** CVM SSH (nutanix), Prism Element admin

@@ -18,6 +18,25 @@ Backup & Restore reference covering Evergreen//Forever — No Traditional Backup
 
 ![Evergreen — Backup & Restore — Diagram](../../../../assets/storage-pure-evergreen-operations-backup-restore-diagram.svg)
 
+```d2
+direction: right
+
+hub: "Evergreen\nOperations" {shape: hexagon}
+evergreenforever_no_traditional_back: "Evergreen//Forever — No Traditional Backup Required" {shape: rectangle}
+export_array_configuration: "Export Array Configuration" {shape: rectangle}
+preupgrade_configuration_snapshot: "Pre-Upgrade Configuration Snapshot" {shape: rectangle}
+restore_after_model_swap: "Restore After Model Swap" {shape: rectangle}
+pure1_configuration_audit: "Pure1 Configuration Audit" {shape: rectangle}
+checklist: "Checklist" {shape: rectangle}
+
+hub -> evergreenforever_no_traditional_back
+hub -> export_array_configuration
+hub -> preupgrade_configuration_snapshot
+hub -> restore_after_model_swap
+hub -> pure1_configuration_audit
+hub -> checklist
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

@@ -14,6 +14,23 @@ Common questions about VMware Aria Operations for Logs operations, configuration
 
 ![VMware Aria Operations for Logs FAQ](../../../../assets/virtualization-vmware-aria-operations-for-logs-operations-faq.svg)
 
+```d2
+direction: right
+
+hub: "Aria Operations for Logs\nOperations" {shape: hexagon}
+general: "General" {shape: rectangle}
+configuration: "Configuration" {shape: rectangle}
+operations: "Operations" {shape: rectangle}
+troubleshooting: "Troubleshooting" {shape: rectangle}
+backup_and_recovery: "Backup and Recovery" {shape: rectangle}
+
+hub -> general
+hub -> configuration
+hub -> operations
+hub -> troubleshooting
+hub -> backup_and_recovery
+```
+
 ## General
 
 **Q: What Aria Operations for Logs version is recommended?**

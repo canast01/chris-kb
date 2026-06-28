@@ -16,6 +16,25 @@ Security baselines and compliance configuration for Dell PowerScale.
 
 
 
+```d2
+direction: down
+
+external: External / Untrusted {shape: rectangle}
+hardening_checklist: "Hardening Checklist" {shape: rectangle}
+commands: "Commands" {shape: rectangle}
+rolebased_administration: "Role-Based Administration" {shape: rectangle}
+security_baseline_validation: "Security Baseline Validation" {shape: rectangle}
+hardening_standards_reference: "Hardening Standards Reference" {shape: rectangle}
+core: "PowerScale (Isilon) Core" {shape: hexagon}
+
+external -> hardening_checklist: traffic in
+hardening_checklist -> commands
+commands -> rolebased_administration
+rolebased_administration -> security_baseline_validation
+security_baseline_validation -> hardening_standards_reference
+hardening_standards_reference -> core: secured path
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

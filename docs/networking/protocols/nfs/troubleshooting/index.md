@@ -16,6 +16,32 @@ NFS Troubleshooting reference covering Diagnostic Flow, Quick Diagnostics, Commo
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+diagnostic_flow: "Diagnostic Flow" {shape: rectangle}
+quick_diagnostics: "Quick Diagnostics" {shape: rectangle}
+common_issues: "Common Issues" {shape: rectangle}
+performance_tuning: "Performance Tuning" {shape: rectangle}
+export_configuration_reference: "Export Configuration Reference" {shape: rectangle}
+stale_file_handle_recovery: "Stale File Handle Recovery" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> diagnostic_flow: investigate
+symptom -> quick_diagnostics: investigate
+symptom -> common_issues: investigate
+symptom -> performance_tuning: investigate
+symptom -> export_configuration_reference: investigate
+symptom -> stale_file_handle_recovery: investigate
+diagnostic_flow -> resolution
+quick_diagnostics -> resolution
+common_issues -> resolution
+performance_tuning -> resolution
+export_configuration_reference -> resolution
+stale_file_handle_recovery -> resolution
+```
+
 ## Before you begin
 
 - **Access:** Network admin credentials; console or SSH to devices

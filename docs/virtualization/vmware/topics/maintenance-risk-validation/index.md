@@ -17,6 +17,19 @@ Validate cluster health before any maintenance window. All checks must pass befo
 
 ---
 
+```d2
+direction: right
+
+center: "Maintenance Risk Validation" {shape: hexagon}
+premaintenance_validation: "Pre-Maintenance Validation" {shape: rectangle}
+redflag_conditions: "Red-Flag Conditions" {shape: rectangle}
+safetoproceed_validation_checklist: "Safe-to-Proceed Validation Checklist" {shape: rectangle}
+
+center -> premaintenance_validation
+center -> redflag_conditions
+center -> safetoproceed_validation_checklist
+```
+
 ## Pre-Maintenance Validation
 
 Run these commands before every maintenance operation. Resolve any failures before proceeding.

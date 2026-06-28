@@ -18,6 +18,23 @@ Catalog of known Aria Operations for Logs (vRLI) bugs, error codes, and workarou
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+syslog_ingestion: "Syslog Ingestion" {shape: rectangle}
+agents: "Agents" {shape: rectangle}
+cluster: "Cluster" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> syslog_ingestion: investigate
+symptom -> agents: investigate
+symptom -> cluster: investigate
+syslog_ingestion -> resolution
+agents -> resolution
+cluster -> resolution
+```
+
 ## Before you begin
 
 - Aria Ops for Logs errors appear in `Administration → Cluster Management`.

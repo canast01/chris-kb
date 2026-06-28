@@ -13,6 +13,25 @@ Health Checks reference covering Daily Health Check Procedure, Change Readiness 
 </div>
 
 
+```d2
+direction: right
+
+hub: "PowerStore\nOperations" {shape: hexagon}
+run_this_routine: "Run This Routine" {shape: rectangle}
+daily_health_check_procedure: "Daily Health Check Procedure" {shape: rectangle}
+change_readiness_checklist: "Change Readiness Checklist" {shape: rectangle}
+postchange_validation: "Post-Change Validation" {shape: rectangle}
+quick_reference_key_rest_api_health_: "Quick Reference — Key REST API Health Endpoints" {shape: rectangle}
+incident_triage: "Incident Triage" {shape: rectangle}
+
+hub -> run_this_routine
+hub -> daily_health_check_procedure
+hub -> change_readiness_checklist
+hub -> postchange_validation
+hub -> quick_reference_key_rest_api_health_
+hub -> incident_triage
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

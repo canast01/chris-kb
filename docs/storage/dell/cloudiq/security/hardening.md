@@ -20,6 +20,19 @@ CloudIQ hardening: audit log retention policy, MFA enforcement for admin account
 
 ---
 
+```d2
+direction: down
+
+external: External / Untrusted {shape: rectangle}
+audit_log: "Audit Log" {shape: rectangle}
+security_baseline: "Security Baseline" {shape: rectangle}
+core: "CloudIQ Core" {shape: hexagon}
+
+external -> audit_log: traffic in
+audit_log -> security_baseline
+security_baseline -> core: secured path
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

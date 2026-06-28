@@ -19,6 +19,25 @@ Install and Upgrade reference covering Prerequisites for vSphere with Tanzu (Sup
 
 ---
 
+```d2
+direction: right
+
+hub: "Tanzu\nOperations" {shape: hexagon}
+prerequisites_for_vsphere_with_tanzu: "Prerequisites for vSphere with Tanzu (Supervisor)" {shape: rectangle}
+enable_workload_management_on_vspher: "Enable Workload Management on vSphere" {shape: rectangle}
+deploy_tkg_management_cluster_standa: "Deploy TKG Management Cluster (Standalone)" {shape: rectangle}
+deploy_a_tkg_workload_cluster: "Deploy a TKG Workload Cluster" {shape: rectangle}
+harbor_deployment_ova: "Harbor Deployment (OVA)" {shape: rectangle}
+upgrade_order: "Upgrade Order" {shape: rectangle}
+
+hub -> prerequisites_for_vsphere_with_tanzu
+hub -> enable_workload_management_on_vspher
+hub -> deploy_tkg_management_cluster_standa
+hub -> deploy_a_tkg_workload_cluster
+hub -> harbor_deployment_ova
+hub -> upgrade_order
+```
+
 ## Before you begin
 
 - **Access:** vCenter Administrator; vSphere Namespace Administrator role for Workload Management; `kubectl vsphere` access after deployment

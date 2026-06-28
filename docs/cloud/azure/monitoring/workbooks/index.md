@@ -15,6 +15,25 @@ Azure Monitor Workbooks are interactive, parameterised reports that combine text
 
 
 
+```d2
+direction: right
+
+center: "Azure" {shape: hexagon}
+workbook_parameters: "Workbook Parameters" {shape: rectangle}
+custom_visualisations: "Custom Visualisations" {shape: rectangle}
+sharing_workbooks: "Sharing Workbooks" {shape: rectangle}
+exporting_and_version_control: "Exporting and Version Control" {shape: rectangle}
+builtin_workbook_gallery: "Built-in Workbook Gallery" {shape: rectangle}
+workbook_governance_tips: "Workbook Governance Tips" {shape: rectangle}
+
+center -> workbook_parameters
+center -> custom_visualisations
+center -> sharing_workbooks
+center -> exporting_and_version_control
+center -> builtin_workbook_gallery
+center -> workbook_governance_tips
+```
+
 ## Workbook Parameters
 
 Parameters allow users to filter workbook data dynamically. Common parameter types include time range, subscription, resource group, resource, and free text.

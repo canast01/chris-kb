@@ -53,6 +53,32 @@ graph TD
     class S,T escalate
 ```
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+step_1_check_instance_health: "Step 1 — Check instance health" {shape: rectangle}
+step_2_jvm_heap_analysis: "Step 2 — JVM heap analysis" {shape: rectangle}
+step_3_thread_dump_capture_and_analy: "Step 3 — Thread dump capture and analysis" {shape: rectangle}
+step_4_database_query_performance: "Step 4 — Database query performance" {shape: rectangle}
+step_5_support_zip_collection: "Step 5 — Support ZIP collection" {shape: rectangle}
+log_locations: "Log locations" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> step_1_check_instance_health: investigate
+symptom -> step_2_jvm_heap_analysis: investigate
+symptom -> step_3_thread_dump_capture_and_analy: investigate
+symptom -> step_4_database_query_performance: investigate
+symptom -> step_5_support_zip_collection: investigate
+symptom -> log_locations: investigate
+step_1_check_instance_health -> resolution
+step_2_jvm_heap_analysis -> resolution
+step_3_thread_dump_capture_and_analy -> resolution
+step_4_database_query_performance -> resolution
+step_5_support_zip_collection -> resolution
+log_locations -> resolution
+```
+
 ## Before you begin
 
 - **Access:** SSH to Confluence server(s) as root or confluence OS user; PostgreSQL admin access; Confluence Admin account for the web UI and support tools

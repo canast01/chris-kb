@@ -54,6 +54,32 @@ graph TD
     class R,S escalate
 ```
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+step_1_check_versions_and_connection: "Step 1 — Check versions and connection state" {shape: rectangle}
+step_2_enable_verbose_and_debug_outp: "Step 2 — Enable verbose and debug output" {shape: rectangle}
+step_3_read_the_full_exception: "Step 3 — Read the full exception" {shape: rectangle}
+step_4_use_extensiondata_for_raw_api: "Step 4 — Use ExtensionData for raw API access" {shape: rectangle}
+step_5_profile_and_optimize_large_in: "Step 5 — Profile and optimize large inventory queries" {shape: rectangle}
+step_6_test_vcenter_api_connectivity: "Step 6 — Test vCenter API connectivity" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> step_1_check_versions_and_connection: investigate
+symptom -> step_2_enable_verbose_and_debug_outp: investigate
+symptom -> step_3_read_the_full_exception: investigate
+symptom -> step_4_use_extensiondata_for_raw_api: investigate
+symptom -> step_5_profile_and_optimize_large_in: investigate
+symptom -> step_6_test_vcenter_api_connectivity: investigate
+step_1_check_versions_and_connection -> resolution
+step_2_enable_verbose_and_debug_outp -> resolution
+step_3_read_the_full_exception -> resolution
+step_4_use_extensiondata_for_raw_api -> resolution
+step_5_profile_and_optimize_large_in -> resolution
+step_6_test_vcenter_api_connectivity -> resolution
+```
+
 ## Before you begin
 
 - **Access:** PowerShell 7+ with VMware.PowerCLI module installed; vCenter credentials with sufficient permissions for the operations being tested

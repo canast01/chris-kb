@@ -15,6 +15,23 @@ Healthy State Reference reference covering Cluster, Storage, Network, VMs, Manag
 
 
 
+```d2
+direction: right
+
+center: "Quick Reference" {shape: rectangle}
+cluster: "Cluster" {shape: rectangle}
+storage: "Storage" {shape: rectangle}
+network: "Network" {shape: rectangle}
+vms: "VMs" {shape: rectangle}
+management: "Management" {shape: rectangle}
+
+center -> cluster
+center -> storage
+center -> network
+center -> vms
+center -> management
+```
+
 ## Cluster
 
 All hosts connected  

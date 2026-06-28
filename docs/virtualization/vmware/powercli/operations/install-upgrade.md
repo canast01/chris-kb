@@ -16,6 +16,25 @@ PowerCLI module lifecycle: upgrading to new versions, managing individual sub-mo
 
 
 
+```d2
+direction: right
+
+hub: "PowerCLI\nOperations" {shape: hexagon}
+check_installed_version: "Check Installed Version" {shape: rectangle}
+upgrade_powercli: "Upgrade PowerCLI" {shape: rectangle}
+selectively_install_submodules: "Selectively Install Sub-modules" {shape: rectangle}
+offline_upgrade: "Offline Upgrade" {shape: rectangle}
+multivcenter_compatibility: "Multi-vCenter Compatibility" {shape: rectangle}
+uninstall_old_modules: "Uninstall Old Modules" {shape: rectangle}
+
+hub -> check_installed_version
+hub -> upgrade_powercli
+hub -> selectively_install_submodules
+hub -> offline_upgrade
+hub -> multivcenter_compatibility
+hub -> uninstall_old_modules
+```
+
 ## Before you begin
 
 - **Access:** vCenter read-only minimum; Administrator role for remediation steps

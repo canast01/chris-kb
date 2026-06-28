@@ -32,6 +32,17 @@ Windows Server 2019/2022/2025 infrastructure — Active Directory DS, DNS, SMB f
   </a>
 </div>
 
+```d2
+direction: right
+
+center: "Windows Server" {shape: hexagon}
+editions: "Editions" {shape: rectangle}
+topology: "Topology" {shape: rectangle}
+
+center -> editions
+center -> topology
+```
+
 ## Editions
 
 | Version | Edition | Key Differentiator |

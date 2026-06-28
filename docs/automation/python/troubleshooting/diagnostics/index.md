@@ -46,6 +46,32 @@ graph TD
     class I ok
 ```
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+step_1_read_and_capture_the_full_tra: "Step 1 — Read and capture the full traceback" {shape: rectangle}
+step_2_check_the_python_environment: "Step 2 — Check the Python environment" {shape: rectangle}
+step_3_trace_import_failures: "Step 3 — Trace import failures" {shape: rectangle}
+step_4_interactive_debugging_with_pd: "Step 4 — Interactive debugging with pdb" {shape: rectangle}
+step_5_enable_structured_debug_loggi: "Step 5 — Enable structured DEBUG logging" {shape: rectangle}
+step_6_profile_cpu_and_memory: "Step 6 — Profile CPU and memory" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> step_1_read_and_capture_the_full_tra: investigate
+symptom -> step_2_check_the_python_environment: investigate
+symptom -> step_3_trace_import_failures: investigate
+symptom -> step_4_interactive_debugging_with_pd: investigate
+symptom -> step_5_enable_structured_debug_loggi: investigate
+symptom -> step_6_profile_cpu_and_memory: investigate
+step_1_read_and_capture_the_full_tra -> resolution
+step_2_check_the_python_environment -> resolution
+step_3_trace_import_failures -> resolution
+step_4_interactive_debugging_with_pd -> resolution
+step_5_enable_structured_debug_loggi -> resolution
+step_6_profile_cpu_and_memory -> resolution
+```
+
 ## Before you begin
 
 - **Access:** the same user / environment that runs the failing script; do not debug as root if the script runs as a service user

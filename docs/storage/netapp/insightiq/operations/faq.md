@@ -14,6 +14,23 @@ Common questions about NetApp InsightIQ operations, configuration, and troublesh
 
 ![NetApp InsightIQ FAQ](../../../../assets/storage-netapp-insightiq-operations-faq.svg)
 
+```d2
+direction: right
+
+hub: "InsightIQ\nOperations" {shape: hexagon}
+general: "General" {shape: rectangle}
+configuration: "Configuration" {shape: rectangle}
+operations: "Operations" {shape: rectangle}
+troubleshooting: "Troubleshooting" {shape: rectangle}
+backup_and_recovery: "Backup and Recovery" {shape: rectangle}
+
+hub -> general
+hub -> configuration
+hub -> operations
+hub -> troubleshooting
+hub -> backup_and_recovery
+```
+
 ## General
 
 **Q: What InsightIQ version is recommended?**

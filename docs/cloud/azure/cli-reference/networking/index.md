@@ -44,6 +44,19 @@ az network public-ip create --resource-group <rg> --name <pip> --allocation-meth
 az network lb list --output table
 ```
 
+```d2
+direction: right
+
+center: "Azure" {shape: hexagon}
+component_a: "Component A" {shape: rectangle}
+component_b: "Component B" {shape: rectangle}
+component_c: "Component C" {shape: rectangle}
+
+center -> component_a
+center -> component_b
+center -> component_c
+```
+
 ## See also
 
 - [Azure CLI Reference](../index.md)

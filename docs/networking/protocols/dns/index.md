@@ -43,6 +43,19 @@ Domain Name System (DNS) is the foundational naming protocol of IP networks, res
 
 </div>
 
+```d2
+direction: right
+
+center: "DNS" {shape: hexagon}
+quick_reference: "Quick Reference" {shape: rectangle}
+common_commands_config: "Common Commands / Config" {shape: rectangle}
+troubleshooting: "Troubleshooting" {shape: rectangle}
+
+center -> quick_reference
+center -> common_commands_config
+center -> troubleshooting
+```
+
 ## Quick Reference
 
 **Record types:**

@@ -13,6 +13,23 @@ Pre-Change Health Check reference covering Overview, Pre-Change Check Timeline, 
 
 
 
+```d2
+direction: right
+
+center: "DR Operations" {shape: hexagon}
+prechange_check_timeline: "Pre-Change Check Timeline" {shape: rectangle}
+prechange_checklist: "Pre-Change Checklist" {shape: rectangle}
+go_nogo_decision: "Go / No-Go Decision" {shape: rectangle}
+baseline_snapshot: "Baseline Snapshot" {shape: rectangle}
+backup_verification: "Backup Verification" {shape: rectangle}
+
+center -> prechange_check_timeline
+center -> prechange_checklist
+center -> go_nogo_decision
+center -> baseline_snapshot
+center -> backup_verification
+```
+
 ## Overview
 
 The pre-change check confirms that the environment is in a stable, known-good state before a change window opens. Implementing a change into an already-degraded environment makes root cause analysis harder, increases risk, and can breach the backout plan assumptions. If the environment is not healthy, the change should not proceed.

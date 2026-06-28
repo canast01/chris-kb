@@ -16,6 +16,25 @@ PowerCLI authentication methods: credential objects, encrypted credential files,
 
 
 
+```d2
+direction: down
+
+external: External / Untrusted {shape: rectangle}
+credential_methods: "Credential Methods" {shape: rectangle}
+certificate_validation: "Certificate Validation" {shape: rectangle}
+sso_vcenter_token_behaviour: "SSO / vCenter Token Behaviour" {shape: rectangle}
+multivcenter_sessions: "Multi-vCenter Sessions" {shape: rectangle}
+service_account_best_practices: "Service Account Best Practices" {shape: rectangle}
+core: "PowerCLI Core" {shape: hexagon}
+
+external -> credential_methods: traffic in
+credential_methods -> certificate_validation
+certificate_validation -> sso_vcenter_token_behaviour
+sso_vcenter_token_behaviour -> multivcenter_sessions
+multivcenter_sessions -> service_account_best_practices
+service_account_best_practices -> core: secured path
+```
+
 ## Before you begin
 
 - **Access:** vCenter Administrator role

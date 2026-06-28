@@ -16,6 +16,17 @@ CloudIQ: Proactive Recommendations and Implementation Tracking reference coverin
 
 
 
+```d2
+direction: right
+
+hub: "CloudIQ\nOperations" {shape: hexagon}
+common_recommendation_issues: "Common Recommendation Issues" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+hub -> common_recommendation_issues
+hub -> verify
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

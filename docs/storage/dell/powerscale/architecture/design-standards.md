@@ -16,6 +16,21 @@ Standards reference covering Sizing Guidelines, Naming Conventions, Build Baseli
 
 
 
+```d2
+direction: right
+
+center: "PowerScale (Isilon)" {shape: hexagon}
+sizing_guidelines: "Sizing Guidelines" {shape: rectangle}
+naming_conventions: "Naming Conventions" {shape: rectangle}
+build_baseline: "Build Baseline" {shape: rectangle}
+configuration_checklist: "Configuration Checklist" {shape: rectangle}
+
+center -> sizing_guidelines
+center -> naming_conventions
+center -> build_baseline
+center -> configuration_checklist
+```
+
 ## Sizing Guidelines
 
 | Dimension | Guidance |

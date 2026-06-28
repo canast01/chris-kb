@@ -17,6 +17,25 @@ Azure VM images are the base OS configurations used to create virtual machines. 
 
 ---
 
+```d2
+direction: right
+
+center: "Azure" {shape: hexagon}
+azure_image_lifecycle: "Azure Image Lifecycle" {shape: rectangle}
+marketplace_images: "Marketplace Images" {shape: rectangle}
+creating_custom_images: "Creating Custom Images" {shape: rectangle}
+azure_compute_gallery_acg: "Azure Compute Gallery (ACG)" {shape: rectangle}
+image_versioning_and_replication: "Image Versioning and Replication" {shape: rectangle}
+sharing_gallery_images: "Sharing Gallery Images" {shape: rectangle}
+
+center -> azure_image_lifecycle
+center -> marketplace_images
+center -> creating_custom_images
+center -> azure_compute_gallery_acg
+center -> image_versioning_and_replication
+center -> sharing_gallery_images
+```
+
 ## Azure Image Lifecycle
 
 ```mermaid

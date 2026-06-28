@@ -16,6 +16,32 @@ DNS Troubleshooting reference covering Overview, Resolution Failure Triage, dcdi
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+resolution_failure_triage: "Resolution Failure Triage" {shape: rectangle}
+dcdiag_testdns: "dcdiag /test:dns" {shape: rectangle}
+cache_poisoning_checks: "Cache Poisoning Checks" {shape: rectangle}
+replication_issues: "Replication Issues" {shape: rectangle}
+common_error_reference: "Common Error Reference" {shape: rectangle}
+known_issues: "Known Issues" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> resolution_failure_triage: investigate
+symptom -> dcdiag_testdns: investigate
+symptom -> cache_poisoning_checks: investigate
+symptom -> replication_issues: investigate
+symptom -> common_error_reference: investigate
+symptom -> known_issues: investigate
+resolution_failure_triage -> resolution
+dcdiag_testdns -> resolution
+cache_poisoning_checks -> resolution
+replication_issues -> resolution
+common_error_reference -> resolution
+known_issues -> resolution
+```
+
 ## Before you begin
 
 - **Access:** Network admin credentials; console or SSH to devices

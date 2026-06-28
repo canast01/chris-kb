@@ -16,6 +16,27 @@ Hardening reference covering Overview, Unisphere Hardening, Solutions Enabler Ha
 
 
 
+```d2
+direction: down
+
+external: External / Untrusted {shape: rectangle}
+unisphere_hardening: "Unisphere Hardening" {shape: rectangle}
+solutions_enabler_hardening: "Solutions Enabler Hardening" {shape: rectangle}
+host_connectivity_hardening: "Host Connectivity Hardening" {shape: rectangle}
+supportassist_and_remote_access_hard: "SupportAssist and Remote Access Hardening" {shape: rectangle}
+hardening_checklist: "Hardening Checklist" {shape: rectangle}
+compliance_mapping: "Compliance Mapping" {shape: rectangle}
+core: "PowerMax Core" {shape: hexagon}
+
+external -> unisphere_hardening: traffic in
+unisphere_hardening -> solutions_enabler_hardening
+solutions_enabler_hardening -> host_connectivity_hardening
+host_connectivity_hardening -> supportassist_and_remote_access_hard
+supportassist_and_remote_access_hard -> hardening_checklist
+hardening_checklist -> compliance_mapping
+compliance_mapping -> core: secured path
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

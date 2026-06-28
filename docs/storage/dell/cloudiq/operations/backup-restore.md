@@ -78,6 +78,15 @@ curl -s -X POST "${BASE}/notification-rules/<rule-id>/test" \
   -H "Authorization: Bearer ${TOKEN}"
 ```
 
+```d2
+direction: right
+
+hub: "CloudIQ\nOperations" {shape: hexagon}
+verify: "Verify" {shape: rectangle}
+
+hub -> verify
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

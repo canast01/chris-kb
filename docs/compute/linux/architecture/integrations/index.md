@@ -14,6 +14,25 @@ Linux integration patterns: LDAP/AD authentication via SSSD, PAM configuration, 
 ![Linux — Integrations](../../../../assets/compute-linux-architecture-integrations-index.svg)
 
 
+```d2
+direction: right
+
+center: "Linux" {shape: hexagon}
+active_directory_authentication_flow: "Active Directory Authentication Flow" {shape: rectangle}
+sudo_configuration_for_ad_groups: "Sudo Configuration for AD Groups" {shape: rectangle}
+backup_agent_integration: "Backup Agent Integration" {shape: rectangle}
+monitoring_integration: "Monitoring Integration" {shape: rectangle}
+iscsi_storage_connectivity: "iSCSI Storage Connectivity" {shape: rectangle}
+san_multipath_data_path: "SAN Multipath Data Path" {shape: rectangle}
+
+center -> active_directory_authentication_flow
+center -> sudo_configuration_for_ad_groups
+center -> backup_agent_integration
+center -> monitoring_integration
+center -> iscsi_storage_connectivity
+center -> san_multipath_data_path
+```
+
 ## Active Directory Authentication Flow
 
 ```mermaid

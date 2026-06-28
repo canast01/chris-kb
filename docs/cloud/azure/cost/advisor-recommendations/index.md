@@ -15,6 +15,25 @@ Azure Advisor analyses your usage and configuration and surfaces personalised re
 
 
 
+```d2
+direction: right
+
+center: "Azure" {shape: hexagon}
+advisor_recommendation_categories: "Advisor Recommendation Categories" {shape: rectangle}
+viewing_recommendations: "Viewing Recommendations" {shape: rectangle}
+cost_savings_opportunities: "Cost Savings Opportunities" {shape: rectangle}
+rightsizing_recommendations: "Right-Sizing Recommendations" {shape: rectangle}
+dismissing_recommendations: "Dismissing Recommendations" {shape: rectangle}
+automation_and_reporting: "Automation and Reporting" {shape: rectangle}
+
+center -> advisor_recommendation_categories
+center -> viewing_recommendations
+center -> cost_savings_opportunities
+center -> rightsizing_recommendations
+center -> dismissing_recommendations
+center -> automation_and_reporting
+```
+
 ## Advisor Recommendation Categories
 
 ```mermaid

@@ -16,6 +16,26 @@ Evergreen//One (Evergreen Sub-Service) reference covering How Evergreen//One Wor
 ![Evergreen//One (Evergreen Sub-Service) — Diagram](../../../../assets/storage-pure-evergreen-evergreen-one-diagram.svg)
 
 Evergreen//One is Pure Storage's storage-as-a-service (STaaS) offering — a subscription model where Pure owns, manages, and refreshes hardware while the customer pays for consumed capacity.
+
+```d2
+direction: right
+
+center: "Evergreen" {shape: hexagon}
+how_evergreenone_works: "How Evergreen//One Works" {shape: rectangle}
+subscription_components: "Subscription Components" {shape: rectangle}
+pure1_monitoring_customer_view: "Pure1 Monitoring (Customer View)" {shape: rectangle}
+sla_reporting: "SLA Reporting" {shape: rectangle}
+capacity_management: "Capacity Management" {shape: rectangle}
+hardware_refresh_under_evergreenone: "Hardware Refresh Under Evergreen//One" {shape: rectangle}
+
+center -> how_evergreenone_works
+center -> subscription_components
+center -> pure1_monitoring_customer_view
+center -> sla_reporting
+center -> capacity_management
+center -> hardware_refresh_under_evergreenone
+```
+
 ## How Evergreen//One Works
 
 - Customer subscribes to a guaranteed minimum capacity tier with defined performance SLAs

@@ -14,6 +14,25 @@ How It Works reference covering Overview, Account Structure, IAM Structure, High
 ![AWS — How It Works](../../../../assets/cloud-aws-architecture-how-it-works-index.svg)
 
 
+```d2
+direction: right
+
+center: "AWS" {shape: hexagon}
+account_structure: "Account Structure" {shape: rectangle}
+high_availability: "High Availability" {shape: rectangle}
+disaster_recovery: "Disaster Recovery" {shape: rectangle}
+aws_global_infrastructure: "AWS Global Infrastructure" {shape: rectangle}
+aws_shared_responsibility_model: "AWS Shared Responsibility Model" {shape: rectangle}
+aws_wellarchitected_framework_6_pill: "AWS Well-Architected Framework — 6 Pillars" {shape: rectangle}
+
+center -> account_structure
+center -> high_availability
+center -> disaster_recovery
+center -> aws_global_infrastructure
+center -> aws_shared_responsibility_model
+center -> aws_wellarchitected_framework_6_pill
+```
+
 ## Overview
 
 AWS is deployed as a multi-account organisation via AWS Organizations. All production workloads run in dedicated member accounts. A management account holds only SCPs and consolidated billing — no workloads. An audit account aggregates CloudTrail and Config findings; a log archive account stores centralised log retention.

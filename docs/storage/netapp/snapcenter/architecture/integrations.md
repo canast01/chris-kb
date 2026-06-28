@@ -18,6 +18,25 @@ SnapCenter integrations: vSphere plugin for VM-consistent snapshots, ONTAP SnapM
 
 ---
 
+```d2
+direction: right
+
+center: "SnapCenter" {shape: hexagon}
+ontap_storage_systems: "ONTAP Storage Systems" {shape: rectangle}
+vcenter_vmware_integration: "vCenter / VMware Integration" {shape: rectangle}
+active_directory_rbac: "Active Directory / RBAC" {shape: rectangle}
+email_notifications: "Email Notifications" {shape: rectangle}
+rest_api: "REST API" {shape: rectangle}
+oracle_plugin_integration: "Oracle Plugin Integration" {shape: rectangle}
+
+center -> ontap_storage_systems
+center -> vcenter_vmware_integration
+center -> active_directory_rbac
+center -> email_notifications
+center -> rest_api
+center -> oracle_plugin_integration
+```
+
 ## ONTAP Storage Systems
 
 Register ONTAP clusters in SnapCenter under Settings → Storage Systems. SnapCenter communicates with ONTAP via REST API (SnapCenter 6.x) or ZAPI (SnapCenter 5.x and earlier).

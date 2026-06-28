@@ -18,6 +18,20 @@ Catalog of known Keystone STaaS bugs, error codes, and workarounds. Most Keyston
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+keystone_collector: "Keystone Collector" {shape: rectangle}
+keystone_portal: "Keystone Portal" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> keystone_collector: investigate
+symptom -> keystone_portal: investigate
+keystone_collector -> resolution
+keystone_portal -> resolution
+```
+
 ## Before you begin
 
 - Keystone Collector logs: `journalctl -u keystone-collector` on the Collector VM.

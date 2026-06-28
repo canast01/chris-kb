@@ -17,6 +17,26 @@ Catalog of known Nutanix AOS / AHV bugs, error codes, and workarounds covering C
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+cvm_and_services: "CVM and Services" {shape: rectangle}
+storage: "Storage" {shape: rectangle}
+ahv_networking: "AHV Networking" {shape: rectangle}
+prism: "Prism" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> cvm_and_services: investigate
+symptom -> storage: investigate
+symptom -> ahv_networking: investigate
+symptom -> prism: investigate
+cvm_and_services -> resolution
+storage -> resolution
+ahv_networking -> resolution
+prism -> resolution
+```
+
 ## Before you begin
 
 - Run `cluster status` from any CVM to check all services.

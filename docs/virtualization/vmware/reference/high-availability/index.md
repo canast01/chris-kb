@@ -11,6 +11,25 @@ tags:
 *Applies to: vSphere 7.x / 8.x*
 </div>
 
+```d2
+direction: right
+
+center: "High Availability" {shape: hexagon}
+ha_tier_model: "HA Tier Model" {shape: rectangle}
+ha_redundancy_patterns: "HA Redundancy Patterns" {shape: rectangle}
+failure_domain_design: "Failure Domain Design" {shape: rectangle}
+network_high_availability: "Network High Availability" {shape: rectangle}
+applicationlayer_high_availability: "Application-Layer High Availability" {shape: rectangle}
+rto_targets_by_ha_mechanism: "RTO Targets by HA Mechanism" {shape: rectangle}
+
+center -> ha_tier_model
+center -> ha_redundancy_patterns
+center -> failure_domain_design
+center -> network_high_availability
+center -> applicationlayer_high_availability
+center -> rto_targets_by_ha_mechanism
+```
+
 ## Overview
 
 High availability (HA) is the discipline of engineering systems so that service disruptions — whether caused by hardware failure, software faults, planned maintenance, or network events — are either invisible to end users or resolved within a predetermined recovery window. Enterprise HA design is not a single technique; it is a layered strategy that must be applied consistently across compute, storage, networking, and application tiers.

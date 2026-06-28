@@ -19,6 +19,25 @@ Scripts reference covering Get All TKG Clusters and Status, Get All PVCs Across 
 
 ---
 
+```d2
+direction: right
+
+hub: "Tanzu\nOperations" {shape: hexagon}
+get_all_tkg_clusters_and_status: "Get All TKG Clusters and Status" {shape: rectangle}
+get_all_pvcs_across_all_namespaces_i: "Get All PVCs Across All Namespaces (Identify Unbound)" {shape: rectangle}
+check_all_node_resource_usage: "Check All Node Resource Usage" {shape: rectangle}
+export_all_deployments_and_services_: "Export All Deployments and Services from Namespace" {shape: rectangle}
+verify_harbor_vulnerability_scanning: "Verify Harbor Vulnerability Scanning" {shape: rectangle}
+check_certificate_expiry_on_tkg_clus: "Check Certificate Expiry on TKG Cluster API Endpoints" {shape: rectangle}
+
+hub -> get_all_tkg_clusters_and_status
+hub -> get_all_pvcs_across_all_namespaces_i
+hub -> check_all_node_resource_usage
+hub -> export_all_deployments_and_services_
+hub -> verify_harbor_vulnerability_scanning
+hub -> check_certificate_expiry_on_tkg_clus
+```
+
 ## Before you begin
 
 - **Access:** vCenter read-only minimum; Administrator role for remediation steps

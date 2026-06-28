@@ -16,6 +16,28 @@ Pure Storage Evergreen Vendor Support reference covering Support Portal, Opening
 
 
 ![Pure Storage Evergreen Vendor Support — Diagram](../../../../assets/storage-pure-evergreen-vendor-support-diagram.svg)
+
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+actor "On-Call Engineer" as ENG
+participant "Evergreen\nSystem" as SYS
+participant "Vendor Support" as SUP
+
+ENG -> SYS: Support Portal
+SYS --> ENG: Output
+ENG -> SYS: Opening a Case
+SYS --> ENG: Output
+ENG -> SYS: Information to Collect
+SYS --> ENG: Output
+ENG -> SUP: Escalate with diagnostic bundle
+SUP --> ENG: Case / resolution path
+
+@enduml
+```
+
 ## Support Portal
 
 Pure Storage support is accessed through the support portal at **https://support.purestorage.com**.

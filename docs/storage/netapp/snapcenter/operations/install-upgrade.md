@@ -18,6 +18,25 @@ SnapCenter install and upgrade: Windows Server prerequisites, plug-in deployment
 
 ---
 
+```d2
+direction: right
+
+hub: "SnapCenter\nOperations" {shape: hexagon}
+snapcenter_version_matrix: "SnapCenter Version Matrix" {shape: rectangle}
+ontap_compatibility: "ONTAP Compatibility" {shape: rectangle}
+upgrade_paths: "Upgrade Paths" {shape: rectangle}
+eol_tracking: "EOL Tracking" {shape: rectangle}
+refresh_planning: "Refresh Planning" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+hub -> snapcenter_version_matrix
+hub -> ontap_compatibility
+hub -> upgrade_paths
+hub -> eol_tracking
+hub -> refresh_planning
+hub -> verify
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

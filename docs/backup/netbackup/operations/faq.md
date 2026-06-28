@@ -14,6 +14,23 @@ Common questions about Veritas NetBackup operations, configuration, and troubles
 
 ![Veritas NetBackup FAQ](../../../assets/backup-netbackup-operations-faq.svg)
 
+```d2
+direction: right
+
+hub: "NetBackup\nOperations" {shape: hexagon}
+general: "General" {shape: rectangle}
+configuration: "Configuration" {shape: rectangle}
+operations: "Operations" {shape: rectangle}
+troubleshooting: "Troubleshooting" {shape: rectangle}
+backup_and_recovery: "Backup and Recovery" {shape: rectangle}
+
+hub -> general
+hub -> configuration
+hub -> operations
+hub -> troubleshooting
+hub -> backup_and_recovery
+```
+
 ## General
 
 **Q: What NetBackup version is recommended for new deployments?**

@@ -9,6 +9,25 @@ tags:
 
 ```powershell
 
+```d2
+direction: right
+
+center: "SMB" {shape: hexagon}
+listing_and_managing_sessions: "Listing and Managing Sessions" {shape: rectangle}
+list_all_active_smb_sessions: "List all active SMB sessions" {shape: rectangle}
+show_session_details_including_clien: "Show session details including client IP and username" {shape: rectangle}
+close_a_specific_session_by_id: "Close a specific session by ID" {shape: rectangle}
+close_all_sessions_from_a_specific_c: "Close all sessions from a specific client" {shape: rectangle}
+list_all_active_sessions_legacy: "List all active sessions (legacy)" {shape: rectangle}
+
+center -> listing_and_managing_sessions
+center -> list_all_active_smb_sessions
+center -> show_session_details_including_clien
+center -> close_a_specific_session_by_id
+center -> close_all_sessions_from_a_specific_c
+center -> list_all_active_sessions_legacy
+```
+
 ## Overview
 
 An SMB session is established after a client authenticates to a server. Sessions can be inspected, disconnected, and constrained via PowerShell and legacy tools. Understanding active sessions is essential for access audits, capacity planning, and incident response.

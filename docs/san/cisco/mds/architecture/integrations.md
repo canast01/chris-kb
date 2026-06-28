@@ -16,6 +16,23 @@ Cisco MDS integrations: DCNM fabric management, vCenter SAN adapter plugin, UCS 
 
 ---
 
+```d2
+direction: right
+
+center: "Cisco MDS" {shape: hexagon}
+nexus_dashboard_fabric_controller_nd: "Nexus Dashboard Fabric Controller (NDFC)" {shape: rectangle}
+vmware_fc_connectivity: "VMware FC Connectivity" {shape: rectangle}
+dell_powermax_integration: "Dell PowerMax Integration" {shape: rectangle}
+pure_storage_flasharray_integration: "Pure Storage FlashArray Integration" {shape: rectangle}
+snmp_and_syslog: "SNMP and Syslog" {shape: rectangle}
+
+center -> nexus_dashboard_fabric_controller_nd
+center -> vmware_fc_connectivity
+center -> dell_powermax_integration
+center -> pure_storage_flasharray_integration
+center -> snmp_and_syslog
+```
+
 ## Nexus Dashboard Fabric Controller (NDFC)
 
 NDFC (formerly DCNM) provides centralised zone management, fabric topology visibility, performance monitoring, and firmware orchestration across all MDS switches.

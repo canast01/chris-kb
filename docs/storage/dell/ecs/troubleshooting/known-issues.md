@@ -18,6 +18,23 @@ Catalog of known ECS (Elastic Cloud Storage) bugs, error codes, and workarounds 
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+s3_api: "S3 API" {shape: rectangle}
+georeplication: "Geo-Replication" {shape: rectangle}
+cluster_health: "Cluster Health" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> s3_api: investigate
+symptom -> georeplication: investigate
+symptom -> cluster_health: investigate
+s3_api -> resolution
+georeplication -> resolution
+cluster_health -> resolution
+```
+
 ## Before you begin
 
 - ECS alerts appear in ECS Portal → Dashboard → Alerts.

@@ -24,6 +24,25 @@ Jump: [A](#a) [B](#b) [C](#c) [D](#d) [E](#e) [F](#f) [G](#g) [H](#h) [I](#i) [J
 
 ---
 
+```d2
+direction: right
+
+center: "Glossary" {shape: hexagon}
+a: "A" {shape: rectangle}
+b: "B" {shape: rectangle}
+c: "C" {shape: rectangle}
+d: "D" {shape: rectangle}
+e: "E" {shape: rectangle}
+f: "F" {shape: rectangle}
+
+center -> a
+center -> b
+center -> c
+center -> d
+center -> e
+center -> f
+```
+
 ## A
 
 **Admission Control** — vSphere HA mechanism reserving cluster capacity to guarantee VM restart after a host failure. Configured as a percentage of cluster resources or as a fixed number of host failures to tolerate.

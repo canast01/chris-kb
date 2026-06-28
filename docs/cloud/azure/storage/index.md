@@ -14,6 +14,15 @@ Azure Storage articles, operational checks, troubleshooting notes, and reference
 
 
 
+```d2
+direction: right
+
+center: "Azure" {shape: hexagon}
+articles: "Articles" {shape: rectangle}
+
+center -> articles
+```
+
 ## Articles
 
 <div class="kb-grid kb-grid-3">

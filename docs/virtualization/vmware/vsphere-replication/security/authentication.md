@@ -20,6 +20,27 @@ Authentication reference covering VRA Registered with vCenter SSO, Site Pairing 
 
 ---
 
+```d2
+direction: down
+
+external: External / Untrusted {shape: rectangle}
+vra_registered_with_vcenter_sso: "VRA Registered with vCenter SSO" {shape: rectangle}
+site_pairing_authentication_certific: "Site Pairing Authentication (Certificate-Based)" {shape: rectangle}
+vra_admin_account: "VRA Admin Account" {shape: rectangle}
+rest_api_authentication: "REST API Authentication" {shape: rectangle}
+vcenter_certificate_replacement_impa: "vCenter Certificate Replacement Impact" {shape: rectangle}
+esxi_hbrsvc_authentication: "ESXi hbrsvc Authentication" {shape: rectangle}
+core: "vSphere Replication Core" {shape: hexagon}
+
+external -> vra_registered_with_vcenter_sso: traffic in
+vra_registered_with_vcenter_sso -> site_pairing_authentication_certific
+site_pairing_authentication_certific -> vra_admin_account
+vra_admin_account -> rest_api_authentication
+rest_api_authentication -> vcenter_certificate_replacement_impa
+vcenter_certificate_replacement_impa -> esxi_hbrsvc_authentication
+esxi_hbrsvc_authentication -> core: secured path
+```
+
 ## Before you begin
 
 - **Access:** vCenter Administrator role

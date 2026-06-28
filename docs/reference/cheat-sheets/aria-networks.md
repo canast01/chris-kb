@@ -13,6 +13,15 @@ Top-10 Aria Networks (vRNI) REST API calls for network entity queries, path anal
 
 
 
+```d2
+direction: right
+
+center: "Cheat Sheets" {shape: rectangle}
+rest_api: "REST API" {shape: rectangle}
+
+center -> rest_api
+```
+
 ## REST API
 
 ```bash

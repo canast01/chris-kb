@@ -15,6 +15,27 @@ Authentication reference covering Authentication Sources, Configuring Active Dir
 ![Aria Operations — Authentication](../../../../assets/virtualization-vmware-aria-operations-security-authenticatio.svg)
 
 
+```d2
+direction: down
+
+external: External / Untrusted {shape: rectangle}
+authentication_sources: "Authentication Sources" {shape: rectangle}
+configuring_active_directory_ldap: "Configuring Active Directory / LDAP" {shape: rectangle}
+ldap_group_import_and_role_assignmen: "LDAP Group Import and Role Assignment" {shape: rectangle}
+workspace_one_access_vidm_saml_integ: "Workspace ONE Access (VIDM) / SAML Integration" {shape: rectangle}
+api_authentication: "API Authentication" {shape: rectangle}
+token_expiry_and_rotation: "Token Expiry and Rotation" {shape: rectangle}
+core: "Aria Operations Core" {shape: hexagon}
+
+external -> authentication_sources: traffic in
+authentication_sources -> configuring_active_directory_ldap
+configuring_active_directory_ldap -> ldap_group_import_and_role_assignmen
+ldap_group_import_and_role_assignmen -> workspace_one_access_vidm_saml_integ
+workspace_one_access_vidm_saml_integ -> api_authentication
+api_authentication -> token_expiry_and_rotation
+token_expiry_and_rotation -> core: secured path
+```
+
 ## Before you begin
 
 - **Access:** vCenter Administrator role

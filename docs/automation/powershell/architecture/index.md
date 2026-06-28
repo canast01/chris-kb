@@ -33,6 +33,17 @@ Cross-platform automation shell on .NET; execution engine processes input throug
 
 </div>
 
+```d2
+direction: right
+
+center: "PowerShell" {shape: hexagon}
+powershell_core_vs_windows_powershel: "PowerShell Core vs Windows PowerShell" {shape: rectangle}
+execution_engine: "Execution Engine" {shape: rectangle}
+
+center -> powershell_core_vs_windows_powershel
+center -> execution_engine
+```
+
 ## PowerShell Core vs Windows PowerShell
 
 | Attribute | Windows PowerShell | PowerShell 7+ |

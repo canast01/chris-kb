@@ -17,6 +17,26 @@ Catalog of known Ceph bugs, error codes, and workarounds covering OSD failures, 
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+osd_issues: "OSD Issues" {shape: rectangle}
+mon_quorum: "MON Quorum" {shape: rectangle}
+rgw_object_storage: "RGW (Object Storage)" {shape: rectangle}
+dashboard: "Dashboard" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> osd_issues: investigate
+symptom -> mon_quorum: investigate
+symptom -> rgw_object_storage: investigate
+symptom -> dashboard: investigate
+osd_issues -> resolution
+mon_quorum -> resolution
+rgw_object_storage -> resolution
+dashboard -> resolution
+```
+
 ## Before you begin
 
 - Run `ceph -s` for overall cluster health; `ceph health detail` for detailed warnings.

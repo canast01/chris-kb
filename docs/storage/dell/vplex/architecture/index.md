@@ -56,6 +56,17 @@ graph LR
   </a>
 </div>
 
+```d2
+direction: right
+
+center: "VPLEX" {shape: hexagon}
+deployment_models: "Deployment Models" {shape: rectangle}
+topology: "Topology" {shape: rectangle}
+
+center -> deployment_models
+center -> topology
+```
+
 ## Deployment Models
 
 | Model | Sites | Replication | RTT Limit | Active-Active | Use Case |

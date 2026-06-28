@@ -18,6 +18,17 @@ Dell AIOps is a SaaS analytics layer on CloudIQ. All operational issues relate t
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+connectivity_and_data: "Connectivity and Data" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> connectivity_and_data: investigate
+connectivity_and_data -> resolution
+```
+
 ## Before you begin
 
 - Dell AIOps is fully SaaS-based; no on-premises AIOps software exists.

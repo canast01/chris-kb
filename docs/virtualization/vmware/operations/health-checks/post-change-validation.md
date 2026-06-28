@@ -14,6 +14,27 @@ Run these checks after any infrastructure change — maintenance, upgrade, patch
 
 
 
+```d2
+direction: right
+
+begin_checks: "Begin Checks" {shape: oval}
+nsx_if_change_was_nsxrelated: "NSX (if change was NSX-related)" {shape: rectangle}
+backup_validation: "Backup Validation" {shape: rectangle}
+monitoring_validation: "Monitoring Validation" {shape: rectangle}
+application_validation: "Application Validation" {shape: rectangle}
+change_record_closure: "Change Record Closure" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+generate_report: "Generate Report" {shape: oval}
+
+begin_checks -> nsx_if_change_was_nsxrelated
+nsx_if_change_was_nsxrelated -> backup_validation
+backup_validation -> monitoring_validation
+monitoring_validation -> application_validation
+application_validation -> change_record_closure
+change_record_closure -> verify
+verify -> generate_report
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

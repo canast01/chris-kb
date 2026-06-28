@@ -6,6 +6,27 @@ search:
   boost: 1.5
 ---
 
+```d2
+direction: right
+
+plan: "Plan" {shape: oval}
+prerequisites: "Prerequisites" {shape: rectangle}
+configure_cluster_peering: "Configure Cluster Peering" {shape: rectangle}
+configure_svm_peering: "Configure SVM Peering" {shape: rectangle}
+create_first_snapmirror_relationship: "Create First SnapMirror Relationship" {shape: rectangle}
+initialize_and_verify: "Initialize and Verify" {shape: rectangle}
+configure_schedule: "Configure Schedule" {shape: rectangle}
+validate: "Validate" {shape: oval}
+
+plan -> prerequisites
+prerequisites -> configure_cluster_peering
+configure_cluster_peering -> configure_svm_peering
+configure_svm_peering -> create_first_snapmirror_relationship
+create_first_snapmirror_relationship -> initialize_and_verify
+initialize_and_verify -> configure_schedule
+configure_schedule -> validate
+```
+
 ## Before you begin
 
 - **Access:** admin credentials for the target system and any upstream dependencies (DNS, NTP, vCenter, directory services)

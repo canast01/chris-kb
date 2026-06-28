@@ -18,6 +18,20 @@ Catalog of known Cisco DCNM (Data Center Network Manager) bugs, error codes, and
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+switch_discovery: "Switch Discovery" {shape: rectangle}
+deployment: "Deployment" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> switch_discovery: investigate
+symptom -> deployment: investigate
+switch_discovery -> resolution
+deployment -> resolution
+```
+
 ## Before you begin
 
 - DCNM errors appear in the DCNM Dashboard → Alarms.

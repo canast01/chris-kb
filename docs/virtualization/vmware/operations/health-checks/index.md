@@ -14,6 +14,19 @@ Virtualization health checks: ESXi host connectivity, cluster HA/DRS status, dat
 
 
 
+```d2
+direction: right
+
+begin_checks: "Begin Checks" {shape: oval}
+run_this_routine: "Run This Routine" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+generate_report: "Generate Report" {shape: oval}
+
+begin_checks -> run_this_routine
+run_this_routine -> verify
+verify -> generate_report
+```
+
 ## Run This Routine
 
 Run these steps at the start of any virtualization operations shift or before a planned change window. These are cross-product checks — for product-specific detail, see each product's own health-checks page.

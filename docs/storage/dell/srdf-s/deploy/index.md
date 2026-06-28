@@ -6,6 +6,27 @@ search:
   boost: 1.5
 ---
 
+```d2
+direction: right
+
+plan: "Plan" {shape: oval}
+prerequisites: "Prerequisites" {shape: rectangle}
+zone_srdf_director_ports: "Zone SRDF Director Ports" {shape: rectangle}
+create_the_srdfs_group: "Create the SRDF/S Group" {shape: rectangle}
+add_devices: "Add Devices" {shape: rectangle}
+establish_synchronous_replication: "Establish Synchronous Replication" {shape: rectangle}
+verify_synchronization: "Verify Synchronization" {shape: rectangle}
+validate: "Validate" {shape: oval}
+
+plan -> prerequisites
+prerequisites -> zone_srdf_director_ports
+zone_srdf_director_ports -> create_the_srdfs_group
+create_the_srdfs_group -> add_devices
+add_devices -> establish_synchronous_replication
+establish_synchronous_replication -> verify_synchronization
+verify_synchronization -> validate
+```
+
 ## Before you begin
 
 - **Access:** admin credentials for the target system and any upstream dependencies (DNS, NTP, vCenter, directory services)

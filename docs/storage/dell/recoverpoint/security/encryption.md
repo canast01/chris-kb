@@ -19,6 +19,21 @@ Encryption reference covering Journal Encryption, Network Segmentation, Certific
 
 ---
 
+```d2
+direction: down
+
+external: External / Untrusted {shape: rectangle}
+journal_encryption: "Journal Encryption" {shape: rectangle}
+network_segmentation: "Network Segmentation" {shape: rectangle}
+certificate_management: "Certificate Management" {shape: rectangle}
+core: "RecoverPoint Core" {shape: hexagon}
+
+external -> journal_encryption: traffic in
+journal_encryption -> network_segmentation
+network_segmentation -> certificate_management
+certificate_management -> core: secured path
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

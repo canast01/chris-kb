@@ -34,6 +34,27 @@ flowchart TD
     style s7 fill:#2e7d32,color:#fff,stroke:#1b5e20
 ```
 
+```d2
+direction: right
+
+plan: "Plan" {shape: oval}
+prerequisites: "Prerequisites" {shape: rectangle}
+deploy_insightiq_ova: "Deploy InsightIQ OVA" {shape: rectangle}
+add_powerscale_cluster_data_source: "Add PowerScale Cluster Data Source" {shape: rectangle}
+configure_data_collection_schedule: "Configure Data Collection Schedule" {shape: rectangle}
+configure_reports: "Configure Reports" {shape: rectangle}
+validate_collection_and_reporting: "Validate Collection and Reporting" {shape: rectangle}
+validate: "Validate" {shape: oval}
+
+plan -> prerequisites
+prerequisites -> deploy_insightiq_ova
+deploy_insightiq_ova -> add_powerscale_cluster_data_source
+add_powerscale_cluster_data_source -> configure_data_collection_schedule
+configure_data_collection_schedule -> configure_reports
+configure_reports -> validate_collection_and_reporting
+validate_collection_and_reporting -> validate
+```
+
 ## Before you begin
 
 - **Access:** admin credentials for the target system and any upstream dependencies (DNS, NTP, vCenter, directory services)

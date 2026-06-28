@@ -38,6 +38,19 @@ az monitor diagnostic-settings create --name <name> --resource <resource_id> \
   --workspace <workspace_id> --metrics '[{"category":"AllMetrics","enabled":true}]'
 ```
 
+```d2
+direction: right
+
+center: "Azure" {shape: hexagon}
+component_a: "Component A" {shape: rectangle}
+component_b: "Component B" {shape: rectangle}
+component_c: "Component C" {shape: rectangle}
+
+center -> component_a
+center -> component_b
+center -> component_c
+```
+
 ## See also
 
 - [Azure CLI Reference](../index.md)

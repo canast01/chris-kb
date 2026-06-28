@@ -13,6 +13,25 @@ Storage Latency Troubleshooting reference covering Overview, Latency Threshold R
 ![Storage Latency Troubleshooting](../../../assets/storage-troubleshooting-storage-latency-index.svg)
 
 
+```d2
+direction: right
+
+center: "Storage Latency" {shape: hexagon}
+latency_threshold_reference: "Latency Threshold Reference" {shape: rectangle}
+diagnostic_flowchart: "Diagnostic Flowchart" {shape: rectangle}
+powermax_vmax_performance_analysis: "PowerMax / VMAX Performance Analysis" {shape: rectangle}
+multipath_issues: "Multipath Issues" {shape: rectangle}
+snapshot_and_replication_impact_on_l: "Snapshot and Replication Impact on Latency" {shape: rectangle}
+storage_controller_cpu_and_cache_hit: "Storage Controller CPU and Cache Hit Rate" {shape: rectangle}
+
+center -> latency_threshold_reference
+center -> diagnostic_flowchart
+center -> powermax_vmax_performance_analysis
+center -> multipath_issues
+center -> snapshot_and_replication_impact_on_l
+center -> storage_controller_cpu_and_cache_hit
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

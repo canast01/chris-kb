@@ -21,6 +21,25 @@ Firewall port reference for Dell PowerMax (formerly VMAX). Covers Unisphere for 
 
 
 
+```d2
+direction: right
+
+center: "PowerMax" {shape: hexagon}
+inbound_management: "Inbound — Management" {shape: rectangle}
+outbound_array_to_external: "Outbound — Array to External" {shape: rectangle}
+iscsi_san: "iSCSI (SAN)" {shape: rectangle}
+srdf_replication_if_iscsibased_srdf: "SRDF Replication (if iSCSI-based SRDF)" {shape: rectangle}
+solutions_enabler_symcli_hostbased_m: "Solutions Enabler (SYMCLI) Host-Based Management" {shape: rectangle}
+firewall_zone_summary: "Firewall Zone Summary" {shape: rectangle}
+
+center -> inbound_management
+center -> outbound_array_to_external
+center -> iscsi_san
+center -> srdf_replication_if_iscsibased_srdf
+center -> solutions_enabler_symcli_hostbased_m
+center -> firewall_zone_summary
+```
+
 ## Inbound — Management
 
 | Port | Protocol | Source | Purpose |

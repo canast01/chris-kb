@@ -13,6 +13,23 @@ SMB Shares reference covering Overview, Creating Shares with PowerShell, Creatin
 
 
 
+```d2
+direction: right
+
+center: "SMB" {shape: hexagon}
+creating_shares_with_powershell: "Creating Shares with PowerShell" {shape: rectangle}
+creating_shares_with_net_share: "Creating Shares with net share" {shape: rectangle}
+dfs_namespace_configuration: "DFS Namespace Configuration" {shape: rectangle}
+share_enumeration_and_auditing: "Share Enumeration and Auditing" {shape: rectangle}
+share_properties_and_limits: "Share Properties and Limits" {shape: rectangle}
+
+center -> creating_shares_with_powershell
+center -> creating_shares_with_net_share
+center -> dfs_namespace_configuration
+center -> share_enumeration_and_auditing
+center -> share_properties_and_limits
+```
+
 ## Overview
 
 SMB shares expose local filesystem paths to network clients. Shares can be created via Server Manager, PowerShell, or `net share`. DFS namespaces abstract share locations so clients do not need to know which server hosts a share. Hidden shares (trailing `$`) are not visible in browse lists but are fully accessible.

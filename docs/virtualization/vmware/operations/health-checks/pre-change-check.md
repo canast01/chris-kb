@@ -14,6 +14,27 @@ Pre-change checks confirm the platform is healthy before maintenance begins. Run
 
 
 
+```d2
+direction: right
+
+begin_checks: "Begin Checks" {shape: oval}
+3_active_alarms: "3. Active Alarms" {shape: rectangle}
+4_datastore_free_space: "4. Datastore Free Space" {shape: rectangle}
+5_snapshot_audit: "5. Snapshot Audit" {shape: rectangle}
+6_vsan_health: "6. vSAN Health" {shape: rectangle}
+7_storage_paths: "7. Storage Paths" {shape: rectangle}
+8_ntp_and_dns: "8. NTP and DNS" {shape: rectangle}
+generate_report: "Generate Report" {shape: oval}
+
+begin_checks -> 3_active_alarms
+3_active_alarms -> 4_datastore_free_space
+4_datastore_free_space -> 5_snapshot_audit
+5_snapshot_audit -> 6_vsan_health
+6_vsan_health -> 7_storage_paths
+7_storage_paths -> 8_ntp_and_dns
+8_ntp_and_dns -> generate_report
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

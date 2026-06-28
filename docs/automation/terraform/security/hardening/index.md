@@ -14,6 +14,17 @@ Hardening reference covering Security Scanning Pipeline, Dependency and Provider
 ![Terraform — Hardening](../../../../assets/automation-terraform-security-hardening-index.svg)
 
 
+```d2
+direction: down
+
+security_scanning_pipeline: "Security Scanning Pipeline" {shape: rectangle}
+dependency_and_provider_security: "Dependency and Provider Security" {shape: rectangle}
+hardening_checklist: "Hardening Checklist" {shape: rectangle}
+
+security_scanning_pipeline -> dependency_and_provider_security: hardens
+dependency_and_provider_security -> hardening_checklist: hardens
+```
+
 ## Before you begin
 
 - **Access:** Provider credentials configured (`terraform login` or env vars)

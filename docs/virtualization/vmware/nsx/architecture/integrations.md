@@ -18,6 +18,23 @@ Integrations reference covering Host Transport Node Profiles, VMware Cloud Found
 
 
 
+```d2
+direction: right
+
+center: "NSX-T" {shape: hexagon}
+physical_network_integration: "Physical Network Integration" {shape: rectangle}
+bgp_integration_with_physical_networ: "BGP Integration with Physical Network" {shape: rectangle}
+active_directory_ldap_integration: "Active Directory / LDAP Integration" {shape: rectangle}
+vsphere_distributed_switch_vds_integ: "vSphere Distributed Switch (vDS) Integration" {shape: rectangle}
+log_forwarding_to_siem: "Log Forwarding to SIEM" {shape: rectangle}
+
+center -> physical_network_integration
+center -> bgp_integration_with_physical_networ
+center -> active_directory_ldap_integration
+center -> vsphere_distributed_switch_vds_integ
+center -> log_forwarding_to_siem
+```
+
 ## Physical Network Integration
 
 ### VLAN Requirements

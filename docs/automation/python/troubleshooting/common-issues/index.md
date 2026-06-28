@@ -16,6 +16,29 @@ Common Issues reference covering Python Error Triage Flow, API and Network Timeo
 ![Python Automation — Common Issues](../../../../assets/automation-python-troubleshooting-common-issues-index.svg)
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+diagnostic_flow: "Diagnostic Flow" {shape: rectangle}
+python_error_triage_flow: "Python Error Triage Flow" {shape: rectangle}
+api_and_network_timeouts: "API and Network Timeouts" {shape: rectangle}
+common_errors_reference: "Common Errors Reference" {shape: rectangle}
+verify_resolution: "Verify resolution" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> diagnostic_flow: investigate
+symptom -> python_error_triage_flow: investigate
+symptom -> api_and_network_timeouts: investigate
+symptom -> common_errors_reference: investigate
+symptom -> verify_resolution: investigate
+diagnostic_flow -> resolution
+python_error_triage_flow -> resolution
+api_and_network_timeouts -> resolution
+common_errors_reference -> resolution
+verify_resolution -> resolution
+```
+
 ## Diagnostic Flow
 
 ```mermaid

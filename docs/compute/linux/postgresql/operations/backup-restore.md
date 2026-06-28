@@ -13,6 +13,17 @@ PostgreSQL backup: `pg_dump`, `pg_basebackup`, WAL archiving with `archive_comma
 ![PostgreSQL — Backup Restore](../../../../assets/compute-linux-postgresql-operations-backup-restore.svg)
 
 
+```d2
+direction: right
+
+hub: "PostgreSQL\nOperations" {shape: hexagon}
+database_backup_validation: "Database — Backup Validation" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+hub -> database_backup_validation
+hub -> verify
+```
+
 ## Before you begin
 
 - **Access:** root or sudo-capable account on target hosts

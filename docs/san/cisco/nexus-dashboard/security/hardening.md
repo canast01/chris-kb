@@ -28,6 +28,21 @@ passwd ndadmin
 
 ---
 
+```d2
+direction: down
+
+external: External / Untrusted {shape: rectangle}
+7_backup_encryption: "7. Backup Encryption" {shape: rectangle}
+8_audit_logging: "8. Audit Logging" {shape: rectangle}
+9_kubernetes_security_baseline: "9. Kubernetes Security Baseline" {shape: rectangle}
+core: "Nexus Dashboard Core" {shape: hexagon}
+
+external -> 7_backup_encryption: traffic in
+7_backup_encryption -> 8_audit_logging
+8_audit_logging -> 9_kubernetes_security_baseline
+9_kubernetes_security_baseline -> core: secured path
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

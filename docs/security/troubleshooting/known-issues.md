@@ -17,6 +17,17 @@ Index of security product known issues and error codes. This top-level page link
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+security_product_knownissues_pages: "Security Product Known-Issues Pages" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> security_product_knownissues_pages: investigate
+security_product_knownissues_pages -> resolution
+```
+
 ## Before you begin
 
 Security product issues often cascade — a CyberArk CPM failure may stem from an AD authentication issue, which may stem from a certificate expiry. Follow the dependency chain.

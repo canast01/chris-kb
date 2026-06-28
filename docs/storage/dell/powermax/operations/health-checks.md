@@ -13,6 +13,25 @@ Health Checks reference covering Monitoring Hierarchy, Daily Checks, Health Chec
 </div>
 
 
+```d2
+direction: right
+
+hub: "PowerMax\nOperations" {shape: hexagon}
+run_this_routine: "Run This Routine" {shape: rectangle}
+monitoring_hierarchy: "Monitoring Hierarchy" {shape: rectangle}
+daily_checks: "Daily Checks" {shape: rectangle}
+health_check: "Health Check" {shape: rectangle}
+array_connectivity_and_status: "Array Connectivity and Status" {shape: rectangle}
+director_and_port_status: "Director and Port Status" {shape: rectangle}
+
+hub -> run_this_routine
+hub -> monitoring_hierarchy
+hub -> daily_checks
+hub -> health_check
+hub -> array_connectivity_and_status
+hub -> director_and_port_status
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

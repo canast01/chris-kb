@@ -37,6 +37,27 @@ flowchart TD
     style s8 fill:#2e7d32,color:#fff,stroke:#1b5e20
 ```
 
+```d2
+direction: right
+
+plan: "Plan" {shape: oval}
+phase_1_physical_layer: "Phase 1 — Physical Layer" {shape: rectangle}
+phase_2_esxi_installation_and_firstb: "Phase 2 — ESXi Installation and First-Boot Config" {shape: rectangle}
+phase_3_vcenter_deployment_and_initi: "Phase 3 — vCenter Deployment and Initial Configuration" {shape: rectangle}
+phase_4_dvswitch_and_vsan_network_se: "Phase 4 — dvSwitch and vSAN Network Setup" {shape: rectangle}
+phase_5_vsan_cluster_enablement: "Phase 5 — vSAN Cluster Enablement" {shape: rectangle}
+phase_6_aria_suite_lifecycle_and_mon: "Phase 6 — Aria Suite Lifecycle and Monitoring (Optional)" {shape: rectangle}
+validate: "Validate" {shape: oval}
+
+plan -> phase_1_physical_layer
+phase_1_physical_layer -> phase_2_esxi_installation_and_firstb
+phase_2_esxi_installation_and_firstb -> phase_3_vcenter_deployment_and_initi
+phase_3_vcenter_deployment_and_initi -> phase_4_dvswitch_and_vsan_network_se
+phase_4_dvswitch_and_vsan_network_se -> phase_5_vsan_cluster_enablement
+phase_5_vsan_cluster_enablement -> phase_6_aria_suite_lifecycle_and_mon
+phase_6_aria_suite_lifecycle_and_mon -> validate
+```
+
 ## Before you begin
 
 <!-- video-link -->

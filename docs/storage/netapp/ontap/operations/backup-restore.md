@@ -16,6 +16,25 @@ Backup and restore in ONTAP is built around native snapshot technology. Snapshot
 
 
 
+```d2
+direction: right
+
+hub: "NetApp ONTAP\nOperations" {shape: hexagon}
+snapshotbased_restore: "Snapshot-Based Restore" {shape: rectangle}
+snapmirror_relationship_types: "SnapMirror Relationship Types" {shape: rectangle}
+snapmirror_failover_dr_restore: "SnapMirror Failover (DR Restore)" {shape: rectangle}
+snapvault_longterm_retention: "SnapVault (Long-Term Retention)" {shape: rectangle}
+snapcenter_integration: "SnapCenter Integration" {shape: rectangle}
+veeam_integration: "Veeam Integration" {shape: rectangle}
+
+hub -> snapshotbased_restore
+hub -> snapmirror_relationship_types
+hub -> snapmirror_failover_dr_restore
+hub -> snapvault_longterm_retention
+hub -> snapcenter_integration
+hub -> veeam_integration
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

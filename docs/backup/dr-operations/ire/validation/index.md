@@ -11,6 +11,19 @@ Validation is the final gate before restored systems return to production. It co
 ![IRE — Validation](../../../../assets/backup-dr-operations-ire-validation-index.svg)
 
 
+```d2
+direction: right
+
+center: "DR Operations" {shape: hexagon}
+validation_gates: "Validation Gates" {shape: rectangle}
+rto_rpo_measurement: "RTO / RPO Measurement" {shape: rectangle}
+common_issues: "Common Issues" {shape: rectangle}
+
+center -> validation_gates
+center -> rto_rpo_measurement
+center -> common_issues
+```
+
 ## Validation Gates
 
 ```mermaid

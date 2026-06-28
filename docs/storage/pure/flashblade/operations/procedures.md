@@ -18,6 +18,25 @@ Procedures reference covering Change Readiness, Maintenance Window, Post-Change 
 
 ---
 
+```d2
+direction: right
+
+hub: "FlashBlade\nOperations" {shape: hexagon}
+change_readiness: "Change Readiness" {shape: rectangle}
+maintenance_window: "Maintenance Window" {shape: rectangle}
+postchange_validation: "Post-Change Validation" {shape: rectangle}
+snapshots: "Snapshots" {shape: rectangle}
+create_a_file_system: "Create a File System" {shape: rectangle}
+create_an_object_store_bucket: "Create an Object Store Bucket" {shape: rectangle}
+
+hub -> change_readiness
+hub -> maintenance_window
+hub -> postchange_validation
+hub -> snapshots
+hub -> create_a_file_system
+hub -> create_an_object_store_bucket
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

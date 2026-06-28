@@ -14,6 +14,23 @@ Ansible design standards: directory layout, role naming, variable precedence rul
 ![Ansible — Standards](../../../../assets/automation-ansible-architecture-design-standards-index.svg)
 
 
+```d2
+direction: down
+
+project_layout: "Project Layout" {shape: rectangle}
+module_standards: "Module Standards" {shape: rectangle}
+variable_management: "Variable Management" {shape: rectangle}
+error_handling: "Error Handling" {shape: rectangle}
+tags: "Tags" {shape: rectangle}
+testing_with_molecule: "Testing with Molecule" {shape: rectangle}
+
+project_layout -> module_standards: hardens
+module_standards -> variable_management: hardens
+variable_management -> error_handling: hardens
+error_handling -> tags: hardens
+tags -> testing_with_molecule: hardens
+```
+
 ## Project Layout
 
 

@@ -30,6 +30,25 @@ Shut down the VM and take a snapshot before creating a pool.
 
 ---
 
+```d2
+direction: right
+
+hub: "Horizon\nOperations" {shape: hexagon}
+uag_deployment: "UAG Deployment" {shape: rectangle}
+app_volumes_manager_installation: "App Volumes Manager Installation" {shape: rectangle}
+upgrade_order: "Upgrade Order" {shape: rectangle}
+upgrade_a_connection_server_rolling: "Upgrade a Connection Server (Rolling)" {shape: rectangle}
+version_compatibility_reference: "Version Compatibility Reference" {shape: rectangle}
+postinstall_verification: "Post-Install Verification" {shape: rectangle}
+
+hub -> uag_deployment
+hub -> app_volumes_manager_installation
+hub -> upgrade_order
+hub -> upgrade_a_connection_server_rolling
+hub -> version_compatibility_reference
+hub -> postinstall_verification
+```
+
 ## Before you begin
 
 - **Access:** vCenter read-only minimum; Administrator role for remediation steps

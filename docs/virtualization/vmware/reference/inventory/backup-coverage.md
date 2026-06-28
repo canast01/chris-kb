@@ -15,6 +15,23 @@ Live register of all VMs, their backup policy, and last verified restore test. R
 
 
 
+```d2
+direction: right
+
+center: "Inventory" {shape: rectangle}
+coverage_register: "Coverage Register" {shape: rectangle}
+criticality_definitions: "Criticality Definitions" {shape: rectangle}
+coverage_review_checklist_monthly: "Coverage Review Checklist (Monthly)" {shape: rectangle}
+unprotected_vms_log: "Unprotected VMs Log" {shape: rectangle}
+restore_test_log: "Restore Test Log" {shape: rectangle}
+
+center -> coverage_register
+center -> criticality_definitions
+center -> coverage_review_checklist_monthly
+center -> unprotected_vms_log
+center -> restore_test_log
+```
+
 ## Coverage Register
 
 | VM Name | Application Owner | Criticality | Backup Tool | Policy | Schedule | Retention | Last Successful | Last Restore Test | Notes |

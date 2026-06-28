@@ -13,6 +13,25 @@ Health checks for Horizon — Connection Server status, desktop pool availabilit
 </div>
 
 
+```d2
+direction: right
+
+hub: "Horizon\nOperations" {shape: hexagon}
+run_this_routine: "Run This Routine" {shape: rectangle}
+session_count_and_pool_status: "Session Count and Pool Status" {shape: rectangle}
+using_vmwarehvhelper_powershell_modu: "Using VMware.Hv.Helper PowerShell module" {shape: rectangle}
+get_current_active_session_count: "Get current active session count" {shape: rectangle}
+get_licensed_session_count_from_lice: "Get licensed session count from License page" {shape: rectangle}
+horizon_console_settings_product_lic: "Horizon Console → Settings → Product Licensing and Usage" {shape: rectangle}
+
+hub -> run_this_routine
+hub -> session_count_and_pool_status
+hub -> using_vmwarehvhelper_powershell_modu
+hub -> get_current_active_session_count
+hub -> get_licensed_session_count_from_lice
+hub -> horizon_console_settings_product_lic
+```
+
 ## Before you begin
 
 - **Access:** vCenter read-only minimum; Administrator role for remediation steps

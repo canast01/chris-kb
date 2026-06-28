@@ -20,6 +20,27 @@ Access Control reference covering Overview, Built-In Roles, Resource Group Scopi
 
 ---
 
+```d2
+direction: down
+
+external: External / Untrusted {shape: rectangle}
+builtin_roles: "Built-In Roles" {shape: rectangle}
+resource_group_scoping: "Resource Group Scoping" {shape: rectangle}
+service_accounts: "Service Accounts" {shape: rectangle}
+least_privilege_guidance: "Least Privilege Guidance" {shape: rectangle}
+audit_log_review: "Audit Log Review" {shape: rectangle}
+disabling_and_removing_accounts: "Disabling and Removing Accounts" {shape: rectangle}
+core: "SANnav Core" {shape: hexagon}
+
+external -> builtin_roles: traffic in
+builtin_roles -> resource_group_scoping
+resource_group_scoping -> service_accounts
+service_accounts -> least_privilege_guidance
+least_privilege_guidance -> audit_log_review
+audit_log_review -> disabling_and_removing_accounts
+disabling_and_removing_accounts -> core: secured path
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

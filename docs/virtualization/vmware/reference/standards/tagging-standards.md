@@ -15,6 +15,17 @@ Consistent tagging supports ownership, billing, backup policy, patch scheduling,
 
 
 
+```d2
+direction: down
+
+required_tags: "Required Tags" {shape: rectangle}
+optional_tags: "Optional Tags" {shape: rectangle}
+tagging_process: "Tagging Process" {shape: rectangle}
+
+required_tags -> optional_tags: hardens
+optional_tags -> tagging_process: hardens
+```
+
 ## Required Tags
 
 | Tag Category | Example Values |

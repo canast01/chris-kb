@@ -16,6 +16,27 @@ FabricOS hardening: disabling unused services (Telnet, HTTP), enforcing HTTPS ma
 
 ---
 
+```d2
+direction: down
+
+external: External / Untrusted {shape: rectangle}
+hardening_sequence_new_switch: "Hardening Sequence — New Switch" {shape: rectangle}
+audit_logging: "Audit Logging" {shape: rectangle}
+default_zone_enforcement: "Default Zone Enforcement" {shape: rectangle}
+security_baselines_summary: "Security Baselines Summary" {shape: rectangle}
+posthardening_verification: "Post-Hardening Verification" {shape: rectangle}
+periodic_review: "Periodic Review" {shape: rectangle}
+core: "Brocade Fabric OS Core" {shape: hexagon}
+
+external -> hardening_sequence_new_switch: traffic in
+hardening_sequence_new_switch -> audit_logging
+audit_logging -> default_zone_enforcement
+default_zone_enforcement -> security_baselines_summary
+security_baselines_summary -> posthardening_verification
+posthardening_verification -> periodic_review
+periodic_review -> core: secured path
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

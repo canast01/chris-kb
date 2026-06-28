@@ -16,6 +16,25 @@ Integrations reference covering S3 Client Integration, Veeam Object Repository, 
 
 
 
+```d2
+direction: right
+
+center: "ECS" {shape: hexagon}
+s3_client_integration: "S3 Client Integration" {shape: rectangle}
+veeam_object_repository: "Veeam Object Repository" {shape: rectangle}
+commvault_integration: "Commvault Integration" {shape: rectangle}
+netbackup_integration: "NetBackup Integration" {shape: rectangle}
+hdfs_integration: "HDFS Integration" {shape: rectangle}
+metadata_search_integration: "Metadata Search Integration" {shape: rectangle}
+
+center -> s3_client_integration
+center -> veeam_object_repository
+center -> commvault_integration
+center -> netbackup_integration
+center -> hdfs_integration
+center -> metadata_search_integration
+```
+
 ## S3 Client Integration
 
 ECS exposes a native S3-compatible API on HTTPS port 443 (or 9021 for the non-standard S3 port; 9020 for plain HTTP in lab environments). Any S3-compatible client can connect using path-style or virtual-hosted-style addressing.

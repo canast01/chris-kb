@@ -18,6 +18,19 @@ Cluster Inventory reference covering Overview, Cluster Inventory Table, Fields R
 
 ---
 
+```d2
+direction: right
+
+center: "Inventory" {shape: rectangle}
+cluster_inventory_table: "Cluster Inventory Table" {shape: rectangle}
+fields_reference: "Fields Reference" {shape: rectangle}
+cluster_configuration_checklist: "Cluster Configuration Checklist" {shape: rectangle}
+
+center -> cluster_inventory_table
+center -> fields_reference
+center -> cluster_configuration_checklist
+```
+
 ## Overview
 
 Use this table format to document each vSphere cluster in the environment. Maintain one row per cluster and update after any cluster configuration change or capacity event.

@@ -21,6 +21,25 @@ Firewall port reference for Dell RecoverPoint (RP). Covers Unisphere for Recover
 
 
 
+```d2
+direction: right
+
+center: "RecoverPoint" {shape: hexagon}
+inbound_management: "Inbound — Management" {shape: rectangle}
+rpa_cluster_communication_within_sit: "RPA Cluster Communication (Within Site)" {shape: rectangle}
+wan_replication_between_sites_cross_: "WAN Replication (Between Sites — Cross Firewall)" {shape: rectangle}
+recoverpoint_to_storage_san: "RecoverPoint to Storage (SAN)" {shape: rectangle}
+outbound_rpa_to_external: "Outbound — RPA to External" {shape: rectangle}
+firewall_zone_summary: "Firewall Zone Summary" {shape: rectangle}
+
+center -> inbound_management
+center -> rpa_cluster_communication_within_sit
+center -> wan_replication_between_sites_cross_
+center -> recoverpoint_to_storage_san
+center -> outbound_rpa_to_external
+center -> firewall_zone_summary
+```
+
 ## Inbound — Management
 
 | Port | Protocol | Source | Purpose |

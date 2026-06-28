@@ -16,6 +16,21 @@ How It Works reference covering Overview, Use Cases, How It Works, Underlying Pl
 
 
 
+```d2
+direction: right
+
+center: "APEX Storage" {shape: hexagon}
+use_cases: "Use Cases" {shape: rectangle}
+how_it_works: "How It Works" {shape: rectangle}
+underlying_platforms: "Underlying Platforms" {shape: rectangle}
+best_practices: "Best Practices" {shape: rectangle}
+
+center -> use_cases
+center -> how_it_works
+center -> underlying_platforms
+center -> best_practices
+```
+
 ## Overview
 
 Dell APEX Storage as a Service (STaaS) is a consumption-based storage model where Dell provisions, owns, and manages the physical infrastructure on-premises at the customer site. Capacity is metered monthly based on committed and burst usage, billed through the APEX Console. The underlying platforms are PowerStore, PowerScale, or PowerFlex, managed by Dell — the customer interacts primarily with the APEX Console or REST API for visibility, capacity requests, and billing reporting.

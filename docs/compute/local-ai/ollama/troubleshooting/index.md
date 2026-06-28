@@ -17,6 +17,32 @@ Common Ollama issues include model load failures, slow inference, GPU not being 
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+checking_ollama_logs: "Checking Ollama Logs" {shape: rectangle}
+gpu_not_detected: "GPU Not Detected" {shape: rectangle}
+model_load_failures: "Model Load Failures" {shape: rectangle}
+slow_inference: "Slow Inference" {shape: rectangle}
+port_conflicts: "Port Conflicts" {shape: rectangle}
+service_wont_start: "Service Won't Start" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> checking_ollama_logs: investigate
+symptom -> gpu_not_detected: investigate
+symptom -> model_load_failures: investigate
+symptom -> slow_inference: investigate
+symptom -> port_conflicts: investigate
+symptom -> service_wont_start: investigate
+checking_ollama_logs -> resolution
+gpu_not_detected -> resolution
+model_load_failures -> resolution
+slow_inference -> resolution
+port_conflicts -> resolution
+service_wont_start -> resolution
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

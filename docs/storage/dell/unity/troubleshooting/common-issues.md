@@ -18,6 +18,29 @@ Common Issues reference covering Common Issues Reference, Incident Triage Sequen
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+diagnostic_flow: "Diagnostic Flow" {shape: rectangle}
+common_issues_reference: "Common Issues Reference" {shape: rectangle}
+incident_triage_sequence: "Incident Triage Sequence" {shape: rectangle}
+known_behaviours_not_bugs: "Known Behaviours (Not Bugs)" {shape: rectangle}
+verify_resolution: "Verify resolution" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> diagnostic_flow: investigate
+symptom -> common_issues_reference: investigate
+symptom -> incident_triage_sequence: investigate
+symptom -> known_behaviours_not_bugs: investigate
+symptom -> verify_resolution: investigate
+diagnostic_flow -> resolution
+common_issues_reference -> resolution
+incident_triage_sequence -> resolution
+known_behaviours_not_bugs -> resolution
+verify_resolution -> resolution
+```
+
 ## Diagnostic Flow
 
 ```mermaid

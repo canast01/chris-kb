@@ -16,6 +16,21 @@ Standards reference covering Naming Conventions, Build Baseline, Configuration C
 
 
 
+```d2
+direction: right
+
+center: "PowerMax" {shape: hexagon}
+naming_conventions: "Naming Conventions" {shape: rectangle}
+build_baseline: "Build Baseline" {shape: rectangle}
+configuration_checklist: "Configuration Checklist" {shape: rectangle}
+sizing_guidelines: "Sizing Guidelines" {shape: rectangle}
+
+center -> naming_conventions
+center -> build_baseline
+center -> configuration_checklist
+center -> sizing_guidelines
+```
+
 ## Naming Conventions
 
 | Object | Convention | Example |

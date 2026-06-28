@@ -14,6 +14,21 @@ What to do in your first hour with a new ONTAP cluster. Covers cluster orientati
 
 ---
 
+```d2
+direction: right
+
+center: "Quick Start" {shape: hexagon}
+1_orient: "1. Orient" {shape: rectangle}
+2_first_health_checks: "2. First Health Checks" {shape: rectangle}
+3_know_the_numbers: "3. Know the Numbers" {shape: rectangle}
+4_common_first_tasks: "4. Common First Tasks" {shape: rectangle}
+
+center -> 1_orient
+center -> 2_first_health_checks
+center -> 3_know_the_numbers
+center -> 4_common_first_tasks
+```
+
 ## 1. Orient
 
 Establish the basic topology before anything else.

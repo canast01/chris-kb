@@ -16,6 +16,25 @@ Azure OpenAI requires you to deploy a model before use — the model version, de
 
 
 
+```d2
+direction: right
+
+center: "Azure OpenAI" {shape: hexagon}
+creating_a_deployment: "Creating a Deployment" {shape: rectangle}
+deployment_types_consumption_vs_ptu: "Deployment Types: Consumption vs PTU" {shape: rectangle}
+capacity_planning: "Capacity Planning" {shape: rectangle}
+deployment_names: "Deployment Names" {shape: rectangle}
+updating_and_deleting_deployments: "Updating and Deleting Deployments" {shape: rectangle}
+common_deployment_issues: "Common Deployment Issues" {shape: rectangle}
+
+center -> creating_a_deployment
+center -> deployment_types_consumption_vs_ptu
+center -> capacity_planning
+center -> deployment_names
+center -> updating_and_deleting_deployments
+center -> common_deployment_issues
+```
+
 ## Creating a Deployment
 
 Deployments are created per Azure OpenAI resource (which is region-scoped). The deployment name is what your application references in API calls.

@@ -17,6 +17,23 @@ ESXi host build standard: NTP server list, syslog destination, vSwitch MTU, BIOS
 ---
 
 
+```d2
+direction: down
+
+management_vmkernel: "Management VMkernel" {shape: rectangle}
+additional_vmkernels: "Additional VMkernels" {shape: rectangle}
+security_profile: "Security Profile" {shape: rectangle}
+host_profiles: "Host Profiles" {shape: rectangle}
+firmware: "Firmware" {shape: rectangle}
+postbuild_verification: "Post-Build Verification" {shape: rectangle}
+
+management_vmkernel -> additional_vmkernels: hardens
+additional_vmkernels -> security_profile: hardens
+security_profile -> host_profiles: hardens
+host_profiles -> firmware: hardens
+firmware -> postbuild_verification: hardens
+```
+
 ## Management VMkernel
 
 | Setting | Requirement |

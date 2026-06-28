@@ -26,6 +26,17 @@ FOD billing is managed by Dell — there is no on-premises software upgrade for 
 | 2 | After adding physical burst capacity under a FOD agreement, confirm CloudIQ reflects the new total installed capacity |
 | 3 | If the array is migrated or replaced, work with Dell to transfer the FOD contract to the new system SID |
 
+```d2
+direction: right
+
+hub: "Flex On Demand\nOperations" {shape: hexagon}
+license_key_management: "License Key Management" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+hub -> license_key_management
+hub -> verify
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

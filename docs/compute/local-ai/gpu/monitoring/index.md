@@ -15,6 +15,23 @@ Monitoring GPU workloads requires tracking utilisation, memory, temperature, pow
 
 
 
+```d2
+direction: right
+
+hub: "GPU Compute\nOperations" {shape: hexagon}
+nvidiasmi_basics: "nvidia-smi Basics" {shape: rectangle}
+key_metrics_to_track: "Key Metrics to Track" {shape: rectangle}
+dcgm_for_production_clusters: "DCGM for Production Clusters" {shape: rectangle}
+prometheus_grafana_stack: "Prometheus + Grafana Stack" {shape: rectangle}
+alerts_for_gpu_workloads: "Alerts for GPU Workloads" {shape: rectangle}
+
+hub -> nvidiasmi_basics
+hub -> key_metrics_to_track
+hub -> dcgm_for_production_clusters
+hub -> prometheus_grafana_stack
+hub -> alerts_for_gpu_workloads
+```
+
 ## nvidia-smi Basics
 
 ```bash

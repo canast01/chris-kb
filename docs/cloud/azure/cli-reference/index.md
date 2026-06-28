@@ -73,6 +73,25 @@ Commonly used Azure CLI (`az`) commands for managing compute, storage, networkin
 
 ---
 
+```d2
+direction: right
+
+center: "Azure" {shape: rectangle}
+storage_accounts_blobs: "Storage Accounts & Blobs" {shape: rectangle}
+networking: "Networking" {shape: rectangle}
+identity_rbac: "Identity & RBAC" {shape: rectangle}
+monitor_alerts: "Monitor & Alerts" {shape: rectangle}
+key_vault: "Key Vault" {shape: rectangle}
+aks: "AKS" {shape: rectangle}
+
+center -> storage_accounts_blobs
+center -> networking
+center -> identity_rbac
+center -> monitor_alerts
+center -> key_vault
+center -> aks
+```
+
 ## Storage Accounts & Blobs
 
 Azure Blob Storage stores unstructured data (files, backups, images) in containers within a storage account. SAS tokens grant time-limited access without sharing account keys.

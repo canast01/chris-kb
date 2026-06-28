@@ -16,6 +16,25 @@ Day-2 operational procedures for Aria Automation — managing cloud accounts, pr
 
 ---
 
+```d2
+direction: right
+
+hub: "Aria Automation\nOperations" {shape: hexagon}
+cloud_account_and_infrastructure: "Cloud Account and Infrastructure" {shape: rectangle}
+add_a_cloud_account: "Add a Cloud Account" {shape: rectangle}
+update_cloud_account_credentials: "Update Cloud Account Credentials" {shape: rectangle}
+trigger_manual_data_collection: "Trigger Manual Data Collection" {shape: rectangle}
+configure_image_mappings_and_flavor_: "Configure Image Mappings and Flavor Mappings" {shape: rectangle}
+configure_a_network_pool: "Configure a Network Pool" {shape: rectangle}
+
+hub -> cloud_account_and_infrastructure
+hub -> add_a_cloud_account
+hub -> update_cloud_account_credentials
+hub -> trigger_manual_data_collection
+hub -> configure_image_mappings_and_flavor_
+hub -> configure_a_network_pool
+```
+
 ## Before you begin
 
 - **Access:** vCenter read-only minimum; Administrator role for remediation steps

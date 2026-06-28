@@ -20,6 +20,25 @@ Reusable scripts for Nutanix operational tasks — cluster health snapshot, stor
 
 ---
 
+```d2
+direction: right
+
+hub: "Nutanix AHV\nOperations" {shape: hexagon}
+daily_health_snapshot: "Daily Health Snapshot" {shape: rectangle}
+ncc_health_check_automation: "NCC Health Check Automation" {shape: rectangle}
+storage_utilisation_report: "Storage Utilisation Report" {shape: rectangle}
+vm_inventory_export: "VM Inventory Export" {shape: rectangle}
+maintenance_mode_helper: "Maintenance Mode Helper" {shape: rectangle}
+rest_api_vm_power_operations: "REST API — VM Power Operations" {shape: rectangle}
+
+hub -> daily_health_snapshot
+hub -> ncc_health_check_automation
+hub -> storage_utilisation_report
+hub -> vm_inventory_export
+hub -> maintenance_mode_helper
+hub -> rest_api_vm_power_operations
+```
+
 ## Before you begin
 
 - **Access:** CVM SSH (nutanix user) for bash scripts; Prism Central admin for REST API scripts

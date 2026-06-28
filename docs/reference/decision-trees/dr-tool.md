@@ -44,6 +44,17 @@ flowchart TD
     M --> N
 ```
 
+```d2
+direction: right
+
+center: "Decision Trees" {shape: hexagon}
+tool_comparison: "Tool comparison" {shape: rectangle}
+key_constraints: "Key constraints" {shape: rectangle}
+
+center -> tool_comparison
+center -> key_constraints
+```
+
 ## Tool comparison
 
 | Criterion | SRM | vSphere Replication | Backup-based DR |

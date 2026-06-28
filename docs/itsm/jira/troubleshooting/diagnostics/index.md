@@ -57,6 +57,32 @@ graph TD
     class W,X escalate
 ```
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+step_1_check_instance_health: "Step 1 — Check instance health" {shape: rectangle}
+step_2_jvm_heap_analysis: "Step 2 — JVM heap analysis" {shape: rectangle}
+step_3_thread_dump_capture_and_analy: "Step 3 — Thread dump capture and analysis" {shape: rectangle}
+step_4_database_slow_query_analysis: "Step 4 — Database slow query analysis" {shape: rectangle}
+step_5_support_zip_collection: "Step 5 — Support ZIP collection" {shape: rectangle}
+step_6_additional_diagnostic_command: "Step 6 — Additional diagnostic commands" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> step_1_check_instance_health: investigate
+symptom -> step_2_jvm_heap_analysis: investigate
+symptom -> step_3_thread_dump_capture_and_analy: investigate
+symptom -> step_4_database_slow_query_analysis: investigate
+symptom -> step_5_support_zip_collection: investigate
+symptom -> step_6_additional_diagnostic_command: investigate
+step_1_check_instance_health -> resolution
+step_2_jvm_heap_analysis -> resolution
+step_3_thread_dump_capture_and_analy -> resolution
+step_4_database_slow_query_analysis -> resolution
+step_5_support_zip_collection -> resolution
+step_6_additional_diagnostic_command -> resolution
+```
+
 ## Before you begin
 
 - **Access:** SSH to Jira server(s) as root or jira OS user; PostgreSQL admin access (`psql -U postgres`); Jira Admin account for the web UI

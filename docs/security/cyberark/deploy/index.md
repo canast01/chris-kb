@@ -34,6 +34,27 @@ flowchart TD
     style s9 fill:#2e7d32,color:#fff,stroke:#1b5e20
 ```
 
+```d2
+direction: right
+
+plan: "Plan" {shape: oval}
+prerequisites: "Prerequisites" {shape: rectangle}
+install_the_digital_vault: "Install the Digital Vault" {shape: rectangle}
+install_the_cpm_central_policy_manag: "Install the CPM (Central Policy Manager)" {shape: rectangle}
+install_pvwa_password_vault_web_acce: "Install PVWA (Password Vault Web Access)" {shape: rectangle}
+install_psm_privileged_session_manag: "Install PSM (Privileged Session Manager)" {shape: rectangle}
+onboard_the_first_accounts: "Onboard the First Accounts" {shape: rectangle}
+validate: "Validate" {shape: oval}
+
+plan -> prerequisites
+prerequisites -> install_the_digital_vault
+install_the_digital_vault -> install_the_cpm_central_policy_manag
+install_the_cpm_central_policy_manag -> install_pvwa_password_vault_web_acce
+install_pvwa_password_vault_web_acce -> install_psm_privileged_session_manag
+install_psm_privileged_session_manag -> onboard_the_first_accounts
+onboard_the_first_accounts -> validate
+```
+
 ## Before you begin
 
 - **Access:** admin credentials for the target system and any upstream dependencies (DNS, NTP, vCenter, directory services)

@@ -19,6 +19,32 @@ How to escalate Dell PowerScale (Isilon) issues to Dell Technologies support: wh
 
 ---
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+preescalation_selfcheck: "Pre-Escalation Self-Check" {shape: rectangle}
+stepbystep_data_collection: "Step-by-Step Data Collection" {shape: rectangle}
+how_to_open_the_case_on_dellcomsuppo: "How to Open the Case on dell.com/support" {shape: rectangle}
+escalation_path: "Escalation Path" {shape: rectangle}
+what_not_to_do: "What NOT to Do" {shape: rectangle}
+useful_commands_for_case_updates: "Useful Commands for Case Updates" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> preescalation_selfcheck: investigate
+symptom -> stepbystep_data_collection: investigate
+symptom -> how_to_open_the_case_on_dellcomsuppo: investigate
+symptom -> escalation_path: investigate
+symptom -> what_not_to_do: investigate
+symptom -> useful_commands_for_case_updates: investigate
+preescalation_selfcheck -> resolution
+stepbystep_data_collection -> resolution
+how_to_open_the_case_on_dellcomsuppo -> resolution
+escalation_path -> resolution
+what_not_to_do -> resolution
+useful_commands_for_case_updates -> resolution
+```
+
 ## Before you begin
 
 - **Access required:** SSH access to any PowerScale node (admin user or root); OneFS web admin UI access; Dell support account at dell.com/support linked to the cluster service tag

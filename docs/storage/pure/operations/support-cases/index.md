@@ -16,6 +16,25 @@ Pure Storage Support Cases reference covering Opening a Support Case, Case Sever
 
 ![Pure Storage Support Cases — Diagram](../../../../assets/storage-pure-operations-support-cases-diagram.svg)
 
+```d2
+direction: right
+
+center: "Support Cases" {shape: hexagon}
+opening_a_support_case: "Opening a Support Case" {shape: rectangle}
+case_severity_levels: "Case Severity Levels" {shape: rectangle}
+gathering_diagnostic_information: "Gathering Diagnostic Information" {shape: rectangle}
+what_to_include_in_a_case: "What to Include in a Case" {shape: rectangle}
+escalating_a_case: "Escalating a Case" {shape: rectangle}
+proactive_engagement: "Proactive Engagement" {shape: rectangle}
+
+center -> opening_a_support_case
+center -> case_severity_levels
+center -> gathering_diagnostic_information
+center -> what_to_include_in_a_case
+center -> escalating_a_case
+center -> proactive_engagement
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

@@ -14,6 +14,27 @@ Health Checks reference covering Drift Detection Flow, Daily Checks.
 ![Terraform — Health Checks](../../../../assets/automation-terraform-operations-health-checks-index.svg)
 
 
+```d2
+direction: right
+
+begin_checks: "Begin Checks" {shape: oval}
+run_this_routine: "Run This Routine" {shape: rectangle}
+provider_drift: "Provider Drift" {shape: rectangle}
+workspace_management: "Workspace Management" {shape: rectangle}
+backend_connectivity: "Backend Connectivity" {shape: rectangle}
+drift_detection_flow: "Drift Detection Flow" {shape: rectangle}
+daily_checks: "Daily Checks" {shape: rectangle}
+generate_report: "Generate Report" {shape: oval}
+
+begin_checks -> run_this_routine
+run_this_routine -> provider_drift
+provider_drift -> workspace_management
+workspace_management -> backend_connectivity
+backend_connectivity -> drift_detection_flow
+drift_detection_flow -> daily_checks
+daily_checks -> generate_report
+```
+
 ## Before you begin
 
 - **Access:** Provider credentials configured (`terraform login` or env vars)

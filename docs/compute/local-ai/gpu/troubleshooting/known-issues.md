@@ -18,6 +18,20 @@ Catalog of known GPU and local AI inference bugs, error codes, and workarounds c
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+cuda_and_driver: "CUDA and Driver" {shape: rectangle}
+out_of_memory: "Out of Memory" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> cuda_and_driver: investigate
+symptom -> out_of_memory: investigate
+cuda_and_driver -> resolution
+out_of_memory -> resolution
+```
+
 ## Before you begin
 
 - `nvidia-smi` for GPU health and VRAM usage.

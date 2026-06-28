@@ -18,6 +18,23 @@ Catalog of known SRDF/A (Asynchronous) bugs, error codes, and workarounds coveri
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+srdfa_pauses: "SRDF/A Pauses" {shape: rectangle}
+failover: "Failover" {shape: rectangle}
+performance: "Performance" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> srdfa_pauses: investigate
+symptom -> failover: investigate
+symptom -> performance: investigate
+srdfa_pauses -> resolution
+failover -> resolution
+performance -> resolution
+```
+
 ## Before you begin
 
 - SRDF/A state: `symrdf -g <dev-group> query` or Unisphere → Replication → SRDF.

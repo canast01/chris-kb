@@ -36,6 +36,17 @@ graph TB
 <a class="kb-card" href="design-standards/"><strong>Design Standards</strong><span>SCG redundancy, capacity planning, and subscription management practices.</span></a>
 </div>
 
+```d2
+direction: right
+
+center: "APEX Storage" {shape: hexagon}
+underlying_platforms: "Underlying Platforms" {shape: rectangle}
+how_apex_staas_works: "How APEX STaaS Works" {shape: rectangle}
+
+center -> underlying_platforms
+center -> how_apex_staas_works
+```
+
 ## Underlying Platforms
 
 | Platform | Storage Type | Use Case |

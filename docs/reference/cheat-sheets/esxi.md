@@ -13,6 +13,17 @@ Top-10 ESXi shell commands for host management, networking, storage, and VM cont
 
 
 
+```d2
+direction: right
+
+center: "Cheat Sheets" {shape: rectangle}
+common_commands: "Common commands" {shape: rectangle}
+quick_diagnostics: "Quick diagnostics" {shape: rectangle}
+
+center -> common_commands
+center -> quick_diagnostics
+```
+
 ## Common commands
 
 ```bash

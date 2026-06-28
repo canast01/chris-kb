@@ -19,6 +19,23 @@ Dell AIOps (delivered via CloudIQ / APEX AIOps) is Dell's AI-driven IT operation
 
 ---
 
+```d2
+direction: right
+
+center: "Dell AIOps" {shape: hexagon}
+architecture: "Architecture" {shape: rectangle}
+component_roles: "Component Roles" {shape: rectangle}
+aiops_capabilities: "AIOps Capabilities" {shape: rectangle}
+telemetry_sources: "Telemetry Sources" {shape: rectangle}
+data_flow: "Data Flow" {shape: rectangle}
+
+center -> architecture
+center -> component_roles
+center -> aiops_capabilities
+center -> telemetry_sources
+center -> data_flow
+```
+
 ## Architecture
 
 ```mermaid

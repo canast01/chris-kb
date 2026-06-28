@@ -16,6 +16,25 @@ High CPU Troubleshooting reference covering Overview, CPU Threshold Reference, D
 ![High CPU Troubleshooting](../../../../assets/compute-linux-troubleshooting-high-cpu-index.svg)
 
 
+```d2
+direction: right
+
+center: "Linux" {shape: hexagon}
+cpu_threshold_reference: "CPU Threshold Reference" {shape: rectangle}
+diagnostic_flowchart: "Diagnostic Flowchart" {shape: rectangle}
+windows_cpu_diagnosis: "Windows CPU Diagnosis" {shape: rectangle}
+vmware_esxi_esxtop_cpu_analysis: "VMware ESXi: esxtop CPU Analysis" {shape: rectangle}
+javajvm_high_cpu_troubleshooting: "Java/JVM High CPU Troubleshooting" {shape: rectangle}
+database_cpu_spikes: "Database CPU Spikes" {shape: rectangle}
+
+center -> cpu_threshold_reference
+center -> diagnostic_flowchart
+center -> windows_cpu_diagnosis
+center -> vmware_esxi_esxtop_cpu_analysis
+center -> javajvm_high_cpu_troubleshooting
+center -> database_cpu_spikes
+```
+
 ## Before you begin
 
 - **Access:** root or sudo-capable account on target hosts

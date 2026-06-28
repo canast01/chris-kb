@@ -18,6 +18,25 @@ Firewall port reference for Ansible and Ansible Automation Platform (AAP). Ansib
 
 
 
+```d2
+direction: right
+
+center: "Ansible" {shape: hexagon}
+inbound_admin_to_ansible_automation_: "Inbound — Admin to Ansible Automation Platform (AAP)" {shape: rectangle}
+control_node_execution_environment_t: "Control Node / Execution Environment to Linux Managed Hosts" {shape: rectangle}
+control_node_to_windows_managed_host: "Control Node to Windows Managed Hosts" {shape: rectangle}
+control_node_to_network_devices: "Control Node to Network Devices" {shape: rectangle}
+control_node_to_cloud_platform_apis: "Control Node to Cloud / Platform APIs" {shape: rectangle}
+aap_internal_services: "AAP Internal Services" {shape: rectangle}
+
+center -> inbound_admin_to_ansible_automation_
+center -> control_node_execution_environment_t
+center -> control_node_to_windows_managed_host
+center -> control_node_to_network_devices
+center -> control_node_to_cloud_platform_apis
+center -> aap_internal_services
+```
+
 ## Before you begin
 
 - Ansible control node (or AAP execution environment) has NO inbound ports required for automation — all connections are outbound to targets

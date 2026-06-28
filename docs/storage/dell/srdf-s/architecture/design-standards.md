@@ -16,6 +16,21 @@ SRDF/S design standards: maximum distance and latency requirements for synchrono
 
 ---
 
+```d2
+direction: right
+
+center: "SRDF/S" {shape: hexagon}
+rtt_and_latency_budget: "RTT and Latency Budget" {shape: rectangle}
+target_volume_standards: "Target Volume Standards" {shape: rectangle}
+test_frequency: "Test Frequency" {shape: rectangle}
+recovery_time_standards: "Recovery Time Standards" {shape: rectangle}
+
+center -> rtt_and_latency_budget
+center -> target_volume_standards
+center -> test_frequency
+center -> recovery_time_standards
+```
+
 ## RTT and Latency Budget
 
 SRDF/S commits every host write synchronously across the replication link. The host write RTT equals local storage latency + 2× WAN latency. Document and enforce maximum RTT before production enablement.

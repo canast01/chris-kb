@@ -39,6 +39,25 @@ flowchart LR
 
 ---
 
+```d2
+direction: right
+
+hub: "VPLEX\nOperations" {shape: hexagon}
+quickreference_command_table: "Quick-Reference Command Table" {shape: rectangle}
+cluster_and_director_status: "Cluster and Director Status" {shape: rectangle}
+virtual_volume_management: "Virtual Volume Management" {shape: rectangle}
+distributed_device_operations_vplex_: "Distributed Device Operations (VPLEX Metro)" {shape: rectangle}
+storage_views_host_masking: "Storage Views (Host Masking)" {shape: rectangle}
+data_migration: "Data Migration" {shape: rectangle}
+
+hub -> quickreference_command_table
+hub -> cluster_and_director_status
+hub -> virtual_volume_management
+hub -> distributed_device_operations_vplex_
+hub -> storage_views_host_masking
+hub -> data_migration
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

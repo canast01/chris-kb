@@ -18,6 +18,20 @@ Catalog of known Pure1 issues covering array connectivity, portal access, and da
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+array_connectivity: "Array Connectivity" {shape: rectangle}
+portal_access: "Portal Access" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> array_connectivity: investigate
+symptom -> portal_access: investigate
+array_connectivity -> resolution
+portal_access -> resolution
+```
+
 ## Before you begin
 
 - Pure1 issues are either phone-home connectivity (array side) or portal access (browser side).

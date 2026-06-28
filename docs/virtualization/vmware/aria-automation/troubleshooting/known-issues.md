@@ -18,6 +18,23 @@ Catalog of known Aria Automation (vRA) bugs, error codes, and workarounds coveri
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+catalog_and_deployments: "Catalog and Deployments" {shape: rectangle}
+integrations: "Integrations" {shape: rectangle}
+cluster_and_services: "Cluster and Services" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> catalog_and_deployments: investigate
+symptom -> integrations: investigate
+symptom -> cluster_and_services: investigate
+catalog_and_deployments -> resolution
+integrations -> resolution
+cluster_and_services -> resolution
+```
+
 ## Before you begin
 
 - Aria Automation errors appear in `Infrastructure → Activity → Requests` — expand failed request for machine detail.

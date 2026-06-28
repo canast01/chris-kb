@@ -56,6 +56,32 @@ graph TD
     class S,T escalate
 ```
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+step_1_check_nsx_manager_cluster_hea: "Step 1 — Check NSX Manager cluster health" {shape: rectangle}
+step_2_check_alarms_and_transport_no: "Step 2 — Check alarms and transport node status" {shape: rectangle}
+step_3_diagnose_tep_connectivity_on_: "Step 3 — Diagnose TEP connectivity on ESXi hosts" {shape: rectangle}
+step_4_inspect_dfw_filters_on_esxi: "Step 4 — Inspect DFW filters on ESXi" {shape: rectangle}
+step_5_diagnose_edge_node_routing_an: "Step 5 — Diagnose Edge node routing and BGP" {shape: rectangle}
+step_6_run_traceflow_for_hopbyhop_pa: "Step 6 — Run Traceflow for hop-by-hop path analysis" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> step_1_check_nsx_manager_cluster_hea: investigate
+symptom -> step_2_check_alarms_and_transport_no: investigate
+symptom -> step_3_diagnose_tep_connectivity_on_: investigate
+symptom -> step_4_inspect_dfw_filters_on_esxi: investigate
+symptom -> step_5_diagnose_edge_node_routing_an: investigate
+symptom -> step_6_run_traceflow_for_hopbyhop_pa: investigate
+step_1_check_nsx_manager_cluster_hea -> resolution
+step_2_check_alarms_and_transport_no -> resolution
+step_3_diagnose_tep_connectivity_on_ -> resolution
+step_4_inspect_dfw_filters_on_esxi -> resolution
+step_5_diagnose_edge_node_routing_an -> resolution
+step_6_run_traceflow_for_hopbyhop_pa -> resolution
+```
+
 ## Before you begin
 
 - **Access:** SSH to an NSX Manager node (admin user); NSX UI credentials; ESXi root SSH access; Edge node admin SSH access

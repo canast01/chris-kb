@@ -45,6 +45,32 @@ graph TD
     class N escalate
 ```
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+step_1_inspect_run_logs_with_gh_cli: "Step 1 — Inspect run logs with gh CLI" {shape: rectangle}
+step_2_enable_debug_logging: "Step 2 — Enable debug logging" {shape: rectangle}
+step_3_diagnose_oidc_and_authenticat: "Step 3 — Diagnose OIDC and authentication issues" {shape: rectangle}
+step_4_check_secrets_and_variables: "Step 4 — Check secrets and variables" {shape: rectangle}
+step_5_diagnose_selfhosted_runner_is: "Step 5 — Diagnose self-hosted runner issues" {shape: rectangle}
+log_locations: "Log locations" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> step_1_inspect_run_logs_with_gh_cli: investigate
+symptom -> step_2_enable_debug_logging: investigate
+symptom -> step_3_diagnose_oidc_and_authenticat: investigate
+symptom -> step_4_check_secrets_and_variables: investigate
+symptom -> step_5_diagnose_selfhosted_runner_is: investigate
+symptom -> log_locations: investigate
+step_1_inspect_run_logs_with_gh_cli -> resolution
+step_2_enable_debug_logging -> resolution
+step_3_diagnose_oidc_and_authenticat -> resolution
+step_4_check_secrets_and_variables -> resolution
+step_5_diagnose_selfhosted_runner_is -> resolution
+log_locations -> resolution
+```
+
 ## Before you begin
 
 - **Access:** Repository admin or Actions write access; `gh` CLI authenticated (`gh auth login`)

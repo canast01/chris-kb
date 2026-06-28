@@ -14,6 +14,19 @@ How VCF, Aria Suite Lifecycle, and vCenter SSO interact — lifecycle APIs, cred
 
 ![Management Domain Interaction Map](../../assets/interaction-map-management.svg)
 
+```d2
+direction: right
+
+center: "Interaction Map" {shape: hexagon}
+integration_summary: "Integration summary" {shape: rectangle}
+vcf_workload_domain_model: "VCF workload domain model" {shape: rectangle}
+aria_suite_lifecycle_deployment_orde: "Aria Suite Lifecycle deployment order" {shape: rectangle}
+
+center -> integration_summary
+center -> vcf_workload_domain_model
+center -> aria_suite_lifecycle_deployment_orde
+```
+
 ## Integration summary
 
 | From | To | Protocol / API | Notes |

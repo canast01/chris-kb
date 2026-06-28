@@ -12,6 +12,26 @@ tags:
 
 
 ```bash
+
+```d2
+direction: right
+
+hub: "VMware Cloud Foundation\nOperations" {shape: hexagon}
+run_precheck_for_a_workload_domain_u: "Run pre-check for a workload domain upgrade" {shape: rectangle}
+retrieve_precheck_results: "Retrieve pre-check results" {shape: rectangle}
+check_sddc_manager_logs_for_precheck: "Check SDDC Manager logs for pre-check detail" {shape: rectangle}
+check_current_component_versions_in_: "Check current component versions in SDDC Manager" {shape: rectangle}
+verify_nsx_version_compatibility: "Verify NSX version compatibility" {shape: rectangle}
+verify_sddc_manager_backup_is_curren: "Verify SDDC Manager backup is current" {shape: rectangle}
+
+hub -> run_precheck_for_a_workload_domain_u
+hub -> retrieve_precheck_results
+hub -> check_sddc_manager_logs_for_precheck
+hub -> check_current_component_versions_in_
+hub -> verify_nsx_version_compatibility
+hub -> verify_sddc_manager_backup_is_curren
+```
+
 ## Before you begin
 
 - **Access:** vCenter read-only minimum; Administrator role for remediation steps

@@ -35,6 +35,27 @@ flowchart TD
     style s10 fill:#2e7d32,color:#fff,stroke:#1b5e20
 ```
 
+```d2
+direction: right
+
+plan: "Plan" {shape: oval}
+prerequisites_hardware_and_network: "Prerequisites — Hardware and Network" {shape: rectangle}
+install_active_directory_domain_serv: "Install Active Directory Domain Services" {shape: rectangle}
+promote_the_first_domain_controller_: "Promote the First Domain Controller (New Forest)" {shape: rectangle}
+configure_dns_forwarders: "Configure DNS Forwarders" {shape: rectangle}
+configure_ntp_on_domain_controller: "Configure NTP on Domain Controller" {shape: rectangle}
+add_replica_domain_controllers: "Add Replica Domain Controllers" {shape: rectangle}
+validate: "Validate" {shape: oval}
+
+plan -> prerequisites_hardware_and_network
+prerequisites_hardware_and_network -> install_active_directory_domain_serv
+install_active_directory_domain_serv -> promote_the_first_domain_controller_
+promote_the_first_domain_controller_ -> configure_dns_forwarders
+configure_dns_forwarders -> configure_ntp_on_domain_controller
+configure_ntp_on_domain_controller -> add_replica_domain_controllers
+add_replica_domain_controllers -> validate
+```
+
 ## Before you begin
 
 - **Access:** admin credentials for the target system and any upstream dependencies (DNS, NTP, vCenter, directory services)

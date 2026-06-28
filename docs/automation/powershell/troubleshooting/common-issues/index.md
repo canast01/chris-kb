@@ -18,6 +18,29 @@ PowerShell troubleshooting: execution policy blocks, module import failures, rem
 
 ---
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+diagnostic_flow: "Diagnostic Flow" {shape: rectangle}
+powershell_troubleshooting_decision_: "PowerShell Troubleshooting Decision Flow" {shape: rectangle}
+debugging_scripts: "Debugging Scripts" {shape: rectangle}
+common_error_reference: "Common Error Reference" {shape: rectangle}
+verify_resolution: "Verify resolution" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> diagnostic_flow: investigate
+symptom -> powershell_troubleshooting_decision_: investigate
+symptom -> debugging_scripts: investigate
+symptom -> common_error_reference: investigate
+symptom -> verify_resolution: investigate
+diagnostic_flow -> resolution
+powershell_troubleshooting_decision_ -> resolution
+debugging_scripts -> resolution
+common_error_reference -> resolution
+verify_resolution -> resolution
+```
+
 ## Diagnostic Flow
 
 ```mermaid

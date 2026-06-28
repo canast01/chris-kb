@@ -12,6 +12,17 @@ DR health-check hub: daily, pre-change, post-change, and evidence-collection rou
 
 
 
+```d2
+direction: right
+
+begin_checks: "Begin Checks" {shape: oval}
+run_this_routine: "Run This Routine" {shape: rectangle}
+generate_report: "Generate Report" {shape: oval}
+
+begin_checks -> run_this_routine
+run_this_routine -> generate_report
+```
+
 ## Run This Routine
 
 Run these steps as the standard project management health check sequence — before any change window, after any incident, and at each scheduled review.

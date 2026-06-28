@@ -16,6 +16,25 @@ Automation scripts and reusable code for Dell PowerScale operations.
 
 
 
+```d2
+direction: right
+
+hub: "PowerScale (Isilon)\nOperations" {shape: hexagon}
+cluster_health_check: "Cluster Health Check" {shape: rectangle}
+synciq_policy_monitor: "SyncIQ Policy Monitor" {shape: rectangle}
+quota_report: "Quota Report" {shape: rectangle}
+ansible_synciq_health_playbook: "Ansible SyncIQ Health Playbook" {shape: rectangle}
+performance_baseline_check: "Performance Baseline Check" {shape: rectangle}
+daily_check_script: "Daily Check Script" {shape: rectangle}
+
+hub -> cluster_health_check
+hub -> synciq_policy_monitor
+hub -> quota_report
+hub -> ansible_synciq_health_playbook
+hub -> performance_baseline_check
+hub -> daily_check_script
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

@@ -14,6 +14,27 @@ Routine checks, service validation, and status verification.
 ![Linux — Health Checks](../../../../assets/compute-linux-operations-health-checks-index.svg)
 
 
+```d2
+direction: right
+
+begin_checks: "Begin Checks" {shape: oval}
+run_this_routine: "Run This Routine" {shape: rectangle}
+cpu_and_load: "CPU and Load" {shape: rectangle}
+memory: "Memory" {shape: rectangle}
+disk: "Disk" {shape: rectangle}
+network: "Network" {shape: rectangle}
+services_and_systemd: "Services and Systemd" {shape: rectangle}
+generate_report: "Generate Report" {shape: oval}
+
+begin_checks -> run_this_routine
+run_this_routine -> cpu_and_load
+cpu_and_load -> memory
+memory -> disk
+disk -> network
+network -> services_and_systemd
+services_and_systemd -> generate_report
+```
+
 ## Before you begin
 
 - **Access:** root or sudo-capable account on target hosts

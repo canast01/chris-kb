@@ -24,6 +24,17 @@ Common bottleneck types and remediation:
 | Controller CPU bound | Too many volumes or complex RAID | Rebalance volumes; consider tiering |
 | Back-end bandwidth saturated | Drive enclosure bandwidth limit | Spread volumes across enclosures |
 
+```d2
+direction: right
+
+center: "Dell AIOps" {shape: hexagon}
+noisy_neighbour_detection: "Noisy Neighbour Detection" {shape: rectangle}
+common_insight_issues: "Common Insight Issues" {shape: rectangle}
+
+center -> noisy_neighbour_detection
+center -> common_insight_issues
+```
+
 ## Noisy Neighbour Detection
 
 AIOps can identify when one workload is monopolising shared resources and impacting co-located workloads.

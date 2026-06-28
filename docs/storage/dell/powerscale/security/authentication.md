@@ -16,6 +16,27 @@ SSO, LDAP, local accounts, and identity sources for Dell PowerScale.
 
 
 
+```d2
+direction: down
+
+external: External / Untrusted {shape: rectangle}
+active_directory: "Active Directory" {shape: rectangle}
+ldap: "LDAP" {shape: rectangle}
+nis: "NIS" {shape: rectangle}
+local_onefs_accounts: "Local OneFS Accounts" {shape: rectangle}
+identity_mapping_multiprotocol: "Identity Mapping (Multi-Protocol)" {shape: rectangle}
+kerberos_nfsv4_and_smb: "Kerberos — NFSv4 and SMB" {shape: rectangle}
+core: "PowerScale (Isilon) Core" {shape: hexagon}
+
+external -> active_directory: traffic in
+active_directory -> ldap
+ldap -> nis
+nis -> local_onefs_accounts
+local_onefs_accounts -> identity_mapping_multiprotocol
+identity_mapping_multiprotocol -> kerberos_nfsv4_and_smb
+kerberos_nfsv4_and_smb -> core: secured path
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

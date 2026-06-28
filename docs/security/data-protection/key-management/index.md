@@ -34,6 +34,19 @@ security key-manager key query
 volume show -fields encryption-state
 ```
 
+```d2
+direction: right
+
+center: "Key Management" {shape: hexagon}
+component_a: "Component A" {shape: rectangle}
+component_b: "Component B" {shape: rectangle}
+component_c: "Component C" {shape: rectangle}
+
+center -> component_a
+center -> component_b
+center -> component_c
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

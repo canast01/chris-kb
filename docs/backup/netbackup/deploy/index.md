@@ -6,6 +6,27 @@ search:
   boost: 1.5
 ---
 
+```d2
+direction: right
+
+plan: "Plan" {shape: oval}
+prerequisites: "Prerequisites" {shape: rectangle}
+install_the_primary_server: "Install the Primary Server" {shape: rectangle}
+install_media_servers: "Install Media Servers" {shape: rectangle}
+configure_storage_units: "Configure Storage Units" {shape: rectangle}
+configure_msdp_media_server_dedup_po: "Configure MSDP (Media Server Dedup Pool)" {shape: rectangle}
+add_clients: "Add Clients" {shape: rectangle}
+validate: "Validate" {shape: oval}
+
+plan -> prerequisites
+prerequisites -> install_the_primary_server
+install_the_primary_server -> install_media_servers
+install_media_servers -> configure_storage_units
+configure_storage_units -> configure_msdp_media_server_dedup_po
+configure_msdp_media_server_dedup_po -> add_clients
+add_clients -> validate
+```
+
 ## Before you begin
 
 - **Access:** admin credentials for the target system and any upstream dependencies (DNS, NTP, vCenter, directory services)

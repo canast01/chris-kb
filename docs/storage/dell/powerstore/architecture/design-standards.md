@@ -16,6 +16,25 @@ Standards reference covering Naming Conventions, Capacity Sizing Guidelines, Pro
 
 
 
+```d2
+direction: right
+
+center: "PowerStore" {shape: hexagon}
+naming_conventions: "Naming Conventions" {shape: rectangle}
+capacity_sizing_guidelines: "Capacity Sizing Guidelines" {shape: rectangle}
+protection_policy_standards: "Protection Policy Standards" {shape: rectangle}
+host_configuration_standards: "Host Configuration Standards" {shape: rectangle}
+software_version_matrix: "Software Version Matrix" {shape: rectangle}
+import_standards_from_legacy_arrays: "Import Standards (from Legacy Arrays)" {shape: rectangle}
+
+center -> naming_conventions
+center -> capacity_sizing_guidelines
+center -> protection_policy_standards
+center -> host_configuration_standards
+center -> software_version_matrix
+center -> import_standards_from_legacy_arrays
+```
+
 ## Naming Conventions
 
 Consistent naming prevents confusion during incidents and makes automation reliable. Apply these standards at initial deployment — renaming objects later requires API calls for each object.

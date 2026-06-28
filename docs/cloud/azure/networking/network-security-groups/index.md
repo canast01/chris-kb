@@ -16,6 +16,25 @@ Network Security Groups (NSGs) are stateful packet filters that control inbound 
 
 
 
+```d2
+direction: right
+
+center: "Azure" {shape: hexagon}
+nsg_rule_evaluation: "NSG Rule Evaluation" {shape: rectangle}
+creating_and_managing_nsgs: "Creating and Managing NSGs" {shape: rectangle}
+inbound_and_outbound_rules: "Inbound and Outbound Rules" {shape: rectangle}
+rule_priority_and_default_rules: "Rule Priority and Default Rules" {shape: rectangle}
+application_security_groups_asgs: "Application Security Groups (ASGs)" {shape: rectangle}
+nsg_flow_logs: "NSG Flow Logs" {shape: rectangle}
+
+center -> nsg_rule_evaluation
+center -> creating_and_managing_nsgs
+center -> inbound_and_outbound_rules
+center -> rule_priority_and_default_rules
+center -> application_security_groups_asgs
+center -> nsg_flow_logs
+```
+
 ## NSG Rule Evaluation
 
 ```mermaid

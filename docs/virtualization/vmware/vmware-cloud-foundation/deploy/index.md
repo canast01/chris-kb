@@ -35,6 +35,27 @@ flowchart TD
     style s7 fill:#2e7d32,color:#fff,stroke:#1b5e20
 ```
 
+```d2
+direction: right
+
+plan: "Plan" {shape: oval}
+phase_1_predeployment_checks: "Phase 1 — Pre-Deployment Checks" {shape: rectangle}
+phase_2_cloud_builder_deployment: "Phase 2 — Cloud Builder Deployment" {shape: rectangle}
+phase_3_management_domain_bringup: "Phase 3 — Management Domain Bringup" {shape: rectangle}
+phase_4_sddc_manager_initial_configu: "Phase 4 — SDDC Manager Initial Configuration" {shape: rectangle}
+phase_5_workload_domain_creation: "Phase 5 — Workload Domain Creation" {shape: rectangle}
+phase_6_endtoend_validation: "Phase 6 — End-to-End Validation" {shape: rectangle}
+validate: "Validate" {shape: oval}
+
+plan -> phase_1_predeployment_checks
+phase_1_predeployment_checks -> phase_2_cloud_builder_deployment
+phase_2_cloud_builder_deployment -> phase_3_management_domain_bringup
+phase_3_management_domain_bringup -> phase_4_sddc_manager_initial_configu
+phase_4_sddc_manager_initial_configu -> phase_5_workload_domain_creation
+phase_5_workload_domain_creation -> phase_6_endtoend_validation
+phase_6_endtoend_validation -> validate
+```
+
 ## Before you begin
 
 <!-- video-link -->

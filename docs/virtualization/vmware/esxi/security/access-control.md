@@ -18,6 +18,27 @@ ESXi Access Control reference covering Exception Users, Local Account Management
 
 ESXi Access Control Model
 
+```d2
+direction: down
+
+external: External / Untrusted {shape: rectangle}
+exception_users: "Exception Users" {shape: rectangle}
+local_account_management: "Local Account Management" {shape: rectangle}
+vcenter_rolebased_access_control: "vCenter Role-Based Access Control" {shape: rectangle}
+esxi_shell_and_ssh_access_controls: "ESXi Shell and SSH Access Controls" {shape: rectangle}
+firewall_ruleset_management: "Firewall Ruleset Management" {shape: rectangle}
+auditing_esxi_access_events: "Auditing ESXi Access Events" {shape: rectangle}
+core: "ESXi Core" {shape: hexagon}
+
+external -> exception_users: traffic in
+exception_users -> local_account_management
+local_account_management -> vcenter_rolebased_access_control
+vcenter_rolebased_access_control -> esxi_shell_and_ssh_access_controls
+esxi_shell_and_ssh_access_controls -> firewall_ruleset_management
+firewall_ruleset_management -> auditing_esxi_access_events
+auditing_esxi_access_events -> core: secured path
+```
+
 ## Before you begin
 
 - **Access:** vCenter Administrator role

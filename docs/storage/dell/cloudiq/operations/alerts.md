@@ -16,6 +16,17 @@ CloudIQ: Alert Types, Severity, and Notification Configuration reference coverin
 
 
 
+```d2
+direction: right
+
+hub: "CloudIQ\nOperations" {shape: hexagon}
+common_alert_issues: "Common Alert Issues" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+hub -> common_alert_issues
+hub -> verify
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

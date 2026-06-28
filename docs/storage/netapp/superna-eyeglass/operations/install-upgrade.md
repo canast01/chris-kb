@@ -14,6 +14,21 @@ Install & Upgrade reference covering Version Compatibility Matrix, EOL Tracking,
 ![Superna Eyeglass — Install & Upgrade](../../../../assets/storage-netapp-superna-eyeglass-operations-install-upgrade.svg)
 
 
+```d2
+direction: right
+
+hub: "Superna Eyeglass\nOperations" {shape: hexagon}
+version_compatibility_matrix: "Version Compatibility Matrix" {shape: rectangle}
+eol_tracking: "EOL Tracking" {shape: rectangle}
+license_management: "License Management" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+hub -> version_compatibility_matrix
+hub -> eol_tracking
+hub -> license_management
+hub -> verify
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

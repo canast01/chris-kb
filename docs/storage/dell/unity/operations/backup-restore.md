@@ -16,6 +16,25 @@ Backup & Restore reference covering Overview, Protection Method Selection, Nativ
 
 
 
+```d2
+direction: right
+
+hub: "Unity XT\nOperations" {shape: hexagon}
+protection_method_selection: "Protection Method Selection" {shape: rectangle}
+native_snapshots: "Native Snapshots" {shape: rectangle}
+snapshot_schedules: "Snapshot Schedules" {shape: rectangle}
+veeam_backup_replication_integration: "Veeam Backup & Replication Integration" {shape: rectangle}
+commvault_intellisnap_integration: "CommVault IntelliSnap Integration" {shape: rectangle}
+ndmp_backup_nas_file_systems: "NDMP Backup (NAS File Systems)" {shape: rectangle}
+
+hub -> protection_method_selection
+hub -> native_snapshots
+hub -> snapshot_schedules
+hub -> veeam_backup_replication_integration
+hub -> commvault_intellisnap_integration
+hub -> ndmp_backup_nas_file_systems
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

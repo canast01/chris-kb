@@ -15,6 +15,17 @@ HSM integration protects the CA private keys and Venafi service credentials. Key
 
 
 
+```d2
+direction: down
+
+encryption_controls: "Encryption Controls" {shape: rectangle}
+hsm_configuration_reference: "HSM Configuration Reference" {shape: rectangle}
+key_rotation_and_lifecycle: "Key Rotation and Lifecycle" {shape: rectangle}
+
+encryption_controls -> hsm_configuration_reference: hardens
+hsm_configuration_reference -> key_rotation_and_lifecycle: hardens
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

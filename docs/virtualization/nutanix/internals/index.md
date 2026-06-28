@@ -19,6 +19,25 @@ Deep dive into AOS distributed architecture — the five core services (Stargate
 
 ---
 
+```d2
+direction: right
+
+center: "Nutanix AHV" {shape: hexagon}
+architecture_overview: "Architecture Overview" {shape: rectangle}
+stargate_io_controller: "Stargate — I/O Controller" {shape: rectangle}
+cassandra_distributed_metadata_store: "Cassandra — Distributed Metadata Store" {shape: rectangle}
+zeus_zookeeper_cluster_config: "Zeus / ZooKeeper — Cluster Config" {shape: rectangle}
+curator_background_worker: "Curator — Background Worker" {shape: rectangle}
+medusa_metadata_access_layer: "Medusa — Metadata Access Layer" {shape: rectangle}
+
+center -> architecture_overview
+center -> stargate_io_controller
+center -> cassandra_distributed_metadata_store
+center -> zeus_zookeeper_cluster_config
+center -> curator_background_worker
+center -> medusa_metadata_access_layer
+```
+
 ## Architecture Overview
 
 

@@ -42,6 +42,32 @@ graph TD
     class P1,BUNDLE escalate
 ```
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+step_1_system_health_and_alerts: "Step 1 — System health and alerts" {shape: rectangle}
+step_2_storage_processor_diagnostics: "Step 2 — Storage processor diagnostics" {shape: rectangle}
+step_3_storage_pool_and_disk_diagnos: "Step 3 — Storage pool and disk diagnostics" {shape: rectangle}
+step_4_lun_diagnostics: "Step 4 — LUN diagnostics" {shape: rectangle}
+step_5_nas_and_file_system_diagnosti: "Step 5 — NAS and file system diagnostics" {shape: rectangle}
+step_6_network_interface_diagnostics: "Step 6 — Network interface diagnostics" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> step_1_system_health_and_alerts: investigate
+symptom -> step_2_storage_processor_diagnostics: investigate
+symptom -> step_3_storage_pool_and_disk_diagnos: investigate
+symptom -> step_4_lun_diagnostics: investigate
+symptom -> step_5_nas_and_file_system_diagnosti: investigate
+symptom -> step_6_network_interface_diagnostics: investigate
+step_1_system_health_and_alerts -> resolution
+step_2_storage_processor_diagnostics -> resolution
+step_3_storage_pool_and_disk_diagnos -> resolution
+step_4_lun_diagnostics -> resolution
+step_5_nas_and_file_system_diagnosti -> resolution
+step_6_network_interface_diagnostics -> resolution
+```
+
 ## Before you begin
 
 - **Access:** SSH or HTTPS to the Unity management IP; `uemcli -d <sp_ip> -u admin -p <password>` — both SP-A and SP-B management IPs work; storage administrator role required for diagnostic commands

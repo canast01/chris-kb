@@ -20,6 +20,32 @@ Quick reference for common problems and resolutions.
 
 Structured approach to diagnosing common Windows Server issues.
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+diagnostic_flow: "Diagnostic Flow" {shape: rectangle}
+rdp_connectivity_triage: "RDP Connectivity Triage" {shape: rectangle}
+high_memory: "High Memory" {shape: rectangle}
+disk_full_or_high_latency: "Disk Full or High Latency" {shape: rectangle}
+network_connectivity_issues: "Network Connectivity Issues" {shape: rectangle}
+service_not_starting: "Service Not Starting" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> diagnostic_flow: investigate
+symptom -> rdp_connectivity_triage: investigate
+symptom -> high_memory: investigate
+symptom -> disk_full_or_high_latency: investigate
+symptom -> network_connectivity_issues: investigate
+symptom -> service_not_starting: investigate
+diagnostic_flow -> resolution
+rdp_connectivity_triage -> resolution
+high_memory -> resolution
+disk_full_or_high_latency -> resolution
+network_connectivity_issues -> resolution
+service_not_starting -> resolution
+```
+
 ## Diagnostic Flow
 
 ```mermaid

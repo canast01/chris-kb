@@ -24,6 +24,25 @@ This page covers the most common operational issues encountered with arrays runn
 
 ---
 
+```d2
+direction: right
+
+hub: "Evergreen\nOperations" {shape: hexagon}
+incident_triage_checklist: "Incident Triage Checklist" {shape: rectangle}
+common_issues_reference: "Common Issues Reference" {shape: rectangle}
+controller_upgrade_issues_in_detail: "Controller Upgrade Issues in Detail" {shape: rectangle}
+capacity_management_issues: "Capacity Management Issues" {shape: rectangle}
+subscription_and_lifecycle_issues: "Subscription and Lifecycle Issues" {shape: rectangle}
+diagnostic_commands_summary: "Diagnostic Commands Summary" {shape: rectangle}
+
+hub -> incident_triage_checklist
+hub -> common_issues_reference
+hub -> controller_upgrade_issues_in_detail
+hub -> capacity_management_issues
+hub -> subscription_and_lifecycle_issues
+hub -> diagnostic_commands_summary
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

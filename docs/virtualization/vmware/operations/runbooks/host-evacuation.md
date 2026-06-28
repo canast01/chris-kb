@@ -14,6 +14,31 @@ ESXi Host Failure Runbook reference covering Confirm Impact, Check Power State, 
 
 
 
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+actor "Responder" as A
+participant "Runbooks System" as B
+participant "Dependent System" as C
+
+A -> B: Confirm Impact
+B --> A: OK
+A -> B: Check Power State
+B --> A: OK
+A -> B: Check Management Network
+B --> A: OK
+A -> B: Check Hardware Management Interface
+B --> A: OK
+A -> B: Review vCenter Alarms
+B --> A: OK
+A -> B: Identify Affected VMs
+B --> A: OK
+
+@enduml
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

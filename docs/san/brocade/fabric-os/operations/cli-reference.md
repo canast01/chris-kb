@@ -275,6 +275,15 @@ setContext 128         # 128 = default/base fabric
 lscfg --port <slot/port> -lport <fid>    # assign port as XISL
 ```
 
+```d2
+direction: right
+
+hub: "Brocade Fabric OS\nOperations" {shape: hexagon}
+verify: "Verify" {shape: rectangle}
+
+hub -> verify
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

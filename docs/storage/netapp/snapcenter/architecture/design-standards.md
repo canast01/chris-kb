@@ -18,6 +18,19 @@ SnapCenter design standards: plugin server placement, SQL/Oracle/VMware plugin s
 
 ---
 
+```d2
+direction: right
+
+center: "SnapCenter" {shape: hexagon}
+naming_conventions: "Naming Conventions" {shape: rectangle}
+build_baseline: "Build Baseline" {shape: rectangle}
+configuration_checklist: "Configuration Checklist" {shape: rectangle}
+
+center -> naming_conventions
+center -> build_baseline
+center -> configuration_checklist
+```
+
 ## Naming Conventions
 
 | Object | Pattern | Example |

@@ -36,6 +36,25 @@ graph LR
     SS --> O4[/tmp/ceph-snapshot-DATE.txt<br/>full cluster state dump]:::out
 ```
 
+```d2
+direction: right
+
+center: "Ceph" {shape: rectangle}
+cephhealthchecksh: "ceph-health-check.sh" {shape: rectangle}
+osdreplacesh: "osd-replace.sh" {shape: rectangle}
+capacityreportsh: "capacity-report.sh" {shape: rectangle}
+cephhealthsnapshotsh: "ceph-health-snapshot.sh" {shape: rectangle}
+osdutilizationreportsh: "osd-utilization-report.sh" {shape: rectangle}
+rbdsnapshotrotatesh: "rbd-snapshot-rotate.sh" {shape: rectangle}
+
+center -> cephhealthchecksh
+center -> osdreplacesh
+center -> capacityreportsh
+center -> cephhealthsnapshotsh
+center -> osdutilizationreportsh
+center -> rbdsnapshotrotatesh
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

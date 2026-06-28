@@ -18,6 +18,23 @@ SnapMirror install and upgrade: ONTAP cluster peering prerequisites, intercluste
 
 ---
 
+```d2
+direction: right
+
+hub: "SnapMirror\nOperations" {shape: hexagon}
+ontap_version_compatibility: "ONTAP Version Compatibility" {shape: rectangle}
+policy_and_relationship_management: "Policy and Relationship Management" {shape: rectangle}
+smbc_snapmirror_sync_mediator: "SMBC / SnapMirror Sync Mediator" {shape: rectangle}
+retention_cleanup: "Retention Cleanup" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+hub -> ontap_version_compatibility
+hub -> policy_and_relationship_management
+hub -> smbc_snapmirror_sync_mediator
+hub -> retention_cleanup
+hub -> verify
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

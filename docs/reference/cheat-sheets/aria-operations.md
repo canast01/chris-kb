@@ -13,6 +13,15 @@ Top-10 Aria Operations (vROps) commands for alerts, metrics, policy management, 
 
 
 
+```d2
+direction: right
+
+center: "Cheat Sheets" {shape: rectangle}
+rest_api_curl_examples: "REST API (curl examples)" {shape: rectangle}
+
+center -> rest_api_curl_examples
+```
+
 ## REST API (curl examples)
 
 ```bash

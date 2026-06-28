@@ -35,6 +35,17 @@ Enterprise certificate lifecycle management — TPP enforces policy, integrates 
 
 </div>
 
+```d2
+direction: right
+
+center: "Architecture" {shape: hexagon}
+component_overview: "Component Overview" {shape: rectangle}
+trust_protection_platform_topology: "Trust Protection Platform Topology" {shape: rectangle}
+
+center -> component_overview
+center -> trust_protection_platform_topology
+```
+
 ## Component Overview
 
 | Component | Role | Deployment |

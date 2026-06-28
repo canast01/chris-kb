@@ -18,6 +18,23 @@ Catalog of known PowerScale / OneFS bugs, error codes, and workarounds covering 
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+nfs: "NFS" {shape: rectangle}
+smb: "SMB" {shape: rectangle}
+synciq: "SyncIQ" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> nfs: investigate
+symptom -> smb: investigate
+symptom -> synciq: investigate
+nfs -> resolution
+smb -> resolution
+synciq -> resolution
+```
+
 ## Before you begin
 
 - Run `isi status` from any node for overall cluster health.

@@ -41,6 +41,19 @@ az storage container generate-sas --account-name <account> --name <container> \
   --permissions rwdl --expiry 2025-12-31
 ```
 
+```d2
+direction: right
+
+center: "Azure" {shape: hexagon}
+component_a: "Component A" {shape: rectangle}
+component_b: "Component B" {shape: rectangle}
+component_c: "Component C" {shape: rectangle}
+
+center -> component_a
+center -> component_b
+center -> component_c
+```
+
 ## See also
 
 - [Azure CLI Reference](../index.md)

@@ -13,6 +13,19 @@ PostgreSQL procedures: VACUUM and ANALYZE scheduling, extension management with 
 ![PostgreSQL — Procedures](../../../../assets/compute-linux-postgresql-operations-procedures.svg)
 
 
+```d2
+direction: right
+
+hub: "PostgreSQL\nOperations" {shape: hexagon}
+database_maintenance_procedures: "Database — Maintenance Procedures" {shape: rectangle}
+sql_server_maintenance: "SQL Server Maintenance" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+hub -> database_maintenance_procedures
+hub -> sql_server_maintenance
+hub -> verify
+```
+
 ## Before you begin
 
 - **Access:** root or sudo-capable account on target hosts

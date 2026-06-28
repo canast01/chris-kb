@@ -26,6 +26,32 @@ If the upgrade is truly stuck (no log activity for 30+ minutes):
 
 ---
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+diagnostic_flow: "Diagnostic Flow" {shape: rectangle}
+nfs_mount_lost_during_operation: "NFS Mount Lost During Operation" {shape: rectangle}
+locker_certificate_import_fails: "Locker Certificate Import Fails" {shape: rectangle}
+vidm_authentication_failure_after_pa: "VIDM Authentication Failure After Password Change" {shape: rectangle}
+product_shows_red_health_in_lcm_dash: "Product Shows Red Health in LCM Dashboard" {shape: rectangle}
+checking_request_history: "Checking Request History" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> diagnostic_flow: investigate
+symptom -> nfs_mount_lost_during_operation: investigate
+symptom -> locker_certificate_import_fails: investigate
+symptom -> vidm_authentication_failure_after_pa: investigate
+symptom -> product_shows_red_health_in_lcm_dash: investigate
+symptom -> checking_request_history: investigate
+diagnostic_flow -> resolution
+nfs_mount_lost_during_operation -> resolution
+locker_certificate_import_fails -> resolution
+vidm_authentication_failure_after_pa -> resolution
+product_shows_red_health_in_lcm_dash -> resolution
+checking_request_history -> resolution
+```
+
 ## Diagnostic Flow
 
 ```mermaid

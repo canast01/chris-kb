@@ -14,6 +14,23 @@ BitLocker with AD key escrow, Network Unlock, TLS hardening, EFS, and SMB signin
 ![Windows Server — Encryption](../../../../assets/compute-windows-server-security-encryption-index.svg)
 
 
+```d2
+direction: down
+
+bitlocker_drive_encryption: "BitLocker — Drive Encryption" {shape: rectangle}
+bitlocker_network_unlock: "BitLocker Network Unlock" {shape: rectangle}
+tls_hardening: "TLS Hardening" {shape: rectangle}
+smb_signing_and_encryption: "SMB Signing and Encryption" {shape: rectangle}
+encrypting_file_system_efs: "Encrypting File System (EFS)" {shape: rectangle}
+certificate_management: "Certificate Management" {shape: rectangle}
+
+bitlocker_drive_encryption -> bitlocker_network_unlock: hardens
+bitlocker_network_unlock -> tls_hardening: hardens
+tls_hardening -> smb_signing_and_encryption: hardens
+smb_signing_and_encryption -> encrypting_file_system_efs: hardens
+encrypting_file_system_efs -> certificate_management: hardens
+```
+
 ## Before you begin
 
 - **Access:** Local Administrator or Domain Admin on target hosts

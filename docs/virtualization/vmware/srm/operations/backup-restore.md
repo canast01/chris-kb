@@ -18,6 +18,25 @@ Backup and Restore reference covering Backup Schedule Recommendation, SRM Config
   SRM Backup Sources
 
 
+```d2
+direction: right
+
+hub: "Site Recovery Manager\nOperations" {shape: hexagon}
+srm_configuration_export: "SRM Configuration Export" {shape: rectangle}
+vsphere_replication_appliance_backup: "vSphere Replication Appliance Backup" {shape: rectangle}
+recovery_plan_pdf_export: "Recovery Plan PDF Export" {shape: rectangle}
+srm_database_considerations: "SRM Database Considerations" {shape: rectangle}
+protection_group_inventory_backup: "Protection Group Inventory Backup" {shape: rectangle}
+restore_srm_after_vcenter_restore: "Restore SRM After vCenter Restore" {shape: rectangle}
+
+hub -> srm_configuration_export
+hub -> vsphere_replication_appliance_backup
+hub -> recovery_plan_pdf_export
+hub -> srm_database_considerations
+hub -> protection_group_inventory_backup
+hub -> restore_srm_after_vcenter_restore
+```
+
 ## SRM Configuration Export
 
 The exported XML contains:

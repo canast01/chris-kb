@@ -32,6 +32,32 @@ graph TD
     class H allow
 ```
 
+```d2
+direction: down
+
+root: "OpenShift\nAccess Control" {shape: hexagon}
+builtin_clusterroles: "Built-in ClusterRoles" {shape: rectangle}
+role_bindings: "Role Bindings" {shape: rectangle}
+custom_role_creation: "Custom Role Creation" {shape: rectangle}
+security_context_constraints_scc: "Security Context Constraints (SCC)" {shape: rectangle}
+service_accounts: "Service Accounts" {shape: rectangle}
+namespace_isolation_with_networkpoli: "Namespace Isolation with NetworkPolicy" {shape: rectangle}
+resources: Protected Resources {shape: cylinder}
+
+root -> builtin_clusterroles: role
+builtin_clusterroles -> resources: scoped
+root -> role_bindings: role
+role_bindings -> resources: scoped
+root -> custom_role_creation: role
+custom_role_creation -> resources: scoped
+root -> security_context_constraints_scc: role
+security_context_constraints_scc -> resources: scoped
+root -> service_accounts: role
+service_accounts -> resources: scoped
+root -> namespace_isolation_with_networkpoli: role
+namespace_isolation_with_networkpoli -> resources: scoped
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

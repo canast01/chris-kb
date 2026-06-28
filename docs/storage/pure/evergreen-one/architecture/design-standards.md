@@ -18,6 +18,25 @@ Design Standards reference covering Committed Reserve Sizing, Network Requiremen
 
 ---
 
+```d2
+direction: right
+
+center: "Evergreen//One" {shape: hexagon}
+committed_reserve_sizing: "Committed Reserve Sizing" {shape: rectangle}
+network_requirements: "Network Requirements" {shape: rectangle}
+protocol_selection: "Protocol Selection" {shape: rectangle}
+sla_compliance_requirements: "SLA Compliance Requirements" {shape: rectangle}
+naming_standards: "Naming Standards" {shape: rectangle}
+change_management: "Change Management" {shape: rectangle}
+
+center -> committed_reserve_sizing
+center -> network_requirements
+center -> protocol_selection
+center -> sla_compliance_requirements
+center -> naming_standards
+center -> change_management
+```
+
 ## Committed Reserve Sizing
 
 The committed reserve is the minimum monthly TiB the customer commits to pay for. Size it based on current workload capacity plus expected growth within the contract term.

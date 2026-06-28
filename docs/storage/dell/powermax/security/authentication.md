@@ -16,6 +16,27 @@ Authentication reference covering Overview, Unisphere Local Accounts, Active Dir
 
 
 
+```d2
+direction: down
+
+external: External / Untrusted {shape: rectangle}
+unisphere_local_accounts: "Unisphere Local Accounts" {shape: rectangle}
+active_directory_ldap_integration: "Active Directory / LDAP Integration" {shape: rectangle}
+role_mapping: "Role Mapping" {shape: rectangle}
+multifactor_authentication_mfa: "Multi-Factor Authentication (MFA)" {shape: rectangle}
+solutions_enabler_symcli_authenticat: "Solutions Enabler (SYMCLI) Authentication" {shape: rectangle}
+audit_logging: "Audit Logging" {shape: rectangle}
+core: "PowerMax Core" {shape: hexagon}
+
+external -> unisphere_local_accounts: traffic in
+unisphere_local_accounts -> active_directory_ldap_integration
+active_directory_ldap_integration -> role_mapping
+role_mapping -> multifactor_authentication_mfa
+multifactor_authentication_mfa -> solutions_enabler_symcli_authenticat
+solutions_enabler_symcli_authenticat -> audit_logging
+audit_logging -> core: secured path
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

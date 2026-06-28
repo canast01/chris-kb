@@ -15,6 +15,25 @@ Health Checks reference covering Weekly Checks, Performance Baseline, Network He
 </div>
 
 
+```d2
+direction: right
+
+hub: "vSAN\nOperations" {shape: hexagon}
+run_this_routine: "Run This Routine" {shape: rectangle}
+disk_group_health: "Disk Group Health" {shape: rectangle}
+object_health: "Object Health" {shape: rectangle}
+skyline_health_categories: "Skyline Health Categories" {shape: rectangle}
+performance_baseline: "Performance Baseline" {shape: rectangle}
+network_health: "Network Health" {shape: rectangle}
+
+hub -> run_this_routine
+hub -> disk_group_health
+hub -> object_health
+hub -> skyline_health_categories
+hub -> performance_baseline
+hub -> network_health
+```
+
 ## Before you begin
 
 - **Access:** vCenter read-only minimum; Administrator role for remediation steps

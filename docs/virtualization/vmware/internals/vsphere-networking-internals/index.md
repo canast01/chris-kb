@@ -39,6 +39,26 @@ graph LR
     VMNIC1 --> PHSW
     VMNIC2 --> PHSW
 ```
+
+```d2
+direction: right
+
+center: "Vsphere Networking Internals" {shape: hexagon}
+dvs_architecture: "DVS Architecture" {shape: rectangle}
+port_group_types: "Port Group Types" {shape: rectangle}
+nioc_network_io_control: "NIOC — Network I/O Control" {shape: rectangle}
+teaming_policies: "Teaming Policies" {shape: rectangle}
+lacp_configuration: "LACP Configuration" {shape: rectangle}
+vmkernel_adapters: "VMkernel Adapters" {shape: rectangle}
+
+center -> dvs_architecture
+center -> port_group_types
+center -> nioc_network_io_control
+center -> teaming_policies
+center -> lacp_configuration
+center -> vmkernel_adapters
+```
+
 ## DVS Architecture
 
 The vSphere Distributed Switch (vDS) splits function across two planes:

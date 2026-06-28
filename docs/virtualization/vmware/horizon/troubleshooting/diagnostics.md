@@ -53,6 +53,32 @@ graph TD
     class Q,R escalate
 ```
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+step_1_check_horizon_admin_ui_events: "Step 1 — Check Horizon Admin UI events" {shape: rectangle}
+step_2_read_connection_server_debug_: "Step 2 — Read Connection Server debug log" {shape: rectangle}
+step_3_check_horizon_agent_in_the_de: "Step 3 — Check Horizon Agent in the desktop VM" {shape: rectangle}
+step_4_test_uag_health_and_display_p: "Step 4 — Test UAG health and display protocol ports" {shape: rectangle}
+step_5_use_vdmadmin_for_session_and_: "Step 5 — Use vdmadmin for session and assignment diagnostics" {shape: rectangle}
+step_6_query_horizon_rest_api: "Step 6 — Query Horizon REST API" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> step_1_check_horizon_admin_ui_events: investigate
+symptom -> step_2_read_connection_server_debug_: investigate
+symptom -> step_3_check_horizon_agent_in_the_de: investigate
+symptom -> step_4_test_uag_health_and_display_p: investigate
+symptom -> step_5_use_vdmadmin_for_session_and_: investigate
+symptom -> step_6_query_horizon_rest_api: investigate
+step_1_check_horizon_admin_ui_events -> resolution
+step_2_read_connection_server_debug_ -> resolution
+step_3_check_horizon_agent_in_the_de -> resolution
+step_4_test_uag_health_and_display_p -> resolution
+step_5_use_vdmadmin_for_session_and_ -> resolution
+step_6_query_horizon_rest_api -> resolution
+```
+
 ## Before you begin
 
 - **Access:** Horizon admin role; PowerShell on Connection Server(s); SSH to UAG appliance; access to the desktop VM (or RDP/console) if diagnosing agent issues

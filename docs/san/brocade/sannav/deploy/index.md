@@ -6,6 +6,27 @@ search:
   boost: 1.5
 ---
 
+```d2
+direction: right
+
+plan: "Plan" {shape: oval}
+prerequisites: "Prerequisites" {shape: rectangle}
+deploy_sannav_ova_or_install: "Deploy SANnav OVA or Install" {shape: rectangle}
+initial_configuration: "Initial Configuration" {shape: rectangle}
+add_first_fabric: "Add First Fabric" {shape: rectangle}
+configure_alert_notifications: "Configure Alert Notifications" {shape: rectangle}
+set_up_performance_monitoring: "Set Up Performance Monitoring" {shape: rectangle}
+validate: "Validate" {shape: oval}
+
+plan -> prerequisites
+prerequisites -> deploy_sannav_ova_or_install
+deploy_sannav_ova_or_install -> initial_configuration
+initial_configuration -> add_first_fabric
+add_first_fabric -> configure_alert_notifications
+configure_alert_notifications -> set_up_performance_monitoring
+set_up_performance_monitoring -> validate
+```
+
 ## Before you begin
 
 - **Access:** admin credentials for the target system and any upstream dependencies (DNS, NTP, vCenter, directory services)

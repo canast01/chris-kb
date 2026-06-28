@@ -15,6 +15,23 @@ Maintenance Window Planning reference covering Overview, Planning Checklist, Win
 
 
 
+```d2
+direction: right
+
+center: "ServiceNow" {shape: hexagon}
+planning_checklist: "Planning Checklist" {shape: rectangle}
+window_scheduling_guidance: "Window Scheduling Guidance" {shape: rectangle}
+dependency_mapping: "Dependency Mapping" {shape: rectangle}
+risk_review: "Risk Review" {shape: rectangle}
+prewindow_communication_schedule: "Pre-Window Communication Schedule" {shape: rectangle}
+
+center -> planning_checklist
+center -> window_scheduling_guidance
+center -> dependency_mapping
+center -> risk_review
+center -> prewindow_communication_schedule
+```
+
 ## Overview
 
 Good maintenance windows are won in the planning phase. The execution itself is often the easy part when planning has been thorough — the runbook is clear, dependencies are mapped, risks are understood, and stakeholders are prepared. This page covers the planning checklist and key decisions that must be made before a window is scheduled.

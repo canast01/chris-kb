@@ -16,6 +16,23 @@ Encryption reference covering Encryption Layers, TLS Configuration, Data at Rest
 
 
 
+```d2
+direction: down
+
+external: External / Untrusted {shape: rectangle}
+encryption_layers: "Encryption Layers" {shape: rectangle}
+tls_configuration: "TLS Configuration" {shape: rectangle}
+data_at_rest_encryption: "Data at Rest Encryption" {shape: rectangle}
+certificate_expiry_monitoring: "Certificate Expiry Monitoring" {shape: rectangle}
+core: "ECS Core" {shape: hexagon}
+
+external -> encryption_layers: traffic in
+encryption_layers -> tls_configuration
+tls_configuration -> data_at_rest_encryption
+data_at_rest_encryption -> certificate_expiry_monitoring
+certificate_expiry_monitoring -> core: secured path
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

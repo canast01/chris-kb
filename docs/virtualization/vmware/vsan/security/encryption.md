@@ -18,6 +18,27 @@ vSAN supports two complementary encryption modes: data-at-rest encryption (D@RE)
 
 ---
 
+```d2
+direction: down
+
+external: External / Untrusted {shape: rectangle}
+encryption_architecture: "Encryption Architecture" {shape: rectangle}
+enabling_dataatrest_encryption: "Enabling Data-at-Rest Encryption" {shape: rectangle}
+enabling_dataintransit_encryption: "Enabling Data-in-Transit Encryption" {shape: rectangle}
+key_rotation: "Key Rotation" {shape: rectangle}
+encryption_and_deduplication_compres: "Encryption and Deduplication / Compression" {shape: rectangle}
+operational_considerations: "Operational Considerations" {shape: rectangle}
+core: "vSAN Core" {shape: hexagon}
+
+external -> encryption_architecture: traffic in
+encryption_architecture -> enabling_dataatrest_encryption
+enabling_dataatrest_encryption -> enabling_dataintransit_encryption
+enabling_dataintransit_encryption -> key_rotation
+key_rotation -> encryption_and_deduplication_compres
+encryption_and_deduplication_compres -> operational_considerations
+operational_considerations -> core: secured path
+```
+
 ## Before you begin
 
 - **Access:** vCenter Administrator role

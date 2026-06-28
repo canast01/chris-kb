@@ -20,6 +20,25 @@ covers the current edition structure — vSphere Foundation (VVF) and VMware Clo
 
 ---
 
+```d2
+direction: right
+
+center: "Licensing" {shape: hexagon}
+edition_comparison: "Edition Comparison" {shape: rectangle}
+pricing_model: "Pricing Model" {shape: rectangle}
+legacy_licence_migration: "Legacy Licence Migration" {shape: rectangle}
+vcf_vs_vvf_decision_guide: "VCF vs VVF — Decision Guide" {shape: rectangle}
+addon_skus: "Add-On SKUs" {shape: rectangle}
+licence_consumption_and_compliance: "Licence Consumption and Compliance" {shape: rectangle}
+
+center -> edition_comparison
+center -> pricing_model
+center -> legacy_licence_migration
+center -> vcf_vs_vvf_decision_guide
+center -> addon_skus
+center -> licence_consumption_and_compliance
+```
+
 ## Edition Comparison
 
 | Feature | vSphere Foundation (VVF) | VMware Cloud Foundation (VCF) |

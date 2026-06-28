@@ -12,6 +12,25 @@ Network services reference for load balancer VIP management, pool health monitor
 
 
 
+```d2
+direction: right
+
+center: "Services" {shape: hexagon}
+test_the_vip_endpoint: "Test the VIP Endpoint" {shape: rectangle}
+f5_bigip_pool_status: "F5 BIG-IP Pool Status" {shape: rectangle}
+haproxy_pool_status: "HAProxy Pool Status" {shape: rectangle}
+tls_certificate_on_vip: "TLS Certificate on VIP" {shape: rectangle}
+test_pool_member_health_check: "Test Pool Member Health Check" {shape: rectangle}
+lb_status_at_a_glance: "LB Status at a Glance" {shape: rectangle}
+
+center -> test_the_vip_endpoint
+center -> f5_bigip_pool_status
+center -> haproxy_pool_status
+center -> tls_certificate_on_vip
+center -> test_pool_member_health_check
+center -> lb_status_at_a_glance
+```
+
 ## Test the VIP Endpoint
 
 ```bash

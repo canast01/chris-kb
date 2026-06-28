@@ -18,6 +18,25 @@ Firewall port reference for Veeam Backup & Replication. Covers VBR server, backu
 
 
 
+```d2
+direction: right
+
+center: "Veeam" {shape: hexagon}
+inbound_client_to_vbr_server: "Inbound — Client to VBR Server" {shape: rectangle}
+vbr_server_to_backup_infrastructure: "VBR Server to Backup Infrastructure" {shape: rectangle}
+backup_proxy_to_vmware_infrastructur: "Backup Proxy to VMware Infrastructure" {shape: rectangle}
+backup_proxy_to_backup_repository_da: "Backup Proxy to Backup Repository (Data Transfer)" {shape: rectangle}
+guest_processing_applicationaware: "Guest Processing (Application-Aware)" {shape: rectangle}
+scaleout_backup_repository_sobr_obje: "Scale-Out Backup Repository (SOBR) — Object Storage (Capacit" {shape: rectangle}
+
+center -> inbound_client_to_vbr_server
+center -> vbr_server_to_backup_infrastructure
+center -> backup_proxy_to_vmware_infrastructur
+center -> backup_proxy_to_backup_repository_da
+center -> guest_processing_applicationaware
+center -> scaleout_backup_repository_sobr_obje
+```
+
 ## Before you begin
 
 - Veeam B&R uses a dynamic data mover port range (2500–5000 TCP) for backup data transfer — this range must be open between proxies, repositories, and VBR server

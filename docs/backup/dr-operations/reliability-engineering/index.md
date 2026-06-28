@@ -13,6 +13,17 @@ Reliability Engineering reference covering Core Principles, Redundancy Patterns,
 
 
 
+```d2
+direction: right
+
+center: "DR Operations" {shape: hexagon}
+toil_reduction: "Toil Reduction" {shape: rectangle}
+reliability_improvement_checklist: "Reliability Improvement Checklist" {shape: rectangle}
+
+center -> toil_reduction
+center -> reliability_improvement_checklist
+```
+
 ## Toil Reduction
 
 Toil is manual, repetitive, automatable operational work that scales with system size.

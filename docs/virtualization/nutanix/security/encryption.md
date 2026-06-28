@@ -21,6 +21,27 @@ Nutanix data-at-rest encryption (software and SED-based), key management (native
 
 ---
 
+```d2
+direction: down
+
+external: External / Untrusted {shape: rectangle}
+encryption_options: "Encryption Options" {shape: rectangle}
+key_manager_options: "Key Manager Options" {shape: rectangle}
+enable_software_dataatrest_encryptio: "Enable Software Data-at-Rest Encryption" {shape: rectangle}
+enable_sedbased_hardware_encryption: "Enable SED-Based Hardware Encryption" {shape: rectangle}
+external_kms_kmip_integration: "External KMS (KMIP) Integration" {shape: rectangle}
+intransit_encryption_cvm_to_cvm: "In-Transit Encryption (CVM to CVM)" {shape: rectangle}
+core: "Nutanix AHV Core" {shape: hexagon}
+
+external -> encryption_options: traffic in
+encryption_options -> key_manager_options
+key_manager_options -> enable_software_dataatrest_encryptio
+enable_software_dataatrest_encryptio -> enable_sedbased_hardware_encryption
+enable_sedbased_hardware_encryption -> external_kms_kmip_integration
+external_kms_kmip_integration -> intransit_encryption_cvm_to_cvm
+intransit_encryption_cvm_to_cvm -> core: secured path
+```
+
 ## Before you begin
 
 - **Licence:** Data-at-rest encryption requires a Nutanix Pro or Ultimate licence

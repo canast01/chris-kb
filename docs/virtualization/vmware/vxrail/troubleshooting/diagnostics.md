@@ -55,6 +55,32 @@ graph TD
     class S,T escalate
 ```
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+step_1_check_vxrail_manager_logs: "Step 1 — Check VxRail Manager logs" {shape: rectangle}
+step_2_check_esxi_host_logs: "Step 2 — Check ESXi host logs" {shape: rectangle}
+step_3_check_idrac_for_hardware_faul: "Step 3 — Check iDRAC for hardware faults" {shape: rectangle}
+step_4_collect_vmsupport_esxi_bundle: "Step 4 — Collect vm-support ESXi bundle" {shape: rectangle}
+step_5_generate_dell_vxrail_support_: "Step 5 — Generate Dell VxRail support bundle" {shape: rectangle}
+log_locations: "Log locations" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> step_1_check_vxrail_manager_logs: investigate
+symptom -> step_2_check_esxi_host_logs: investigate
+symptom -> step_3_check_idrac_for_hardware_faul: investigate
+symptom -> step_4_collect_vmsupport_esxi_bundle: investigate
+symptom -> step_5_generate_dell_vxrail_support_: investigate
+symptom -> log_locations: investigate
+step_1_check_vxrail_manager_logs -> resolution
+step_2_check_esxi_host_logs -> resolution
+step_3_check_idrac_for_hardware_faul -> resolution
+step_4_collect_vmsupport_esxi_bundle -> resolution
+step_5_generate_dell_vxrail_support_ -> resolution
+log_locations -> resolution
+```
+
 ## Before you begin
 
 - **Access:** SSH to VxRail Manager (`mystic@<vxrail-manager-ip>`); ESXi root SSH access; iDRAC SSH or racadm remote access; vCenter admin credentials

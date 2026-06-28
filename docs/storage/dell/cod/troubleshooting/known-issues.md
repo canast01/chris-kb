@@ -18,6 +18,17 @@ Dell COD (Capacity on Demand) is a PowerMax capacity licensing model, not a sepa
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+license_activation: "License Activation" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> license_activation: investigate
+license_activation -> resolution
+```
+
 ## Before you begin
 
 - COD issues are almost always ESRS connectivity (TCP 443 to esrs.dell.com) or license entitlement mismatch.

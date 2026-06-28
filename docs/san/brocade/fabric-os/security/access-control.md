@@ -16,6 +16,25 @@ FabricOS access control: RBAC role assignment, `userconfig` CLI, default account
 
 ---
 
+```d2
+direction: down
+
+external: External / Untrusted {shape: rectangle}
+access_control_architecture: "Access Control Architecture" {shape: rectangle}
+secure_fabric_os_policies: "Secure Fabric OS Policies" {shape: rectangle}
+fabric_binding: "Fabric Binding" {shape: rectangle}
+access_control_standards: "Access Control Standards" {shape: rectangle}
+troubleshooting_access_control: "Troubleshooting Access Control" {shape: rectangle}
+core: "Brocade Fabric OS Core" {shape: hexagon}
+
+external -> access_control_architecture: traffic in
+access_control_architecture -> secure_fabric_os_policies
+secure_fabric_os_policies -> fabric_binding
+fabric_binding -> access_control_standards
+access_control_standards -> troubleshooting_access_control
+troubleshooting_access_control -> core: secured path
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

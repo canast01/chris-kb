@@ -18,6 +18,20 @@ Catalog of known InsightIQ bugs, error codes, and workarounds covering data coll
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+data_collection: "Data Collection" {shape: rectangle}
+reporting: "Reporting" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> data_collection: investigate
+symptom -> reporting: investigate
+data_collection -> resolution
+reporting -> resolution
+```
+
 ## Before you begin
 
 - InsightIQ errors appear in the web UI under `Administration → Data Collections`.

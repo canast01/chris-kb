@@ -14,6 +14,48 @@ How It Works reference covering Overview, SAN Fabric Topology.
 ![Cisco MDS — How It Works](../../../../assets/san-cisco-mds-architecture-how-it-works.svg)
 
 
+```d2
+direction: right
+
+hosts: Servers {
+  h1: Host 1 (HBA) {shape: rectangle}
+  h2: Host 2 (HBA) {shape: rectangle}
+}
+
+director_a: MDS Director A\n(Fabric A) {
+  linecard1: Line Card 1 (32×32G) {shape: rectangle}
+  linecard2: Line Card 2 (32×32G) {shape: rectangle}
+  sup: Supervisor Module {shape: rectangle}
+  linecard1 -> sup: backplane
+  linecard2 -> sup: backplane
+}
+
+director_b: MDS Director B\n(Fabric B) {
+  linecard3: Line Card 3 (32×32G) {shape: rectangle}
+  linecard4: Line Card 4 (32×32G) {shape: rectangle}
+  sup2: Supervisor Module {shape: rectangle}
+  linecard3 -> sup2: backplane
+  linecard4 -> sup2: backplane
+}
+
+storage: Storage Arrays {
+  arr: Target Ports {shape: cylinder}
+}
+
+dcnm: Cisco DCNM\n(management) {shape: rectangle}
+
+hosts.h1 -> director_a.linecard1: F_Port (32G FC)
+hosts.h1 -> director_b.linecard3: F_Port (dual fabric)
+hosts.h2 -> director_a.linecard1: F_Port
+hosts.h2 -> director_b.linecard3: F_Port
+
+director_a.linecard2 -> storage.arr: F_Port
+director_b.linecard4 -> storage.arr: F_Port
+
+dcnm -> director_a.sup: SNMP / SSH
+dcnm -> director_b.sup2: SNMP / SSH
+```
+
 ## Overview
 
 Cisco MDS 9000 series switches run NX-OS and provide scalable SAN fabric services supporting Fibre Channel (FC). The core isolation mechanism is the **VSAN (Virtual SAN)** — multiple logical fabrics share physical infrastructure while maintaining separate name servers, zoning databases, and fabric login tables. Each VSAN operates as an independent fabric.

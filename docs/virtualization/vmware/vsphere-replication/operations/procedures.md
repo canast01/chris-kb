@@ -16,6 +16,25 @@ Operational procedures for vSphere Replication — configuring VM replication, m
 
 ---
 
+```d2
+direction: right
+
+hub: "vSphere Replication\nOperations" {shape: hexagon}
+configure_vsphere_replication_for_a_: "Configure vSphere Replication for a VM" {shape: rectangle}
+configure_vsphere_replication_for_mu: "Configure vSphere Replication for Multiple VMs (Bulk)" {shape: rectangle}
+change_rpo_for_an_existing_replicati: "Change RPO for an Existing Replication" {shape: rectangle}
+pause_and_resume_replication: "Pause and Resume Replication" {shape: rectangle}
+recover_or_remove_a_stuck_replicatio: "Recover or Remove a Stuck Replication" {shape: rectangle}
+move_a_replication_to_a_different_ta: "Move a Replication to a Different Target Datastore" {shape: rectangle}
+
+hub -> configure_vsphere_replication_for_a_
+hub -> configure_vsphere_replication_for_mu
+hub -> change_rpo_for_an_existing_replicati
+hub -> pause_and_resume_replication
+hub -> recover_or_remove_a_stuck_replicatio
+hub -> move_a_replication_to_a_different_ta
+```
+
 ## Before you begin
 
 - **Access:** vCenter read-only minimum; Administrator role for remediation steps

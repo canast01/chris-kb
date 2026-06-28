@@ -15,6 +15,25 @@ MySQL encryption — InnoDB tablespace encryption (TDE), SSL/TLS for connections
 
 
 
+```d2
+direction: down
+
+external: External / Untrusted {shape: rectangle}
+innodb_tablespace_encryption_tde: "InnoDB Tablespace Encryption (TDE)" {shape: rectangle}
+ssltls_for_client_connections: "SSL/TLS for Client Connections" {shape: rectangle}
+binlog_encryption: "Binlog Encryption" {shape: rectangle}
+backup_encryption: "Backup Encryption" {shape: rectangle}
+key_rotation: "Key Rotation" {shape: rectangle}
+core: "Linux Core" {shape: hexagon}
+
+external -> innodb_tablespace_encryption_tde: traffic in
+innodb_tablespace_encryption_tde -> ssltls_for_client_connections
+ssltls_for_client_connections -> binlog_encryption
+binlog_encryption -> backup_encryption
+backup_encryption -> key_rotation
+key_rotation -> core: secured path
+```
+
 ## Before you begin
 
 - **Access:** root or sudo-capable account on target hosts

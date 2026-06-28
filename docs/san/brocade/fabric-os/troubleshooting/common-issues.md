@@ -18,6 +18,32 @@ FabricOS troubleshooting: `porterrshow`, `portlogdump`, `errshow`, ISL link boun
 
 ---
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+diagnostic_flow: "Diagnostic Flow" {shape: rectangle}
+incident_triage_decision_tree: "Incident Triage Decision Tree" {shape: rectangle}
+host_cannot_see_storage_lun_access_f: "Host Cannot See Storage (LUN Access Failure)" {shape: rectangle}
+port_flapping_high_error_counts: "Port Flapping / High Error Counts" {shape: rectangle}
+fabric_segmentation: "Fabric Segmentation" {shape: rectangle}
+principal_switch_changed_unexpectedl: "Principal Switch Changed Unexpectedly" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> diagnostic_flow: investigate
+symptom -> incident_triage_decision_tree: investigate
+symptom -> host_cannot_see_storage_lun_access_f: investigate
+symptom -> port_flapping_high_error_counts: investigate
+symptom -> fabric_segmentation: investigate
+symptom -> principal_switch_changed_unexpectedl: investigate
+diagnostic_flow -> resolution
+incident_triage_decision_tree -> resolution
+host_cannot_see_storage_lun_access_f -> resolution
+port_flapping_high_error_counts -> resolution
+fabric_segmentation -> resolution
+principal_switch_changed_unexpectedl -> resolution
+```
+
 ## Diagnostic Flow
 
 ```mermaid

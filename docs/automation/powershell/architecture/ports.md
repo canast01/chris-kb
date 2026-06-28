@@ -20,6 +20,23 @@ Firewall port reference for PowerShell remoting. PowerShell itself has no listen
 
 
 
+```d2
+direction: right
+
+center: "PowerShell" {shape: hexagon}
+winrm_windows_remoting_primary: "WinRM — Windows Remoting (Primary)" {shape: rectangle}
+sshbased_ps_remoting_crossplatform: "SSH-Based PS Remoting (Cross-Platform)" {shape: rectangle}
+powershell_to_infrastructure_apis: "PowerShell to Infrastructure APIs" {shape: rectangle}
+firewall_zone_summary: "Firewall Zone Summary" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+center -> winrm_windows_remoting_primary
+center -> sshbased_ps_remoting_crossplatform
+center -> powershell_to_infrastructure_apis
+center -> firewall_zone_summary
+center -> verify
+```
+
 ## WinRM — Windows Remoting (Primary)
 
 | Port | Protocol | Source | Destination | Purpose |

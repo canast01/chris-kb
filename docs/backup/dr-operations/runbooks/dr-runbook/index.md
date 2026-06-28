@@ -12,6 +12,23 @@ Disaster Recovery Runbook reference covering Overview, Activation Criteria, Comm
 
 
 
+```d2
+direction: right
+
+center: "DR Operations" {shape: hexagon}
+activation_criteria: "Activation Criteria" {shape: rectangle}
+communication_tree: "Communication Tree" {shape: rectangle}
+phased_recovery_procedure: "Phased Recovery Procedure" {shape: rectangle}
+validation_checklist: "Validation Checklist" {shape: rectangle}
+returntonormal_checklist_failback: "Return-to-Normal Checklist (Failback)" {shape: rectangle}
+
+center -> activation_criteria
+center -> communication_tree
+center -> phased_recovery_procedure
+center -> validation_checklist
+center -> returntonormal_checklist_failback
+```
+
 ## Overview
 
 This runbook defines the activation criteria, phased recovery procedures, communication obligations, and validation requirements for declaring and executing a disaster recovery event. It applies to all infrastructure tiers managed under this platform.

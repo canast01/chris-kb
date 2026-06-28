@@ -18,6 +18,27 @@ Escalation paths for Git platform incidents, support ticket procedures, data col
 
 ---
 
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+actor "On-Call Engineer" as ENG
+participant "Escalation\nSystem" as SYS
+participant "Vendor Support" as SUP
+
+ENG -> SYS: Escalation Matrix
+SYS --> ENG: Output
+ENG -> SYS: Data to Collect Before Escalating
+SYS --> ENG: Output
+ENG -> SYS: Emergency Repository Recovery Procedure
+SYS --> ENG: Output
+ENG -> SUP: Escalate with diagnostic bundle
+SUP --> ENG: Case / resolution path
+
+@enduml
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

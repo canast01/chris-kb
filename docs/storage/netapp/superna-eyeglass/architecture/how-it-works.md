@@ -14,6 +14,19 @@ How It Works reference covering Overview, Component Topology, Connectivity, Key 
 ![Superna Eyeglass — How It Works](../../../../assets/storage-netapp-superna-eyeglass-architecture-how-it-works.svg)
 
 
+```d2
+direction: right
+
+center: "Superna Eyeglass" {shape: hexagon}
+component_topology: "Component Topology" {shape: rectangle}
+sizing: "Sizing" {shape: rectangle}
+rpo_tiers: "RPO Tiers" {shape: rectangle}
+
+center -> component_topology
+center -> sizing
+center -> rpo_tiers
+```
+
 ## Overview
 
 Superna Eyeglass is a DR orchestration platform purpose-built for NetApp PowerScale (Isilon). It automates the share, quota, and DNS reconfiguration steps that previously required hours of manual work during a SyncIQ failover. Eyeglass continuously monitors DR readiness and scores it at 100% only when all shares, exports, quotas, and DNS zones are aligned between primary and DR clusters.

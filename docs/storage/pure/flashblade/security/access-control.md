@@ -22,6 +22,27 @@ This page covers Purity//FB role-based access control (RBAC), NFS export policy 
 
 ---
 
+```d2
+direction: down
+
+external: External / Untrusted {shape: rectangle}
+admin_rbac: "Admin RBAC" {shape: rectangle}
+nfs_export_policy_access_control: "NFS Export Policy Access Control" {shape: rectangle}
+s3_bucket_access_control: "S3 Bucket Access Control" {shape: rectangle}
+smb_share_permissions: "SMB Share Permissions" {shape: rectangle}
+audit_logging: "Audit Logging" {shape: rectangle}
+access_control_review_checklist: "Access Control Review Checklist" {shape: rectangle}
+core: "FlashBlade Core" {shape: hexagon}
+
+external -> admin_rbac: traffic in
+admin_rbac -> nfs_export_policy_access_control
+nfs_export_policy_access_control -> s3_bucket_access_control
+s3_bucket_access_control -> smb_share_permissions
+smb_share_permissions -> audit_logging
+audit_logging -> access_control_review_checklist
+access_control_review_checklist -> core: secured path
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

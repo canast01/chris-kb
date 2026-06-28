@@ -30,6 +30,19 @@ logger -t sannav-test "Test syslog message from SANnav"
 
 ---
 
+```d2
+direction: right
+
+center: "SANnav" {shape: hexagon}
+component_a: "Component A" {shape: rectangle}
+component_b: "Component B" {shape: rectangle}
+component_c: "Component C" {shape: rectangle}
+
+center -> component_a
+center -> component_b
+center -> component_c
+```
+
 ## See also
 
 - [Sannav — How It Works](how-it-works/)

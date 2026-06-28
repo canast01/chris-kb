@@ -16,6 +16,25 @@ Key Vault keys are cryptographic keys used for encryption, signing, and wrapping
 
 
 
+```d2
+direction: right
+
+center: "Azure" {shape: hexagon}
+key_types: "Key Types" {shape: rectangle}
+key_operations: "Key Operations" {shape: rectangle}
+creating_keys: "Creating Keys" {shape: rectangle}
+key_rotation: "Key Rotation" {shape: rectangle}
+key_versions: "Key Versions" {shape: rectangle}
+byok_bring_your_own_key: "BYOK — Bring Your Own Key" {shape: rectangle}
+
+center -> key_types
+center -> key_operations
+center -> creating_keys
+center -> key_rotation
+center -> key_versions
+center -> byok_bring_your_own_key
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

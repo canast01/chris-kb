@@ -19,6 +19,21 @@ VCF CLI Tool Map — Where to Run What
 
 ---
 
+```d2
+direction: right
+
+hub: "VMware Cloud Foundation\nOperations" {shape: hexagon}
+sddc_manager_rest_api: "SDDC Manager REST API" {shape: rectangle}
+password_management: "Password Management" {shape: rectangle}
+service_status_logs: "Service Status & Logs" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+hub -> sddc_manager_rest_api
+hub -> password_management
+hub -> service_status_logs
+hub -> verify
+```
+
 ## Before you begin
 
 - **Access:** vCenter read-only minimum; Administrator role for remediation steps

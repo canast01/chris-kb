@@ -41,6 +41,19 @@ Dynamic Host Configuration Protocol (DHCP) automates IP address assignment using
 
 </div>
 
+```d2
+direction: right
+
+center: "DHCP" {shape: hexagon}
+quick_reference: "Quick Reference" {shape: rectangle}
+common_commands_config: "Common Commands / Config" {shape: rectangle}
+troubleshooting: "Troubleshooting" {shape: rectangle}
+
+center -> quick_reference
+center -> common_commands_config
+center -> troubleshooting
+```
+
 ## Quick Reference
 
 **DORA handshake:**

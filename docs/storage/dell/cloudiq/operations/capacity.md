@@ -16,6 +16,19 @@ CloudIQ: Capacity Forecasting and Pool Utilisation reference covering Capacity F
 
 
 
+```d2
+direction: right
+
+hub: "CloudIQ\nOperations" {shape: hexagon}
+threshold_alerts_for_capacity: "Threshold Alerts for Capacity" {shape: rectangle}
+common_capacity_issues: "Common Capacity Issues" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+hub -> threshold_alerts_for_capacity
+hub -> common_capacity_issues
+hub -> verify
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

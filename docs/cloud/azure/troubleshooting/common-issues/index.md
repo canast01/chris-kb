@@ -24,6 +24,32 @@ See also: [Troubleshooting](../index.md) for full diagnostic procedures.
 
 ---
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+diagnostic_flow: "Diagnostic Flow" {shape: rectangle}
+azure_connectivity_triage: "Azure Connectivity Triage" {shape: rectangle}
+vm_connectivity_issues: "VM Connectivity Issues" {shape: rectangle}
+nsg_troubleshooting: "NSG Troubleshooting" {shape: rectangle}
+azure_ad_authentication_errors: "Azure AD Authentication Errors" {shape: rectangle}
+azure_storage_access_denied: "Azure Storage Access Denied" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> diagnostic_flow: investigate
+symptom -> azure_connectivity_triage: investigate
+symptom -> vm_connectivity_issues: investigate
+symptom -> nsg_troubleshooting: investigate
+symptom -> azure_ad_authentication_errors: investigate
+symptom -> azure_storage_access_denied: investigate
+diagnostic_flow -> resolution
+azure_connectivity_triage -> resolution
+vm_connectivity_issues -> resolution
+nsg_troubleshooting -> resolution
+azure_ad_authentication_errors -> resolution
+azure_storage_access_denied -> resolution
+```
+
 ## Diagnostic Flow
 
 ```mermaid

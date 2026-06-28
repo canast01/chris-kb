@@ -10,6 +10,19 @@ Version history and release notes for Dell Apex Storage-as-a-Service.
 
 ![Release Notes](../../../assets/apex-storage-as-a-service-release-notes.svg)
 
+```d2
+direction: right
+
+center: "APEX Storage" {shape: hexagon}
+version_history: "Version History" {shape: rectangle}
+key_terminology: "Key Terminology" {shape: rectangle}
+upgrade_path: "Upgrade Path" {shape: rectangle}
+
+center -> version_history
+center -> key_terminology
+center -> upgrade_path
+```
+
 ## Version History
 
 | Version | Released | Summary | Notes |

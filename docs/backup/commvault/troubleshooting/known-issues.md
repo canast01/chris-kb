@@ -18,6 +18,23 @@ Catalog of known Commvault bugs, error codes, and workarounds covering backup jo
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+vmware_vsa: "VMware (VSA)" {shape: rectangle}
+media_agents: "Media Agents" {shape: rectangle}
+commserve: "CommServe" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> vmware_vsa: investigate
+symptom -> media_agents: investigate
+symptom -> commserve: investigate
+vmware_vsa -> resolution
+media_agents -> resolution
+commserve -> resolution
+```
+
 ## Before you begin
 
 - Commvault errors appear in CommCell Console → Job Controller → Failed jobs — expand for event log.

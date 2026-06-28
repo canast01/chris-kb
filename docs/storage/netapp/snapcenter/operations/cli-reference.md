@@ -18,6 +18,19 @@ SnapCenter CLI reference: `Open-SmConnection`, `Add-SmResources`, `New-SmBackup`
 
 ---
 
+```d2
+direction: right
+
+hub: "SnapCenter\nOperations" {shape: hexagon}
+powershell_module: "PowerShell Module" {shape: rectangle}
+rest_api_curl: "REST API (curl)" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+hub -> powershell_module
+hub -> rest_api_curl
+hub -> verify
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

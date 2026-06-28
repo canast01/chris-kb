@@ -18,6 +18,23 @@ Azure hardening applies the principle of least privilege, reduces the attack sur
 
 ---
 
+```d2
+direction: down
+
+microsoft_defender_for_cloud: "Microsoft Defender for Cloud" {shape: rectangle}
+network_security_groups: "Network Security Groups" {shape: rectangle}
+justintime_vm_access: "Just-In-Time VM Access" {shape: rectangle}
+azure_policy_for_security: "Azure Policy for Security" {shape: rectangle}
+resource_locks: "Resource Locks" {shape: rectangle}
+defender_for_servers_hardening: "Defender for Servers — Hardening" {shape: rectangle}
+
+microsoft_defender_for_cloud -> network_security_groups: hardens
+network_security_groups -> justintime_vm_access: hardens
+justintime_vm_access -> azure_policy_for_security: hardens
+azure_policy_for_security -> resource_locks: hardens
+resource_locks -> defender_for_servers_hardening: hardens
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

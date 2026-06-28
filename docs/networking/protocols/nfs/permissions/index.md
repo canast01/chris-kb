@@ -13,6 +13,23 @@ NFS Permissions reference covering Overview, UID/GID Mapping, NFSv4 ID Mapping (
 
 
 
+```d2
+direction: right
+
+center: "NFS" {shape: hexagon}
+uidgid_mapping: "UID/GID Mapping" {shape: rectangle}
+nfsv4_id_mapping_idmapd: "NFSv4 ID Mapping (idmapd)" {shape: rectangle}
+kerberos_security_modes: "Kerberos Security Modes" {shape: rectangle}
+acl_interaction: "ACL Interaction" {shape: rectangle}
+known_issues: "Known Issues" {shape: rectangle}
+
+center -> uidgid_mapping
+center -> nfsv4_id_mapping_idmapd
+center -> kerberos_security_modes
+center -> acl_interaction
+center -> known_issues
+```
+
 ## Overview
 
 NFS relies on UID/GID matching between client and server for access control. NFSv3 trusts client-reported UIDs; NFSv4 with Kerberos (`krb5`, `krb5i`, `krb5p`) adds cryptographic authentication. POSIX ACLs are supported over NFS but require the underlying filesystem to support them.

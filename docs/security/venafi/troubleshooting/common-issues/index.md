@@ -26,6 +26,23 @@ Known issues and resolution steps for frequent Venafi problems.
 | LDAP/AD auth failing in Venafi | Test LDAP bind from TPP server; verify service account password not expired |
 | Syslog events not appearing in SIEM | Check Log Server service; verify syslog target IP/port; check firewall |
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+diagnostic_flow: "Diagnostic Flow" {shape: rectangle}
+known_issues: "Known Issues" {shape: rectangle}
+verify_resolution: "Verify resolution" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> diagnostic_flow: investigate
+symptom -> known_issues: investigate
+symptom -> verify_resolution: investigate
+diagnostic_flow -> resolution
+known_issues -> resolution
+verify_resolution -> resolution
+```
+
 ## Diagnostic Flow
 
 ```mermaid

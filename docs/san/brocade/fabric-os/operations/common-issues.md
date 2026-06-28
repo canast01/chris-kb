@@ -20,6 +20,25 @@ Known Issues reference covering Incident Triage, Port Issues, Zoning Issues, Swi
 
 ---
 
+```d2
+direction: right
+
+hub: "Brocade Fabric OS\nOperations" {shape: hexagon}
+incident_triage: "Incident Triage" {shape: rectangle}
+port_issues: "Port Issues" {shape: rectangle}
+zoning_issues: "Zoning Issues" {shape: rectangle}
+switch_fabric_issues: "Switch / Fabric Issues" {shape: rectangle}
+maps_and_alerting: "MAPS and Alerting" {shape: rectangle}
+virtual_fabrics_vf_issues: "Virtual Fabrics (VF) Issues" {shape: rectangle}
+
+hub -> incident_triage
+hub -> port_issues
+hub -> zoning_issues
+hub -> switch_fabric_issues
+hub -> maps_and_alerting
+hub -> virtual_fabrics_vf_issues
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

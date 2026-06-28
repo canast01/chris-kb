@@ -15,6 +15,27 @@ Complete all items after every upgrade (vCenter, ESXi, vSAN, NSX, VxRail). Docum
 
 
 
+```d2
+direction: right
+
+plan: "Plan" {shape: oval}
+immediate_validation_within_15_minut: "Immediate Validation (within 15 minutes of upgrade completio" {shape: rectangle}
+vcenter_health: "vCenter Health" {shape: rectangle}
+cluster_ha_and_drs: "Cluster HA and DRS" {shape: rectangle}
+vsan_validation_if_applicable: "vSAN Validation (if applicable)" {shape: rectangle}
+nsx_validation_if_nsx_was_upgraded_o: "NSX Validation (if NSX was upgraded or touched)" {shape: rectangle}
+vxrail_validation_if_applicable: "VxRail Validation (if applicable)" {shape: rectangle}
+validate: "Validate" {shape: oval}
+
+plan -> immediate_validation_within_15_minut
+immediate_validation_within_15_minut -> vcenter_health
+vcenter_health -> cluster_ha_and_drs
+cluster_ha_and_drs -> vsan_validation_if_applicable
+vsan_validation_if_applicable -> nsx_validation_if_nsx_was_upgraded_o
+nsx_validation_if_nsx_was_upgraded_o -> vxrail_validation_if_applicable
+vxrail_validation_if_applicable -> validate
+```
+
 ## Immediate Validation (within 15 minutes of upgrade completion)
 
 ```powershell

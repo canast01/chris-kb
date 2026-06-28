@@ -16,6 +16,25 @@ Azure OpenAI integrates with Azure Monitor for metrics, logs, and alerting. Moni
 
 
 
+```d2
+direction: right
+
+hub: "Azure OpenAI\nOperations" {shape: hexagon}
+azure_monitor_metrics: "Azure Monitor Metrics" {shape: rectangle}
+key_metrics: "Key Metrics" {shape: rectangle}
+diagnostic_logs: "Diagnostic Logs" {shape: rectangle}
+log_analytics_queries: "Log Analytics Queries" {shape: rectangle}
+content_filtering_logs: "Content Filtering Logs" {shape: rectangle}
+alerts: "Alerts" {shape: rectangle}
+
+hub -> azure_monitor_metrics
+hub -> key_metrics
+hub -> diagnostic_logs
+hub -> log_analytics_queries
+hub -> content_filtering_logs
+hub -> alerts
+```
+
 ## Azure Monitor Metrics
 
 Metrics are available under the Cognitive Services resource type in Azure Monitor. No configuration is needed — metrics stream automatically.

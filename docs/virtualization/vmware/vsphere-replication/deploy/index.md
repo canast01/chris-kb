@@ -35,6 +35,27 @@ flowchart TD
     style s7 fill:#2e7d32,color:#fff,stroke:#1b5e20
 ```
 
+```d2
+direction: right
+
+plan: "Plan" {shape: oval}
+phase_1_predeployment_checks: "Phase 1 — Pre-Deployment Checks" {shape: rectangle}
+phase_2_vra_deployment_source_site: "Phase 2 — VRA Deployment: Source Site" {shape: rectangle}
+phase_3_vra_deployment_target_site_a: "Phase 3 — VRA Deployment: Target Site and Site Pairing" {shape: rectangle}
+phase_4_configure_vm_replication: "Phase 4 — Configure VM Replication" {shape: rectangle}
+phase_5_monitor_rpo_compliance: "Phase 5 — Monitor RPO Compliance" {shape: rectangle}
+phase_6_endtoend_validation: "Phase 6 — End-to-End Validation" {shape: rectangle}
+validate: "Validate" {shape: oval}
+
+plan -> phase_1_predeployment_checks
+phase_1_predeployment_checks -> phase_2_vra_deployment_source_site
+phase_2_vra_deployment_source_site -> phase_3_vra_deployment_target_site_a
+phase_3_vra_deployment_target_site_a -> phase_4_configure_vm_replication
+phase_4_configure_vm_replication -> phase_5_monitor_rpo_compliance
+phase_5_monitor_rpo_compliance -> phase_6_endtoend_validation
+phase_6_endtoend_validation -> validate
+```
+
 ## Before you begin
 
 - **Access:** vCenter Administrator role and SSH access to VCSA/ESXi hosts

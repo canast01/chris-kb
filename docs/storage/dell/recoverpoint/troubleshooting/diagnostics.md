@@ -43,6 +43,32 @@ graph TD
     class K,L escalate
 ```
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+step_1_check_overall_system_status: "Step 1 — Check overall system status" {shape: rectangle}
+step_2_check_consistency_group_state: "Step 2 — Check consistency group states" {shape: rectangle}
+step_3_check_journal_utilization_and: "Step 3 — Check journal utilization and lag" {shape: rectangle}
+step_4_check_network_connectivity_be: "Step 4 — Check network connectivity between sites" {shape: rectangle}
+step_5_check_splitter_status: "Step 5 — Check splitter status" {shape: rectangle}
+step_6_collect_support_bundle: "Step 6 — Collect support bundle" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> step_1_check_overall_system_status: investigate
+symptom -> step_2_check_consistency_group_state: investigate
+symptom -> step_3_check_journal_utilization_and: investigate
+symptom -> step_4_check_network_connectivity_be: investigate
+symptom -> step_5_check_splitter_status: investigate
+symptom -> step_6_collect_support_bundle: investigate
+step_1_check_overall_system_status -> resolution
+step_2_check_consistency_group_state -> resolution
+step_3_check_journal_utilization_and -> resolution
+step_4_check_network_connectivity_be -> resolution
+step_5_check_splitter_status -> resolution
+step_6_collect_support_bundle -> resolution
+```
+
 ## Before you begin
 
 - **Access:** SSH to the RecoverPoint management IP as `admin`; or log in to the RecoverPoint management web UI

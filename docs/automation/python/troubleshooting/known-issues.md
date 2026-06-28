@@ -18,6 +18,23 @@ Catalog of known Python scripting bugs, error codes, and workarounds covering vi
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+ssl_and_certificates: "SSL and Certificates" {shape: rectangle}
+virtual_environments: "Virtual Environments" {shape: rectangle}
+rest_api_integration: "REST API Integration" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> ssl_and_certificates: investigate
+symptom -> virtual_environments: investigate
+symptom -> rest_api_integration: investigate
+ssl_and_certificates -> resolution
+virtual_environments -> resolution
+rest_api_integration -> resolution
+```
+
 ## Before you begin
 
 - Always use virtual environments (`venv`) for isolation — avoid system Python for scripts.

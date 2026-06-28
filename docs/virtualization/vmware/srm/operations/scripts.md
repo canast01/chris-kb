@@ -18,6 +18,15 @@ SRM automation scripts: PowerCLI `Get-SrmRecoveryPlan`, `Start-SrmRecoveryPlan -
   SRM Automation via PowerCLI + REST API
 
 
+```d2
+direction: right
+
+hub: "Site Recovery Manager\nOperations" {shape: hexagon}
+verify: "Verify" {shape: rectangle}
+
+hub -> verify
+```
+
 ## Before you begin
 
 - **Access:** vCenter read-only minimum; Administrator role for remediation steps

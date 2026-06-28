@@ -16,6 +16,15 @@ PowerShell encryption: `ConvertTo-SecureString`, `New-SelfSignedCertificate`, en
 
 ---
 
+```d2
+direction: down
+
+powershell_encryption_and_secure_com: "PowerShell Encryption and Secure Communication" {shape: rectangle}
+encryption_reference: "Encryption Reference" {shape: rectangle}
+
+powershell_encryption_and_secure_com -> encryption_reference: hardens
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

@@ -13,6 +13,25 @@ Replication Failures Troubleshooting reference covering Overview, Replication Te
 ![Replication Failures Troubleshooting](../../../assets/storage-troubleshooting-replication-failures-index.svg)
 
 
+```d2
+direction: right
+
+center: "Replication Failures" {shape: hexagon}
+replication_technology_classificatio: "Replication Technology Classification" {shape: rectangle}
+diagnostic_flowchart: "Diagnostic Flowchart" {shape: rectangle}
+ontap_snapmirror_troubleshooting: "ONTAP SnapMirror Troubleshooting" {shape: rectangle}
+recoverpoint_troubleshooting: "RecoverPoint Troubleshooting" {shape: rectangle}
+replication_lag_threshold_and_rpo_br: "Replication Lag Threshold and RPO Breach Criteria" {shape: rectangle}
+network_bandwidth_and_latency_impact: "Network Bandwidth and Latency Impact" {shape: rectangle}
+
+center -> replication_technology_classificatio
+center -> diagnostic_flowchart
+center -> ontap_snapmirror_troubleshooting
+center -> recoverpoint_troubleshooting
+center -> replication_lag_threshold_and_rpo_br
+center -> network_bandwidth_and_latency_impact
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

@@ -6,6 +6,21 @@ Full KB site index: links to all infrastructure, resilience, security, automatio
 ![Site Map](assets/site-map.svg)
 
 
+```d2
+direction: right
+
+center: "System" {shape: hexagon}
+infrastructure: "Infrastructure" {shape: rectangle}
+resilience_recovery: "Resilience & Recovery" {shape: rectangle}
+security_compliance: "Security & Compliance" {shape: rectangle}
+automation_tooling: "Automation & Tooling" {shape: rectangle}
+
+center -> infrastructure
+center -> resilience_recovery
+center -> security_compliance
+center -> automation_tooling
+```
+
 ## Infrastructure
 
 | Section | Sub-sections |

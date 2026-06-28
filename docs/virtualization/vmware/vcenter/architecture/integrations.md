@@ -20,6 +20,19 @@ Integrations reference covering Veeam Backup & Replication, Identity and Authent
 - **IWA**: Uses the machine account of the VCSA; requires VCSA joined to AD domain
 - **LDAP**: Explicit bind account; use LDAPS (port 636) for encrypted queries
 
+```d2
+direction: right
+
+center: "vCenter Server" {shape: hexagon}
+identity_integration: "Identity Integration" {shape: rectangle}
+monitoring_integration: "Monitoring Integration" {shape: rectangle}
+nsx_integration: "NSX Integration" {shape: rectangle}
+
+center -> identity_integration
+center -> monitoring_integration
+center -> nsx_integration
+```
+
 ## Identity Integration
 
 ### SSO Domain

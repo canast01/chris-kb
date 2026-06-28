@@ -16,6 +16,27 @@ Escalation reference covering Escalation Matrix, Emergency Contacts, Escalation 
 ![Jira — Escalation](../../../../assets/itsm-jira-troubleshooting-escalation-index.svg)
 
 
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+actor "On-Call Engineer" as ENG
+participant "Jira\nSystem" as SYS
+participant "Vendor Support" as SUP
+
+ENG -> SYS: Escalation Matrix
+SYS --> ENG: Output
+ENG -> SYS: Pre-Escalation Self-Check
+SYS --> ENG: Output
+ENG -> SYS: Step-by-Step Data Collection
+SYS --> ENG: Output
+ENG -> SUP: Escalate with diagnostic bundle
+SUP --> ENG: Case / resolution path
+
+@enduml
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

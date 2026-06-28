@@ -16,6 +16,25 @@ Integrations reference covering Connectivity and Integration Points, Secure Conn
 
 
 
+```d2
+direction: right
+
+center: "CloudIQ" {shape: hexagon}
+email_notifications: "Email Notifications" {shape: rectangle}
+webhook_notifications: "Webhook Notifications" {shape: rectangle}
+rest_api_integration: "REST API Integration" {shape: rectangle}
+servicenow_integration: "ServiceNow Integration" {shape: rectangle}
+native_platform_integrations_inbound: "Native Platform Integrations (Inbound via SCG)" {shape: rectangle}
+aria_operations_integration: "Aria Operations Integration" {shape: rectangle}
+
+center -> email_notifications
+center -> webhook_notifications
+center -> rest_api_integration
+center -> servicenow_integration
+center -> native_platform_integrations_inbound
+center -> aria_operations_integration
+```
+
 ## Email Notifications
 
 CloudIQ sends alert notifications directly from Dell's mail infrastructure — no on-premises SMTP relay is required. Configure notification recipients in the CloudIQ portal under **Settings > Notifications > Email**.

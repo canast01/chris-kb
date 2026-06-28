@@ -16,6 +16,25 @@ How It Works reference covering Overview, Architecture, OneFS Distributed File S
 
 
 
+```d2
+direction: right
+
+center: "PowerScale (Isilon)" {shape: hexagon}
+architecture: "Architecture" {shape: rectangle}
+onefs_distributed_file_system: "OneFS Distributed File System" {shape: rectangle}
+ha_and_protection_levels: "HA and Protection Levels" {shape: rectangle}
+node_pool_and_tier_architecture: "Node Pool and Tier Architecture" {shape: rectangle}
+components: "Components" {shape: rectangle}
+connectivity: "Connectivity" {shape: rectangle}
+
+center -> architecture
+center -> onefs_distributed_file_system
+center -> ha_and_protection_levels
+center -> node_pool_and_tier_architecture
+center -> components
+center -> connectivity
+```
+
 ## Overview
 
 Dell PowerScale (formerly Isilon) is a scale-out NAS platform running the **OneFS** distributed operating system. All nodes in a cluster are peers — there is no dedicated metadata controller. The entire cluster presents a single namespace rooted at `/ifs` across all protocols (NFS, SMB, HDFS, S3, FTP). Clusters scale from a minimum of 3 nodes to 252 nodes.

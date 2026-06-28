@@ -16,6 +16,25 @@ A Private Endpoint is a network interface that uses a private IP from your VNet 
 
 
 
+```d2
+direction: right
+
+center: "Azure" {shape: hexagon}
+private_endpoint_architecture: "Private Endpoint Architecture" {shape: rectangle}
+creating_a_private_endpoint: "Creating a Private Endpoint" {shape: rectangle}
+supported_group_ids_subresources: "Supported Group IDs (subresources)" {shape: rectangle}
+dns_configuration: "DNS Configuration" {shape: rectangle}
+approving_a_private_endpoint_connect: "Approving a Private Endpoint Connection" {shape: rectangle}
+network_policy_for_private_endpoints: "Network Policy for Private Endpoints" {shape: rectangle}
+
+center -> private_endpoint_architecture
+center -> creating_a_private_endpoint
+center -> supported_group_ids_subresources
+center -> dns_configuration
+center -> approving_a_private_endpoint_connect
+center -> network_policy_for_private_endpoints
+```
+
 ## Private Endpoint Architecture
 
 ```mermaid

@@ -15,6 +15,27 @@ Complete all items before starting any vSphere upgrade (vCenter, ESXi, vSAN, NSX
 
 
 
+```d2
+direction: right
+
+plan: "Plan" {shape: oval}
+backup_and_recovery: "Backup and Recovery" {shape: rectangle}
+environment_health: "Environment Health" {shape: rectangle}
+compatibility_verification: "Compatibility Verification" {shape: rectangle}
+disk_and_capacity: "Disk and Capacity" {shape: rectangle}
+dns_and_ntp: "DNS and NTP" {shape: rectangle}
+certificates: "Certificates" {shape: rectangle}
+validate: "Validate" {shape: oval}
+
+plan -> backup_and_recovery
+backup_and_recovery -> environment_health
+environment_health -> compatibility_verification
+compatibility_verification -> disk_and_capacity
+disk_and_capacity -> dns_and_ntp
+dns_and_ntp -> certificates
+certificates -> validate
+```
+
 ## Backup and Recovery
 
 - [ ] vCenter appliance backup completed and verified (VAMI → Backup → Run Now; confirm backup file exists)

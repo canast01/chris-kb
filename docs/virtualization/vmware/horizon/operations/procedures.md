@@ -25,6 +25,25 @@ Get-HVPool -PoolName "pool-ic-win11" | Select-Object -ExpandProperty AutomatedDe
 Get-HVMachine -PoolName "pool-ic-win11" | Group-Object State | Select-Object Name, Count
 ```
 
+```d2
+direction: right
+
+hub: "Horizon\nOperations" {shape: hexagon}
+create_an_rds_farm_and_application_p: "Create an RDS Farm and Application Pool" {shape: rectangle}
+add_or_remove_user_entitlement_from_: "Add or Remove User Entitlement from a Pool" {shape: rectangle}
+force_logoff_or_reset_a_user_session: "Force Logoff or Reset a User Session" {shape: rectangle}
+recompose_an_instant_clone_pool: "Recompose an Instant Clone Pool" {shape: rectangle}
+renew_certificate_on_connection_serv: "Renew Certificate on Connection Servers" {shape: rectangle}
+configure_horizon_event_database: "Configure Horizon Event Database" {shape: rectangle}
+
+hub -> create_an_rds_farm_and_application_p
+hub -> add_or_remove_user_entitlement_from_
+hub -> force_logoff_or_reset_a_user_session
+hub -> recompose_an_instant_clone_pool
+hub -> renew_certificate_on_connection_serv
+hub -> configure_horizon_event_database
+```
+
 ## Before you begin
 
 - **Access:** vCenter read-only minimum; Administrator role for remediation steps

@@ -42,6 +42,15 @@ for sub in resp.json().get("subscriptions", []):
     print(f"{sub['subscriptionNumber']}  committed={sub['committedCapacity']} consumed={sub['consumedCapacity']}")
 ```
 
+```d2
+direction: right
+
+hub: "Keystone STaaS\nOperations" {shape: hexagon}
+verify: "Verify" {shape: rectangle}
+
+hub -> verify
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

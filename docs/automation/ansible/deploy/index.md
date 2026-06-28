@@ -34,6 +34,27 @@ flowchart TD
     style s9 fill:#2e7d32,color:#fff,stroke:#1b5e20
 ```
 
+```d2
+direction: right
+
+plan: "Plan" {shape: oval}
+install_ansible: "Install Ansible" {shape: rectangle}
+configure_inventory_file: "Configure Inventory File" {shape: rectangle}
+configure_ssh_key_authentication: "Configure SSH Key Authentication" {shape: rectangle}
+configure_ansiblecfg: "Configure ansible.cfg" {shape: rectangle}
+test_connectivity: "Test Connectivity" {shape: rectangle}
+install_required_collections_and_rol: "Install Required Collections and Roles" {shape: rectangle}
+validate: "Validate" {shape: oval}
+
+plan -> install_ansible
+install_ansible -> configure_inventory_file
+configure_inventory_file -> configure_ssh_key_authentication
+configure_ssh_key_authentication -> configure_ansiblecfg
+configure_ansiblecfg -> test_connectivity
+test_connectivity -> install_required_collections_and_rol
+install_required_collections_and_rol -> validate
+```
+
 ## Before you begin
 
 - **Access:** SSH key or service account with sudo on managed hosts; Ansible control node

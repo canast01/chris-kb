@@ -19,6 +19,20 @@ Catalog of known SANnav bugs, error codes, and workarounds covering switch disco
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+switch_discovery: "Switch Discovery" {shape: rectangle}
+performance_data: "Performance Data" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> switch_discovery: investigate
+symptom -> performance_data: investigate
+switch_discovery -> resolution
+performance_data -> resolution
+```
+
 ## Before you begin
 
 - SANnav errors appear in Dashboard → Events and in SANnav → Administration → Logs.

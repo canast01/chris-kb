@@ -17,6 +17,25 @@ Encryption reference covering Data at Rest, Data in Transit, Certificate Managem
 
 ---
 
+```d2
+direction: down
+
+external: External / Untrusted {shape: rectangle}
+data_at_rest: "Data at Rest" {shape: rectangle}
+data_in_transit: "Data in Transit" {shape: rectangle}
+certificate_management: "Certificate Management" {shape: rectangle}
+tls_cipher_hardening: "TLS Cipher Hardening" {shape: rectangle}
+credential_storage: "Credential Storage" {shape: rectangle}
+core: "Aria Operations for Networks Core" {shape: hexagon}
+
+external -> data_at_rest: traffic in
+data_at_rest -> data_in_transit
+data_in_transit -> certificate_management
+certificate_management -> tls_cipher_hardening
+tls_cipher_hardening -> credential_storage
+credential_storage -> core: secured path
+```
+
 ## Before you begin
 
 - **Access:** vCenter Administrator role

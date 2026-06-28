@@ -19,6 +19,32 @@ Troubleshooting guide for the most frequent Aria Operations for Networks problem
 
 
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+diagnostic_flow: "Diagnostic Flow" {shape: rectangle}
+data_source_red_collection_failed: "Data Source Red / Collection Failed" {shape: rectangle}
+no_flows_in_flow_map: "No Flows in Flow Map" {shape: rectangle}
+collector_offline_in_ui: "Collector Offline in UI" {shape: rectangle}
+path_analysis_showing_no_path_or_inc: "Path Analysis Showing No Path or Incomplete Path" {shape: rectangle}
+ldap_ad_login_failure: "LDAP / AD Login Failure" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> diagnostic_flow: investigate
+symptom -> data_source_red_collection_failed: investigate
+symptom -> no_flows_in_flow_map: investigate
+symptom -> collector_offline_in_ui: investigate
+symptom -> path_analysis_showing_no_path_or_inc: investigate
+symptom -> ldap_ad_login_failure: investigate
+diagnostic_flow -> resolution
+data_source_red_collection_failed -> resolution
+no_flows_in_flow_map -> resolution
+collector_offline_in_ui -> resolution
+path_analysis_showing_no_path_or_inc -> resolution
+ldap_ad_login_failure -> resolution
+```
+
 ## Diagnostic Flow
 
 ```mermaid

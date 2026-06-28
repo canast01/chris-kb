@@ -15,6 +15,25 @@ Health Checks reference covering Disk Partition Usage, SSO and Lookup Service He
 </div>
 
 
+```d2
+direction: right
+
+hub: "vCenter Server\nOperations" {shape: hexagon}
+run_this_routine: "Run This Routine" {shape: rectangle}
+sso_and_lookup_service_health: "SSO and Lookup Service Health" {shape: rectangle}
+dns_and_ntp_validation: "DNS and NTP Validation" {shape: rectangle}
+powercli_health_checks: "PowerCLI Health Checks" {shape: rectangle}
+daily_checks: "Daily Checks" {shape: rectangle}
+change_readiness_checklist: "Change Readiness Checklist" {shape: rectangle}
+
+hub -> run_this_routine
+hub -> sso_and_lookup_service_health
+hub -> dns_and_ntp_validation
+hub -> powercli_health_checks
+hub -> daily_checks
+hub -> change_readiness_checklist
+```
+
 ## Before you begin
 
 - **Access:** vCenter read-only minimum; Administrator role for remediation steps

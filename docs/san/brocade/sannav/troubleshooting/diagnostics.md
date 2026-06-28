@@ -54,6 +54,32 @@ graph TD
     class T escalate
 ```
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+step_1_check_sannav_service_health: "Step 1 — Check SANnav service health" {shape: rectangle}
+step_2_check_database_health: "Step 2 — Check database health" {shape: rectangle}
+step_3_diagnose_switch_discovery_fai: "Step 3 — Diagnose switch discovery failures" {shape: rectangle}
+step_4_check_snmp_trap_reception: "Step 4 — Check SNMP trap reception" {shape: rectangle}
+step_5_check_sannav_host_system_perf: "Step 5 — Check SANnav host system performance" {shape: rectangle}
+step_6_collect_support_bundle_for_br: "Step 6 — Collect support bundle for Broadcom TAC" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> step_1_check_sannav_service_health: investigate
+symptom -> step_2_check_database_health: investigate
+symptom -> step_3_diagnose_switch_discovery_fai: investigate
+symptom -> step_4_check_snmp_trap_reception: investigate
+symptom -> step_5_check_sannav_host_system_perf: investigate
+symptom -> step_6_collect_support_bundle_for_br: investigate
+step_1_check_sannav_service_health -> resolution
+step_2_check_database_health -> resolution
+step_3_diagnose_switch_discovery_fai -> resolution
+step_4_check_snmp_trap_reception -> resolution
+step_5_check_sannav_host_system_perf -> resolution
+step_6_collect_support_bundle_for_br -> resolution
+```
+
 ## Before you begin
 
 - **Access:** SSH to the SANnav VM as `admin`; SANnav web UI admin credentials; Brocade switch CLI access via SSH

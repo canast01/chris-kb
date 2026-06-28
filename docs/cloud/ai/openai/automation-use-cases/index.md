@@ -16,6 +16,25 @@ Practical patterns for using the OpenAI API in automation pipelines: summarisati
 
 
 
+```d2
+direction: right
+
+center: "OpenAI API" {shape: hexagon}
+summarisation: "Summarisation" {shape: rectangle}
+classification: "Classification" {shape: rectangle}
+code_generation: "Code Generation" {shape: rectangle}
+embeddings_for_semantic_search: "Embeddings for Semantic Search" {shape: rectangle}
+batch_processing: "Batch Processing" {shape: rectangle}
+common_automation_patterns: "Common Automation Patterns" {shape: rectangle}
+
+center -> summarisation
+center -> classification
+center -> code_generation
+center -> embeddings_for_semantic_search
+center -> batch_processing
+center -> common_automation_patterns
+```
+
 ## Summarisation
 
 Summarise long documents, logs, or reports into structured output.

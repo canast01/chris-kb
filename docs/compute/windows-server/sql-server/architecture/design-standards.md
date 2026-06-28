@@ -15,6 +15,25 @@ SQL Server design standards — HA topology (Always On AG, FCI), edition selecti
 
 
 
+```d2
+direction: right
+
+center: "SQL Server" {shape: hexagon}
+highavailability_topologies: "High-Availability Topologies" {shape: rectangle}
+edition_selection: "Edition Selection" {shape: rectangle}
+disk_layout: "Disk Layout" {shape: rectangle}
+memory_sizing: "Memory Sizing" {shape: rectangle}
+tempdb_best_practices: "tempdb Best Practices" {shape: rectangle}
+naming_conventions: "Naming Conventions" {shape: rectangle}
+
+center -> highavailability_topologies
+center -> edition_selection
+center -> disk_layout
+center -> memory_sizing
+center -> tempdb_best_practices
+center -> naming_conventions
+```
+
 ## High-Availability Topologies
 
 | Pattern | Description | Use case |

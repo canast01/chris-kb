@@ -16,6 +16,25 @@ NetApp Keystone procedures: burst capacity activation, storage tier changes, sch
 
 ---
 
+```d2
+direction: right
+
+hub: "Keystone STaaS\nOperations" {shape: hexagon}
+daily_checks: "Daily Checks" {shape: rectangle}
+health_check: "Health Check" {shape: rectangle}
+change_readiness: "Change Readiness" {shape: rectangle}
+maintenance_window: "Maintenance Window" {shape: rectangle}
+postchange_validation: "Post-Change Validation" {shape: rectangle}
+usage_reporting: "Usage Reporting" {shape: rectangle}
+
+hub -> daily_checks
+hub -> health_check
+hub -> change_readiness
+hub -> maintenance_window
+hub -> postchange_validation
+hub -> usage_reporting
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

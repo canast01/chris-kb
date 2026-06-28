@@ -19,6 +19,25 @@ Firewall port reference for Nutanix AHV clusters. Covers Prism management, CVM-t
 
 
 
+```d2
+direction: right
+
+center: "Nutanix AHV" {shape: hexagon}
+inbound_client_to_prism_element_and_: "Inbound — Client to Prism (Element and Central)" {shape: rectangle}
+prism_central_to_prism_element: "Prism Central to Prism Element" {shape: rectangle}
+cvm_cluster_fabric_internal_no_firew: "CVM Cluster Fabric (Internal — No Firewall)" {shape: rectangle}
+ahv_host_to_cvm: "AHV Host to CVM" {shape: rectangle}
+ahv_live_migration_host_to_host: "AHV Live Migration (Host to Host)" {shape: rectangle}
+storage_protocols_client_to_cluster_: "Storage Protocols (Client to Cluster VIP / Data IP)" {shape: rectangle}
+
+center -> inbound_client_to_prism_element_and_
+center -> prism_central_to_prism_element
+center -> cvm_cluster_fabric_internal_no_firew
+center -> ahv_host_to_cvm
+center -> ahv_live_migration_host_to_host
+center -> storage_protocols_client_to_cluster_
+```
+
 ## Before you begin
 
 - CVM-to-CVM traffic (cluster fabric) requires no firewall on the CVM VLAN — all CVMs must reach each other without filtering

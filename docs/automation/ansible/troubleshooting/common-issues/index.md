@@ -18,6 +18,29 @@ Ansible troubleshooting: unreachable hosts, privilege escalation failures, varia
 
 ---
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+diagnostic_flow: "Diagnostic Flow" {shape: rectangle}
+ansible_troubleshooting_decision_flo: "Ansible Troubleshooting Decision Flow" {shape: rectangle}
+common_module_errors: "Common Module Errors" {shape: rectangle}
+fact_gathering_issues: "Fact Gathering Issues" {shape: rectangle}
+verify_resolution: "Verify resolution" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> diagnostic_flow: investigate
+symptom -> ansible_troubleshooting_decision_flo: investigate
+symptom -> common_module_errors: investigate
+symptom -> fact_gathering_issues: investigate
+symptom -> verify_resolution: investigate
+diagnostic_flow -> resolution
+ansible_troubleshooting_decision_flo -> resolution
+common_module_errors -> resolution
+fact_gathering_issues -> resolution
+verify_resolution -> resolution
+```
+
 ## Diagnostic Flow
 
 ```mermaid

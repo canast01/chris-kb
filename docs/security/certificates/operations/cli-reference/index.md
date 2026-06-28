@@ -16,6 +16,25 @@ Windows certificate operations use `certutil` for verification, revocation, and 
 
  PowerShell provides `Get-ChildItem Cert:\` for the Windows certificate store and `Test-Certificate` for chain validation.
 
+```d2
+direction: right
+
+center: "Cli Reference" {shape: rectangle}
+tool_selection_by_task: "Tool Selection by Task" {shape: rectangle}
+openssl_inspection: "openssl — Inspection" {shape: rectangle}
+openssl_verification: "openssl — Verification" {shape: rectangle}
+openssl_tls_testing: "openssl — TLS Testing" {shape: rectangle}
+certutil_windows: "certutil — Windows" {shape: rectangle}
+powershell_windows_certificate_store: "PowerShell — Windows Certificate Store" {shape: rectangle}
+
+center -> tool_selection_by_task
+center -> openssl_inspection
+center -> openssl_verification
+center -> openssl_tls_testing
+center -> certutil_windows
+center -> powershell_windows_certificate_store
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

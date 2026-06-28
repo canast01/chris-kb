@@ -14,6 +14,23 @@ Common questions about Superna Eyeglass for NetApp operations, configuration, an
 
 ![Superna Eyeglass for NetApp FAQ](../../../../assets/storage-netapp-superna-eyeglass-operations-faq.svg)
 
+```d2
+direction: right
+
+hub: "Superna Eyeglass\nOperations" {shape: hexagon}
+general: "General" {shape: rectangle}
+configuration: "Configuration" {shape: rectangle}
+operations: "Operations" {shape: rectangle}
+troubleshooting: "Troubleshooting" {shape: rectangle}
+backup_and_recovery: "Backup and Recovery" {shape: rectangle}
+
+hub -> general
+hub -> configuration
+hub -> operations
+hub -> troubleshooting
+hub -> backup_and_recovery
+```
+
 ## General
 
 **Q: What Superna Eyeglass version is recommended?**

@@ -14,6 +14,17 @@ Hardening reference covering Secure Script Development Checklist Flow, Dependenc
 ![Python Automation — Hardening](../../../../assets/automation-python-security-hardening-index.svg)
 
 
+```d2
+direction: down
+
+secure_script_development_checklist_: "Secure Script Development Checklist Flow" {shape: rectangle}
+file_and_permission_security: "File and Permission Security" {shape: rectangle}
+hardening_checklist: "Hardening Checklist" {shape: rectangle}
+
+secure_script_development_checklist_ -> file_and_permission_security: hardens
+file_and_permission_security -> hardening_checklist: hardens
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

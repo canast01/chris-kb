@@ -19,6 +19,27 @@ Authentication reference covering Supervisor Authentication (vSphere with Tanzu)
 
 ---
 
+```d2
+direction: down
+
+external: External / Untrusted {shape: rectangle}
+supervisor_authentication_vsphere_wi: "Supervisor Authentication (vSphere with Tanzu)" {shape: rectangle}
+tkg_workload_cluster_authentication_: "TKG Workload Cluster Authentication (Pinniped + Dex)" {shape: rectangle}
+harbor_authentication: "Harbor Authentication" {shape: rectangle}
+service_account_tokens_kubernetes: "Service Account Tokens (Kubernetes)" {shape: rectangle}
+pull_secret_management: "Pull Secret Management" {shape: rectangle}
+oidc_for_harbor: "OIDC for Harbor" {shape: rectangle}
+core: "Tanzu Core" {shape: hexagon}
+
+external -> supervisor_authentication_vsphere_wi: traffic in
+supervisor_authentication_vsphere_wi -> tkg_workload_cluster_authentication_
+tkg_workload_cluster_authentication_ -> harbor_authentication
+harbor_authentication -> service_account_tokens_kubernetes
+service_account_tokens_kubernetes -> pull_secret_management
+pull_secret_management -> oidc_for_harbor
+oidc_for_harbor -> core: secured path
+```
+
 ## Before you begin
 
 - **Access:** vCenter Administrator role

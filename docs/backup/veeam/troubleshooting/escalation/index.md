@@ -19,6 +19,27 @@ How to escalate Veeam backup issues to Veeam support: what data to collect, how 
 
 ---
 
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+actor "On-Call Engineer" as ENG
+participant "Veeam\nSystem" as SYS
+participant "Vendor Support" as SUP
+
+ENG -> SYS: Pre-Escalation Self-Check
+SYS --> ENG: Output
+ENG -> SYS: Step-by-Step Data Collection
+SYS --> ENG: Output
+ENG -> SYS: How to Open the Case on the Veeam Support Portal
+SYS --> ENG: Output
+ENG -> SUP: Escalate with diagnostic bundle
+SUP --> ENG: Case / resolution path
+
+@enduml
+```
+
 ## Before you begin
 
 - **Access required:** Backup Administrator role on the Veeam Backup Server; access to VBR Console; Veeam support account (my.veeam.com) with active support entitlement

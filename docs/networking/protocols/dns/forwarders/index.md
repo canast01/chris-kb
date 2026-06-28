@@ -13,6 +13,25 @@ DNS Forwarders reference covering Overview, Configuring Global Forwarders, Condi
 
 
 
+```d2
+direction: right
+
+center: "DNS" {shape: hexagon}
+configuring_global_forwarders: "Configuring Global Forwarders" {shape: rectangle}
+conditional_forwarders: "Conditional Forwarders" {shape: rectangle}
+root_hints_vs_forwarders: "Root Hints vs Forwarders" {shape: rectangle}
+splitbrain_dns: "Split-Brain DNS" {shape: rectangle}
+loop_prevention: "Loop Prevention" {shape: rectangle}
+known_issues: "Known Issues" {shape: rectangle}
+
+center -> configuring_global_forwarders
+center -> conditional_forwarders
+center -> root_hints_vs_forwarders
+center -> splitbrain_dns
+center -> loop_prevention
+center -> known_issues
+```
+
 ## Overview
 
 DNS forwarders direct queries for names a server cannot resolve locally to another DNS server. Conditional forwarders send queries for a specific domain to a designated server — essential for split-brain DNS and cross-forest resolution. Root hints are the fallback when no forwarder is configured.

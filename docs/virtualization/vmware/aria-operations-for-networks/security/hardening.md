@@ -53,6 +53,21 @@ echo | openssl s_client -connect vrni.example.local:443 2>/dev/null \
 # Renew 30 days before expiry via Settings → SSL Certificate → Upload
 ```
 
+```d2
+direction: down
+
+external: External / Untrusted {shape: rectangle}
+perimeter_controls: "Perimeter Controls" {shape: rectangle}
+identity_access: "Identity & Access" {shape: rectangle}
+audit_logging: "Audit & Logging" {shape: rectangle}
+core: "Aria Operations for Networks Core" {shape: hexagon}
+
+external -> perimeter_controls: traffic in
+perimeter_controls -> identity_access
+identity_access -> audit_logging
+audit_logging -> core: secured path
+```
+
 ## Before you begin
 
 - **Access:** vCenter Administrator role

@@ -18,6 +18,21 @@ Host Inventory reference covering Overview, Host Inventory Table, Fields Referen
 
 ---
 
+```d2
+direction: right
+
+center: "Inventory" {shape: rectangle}
+host_inventory_table: "Host Inventory Table" {shape: rectangle}
+fields_reference: "Fields Reference" {shape: rectangle}
+host_lifecycle_events: "Host Lifecycle Events" {shape: rectangle}
+adding_a_host: "Adding a Host" {shape: rectangle}
+
+center -> host_inventory_table
+center -> fields_reference
+center -> host_lifecycle_events
+center -> adding_a_host
+```
+
 ## Overview
 
 Track every ESXi host in the environment using the table format below. One row per physical host. Update after hardware changes, firmware updates, or cluster moves.

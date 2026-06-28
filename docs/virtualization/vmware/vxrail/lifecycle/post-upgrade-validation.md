@@ -16,6 +16,27 @@ VxRail Post-Upgrade Validation reference covering Overview, Where It Fits, Daily
 Post-Upgrade Validation Sequence
 
 
+```d2
+direction: right
+
+plan: "Plan" {shape: oval}
+where_it_fits: "Where It Fits" {shape: rectangle}
+daily_checks: "Daily Checks" {shape: rectangle}
+health_commands: "Health Commands" {shape: rectangle}
+common_issues: "Common Issues" {shape: rectangle}
+operational_tasks: "Operational Tasks" {shape: rectangle}
+upgrade_notes: "Upgrade Notes" {shape: rectangle}
+validate: "Validate" {shape: oval}
+
+plan -> where_it_fits
+where_it_fits -> daily_checks
+daily_checks -> health_commands
+health_commands -> common_issues
+common_issues -> operational_tasks
+operational_tasks -> upgrade_notes
+upgrade_notes -> validate
+```
+
 ## Overview
 
 Validation after upgrade, alert review, cluster health, and documentation.

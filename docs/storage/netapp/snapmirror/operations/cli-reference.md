@@ -18,6 +18,21 @@ SnapMirror CLI reference: `snapmirror show`, `snapmirror create`, `snapmirror mo
 
 ---
 
+```d2
+direction: right
+
+hub: "SnapMirror\nOperations" {shape: hexagon}
+ontap_cli: "ONTAP CLI" {shape: rectangle}
+lag_monitoring_and_alerts: "Lag Monitoring and Alerts" {shape: rectangle}
+rest_api: "REST API" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+hub -> ontap_cli
+hub -> lag_monitoring_and_alerts
+hub -> rest_api
+hub -> verify
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

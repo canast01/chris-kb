@@ -18,6 +18,25 @@ SnapMirror automation scripts: ONTAP REST API and `ontap-python` library example
 
 ---
 
+```d2
+direction: right
+
+hub: "SnapMirror\nOperations" {shape: hexagon}
+lag_monitor_bash: "Lag Monitor (Bash)" {shape: rectangle}
+planned_dr_failover_bash: "Planned DR Failover (Bash)" {shape: rectangle}
+relationship_health_report_perl: "Relationship Health Report (Perl)" {shape: rectangle}
+ansible_snapmirror_resync_playbook: "Ansible SnapMirror Resync Playbook" {shape: rectangle}
+windows_snapmirror_relationship_stat: "Windows: SnapMirror Relationship Status via REST API (PowerS" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+hub -> lag_monitor_bash
+hub -> planned_dr_failover_bash
+hub -> relationship_health_report_perl
+hub -> ansible_snapmirror_resync_playbook
+hub -> windows_snapmirror_relationship_stat
+hub -> verify
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

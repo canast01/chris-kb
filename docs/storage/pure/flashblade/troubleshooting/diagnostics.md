@@ -52,6 +52,32 @@ graph TD
     class R,S escalate
 ```
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+step_1_check_array_health_and_active: "Step 1 — Check array health and active alerts" {shape: rectangle}
+step_2_check_blade_and_hardware_heal: "Step 2 — Check blade and hardware health" {shape: rectangle}
+step_3_check_filesystem_and_bucket_s: "Step 3 — Check filesystem and bucket state" {shape: rectangle}
+step_4_check_replication_health: "Step 4 — Check replication health" {shape: rectangle}
+step_5_diagnose_performance_issues: "Step 5 — Diagnose performance issues" {shape: rectangle}
+step_6_generate_diagnostic_bundle_fo: "Step 6 — Generate diagnostic bundle for Pure support" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> step_1_check_array_health_and_active: investigate
+symptom -> step_2_check_blade_and_hardware_heal: investigate
+symptom -> step_3_check_filesystem_and_bucket_s: investigate
+symptom -> step_4_check_replication_health: investigate
+symptom -> step_5_diagnose_performance_issues: investigate
+symptom -> step_6_generate_diagnostic_bundle_fo: investigate
+step_1_check_array_health_and_active -> resolution
+step_2_check_blade_and_hardware_heal -> resolution
+step_3_check_filesystem_and_bucket_s -> resolution
+step_4_check_replication_health -> resolution
+step_5_diagnose_performance_issues -> resolution
+step_6_generate_diagnostic_bundle_fo -> resolution
+```
+
 ## Before you begin
 
 - **Access:** FlashBlade admin credentials (SSH to management IP or Purity//FB web GUI); Pure1 portal access

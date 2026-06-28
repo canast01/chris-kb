@@ -15,6 +15,23 @@ Maintenance Window Closeout reference covering Overview, Closeout Sequence, Clos
 
 
 
+```d2
+direction: right
+
+center: "ServiceNow" {shape: hexagon}
+closeout_sequence: "Closeout Sequence" {shape: rectangle}
+closeout_checklist: "Closeout Checklist" {shape: rectangle}
+deferred_task_handling: "Deferred Task Handling" {shape: rectangle}
+debrief_and_lessons_learned: "Debrief and Lessons Learned" {shape: rectangle}
+monitoring_reinstatement: "Monitoring Reinstatement" {shape: rectangle}
+
+center -> closeout_sequence
+center -> closeout_checklist
+center -> deferred_task_handling
+center -> debrief_and_lessons_learned
+center -> monitoring_reinstatement
+```
+
 ## Overview
 
 Closeout formally ends the maintenance window, ensures all tasks are accounted for, and hands the environment back to normal operations. A rushed or skipped closeout leaves ambiguity about what was completed, creates gaps in the audit trail, and can leave monitoring in a suppressed state.

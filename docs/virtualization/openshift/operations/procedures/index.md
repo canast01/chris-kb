@@ -38,6 +38,25 @@ graph TD
     classDef step3 fill:#7c3aed,color:#fff
 ```
 
+```d2
+direction: right
+
+hub: "OpenShift\nOperations" {shape: hexagon}
+node_maintenance_procedure: "Node Maintenance Procedure" {shape: rectangle}
+scale_workers_via_machineset: "Scale Workers via MachineSet" {shape: rectangle}
+add_new_machineset: "Add New MachineSet" {shape: rectangle}
+add_infra_node_role: "Add Infra Node Role" {shape: rectangle}
+scale_deployment_and_rollout_managem: "Scale Deployment and Rollout Management" {shape: rectangle}
+emergency_etcd_member_recovery: "Emergency etcd Member Recovery" {shape: rectangle}
+
+hub -> node_maintenance_procedure
+hub -> scale_workers_via_machineset
+hub -> add_new_machineset
+hub -> add_infra_node_role
+hub -> scale_deployment_and_rollout_managem
+hub -> emergency_etcd_member_recovery
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

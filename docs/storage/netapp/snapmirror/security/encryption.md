@@ -18,6 +18,25 @@ SnapMirror encryption: SnapMirror Traffic Encryption (SMT) using TLS, `snapmirro
 
 ---
 
+```d2
+direction: down
+
+external: External / Untrusted {shape: rectangle}
+encryption_in_transit: "Encryption in Transit" {shape: rectangle}
+encryption_at_rest: "Encryption at Rest" {shape: rectangle}
+key_management_for_encrypted_destina: "Key Management for Encrypted Destination Volumes" {shape: rectangle}
+snapmirror_synchronous_and_smbc_encr: "SnapMirror Synchronous and SMBC Encryption" {shape: rectangle}
+compliance_mapping: "Compliance Mapping" {shape: rectangle}
+core: "SnapMirror Core" {shape: hexagon}
+
+external -> encryption_in_transit: traffic in
+encryption_in_transit -> encryption_at_rest
+encryption_at_rest -> key_management_for_encrypted_destina
+key_management_for_encrypted_destina -> snapmirror_synchronous_and_smbc_encr
+snapmirror_synchronous_and_smbc_encr -> compliance_mapping
+compliance_mapping -> core: secured path
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

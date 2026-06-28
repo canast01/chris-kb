@@ -19,6 +19,25 @@ InsightIQ is Dell EMC's performance analytics platform for NetApp PowerScale (Is
 
 ---
 
+```d2
+direction: right
+
+center: "InsightIQ" {shape: hexagon}
+deployment_architecture: "Deployment Architecture" {shape: rectangle}
+component_roles: "Component Roles" {shape: rectangle}
+data_collection: "Data Collection" {shape: rectangle}
+storage_and_retention: "Storage and Retention" {shape: rectangle}
+sizing_guidelines: "Sizing Guidelines" {shape: rectangle}
+network_requirements: "Network Requirements" {shape: rectangle}
+
+center -> deployment_architecture
+center -> component_roles
+center -> data_collection
+center -> storage_and_retention
+center -> sizing_guidelines
+center -> network_requirements
+```
+
 ## Deployment Architecture
 
 ```mermaid

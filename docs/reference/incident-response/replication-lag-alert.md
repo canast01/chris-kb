@@ -17,6 +17,31 @@ Response procedure for SnapMirror lag exceeding RPO targets, SRM replication ale
 
 > **Severity: P2** (lag increasing) → **P1** (RPO breached). Escalate immediately on RPO breach.
 
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+actor "Responder" as A
+participant "Incident Response System" as B
+participant "Dependent System" as C
+
+A -> B: Symptoms
+B --> A: OK
+A -> B: Triage  Identify Scope and Severity
+B --> A: OK
+A -> B: Diagnose Root Cause
+B --> A: OK
+A -> B: Fix  Option A Force Immediate Update
+B --> A: OK
+A -> B: Fix  Option B Remove Throttle for Catch-Up
+B --> A: OK
+A -> B: Fix  Option C Expand Destination Volume
+B --> A: OK
+
+@enduml
+```
+
 ## Symptoms
 
 - ONTAP SnapMirror alert: lag time exceeds configured threshold

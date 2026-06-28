@@ -16,6 +16,23 @@ Health Checks reference covering Daily Checklist, Weekly Checks.
 
 
 
+```d2
+direction: right
+
+begin_checks: "Begin Checks" {shape: oval}
+run_this_routine: "Run This Routine" {shape: rectangle}
+daily_checklist: "Daily Checklist" {shape: rectangle}
+weekly_checks: "Weekly Checks" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+generate_report: "Generate Report" {shape: oval}
+
+begin_checks -> run_this_routine
+run_this_routine -> daily_checklist
+daily_checklist -> weekly_checks
+weekly_checks -> verify
+verify -> generate_report
+```
+
 ## Before you begin
 
 - **Access:** Backup admin role on backup server; target system credentials

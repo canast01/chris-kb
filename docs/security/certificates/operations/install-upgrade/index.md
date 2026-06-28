@@ -14,6 +14,27 @@ The certificate lifecycle spans six stages: enrolment, issuance, installation, m
 
 
 
+```d2
+direction: right
+
+plan: "Plan" {shape: oval}
+full_certificate_lifecycle: "Full Certificate Lifecycle" {shape: rectangle}
+lifecycle_overview: "Lifecycle Overview" {shape: rectangle}
+csr_generation: "CSR Generation" {shape: rectangle}
+certificate_issuance_internal_adcs: "Certificate Issuance (Internal ADCS)" {shape: rectangle}
+certificate_installation: "Certificate Installation" {shape: rectangle}
+certificate_renewal: "Certificate Renewal" {shape: rectangle}
+validate: "Validate" {shape: oval}
+
+plan -> full_certificate_lifecycle
+full_certificate_lifecycle -> lifecycle_overview
+lifecycle_overview -> csr_generation
+csr_generation -> certificate_issuance_internal_adcs
+certificate_issuance_internal_adcs -> certificate_installation
+certificate_installation -> certificate_renewal
+certificate_renewal -> validate
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

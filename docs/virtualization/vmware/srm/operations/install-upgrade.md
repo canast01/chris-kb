@@ -27,6 +27,25 @@ vCenter (Protected) → Site Recovery → New Site Pair
 
 ---
 
+```d2
+direction: right
+
+hub: "Site Recovery Manager\nOperations" {shape: hexagon}
+sra_installation: "SRA Installation" {shape: rectangle}
+site_pairing: "Site Pairing" {shape: rectangle}
+upgrade_order: "Upgrade Order" {shape: rectangle}
+postinstall_verification: "Post-Install Verification" {shape: rectangle}
+version_compatibility: "Version Compatibility" {shape: rectangle}
+upgrade_sequence: "Upgrade Sequence" {shape: rectangle}
+
+hub -> sra_installation
+hub -> site_pairing
+hub -> upgrade_order
+hub -> postinstall_verification
+hub -> version_compatibility
+hub -> upgrade_sequence
+```
+
 ## Before you begin
 
 - **Access:** vCenter read-only minimum; Administrator role for remediation steps

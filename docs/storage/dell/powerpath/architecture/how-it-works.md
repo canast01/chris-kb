@@ -16,6 +16,25 @@ How It Works reference covering Overview, Host-Side MPIO Stack, Path States, Loa
 
 
 
+```d2
+direction: right
+
+center: "PowerPath" {shape: hexagon}
+hostside_mpio_stack: "Host-Side MPIO Stack" {shape: rectangle}
+path_states: "Path States" {shape: rectangle}
+loadbalancing_policies: "Load-Balancing Policies" {shape: rectangle}
+failover_and_recovery: "Failover and Recovery" {shape: rectangle}
+supported_platforms: "Supported Platforms" {shape: rectangle}
+key_commands: "Key Commands" {shape: rectangle}
+
+center -> hostside_mpio_stack
+center -> path_states
+center -> loadbalancing_policies
+center -> failover_and_recovery
+center -> supported_platforms
+center -> key_commands
+```
+
 ## Overview
 
 Dell PowerPath is a host-side multipath I/O driver that sits between the OS block device layer and the physical HBA/iSCSI initiator layer. It intercepts I/O destined for storage LUNs and distributes it across all available physical paths, providing automatic failover on path loss and load balancing across healthy paths. PowerPath presents a single virtual (pseudo) device per LUN to the OS regardless of how many physical paths exist.

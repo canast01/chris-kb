@@ -13,6 +13,27 @@ Validates that infrastructure is in a safe state before any upgrade or patching 
 ![Upgrade Readiness Checklist](../../../../assets/itsm-servicenow-lifecycle-upgrade-readiness-index.svg)
 
 
+```d2
+direction: right
+
+plan: "Plan" {shape: oval}
+preupgrade_gate_criteria: "Pre-Upgrade Gate Criteria" {shape: rectangle}
+4_network_and_connectivity: "4. Network and Connectivity" {shape: rectangle}
+5_vendor_compatibility_matrix: "5. Vendor Compatibility Matrix" {shape: rectangle}
+6_preupgrade_snapshot_vms: "6. Pre-Upgrade Snapshot (VMs)" {shape: rectangle}
+7_rollback_plan: "7. Rollback Plan" {shape: rectangle}
+go_nogo_signoff: "Go / No-Go Sign-Off" {shape: rectangle}
+validate: "Validate" {shape: oval}
+
+plan -> preupgrade_gate_criteria
+preupgrade_gate_criteria -> 4_network_and_connectivity
+4_network_and_connectivity -> 5_vendor_compatibility_matrix
+5_vendor_compatibility_matrix -> 6_preupgrade_snapshot_vms
+6_preupgrade_snapshot_vms -> 7_rollback_plan
+7_rollback_plan -> go_nogo_signoff
+go_nogo_signoff -> validate
+```
+
 ## Pre-Upgrade Gate Criteria
 
 ```mermaid

@@ -14,6 +14,27 @@ OCP upgrade channels, EUS (Extended Update Support) path, version lifecycle, upg
 
 
 
+```d2
+direction: right
+
+plan: "Plan" {shape: oval}
+upgrade_flow: "Upgrade Flow" {shape: rectangle}
+channel_selection: "Channel Selection" {shape: rectangle}
+upgrade_prerequisites_checklist: "Upgrade Prerequisites Checklist" {shape: rectangle}
+standard_upgrade_procedure: "Standard Upgrade Procedure" {shape: rectangle}
+upgrade_command_reference: "Upgrade Command Reference" {shape: rectangle}
+pause_worker_machineconfigpool: "Pause Worker MachineConfigPool" {shape: rectangle}
+validate: "Validate" {shape: oval}
+
+plan -> upgrade_flow
+upgrade_flow -> channel_selection
+channel_selection -> upgrade_prerequisites_checklist
+upgrade_prerequisites_checklist -> standard_upgrade_procedure
+standard_upgrade_procedure -> upgrade_command_reference
+upgrade_command_reference -> pause_worker_machineconfigpool
+pause_worker_machineconfigpool -> validate
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

@@ -18,6 +18,25 @@ scenario covers the full procedure from pre-flight checks through post-patch val
 
 
 
+```d2
+direction: right
+
+center: "Scenarios" {shape: hexagon}
+products_involved: "Products Involved" {shape: rectangle}
+1_premaintenance_checks: "1. Pre-Maintenance Checks" {shape: rectangle}
+2_evacuate_vms: "2. Evacuate VMs" {shape: rectangle}
+3_vsan_maintenance_mode_choose_the_r: "3. vSAN Maintenance Mode — Choose the Right Data Migration O" {shape: rectangle}
+4_apply_patches_via_lifecycle_manage: "4. Apply Patches via Lifecycle Manager" {shape: rectangle}
+5_manual_patch_via_esxcli_when_lcm_i: "5. Manual Patch via esxcli (When LCM Is Not Available)" {shape: rectangle}
+
+center -> products_involved
+center -> 1_premaintenance_checks
+center -> 2_evacuate_vms
+center -> 3_vsan_maintenance_mode_choose_the_r
+center -> 4_apply_patches_via_lifecycle_manage
+center -> 5_manual_patch_via_esxcli_when_lcm_i
+```
+
 ## Products Involved
 
 | Product | Role in This Scenario |

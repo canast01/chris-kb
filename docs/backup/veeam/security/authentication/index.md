@@ -16,6 +16,32 @@ Authentication reference covering Multi-Factor Authentication, CyberArk Integrat
 
 
 
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+actor "User / Service" as USR
+participant "Veeam" as SVC
+participant "Identity Provider\n(LDAP / OIDC / AD)" as IDP
+participant "Token / Session Store" as TOKEN
+
+USR -> SVC: Authentication request
+SVC -> IDP: Validate credentials
+IDP --> SVC: Identity confirmed
+SVC -> TOKEN: Issue session token
+TOKEN --> SVC: Token granted
+SVC --> USR: Access allowed
+
+note over SVC
+  REST API Token Configuration
+  Backup Infrastructure Credentials Management
+  Controls Summary
+end note
+
+@enduml
+```
+
 ## REST API Token Configuration
 
 ### Token Expiry

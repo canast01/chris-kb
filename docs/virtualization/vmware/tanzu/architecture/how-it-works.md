@@ -17,6 +17,25 @@ How It Works reference covering vSphere with Tanzu Architecture, TKG Standalone 
 
 
 
+```d2
+direction: right
+
+center: "Tanzu" {shape: hexagon}
+vsphere_with_tanzu_architecture: "vSphere with Tanzu Architecture" {shape: rectangle}
+tkg_standalone_workload_cluster_life: "TKG Standalone — Workload Cluster Lifecycle" {shape: rectangle}
+networking_models: "Networking Models" {shape: rectangle}
+harbor_registry_integration: "Harbor Registry Integration" {shape: rectangle}
+tap_supply_chain_concept: "TAP Supply Chain Concept" {shape: rectangle}
+component_relationship_diagram: "Component Relationship Diagram" {shape: rectangle}
+
+center -> vsphere_with_tanzu_architecture
+center -> tkg_standalone_workload_cluster_life
+center -> networking_models
+center -> harbor_registry_integration
+center -> tap_supply_chain_concept
+center -> component_relationship_diagram
+```
+
 ## vSphere with Tanzu Architecture
 
 vSphere with Tanzu (Workload Management) embeds Kubernetes natively into the ESXi hypervisor layer. The Supervisor cluster runs directly on ESXi hosts via the Spherelet component — a kubelet-equivalent that executes in the ESXi kernel space. Supervisor control plane VMs and workload VMs are scheduled as native vSphere VMs, but managed by Kubernetes APIs exposed through vCenter.

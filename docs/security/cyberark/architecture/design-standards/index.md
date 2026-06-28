@@ -30,6 +30,19 @@ Safe names follow the pattern `ENV-TEAM-PURPOSE` (e.g., `PROD-INFRA-SERVERS`, `D
 | Max safe member count | 20 (review if exceeded) |
 | Master Policy base | Require dual control, enforce check-in/out |
 
+```d2
+direction: down
+
+network_controls: "Network Controls" {shape: rectangle}
+os_hardening: "OS Hardening" {shape: rectangle}
+application_security: "Application Security" {shape: rectangle}
+audit_monitoring: "Audit & Monitoring" {shape: rectangle}
+
+network_controls -> os_hardening: hardens
+os_hardening -> application_security: hardens
+application_security -> audit_monitoring: hardens
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

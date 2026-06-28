@@ -45,6 +45,32 @@ graph TD
     class M escalate
 ```
 
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+step_1_filesystem_diagnostics: "Step 1 — Filesystem diagnostics" {shape: rectangle}
+step_2_replication_diagnostics: "Step 2 — Replication diagnostics" {shape: rectangle}
+step_3_dd_boost_diagnostics: "Step 3 — DD Boost diagnostics" {shape: rectangle}
+step_4_disk_and_hardware_diagnostics: "Step 4 — Disk and hardware diagnostics" {shape: rectangle}
+step_5_network_diagnostics: "Step 5 — Network diagnostics" {shape: rectangle}
+step_6_log_analysis_and_advanced_dia: "Step 6 — Log analysis and advanced diagnostics" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> step_1_filesystem_diagnostics: investigate
+symptom -> step_2_replication_diagnostics: investigate
+symptom -> step_3_dd_boost_diagnostics: investigate
+symptom -> step_4_disk_and_hardware_diagnostics: investigate
+symptom -> step_5_network_diagnostics: investigate
+symptom -> step_6_log_analysis_and_advanced_dia: investigate
+step_1_filesystem_diagnostics -> resolution
+step_2_replication_diagnostics -> resolution
+step_3_dd_boost_diagnostics -> resolution
+step_4_disk_and_hardware_diagnostics -> resolution
+step_5_network_diagnostics -> resolution
+step_6_log_analysis_and_advanced_dia -> resolution
+```
+
 ## Before you begin
 
 - **Access:** SSH to the Data Domain management IP as `sysadmin` or `admin`; serial console access for unresponsive systems; SCP server or USB for bundle transfer

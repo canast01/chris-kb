@@ -15,6 +15,25 @@ Access Control reference covering RBAC Roles, Object-Level Access Permissions, C
 ![Aria Operations — Access Control](../../../../assets/virtualization-vmware-aria-operations-security-access-contro.svg)
 
 
+```d2
+direction: down
+
+external: External / Untrusted {shape: rectangle}
+rbac_roles: "RBAC Roles" {shape: rectangle}
+objectlevel_access_permissions: "Object-Level Access Permissions" {shape: rectangle}
+creating_a_service_account_for_api_a: "Creating a Service Account for API Access" {shape: rectangle}
+reviewing_current_role_assignments: "Reviewing Current Role Assignments" {shape: rectangle}
+local_admin_account_hardening: "Local Admin Account Hardening" {shape: rectangle}
+core: "Aria Operations Core" {shape: hexagon}
+
+external -> rbac_roles: traffic in
+rbac_roles -> objectlevel_access_permissions
+objectlevel_access_permissions -> creating_a_service_account_for_api_a
+creating_a_service_account_for_api_a -> reviewing_current_role_assignments
+reviewing_current_role_assignments -> local_admin_account_hardening
+local_admin_account_hardening -> core: secured path
+```
+
 ## Before you begin
 
 - **Access:** vCenter Administrator role
