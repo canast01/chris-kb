@@ -8477,53 +8477,123 @@
 
 
 <h1 id="inventory-environment-mapping">Inventory — Environment Mapping<a class="headerlink" href="#inventory-environment-mapping" title="Permanent link">&para;</a></h1>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="gu">## Application: Payments API</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="gs">**Tier:**</span> Production
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="gs">**Hosts:**</span> pay-api-01, pay-api-02, pay-api-03 (load balanced via alb-pay-prod)
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="gs">**Owner:**</span> Payments Team — payments-team@example.com
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="gu">### Inbound Dependencies (who calls this service)</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>| Caller | Protocol | Port | Auth |
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>|---|---|---|---|
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>| Web frontend | HTTPS | 443 | JWT |
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>| Mobile app | HTTPS | 443 | JWT |
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>| Batch job (billing-cron) | HTTPS | 443 | mTLS |
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="gu">### Outbound Dependencies (what this service calls)</span>
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>| Target | Protocol | Port | Auth | Failure Impact |
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>|---|---|---|---|---|
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>| payments-db-primary | PostgreSQL | 5432 | DB user | Full outage |
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>| payments-db-replica | PostgreSQL | 5432 | DB user | Read-only degraded |
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>| fraud-detection-api | HTTPS | 443 | API key | Transactions blocked |
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>| vault | HTTPS | 8200 | AppRole | Auth fails; downtime |
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>| smtp-relay | SMTP | 25 | None | Email receipts fail only |
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="gu">### Data Flows</span>
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="k">-</span><span class="w"> </span>Payment transaction → payments-db → fraud-detection-api → response
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="k">-</span><span class="w"> </span>Audit log → kafka-payments-topic → SIEM
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a><span class="gu">### Infrastructure</span>
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a><span class="k">-</span><span class="w"> </span>Load Balancer: alb-pay-prod (AWS ALB)
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a><span class="k">-</span><span class="w"> </span>DNS: api.payments.example.com → alb-pay-prod CNAME
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a><span class="k">-</span><span class="w"> </span>TLS cert: *.payments.example.com — expires 2027-03-01
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a><span class="k">-</span><span class="w"> </span>Secrets: vault path <span class="sb">`secret/payments/db_password`</span>, <span class="sb">`secret/payments/fraud_api_key`</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>```d2
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>direction: down
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>application_payments_api: &quot;Application: Payments API&quot; {shape: rectangle}
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># netstat — find connections on a host</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ss<span class="w"> </span>-tnp<span class="w">    </span><span class="c1"># established TCP connections and owning process</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>ss<span class="w"> </span>-tlnp<span class="w">   </span><span class="c1"># listening ports</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Find which process owns a port</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>lsof<span class="w"> </span>-i<span class="w"> </span>:&lt;port&gt;
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Trace network path to a service</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>traceroute<span class="w"> </span>&lt;target-host&gt;
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>mtr<span class="w"> </span>--report<span class="w"> </span>&lt;target-host&gt;
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c1"># DNS record discovery</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>dig<span class="w"> </span>&lt;hostname&gt;<span class="w"> </span>ANY
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>dig<span class="w"> </span>-t<span class="w"> </span>SRV<span class="w"> </span>_service._proto.&lt;domain&gt;
-</code></pre></div>
+<h2 id="application-payments-api">Application: Payments API<a class="headerlink" href="#application-payments-api" title="Permanent link">&para;</a></h2>
+<p><strong>Tier:</strong> Production
+<strong>Hosts:</strong> pay-api-01, pay-api-02, pay-api-03 (load balanced via alb-pay-prod)
+<strong>Owner:</strong> Payments Team — payments-team@example.com</p>
+<h3 id="inbound-dependencies-who-calls-this-service">Inbound Dependencies (who calls this service)<a class="headerlink" href="#inbound-dependencies-who-calls-this-service" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Caller</th>
+<th>Protocol</th>
+<th>Port</th>
+<th>Auth</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Web frontend</td>
+<td>HTTPS</td>
+<td>443</td>
+<td>JWT</td>
+</tr>
+<tr>
+<td>Mobile app</td>
+<td>HTTPS</td>
+<td>443</td>
+<td>JWT</td>
+</tr>
+<tr>
+<td>Batch job (billing-cron)</td>
+<td>HTTPS</td>
+<td>443</td>
+<td>mTLS</td>
+</tr>
+</tbody>
+</table>
+<h3 id="outbound-dependencies-what-this-service-calls">Outbound Dependencies (what this service calls)<a class="headerlink" href="#outbound-dependencies-what-this-service-calls" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Target</th>
+<th>Protocol</th>
+<th>Port</th>
+<th>Auth</th>
+<th>Failure Impact</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>payments-db-primary</td>
+<td>PostgreSQL</td>
+<td>5432</td>
+<td>DB user</td>
+<td>Full outage</td>
+</tr>
+<tr>
+<td>payments-db-replica</td>
+<td>PostgreSQL</td>
+<td>5432</td>
+<td>DB user</td>
+<td>Read-only degraded</td>
+</tr>
+<tr>
+<td>fraud-detection-api</td>
+<td>HTTPS</td>
+<td>443</td>
+<td>API key</td>
+<td>Transactions blocked</td>
+</tr>
+<tr>
+<td>vault</td>
+<td>HTTPS</td>
+<td>8200</td>
+<td>AppRole</td>
+<td>Auth fails; downtime</td>
+</tr>
+<tr>
+<td>smtp-relay</td>
+<td>SMTP</td>
+<td>25</td>
+<td>None</td>
+<td>Email receipts fail only</td>
+</tr>
+</tbody>
+</table>
+<h3 id="data-flows">Data Flows<a class="headerlink" href="#data-flows" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Payment transaction → payments-db → fraud-detection-api → response</li>
+<li>Audit log → kafka-payments-topic → SIEM</li>
+</ul>
+<h3 id="infrastructure">Infrastructure<a class="headerlink" href="#infrastructure" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Load Balancer: alb-pay-prod (AWS ALB)</li>
+<li>DNS: api.payments.example.com → alb-pay-prod CNAME</li>
+<li>TLS cert: *.payments.example.com — expires 2027-03-01</li>
+<li>Secrets: vault path <code>secret/payments/db_password</code>, <code>secret/payments/fraud_api_key</code>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>```bash
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a># netstat — find connections on a host
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>ss -tnp    # established TCP connections and owning process
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>ss -tlnp   # listening ports
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a># Find which process owns a port
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>lsof -i :&lt;port&gt;
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a># Trace network path to a service
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>traceroute &lt;target-host&gt;
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>mtr --report &lt;target-host&gt;
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a># DNS record discovery
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>dig &lt;hostname&gt; ANY
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>dig -t SRV _service._proto.&lt;domain&gt;
+</code></pre></div></li>
+</ul>
 
 
 
@@ -8546,7 +8616,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:29:13 UTC"><span class="timeago" datetime="2026-06-28T18:29:13+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:29:13 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 23:38:21 UTC"><span class="timeago" datetime="2026-06-28T23:38:21+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 23:38:21 UTC">2026-06-28</span>
   </span>
 
     
