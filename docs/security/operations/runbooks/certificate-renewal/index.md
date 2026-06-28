@@ -16,6 +16,23 @@ tags:
 | Estimated time | 30–60 minutes |
 | Impact | Brief service interruption during hot-swap (seconds); expired cert causes full outage |
 
+```d2
+direction: down
+
+renewal_timeline: "Renewal Timeline" {shape: rectangle}
+step_2_generate_private_key_and_csr: "Step 2 — Generate Private Key and CSR" {shape: rectangle}
+step_3_submit_to_ca: "Step 3 — Submit to CA" {shape: rectangle}
+step_4_install_certificate: "Step 4 — Install Certificate" {shape: rectangle}
+step_5_postrenewal_validation: "Step 5 — Post-Renewal Validation" {shape: rectangle}
+rollback: "Rollback" {shape: rectangle}
+
+renewal_timeline -> step_2_generate_private_key_and_csr: uses
+step_2_generate_private_key_and_csr -> step_3_submit_to_ca: uses
+step_3_submit_to_ca -> step_4_install_certificate: uses
+step_4_install_certificate -> step_5_postrenewal_validation: uses
+step_5_postrenewal_validation -> rollback: uses
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

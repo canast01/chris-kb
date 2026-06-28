@@ -15,6 +15,23 @@ Why vSAN resyncs happen, how CLOM decides when and where to rebuild, what drives
 
 ---
 
+```d2
+direction: down
+
+why_resync_happens: "Why Resync Happens" {shape: rectangle}
+how_clom_decides_where_to_rebuild: "How CLOM Decides Where to Rebuild" {shape: rectangle}
+capacity_headroom_why_30_matters: "Capacity Headroom: Why 30% Matters" {shape: rectangle}
+resync_duration_and_throughput: "Resync Duration and Throughput" {shape: rectangle}
+the_throttle_trading_speed_for_vm_st: "The Throttle: Trading Speed for VM Stability" {shape: rectangle}
+deltasync_vs_full_rebuild: "Delta-Sync vs Full Rebuild" {shape: rectangle}
+
+why_resync_happens -> how_clom_decides_where_to_rebuild: uses
+how_clom_decides_where_to_rebuild -> capacity_headroom_why_30_matters: uses
+capacity_headroom_why_30_matters -> resync_duration_and_throughput: uses
+resync_duration_and_throughput -> the_throttle_trading_speed_for_vm_st: uses
+the_throttle_trading_speed_for_vm_st -> deltasync_vs_full_rebuild: uses
+```
+
 ## Why Resync Happens
 
 Resync is vSAN's mechanism for maintaining the data protection promises defined in storage policies. It runs whenever the current state of an object does not match its policy.

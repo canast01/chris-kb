@@ -10,6 +10,21 @@ DNS Lookups reference covering Overview, nslookup, dig, Resolve-DnsName (PowerSh
 
         FORWARD vs REVERSE LOOKUPS
 
+```d2
+direction: down
+
+nslookup: "nslookup" {shape: rectangle}
+dig: "dig" {shape: rectangle}
+resolvednsname_powershell: "Resolve-DnsName (PowerShell)" {shape: rectangle}
+ttl_debugging: "TTL Debugging" {shape: rectangle}
+known_issues: "Known Issues" {shape: rectangle}
+
+nslookup -> dig: uses
+dig -> resolvednsname_powershell: uses
+resolvednsname_powershell -> ttl_debugging: uses
+ttl_debugging -> known_issues: uses
+```
+
 ## Overview
 
 DNS lookups translate hostnames to IPs (forward) and IPs to hostnames (reverse). Tools vary by OS: `nslookup` is universal, `dig` is preferred on Linux/macOS for detailed output, and `Resolve-DnsName` is the PowerShell equivalent on Windows. TTL inspection is essential when debugging stale cache issues.

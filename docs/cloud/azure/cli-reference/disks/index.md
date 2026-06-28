@@ -31,6 +31,17 @@ az snapshot create --resource-group <rg> --name <snap> --source <disk_id>
 az snapshot delete --resource-group <rg> --name <snap>
 ```
 
+```d2
+direction: down
+
+component_a: "Component A" {shape: rectangle}
+component_b: "Component B" {shape: rectangle}
+component_c: "Component C" {shape: rectangle}
+
+component_a -> component_b: uses
+component_b -> component_c: uses
+```
+
 ## See also
 
 - [Azure CLI Reference](../index.md)

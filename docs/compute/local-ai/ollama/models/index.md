@@ -12,6 +12,23 @@ Ollama's model library includes a wide range of open models. Models are identifi
 *Applies to: Ollama*
 </div>
 
+```d2
+direction: down
+
+pulling_models: "Pulling Models" {shape: rectangle}
+popular_models_and_tags: "Popular Models and Tags" {shape: rectangle}
+quantisation_levels: "Quantisation Levels" {shape: rectangle}
+custom_modelfiles: "Custom Modelfiles" {shape: rectangle}
+gguf_models_from_huggingface: "GGUF Models from HuggingFace" {shape: rectangle}
+managing_the_model_library: "Managing the Model Library" {shape: rectangle}
+
+pulling_models -> popular_models_and_tags: uses
+popular_models_and_tags -> quantisation_levels: uses
+quantisation_levels -> custom_modelfiles: uses
+custom_modelfiles -> gguf_models_from_huggingface: uses
+gguf_models_from_huggingface -> managing_the_model_library: uses
+```
+
 ## Pulling Models
 
 ```bash

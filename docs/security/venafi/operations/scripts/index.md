@@ -34,6 +34,13 @@ $certs = Invoke-RestMethod -Uri $uri -Headers @{ "X-Venafi-Token" = $token }
 $certs.Certificates | Export-Csv -Path "expiring-certs.csv" -NoTypeInformation
 ```
 
+```d2
+direction: down
+
+verify: "Verify" {shape: rectangle}
+
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

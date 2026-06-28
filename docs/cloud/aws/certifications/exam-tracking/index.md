@@ -9,6 +9,23 @@ tags:
 AWS Exam Tracking reference covering Certification Path Overview, Exam Scheduling, Domain Score Breakdown — SAA-C03, Exam Attempt Log, Retake and Recertification Notes and 1 more sections.
 </div>
 
+```d2
+direction: down
+
+certification_path_overview: "Certification Path Overview" {shape: rectangle}
+exam_scheduling: "Exam Scheduling" {shape: rectangle}
+domain_score_breakdown_saac03: "Domain Score Breakdown — SAA-C03" {shape: rectangle}
+exam_attempt_log: "Exam Attempt Log" {shape: rectangle}
+retake_and_recertification_notes: "Retake and Recertification Notes" {shape: rectangle}
+study_checklist: "Study Checklist" {shape: rectangle}
+
+certification_path_overview -> exam_scheduling: uses
+exam_scheduling -> domain_score_breakdown_saac03: uses
+domain_score_breakdown_saac03 -> exam_attempt_log: uses
+exam_attempt_log -> retake_and_recertification_notes: uses
+retake_and_recertification_notes -> study_checklist: uses
+```
+
 ## Certification Path Overview
 
 | Level | Exam | Code | Fee (USD) | Duration |

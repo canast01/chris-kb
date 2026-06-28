@@ -16,6 +16,23 @@ Standard alert thresholds for compute, storage, network, and backup infrastructu
 
 ---
 
+```d2
+direction: down
+
+vmware_vsphere: "VMware vSphere" {shape: rectangle}
+ontap: "ONTAP" {shape: rectangle}
+pure_flasharray: "Pure FlashArray" {shape: rectangle}
+veeam_backup: "Veeam Backup" {shape: rectangle}
+network_nsx: "Network / NSX" {shape: rectangle}
+fc_san: "FC / SAN" {shape: rectangle}
+
+vmware_vsphere -> ontap: uses
+ontap -> pure_flasharray: uses
+pure_flasharray -> veeam_backup: uses
+veeam_backup -> network_nsx: uses
+network_nsx -> fc_san: uses
+```
+
 ## VMware vSphere
 
 ### Host-Level Metrics

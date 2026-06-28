@@ -9,6 +9,23 @@ tags:
 Azure Weak Areas reference covering NSG vs ASG, VNet Peering vs VPN Gateway, RBAC vs Azure Policy, Storage Account Redundancy Options, Managed Disk Types and 1 more sections.
 </div>
 
+```d2
+direction: down
+
+nsg_vs_asg: "NSG vs ASG" {shape: rectangle}
+vnet_peering_vs_vpn_gateway: "VNet Peering vs VPN Gateway" {shape: rectangle}
+rbac_vs_azure_policy: "RBAC vs Azure Policy" {shape: rectangle}
+storage_account_redundancy_options: "Storage Account Redundancy Options" {shape: rectangle}
+managed_disk_types: "Managed Disk Types" {shape: rectangle}
+study_checklist: "Study Checklist" {shape: rectangle}
+
+nsg_vs_asg -> vnet_peering_vs_vpn_gateway: uses
+vnet_peering_vs_vpn_gateway -> rbac_vs_azure_policy: uses
+rbac_vs_azure_policy -> storage_account_redundancy_options: uses
+storage_account_redundancy_options -> managed_disk_types: uses
+managed_disk_types -> study_checklist: uses
+```
+
 ## NSG vs ASG
 
 | Feature | NSG (Network Security Group) | ASG (Application Security Group) |

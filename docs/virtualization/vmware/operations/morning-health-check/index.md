@@ -20,6 +20,23 @@ Start-of-shift health check sequence for a VMware SDDC environment. Run these ch
 
 ---
 
+```d2
+direction: down
+
+1_vcenter: "1. vCenter" {shape: rectangle}
+2_esxi_cluster: "2. ESXi Cluster" {shape: rectangle}
+3_vsan: "3. vSAN" {shape: rectangle}
+4_nsx: "4. NSX" {shape: rectangle}
+5_aria_operations: "5. Aria Operations" {shape: rectangle}
+signoff_checklist: "Sign-off Checklist" {shape: rectangle}
+
+1_vcenter -> 2_esxi_cluster: uses
+2_esxi_cluster -> 3_vsan: uses
+3_vsan -> 4_nsx: uses
+4_nsx -> 5_aria_operations: uses
+5_aria_operations -> signoff_checklist: uses
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

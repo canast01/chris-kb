@@ -8,6 +8,21 @@ tags:
 NFS Exports reference covering Overview, /etc/exports Syntax, Key Export Options, Applying Export Changes, Verifying Exports from Client Side and 1 more sections.
 </div>
 
+```d2
+direction: down
+
+etcexports_syntax: "/etc/exports Syntax" {shape: rectangle}
+key_export_options: "Key Export Options" {shape: rectangle}
+applying_export_changes: "Applying Export Changes" {shape: rectangle}
+verifying_exports_from_client_side: "Verifying Exports from Client Side" {shape: rectangle}
+known_issues: "Known Issues" {shape: rectangle}
+
+etcexports_syntax -> key_export_options: uses
+key_export_options -> applying_export_changes: uses
+applying_export_changes -> verifying_exports_from_client_side: uses
+verifying_exports_from_client_side -> known_issues: uses
+```
+
 ## Overview
 
 NFS exports are defined in `/etc/exports` on Linux servers. Each line specifies a directory, the clients allowed to mount it, and a set of options controlling access, security, and behavior. Changes take effect with `exportfs -ra` — no service restart required.

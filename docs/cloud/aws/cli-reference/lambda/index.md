@@ -10,6 +10,23 @@ Lambda reference covering Environment Variables, Event Source Mappings (SQS / Ki
 *Applies to: AWS*
 </div>
 
+```d2
+direction: down
+
+event_source_mappings_sqs_kinesis_tr: "Event Source Mappings (SQS / Kinesis triggers)" {shape: rectangle}
+layers: "Layers" {shape: rectangle}
+versions_and_aliases: "Versions and Aliases" {shape: rectangle}
+concurrency: "Concurrency" {shape: rectangle}
+function_urls: "Function URLs" {shape: rectangle}
+logs: "Logs" {shape: rectangle}
+
+event_source_mappings_sqs_kinesis_tr -> layers: uses
+layers -> versions_and_aliases: uses
+versions_and_aliases -> concurrency: uses
+concurrency -> function_urls: uses
+function_urls -> logs: uses
+```
+
 ## Event Source Mappings (SQS / Kinesis triggers)
 
 ```bash

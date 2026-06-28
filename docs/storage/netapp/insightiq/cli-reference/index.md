@@ -36,6 +36,17 @@ curl -k -u "admin:<pass>"   https://<insightiq_fqdn>/api/json/v2/reports
 curl -k -u "admin:<pass>"   "https://<insightiq_fqdn>/api/json/v2/reports/<report_id>/download"   -o report.csv
 ```
 
+```d2
+direction: down
+
+component_a: "Component A" {shape: rectangle}
+component_b: "Component B" {shape: rectangle}
+component_c: "Component C" {shape: rectangle}
+
+component_a -> component_b: uses
+component_b -> component_c: uses
+```
+
 ## See also
 
 - [InsightIQ — Overview](../../)

@@ -15,6 +15,23 @@ diagnosing NTP and DNS as silent causes, and identifying the impact on NSX trans
 *Applies to: vSphere 7.x / 8.x*
 </div>
 
+```d2
+direction: down
+
+products_involved: "Products Involved" {shape: rectangle}
+1_confirm_vm_status_before_doing_any: "1. Confirm VM Status Before Doing Anything Else" {shape: rectangle}
+2_attempt_reconnect_from_vcenter: "2. Attempt Reconnect from vCenter" {shape: rectangle}
+3_test_management_network_reachabili: "3. Test Management Network Reachability" {shape: rectangle}
+4_check_and_restart_vpxa_and_hostd_a: "4. Check and Restart vpxa and hostd Agents" {shape: rectangle}
+5_verify_management_network_configur: "5. Verify Management Network Configuration" {shape: rectangle}
+
+products_involved -> 1_confirm_vm_status_before_doing_any: uses
+1_confirm_vm_status_before_doing_any -> 2_attempt_reconnect_from_vcenter: uses
+2_attempt_reconnect_from_vcenter -> 3_test_management_network_reachabili: uses
+3_test_management_network_reachabili -> 4_check_and_restart_vpxa_and_hostd_a: uses
+4_check_and_restart_vpxa_and_hostd_a -> 5_verify_management_network_configur: uses
+```
+
 ## Products Involved
 
 | Product | Role in This Scenario |

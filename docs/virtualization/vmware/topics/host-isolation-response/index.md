@@ -11,6 +11,23 @@ vSphere HA host isolation response determines what happens to VMs on a host that
 *Applies to: vSphere 7.x / 8.x*
 </div>
 
+```d2
+direction: down
+
+isolation_response_options: "Isolation Response Options" {shape: rectangle}
+recommended_configuration: "Recommended Configuration" {shape: rectangle}
+datastore_heartbeating: "Datastore Heartbeating" {shape: rectangle}
+splitbrain_risk: "Split-Brain Risk" {shape: rectangle}
+pervm_override: "Per-VM Override" {shape: rectangle}
+troubleshooting_isolation_events: "Troubleshooting Isolation Events" {shape: rectangle}
+
+isolation_response_options -> recommended_configuration: uses
+recommended_configuration -> datastore_heartbeating: uses
+datastore_heartbeating -> splitbrain_risk: uses
+splitbrain_risk -> pervm_override: uses
+pervm_override -> troubleshooting_isolation_events: uses
+```
+
 ## Isolation Response Options
 
 | Setting | Behaviour | When to Use |

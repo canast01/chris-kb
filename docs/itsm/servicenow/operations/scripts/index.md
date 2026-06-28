@@ -254,6 +254,13 @@ MID Server Status Report — 2026-05-08 08:00 UTC
 Total MID Servers: 3 | Issues: 1
 ```
 
+```d2
+direction: down
+
+verify: "Verify" {shape: rectangle}
+
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

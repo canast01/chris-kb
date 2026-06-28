@@ -10,6 +10,23 @@ An iSCSI target is the storage-side endpoint — a port on an array, NAS gateway
 
         iSCSI TARGET STRUCTURE
 
+```d2
+direction: down
+
+target_address_format: "Target Address Format" {shape: rectangle}
+target_portal_groups: "Target Portal Groups" {shape: rectangle}
+discovery_methods: "Discovery Methods" {shape: rectangle}
+host_initiator_group_mapping: "Host / Initiator Group Mapping" {shape: rectangle}
+verifying_target_connectivity: "Verifying Target Connectivity" {shape: rectangle}
+common_issues: "Common Issues" {shape: rectangle}
+
+target_address_format -> target_portal_groups: uses
+target_portal_groups -> discovery_methods: uses
+discovery_methods -> host_initiator_group_mapping: uses
+host_initiator_group_mapping -> verifying_target_connectivity: uses
+verifying_target_connectivity -> common_issues: uses
+```
+
 ## Target Address Format
 
 ```text

@@ -28,3 +28,24 @@ Dell AIOps and CloudIQ support is provided by Dell Technologies via the Dell Sup
 | SCG Download / Updates | dell.com/support > Secure Connect Gateway |
 | CloudIQ API Documentation | developer.dell.com/cloudiq |
 | ProSupport | ProSupport contract required for AIOps SLA |
+
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+actor "On-Call Engineer" as ENG
+participant "Dell AIOps\nSystem" as SYS
+participant "Vendor Support" as SUP
+
+ENG -> SYS: Identify Severity
+SYS --> ENG: Output
+ENG -> SYS: Collect Diagnostics
+SYS --> ENG: Output
+ENG -> SYS: Open Support Case
+SYS --> ENG: Output
+ENG -> SUP: Escalate with diagnostic bundle
+SUP --> ENG: Case / resolution path
+
+@enduml
+```

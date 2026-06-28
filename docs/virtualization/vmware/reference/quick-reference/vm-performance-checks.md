@@ -10,6 +10,23 @@ VM performance quick checks: CPU ready %, memory balloon/swap, storage latency v
 *Applies to: vSphere 7.x / 8.x*
 </div>
 
+```d2
+direction: down
+
+cpu: "CPU" {shape: rectangle}
+memory: "Memory" {shape: rectangle}
+storage: "Storage" {shape: rectangle}
+network: "Network" {shape: rectangle}
+recent_changes: "Recent Changes" {shape: rectangle}
+quick_commands_from_esxi: "Quick Commands from ESXi" {shape: rectangle}
+
+cpu -> memory: uses
+memory -> storage: uses
+storage -> network: uses
+network -> recent_changes: uses
+recent_changes -> quick_commands_from_esxi: uses
+```
+
 ## CPU
 
 - **CPU Ready** — time the VM is waiting for a physical CPU. Above 5% is worth investigating.

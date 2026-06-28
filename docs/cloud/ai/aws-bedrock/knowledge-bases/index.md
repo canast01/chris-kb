@@ -11,6 +11,23 @@ Bedrock Knowledge Bases provide retrieval-augmented generation (RAG) by connecti
 *Applies to: AWS Bedrock*
 </div>
 
+```d2
+direction: down
+
+s3_data_sources: "S3 Data Sources" {shape: rectangle}
+embeddings_and_chunking: "Embeddings and Chunking" {shape: rectangle}
+retrieval_configuration: "Retrieval Configuration" {shape: rectangle}
+syncing_data_sources: "Syncing Data Sources" {shape: rectangle}
+associating_with_an_agent: "Associating with an Agent" {shape: rectangle}
+troubleshooting: "Troubleshooting" {shape: rectangle}
+
+s3_data_sources -> embeddings_and_chunking: uses
+embeddings_and_chunking -> retrieval_configuration: uses
+retrieval_configuration -> syncing_data_sources: uses
+syncing_data_sources -> associating_with_an_agent: uses
+associating_with_an_agent -> troubleshooting: uses
+```
+
 ## S3 Data Sources
 
 Data sources point to S3 prefixes. Supported formats include PDF, DOCX, TXT, HTML, CSV, and Markdown.

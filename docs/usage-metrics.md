@@ -6,6 +6,17 @@ Knowledge base statistics: page counts, section distribution, and content type c
 
 Generated: 2026-06-28
 
+```d2
+direction: down
+
+current_totals: "Current totals" {shape: rectangle}
+section_page_counts: "Section page counts" {shape: rectangle}
+health_checks: "Health checks" {shape: rectangle}
+
+current_totals -> section_page_counts: uses
+section_page_counts -> health_checks: uses
+```
+
 ## Current totals
 
 | Metric | Count |

@@ -51,3 +51,14 @@ Recovery:       Re-enabled path; multipath rebalanced within 5 seconds
 Pass/Fail:      Pass
 Notes:          Alert was 45 seconds delayed — investigate alerting lag
 ```
+
+```d2
+direction: down
+
+component_a: "Component A" {shape: rectangle}
+component_b: "Component B" {shape: rectangle}
+component_c: "Component C" {shape: rectangle}
+
+component_a -> component_b: uses
+component_b -> component_c: uses
+```

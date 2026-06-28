@@ -16,6 +16,23 @@ tags:
 | Estimated time | 5–15 minutes |
 | Impact | User regains access; no service disruption |
 
+```d2
+direction: down
+
+process_flow: "Process Flow" {shape: rectangle}
+step_3_fix_root_cause: "Step 3 — Fix Root Cause" {shape: rectangle}
+step_4_unlock_the_account: "Step 4 — Unlock the Account" {shape: rectangle}
+step_5_validate_authentication: "Step 5 — Validate Authentication" {shape: rectangle}
+linux_sssd_if_applicable: "Linux / SSSD (if applicable)" {shape: rectangle}
+checklist: "Checklist" {shape: rectangle}
+
+process_flow -> step_3_fix_root_cause: uses
+step_3_fix_root_cause -> step_4_unlock_the_account: uses
+step_4_unlock_the_account -> step_5_validate_authentication: uses
+step_5_validate_authentication -> linux_sssd_if_applicable: uses
+linux_sssd_if_applicable -> checklist: uses
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

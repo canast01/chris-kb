@@ -314,6 +314,13 @@ jcmd "${JIRA_PID}" GC.heap_info
 jcmd "${JIRA_PID}" VM.system_properties | grep -E "jira|atlassian|java.heap|Xmx"
 ```
 
+```d2
+direction: down
+
+verify: "Verify" {shape: rectangle}
+
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

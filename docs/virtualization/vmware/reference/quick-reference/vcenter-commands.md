@@ -12,6 +12,23 @@ vCenter SSH command reference: `service-control --status/--start/--stop`, `vmon-
 *Applies to: vSphere 7.x / 8.x*
 </div>
 
+```d2
+direction: down
+
+check_all_services: "Check All Services" {shape: rectangle}
+start_all_services: "Start All Services" {shape: rectangle}
+stop_all_services: "Stop All Services" {shape: rectangle}
+restart_all_services: "Restart All Services" {shape: rectangle}
+restart_a_single_service: "Restart a Single Service" {shape: rectangle}
+check_disk_space: "Check Disk Space" {shape: rectangle}
+
+check_all_services -> start_all_services: uses
+start_all_services -> stop_all_services: uses
+stop_all_services -> restart_all_services: uses
+restart_all_services -> restart_a_single_service: uses
+restart_a_single_service -> check_disk_space: uses
+```
+
 ## Check All Services
 
 ```bash

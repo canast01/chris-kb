@@ -15,6 +15,23 @@ to prevent recurrence.
 *Applies to: vSphere 7.x / 8.x*
 </div>
 
+```d2
+direction: down
+
+products_involved: "Products Involved" {shape: rectangle}
+1_identify_the_alarm_and_affected_da: "1. Identify the Alarm and Affected Datastore" {shape: rectangle}
+2_check_what_is_consuming_space: "2. Check What Is Consuming Space" {shape: rectangle}
+3_find_large_snapshots_powercli: "3. Find Large Snapshots — PowerCLI" {shape: rectangle}
+4_find_orphaned_vmdks_on_the_datasto: "4. Find Orphaned VMDKs on the Datastore" {shape: rectangle}
+5_expand_capacity_or_storage_vmotion: "5. Expand Capacity or Storage vMotion VMs" {shape: rectangle}
+
+products_involved -> 1_identify_the_alarm_and_affected_da: uses
+1_identify_the_alarm_and_affected_da -> 2_check_what_is_consuming_space: uses
+2_check_what_is_consuming_space -> 3_find_large_snapshots_powercli: uses
+3_find_large_snapshots_powercli -> 4_find_orphaned_vmdks_on_the_datasto: uses
+4_find_orphaned_vmdks_on_the_datasto -> 5_expand_capacity_or_storage_vmotion: uses
+```
+
 ## Products Involved
 
 | Product | Role in This Scenario |

@@ -10,6 +10,21 @@ Incident Resolution reference covering Overview, Resolution vs Workaround, Resol
 *Applies to: ServiceNow*
 </div>
 
+```d2
+direction: down
+
+resolution_vs_workaround: "Resolution vs Workaround" {shape: rectangle}
+resolution_steps_process: "Resolution Steps Process" {shape: rectangle}
+rca_triggers: "RCA Triggers" {shape: rectangle}
+postresolution_monitoring: "Post-Resolution Monitoring" {shape: rectangle}
+incident_closure_checklist: "Incident Closure Checklist" {shape: rectangle}
+
+resolution_vs_workaround -> resolution_steps_process: uses
+resolution_steps_process -> rca_triggers: uses
+rca_triggers -> postresolution_monitoring: uses
+postresolution_monitoring -> incident_closure_checklist: uses
+```
+
 ## Overview
 
 Resolution is the phase where the immediate problem is fixed and service is restored. It is distinct from root cause analysis — resolution focuses on getting users back online; RCA focuses on understanding why the failure happened and preventing recurrence. Both are important, but do not let RCA work delay restoration.

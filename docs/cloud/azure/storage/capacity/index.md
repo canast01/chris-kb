@@ -10,6 +10,21 @@ Capacity Monitoring reference covering Overview, Storage Account Metrics, Capaci
 *Applies to: Azure*
 </div>
 
+```d2
+direction: down
+
+storage_account_metrics: "Storage Account Metrics" {shape: rectangle}
+capacity_alerts: "Capacity Alerts" {shape: rectangle}
+containerlevel_capacity: "Container-Level Capacity" {shape: rectangle}
+forecasting_and_trend_analysis: "Forecasting and Trend Analysis" {shape: rectangle}
+storage_account_limits_reference: "Storage Account Limits Reference" {shape: rectangle}
+
+storage_account_metrics -> capacity_alerts: uses
+capacity_alerts -> containerlevel_capacity: uses
+containerlevel_capacity -> forecasting_and_trend_analysis: uses
+forecasting_and_trend_analysis -> storage_account_limits_reference: uses
+```
+
 ## Overview
 
 Monitoring storage capacity in Azure involves tracking used capacity at the account and container level, setting metric alerts before quotas are hit, and projecting growth to plan ahead. Azure Monitor provides built-in storage metrics with 93-day retention.

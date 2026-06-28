@@ -8,6 +8,23 @@ tags:
 AI Practice Notes reference covering Question Pattern Recognition, Common Wrong Answers to Avoid, Exam Domain Breakdown — AWS Certified AI Practitioner (AIF-C01), Key Terminology Distinctions, Scoring and Exam Strategy and 2 more sections.
 </div>
 
+```d2
+direction: down
+
+question_pattern_recognition: "Question Pattern Recognition" {shape: rectangle}
+common_wrong_answers_to_avoid: "Common Wrong Answers to Avoid" {shape: rectangle}
+exam_domain_breakdown_aws_certified_: "Exam Domain Breakdown — AWS Certified AI Practitioner (AIF-C" {shape: rectangle}
+key_terminology_distinctions: "Key Terminology Distinctions" {shape: rectangle}
+scoring_and_exam_strategy: "Scoring and Exam Strategy" {shape: rectangle}
+service_boundary_quick_reference: "Service Boundary Quick Reference" {shape: rectangle}
+
+question_pattern_recognition -> common_wrong_answers_to_avoid: uses
+common_wrong_answers_to_avoid -> exam_domain_breakdown_aws_certified_: uses
+exam_domain_breakdown_aws_certified_ -> key_terminology_distinctions: uses
+key_terminology_distinctions -> scoring_and_exam_strategy: uses
+scoring_and_exam_strategy -> service_boundary_quick_reference: uses
+```
+
 ## Question Pattern Recognition
 
 Most AI certification exams use scenario-based questions. Common patterns:

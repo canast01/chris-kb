@@ -10,6 +10,21 @@ Asset Audit Process reference covering Overview, Audit Scope and Frequency, Disc
 *Applies to: ServiceNow*
 </div>
 
+```d2
+direction: down
+
+audit_scope_and_frequency: "Audit Scope and Frequency" {shape: rectangle}
+discovery_tools: "Discovery Tools" {shape: rectangle}
+cmdb_reconciliation_steps: "CMDB Reconciliation Steps" {shape: rectangle}
+discrepancy_tracking: "Discrepancy Tracking" {shape: rectangle}
+audit_signoff_and_reporting: "Audit Sign-Off and Reporting" {shape: rectangle}
+
+audit_scope_and_frequency -> discovery_tools: uses
+discovery_tools -> cmdb_reconciliation_steps: uses
+cmdb_reconciliation_steps -> discrepancy_tracking: uses
+discrepancy_tracking -> audit_signoff_and_reporting: uses
+```
+
 ## Overview
 
 Regular asset audits ensure your CMDB reflects reality. Without periodic reconciliation, configuration drift accumulates — shadow IT, decommissioned hardware still listed as active, and undocumented dependencies all erode trust in asset data. A structured audit process keeps records accurate and supports change, incident, and capacity management.

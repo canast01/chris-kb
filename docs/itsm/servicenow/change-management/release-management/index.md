@@ -10,6 +10,19 @@ Coordinates planning, scheduling, and execution of software and infrastructure r
 *Applies to: ServiceNow*
 </div>
 
+```d2
+direction: down
+
+release_types: "Release Types" {shape: rectangle}
+release_lifecycle: "Release Lifecycle" {shape: rectangle}
+go_nogo_decision: "Go / No-Go Decision" {shape: rectangle}
+postrelease_actions: "Post-Release Actions" {shape: rectangle}
+
+release_types -> release_lifecycle: uses
+release_lifecycle -> go_nogo_decision: uses
+go_nogo_decision -> postrelease_actions: uses
+```
+
 ## Release Types
 
 | Type | Description | Cadence | Approval |

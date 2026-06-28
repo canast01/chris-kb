@@ -10,6 +10,21 @@ Change Closeout reference covering Overview, Closeout Checklist, Change Outcome 
 *Applies to: ServiceNow*
 </div>
 
+```d2
+direction: down
+
+closeout_checklist: "Closeout Checklist" {shape: rectangle}
+change_outcome_classification: "Change Outcome Classification" {shape: rectangle}
+pir_postimplementation_review: "PIR (Post-Implementation Review)" {shape: rectangle}
+lessons_learned: "Lessons Learned" {shape: rectangle}
+cmdb_update_on_closeout: "CMDB Update on Closeout" {shape: rectangle}
+
+closeout_checklist -> change_outcome_classification: uses
+change_outcome_classification -> pir_postimplementation_review: uses
+pir_postimplementation_review -> lessons_learned: uses
+lessons_learned -> cmdb_update_on_closeout: uses
+```
+
 ## Overview
 
 Change closeout is the final phase of the change lifecycle. It ensures that the change is formally concluded, documentation is complete, CMDB records are updated, and any lessons learned are captured. Skipping closeout leaves the change process incomplete and can mask problems that should inform future changes.

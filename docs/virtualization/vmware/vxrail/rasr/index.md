@@ -14,6 +14,23 @@ unrecoverable by normal means and must be rebuilt from scratch before rejoining 
 
 ---
 
+```d2
+direction: down
+
+what_rasr_does: "What RASR Does" {shape: rectangle}
+when_to_use_rasr: "When to Use RASR" {shape: rectangle}
+prerequisites: "Prerequisites" {shape: rectangle}
+rasr_procedure: "RASR Procedure" {shape: rectangle}
+postrecovery_validation: "Post-Recovery Validation" {shape: rectangle}
+common_issues: "Common Issues" {shape: rectangle}
+
+what_rasr_does -> when_to_use_rasr: uses
+when_to_use_rasr -> prerequisites: uses
+prerequisites -> rasr_procedure: uses
+rasr_procedure -> postrecovery_validation: uses
+postrecovery_validation -> common_issues: uses
+```
+
 ## What RASR Does
 
 RASR is a bare-metal recovery tool distributed by Dell for VxRail nodes. When booted, it:

@@ -51,6 +51,17 @@ aws ec2 describe-reserved-instances --filters "Name=state,Values=active" \
     --query "ReservedInstances[?End<='$(date -d '+90 days' +%Y-%m-%d)T23:59:59'].[ReservedInstancesId,InstanceType,End]"
 ```
 
+```d2
+direction: right
+
+plan: "Plan" {shape: oval}
+verify: "Verify" {shape: rectangle}
+validate: "Validate" {shape: oval}
+
+plan -> verify
+verify -> validate
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

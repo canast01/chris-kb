@@ -10,6 +10,23 @@ NTP Firewall Rules reference covering Required Firewall Rules, Linux — firewal
 
 NTP uses **UDP port 123** for all client-server and peer communication. If this port is blocked between a host and its NTP server, the clock will not synchronise.
 
+```d2
+direction: down
+
+required_firewall_rules: "Required Firewall Rules" {shape: rectangle}
+linux_firewalld: "Linux — firewalld" {shape: rectangle}
+linux_iptables: "Linux — iptables" {shape: rectangle}
+windows_firewall: "Windows Firewall" {shape: rectangle}
+cisco_asa_firepower: "Cisco ASA / Firepower" {shape: rectangle}
+testing_connectivity: "Testing Connectivity" {shape: rectangle}
+
+required_firewall_rules -> linux_firewalld: uses
+linux_firewalld -> linux_iptables: uses
+linux_iptables -> windows_firewall: uses
+windows_firewall -> cisco_asa_firepower: uses
+cisco_asa_firepower -> testing_connectivity: uses
+```
+
 ## Required Firewall Rules
 
 | Direction | Source | Destination | Port | Protocol |

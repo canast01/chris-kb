@@ -10,6 +10,23 @@ Network Packet Loss Validation reference covering Symptoms, NIC Statistics, vmkp
 *Applies to: vSphere 7.x / 8.x*
 </div>
 
+```d2
+direction: down
+
+symptoms: "Symptoms" {shape: rectangle}
+nic_statistics: "NIC Statistics" {shape: rectangle}
+vmkping_reachability_and_mtu_testing: "vmkping — Reachability and MTU Testing" {shape: rectangle}
+powercli_network_checks: "PowerCLI Network Checks" {shape: rectangle}
+common_causes_and_fixes: "Common Causes and Fixes" {shape: rectangle}
+ongoing_monitoring: "Ongoing Monitoring" {shape: rectangle}
+
+symptoms -> nic_statistics: uses
+nic_statistics -> vmkping_reachability_and_mtu_testing: uses
+vmkping_reachability_and_mtu_testing -> powercli_network_checks: uses
+powercli_network_checks -> common_causes_and_fixes: uses
+common_causes_and_fixes -> ongoing_monitoring: uses
+```
+
 ## Symptoms
 
 | Symptom | Likely Cause |

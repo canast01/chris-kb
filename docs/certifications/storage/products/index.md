@@ -8,6 +8,21 @@ tags:
 Storage Products Reference reference covering Dell Technologies Storage Portfolio, NetApp Storage Portfolio, Pure Storage Portfolio, Product Comparison by Use Case, Study Checklist.
 </div>
 
+```d2
+direction: down
+
+dell_technologies_storage_portfolio: "Dell Technologies Storage Portfolio" {shape: rectangle}
+netapp_storage_portfolio: "NetApp Storage Portfolio" {shape: rectangle}
+pure_storage_portfolio: "Pure Storage Portfolio" {shape: rectangle}
+product_comparison_by_use_case: "Product Comparison by Use Case" {shape: rectangle}
+study_checklist: "Study Checklist" {shape: rectangle}
+
+dell_technologies_storage_portfolio -> netapp_storage_portfolio: uses
+netapp_storage_portfolio -> pure_storage_portfolio: uses
+pure_storage_portfolio -> product_comparison_by_use_case: uses
+product_comparison_by_use_case -> study_checklist: uses
+```
+
 ## Dell Technologies Storage Portfolio
 
 | Product | Category | Key Characteristics |

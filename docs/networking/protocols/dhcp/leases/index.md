@@ -8,6 +8,23 @@ tags:
 DHCP Leases reference covering Overview, Viewing Leases, Finding IP from MAC, Lease States Reference, Clearing Stale Leases and 2 more sections.
 </div>
 
+```d2
+direction: down
+
+viewing_leases: "Viewing Leases" {shape: rectangle}
+finding_ip_from_mac: "Finding IP from MAC" {shape: rectangle}
+lease_states_reference: "Lease States Reference" {shape: rectangle}
+clearing_stale_leases: "Clearing Stale Leases" {shape: rectangle}
+exporting_and_importing_leases: "Exporting and Importing Leases" {shape: rectangle}
+known_issues: "Known Issues" {shape: rectangle}
+
+viewing_leases -> finding_ip_from_mac: uses
+finding_ip_from_mac -> lease_states_reference: uses
+lease_states_reference -> clearing_stale_leases: uses
+clearing_stale_leases -> exporting_and_importing_leases: uses
+exporting_and_importing_leases -> known_issues: uses
+```
+
 ## Overview
 
 DHCP leases track which IP address is assigned to which client. On Windows Server, lease management is done with the `DhcpServer` PowerShell module. Stale leases can cause address exhaustion and ghost entries in DNS.

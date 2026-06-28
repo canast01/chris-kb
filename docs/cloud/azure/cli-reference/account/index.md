@@ -38,6 +38,17 @@ az group delete --name <rg> --yes
 az group list --query "[].{Name:name,Location:location,State:properties.provisioningState}" --output table
 ```
 
+```d2
+direction: down
+
+component_a: "Component A" {shape: rectangle}
+component_b: "Component B" {shape: rectangle}
+component_c: "Component C" {shape: rectangle}
+
+component_a -> component_b: uses
+component_b -> component_c: uses
+```
+
 ## See also
 
 - [Azure CLI Reference](../index.md)

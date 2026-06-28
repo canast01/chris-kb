@@ -15,6 +15,26 @@ Forward audit logs to SIEM via syslog:
 - Command Center: Manage → Alerts → configure syslog destination
 - Alert on: admin account creation, policy modifications, job deletion, encryption key access
 
+```d2
+direction: down
+
+auth: "Commvault\nAuthentication" {shape: rectangle}
+administrator: "Administrator" {shape: rectangle}
+operator: "Operator" {shape: rectangle}
+auditor: "Auditor" {shape: rectangle}
+readonly: "Read-Only" {shape: rectangle}
+resources: Protected Resources {shape: cylinder}
+
+auth -> administrator: grants
+administrator -> resources: access
+auth -> operator: grants
+operator -> resources: access
+auth -> auditor: grants
+auditor -> resources: access
+auth -> readonly: grants
+readonly -> resources: access
+```
+
 ## Before you begin
 
 - **Access:** Backup admin role on backup server; target system credentials

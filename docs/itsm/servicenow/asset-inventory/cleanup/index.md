@@ -10,6 +10,21 @@ Asset Cleanup and Decommission reference covering Overview, Decommission Workflo
 *Applies to: ServiceNow*
 </div>
 
+```d2
+direction: down
+
+decommission_workflow: "Decommission Workflow" {shape: rectangle}
+data_wiping_standards: "Data Wiping Standards" {shape: rectangle}
+dependency_verification_checklist: "Dependency Verification Checklist" {shape: rectangle}
+physical_asset_disposal: "Physical Asset Disposal" {shape: rectangle}
+cmdb_record_updates: "CMDB Record Updates" {shape: rectangle}
+
+decommission_workflow -> data_wiping_standards: uses
+data_wiping_standards -> dependency_verification_checklist: uses
+dependency_verification_checklist -> physical_asset_disposal: uses
+physical_asset_disposal -> cmdb_record_updates: uses
+```
+
 ## Overview
 
 Asset cleanup covers the full workflow from decommission decision through physical disposal and CMDB record retirement. Skipping steps creates compliance gaps, security risks from data not wiped, and CMDB inaccuracies that affect downstream processes like change and incident management.

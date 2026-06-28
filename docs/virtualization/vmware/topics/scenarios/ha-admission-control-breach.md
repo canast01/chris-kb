@@ -15,6 +15,23 @@ to allow restarts, recovering the cluster, and preventing a recurrence through p
 *Applies to: vSphere 7.x / 8.x*
 </div>
 
+```d2
+direction: down
+
+products_involved: "Products Involved" {shape: rectangle}
+1_confirm_the_breach_how_many_hosts_: "1. Confirm the Breach — How Many Hosts Failed and What Remai" {shape: rectangle}
+2_triage_which_vms_are_critical: "2. Triage — Which VMs Are Critical" {shape: rectangle}
+3_assess_remaining_cluster_resources: "3. Assess Remaining Cluster Resources" {shape: rectangle}
+4_option_a_recover_a_failed_host_bes: "4. Option A — Recover a Failed Host (Best Path)" {shape: rectangle}
+5_option_b_temporarily_lower_admissi: "5. Option B — Temporarily Lower Admission Control Reservatio" {shape: rectangle}
+
+products_involved -> 1_confirm_the_breach_how_many_hosts_: uses
+1_confirm_the_breach_how_many_hosts_ -> 2_triage_which_vms_are_critical: uses
+2_triage_which_vms_are_critical -> 3_assess_remaining_cluster_resources: uses
+3_assess_remaining_cluster_resources -> 4_option_a_recover_a_failed_host_bes: uses
+4_option_a_recover_a_failed_host_bes -> 5_option_b_temporarily_lower_admissi: uses
+```
+
 ## Products Involved
 
 | Product | Role in This Scenario |

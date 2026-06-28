@@ -10,6 +10,19 @@ Azure Cost Management reference covering Overview, Daily Checks, Operational Tas
 *Applies to: Azure*
 </div>
 
+```d2
+direction: down
+
+daily_checks: "Daily Checks" {shape: rectangle}
+operational_tasks: "Operational Tasks" {shape: rectangle}
+common_issues: "Common Issues" {shape: rectangle}
+maintenance_notes: "Maintenance Notes" {shape: rectangle}
+
+daily_checks -> operational_tasks: uses
+operational_tasks -> common_issues: uses
+common_issues -> maintenance_notes: uses
+```
+
 ## Overview
 
 Azure Cost Management is a core cloud infrastructure service used for production operations, automation, monitoring, and platform support.

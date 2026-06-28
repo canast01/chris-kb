@@ -17,6 +17,23 @@ See also:
 
 ---
 
+```d2
+direction: down
+
+daily_check_script: "Daily Check Script" {shape: rectangle}
+incident_triage_script: "Incident Triage Script" {shape: rectangle}
+change_precheck_script: "Change Pre-Check Script" {shape: rectangle}
+postchange_validation_script: "Post-Change Validation Script" {shape: rectangle}
+health_check_script: "Health Check Script" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+daily_check_script -> incident_triage_script: uses
+incident_triage_script -> change_precheck_script: uses
+change_precheck_script -> postchange_validation_script: uses
+postchange_validation_script -> health_check_script: uses
+health_check_script -> verify: uses
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

@@ -8,6 +8,21 @@ tags:
 NFS Mounts reference covering Overview, Manual Mounts, /etc/fstab Options, Mount Option Reference, Automount with autofs and 1 more sections.
 </div>
 
+```d2
+direction: down
+
+manual_mounts: "Manual Mounts" {shape: rectangle}
+etcfstab_options: "/etc/fstab Options" {shape: rectangle}
+mount_option_reference: "Mount Option Reference" {shape: rectangle}
+automount_with_autofs: "Automount with autofs" {shape: rectangle}
+known_issues: "Known Issues" {shape: rectangle}
+
+manual_mounts -> etcfstab_options: uses
+etcfstab_options -> mount_option_reference: uses
+mount_option_reference -> automount_with_autofs: uses
+automount_with_autofs -> known_issues: uses
+```
+
 ## Overview
 
 NFS mounts attach remote exports to the local filesystem. Mounts can be done manually with `mount`, made persistent via `/etc/fstab`, or managed automatically with autofs. Mount options control reliability, timeout behavior, and NFS version negotiation.

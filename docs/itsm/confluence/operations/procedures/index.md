@@ -196,6 +196,23 @@ curl -s -u user:token -G \
 
 ---
 
+```d2
+direction: right
+
+create_a_space: "Create a Space" {shape: rectangle}
+manage_space_permissions: "Manage Space Permissions" {shape: rectangle}
+create_and_publish_a_page: "Create and Publish a Page" {shape: rectangle}
+restrict_page_access: "Restrict Page Access" {shape: rectangle}
+manage_user_accounts_admin: "Manage User Accounts (Admin)" {shape: rectangle}
+run_a_space_backup: "Run a Space Backup" {shape: rectangle}
+
+create_a_space -> manage_space_permissions
+manage_space_permissions -> create_and_publish_a_page
+create_and_publish_a_page -> restrict_page_access
+restrict_page_access -> manage_user_accounts_admin
+manage_user_accounts_admin -> run_a_space_backup
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

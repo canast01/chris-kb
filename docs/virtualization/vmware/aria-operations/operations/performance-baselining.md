@@ -40,6 +40,13 @@ Response (P95): avg 85ms | peak 340ms
 Error rate:     avg 0.02%
 ```
 
+```d2
+direction: right
+
+verify: "Verify" {shape: rectangle}
+
+```
+
 ## Before you begin
 
 - **Access:** vCenter read-only minimum; Administrator role for remediation steps

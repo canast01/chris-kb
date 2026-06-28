@@ -11,6 +11,23 @@ Jira operational procedures — story and epic creation, sprint management, back
 *Applies to: Jira 9.x / Cloud*
 </div>
 
+```d2
+direction: right
+
+stories: "Stories" {shape: rectangle}
+story_structure: "Story Structure" {shape: rectangle}
+epics: "Epics" {shape: rectangle}
+story_splitting: "Story Splitting" {shape: rectangle}
+tasks: "Tasks" {shape: rectangle}
+creating_tasks: "Creating Tasks" {shape: rectangle}
+
+stories -> story_structure
+story_structure -> epics
+epics -> story_splitting
+story_splitting -> tasks
+tasks -> creating_tasks
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

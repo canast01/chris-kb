@@ -10,6 +10,23 @@ VMware Certificate Quick Reference reference covering Check Expiration Quickly, 
 *Applies to: vSphere 7.x / 8.x*
 </div>
 
+```d2
+direction: down
+
+check_expiration_quickly: "Check Expiration Quickly" {shape: rectangle}
+identify_certificate_type: "Identify Certificate Type" {shape: rectangle}
+review_trusted_root_chain: "Review Trusted Root Chain" {shape: rectangle}
+check_sts_certificate: "Check STS Certificate" {shape: rectangle}
+validate_after_replacement: "Validate After Replacement" {shape: rectangle}
+escalate_if: "Escalate If" {shape: rectangle}
+
+check_expiration_quickly -> identify_certificate_type: uses
+identify_certificate_type -> review_trusted_root_chain: uses
+review_trusted_root_chain -> check_sts_certificate: uses
+check_sts_certificate -> validate_after_replacement: uses
+validate_after_replacement -> escalate_if: uses
+```
+
 ## Check Expiration Quickly
 
 In vCenter Appliance Management (VAMI) at `https://<vcenter>:5480`:

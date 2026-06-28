@@ -47,6 +47,17 @@ filter=severity%20eq%20'High'%20and%20state%20eq%20'ACTIVE'&limit=100" \
   -H "Authorization: Bearer ${TOKEN}" | jq '.results[] | {id,title,system_name}'
 ```
 
+```d2
+direction: down
+
+component_a: "Component A" {shape: rectangle}
+component_b: "Component B" {shape: rectangle}
+component_c: "Component C" {shape: rectangle}
+
+component_a -> component_b: uses
+component_b -> component_c: uses
+```
+
 ## See also
 
 - [Dell AIOps — Overview](../../)

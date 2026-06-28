@@ -10,6 +10,19 @@ Entra ID (Azure AD) groups are the primary mechanism for managing access at scal
 *Applies to: Azure*
 </div>
 
+```d2
+direction: down
+
+powershell: "PowerShell" {shape: rectangle}
+dynamic_membership_rules: "Dynamic Membership Rules" {shape: rectangle}
+nested_groups: "Nested Groups" {shape: rectangle}
+common_issues: "Common Issues" {shape: rectangle}
+
+powershell -> dynamic_membership_rules: uses
+dynamic_membership_rules -> nested_groups: uses
+nested_groups -> common_issues: uses
+```
+
 ## PowerShell
 
 ```powershell

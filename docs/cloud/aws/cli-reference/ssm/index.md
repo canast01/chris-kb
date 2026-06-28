@@ -10,6 +10,23 @@ Systems Manager (SSM) reference covering Run Command, Parameter Store, Maintenan
 *Applies to: AWS*
 </div>
 
+```d2
+direction: down
+
+parameter_store: "Parameter Store" {shape: rectangle}
+maintenance_windows: "Maintenance Windows" {shape: rectangle}
+patch_management: "Patch Management" {shape: rectangle}
+inventory: "Inventory" {shape: rectangle}
+opsitems: "OpsItems" {shape: rectangle}
+automation_documents: "Automation Documents" {shape: rectangle}
+
+parameter_store -> maintenance_windows: uses
+maintenance_windows -> patch_management: uses
+patch_management -> inventory: uses
+inventory -> opsitems: uses
+opsitems -> automation_documents: uses
+```
+
 ## Parameter Store
 
 ```bash

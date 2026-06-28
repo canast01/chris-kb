@@ -13,6 +13,15 @@ search:
 Daily Veeam Backup &amp; Replication health-check sequence — takes ~5 minutes. Run this every morning before starting any operational work.
 </div>
 
+```d2
+direction: down
+
+run_this_routine: "Run This Routine" {shape: rectangle}
+health_thresholds: "Health Thresholds" {shape: rectangle}
+
+run_this_routine -> health_thresholds: uses
+```
+
 ## Before you begin
 
 **Prerequisites:**

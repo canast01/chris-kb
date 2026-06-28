@@ -10,6 +10,15 @@ Support reference covering Diagnostic Bundle Collection, Severity Definitions, E
 *Applies to: Pure1*
 </div>
 
+```d2
+direction: down
+
+escalation_path: "Escalation Path" {shape: rectangle}
+common_support_scenarios: "Common Support Scenarios" {shape: rectangle}
+
+escalation_path -> common_support_scenarios: uses
+```
+
 ## Escalation Path
 
 ```text

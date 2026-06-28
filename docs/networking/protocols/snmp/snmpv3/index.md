@@ -14,6 +14,23 @@ SNMPv3 adds authentication and encryption to SNMP, replacing the plaintext commu
 
 It is the required version for any environment with compliance requirements.
 
+```d2
+direction: down
+
+security_models: "Security Models" {shape: rectangle}
+snmpv3_parameters_usm: "SNMPv3 Parameters (USM)" {shape: rectangle}
+linux_create_snmpv3_user_snmpd: "Linux — Create SNMPv3 User (snmpd)" {shape: rectangle}
+cisco_ios: "Cisco IOS" {shape: rectangle}
+arista_eos: "Arista EOS" {shape: rectangle}
+snmpv3_trap_inform_cisco: "SNMPv3 Trap / Inform (Cisco)" {shape: rectangle}
+
+security_models -> snmpv3_parameters_usm: uses
+snmpv3_parameters_usm -> linux_create_snmpv3_user_snmpd: uses
+linux_create_snmpv3_user_snmpd -> cisco_ios: uses
+cisco_ios -> arista_eos: uses
+arista_eos -> snmpv3_trap_inform_cisco: uses
+```
+
 ## Security Models
 
 | Level | Authentication | Encryption | Use case |

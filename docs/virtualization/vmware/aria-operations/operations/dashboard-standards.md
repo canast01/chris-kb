@@ -12,6 +12,17 @@ Monitoring Dashboard Standards reference covering Grafana — Dashboard as Code,
 *Applies to: Aria Ops 8.x*
 </div>
 
+```d2
+direction: right
+
+validation_checklist: "Validation Checklist" {shape: rectangle}
+dashboard_review_cadence: "Dashboard Review Cadence" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+validation_checklist -> dashboard_review_cadence
+dashboard_review_cadence -> verify
+```
+
 ## Before you begin
 
 - **Access:** vCenter read-only minimum; Administrator role for remediation steps

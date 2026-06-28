@@ -11,6 +11,25 @@ NetApp Keystone Security reference covering Shared Responsibility, Keystone Coll
 *Applies to: Keystone STaaS*
 </div>
 
+```d2
+direction: down
+
+external: External / Untrusted {shape: rectangle}
+shared_responsibility: "Shared Responsibility" {shape: rectangle}
+keystone_collector_security: "Keystone Collector Security" {shape: rectangle}
+storage_security: "Storage Security" {shape: rectangle}
+access_control: "Access Control" {shape: rectangle}
+compliance: "Compliance" {shape: rectangle}
+core: "Keystone STaaS Core" {shape: hexagon}
+
+external -> shared_responsibility: traffic in
+shared_responsibility -> keystone_collector_security
+keystone_collector_security -> storage_security
+storage_security -> access_control
+access_control -> compliance
+compliance -> core: secured path
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

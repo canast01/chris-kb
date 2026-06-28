@@ -16,6 +16,23 @@ opening broad exceptions — using Traceflow, hit count analysis, and packet cap
 *Applies to: vSphere 7.x / 8.x*
 </div>
 
+```d2
+direction: down
+
+products_involved: "Products Involved" {shape: rectangle}
+1_confirm_dfw_is_the_cause: "1. Confirm DFW Is the Cause" {shape: rectangle}
+2_identify_the_blocking_rule: "2. Identify the Blocking Rule" {shape: rectangle}
+3_check_group_membership: "3. Check Group Membership" {shape: rectangle}
+4_resolve_rule_group_or_tag_fix: "4. Resolve: Rule, Group, or Tag Fix" {shape: rectangle}
+5_packet_capture_at_vnic_level: "5. Packet Capture at vNIC Level" {shape: rectangle}
+
+products_involved -> 1_confirm_dfw_is_the_cause: uses
+1_confirm_dfw_is_the_cause -> 2_identify_the_blocking_rule: uses
+2_identify_the_blocking_rule -> 3_check_group_membership: uses
+3_check_group_membership -> 4_resolve_rule_group_or_tag_fix: uses
+4_resolve_rule_group_or_tag_fix -> 5_packet_capture_at_vnic_level: uses
+```
+
 ## Products Involved
 
 | Product | Role in This Scenario |

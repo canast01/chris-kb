@@ -54,6 +54,17 @@ terraform {
 }
 ```
 
+```d2
+direction: right
+
+plan: "Plan" {shape: oval}
+verify: "Verify" {shape: rectangle}
+validate: "Validate" {shape: oval}
+
+plan -> verify
+verify -> validate
+```
+
 ## Before you begin
 
 - **Access:** Provider credentials configured (`terraform login` or env vars)

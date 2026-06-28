@@ -42,3 +42,14 @@ for array in resp.json()["items"]:
     }
     print(json.dumps(event))  # Splunk scripted input reads stdout
 ```
+
+```d2
+direction: down
+
+component_a: "Component A" {shape: rectangle}
+component_b: "Component B" {shape: rectangle}
+component_c: "Component C" {shape: rectangle}
+
+component_a -> component_b: uses
+component_b -> component_c: uses
+```

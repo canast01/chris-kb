@@ -12,6 +12,23 @@ SCG automation scripts: `dcicli` health polling, REST API examples for device in
 
 ---
 
+```d2
+direction: down
+
+connectivity_health_check: "Connectivity Health Check" {shape: rectangle}
+device_registration_auditor: "Device Registration Auditor" {shape: rectangle}
+ansible_scg_status_playbook: "Ansible SCG Status Playbook" {shape: rectangle}
+windows_scg_connection_test_via_plin: "Windows: SCG Connection Test via Plink (CMD)" {shape: rectangle}
+windows_scg_device_inventory_via_res: "Windows: SCG Device Inventory via REST API (PowerShell)" {shape: rectangle}
+daily_check_script: "Daily Check Script" {shape: rectangle}
+
+connectivity_health_check -> device_registration_auditor: uses
+device_registration_auditor -> ansible_scg_status_playbook: uses
+ansible_scg_status_playbook -> windows_scg_connection_test_via_plin: uses
+windows_scg_connection_test_via_plin -> windows_scg_device_inventory_via_res: uses
+windows_scg_device_inventory_via_res -> daily_check_script: uses
+```
+
 ## Connectivity Health Check
 
 Tests outbound HTTPS connectivity from the SCG host to the required Dell support endpoints, checks the SCG service status, and prints a PASS/FAIL summary for each check. Suitable for cron or a monitoring probe.

@@ -11,6 +11,13 @@ Veeam encryption: backup job-level encryption, encryption key management in the 
 *Applies to: Veeam 12.x*
 </div>
 
+```d2
+direction: down
+
+immutable_repository_configuration: "Immutable Repository Configuration" {shape: rectangle}
+
+```
+
 ## Immutable Repository Configuration
 
 ### S3 Object Lock (SOBR Capacity Tier)

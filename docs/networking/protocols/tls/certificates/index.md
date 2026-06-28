@@ -10,6 +10,23 @@ A TLS certificate is a signed X.509 document that binds a public key to an ident
 
 The certificate allows clients to verify they are talking to the correct server and to establish encrypted sessions.
 
+```d2
+direction: down
+
+certificate_components: "Certificate Components" {shape: rectangle}
+certificate_types: "Certificate Types" {shape: rectangle}
+reading_a_certificate: "Reading a Certificate" {shape: rectangle}
+generating_a_csr: "Generating a CSR" {shape: rectangle}
+certificate_formats: "Certificate Formats" {shape: rectangle}
+key_sizes_and_algorithms: "Key Sizes and Algorithms" {shape: rectangle}
+
+certificate_components -> certificate_types: uses
+certificate_types -> reading_a_certificate: uses
+reading_a_certificate -> generating_a_csr: uses
+generating_a_csr -> certificate_formats: uses
+certificate_formats -> key_sizes_and_algorithms: uses
+```
+
 ## Certificate Components
 
 | Field | Description | Example |

@@ -6,6 +6,13 @@ tags:
 
 ```markdown
 
+```d2
+direction: down
+
+application_payments_api: "Application: Payments API" {shape: rectangle}
+
+```
+
 ## Application: Payments API
 
 **Tier:** Production

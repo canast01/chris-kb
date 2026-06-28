@@ -10,6 +10,21 @@ VxRail Field Reference reference covering Overview, Daily Checks, Dependencies, 
 *Applies to: VxRail 7.x · 8.x*
 </div>
 
+```d2
+direction: down
+
+daily_checks: "Daily Checks" {shape: rectangle}
+dependencies: "Dependencies" {shape: rectangle}
+common_issues: "Common Issues" {shape: rectangle}
+troubleshooting_workflow: "Troubleshooting Workflow" {shape: rectangle}
+best_practices: "Best Practices" {shape: rectangle}
+
+daily_checks -> dependencies: uses
+dependencies -> common_issues: uses
+common_issues -> troubleshooting_workflow: uses
+troubleshooting_workflow -> best_practices: uses
+```
+
 ## Overview
 
 Core operational reference for VxRail infrastructure.

@@ -8,6 +8,23 @@ tags:
 AI Model Concepts reference covering Transformers and Attention Mechanisms, Embeddings, Tokens and Tokenization, Fine-Tuning vs. RAG vs. Prompting, Generation Parameters and 1 more sections.
 </div>
 
+```d2
+direction: down
+
+transformers_and_attention_mechanism: "Transformers and Attention Mechanisms" {shape: rectangle}
+embeddings: "Embeddings" {shape: rectangle}
+tokens_and_tokenization: "Tokens and Tokenization" {shape: rectangle}
+finetuning_vs_rag_vs_prompting: "Fine-Tuning vs. RAG vs. Prompting" {shape: rectangle}
+generation_parameters: "Generation Parameters" {shape: rectangle}
+study_checklist: "Study Checklist" {shape: rectangle}
+
+transformers_and_attention_mechanism -> embeddings: uses
+embeddings -> tokens_and_tokenization: uses
+tokens_and_tokenization -> finetuning_vs_rag_vs_prompting: uses
+finetuning_vs_rag_vs_prompting -> generation_parameters: uses
+generation_parameters -> study_checklist: uses
+```
+
 ## Transformers and Attention Mechanisms
 
 The Transformer architecture underpins virtually all modern LLMs. Key components tested on AI certification exams:

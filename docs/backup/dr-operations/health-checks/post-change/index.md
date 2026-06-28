@@ -8,6 +8,21 @@ tags:
 Post-Change Health Check reference covering Overview, Timing, Post-Change Check Sequence, Comparison Against Pre-Change Baseline, Escalation During Post-Check and 1 more sections.
 </div>
 
+```d2
+direction: down
+
+timing: "Timing" {shape: rectangle}
+postchange_check_sequence: "Post-Change Check Sequence" {shape: rectangle}
+comparison_against_prechange_baselin: "Comparison Against Pre-Change Baseline" {shape: rectangle}
+escalation_during_postcheck: "Escalation During Post-Check" {shape: rectangle}
+postcheck_signoff: "Post-Check Sign-Off" {shape: rectangle}
+
+timing -> postchange_check_sequence: uses
+postchange_check_sequence -> comparison_against_prechange_baselin: uses
+comparison_against_prechange_baselin -> escalation_during_postcheck: uses
+escalation_during_postcheck -> postcheck_signoff: uses
+```
+
 ## Overview
 
 A post-change health check is a structured review of system state immediately after a change is implemented. It is narrower and more targeted than a general daily check — the focus is on confirming the changed component is healthy and that nothing adjacent was disturbed. The rollback window remains open until this check passes.

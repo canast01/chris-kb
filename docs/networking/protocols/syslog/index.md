@@ -16,6 +16,21 @@ systemctl restart rsyslog
 logger -t TEST "Forwarding test from $(hostname)"
 ```
 
+```d2
+direction: down
+
+journald_to_syslog_bridge: "journald to Syslog Bridge" {shape: rectangle}
+windows_event_forwarding: "Windows Event Forwarding" {shape: rectangle}
+syslog_severity_levels_rfc_5424: "Syslog Severity Levels (RFC 5424)" {shape: rectangle}
+querying_logs: "Querying Logs" {shape: rectangle}
+troubleshooting_logs_not_arriving: "Troubleshooting — Logs Not Arriving" {shape: rectangle}
+
+journald_to_syslog_bridge -> windows_event_forwarding: uses
+windows_event_forwarding -> syslog_severity_levels_rfc_5424: uses
+syslog_severity_levels_rfc_5424 -> querying_logs: uses
+querying_logs -> troubleshooting_logs_not_arriving: uses
+```
+
 ## journald to Syslog Bridge
 
 ```bash

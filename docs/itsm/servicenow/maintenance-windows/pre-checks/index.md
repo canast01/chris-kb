@@ -10,6 +10,23 @@ Pre-Maintenance Checks reference covering Overview, Pre-Check Timeline, Environm
 *Applies to: ServiceNow*
 </div>
 
+```d2
+direction: down
+
+precheck_timeline: "Pre-Check Timeline" {shape: rectangle}
+environment_health_checklist: "Environment Health Checklist" {shape: rectangle}
+backup_verification: "Backup Verification" {shape: rectangle}
+rollback_readiness: "Rollback Readiness" {shape: rectangle}
+team_and_access_readiness: "Team and Access Readiness" {shape: rectangle}
+final_go_nogo: "Final Go / No-Go" {shape: rectangle}
+
+precheck_timeline -> environment_health_checklist: uses
+environment_health_checklist -> backup_verification: uses
+backup_verification -> rollback_readiness: uses
+rollback_readiness -> team_and_access_readiness: uses
+team_and_access_readiness -> final_go_nogo: uses
+```
+
 ## Overview
 
 Pre-maintenance checks are the final gate before a window opens. They confirm that the environment is in the expected state, backups are valid, the team is ready, and all logistical requirements are met. A failed pre-check is a reason to defer — not push through.

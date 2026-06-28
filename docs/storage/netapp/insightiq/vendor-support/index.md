@@ -27,3 +27,24 @@ InsightIQ support is provided by NetApp via the NetApp Support Portal (mysupport
 | Log location | `/var/log/insightiq/` |
 | NetApp IMT | mysupport.netapp.com/matrix |
 | InsightIQ Documentation | docs.netapp.com |
+
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+actor "On-Call Engineer" as ENG
+participant "InsightIQ\nSystem" as SYS
+participant "Vendor Support" as SUP
+
+ENG -> SYS: Identify Severity
+SYS --> ENG: Output
+ENG -> SYS: Collect Diagnostics
+SYS --> ENG: Output
+ENG -> SYS: Open Support Case
+SYS --> ENG: Output
+ENG -> SUP: Escalate with diagnostic bundle
+SUP --> ENG: Case / resolution path
+
+@enduml
+```

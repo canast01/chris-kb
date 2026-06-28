@@ -56,3 +56,14 @@ awk -F',' 'NR>1 {
   if (days < 90) print "WARNING: " $1 " expires in " days " days — owner: " $3
 }' license-inventory.csv
 ```
+
+```d2
+direction: down
+
+component_a: "Component A" {shape: rectangle}
+component_b: "Component B" {shape: rectangle}
+component_c: "Component C" {shape: rectangle}
+
+component_a -> component_b: uses
+component_b -> component_c: uses
+```

@@ -10,6 +10,21 @@ Managed identities give Azure resources an identity in Entra ID without requirin
 *Applies to: Azure*
 </div>
 
+```d2
+direction: down
+
+userassigned: "User-Assigned" {shape: rectangle}
+grant_access_via_rbac: "Grant Access via RBAC" {shape: rectangle}
+using_the_identity_in_code: "Using the Identity in Code" {shape: rectangle}
+aks_workload_identity: "AKS Workload Identity" {shape: rectangle}
+common_issues: "Common Issues" {shape: rectangle}
+
+userassigned -> grant_access_via_rbac: uses
+grant_access_via_rbac -> using_the_identity_in_code: uses
+using_the_identity_in_code -> aks_workload_identity: uses
+aks_workload_identity -> common_issues: uses
+```
+
 ## User-Assigned
 
 ```bash

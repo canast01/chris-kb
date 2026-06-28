@@ -25,6 +25,17 @@ ServiceNow integration enables certificate request workflows via ITSM tickets, r
 | SIEM | Venafi Log Server syslog forwarding | Audit event centralisation |
 | Terraform | Venafi Terraform provider | Certificate provisioning in IaC pipelines |
 
+```d2
+direction: down
+
+component_a: "Component A" {shape: rectangle}
+component_b: "Component B" {shape: rectangle}
+component_c: "Component C" {shape: rectangle}
+
+component_a -> component_b: uses
+component_b -> component_c: uses
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

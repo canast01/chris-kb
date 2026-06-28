@@ -10,6 +10,23 @@ tags:
 Installing and maintaining NVIDIA drivers correctly is critical for GPU workloads. A driver mismatch between the kernel, CUDA toolkit, and frameworks is the most common source of GPU failures.
 </div>
 
+```d2
+direction: down
+
+checking_current_state: "Checking Current State" {shape: rectangle}
+installing_drivers_on_ubuntudebian: "Installing Drivers on Ubuntu/Debian" {shape: rectangle}
+installing_drivers_on_rhelrocky_linu: "Installing Drivers on RHEL/Rocky Linux" {shape: rectangle}
+cuda_toolkit_installation: "CUDA Toolkit Installation" {shape: rectangle}
+driver_and_cuda_compatibility_matrix: "Driver and CUDA Compatibility Matrix" {shape: rectangle}
+updating_drivers: "Updating Drivers" {shape: rectangle}
+
+checking_current_state -> installing_drivers_on_ubuntudebian: uses
+installing_drivers_on_ubuntudebian -> installing_drivers_on_rhelrocky_linu: uses
+installing_drivers_on_rhelrocky_linu -> cuda_toolkit_installation: uses
+cuda_toolkit_installation -> driver_and_cuda_compatibility_matrix: uses
+driver_and_cuda_compatibility_matrix -> updating_drivers: uses
+```
+
 ## Checking Current State
 
 ```bash

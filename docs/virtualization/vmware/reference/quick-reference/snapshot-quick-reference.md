@@ -10,6 +10,23 @@ VMware Snapshot Quick Reference reference covering Find All Snapshots, Check Sna
 *Applies to: vSphere 7.x / 8.x*
 </div>
 
+```d2
+direction: down
+
+find_all_snapshots: "Find All Snapshots" {shape: rectangle}
+check_snapshot_age_and_size: "Check Snapshot Age and Size" {shape: rectangle}
+identify_snapshot_owner: "Identify Snapshot Owner" {shape: rectangle}
+remove_a_snapshot_safely: "Remove a Snapshot Safely" {shape: rectangle}
+consolidation_warning: "Consolidation Warning" {shape: rectangle}
+check_datastore_free_space_after_cle: "Check Datastore Free Space After Cleanup" {shape: rectangle}
+
+find_all_snapshots -> check_snapshot_age_and_size: uses
+check_snapshot_age_and_size -> identify_snapshot_owner: uses
+identify_snapshot_owner -> remove_a_snapshot_safely: uses
+remove_a_snapshot_safely -> consolidation_warning: uses
+consolidation_warning -> check_datastore_free_space_after_cle: uses
+```
+
 ## Find All Snapshots
 
 In vCenter: **Menu** → **Global Views** → **VMs and Templates** → Filter by snapshot state

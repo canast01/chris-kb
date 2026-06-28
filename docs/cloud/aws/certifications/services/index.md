@@ -9,6 +9,23 @@ tags:
 AWS Services Reference reference covering Compute Services, Storage Services, Networking Services, Security Services, Database Services and 1 more sections.
 </div>
 
+```d2
+direction: down
+
+compute_services: "Compute Services" {shape: rectangle}
+storage_services: "Storage Services" {shape: rectangle}
+networking_services: "Networking Services" {shape: rectangle}
+security_services: "Security Services" {shape: rectangle}
+database_services: "Database Services" {shape: rectangle}
+study_checklist: "Study Checklist" {shape: rectangle}
+
+compute_services -> storage_services: uses
+storage_services -> networking_services: uses
+networking_services -> security_services: uses
+security_services -> database_services: uses
+database_services -> study_checklist: uses
+```
+
 ## Compute Services
 
 | Service | Category | Key Facts |

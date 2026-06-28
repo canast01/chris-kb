@@ -255,6 +255,13 @@ issuetype = Bug AND labels = regression AND fixVersion in unreleasedVersions()
 project = PROJ AND text ~ "authentication timeout" ORDER BY updated DESC
 ```
 
+```d2
+direction: down
+
+verify: "Verify" {shape: rectangle}
+
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

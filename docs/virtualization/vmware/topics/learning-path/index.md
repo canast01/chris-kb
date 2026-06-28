@@ -11,6 +11,23 @@ Recommended reading order for VMware. Start here to build a complete mental mode
 *Applies to: vSphere 7.x / 8.x*
 </div>
 
+```d2
+direction: right
+
+step_1_vcenter_server: "Stage 1: vCenter Server" {shape: rectangle}
+step_2_esxi: "Stage 2: ESXi" {shape: rectangle}
+step_3_vsan: "Stage 3: vSAN" {shape: rectangle}
+step_4_nsx: "Stage 4: NSX" {shape: rectangle}
+step_5_aria_suite: "Stage 5: Aria Suite" {shape: rectangle}
+step_6_vxrail: "Stage 6: VxRail" {shape: rectangle}
+
+step_1_vcenter_server -> step_2_esxi: next
+step_2_esxi -> step_3_vsan: next
+step_3_vsan -> step_4_nsx: next
+step_4_nsx -> step_5_aria_suite: next
+step_5_aria_suite -> step_6_vxrail: next
+```
+
 ## Stage 1: vCenter Server
 
 vCenter is the management plane that everything else plugs into. Learn it first because every other product assumes you already understand it.

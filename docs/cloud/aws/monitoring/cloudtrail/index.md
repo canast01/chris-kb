@@ -10,6 +10,23 @@ AWS CloudTrail reference covering Overview, Where It Fits, Daily Checks, Health 
 *Applies to: AWS*
 </div>
 
+```d2
+direction: down
+
+where_it_fits: "Where It Fits" {shape: rectangle}
+daily_checks: "Daily Checks" {shape: rectangle}
+health_commands: "Health Commands" {shape: rectangle}
+common_issues: "Common Issues" {shape: rectangle}
+operational_tasks: "Operational Tasks" {shape: rectangle}
+upgrade_notes: "Upgrade Notes" {shape: rectangle}
+
+where_it_fits -> daily_checks: uses
+daily_checks -> health_commands: uses
+health_commands -> common_issues: uses
+common_issues -> operational_tasks: uses
+operational_tasks -> upgrade_notes: uses
+```
+
 ## Overview
 
 AWS CloudTrail notes for day-to-day infrastructure operations.

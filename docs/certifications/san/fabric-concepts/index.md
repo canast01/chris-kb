@@ -9,6 +9,23 @@ tags:
 SAN Fabric Concepts reference covering Fibre Channel Layer Model, Port Types, WWPN vs WWNN, Fabric IDs and Domain IDs, Fabric Login Sequence and 2 more sections.
 </div>
 
+```d2
+direction: down
+
+fibre_channel_layer_model: "Fibre Channel Layer Model" {shape: rectangle}
+port_types: "Port Types" {shape: rectangle}
+wwpn_vs_wwnn: "WWPN vs WWNN" {shape: rectangle}
+fabric_ids_and_domain_ids: "Fabric IDs and Domain IDs" {shape: rectangle}
+fabric_login_sequence: "Fabric Login Sequence" {shape: rectangle}
+fabric_services_wellknown_addresses: "Fabric Services (Well-Known Addresses)" {shape: rectangle}
+
+fibre_channel_layer_model -> port_types: uses
+port_types -> wwpn_vs_wwnn: uses
+wwpn_vs_wwnn -> fabric_ids_and_domain_ids: uses
+fabric_ids_and_domain_ids -> fabric_login_sequence: uses
+fabric_login_sequence -> fabric_services_wellknown_addresses: uses
+```
+
 ## Fibre Channel Layer Model
 
 | Layer | Name | Function |

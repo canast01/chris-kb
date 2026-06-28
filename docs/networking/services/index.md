@@ -8,6 +8,23 @@ tags:
 Network services reference for load balancer VIP management, pool health monitoring, and IPAM. For DNS and DHCP protocol coverage, see <a href="../protocols/dns/">Protocols → DNS</a> and <a href="../protocols/dhcp/">Protocols → DHCP</a>.
 </div>
 
+```d2
+direction: down
+
+test_the_vip_endpoint: "Test the VIP Endpoint" {shape: rectangle}
+f5_bigip_pool_status: "F5 BIG-IP Pool Status" {shape: rectangle}
+haproxy_pool_status: "HAProxy Pool Status" {shape: rectangle}
+tls_certificate_on_vip: "TLS Certificate on VIP" {shape: rectangle}
+test_pool_member_health_check: "Test Pool Member Health Check" {shape: rectangle}
+lb_status_at_a_glance: "LB Status at a Glance" {shape: rectangle}
+
+test_the_vip_endpoint -> f5_bigip_pool_status: uses
+f5_bigip_pool_status -> haproxy_pool_status: uses
+haproxy_pool_status -> tls_certificate_on_vip: uses
+tls_certificate_on_vip -> test_pool_member_health_check: uses
+test_pool_member_health_check -> lb_status_at_a_glance: uses
+```
+
 ## Test the VIP Endpoint
 
 ```bash

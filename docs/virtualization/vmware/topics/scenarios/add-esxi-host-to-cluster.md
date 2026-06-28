@@ -17,6 +17,23 @@ are difficult to diagnose after the fact.
 *Applies to: vSphere 7.x / 8.x*
 </div>
 
+```d2
+direction: down
+
+products_involved: "Products Involved" {shape: rectangle}
+1_hardware_firmware_and_esxi_install: "1. Hardware Firmware and ESXi Installation" {shape: rectangle}
+2_dns_precheck: "2. DNS Pre-Check" {shape: rectangle}
+3_ntp_configuration: "3. NTP Configuration" {shape: rectangle}
+4_vmkernel_port_configuration: "4. VMkernel Port Configuration" {shape: rectangle}
+5_add_host_to_vcenter: "5. Add Host to vCenter" {shape: rectangle}
+
+products_involved -> 1_hardware_firmware_and_esxi_install: uses
+1_hardware_firmware_and_esxi_install -> 2_dns_precheck: uses
+2_dns_precheck -> 3_ntp_configuration: uses
+3_ntp_configuration -> 4_vmkernel_port_configuration: uses
+4_vmkernel_port_configuration -> 5_add_host_to_vcenter: uses
+```
+
 ## Products Involved
 
 | Product | Role in This Scenario |

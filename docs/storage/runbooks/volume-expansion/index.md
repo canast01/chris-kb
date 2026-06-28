@@ -16,6 +16,23 @@ tags:
 | Estimated time | 20–40 minutes |
 | Impact | No downtime for online expansion; brief I/O pause during partition resize on some platforms |
 
+```d2
+direction: down
+
+process_flow: "Process Flow" {shape: rectangle}
+step_2_rescan_storage_on_the_host: "Step 2 — Rescan Storage on the Host" {shape: rectangle}
+step_3a_resize_partition: "Step 3a — Resize Partition" {shape: rectangle}
+step_3b_resize_filesystem_lv: "Step 3b — Resize Filesystem / LV" {shape: rectangle}
+step_4_validate: "Step 4 — Validate" {shape: rectangle}
+rollback: "Rollback" {shape: rectangle}
+
+process_flow -> step_2_rescan_storage_on_the_host: uses
+step_2_rescan_storage_on_the_host -> step_3a_resize_partition: uses
+step_3a_resize_partition -> step_3b_resize_filesystem_lv: uses
+step_3b_resize_filesystem_lv -> step_4_validate: uses
+step_4_validate -> rollback: uses
+```
+
 ## Process Flow
 
 **Dell PowerMax (Solutions Enabler):**

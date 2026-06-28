@@ -9,6 +9,23 @@ tags:
 Adding CA certificates to OS and application trust stores so that TLS connections to internal services succeed. Covers Linux (RHEL, Ubuntu/Debian), Windows (machine store and GPO), Java keystores, and verification commands.
 </div>
 
+```d2
+direction: down
+
+ubuntu_debian: "Ubuntu / Debian" {shape: rectangle}
+rhel_rocky_almalinux: "RHEL / Rocky / AlmaLinux" {shape: rectangle}
+windows_local_machine_store: "Windows — Local Machine Store" {shape: rectangle}
+windows_gpo_domain_distribution: "Windows — GPO (Domain Distribution)" {shape: rectangle}
+java_keystore: "Java Keystore" {shape: rectangle}
+verification_commands: "Verification Commands" {shape: rectangle}
+
+ubuntu_debian -> rhel_rocky_almalinux: uses
+rhel_rocky_almalinux -> windows_local_machine_store: uses
+windows_local_machine_store -> windows_gpo_domain_distribution: uses
+windows_gpo_domain_distribution -> java_keystore: uses
+java_keystore -> verification_commands: uses
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

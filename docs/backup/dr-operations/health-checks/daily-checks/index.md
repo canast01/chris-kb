@@ -8,6 +8,21 @@ tags:
 Daily Infrastructure Health Checks reference covering Overview, Morning Check Routine, What to Look For, Escalation Decision Tree, Documentation and Handover and 1 more sections.
 </div>
 
+```d2
+direction: down
+
+morning_check_routine: "Morning Check Routine" {shape: rectangle}
+what_to_look_for: "What to Look For" {shape: rectangle}
+escalation_decision_tree: "Escalation Decision Tree" {shape: rectangle}
+documentation_and_handover: "Documentation and Handover" {shape: rectangle}
+common_daily_check_commands: "Common Daily Check Commands" {shape: rectangle}
+
+morning_check_routine -> what_to_look_for: uses
+what_to_look_for -> escalation_decision_tree: uses
+escalation_decision_tree -> documentation_and_handover: uses
+documentation_and_handover -> common_daily_check_commands: uses
+```
+
 ## Overview
 
 A consistent daily check routine catches issues before they escalate into incidents. The goal is not to review everything — it is to confirm that the most critical systems are healthy, recent changes have not caused drift, and nothing in overnight logs or alerts requires action before business hours begin.

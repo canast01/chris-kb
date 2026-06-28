@@ -10,6 +10,21 @@ Live register of all VMs, their backup policy, and last verified restore test. R
 *Applies to: vSphere 7.x / 8.x*
 </div>
 
+```d2
+direction: down
+
+coverage_register: "Coverage Register" {shape: rectangle}
+criticality_definitions: "Criticality Definitions" {shape: rectangle}
+coverage_review_checklist_monthly: "Coverage Review Checklist (Monthly)" {shape: rectangle}
+unprotected_vms_log: "Unprotected VMs Log" {shape: rectangle}
+restore_test_log: "Restore Test Log" {shape: rectangle}
+
+coverage_register -> criticality_definitions: uses
+criticality_definitions -> coverage_review_checklist_monthly: uses
+coverage_review_checklist_monthly -> unprotected_vms_log: uses
+unprotected_vms_log -> restore_test_log: uses
+```
+
 ## Coverage Register
 
 | VM Name | Application Owner | Criticality | Backup Tool | Policy | Schedule | Retention | Last Successful | Last Restore Test | Notes |

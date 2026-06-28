@@ -8,6 +8,19 @@ tags:
 Service Availability Monitoring reference covering Availability Calculation, Uptime Monitoring Tools, Azure Monitor — Availability Test, AWS Route 53 Health Checks, Availability Incident Tracking and 1 more sections.
 </div>
 
+```d2
+direction: down
+
+availability_calculation: "Availability Calculation" {shape: rectangle}
+aws_route_53_health_checks: "AWS Route 53 Health Checks" {shape: rectangle}
+availability_incident_tracking: "Availability Incident Tracking" {shape: rectangle}
+reporting: "Reporting" {shape: rectangle}
+
+availability_calculation -> aws_route_53_health_checks: uses
+aws_route_53_health_checks -> availability_incident_tracking: uses
+availability_incident_tracking -> reporting: uses
+```
+
 ## Availability Calculation
 
 ## AWS Route 53 Health Checks

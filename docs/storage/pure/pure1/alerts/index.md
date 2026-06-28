@@ -10,6 +10,19 @@ Alerts reference covering Viewing Alerts in Pure1, Alerts via CLI, Alerts via Pu
 *Applies to: Pure1*
 </div>
 
+```d2
+direction: down
+
+alert_severity_definitions: "Alert Severity Definitions" {shape: rectangle}
+common_alert_types: "Common Alert Types" {shape: rectangle}
+alert_notification_configuration: "Alert Notification Configuration" {shape: rectangle}
+alert_integration_with_prometheus: "Alert Integration with Prometheus" {shape: rectangle}
+
+alert_severity_definitions -> common_alert_types: uses
+common_alert_types -> alert_notification_configuration: uses
+alert_notification_configuration -> alert_integration_with_prometheus: uses
+```
+
 ## Alert Severity Definitions
 
 | Severity | Meaning | Response |

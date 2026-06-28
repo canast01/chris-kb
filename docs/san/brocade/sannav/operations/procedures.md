@@ -9,6 +9,23 @@ SANnav Management Portal is the Brocade web-based tool for SAN fabric discovery,
 
 ---
 
+```d2
+direction: right
+
+add_a_fabric_to_sannav_management: "Add a Fabric to SANnav Management" {shape: rectangle}
+discover_switches_in_a_fabric: "Discover Switches in a Fabric" {shape: rectangle}
+add_a_fabric_to_sannav: "Add a Fabric to SANnav" {shape: rectangle}
+discover_or_rediscover_switches_in_a: "Discover or Rediscover Switches in a Fabric" {shape: rectangle}
+generate_a_fabric_health_report: "Generate a Fabric Health Report" {shape: rectangle}
+configure_maps_alert_thresholds_and_: "Configure MAPS Alert Thresholds and Email Notifications" {shape: rectangle}
+
+add_a_fabric_to_sannav_management -> discover_switches_in_a_fabric
+discover_switches_in_a_fabric -> add_a_fabric_to_sannav
+add_a_fabric_to_sannav -> discover_or_rediscover_switches_in_a
+discover_or_rediscover_switches_in_a -> generate_a_fabric_health_report
+generate_a_fabric_health_report -> configure_maps_alert_thresholds_and_
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

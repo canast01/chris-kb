@@ -10,6 +10,17 @@ Performance reference covering Performance via Pure1 API, Latency Investigation,
 *Applies to: Pure1*
 </div>
 
+```d2
+direction: down
+
+latency_investigation: "Latency Investigation" {shape: rectangle}
+performance_benchmarking_fio: "Performance Benchmarking (fio)" {shape: rectangle}
+common_performance_issues: "Common Performance Issues" {shape: rectangle}
+
+latency_investigation -> performance_benchmarking_fio: uses
+performance_benchmarking_fio -> common_performance_issues: uses
+```
+
 ## Latency Investigation
 
 High latency on a Pure FlashArray usually originates from the host side, not the array. Investigate in this order:

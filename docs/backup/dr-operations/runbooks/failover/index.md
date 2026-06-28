@@ -49,6 +49,17 @@ Get-Service | Where-Object { $_.Status -ne 'Running' -and $_.StartType -eq 'Auto
 Test-NetConnection -ComputerName <dr-app-server> -Port 443
 ```
 
+```d2
+direction: down
+
+component_a: "Component A" {shape: rectangle}
+component_b: "Component B" {shape: rectangle}
+component_c: "Component C" {shape: rectangle}
+
+component_a -> component_b: uses
+component_b -> component_c: uses
+```
+
 ## See also
 
 - [DR Runbooks](../index.md)

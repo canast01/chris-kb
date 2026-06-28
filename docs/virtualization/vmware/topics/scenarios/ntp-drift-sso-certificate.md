@@ -14,6 +14,23 @@ and recovering SSO and certificate services after time is fixed.
 *Applies to: vSphere 7.x / 8.x*
 </div>
 
+```d2
+direction: down
+
+products_involved: "Products Involved" {shape: rectangle}
+1_understand_why_ntp_matters_in_vmwa: "1. Understand Why NTP Matters in VMware" {shape: rectangle}
+2_check_time_on_vcenter_vcsa: "2. Check Time on vCenter VCSA" {shape: rectangle}
+3_check_time_on_esxi_hosts: "3. Check Time on ESXi Hosts" {shape: rectangle}
+4_check_time_on_nsx_manager: "4. Check Time on NSX Manager" {shape: rectangle}
+5_fix_ntp_on_esxi_hosts: "5. Fix NTP on ESXi Hosts" {shape: rectangle}
+
+products_involved -> 1_understand_why_ntp_matters_in_vmwa: uses
+1_understand_why_ntp_matters_in_vmwa -> 2_check_time_on_vcenter_vcsa: uses
+2_check_time_on_vcenter_vcsa -> 3_check_time_on_esxi_hosts: uses
+3_check_time_on_esxi_hosts -> 4_check_time_on_nsx_manager: uses
+4_check_time_on_nsx_manager -> 5_fix_ntp_on_esxi_hosts: uses
+```
+
 ## Products Involved
 
 | Product | Role in This Scenario |

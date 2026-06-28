@@ -11,6 +11,23 @@ Azure OpenAI model availability varies by region and subscription tier. Some mod
 *Applies to: Azure OpenAI*
 </div>
 
+```d2
+direction: down
+
+model_availability_by_region: "Model Availability by Region" {shape: rectangle}
+requesting_access_for_gated_models: "Requesting Access for Gated Models" {shape: rectangle}
+quota_and_rate_limits: "Quota and Rate Limits" {shape: rectangle}
+rate_limit_headers: "Rate Limit Headers" {shape: rectangle}
+multiregion_strategy: "Multi-Region Strategy" {shape: rectangle}
+common_access_issues: "Common Access Issues" {shape: rectangle}
+
+model_availability_by_region -> requesting_access_for_gated_models: uses
+requesting_access_for_gated_models -> quota_and_rate_limits: uses
+quota_and_rate_limits -> rate_limit_headers: uses
+rate_limit_headers -> multiregion_strategy: uses
+multiregion_strategy -> common_access_issues: uses
+```
+
 ## Model Availability by Region
 
 Not all models are available in all regions. Use the Azure portal or CLI to list available models for your resource's region.

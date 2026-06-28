@@ -9,6 +9,23 @@ tags:
 Exam Tracking reference covering Purpose, Common checks, Incident notes, Change notes, Useful commands or references and 1 more sections.
 </div>
 
+```d2
+direction: down
+
+purpose: "Purpose" {shape: rectangle}
+common_checks: "Common checks" {shape: rectangle}
+incident_notes: "Incident notes" {shape: rectangle}
+change_notes: "Change notes" {shape: rectangle}
+useful_commands_or_references: "Useful commands or references" {shape: rectangle}
+known_issues: "Known issues" {shape: rectangle}
+
+purpose -> common_checks: uses
+common_checks -> incident_notes: uses
+incident_notes -> change_notes: uses
+change_notes -> useful_commands_or_references: uses
+useful_commands_or_references -> known_issues: uses
+```
+
 ## Purpose
 
 Use this page for practical VMware Exam Tracking notes, checks, troubleshooting, commands, standards, and field references.

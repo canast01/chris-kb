@@ -8,6 +8,21 @@ tags:
 NTFS Permissions reference covering Overview, NTFS Permission Types, icacls Reference, Inheritance, Effective Permissions and 1 more sections.
 </div>
 
+```d2
+direction: down
+
+ntfs_permission_types: "NTFS Permission Types" {shape: rectangle}
+icacls_reference: "icacls Reference" {shape: rectangle}
+inheritance: "Inheritance" {shape: rectangle}
+effective_permissions: "Effective Permissions" {shape: rectangle}
+ownership_and_auditing: "Ownership and Auditing" {shape: rectangle}
+
+ntfs_permission_types -> icacls_reference: uses
+icacls_reference -> inheritance: uses
+inheritance -> effective_permissions: uses
+effective_permissions -> ownership_and_auditing: uses
+```
+
 ## Overview
 
 NTFS permissions control access to files and folders at the filesystem level on Windows volumes. They are distinct from share permissions and apply whether access comes over the network or locally. Effective access is determined by combining both layers: the most restrictive result of NTFS and share permissions wins.

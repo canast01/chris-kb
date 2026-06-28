@@ -281,6 +281,23 @@ done
 
 ---
 
+```d2
+direction: right
+
+create_an_incident: "Create an Incident" {shape: rectangle}
+escalate_an_incident: "Escalate an Incident" {shape: rectangle}
+create_a_change_request: "Create a Change Request" {shape: rectangle}
+approve_or_reject_a_change: "Approve or Reject a Change" {shape: rectangle}
+create_a_problem_record: "Create a Problem Record" {shape: rectangle}
+configure_a_business_rule_or_workflo: "Configure a Business Rule or Workflow" {shape: rectangle}
+
+create_an_incident -> escalate_an_incident
+escalate_an_incident -> create_a_change_request
+create_a_change_request -> approve_or_reject_a_change
+approve_or_reject_a_change -> create_a_problem_record
+create_a_problem_record -> configure_a_business_rule_or_workflo
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

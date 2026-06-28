@@ -12,6 +12,21 @@ VxRail CLI reference: `vxrail-upgrade`, `vxrail-health-check`, `vxrail-lcm-statu
 
 ---
 
+```d2
+direction: down
+
+vxrail_manager_rest_api: "VxRail Manager REST API" {shape: rectangle}
+vxrail_manager_ssh_cli: "VxRail Manager SSH CLI" {shape: rectangle}
+powercli_vxrail_module: "PowerCLI + VxRail Module" {shape: rectangle}
+esxcli_on_vxrail_nodes: "ESXCLI on VxRail Nodes" {shape: rectangle}
+idrac_racadm_hardware_health: "iDRAC / RACADM (Hardware Health)" {shape: rectangle}
+
+vxrail_manager_rest_api -> vxrail_manager_ssh_cli: uses
+vxrail_manager_ssh_cli -> powercli_vxrail_module: uses
+powercli_vxrail_module -> esxcli_on_vxrail_nodes: uses
+esxcli_on_vxrail_nodes -> idrac_racadm_hardware_health: uses
+```
+
 ## Overview
 
 VxRail management interfaces:

@@ -16,6 +16,26 @@ Forward to SIEM using a log forwarder (Filebeat, Splunk UF) on the VBR server. A
 - Job deletion or modification outside maintenance windows
 - Encryption key management operations
 
+```d2
+direction: down
+
+auth: "Veeam\nAuthentication" {shape: rectangle}
+administrator: "Administrator" {shape: rectangle}
+operator: "Operator" {shape: rectangle}
+auditor: "Auditor" {shape: rectangle}
+readonly: "Read-Only" {shape: rectangle}
+resources: Protected Resources {shape: cylinder}
+
+auth -> administrator: grants
+administrator -> resources: access
+auth -> operator: grants
+operator -> resources: access
+auth -> auditor: grants
+auditor -> resources: access
+auth -> readonly: grants
+readonly -> resources: access
+```
+
 ## Before you begin
 
 - **Access:** Backup admin role on backup server; target system credentials

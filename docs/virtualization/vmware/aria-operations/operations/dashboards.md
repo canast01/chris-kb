@@ -21,6 +21,15 @@ Popular community packs:
 | vSAN Operations | Disk group health, capacity, performance |
 | Kubernetes | Container resource usage via Telegraf |
 
+```d2
+direction: right
+
+common_dashboard_issues: "Common Dashboard Issues" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+common_dashboard_issues -> verify
+```
+
 ## Before you begin
 
 - **Access:** vCenter read-only minimum; Administrator role for remediation steps

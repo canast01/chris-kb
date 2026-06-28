@@ -17,6 +17,23 @@ is restored.
 *Applies to: vSphere 7.x / 8.x*
 </div>
 
+```d2
+direction: down
+
+products_involved: "Products Involved" {shape: rectangle}
+1_identify_the_failure_what_does_vce: "1. Identify the Failure — What Does vCenter Show?" {shape: rectangle}
+2_check_witness_appliance_reachabili: "2. Check Witness Appliance Reachability" {shape: rectangle}
+3_confirm_the_preferred_site_configu: "3. Confirm the Preferred Site Configuration" {shape: rectangle}
+4_determine_current_quorum_state: "4. Determine Current Quorum State" {shape: rectangle}
+5_check_intersite_vsan_network_path: "5. Check Inter-Site vSAN Network Path" {shape: rectangle}
+
+products_involved -> 1_identify_the_failure_what_does_vce: uses
+1_identify_the_failure_what_does_vce -> 2_check_witness_appliance_reachabili: uses
+2_check_witness_appliance_reachabili -> 3_confirm_the_preferred_site_configu: uses
+3_confirm_the_preferred_site_configu -> 4_determine_current_quorum_state: uses
+4_determine_current_quorum_state -> 5_check_intersite_vsan_network_path: uses
+```
+
 ## Products Involved
 
 | Product | Role in This Scenario |

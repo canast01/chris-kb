@@ -31,6 +31,15 @@ timedatectl status
 # Expected: "synchronized: yes"
 ```
 
+```d2
+direction: right
+
+run_this_routine: "Run This Routine" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+run_this_routine -> verify
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

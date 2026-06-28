@@ -11,6 +11,23 @@ Azure Private Link enables private connectivity to Azure PaaS services (Storage,
 *Applies to: Azure*
 </div>
 
+```d2
+direction: down
+
+concepts: "Concepts" {shape: rectangle}
+traffic_flow: "Traffic Flow" {shape: rectangle}
+creating_a_private_endpoint: "Creating a Private Endpoint" {shape: rectangle}
+dns_configuration: "DNS Configuration" {shape: rectangle}
+private_dns_zones_by_service: "Private DNS Zones by Service" {shape: rectangle}
+validating_connectivity: "Validating Connectivity" {shape: rectangle}
+
+concepts -> traffic_flow: uses
+traffic_flow -> creating_a_private_endpoint: uses
+creating_a_private_endpoint -> dns_configuration: uses
+dns_configuration -> private_dns_zones_by_service: uses
+private_dns_zones_by_service -> validating_connectivity: uses
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

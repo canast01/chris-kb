@@ -11,6 +11,23 @@ VxRail Support Case Prep reference covering Overview, Where It Fits, Daily Check
 *Applies to: VxRail 7.x / 8.x*
 </div>
 
+```d2
+direction: right
+
+where_it_fits: "Where It Fits" {shape: rectangle}
+daily_checks: "Daily Checks" {shape: rectangle}
+health_commands: "Health Commands" {shape: rectangle}
+common_issues: "Common Issues" {shape: rectangle}
+operational_tasks: "Operational Tasks" {shape: rectangle}
+upgrade_notes: "Upgrade Notes" {shape: rectangle}
+
+where_it_fits -> daily_checks
+daily_checks -> health_commands
+health_commands -> common_issues
+common_issues -> operational_tasks
+operational_tasks -> upgrade_notes
+```
+
 ## Before you begin
 
 - **Access:** vCenter read-only minimum; Administrator role for remediation steps

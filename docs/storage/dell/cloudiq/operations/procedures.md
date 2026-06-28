@@ -15,6 +15,23 @@ CloudIQ operational procedures: scheduling maintenance windows to suppress alert
 
 ---
 
+```d2
+direction: right
+
+maintenance_window: "Maintenance Window" {shape: rectangle}
+connect_a_storage_system_to_cloudiq: "Connect a Storage System to CloudIQ" {shape: rectangle}
+acknowledge_an_alert: "Acknowledge an Alert" {shape: rectangle}
+create_a_custom_capacity_report: "Create a Custom Capacity Report" {shape: rectangle}
+configure_thresholdbased_notificatio: "Configure Threshold-Based Notifications" {shape: rectangle}
+review_performance_anomaly: "Review Performance Anomaly" {shape: rectangle}
+
+maintenance_window -> connect_a_storage_system_to_cloudiq
+connect_a_storage_system_to_cloudiq -> acknowledge_an_alert
+acknowledge_an_alert -> create_a_custom_capacity_report
+create_a_custom_capacity_report -> configure_thresholdbased_notificatio
+configure_thresholdbased_notificatio -> review_performance_anomaly
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

@@ -13,6 +13,23 @@ VxRail Node Maintenance Procedure reference covering Before Starting, Evacuation
 
 Node Maintenance Mode Lifecycle
 
+```d2
+direction: right
+
+before_starting: "Before Starting" {shape: rectangle}
+evacuation_mode_selection: "Evacuation Mode Selection" {shape: rectangle}
+entering_maintenance_mode: "Entering Maintenance Mode" {shape: rectangle}
+performing_the_work: "Performing the Work" {shape: rectangle}
+exiting_maintenance_mode: "Exiting Maintenance Mode" {shape: rectangle}
+postmaintenance_validation: "Post-Maintenance Validation" {shape: rectangle}
+
+before_starting -> evacuation_mode_selection
+evacuation_mode_selection -> entering_maintenance_mode
+entering_maintenance_mode -> performing_the_work
+performing_the_work -> exiting_maintenance_mode
+exiting_maintenance_mode -> postmaintenance_validation
+```
+
 ## Before you begin
 
 - **Access:** vCenter read-only minimum; Administrator role for remediation steps

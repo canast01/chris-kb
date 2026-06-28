@@ -10,6 +10,23 @@ tags:
 Getting the most out of GPU hardware requires profiling to identify bottlenecks, then applying targeted optimisations such as mixed precision, larger batch sizes, and multi-GPU communication tuning.
 </div>
 
+```d2
+direction: down
+
+profiling_with_nsight_and_pytorch_pr: "Profiling with Nsight and PyTorch Profiler" {shape: rectangle}
+mixed_precision_training: "Mixed Precision Training" {shape: rectangle}
+batch_size_and_throughput: "Batch Size and Throughput" {shape: rectangle}
+nccl_and_multigpu_communication: "NCCL and Multi-GPU Communication" {shape: rectangle}
+performance_benchmarking: "Performance Benchmarking" {shape: rectangle}
+common_bottlenecks: "Common Bottlenecks" {shape: rectangle}
+
+profiling_with_nsight_and_pytorch_pr -> mixed_precision_training: uses
+mixed_precision_training -> batch_size_and_throughput: uses
+batch_size_and_throughput -> nccl_and_multigpu_communication: uses
+nccl_and_multigpu_communication -> performance_benchmarking: uses
+performance_benchmarking -> common_bottlenecks: uses
+```
+
 ## Profiling with Nsight and PyTorch Profiler
 
 Start by measuring before optimising. Guessing at bottlenecks wastes time.

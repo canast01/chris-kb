@@ -10,6 +10,23 @@ HA Admission Control reference covering Purpose, Admission Control Policies, Che
 *Applies to: vSphere 7.x / 8.x*
 </div>
 
+```d2
+direction: down
+
+purpose: "Purpose" {shape: rectangle}
+admission_control_policies: "Admission Control Policies" {shape: rectangle}
+checking_admission_control_status: "Checking Admission Control Status" {shape: rectangle}
+configure_admission_control: "Configure Admission Control" {shape: rectangle}
+admission_control_and_overcommit: "Admission Control and Overcommit" {shape: rectangle}
+risk_indicators: "Risk Indicators" {shape: rectangle}
+
+purpose -> admission_control_policies: uses
+admission_control_policies -> checking_admission_control_status: uses
+checking_admission_control_status -> configure_admission_control: uses
+configure_admission_control -> admission_control_and_overcommit: uses
+admission_control_and_overcommit -> risk_indicators: uses
+```
+
 ## Purpose
 
 Admission control reserves cluster capacity so that in the event of a host failure, vSphere HA can restart all VMs from the failed host on remaining hosts. Without it, a cluster at 100% utilisation cannot restart failed VMs.

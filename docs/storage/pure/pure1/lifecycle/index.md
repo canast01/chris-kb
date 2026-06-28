@@ -34,3 +34,18 @@ Rotation procedure:
 5. Verify API calls succeed with the new key
 6. Log the rotation date and next due date in the credential register
 ```
+
+```d2
+direction: right
+
+plan: "Plan" {shape: oval}
+prepare: "Prepare" {shape: rectangle}
+execute: "Execute" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+validate: "Validate" {shape: oval}
+
+plan -> prepare
+prepare -> execute
+execute -> verify
+verify -> validate
+```

@@ -10,6 +10,21 @@ Environment Baseline reference covering Core Platform, Networking, Storage, Back
 *Applies to: vSphere 7.x / 8.x*
 </div>
 
+```d2
+direction: down
+
+core_platform: "Core Platform" {shape: rectangle}
+networking: "Networking" {shape: rectangle}
+storage: "Storage" {shape: rectangle}
+backup: "Backup" {shape: rectangle}
+monitoring: "Monitoring" {shape: rectangle}
+
+core_platform -> networking: uses
+networking -> storage: uses
+storage -> backup: uses
+backup -> monitoring: uses
+```
+
 ## Core Platform
 
 vCenter version  

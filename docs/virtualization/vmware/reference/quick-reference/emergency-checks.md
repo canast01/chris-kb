@@ -21,6 +21,17 @@ Emergency checks: vCenter service status, ESXi PSOD scan, vSAN health degradatio
 | Hardware | Any failed disks, NICs, PSU, memory? |
 | Backups | Are recent backups available? |
 
+```d2
+direction: down
+
+known_issue_tracking: "Known Issue Tracking" {shape: rectangle}
+escalation_quick_reference: "Escalation Quick Reference" {shape: rectangle}
+fast_troubleshooting_map: "Fast Troubleshooting Map" {shape: rectangle}
+
+known_issue_tracking -> escalation_quick_reference: uses
+escalation_quick_reference -> fast_troubleshooting_map: uses
+```
+
 ## Known Issue Tracking
 
 | Field | Description |

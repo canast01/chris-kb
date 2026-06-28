@@ -10,6 +10,21 @@ InsightIQ Integration reference covering Overview, OneFS Data Connector (Inbound
 *Applies to: InsightIQ*
 </div>
 
+```d2
+direction: down
+
+onefs_data_connector_inbound: "OneFS Data Connector (Inbound)" {shape: rectangle}
+snmp_forwarding_to_monitoring_platfo: "SNMP Forwarding to Monitoring Platform" {shape: rectangle}
+syslog_to_siem: "Syslog to SIEM" {shape: rectangle}
+csv_pdf_report_export: "CSV / PDF Report Export" {shape: rectangle}
+integration_summary: "Integration Summary" {shape: rectangle}
+
+onefs_data_connector_inbound -> snmp_forwarding_to_monitoring_platfo: uses
+snmp_forwarding_to_monitoring_platfo -> syslog_to_siem: uses
+syslog_to_siem -> csv_pdf_report_export: uses
+csv_pdf_report_export -> integration_summary: uses
+```
+
 ## Overview
 
 InsightIQ integrates primarily with PowerScale (Isilon) clusters for data collection, and with enterprise monitoring, identity, and notification platforms for alerting and access management.

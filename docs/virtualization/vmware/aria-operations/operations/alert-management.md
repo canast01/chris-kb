@@ -12,6 +12,19 @@ Alert Management reference covering Common Alert Sources, Alert Noise Reduction 
 *Applies to: Aria Ops 8.x*
 </div>
 
+```d2
+direction: right
+
+custom_alert_thresholds: "Custom Alert Thresholds" {shape: rectangle}
+alert_noise_reduction_checklist: "Alert Noise Reduction Checklist" {shape: rectangle}
+escalation_matrix_template: "Escalation Matrix (template)" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+custom_alert_thresholds -> alert_noise_reduction_checklist
+alert_noise_reduction_checklist -> escalation_matrix_template
+escalation_matrix_template -> verify
+```
+
 ## Custom Alert Thresholds
 
 ### Disk Space

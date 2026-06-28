@@ -8,6 +8,23 @@ tags:
 DHCP Reservations reference covering Overview, Creating a Reservation, Bulk Reservations from CSV, Reservation Conflicts, Reservation Management Reference and 2 more sections.
 </div>
 
+```d2
+direction: down
+
+creating_a_reservation: "Creating a Reservation" {shape: rectangle}
+bulk_reservations_from_csv: "Bulk Reservations from CSV" {shape: rectangle}
+reservation_conflicts: "Reservation Conflicts" {shape: rectangle}
+reservation_management_reference: "Reservation Management Reference" {shape: rectangle}
+reservation_option_overrides: "Reservation Option Overrides" {shape: rectangle}
+known_issues: "Known Issues" {shape: rectangle}
+
+creating_a_reservation -> bulk_reservations_from_csv: uses
+bulk_reservations_from_csv -> reservation_conflicts: uses
+reservation_conflicts -> reservation_management_reference: uses
+reservation_management_reference -> reservation_option_overrides: uses
+reservation_option_overrides -> known_issues: uses
+```
+
 ## Overview
 
 A DHCP reservation pins a specific IP address to a client's MAC address. The IP must fall within the scope range but is excluded from the dynamic pool. Reservations inherit scope options unless overridden at the reservation level.

@@ -4,6 +4,19 @@
 Full KB site index: links to all infrastructure, resilience, security, automation, and cloud sections. Use Ctrl+F to locate any product or topic quickly.
 </div>
 
+```d2
+direction: down
+
+infrastructure: "Infrastructure" {shape: rectangle}
+resilience_recovery: "Resilience & Recovery" {shape: rectangle}
+security_compliance: "Security & Compliance" {shape: rectangle}
+automation_tooling: "Automation & Tooling" {shape: rectangle}
+
+infrastructure -> resilience_recovery: uses
+resilience_recovery -> security_compliance: uses
+security_compliance -> automation_tooling: uses
+```
+
 ## Infrastructure
 
 | Section | Sub-sections |

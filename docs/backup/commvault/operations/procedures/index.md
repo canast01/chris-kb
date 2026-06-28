@@ -16,6 +16,23 @@ qlist jobs
 qlist services
 ```
 
+```d2
+direction: right
+
+add_a_client: "Add a Client" {shape: rectangle}
+create_a_storage_policy: "Create a Storage Policy" {shape: rectangle}
+create_a_subclient_and_schedule: "Create a Subclient and Schedule" {shape: rectangle}
+run_an_adhoc_backup: "Run an Ad-Hoc Backup" {shape: rectangle}
+restore_files_from_backup: "Restore Files from Backup" {shape: rectangle}
+change_a_backup_schedule: "Change a Backup Schedule" {shape: rectangle}
+
+add_a_client -> create_a_storage_policy
+create_a_storage_policy -> create_a_subclient_and_schedule
+create_a_subclient_and_schedule -> run_an_adhoc_backup
+run_an_adhoc_backup -> restore_files_from_backup
+restore_files_from_backup -> change_a_backup_schedule
+```
+
 ## Before you begin
 
 - **Access:** Backup admin role on backup server; target system credentials

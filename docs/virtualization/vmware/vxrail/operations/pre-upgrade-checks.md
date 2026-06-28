@@ -11,6 +11,21 @@ VxRail Pre-Upgrade Checks reference covering Overview, Pre-Checks, Steps, Valida
 *Applies to: VxRail 7.x / 8.x*
 </div>
 
+```d2
+direction: right
+
+prechecks: "Pre-Checks" {shape: rectangle}
+steps: "Steps" {shape: rectangle}
+validation: "Validation" {shape: rectangle}
+rollback: "Rollback" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+prechecks -> steps
+steps -> validation
+validation -> rollback
+rollback -> verify
+```
+
 ## Before you begin
 
 - **Access:** vCenter read-only minimum; Administrator role for remediation steps

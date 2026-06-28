@@ -8,6 +8,23 @@ Quick reference for determining which licence tier is required to enable a speci
 
 ---
 
+```d2
+direction: down
+
+overview_postbroadcom_licensing_mode: "Overview — Post-Broadcom Licensing Model" {shape: rectangle}
+vmware_cloud_foundation_vcf: "VMware Cloud Foundation (VCF)" {shape: rectangle}
+vsphere_foundation_vvf: "vSphere Foundation (VVF)" {shape: rectangle}
+standalone_addon_licences: "Standalone / Add-on Licences" {shape: rectangle}
+vsphere_feature_licence_tier_require: "vSphere Feature — Licence Tier Requirements" {shape: rectangle}
+nsx_feature_licence_tier_requirement: "NSX Feature — Licence Tier Requirements" {shape: rectangle}
+
+overview_postbroadcom_licensing_mode -> vmware_cloud_foundation_vcf: uses
+vmware_cloud_foundation_vcf -> vsphere_foundation_vvf: uses
+vsphere_foundation_vvf -> standalone_addon_licences: uses
+standalone_addon_licences -> vsphere_feature_licence_tier_require: uses
+vsphere_feature_licence_tier_require -> nsx_feature_licence_tier_requirement: uses
+```
+
 ## Overview — Post-Broadcom Licensing Model
 
 As of 2024, Broadcom restructured VMware's entire licensing portfolio. The key changes:

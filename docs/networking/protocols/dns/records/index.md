@@ -8,6 +8,21 @@ tags:
 DNS Records reference covering Overview, Common Record Types, Managing Records with PowerShell, Scavenging and Aging, Dynamic DNS and 1 more sections.
 </div>
 
+```d2
+direction: down
+
+common_record_types: "Common Record Types" {shape: rectangle}
+managing_records_with_powershell: "Managing Records with PowerShell" {shape: rectangle}
+scavenging_and_aging: "Scavenging and Aging" {shape: rectangle}
+dynamic_dns: "Dynamic DNS" {shape: rectangle}
+known_issues: "Known Issues" {shape: rectangle}
+
+common_record_types -> managing_records_with_powershell: uses
+managing_records_with_powershell -> scavenging_and_aging: uses
+scavenging_and_aging -> dynamic_dns: uses
+dynamic_dns -> known_issues: uses
+```
+
 ## Overview
 
 DNS records define how names map to resources. Each record type serves a distinct purpose. On Windows DNS Server, records are managed with `DnsServer` PowerShell cmdlets or `dnscmd`. Dynamic DNS (DDNS) allows DHCP servers and clients to register records automatically.

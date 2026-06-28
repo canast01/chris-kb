@@ -15,6 +15,23 @@ Comprehensive reference for vSphere networking. Covers the architecture differen
 
 ---
 
+```d2
+direction: down
+
+standard_switch_vss_vs_distributed_s: "Standard Switch (VSS) vs Distributed Switch (VDS)" {shape: rectangle}
+vmkernel_adapters: "VMkernel Adapters" {shape: rectangle}
+networking_policies: "Networking Policies" {shape: rectangle}
+network_io_control_nioc: "Network I/O Control (NIOC)" {shape: rectangle}
+port_groups_and_vlans: "Port Groups and VLANs" {shape: rectangle}
+multiple_tcpip_stacks: "Multiple TCP/IP Stacks" {shape: rectangle}
+
+standard_switch_vss_vs_distributed_s -> vmkernel_adapters: uses
+vmkernel_adapters -> networking_policies: uses
+networking_policies -> network_io_control_nioc: uses
+network_io_control_nioc -> port_groups_and_vlans: uses
+port_groups_and_vlans -> multiple_tcpip_stacks: uses
+```
+
 ## Standard Switch (VSS) vs Distributed Switch (VDS)
 
 A **vSphere Standard Switch (VSS)** is configured per ESXi host. Each host maintains its own switch configuration independently. A **vSphere Distributed Switch (VDS)** is managed centrally from vCenter and spans multiple hosts — the configuration is consistent across all member hosts.

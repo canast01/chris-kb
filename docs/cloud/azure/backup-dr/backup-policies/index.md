@@ -12,6 +12,21 @@ Backup policies define when backups run, how many recovery points are retained, 
 
 ---
 
+```d2
+direction: down
+
+creating_a_vm_backup_policy: "Creating a VM Backup Policy" {shape: rectangle}
+retention_rules_reference: "Retention Rules Reference" {shape: rectangle}
+modifying_an_existing_policy: "Modifying an Existing Policy" {shape: rectangle}
+assigning_a_policy_to_protected_item: "Assigning a Policy to Protected Items" {shape: rectangle}
+deleting_a_policy: "Deleting a Policy" {shape: rectangle}
+
+creating_a_vm_backup_policy -> retention_rules_reference: uses
+retention_rules_reference -> modifying_an_existing_policy: uses
+modifying_an_existing_policy -> assigning_a_policy_to_protected_item: uses
+assigning_a_policy_to_protected_item -> deleting_a_policy: uses
+```
+
 ## Creating a VM Backup Policy
 
 Policies are defined in JSON. Below is a minimal daily VM backup policy template.

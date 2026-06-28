@@ -13,6 +13,23 @@ assess vSAN component health during the outage, and confirm the cluster is re-ar
 *Applies to: vSphere 7.x / 8.x*
 </div>
 
+```d2
+direction: down
+
+products_involved: "Products Involved" {shape: rectangle}
+1_identify_which_host_failed_and_how: "1. Identify Which Host Failed and How" {shape: rectangle}
+2_check_ha_restart_status: "2. Check HA Restart Status" {shape: rectangle}
+3_determine_storage_path_state_apd_v: "3. Determine Storage Path State — APD vs PDL" {shape: rectangle}
+4_check_vsan_resyncing_objects: "4. Check vSAN Resyncing Objects" {shape: rectangle}
+5_powercli_validate_postfailover_sta: "5. PowerCLI — Validate Post-Failover State" {shape: rectangle}
+
+products_involved -> 1_identify_which_host_failed_and_how: uses
+1_identify_which_host_failed_and_how -> 2_check_ha_restart_status: uses
+2_check_ha_restart_status -> 3_determine_storage_path_state_apd_v: uses
+3_determine_storage_path_state_apd_v -> 4_check_vsan_resyncing_objects: uses
+4_check_vsan_resyncing_objects -> 5_powercli_validate_postfailover_sta: uses
+```
+
 ## Products Involved
 
 | Product | Role in This Scenario |

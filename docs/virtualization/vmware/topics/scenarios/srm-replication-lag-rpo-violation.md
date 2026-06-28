@@ -16,6 +16,23 @@ replication to within RPO before verifying with an SRM test recovery.
 *Applies to: vSphere 7.x / 8.x*
 </div>
 
+```d2
+direction: down
+
+products_involved: "Products Involved" {shape: rectangle}
+1_identify_which_vms_are_lagging: "1. Identify Which VMs Are Lagging" {shape: rectangle}
+2_check_vsphere_replication_applianc: "2. Check vSphere Replication Appliance Health" {shape: rectangle}
+3_check_intersite_replication_networ: "3. Check Inter-Site Replication Network" {shape: rectangle}
+4_check_vm_change_rate: "4. Check VM Change Rate" {shape: rectangle}
+5_enable_compression_or_adjust_throt: "5. Enable Compression or Adjust Throttle Settings" {shape: rectangle}
+
+products_involved -> 1_identify_which_vms_are_lagging: uses
+1_identify_which_vms_are_lagging -> 2_check_vsphere_replication_applianc: uses
+2_check_vsphere_replication_applianc -> 3_check_intersite_replication_networ: uses
+3_check_intersite_replication_networ -> 4_check_vm_change_rate: uses
+4_check_vm_change_rate -> 5_enable_compression_or_adjust_throt: uses
+```
+
 ## Products Involved
 
 | Product | Role in This Scenario |

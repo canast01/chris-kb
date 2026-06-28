@@ -11,6 +11,23 @@ NetBackup operational procedures: creating and tuning backup policies, storage u
 *Applies to: NetBackup 10.x*
 </div>
 
+```d2
+direction: right
+
+backup_policies: "Backup Policies" {shape: rectangle}
+run_an_adhoc_backup: "Run an Ad-Hoc Backup" {shape: rectangle}
+restore_files_bprestore: "Restore Files (bprestore)" {shape: rectangle}
+check_job_status: "Check Job Status" {shape: rectangle}
+expire_a_backup_image: "Expire a Backup Image" {shape: rectangle}
+import_a_backup_from_tape_catalog_re: "Import a Backup from Tape (Catalog Recovery)" {shape: rectangle}
+
+backup_policies -> run_an_adhoc_backup
+run_an_adhoc_backup -> restore_files_bprestore
+restore_files_bprestore -> check_job_status
+check_job_status -> expire_a_backup_image
+expire_a_backup_image -> import_a_backup_from_tape_catalog_re
+```
+
 ## Before you begin
 
 - **Access:** Backup admin role on backup server; target system credentials

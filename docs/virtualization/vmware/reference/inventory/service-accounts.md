@@ -10,6 +10,23 @@ Service accounts used for VMware platform integrations. All accounts must be vau
 *Applies to: vSphere 7.x / 8.x*
 </div>
 
+```d2
+direction: down
+
+account_register: "Account Register" {shape: rectangle}
+permission_role_definitions: "Permission Role Definitions" {shape: rectangle}
+creating_a_service_account_in_ad: "Creating a Service Account in AD" {shape: rectangle}
+assigning_a_custom_vcenter_role: "Assigning a Custom vCenter Role" {shape: rectangle}
+quarterly_review_checklist: "Quarterly Review Checklist" {shape: rectangle}
+detecting_orphaned_accounts: "Detecting Orphaned Accounts" {shape: rectangle}
+
+account_register -> permission_role_definitions: uses
+permission_role_definitions -> creating_a_service_account_in_ad: uses
+creating_a_service_account_in_ad -> assigning_a_custom_vcenter_role: uses
+assigning_a_custom_vcenter_role -> quarterly_review_checklist: uses
+quarterly_review_checklist -> detecting_orphaned_accounts: uses
+```
+
 ## Account Register
 
 | Account | Purpose | Target System | Permission Level | Owner | Rotation | Vault Path | Last Reviewed |

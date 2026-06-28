@@ -149,6 +149,13 @@ jobs:
         run: docker pull ${{ steps.build.outputs.image-tag }}
 ```
 
+```d2
+direction: down
+
+verify: "Verify" {shape: rectangle}
+
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

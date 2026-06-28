@@ -36,6 +36,13 @@ def check_cert_expiry(hostname, port=443, warn_days=30):
     return days_left
 ```
 
+```d2
+direction: down
+
+verify: "Verify" {shape: rectangle}
+
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

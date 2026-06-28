@@ -14,6 +14,23 @@ Common Nutanix operational procedures — adding and removing nodes, entering ma
 
 ---
 
+```d2
+direction: right
+
+enter_host_maintenance_mode: "Enter Host Maintenance Mode" {shape: rectangle}
+aos_ahv_upgrade_via_lcm: "AOS / AHV Upgrade via LCM" {shape: rectangle}
+add_a_node_to_an_existing_cluster: "Add a Node to an Existing Cluster" {shape: rectangle}
+remove_a_node_from_cluster: "Remove a Node from Cluster" {shape: rectangle}
+expand_storage_add_disks: "Expand Storage (Add Disks)" {shape: rectangle}
+clone_a_vm: "Clone a VM" {shape: rectangle}
+
+enter_host_maintenance_mode -> aos_ahv_upgrade_via_lcm
+aos_ahv_upgrade_via_lcm -> add_a_node_to_an_existing_cluster
+add_a_node_to_an_existing_cluster -> remove_a_node_from_cluster
+remove_a_node_from_cluster -> expand_storage_add_disks
+expand_storage_add_disks -> clone_a_vm
+```
+
 ## Before you begin
 
 - **Access:** CVM SSH (nutanix) and Prism Element admin

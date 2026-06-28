@@ -19,6 +19,21 @@ them to fail.
 !!! warning "Production traffic cutover"
     Executing a planned failover transfers production traffic to the recovery site. Confirm all replication groups are synchronised (RPO = 0) and stakeholders are notified before starting.
 
+```d2
+direction: down
+
+products_involved: "Products Involved" {shape: rectangle}
+dr_test_nondisruptive_recovery_valid: "DR Test — Non-Disruptive Recovery Validation" {shape: rectangle}
+planned_failover_graceful_production: "Planned Failover — Graceful Production Migration to DR Site" {shape: rectangle}
+posttask_validation: "Post-Task Validation" {shape: rectangle}
+key_terms: "Key Terms" {shape: rectangle}
+
+products_involved -> dr_test_nondisruptive_recovery_valid: uses
+dr_test_nondisruptive_recovery_valid -> planned_failover_graceful_production: uses
+planned_failover_graceful_production -> posttask_validation: uses
+posttask_validation -> key_terms: uses
+```
+
 ## Products Involved
 
 | Product | Role in This Scenario |

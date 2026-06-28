@@ -12,6 +12,23 @@ SNMP traps are unsolicited notifications sent from a device to a trap receiver (
 
 — a link going down, a threshold being crossed, or a hardware fault. Unlike polling, traps push alerts in real time.
 
+```d2
+direction: down
+
+trap_vs_inform: "Trap vs Inform" {shape: rectangle}
+configuring_trap_destinations: "Configuring Trap Destinations" {shape: rectangle}
+testing_trap_delivery: "Testing Trap Delivery" {shape: rectangle}
+common_trap_oids: "Common Trap OIDs" {shape: rectangle}
+trap_receiver_snmptrapd: "Trap Receiver — snmptrapd" {shape: rectangle}
+common_issues: "Common Issues" {shape: rectangle}
+
+trap_vs_inform -> configuring_trap_destinations: uses
+configuring_trap_destinations -> testing_trap_delivery: uses
+testing_trap_delivery -> common_trap_oids: uses
+common_trap_oids -> trap_receiver_snmptrapd: uses
+trap_receiver_snmptrapd -> common_issues: uses
+```
+
 ## Trap vs Inform
 
 | Type | Acknowledgement | Reliability | Version |

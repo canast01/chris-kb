@@ -10,6 +10,23 @@ By default, Azure OpenAI resources accept traffic from all public IP addresses. 
 *Applies to: Azure OpenAI*
 </div>
 
+```d2
+direction: down
+
+private_endpoints: "Private Endpoints" {shape: rectangle}
+disabling_public_access: "Disabling Public Access" {shape: rectangle}
+firewall_rules: "Firewall Rules" {shape: rectangle}
+network_architecture_patterns: "Network Architecture Patterns" {shape: rectangle}
+testing_connectivity: "Testing Connectivity" {shape: rectangle}
+outbound_connectivity_for_app_servic: "Outbound Connectivity for App Services" {shape: rectangle}
+
+private_endpoints -> disabling_public_access: uses
+disabling_public_access -> firewall_rules: uses
+firewall_rules -> network_architecture_patterns: uses
+network_architecture_patterns -> testing_connectivity: uses
+testing_connectivity -> outbound_connectivity_for_app_servic: uses
+```
+
 ## Private Endpoints
 
 Private endpoints place the Azure OpenAI resource on your VNet with a private IP address, removing exposure to the public internet.

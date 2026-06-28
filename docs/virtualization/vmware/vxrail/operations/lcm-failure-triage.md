@@ -11,6 +11,23 @@ VxRail LCM Failure Triage reference covering Symptoms, Likely Causes, Commands, 
 *Applies to: VxRail 7.x / 8.x*
 </div>
 
+```d2
+direction: right
+
+symptoms: "Symptoms" {shape: rectangle}
+likely_causes: "Likely Causes" {shape: rectangle}
+commands: "Commands" {shape: rectangle}
+troubleshooting_workflow: "Troubleshooting Workflow" {shape: rectangle}
+resolution: "Resolution" {shape: rectangle}
+prevention: "Prevention" {shape: rectangle}
+
+symptoms -> likely_causes
+likely_causes -> commands
+commands -> troubleshooting_workflow
+troubleshooting_workflow -> resolution
+resolution -> prevention
+```
+
 ## Before you begin
 
 - **Access:** vCenter read-only minimum; Administrator role for remediation steps

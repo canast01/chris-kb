@@ -10,6 +10,23 @@ Change Approval Process reference covering Change Types and Approval Requirement
 *Applies to: ServiceNow*
 </div>
 
+```d2
+direction: down
+
+risk_classification_matrix: "Risk Classification Matrix" {shape: rectangle}
+itsm_approval_fields: "ITSM Approval Fields" {shape: rectangle}
+approval_checklist: "Approval Checklist" {shape: rectangle}
+common_rejection_reasons: "Common Rejection Reasons" {shape: rectangle}
+approval_tiers: "Approval Tiers" {shape: rectangle}
+cab_process: "CAB Process" {shape: rectangle}
+
+risk_classification_matrix -> itsm_approval_fields: uses
+itsm_approval_fields -> approval_checklist: uses
+approval_checklist -> common_rejection_reasons: uses
+common_rejection_reasons -> approval_tiers: uses
+approval_tiers -> cab_process: uses
+```
+
 ## Risk Classification Matrix
 
 | Impact ↓ / Likelihood → | Low | Medium | High |

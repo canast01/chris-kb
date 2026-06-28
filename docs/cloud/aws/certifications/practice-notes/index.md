@@ -9,6 +9,21 @@ tags:
 AWS Practice Notes reference covering Service Comparison Tables, Common Gotchas, Architecture Patterns, IAM Quick Reference, Study Checklist.
 </div>
 
+```d2
+direction: down
+
+service_comparison_tables: "Service Comparison Tables" {shape: rectangle}
+common_gotchas: "Common Gotchas" {shape: rectangle}
+architecture_patterns: "Architecture Patterns" {shape: rectangle}
+iam_quick_reference: "IAM Quick Reference" {shape: rectangle}
+study_checklist: "Study Checklist" {shape: rectangle}
+
+service_comparison_tables -> common_gotchas: uses
+common_gotchas -> architecture_patterns: uses
+architecture_patterns -> iam_quick_reference: uses
+iam_quick_reference -> study_checklist: uses
+```
+
 ## Service Comparison Tables
 
 ### Compute

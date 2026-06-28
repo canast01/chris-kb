@@ -11,6 +11,15 @@ Daily operations centre on replication health and authentication event monitorin
 *Applies to: Windows Server 2019 / 2022*
 </div>
 
+```d2
+direction: right
+
+run_this_routine: "Run This Routine" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+run_this_routine -> verify
+```
+
 ## Before you begin
 
 - **Access:** Local Administrator or Domain Admin on target hosts

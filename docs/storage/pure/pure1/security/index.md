@@ -11,6 +11,27 @@ Pure1 Security reference covering Access Control (RBAC), SSO Configuration (SAML
 *Applies to: Pure1*
 </div>
 
+```d2
+direction: down
+
+external: External / Untrusted {shape: rectangle}
+access_control_rbac: "Access Control (RBAC)" {shape: rectangle}
+sso_configuration_saml_20: "SSO Configuration (SAML 2.0)" {shape: rectangle}
+authentication_flow_rsa_key: "Authentication Flow (RSA Key)" {shape: rectangle}
+audit_logging: "Audit Logging" {shape: rectangle}
+data_security: "Data Security" {shape: rectangle}
+security_hardening_checklist: "Security Hardening Checklist" {shape: rectangle}
+core: "Pure1 Core" {shape: hexagon}
+
+external -> access_control_rbac: traffic in
+access_control_rbac -> sso_configuration_saml_20
+sso_configuration_saml_20 -> authentication_flow_rsa_key
+authentication_flow_rsa_key -> audit_logging
+audit_logging -> data_security
+data_security -> security_hardening_checklist
+security_hardening_checklist -> core: secured path
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

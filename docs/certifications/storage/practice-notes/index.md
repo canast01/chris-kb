@@ -8,6 +8,23 @@ tags:
 Storage Practice Notes reference covering RAID Level Quick Reference, Thin vs Thick Provisioning, Deduplication vs Compression, Replication Types, Snapshot vs Clone and 1 more sections.
 </div>
 
+```d2
+direction: down
+
+raid_level_quick_reference: "RAID Level Quick Reference" {shape: rectangle}
+thin_vs_thick_provisioning: "Thin vs Thick Provisioning" {shape: rectangle}
+deduplication_vs_compression: "Deduplication vs Compression" {shape: rectangle}
+replication_types: "Replication Types" {shape: rectangle}
+snapshot_vs_clone: "Snapshot vs Clone" {shape: rectangle}
+study_checklist: "Study Checklist" {shape: rectangle}
+
+raid_level_quick_reference -> thin_vs_thick_provisioning: uses
+thin_vs_thick_provisioning -> deduplication_vs_compression: uses
+deduplication_vs_compression -> replication_types: uses
+replication_types -> snapshot_vs_clone: uses
+snapshot_vs_clone -> study_checklist: uses
+```
+
 ## RAID Level Quick Reference
 
 | RAID Level | Min Disks | Fault Tolerance | Overhead | Performance | Use Case |

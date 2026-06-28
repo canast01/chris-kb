@@ -8,6 +8,23 @@ tags:
 DNS Zones reference covering Overview, Zone Types Reference, Creating Zones, Zone Transfer, Zone Delegation and 2 more sections.
 </div>
 
+```d2
+direction: down
+
+zone_types_reference: "Zone Types Reference" {shape: rectangle}
+creating_zones: "Creating Zones" {shape: rectangle}
+zone_transfer: "Zone Transfer" {shape: rectangle}
+zone_delegation: "Zone Delegation" {shape: rectangle}
+adintegrated_zone_replication_scopes: "AD-Integrated Zone Replication Scopes" {shape: rectangle}
+known_issues: "Known Issues" {shape: rectangle}
+
+zone_types_reference -> creating_zones: uses
+creating_zones -> zone_transfer: uses
+zone_transfer -> zone_delegation: uses
+zone_delegation -> adintegrated_zone_replication_scopes: uses
+adintegrated_zone_replication_scopes -> known_issues: uses
+```
+
 ## Overview
 
 DNS zones are authoritative containers for a portion of the DNS namespace. Windows DNS supports primary, secondary, stub, and forward zones. AD-integrated zones store data in Active Directory, enabling multi-master replication and secure dynamic updates. Zone delegation carves out sub-domains to separate DNS servers.

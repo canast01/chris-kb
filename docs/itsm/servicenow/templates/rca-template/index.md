@@ -12,6 +12,21 @@ Root Cause Analysis Template reference covering Overview, Incident Summary, Time
 *Applies to: ServiceNow*
 </div>
 
+```d2
+direction: down
+
+incident_summary: "Incident Summary" {shape: rectangle}
+timeline: "Timeline" {shape: rectangle}
+root_cause: "Root Cause" {shape: rectangle}
+corrective_actions: "Corrective Actions" {shape: rectangle}
+preventive_actions: "Preventive Actions" {shape: rectangle}
+
+incident_summary -> timeline: uses
+timeline -> root_cause: uses
+root_cause -> corrective_actions: uses
+corrective_actions -> preventive_actions: uses
+```
+
 ## Overview
 
 This template documents incidents, root causes, corrective actions, and prevention strategies.

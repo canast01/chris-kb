@@ -10,6 +10,23 @@ Keystone Usage Reporting reference covering BlueXP Digital Wallet, Keystone Coll
 *Applies to: Keystone STaaS*
 </div>
 
+```d2
+direction: down
+
+bluexp_digital_wallet: "BlueXP Digital Wallet" {shape: rectangle}
+keystone_collector: "Keystone Collector" {shape: rectangle}
+monthly_consumption_reports: "Monthly Consumption Reports" {shape: rectangle}
+identifying_highconsuming_volumes_on: "Identifying High-Consuming Volumes (ONTAP CLI)" {shape: rectangle}
+reporting_discrepancies: "Reporting Discrepancies" {shape: rectangle}
+key_metrics: "Key Metrics" {shape: rectangle}
+
+bluexp_digital_wallet -> keystone_collector: uses
+keystone_collector -> monthly_consumption_reports: uses
+monthly_consumption_reports -> identifying_highconsuming_volumes_on: uses
+identifying_highconsuming_volumes_on -> reporting_discrepancies: uses
+reporting_discrepancies -> key_metrics: uses
+```
+
 ## BlueXP Digital Wallet
 
 Primary source for Keystone consumption reporting:

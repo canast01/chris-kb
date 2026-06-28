@@ -8,6 +8,23 @@ tags:
 SLOs define quantitative targets for service reliability and performance. They form the basis for alerting thresholds, capacity decisions, and on-call escalation.
 </div>
 
+```d2
+direction: down
+
+slo_vs_sla_vs_sli: "SLO vs SLA vs SLI" {shape: rectangle}
+common_slos_for_infrastructure: "Common SLOs for Infrastructure" {shape: rectangle}
+error_budget: "Error Budget" {shape: rectangle}
+slo_dashboard_requirements: "SLO Dashboard Requirements" {shape: rectangle}
+alerting_from_slos: "Alerting from SLOs" {shape: rectangle}
+slo_review_cadence: "SLO Review Cadence" {shape: rectangle}
+
+slo_vs_sla_vs_sli -> common_slos_for_infrastructure: uses
+common_slos_for_infrastructure -> error_budget: uses
+error_budget -> slo_dashboard_requirements: uses
+slo_dashboard_requirements -> alerting_from_slos: uses
+alerting_from_slos -> slo_review_cadence: uses
+```
+
 ## SLO vs SLA vs SLI
 
 | Term | Definition |

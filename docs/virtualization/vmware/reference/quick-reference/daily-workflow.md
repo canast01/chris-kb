@@ -10,6 +10,23 @@ A repeatable morning workflow to confirm the environment is healthy before the b
 *Applies to: vSphere 7.x / 8.x*
 </div>
 
+```d2
+direction: down
+
+step_1_vcenter_alarm_triage_5_min: "Step 1 — vCenter Alarm Triage (5 min)" {shape: rectangle}
+step_2_host_health_3_min: "Step 2 — Host Health (3 min)" {shape: rectangle}
+step_3_cluster_ha_and_drs_status_2_m: "Step 3 — Cluster HA and DRS Status (2 min)" {shape: rectangle}
+step_4_datastore_capacity_3_min: "Step 4 — Datastore Capacity (3 min)" {shape: rectangle}
+step_5_vsan_health_2_min_if_applicab: "Step 5 — vSAN Health (2 min, if applicable)" {shape: rectangle}
+step_6_review_failed_tasks_2_min: "Step 6 — Review Failed Tasks (2 min)" {shape: rectangle}
+
+step_1_vcenter_alarm_triage_5_min -> step_2_host_health_3_min: uses
+step_2_host_health_3_min -> step_3_cluster_ha_and_drs_status_2_m: uses
+step_3_cluster_ha_and_drs_status_2_m -> step_4_datastore_capacity_3_min: uses
+step_4_datastore_capacity_3_min -> step_5_vsan_health_2_min_if_applicab: uses
+step_5_vsan_health_2_min_if_applicab -> step_6_review_failed_tasks_2_min: uses
+```
+
 ## Step 1 — vCenter Alarm Triage (5 min)
 
 ```powershell

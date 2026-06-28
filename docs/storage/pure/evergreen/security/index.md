@@ -13,6 +13,25 @@ Pure Storage Evergreen Security reference covering Hardening Checklist, RBAC, En
 
 Evergreen Security Controls
 
+```d2
+direction: down
+
+external: External / Untrusted {shape: rectangle}
+hardening_checklist: "Hardening Checklist" {shape: rectangle}
+rbac: "RBAC" {shape: rectangle}
+encryption: "Encryption" {shape: rectangle}
+audit_logging: "Audit Logging" {shape: rectangle}
+subscription_security: "Subscription Security" {shape: rectangle}
+core: "Evergreen Core" {shape: hexagon}
+
+external -> hardening_checklist: traffic in
+hardening_checklist -> rbac
+rbac -> encryption
+encryption -> audit_logging
+audit_logging -> subscription_security
+subscription_security -> core: secured path
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

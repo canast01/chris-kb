@@ -32,6 +32,21 @@ curl -s http://alertmanager:9093/api/v2/alerts | jq '[.[] | select(.status.state
 # - Resource utilisation jump (CPU, memory, disk I/O)
 ```
 
+```d2
+direction: down
+
+validation_principles: "Validation Principles" {shape: rectangle}
+standard_validation_checklist: "Standard Validation Checklist" {shape: rectangle}
+validation_by_change_type: "Validation by Change Type" {shape: rectangle}
+monitoring_observation_period: "Monitoring Observation Period" {shape: rectangle}
+signoff: "Sign-Off" {shape: rectangle}
+
+validation_principles -> standard_validation_checklist: uses
+standard_validation_checklist -> validation_by_change_type: uses
+validation_by_change_type -> monitoring_observation_period: uses
+monitoring_observation_period -> signoff: uses
+```
+
 ## Overview
 
 Validation confirms that a change achieved its intended outcome without introducing new problems. It is distinct from the implementation checklist — implementation confirms tasks were executed; validation confirms the service is healthy and behaving correctly. Both must be completed before a change is closed.

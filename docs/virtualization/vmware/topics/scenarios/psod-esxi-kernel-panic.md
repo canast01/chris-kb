@@ -16,6 +16,23 @@ and identifying driver/firmware mismatch as the most common production cause.
 *Applies to: vSphere 7.x / 8.x*
 </div>
 
+```d2
+direction: down
+
+products_involved: "Products Involved" {shape: rectangle}
+1_confirm_ha_is_restarting_vms: "1. Confirm HA Is Restarting VMs" {shape: rectangle}
+2_capture_the_psod_screen: "2. Capture the PSOD Screen" {shape: rectangle}
+3_check_idrac_ilo_hardware_event_log: "3. Check iDRAC / iLO Hardware Event Log" {shape: rectangle}
+4_retrieve_logs_after_host_reboots: "4. Retrieve Logs After Host Reboots" {shape: rectangle}
+5_generate_a_vmsupport_bundle: "5. Generate a vm-support Bundle" {shape: rectangle}
+
+products_involved -> 1_confirm_ha_is_restarting_vms: uses
+1_confirm_ha_is_restarting_vms -> 2_capture_the_psod_screen: uses
+2_capture_the_psod_screen -> 3_check_idrac_ilo_hardware_event_log: uses
+3_check_idrac_ilo_hardware_event_log -> 4_retrieve_logs_after_host_reboots: uses
+4_retrieve_logs_after_host_reboots -> 5_generate_a_vmsupport_bundle: uses
+```
+
 ## Products Involved
 
 | Product | Role in This Scenario |

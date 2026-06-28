@@ -16,6 +16,23 @@ on HCI deployments.
 *Applies to: vSphere 7.x / 8.x*
 </div>
 
+```d2
+direction: down
+
+products_involved: "Products Involved" {shape: rectangle}
+1_identify_the_alarm_skyline_health: "1. Identify the Alarm — Skyline Health" {shape: rectangle}
+2_identify_the_failed_component: "2. Identify the Failed Component" {shape: rectangle}
+3_assess_the_risk_window: "3. Assess the Risk Window" {shape: rectangle}
+4_check_physical_disk_health: "4. Check Physical Disk Health" {shape: rectangle}
+5_initiate_or_monitor_rebuild: "5. Initiate or Monitor Rebuild" {shape: rectangle}
+
+products_involved -> 1_identify_the_alarm_skyline_health: uses
+1_identify_the_alarm_skyline_health -> 2_identify_the_failed_component: uses
+2_identify_the_failed_component -> 3_assess_the_risk_window: uses
+3_assess_the_risk_window -> 4_check_physical_disk_health: uses
+4_check_physical_disk_health -> 5_initiate_or_monitor_rebuild: uses
+```
+
 ## Products Involved
 
 | Product | Role in This Scenario |

@@ -653,6 +653,13 @@ cd C:\Users\YourName\Desktop
 .\aws-s3-inventory.ps1
 ```
 
+```d2
+direction: down
+
+verify: "Verify" {shape: rectangle}
+
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

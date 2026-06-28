@@ -18,6 +18,23 @@ projects.
 *Applies to: vSphere 7.x / 8.x*
 </div>
 
+```d2
+direction: down
+
+products_involved: "Products Involved" {shape: rectangle}
+1_enable_ipfix_flow_collection: "1. Enable IPFIX Flow Collection" {shape: rectangle}
+2_observe_traffic_flows_phase_1_24_w: "2. Observe Traffic Flows (Phase 1: 2-4 Weeks)" {shape: rectangle}
+3_create_nsx_security_groups: "3. Create NSX Security Groups" {shape: rectangle}
+4_tag_vms_in_vcenter: "4. Tag VMs in vCenter" {shape: rectangle}
+5_define_dfw_policy_in_monitor_mode: "5. Define DFW Policy in Monitor Mode" {shape: rectangle}
+
+products_involved -> 1_enable_ipfix_flow_collection: uses
+1_enable_ipfix_flow_collection -> 2_observe_traffic_flows_phase_1_24_w: uses
+2_observe_traffic_flows_phase_1_24_w -> 3_create_nsx_security_groups: uses
+3_create_nsx_security_groups -> 4_tag_vms_in_vcenter: uses
+4_tag_vms_in_vcenter -> 5_define_dfw_policy_in_monitor_mode: uses
+```
+
 ## Products Involved
 
 | Product | Role in This Scenario |

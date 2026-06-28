@@ -19,6 +19,15 @@ tags:
 | Aria Logs | aria-logs.domain.local | Endpoint | Custom CA | YYYY-MM-DD | infra-team | YYYY-MM-DD | YYYY-MM-DD |
 | VxRail Manager | vxrail.domain.local | UI/API | Self-signed | YYYY-MM-DD | infra-team | YYYY-MM-DD | YYYY-MM-DD |
 
+```d2
+direction: down
+
+replacement_method_notes: "Replacement Method Notes" {shape: rectangle}
+tracking_notes: "Tracking Notes" {shape: rectangle}
+
+replacement_method_notes -> tracking_notes: uses
+```
+
 ## Replacement Method Notes
 
 - **VMCA-issued** — replace via vSphere Client or VAMI

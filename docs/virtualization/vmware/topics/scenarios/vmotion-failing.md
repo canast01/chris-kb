@@ -13,6 +13,23 @@ the exact CLI commands and vCenter checks to isolate and fix each one.
 *Applies to: vSphere 7.x / 8.x*
 </div>
 
+```d2
+direction: down
+
+products_involved: "Products Involved" {shape: rectangle}
+1_read_the_error_message_first: "1. Read the Error Message First" {shape: rectangle}
+2_evc_mode_check_cpu_incompatibility: "2. EVC Mode Check (CPU Incompatibility Errors)" {shape: rectangle}
+3_vmkernel_mtu_check_most_common_cau: "3. VMkernel MTU Check (Most Common Cause)" {shape: rectangle}
+4_vmkernel_routing_check: "4. VMkernel Routing Check" {shape: rectangle}
+5_nic_and_driver_validation: "5. NIC and Driver Validation" {shape: rectangle}
+
+products_involved -> 1_read_the_error_message_first: uses
+1_read_the_error_message_first -> 2_evc_mode_check_cpu_incompatibility: uses
+2_evc_mode_check_cpu_incompatibility -> 3_vmkernel_mtu_check_most_common_cau: uses
+3_vmkernel_mtu_check_most_common_cau -> 4_vmkernel_routing_check: uses
+4_vmkernel_routing_check -> 5_nic_and_driver_validation: uses
+```
+
 ## Products Involved
 
 | Product | Role in This Scenario |

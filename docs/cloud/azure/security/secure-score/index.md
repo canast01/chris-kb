@@ -11,6 +11,23 @@ Microsoft Defender for Cloud Secure Score is a quantified measure of an Azure en
 *Applies to: Azure*
 </div>
 
+```d2
+direction: down
+
+score_calculation: "Score Calculation" {shape: rectangle}
+viewing_secure_score: "Viewing Secure Score" {shape: rectangle}
+recommendations: "Recommendations" {shape: rectangle}
+common_highimpact_recommendations: "Common High-Impact Recommendations" {shape: rectangle}
+remediating_via_cli: "Remediating via CLI" {shape: rectangle}
+exemptions: "Exemptions" {shape: rectangle}
+
+score_calculation -> viewing_secure_score: uses
+viewing_secure_score -> recommendations: uses
+recommendations -> common_highimpact_recommendations: uses
+common_highimpact_recommendations -> remediating_via_cli: uses
+remediating_via_cli -> exemptions: uses
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

@@ -13,6 +13,23 @@ A practical reference for day-to-day Azure CLI usage: authentication, subscripti
 
 ---
 
+```d2
+direction: down
+
+authentication_and_login: "Authentication and Login" {shape: rectangle}
+account_and_subscription_management: "Account and Subscription Management" {shape: rectangle}
+resource_group_operations: "Resource Group Operations" {shape: rectangle}
+output_formats: "Output Formats" {shape: rectangle}
+useful_queries_with_query: "Useful Queries with --query" {shape: rectangle}
+az_find_command_discovery: "az find — Command Discovery" {shape: rectangle}
+
+authentication_and_login -> account_and_subscription_management: uses
+account_and_subscription_management -> resource_group_operations: uses
+resource_group_operations -> output_formats: uses
+output_formats -> useful_queries_with_query: uses
+useful_queries_with_query -> az_find_command_discovery: uses
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

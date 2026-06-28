@@ -128,6 +128,17 @@ ansible all -i inventory/ -m ansible.posix.authorized_key \
   --become --user root
 ```
 
+```d2
+direction: right
+
+plan: "Plan" {shape: oval}
+verify: "Verify" {shape: rectangle}
+validate: "Validate" {shape: oval}
+
+plan -> verify
+verify -> validate
+```
+
 ## Before you begin
 
 - **Access:** SSH key or service account with sudo on managed hosts; Ansible control node

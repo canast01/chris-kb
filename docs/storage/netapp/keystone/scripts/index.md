@@ -12,6 +12,21 @@ NetApp Keystone automation scripts: REST API queries for subscription consumptio
 
 ---
 
+```d2
+direction: down
+
+keystone_collector_health_check_bash: "Keystone Collector Health Check (Bash)" {shape: rectangle}
+keystone_usage_report_python: "Keystone Usage Report (Python)" {shape: rectangle}
+volume_service_level_audit_bash: "Volume Service Level Audit (Bash)" {shape: rectangle}
+windows_keystone_subscription_usage_: "Windows: Keystone Subscription Usage via REST API (PowerShel" {shape: rectangle}
+windows_keystone_usage_trending_powe: "Windows: Keystone Usage Trending (PowerShell)" {shape: rectangle}
+
+keystone_collector_health_check_bash -> keystone_usage_report_python: uses
+keystone_usage_report_python -> volume_service_level_audit_bash: uses
+volume_service_level_audit_bash -> windows_keystone_subscription_usage_: uses
+windows_keystone_subscription_usage_ -> windows_keystone_usage_trending_powe: uses
+```
+
 ## Keystone Collector Health Check (Bash)
 
 Check Keystone Collector service status, verify the last collection timestamp from the collector log, and confirm the collector can reach the Keystone API endpoint. Exits non-zero if the collector is stopped or the last collection is more than two hours old.

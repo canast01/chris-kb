@@ -26,3 +26,24 @@ Pure Storage support is accessed via the support portal at support.purestorage.c
 | SR creation | Via Pure1 dashboard or support portal |
 | Remote log pull | Pure support can pull bundles via Pure1 (no on-site needed) |
 | SLA tiers | Evergreen//One, Evergreen//Forever (check contract) |
+
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+actor "On-Call Engineer" as ENG
+participant "Pure1\nSystem" as SYS
+participant "Vendor Support" as SUP
+
+ENG -> SYS: Identify Severity
+SYS --> ENG: Output
+ENG -> SYS: Collect Diagnostics
+SYS --> ENG: Output
+ENG -> SYS: Open Support Case
+SYS --> ENG: Output
+ENG -> SUP: Escalate with diagnostic bundle
+SUP --> ENG: Case / resolution path
+
+@enduml
+```

@@ -8,6 +8,21 @@ tags:
 SMB Share Permissions reference covering Overview, Viewing and Setting Share Permissions, Creating Shares with net share, Combining NTFS and Share Permissions, PowerShell Share Creation and 1 more sections.
 </div>
 
+```d2
+direction: down
+
+viewing_and_setting_share_permission: "Viewing and Setting Share Permissions" {shape: rectangle}
+creating_shares_with_net_share: "Creating Shares with net share" {shape: rectangle}
+combining_ntfs_and_share_permissions: "Combining NTFS and Share Permissions" {shape: rectangle}
+powershell_share_creation: "PowerShell Share Creation" {shape: rectangle}
+auditing_share_permission_changes: "Auditing Share Permission Changes" {shape: rectangle}
+
+viewing_and_setting_share_permission -> creating_shares_with_net_share: uses
+creating_shares_with_net_share -> combining_ntfs_and_share_permissions: uses
+combining_ntfs_and_share_permissions -> powershell_share_creation: uses
+powershell_share_creation -> auditing_share_permission_changes: uses
+```
+
 ## Overview
 
 Share permissions are the first access gate for network clients connecting to an SMB share. They apply only to network access — local access bypasses them entirely. In practice, share permissions are often set to **Everyone: Full Control** and NTFS permissions handle actual access control. Effective permission for a network user is the most restrictive result of both layers combined.

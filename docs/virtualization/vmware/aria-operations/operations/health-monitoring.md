@@ -30,6 +30,19 @@ uemcli -d <ip> /sys/general show
 uemcli -d <ip> /sys/alert show
 ```
 
+```d2
+direction: right
+
+network_health: "Network Health" {shape: rectangle}
+monitoring_agent_validation: "Monitoring Agent Validation" {shape: rectangle}
+escalation_thresholds_reference: "Escalation Thresholds (reference)" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+network_health -> monitoring_agent_validation
+monitoring_agent_validation -> escalation_thresholds_reference
+escalation_thresholds_reference -> verify
+```
+
 ## Before you begin
 
 - **Access:** vCenter read-only minimum; Administrator role for remediation steps

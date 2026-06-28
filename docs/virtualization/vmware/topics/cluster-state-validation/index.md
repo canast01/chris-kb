@@ -10,6 +10,23 @@ Quick checks to confirm a vSphere cluster is healthy before and after changes.
 *Applies to: vSphere 7.x / 8.x*
 </div>
 
+```d2
+direction: down
+
+host_connectivity: "Host Connectivity" {shape: rectangle}
+ha_and_drs_status: "HA and DRS Status" {shape: rectangle}
+active_alarms: "Active Alarms" {shape: rectangle}
+vsan_cluster_health: "vSAN Cluster Health" {shape: rectangle}
+resource_utilisation: "Resource Utilisation" {shape: rectangle}
+drs_migration_recommendations: "DRS Migration Recommendations" {shape: rectangle}
+
+host_connectivity -> ha_and_drs_status: uses
+ha_and_drs_status -> active_alarms: uses
+active_alarms -> vsan_cluster_health: uses
+vsan_cluster_health -> resource_utilisation: uses
+resource_utilisation -> drs_migration_recommendations: uses
+```
+
 ## Host Connectivity
 
 ```powershell

@@ -10,6 +10,23 @@ VxRail Technical Deep Dive reference covering Overview, Platform Role, Core Comp
 *Applies to: VxRail 7.x · 8.x*
 </div>
 
+```d2
+direction: down
+
+platform_role: "Platform Role" {shape: rectangle}
+core_components: "Core Components" {shape: rectangle}
+main_dependencies: "Main Dependencies" {shape: rectangle}
+ports_and_protocols: "Ports and Protocols" {shape: rectangle}
+key_logs: "Key Logs" {shape: rectangle}
+health_checks: "Health Checks" {shape: rectangle}
+
+platform_role -> core_components: uses
+core_components -> main_dependencies: uses
+main_dependencies -> ports_and_protocols: uses
+ports_and_protocols -> key_logs: uses
+key_logs -> health_checks: uses
+```
+
 ## Overview
 
 VxRail is part of the virtualization platform. This page is for technical operations, troubleshooting, upgrade planning, and support handoff.

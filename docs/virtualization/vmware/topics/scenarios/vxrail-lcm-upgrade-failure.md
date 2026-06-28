@@ -15,6 +15,23 @@ pre-check failures, handling mid-upgrade node failures, and safely retrying afte
 *Applies to: vSphere 7.x / 8.x*
 </div>
 
+```d2
+direction: down
+
+products_involved: "Products Involved" {shape: rectangle}
+1_identify_the_failure_phase: "1. Identify the Failure Phase" {shape: rectangle}
+2_precheck_failures: "2. Pre-check Failures" {shape: rectangle}
+3_bundle_download_failure: "3. Bundle Download Failure" {shape: rectangle}
+4_midupgrade_node_failure: "4. Mid-Upgrade Node Failure" {shape: rectangle}
+5_use_rest_api_to_check_status_and_g: "5. Use REST API to Check Status and Generate Support Bundle" {shape: rectangle}
+
+products_involved -> 1_identify_the_failure_phase: uses
+1_identify_the_failure_phase -> 2_precheck_failures: uses
+2_precheck_failures -> 3_bundle_download_failure: uses
+3_bundle_download_failure -> 4_midupgrade_node_failure: uses
+4_midupgrade_node_failure -> 5_use_rest_api_to_check_status_and_g: uses
+```
+
 ## Products Involved
 
 | Product | Role in This Scenario |

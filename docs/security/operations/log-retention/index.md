@@ -9,6 +9,19 @@ tags:
 Log Retention Policy reference covering journald Retention, Centralised Log Retention (SIEM / Graylog / Splunk), Archive to Object Storage, Validation Checklist.
 </div>
 
+```d2
+direction: down
+
+centralised_log_retention_siem_grayl: "Centralised Log Retention (SIEM / Graylog / Splunk)" {shape: rectangle}
+archive_to_object_storage: "Archive to Object Storage" {shape: rectangle}
+validation_checklist: "Validation Checklist" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+centralised_log_retention_siem_grayl -> archive_to_object_storage: uses
+archive_to_object_storage -> validation_checklist: uses
+validation_checklist -> verify: uses
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

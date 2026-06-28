@@ -10,6 +10,21 @@ Maintenance Window Communications reference covering Overview, Communication Tim
 *Applies to: ServiceNow*
 </div>
 
+```d2
+direction: down
+
+communication_timeline: "Communication Timeline" {shape: rectangle}
+stakeholder_list: "Stakeholder List" {shape: rectangle}
+notification_templates: "Notification Templates" {shape: rectangle}
+bridge_and_war_room_details: "Bridge and War Room Details" {shape: rectangle}
+status_page_updates: "Status Page Updates" {shape: rectangle}
+
+communication_timeline -> stakeholder_list: uses
+stakeholder_list -> notification_templates: uses
+notification_templates -> bridge_and_war_room_details: uses
+bridge_and_war_room_details -> status_page_updates: uses
+```
+
 ## Overview
 
 Clear, timely communications are as important as the technical work in a maintenance window. Users and stakeholders who are surprised by downtime are frustrated even when the work goes perfectly. A well-managed comms process sets expectations, reduces inbound queries during the window, and builds trust in the infrastructure team.

@@ -9,6 +9,15 @@ tags:
 Top-10 vSphere Replication commands for replication configuration, status monitoring, and recovery via PowerCLI and VRMS REST API.
 </div>
 
+```d2
+direction: down
+
+powercli: "PowerCLI" {shape: rectangle}
+vrms_rest_api: "VRMS REST API" {shape: rectangle}
+
+powercli -> vrms_rest_api: uses
+```
+
 ## PowerCLI
 
 ```powershell

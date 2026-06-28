@@ -10,6 +10,21 @@ Backout Plan reference covering Overview, Backout Criteria, Backout Steps Templa
 *Applies to: ServiceNow*
 </div>
 
+```d2
+direction: down
+
+backout_criteria: "Backout Criteria" {shape: rectangle}
+backout_steps_template: "Backout Steps Template" {shape: rectangle}
+backout_checklist: "Backout Checklist" {shape: rectangle}
+validation_after_backout: "Validation After Backout" {shape: rectangle}
+postbackout_communication: "Post-Backout Communication" {shape: rectangle}
+
+backout_criteria -> backout_steps_template: uses
+backout_steps_template -> backout_checklist: uses
+backout_checklist -> validation_after_backout: uses
+validation_after_backout -> postbackout_communication: uses
+```
+
 ## Overview
 
 A backout plan defines exactly how to reverse a change if it fails or causes unintended impact. Every change with a risk score above 2 must have a documented backout plan approved before implementation begins. A vague "restore from backup" is not an acceptable backout plan — it must be specific, tested, and actionable in the heat of an incident.

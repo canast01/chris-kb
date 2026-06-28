@@ -12,6 +12,23 @@ VxRail integrations: vCenter plug-in installation, VxRail Manager API registrati
 
 ---
 
+```d2
+direction: down
+
+vcenter_integration: "vCenter Integration" {shape: rectangle}
+nsx_integration: "NSX Integration" {shape: rectangle}
+aria_operations_integration: "Aria Operations Integration" {shape: rectangle}
+dell_srs_supportassist: "Dell SRS / SupportAssist" {shape: rectangle}
+dell_openmanage_integration: "Dell OpenManage Integration" {shape: rectangle}
+backup_integration: "Backup Integration" {shape: rectangle}
+
+vcenter_integration -> nsx_integration: uses
+nsx_integration -> aria_operations_integration: uses
+aria_operations_integration -> dell_srs_supportassist: uses
+dell_srs_supportassist -> dell_openmanage_integration: uses
+dell_openmanage_integration -> backup_integration: uses
+```
+
 ## vCenter Integration
 
 VxRail Manager registers as a vCenter plugin, surfacing cluster health, node status, and lifecycle management directly within the vSphere Client.

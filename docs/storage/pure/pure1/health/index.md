@@ -10,6 +10,17 @@ Array Health reference covering FlashBlade Health, Health via Pure1 REST API, Co
 *Applies to: Pure1*
 </div>
 
+```d2
+direction: down
+
+connectivity_health_phone_home: "Connectivity Health — Phone Home" {shape: rectangle}
+health_monitoring_integration: "Health Monitoring Integration" {shape: rectangle}
+common_health_issues: "Common Health Issues" {shape: rectangle}
+
+connectivity_health_phone_home -> health_monitoring_integration: uses
+health_monitoring_integration -> common_health_issues: uses
+```
+
 ## Connectivity Health — Phone Home
 
 Pure1 requires outbound HTTPS connectivity (TCP 443) from the array to Pure Storage cloud. If Phone Home is failing:

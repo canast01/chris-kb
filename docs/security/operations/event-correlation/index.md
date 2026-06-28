@@ -9,6 +9,17 @@ tags:
 Event Correlation reference covering Correlation Workflow, Building a Correlation Timeline, Common Correlation Patterns, SIEM Correlation Rules (Examples), Dependency Map (template) and 1 more sections.
 </div>
 
+```d2
+direction: down
+
+dependency_map_template: "Dependency Map (template)" {shape: rectangle}
+crossplatform_log_locations: "Cross-Platform Log Locations" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+dependency_map_template -> crossplatform_log_locations: uses
+crossplatform_log_locations -> verify: uses
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

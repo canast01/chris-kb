@@ -11,6 +11,23 @@ Azure Key Vault manages X.509 certificates, providing lifecycle management inclu
 *Applies to: Azure*
 </div>
 
+```d2
+direction: down
+
+creating_a_key_vault_certificate: "Creating a Key Vault Certificate" {shape: rectangle}
+importing_certificates: "Importing Certificates" {shape: rectangle}
+certificate_versions_and_rotation: "Certificate Versions and Rotation" {shape: rectangle}
+autorotation_with_lifetime_actions: "Auto-Rotation with Lifetime Actions" {shape: rectangle}
+app_gateway_integration: "App Gateway Integration" {shape: rectangle}
+certificate_expiry_monitoring: "Certificate Expiry Monitoring" {shape: rectangle}
+
+creating_a_key_vault_certificate -> importing_certificates: uses
+importing_certificates -> certificate_versions_and_rotation: uses
+certificate_versions_and_rotation -> autorotation_with_lifetime_actions: uses
+autorotation_with_lifetime_actions -> app_gateway_integration: uses
+app_gateway_integration -> certificate_expiry_monitoring: uses
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

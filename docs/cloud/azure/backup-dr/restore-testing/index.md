@@ -12,6 +12,21 @@ Restore testing validates that backup data is usable and that recovery procedure
 
 ---
 
+```d2
+direction: down
+
+restore_a_vm_to_a_new_vm_full_restor: "Restore a VM to a New VM (Full Restore)" {shape: rectangle}
+restore_to_original_location_overwri: "Restore to Original Location (Overwrite Existing VM)" {shape: rectangle}
+filelevel_recovery: "File-Level Recovery" {shape: rectangle}
+validating_a_restored_vm: "Validating a Restored VM" {shape: rectangle}
+restore_test_checklist: "Restore Test Checklist" {shape: rectangle}
+
+restore_a_vm_to_a_new_vm_full_restor -> restore_to_original_location_overwri: uses
+restore_to_original_location_overwri -> filelevel_recovery: uses
+filelevel_recovery -> validating_a_restored_vm: uses
+validating_a_restored_vm -> restore_test_checklist: uses
+```
+
 ## Restore a VM to a New VM (Full Restore)
 
 ```bash

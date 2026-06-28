@@ -10,6 +10,21 @@ EKS reference covering Node Groups, Fargate Profiles, IAM OIDC Provider, Access 
 *Applies to: AWS*
 </div>
 
+```d2
+direction: down
+
+fargate_profiles: "Fargate Profiles" {shape: rectangle}
+iam_oidc_provider: "IAM OIDC Provider" {shape: rectangle}
+access_entries_and_auth_mode: "Access Entries and Auth Mode" {shape: rectangle}
+addons: "Add-ons" {shape: rectangle}
+pod_identity_associations: "Pod Identity Associations" {shape: rectangle}
+
+fargate_profiles -> iam_oidc_provider: uses
+iam_oidc_provider -> access_entries_and_auth_mode: uses
+access_entries_and_auth_mode -> addons: uses
+addons -> pod_identity_associations: uses
+```
+
 ## Fargate Profiles
 
 ```bash

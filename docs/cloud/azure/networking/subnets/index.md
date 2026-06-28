@@ -11,6 +11,19 @@ Subnets segment a Virtual Network address space into smaller ranges.
 *Applies to: Azure*
 </div>
 
+```d2
+direction: down
+
+service_endpoints: "Service Endpoints" {shape: rectangle}
+subnet_delegation: "Subnet Delegation" {shape: rectangle}
+nsg_and_route_table_association: "NSG and Route Table Association" {shape: rectangle}
+private_endpoint_network_policies: "Private Endpoint Network Policies" {shape: rectangle}
+
+service_endpoints -> subnet_delegation: uses
+subnet_delegation -> nsg_and_route_table_association: uses
+nsg_and_route_table_association -> private_endpoint_network_policies: uses
+```
+
 ## Service Endpoints
 
 Service endpoints extend VNet identity to Azure PaaS services, ensuring traffic flows over the Azure backbone rather than the public internet.

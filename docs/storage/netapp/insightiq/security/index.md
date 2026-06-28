@@ -11,6 +11,23 @@ InsightIQ Security reference covering Authentication, OneFS Service Account Secu
 *Applies to: InsightIQ*
 </div>
 
+```d2
+direction: down
+
+external: External / Untrusted {shape: rectangle}
+authentication: "Authentication" {shape: rectangle}
+database_backup_encryption: "Database Backup Encryption" {shape: rectangle}
+audit_logging: "Audit Logging" {shape: rectangle}
+security_hardening_checklist: "Security Hardening Checklist" {shape: rectangle}
+core: "InsightIQ Core" {shape: hexagon}
+
+external -> authentication: traffic in
+authentication -> database_backup_encryption
+database_backup_encryption -> audit_logging
+audit_logging -> security_hardening_checklist
+security_hardening_checklist -> core: secured path
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

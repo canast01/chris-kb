@@ -13,6 +13,23 @@ Two-tier PKI hierarchy deployment: offline standalone Root CA and domain-joined 
 *Applies to: Windows Server 2019 / 2022 CA role*
 </div>
 
+```d2
+direction: down
+
+prerequisites: "Prerequisites" {shape: rectangle}
+deploy_the_offline_root_ca: "Deploy the Offline Root CA" {shape: rectangle}
+configure_root_ca_cdp_and_aia: "Configure Root CA CDP and AIA" {shape: rectangle}
+deploy_the_intermediateissuing_ca: "Deploy the Intermediate/Issuing CA" {shape: rectangle}
+publish_root_ca_certificate_to_ad: "Publish Root CA Certificate to AD" {shape: rectangle}
+configure_certificate_templates: "Configure Certificate Templates" {shape: rectangle}
+
+prerequisites -> deploy_the_offline_root_ca: uses
+deploy_the_offline_root_ca -> configure_root_ca_cdp_and_aia: uses
+configure_root_ca_cdp_and_aia -> deploy_the_intermediateissuing_ca: uses
+deploy_the_intermediateissuing_ca -> publish_root_ca_certificate_to_ad: uses
+publish_root_ca_certificate_to_ad -> configure_certificate_templates: uses
+```
+
 ## Before you begin
 
 - **Access:** admin credentials for the target system and any upstream dependencies (DNS, NTP, vCenter, directory services)

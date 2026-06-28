@@ -13,6 +13,23 @@ Maps VCP-DCV 8 exam objectives (exam code 2V0-21.23) to KB content pages. Use th
 
 ---
 
+```d2
+direction: down
+
+exam_overview: "Exam Overview" {shape: rectangle}
+section_1_architecture_and_technolog: "Section 1 — Architecture and Technologies" {shape: rectangle}
+section_2_products_and_solutions: "Section 2 — Products and Solutions" {shape: rectangle}
+section_4_installing_configuring_and: "Section 4 — Installing, Configuring, and Setup" {shape: rectangle}
+section_5_performance_and_upgrades: "Section 5 — Performance and Upgrades" {shape: rectangle}
+section_6_troubleshooting: "Section 6 — Troubleshooting" {shape: rectangle}
+
+exam_overview -> section_1_architecture_and_technolog: uses
+section_1_architecture_and_technolog -> section_2_products_and_solutions: uses
+section_2_products_and_solutions -> section_4_installing_configuring_and: uses
+section_4_installing_configuring_and -> section_5_performance_and_upgrades: uses
+section_5_performance_and_upgrades -> section_6_troubleshooting: uses
+```
+
 ## Exam Overview
 
 | Item | Detail |

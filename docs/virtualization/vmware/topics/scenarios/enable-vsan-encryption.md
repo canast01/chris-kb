@@ -20,6 +20,23 @@ ensure the cluster has at least 30% free space before enabling.
 !!! warning "Full data rebuild required"
     Enabling or disabling vSAN encryption triggers a full data migration across all disk groups. This can take hours on large clusters. Do not proceed without confirming available capacity and a tested rollback snapshot of vCenter.
 
+```d2
+direction: down
+
+products_involved: "Products Involved" {shape: rectangle}
+1_choose_the_key_provider: "1. Choose the Key Provider" {shape: rectangle}
+2_configure_native_key_provider_nkp: "2. Configure Native Key Provider (NKP)" {shape: rectangle}
+3_configure_external_kms_if_using_ex: "3. Configure External KMS (If Using External)" {shape: rectangle}
+4_preencryption_checks: "4. Pre-Encryption Checks" {shape: rectangle}
+5_enable_encryption: "5. Enable Encryption" {shape: rectangle}
+
+products_involved -> 1_choose_the_key_provider: uses
+1_choose_the_key_provider -> 2_configure_native_key_provider_nkp: uses
+2_configure_native_key_provider_nkp -> 3_configure_external_kms_if_using_ex: uses
+3_configure_external_kms_if_using_ex -> 4_preencryption_checks: uses
+4_preencryption_checks -> 5_enable_encryption: uses
+```
+
 ## Products Involved
 
 | Product | Role in This Scenario |

@@ -10,6 +10,13 @@ InsightIQ: Throughput, Latency, IOPS, and Protocol Performance Dashboards refere
 *Applies to: InsightIQ*
 </div>
 
+```d2
+direction: down
+
+common_performance_issues: "Common Performance Issues" {shape: rectangle}
+
+```
+
 ## Common Performance Issues
 
 | Issue | Likely Cause | Fix |

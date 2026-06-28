@@ -11,6 +11,15 @@ Nexus Dashboard: Endpoint Tracking, Flow Visibility, and Topology View reference
 *Applies to: Cisco MDS · Nexus*
 </div>
 
+```d2
+direction: right
+
+common_visibility_issues: "Common Visibility Issues" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+common_visibility_issues -> verify
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

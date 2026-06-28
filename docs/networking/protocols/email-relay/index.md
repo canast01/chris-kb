@@ -12,6 +12,17 @@ Email relay integration using SMTP — how infrastructure components route mail 
 *Applies to: Postfix · Exim · any SMTP-capable relay*
 </div>
 
+```d2
+direction: down
+
+common_relay_hosts: "Common Relay Hosts" {shape: rectangle}
+postfix_quick_reference: "Postfix Quick Reference" {shape: rectangle}
+key_configuration: "Key Configuration" {shape: rectangle}
+
+common_relay_hosts -> postfix_quick_reference: uses
+postfix_quick_reference -> key_configuration: uses
+```
+
 ## Overview
 
 An email relay receives SMTP messages from internal hosts and forwards them to an external mail server or MX record. Common uses include:

@@ -10,6 +10,21 @@ VMware Logs Quick Reference reference covering ESXi Log Locations, vCenter Appli
 *Applies to: vSphere 7.x / 8.x*
 </div>
 
+```d2
+direction: down
+
+esxi_log_locations: "ESXi Log Locations" {shape: rectangle}
+vcenter_appliance_log_locations: "vCenter Appliance Log Locations" {shape: rectangle}
+collecting_a_vcenter_support_bundle: "Collecting a vCenter Support Bundle" {shape: rectangle}
+collecting_an_esxi_support_bundle: "Collecting an ESXi Support Bundle" {shape: rectangle}
+using_aria_operations_for_logs: "Using Aria Operations for Logs" {shape: rectangle}
+
+esxi_log_locations -> vcenter_appliance_log_locations: uses
+vcenter_appliance_log_locations -> collecting_a_vcenter_support_bundle: uses
+collecting_a_vcenter_support_bundle -> collecting_an_esxi_support_bundle: uses
+collecting_an_esxi_support_bundle -> using_aria_operations_for_logs: uses
+```
+
 ## ESXi Log Locations
 
 ```bash

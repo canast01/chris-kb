@@ -17,6 +17,23 @@ ESXi hosts and running VMs are unaffected during a vCenter upgrade — only mana
 *Applies to: vSphere 7.x / 8.x*
 </div>
 
+```d2
+direction: down
+
+products_involved: "Products Involved" {shape: rectangle}
+1_understand_the_vcsa_upgrade_stages: "1. Understand the VCSA Upgrade Stages" {shape: rectangle}
+2_preupgrade_checklist_failures_prev: "2. Pre-Upgrade Checklist — Failures Prevented Here" {shape: rectangle}
+step_3_failure_source_vcsa_still_: "3. Stage 1 Failure — Source VCSA Still Running" {shape: rectangle}
+step_4_failure_rollback_the_new_v: "4. Stage 2 Failure — Rollback the New VCSA" {shape: rectangle}
+step_5_failure_read_the_upgrade_l: "5. Stage 2 Failure — Read the Upgrade Logs" {shape: rectangle}
+
+products_involved -> 1_understand_the_vcsa_upgrade_stages: uses
+1_understand_the_vcsa_upgrade_stages -> 2_preupgrade_checklist_failures_prev: uses
+2_preupgrade_checklist_failures_prev -> step_3_failure_source_vcsa_still_: uses
+step_3_failure_source_vcsa_still_ -> step_4_failure_rollback_the_new_v: uses
+step_4_failure_rollback_the_new_v -> step_5_failure_read_the_upgrade_l: uses
+```
+
 ## Products Involved
 
 | Product | Role in This Scenario |

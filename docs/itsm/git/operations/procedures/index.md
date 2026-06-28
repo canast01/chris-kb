@@ -140,6 +140,23 @@ git fsck --no-reflogs | grep "dangling commit" | awk '{print $3}' | \
 
 ---
 
+```d2
+direction: right
+
+create_a_repository: "Create a Repository" {shape: rectangle}
+clone_a_repository: "Clone a Repository" {shape: rectangle}
+create_and_switch_branches: "Create and Switch Branches" {shape: rectangle}
+commit_and_push_changes: "Commit and Push Changes" {shape: rectangle}
+create_a_merge_request_pull_request: "Create a Merge Request / Pull Request" {shape: rectangle}
+resolve_a_merge_conflict: "Resolve a Merge Conflict" {shape: rectangle}
+
+create_a_repository -> clone_a_repository
+clone_a_repository -> create_and_switch_branches
+create_and_switch_branches -> commit_and_push_changes
+commit_and_push_changes -> create_a_merge_request_pull_request
+create_a_merge_request_pull_request -> resolve_a_merge_conflict
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

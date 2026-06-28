@@ -8,6 +8,23 @@ tags:
 Use these commands to verify TLS configuration on servers, check certificate validity, diagnose handshake failures, and confirm correct chain presentation.
 </div>
 
+```d2
+direction: down
+
+quick_validation_live_endpoint: "Quick Validation — Live Endpoint" {shape: rectangle}
+certificate_validity_checks: "Certificate Validity Checks" {shape: rectangle}
+chain_validation: "Chain Validation" {shape: rectangle}
+protocol_and_cipher_checks: "Protocol and Cipher Checks" {shape: rectangle}
+curl_validation: "curl Validation" {shape: rectangle}
+validating_a_certificate_file: "Validating a Certificate File" {shape: rectangle}
+
+quick_validation_live_endpoint -> certificate_validity_checks: uses
+certificate_validity_checks -> chain_validation: uses
+chain_validation -> protocol_and_cipher_checks: uses
+protocol_and_cipher_checks -> curl_validation: uses
+curl_validation -> validating_a_certificate_file: uses
+```
+
 ## Quick Validation — Live Endpoint
 
 ```bash

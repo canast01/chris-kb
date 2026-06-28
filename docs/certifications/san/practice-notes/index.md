@@ -9,6 +9,23 @@ tags:
 SAN Practice Notes reference covering Zoning Exam Questions, Fabric Login Sequence — Common Error Scenarios, Common Wrong Answers to Avoid, Key Numbers to Memorize, Quick Reference: Brocade vs Cisco Terminology and 1 more sections.
 </div>
 
+```d2
+direction: down
+
+zoning_exam_questions: "Zoning Exam Questions" {shape: rectangle}
+fabric_login_sequence_common_error_s: "Fabric Login Sequence — Common Error Scenarios" {shape: rectangle}
+common_wrong_answers_to_avoid: "Common Wrong Answers to Avoid" {shape: rectangle}
+key_numbers_to_memorize: "Key Numbers to Memorize" {shape: rectangle}
+quick_reference_brocade_vs_cisco_ter: "Quick Reference: Brocade vs Cisco Terminology" {shape: rectangle}
+study_checklist: "Study Checklist" {shape: rectangle}
+
+zoning_exam_questions -> fabric_login_sequence_common_error_s: uses
+fabric_login_sequence_common_error_s -> common_wrong_answers_to_avoid: uses
+common_wrong_answers_to_avoid -> key_numbers_to_memorize: uses
+key_numbers_to_memorize -> quick_reference_brocade_vs_cisco_ter: uses
+quick_reference_brocade_vs_cisco_ter -> study_checklist: uses
+```
+
 ## Zoning Exam Questions
 
 Most SAN exam zoning questions test:

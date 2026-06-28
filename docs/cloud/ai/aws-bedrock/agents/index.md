@@ -11,6 +11,23 @@ AWS Bedrock Agents enable multi-step reasoning and action execution using founda
 *Applies to: AWS Bedrock*
 </div>
 
+```d2
+direction: down
+
+creating_an_agent: "Creating an Agent" {shape: rectangle}
+action_groups: "Action Groups" {shape: rectangle}
+lambda_integration: "Lambda Integration" {shape: rectangle}
+testing_agents: "Testing Agents" {shape: rectangle}
+agent_aliases_and_versioning: "Agent Aliases and Versioning" {shape: rectangle}
+troubleshooting: "Troubleshooting" {shape: rectangle}
+
+creating_an_agent -> action_groups: uses
+action_groups -> lambda_integration: uses
+lambda_integration -> testing_agents: uses
+testing_agents -> agent_aliases_and_versioning: uses
+agent_aliases_and_versioning -> troubleshooting: uses
+```
+
 ## Creating an Agent
 
 Each agent requires a foundation model, an instruction prompt, an IAM execution role, and optionally action groups and knowledge bases.

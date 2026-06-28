@@ -195,16 +195,26 @@ def page_type_of(path: Path) -> str:
     return path.parent.name.lower()
 
 
-def already_has_kroki(lines: list) -> bool:
-    markers = {"```d2", "```plantuml", "```vega-lite"}
-    return any(line.rstrip() in markers for line in lines)
+def already_has_diagram(lines: list) -> bool:
+    """True if the page already has any diagram — SVG, Mermaid, Kroki, or ASCII box."""
+    text = "".join(lines)
+    kroki = {"```d2", "```plantuml", "```vega-lite", "```mermaid", "```vegalite"}
+    if any(line.rstrip() in kroki for line in lines):
+        return True
+    if re.search(r'\.(svg|png|jpg)\)', text) or '<img ' in text:
+        return True
+    if re.search(r'[┌│└┐┘]', text):
+        return True
+    return False
 
 
 def find_inject_pos(lines: list):
+    """Return index of first ## heading, or first ### heading, or end of file."""
     for i, line in enumerate(lines):
-        if line.startswith("## "):
+        if line.startswith("## ") or line.startswith("### "):
             return i
-    return None
+    # Fall back to end of file (append)
+    return len(lines)
 
 
 def inject_block(lines: list, pos: int, content: str) -> list:
@@ -240,12 +250,11 @@ def d2_operations(product: str, sections: list) -> str:
     nodes = sections or ["Routine Checks", "Configuration", "Monitoring", "Maintenance"]
     pairs = dedup_slugs(nodes)
     out = ["```d2", "direction: right", ""]
-    out.append(f'hub: "{d2lbl(product)}\\nOperations" {{shape: hexagon}}')
     for txt, sid in pairs:
         out.append(f'{sid}: "{d2lbl(txt)}" {{shape: rectangle}}')
     out.append("")
-    for _, sid in pairs:
-        out.append(f"hub -> {sid}")
+    for i in range(len(pairs) - 1):
+        out.append(f"{pairs[i][1]} -> {pairs[i+1][1]}")
     out.append("```\n")
     return "\n".join(out)
 
@@ -287,16 +296,16 @@ def d2_pipeline(product: str, sections: list, start: str = "Plan", end: str = "V
     return "\n".join(out)
 
 
-def d2_hub_spoke(product: str, sections: list, center_shape: str = "hexagon") -> str:
+def d2_components(product: str, sections: list) -> str:
+    """Dependency chain — replaces the old hub-and-spoke pattern."""
     nodes = sections or ["Component A", "Component B", "Component C"]
     pairs = dedup_slugs(nodes)
-    out = ["```d2", "direction: right", ""]
-    out.append(f'center: "{d2lbl(product)}" {{shape: {center_shape}}}')
+    out = ["```d2", "direction: down", ""]
     for txt, sid in pairs:
         out.append(f'{sid}: "{d2lbl(txt)}" {{shape: rectangle}}')
     out.append("")
-    for _, sid in pairs:
-        out.append(f"center -> {sid}")
+    for i in range(len(pairs) - 1):
+        out.append(f"{pairs[i][1]} -> {pairs[i+1][1]}: uses")
     out.append("```\n")
     return "\n".join(out)
 
@@ -318,14 +327,14 @@ def d2_rbac(product: str, sections: list) -> str:
     roles = sections or ["Administrator", "Operator", "Auditor", "Read-Only"]
     pairs = dedup_slugs(roles)
     out = ["```d2", "direction: down", ""]
-    out.append(f'root: "{d2lbl(product)}\\nAccess Control" {{shape: hexagon}}')
+    out.append(f'auth: "{d2lbl(product)}\\nAuthentication" {{shape: rectangle}}')
     for txt, sid in pairs:
         out.append(f'{sid}: "{d2lbl(txt)}" {{shape: rectangle}}')
     out.append('resources: Protected Resources {shape: cylinder}')
     out.append("")
     for _, sid in pairs:
-        out.append(f"root -> {sid}: role")
-        out.append(f"{sid} -> resources: scoped")
+        out.append(f"auth -> {sid}: grants")
+        out.append(f"{sid} -> resources: access")
     out.append("```\n")
     return "\n".join(out)
 
@@ -482,13 +491,13 @@ def build_diagram(ptype: str, product: str, sections: list) -> str:
     if ptype == "learning-path":
         return d2_learning_path(product, sections)
     if ptype in ("integrations", "scenarios", "integration"):
-        return d2_hub_spoke(product, sections, center_shape="hexagon")
+        return d2_components(product, sections)
     if ptype in ("cli-reference", "cheat-sheets", "quick-reference", "inventory", "scripts"):
-        return d2_hub_spoke(product, sections, center_shape="rectangle")
+        return d2_components(product, sections)
     if ptype in ("how-it-works", "architecture"):
-        return d2_hub_spoke(product, sections, center_shape="hexagon")
+        return d2_components(product, sections)
     # default
-    return d2_hub_spoke(product, sections)
+    return d2_components(product, sections)
 
 
 # ─── Per-file processor ───────────────────────────────────────────────────────
@@ -497,12 +506,14 @@ def process_file(path: Path, dry_run: bool) -> str:
     text = path.read_text(encoding="utf-8")
     lines = text.splitlines(keepends=True)
 
-    if already_has_kroki(lines):
+    if already_has_diagram(lines):
+        return "SKIP"
+
+    # Skip nav/card pages — they don't need diagrams
+    if "kb-card" in text or "kb-grid" in text:
         return "SKIP"
 
     pos = find_inject_pos(lines)
-    if pos is None:
-        return "NO_H2"
 
     rel = str(path.relative_to(ROOT))
     prod = product_name(rel)

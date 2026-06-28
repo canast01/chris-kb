@@ -11,6 +11,23 @@ An AWS Virtual Private Cloud (VPC) is your own isolated private network inside A
 *Applies to: AWS*
 </div>
 
+```d2
+direction: down
+
+vpc_anatomy: "VPC Anatomy" {shape: rectangle}
+daily_checks: "Daily Checks" {shape: rectangle}
+common_issues: "Common Issues" {shape: rectangle}
+vpc_subnet_architecture: "VPC Subnet Architecture" {shape: rectangle}
+aws_network_connectivity_options: "AWS Network Connectivity Options" {shape: rectangle}
+route_53_routing_policies: "Route 53 Routing Policies" {shape: rectangle}
+
+vpc_anatomy -> daily_checks: uses
+daily_checks -> common_issues: uses
+common_issues -> vpc_subnet_architecture: uses
+vpc_subnet_architecture -> aws_network_connectivity_options: uses
+aws_network_connectivity_options -> route_53_routing_policies: uses
+```
+
 ## VPC Anatomy
 
 ---

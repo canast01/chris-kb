@@ -9,6 +9,17 @@ tags:
 
 ---
 
+```d2
+direction: down
+
+auth: "ServiceNow\nAuthentication" {shape: rectangle}
+access_control_lists_acls: "Access Control Lists (ACLs)" {shape: rectangle}
+resources: Protected Resources {shape: cylinder}
+
+auth -> access_control_lists_acls: grants
+access_control_lists_acls -> resources: access
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

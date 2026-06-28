@@ -8,6 +8,21 @@ tags:
 LDAP Binds reference covering Overview, Simple Bind, SASL / Kerberos Bind, Service Account Bind Configuration, Anonymous Bind Risks and 1 more sections.
 </div>
 
+```d2
+direction: down
+
+simple_bind: "Simple Bind" {shape: rectangle}
+sasl_kerberos_bind: "SASL / Kerberos Bind" {shape: rectangle}
+service_account_bind_configuration: "Service Account Bind Configuration" {shape: rectangle}
+anonymous_bind_risks: "Anonymous Bind Risks" {shape: rectangle}
+bind_test_checklist: "Bind Test Checklist" {shape: rectangle}
+
+simple_bind -> sasl_kerberos_bind: uses
+sasl_kerberos_bind -> service_account_bind_configuration: uses
+service_account_bind_configuration -> anonymous_bind_risks: uses
+anonymous_bind_risks -> bind_test_checklist: uses
+```
+
 ## Overview
 
 A bind is how an LDAP client authenticates to a directory server. The bind operation establishes the identity used for subsequent queries. Choosing the wrong bind method exposes credentials or fails entirely in hardened environments.

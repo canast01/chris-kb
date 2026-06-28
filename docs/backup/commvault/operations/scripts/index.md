@@ -11,6 +11,13 @@ PowerShell and qscript automation for Commvault job management, SLA reporting, c
 *Applies to: Commvault 2024.x*
 </div>
 
+```d2
+direction: down
+
+verify: "Verify" {shape: rectangle}
+
+```
+
 ## Before you begin
 
 - **Access:** Backup admin role on backup server; target system credentials

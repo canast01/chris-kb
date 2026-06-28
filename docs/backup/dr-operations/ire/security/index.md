@@ -42,6 +42,21 @@ Set-ADAccountPassword -Identity ire-breakglass -NewPassword (ConvertTo-SecureStr
 # Print and seal in envelope — never store in digital form
 ```
 
+```d2
+direction: down
+
+external: External / Untrusted {shape: rectangle}
+perimeter_controls: "Perimeter Controls" {shape: rectangle}
+identity_access: "Identity & Access" {shape: rectangle}
+audit_logging: "Audit & Logging" {shape: rectangle}
+core: "DR Operations Core" {shape: hexagon}
+
+external -> perimeter_controls: traffic in
+perimeter_controls -> identity_access
+identity_access -> audit_logging
+audit_logging -> core: secured path
+```
+
 ## Before you begin
 
 - **Access:** Backup admin role on backup server; target system credentials

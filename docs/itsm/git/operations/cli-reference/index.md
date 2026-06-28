@@ -141,6 +141,13 @@ git config --global alias.unstage "restore --staged"
 git config --global alias.aliases "config --get-regexp alias"
 ```
 
+```d2
+direction: down
+
+verify: "Verify" {shape: rectangle}
+
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

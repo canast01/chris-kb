@@ -12,6 +12,23 @@ Security considerations when integrating the OpenAI API into production systems:
 *Applies to: OpenAI API*
 </div>
 
+```d2
+direction: down
+
+data_retention_policies: "Data Retention Policies" {shape: rectangle}
+prompt_injection_risks: "Prompt Injection Risks" {shape: rectangle}
+pii_handling: "PII Handling" {shape: rectangle}
+compliance_frameworks: "Compliance Frameworks" {shape: rectangle}
+api_key_security: "API Key Security" {shape: rectangle}
+output_validation: "Output Validation" {shape: rectangle}
+
+data_retention_policies -> prompt_injection_risks: uses
+prompt_injection_risks -> pii_handling: uses
+pii_handling -> compliance_frameworks: uses
+compliance_frameworks -> api_key_security: uses
+api_key_security -> output_validation: uses
+```
+
 ## Data Retention Policies
 
 Understanding what OpenAI retains is essential for compliance decisions.

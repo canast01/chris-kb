@@ -11,6 +11,23 @@ Support Cases reference covering Opening a Support Case, Case Severity Levels, G
 *Applies to: ONTAP 9.x*
 </div>
 
+```d2
+direction: down
+
+opening_a_support_case: "Opening a Support Case" {shape: rectangle}
+case_severity_levels: "Case Severity Levels" {shape: rectangle}
+generating_a_support_bundle: "Generating a Support Bundle" {shape: rectangle}
+information_to_include_in_a_case: "Information to Include in a Case" {shape: rectangle}
+keystonespecific_cases: "Keystone-Specific Cases" {shape: rectangle}
+escalating_a_case: "Escalating a Case" {shape: rectangle}
+
+opening_a_support_case -> case_severity_levels: uses
+case_severity_levels -> generating_a_support_bundle: uses
+generating_a_support_bundle -> information_to_include_in_a_case: uses
+information_to_include_in_a_case -> keystonespecific_cases: uses
+keystonespecific_cases -> escalating_a_case: uses
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

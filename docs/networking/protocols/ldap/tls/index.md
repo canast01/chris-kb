@@ -12,6 +12,21 @@ TLS (LDAP) reference covering Overview, Certificate Requirements for LDAPS, Conf
 
         STARTTLS vs LDAPS
 
+```d2
+direction: down
+
+certificate_requirements_for_ldaps: "Certificate Requirements for LDAPS" {shape: rectangle}
+configuring_ldaps_on_active_director: "Configuring LDAPS on Active Directory" {shape: rectangle}
+channel_binding_and_ldap_signing: "Channel Binding and LDAP Signing" {shape: rectangle}
+ldapclientintegrity_client_side: "LdapClientIntegrity (Client Side)" {shape: rectangle}
+testing_tls_configuration: "Testing TLS Configuration" {shape: rectangle}
+
+certificate_requirements_for_ldaps -> configuring_ldaps_on_active_director: uses
+configuring_ldaps_on_active_director -> channel_binding_and_ldap_signing: uses
+channel_binding_and_ldap_signing -> ldapclientintegrity_client_side: uses
+ldapclientintegrity_client_side -> testing_tls_configuration: uses
+```
+
 ## Overview
 
 LDAPS (LDAP over TLS on port 636) and StartTLS (TLS upgrade on port 389) protect LDAP traffic from eavesdropping and tampering. Active Directory enforces LDAP channel binding and signing requirements via KB4520412 and related updates. Misconfigured TLS is a common cause of bind failures after patch cycles.

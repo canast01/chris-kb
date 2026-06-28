@@ -9,6 +9,23 @@ tags:
 AWS Weak Areas reference covering VPC Peering vs PrivateLink vs Transit Gateway, S3 Storage Classes, IAM Policy Evaluation, RDS Multi-AZ vs Read Replicas, Security Group vs NACL and 1 more sections.
 </div>
 
+```d2
+direction: down
+
+vpc_peering_vs_privatelink_vs_transi: "VPC Peering vs PrivateLink vs Transit Gateway" {shape: rectangle}
+s3_storage_classes: "S3 Storage Classes" {shape: rectangle}
+iam_policy_evaluation: "IAM Policy Evaluation" {shape: rectangle}
+rds_multiaz_vs_read_replicas: "RDS Multi-AZ vs Read Replicas" {shape: rectangle}
+security_group_vs_nacl: "Security Group vs NACL" {shape: rectangle}
+study_checklist: "Study Checklist" {shape: rectangle}
+
+vpc_peering_vs_privatelink_vs_transi -> s3_storage_classes: uses
+s3_storage_classes -> iam_policy_evaluation: uses
+iam_policy_evaluation -> rds_multiaz_vs_read_replicas: uses
+rds_multiaz_vs_read_replicas -> security_group_vs_nacl: uses
+security_group_vs_nacl -> study_checklist: uses
+```
+
 ## VPC Peering vs PrivateLink vs Transit Gateway
 
 | Feature | VPC Peering | PrivateLink | Transit Gateway |

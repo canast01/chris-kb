@@ -25,6 +25,23 @@ SCG is managed via:
 
 ---
 
+```d2
+direction: down
+
+quickreference_command_table: "Quick-Reference Command Table" {shape: rectangle}
+scg_management_shell: "SCG Management Shell" {shape: rectangle}
+device_registration: "Device Registration" {shape: rectangle}
+connectivity_check: "Connectivity Check" {shape: rectangle}
+log_collection: "Log Collection" {shape: rectangle}
+rest_api_curl: "REST API (curl)" {shape: rectangle}
+
+quickreference_command_table -> scg_management_shell: uses
+scg_management_shell -> device_registration: uses
+device_registration -> connectivity_check: uses
+connectivity_check -> log_collection: uses
+log_collection -> rest_api_curl: uses
+```
+
 ## Quick-Reference Command Table
 
 | Command | Purpose |

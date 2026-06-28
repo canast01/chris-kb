@@ -11,6 +11,23 @@ Procedures reference covering Change Readiness, Maintenance Window, Post-Change 
 *Applies to: PowerPath*
 </div>
 
+```d2
+direction: right
+
+change_readiness: "Change Readiness" {shape: rectangle}
+maintenance_window: "Maintenance Window" {shape: rectangle}
+postchange_validation: "Post-Change Validation" {shape: rectangle}
+verify_all_paths_are_active: "Verify All Paths Are Active" {shape: rectangle}
+restore_dead_paths: "Restore Dead Paths" {shape: rectangle}
+change_load_balancing_policy: "Change Load Balancing Policy" {shape: rectangle}
+
+change_readiness -> maintenance_window
+maintenance_window -> postchange_validation
+postchange_validation -> verify_all_paths_are_active
+verify_all_paths_are_active -> restore_dead_paths
+restore_dead_paths -> change_load_balancing_policy
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

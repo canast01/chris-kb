@@ -12,6 +12,23 @@ Ollama supports Linux, macOS, and Windows. On Linux, the recommended setup is th
 *Applies to: Ollama*
 </div>
 
+```d2
+direction: down
+
+linux_installation: "Linux Installation" {shape: rectangle}
+macos_installation: "macOS Installation" {shape: rectangle}
+windows_installation: "Windows Installation" {shape: rectangle}
+systemd_service_configuration: "Systemd Service Configuration" {shape: rectangle}
+docker_setup: "Docker Setup" {shape: rectangle}
+key_environment_variables: "Key Environment Variables" {shape: rectangle}
+
+linux_installation -> macos_installation: uses
+macos_installation -> windows_installation: uses
+windows_installation -> systemd_service_configuration: uses
+systemd_service_configuration -> docker_setup: uses
+docker_setup -> key_environment_variables: uses
+```
+
 ## Linux Installation
 
 ```bash

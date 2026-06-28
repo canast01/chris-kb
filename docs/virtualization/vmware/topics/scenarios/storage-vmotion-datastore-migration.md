@@ -18,6 +18,23 @@ large VMDKs and always verify destination capacity and storage policy before sta
 !!! warning "Increased I/O load"
     Storage vMotion generates sustained read/write I/O on both source and destination datastores. Run during a low-traffic window and monitor vSAN resync latency throughout.
 
+```d2
+direction: down
+
+products_involved: "Products Involved" {shape: rectangle}
+1_premigration_checks: "1. Pre-Migration Checks" {shape: rectangle}
+2_choose_storage_policy_for_destinat: "2. Choose Storage Policy for Destination" {shape: rectangle}
+3_initiate_svmotion_via_vcenter_ui: "3. Initiate svMotion via vCenter UI" {shape: rectangle}
+4_initiate_svmotion_via_powercli: "4. Initiate svMotion via PowerCLI" {shape: rectangle}
+5_monitor_migration_progress: "5. Monitor Migration Progress" {shape: rectangle}
+
+products_involved -> 1_premigration_checks: uses
+1_premigration_checks -> 2_choose_storage_policy_for_destinat: uses
+2_choose_storage_policy_for_destinat -> 3_initiate_svmotion_via_vcenter_ui: uses
+3_initiate_svmotion_via_vcenter_ui -> 4_initiate_svmotion_via_powercli: uses
+4_initiate_svmotion_via_powercli -> 5_monitor_migration_progress: uses
+```
+
 ## Products Involved
 
 | Product | Role in This Scenario |

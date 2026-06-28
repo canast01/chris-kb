@@ -35,6 +35,13 @@ volume show -percent-used <50 -fields volume,size,used,percent-used
 find /data -type f -size +1G -mtime +90 -ls | sort -k7 -rn | head -20
 ```
 
+```d2
+direction: right
+
+verify: "Verify" {shape: rectangle}
+
+```
+
 ## Before you begin
 
 - **Access:** vCenter read-only minimum; Administrator role for remediation steps

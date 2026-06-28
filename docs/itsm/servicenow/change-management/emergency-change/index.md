@@ -10,6 +10,21 @@ Emergency changes bypass the standard CAB cycle to address active outages or cri
 *Applies to: ServiceNow*
 </div>
 
+```d2
+direction: down
+
+trigger_conditions: "Trigger Conditions" {shape: rectangle}
+preimplementation_30_minutes: "Pre-Implementation (< 30 minutes)" {shape: rectangle}
+ecab_minimum_approval: "eCAB — Minimum Approval" {shape: rectangle}
+implementation: "Implementation" {shape: rectangle}
+guardrails: "Guardrails" {shape: rectangle}
+
+trigger_conditions -> preimplementation_30_minutes: uses
+preimplementation_30_minutes -> ecab_minimum_approval: uses
+ecab_minimum_approval -> implementation: uses
+implementation -> guardrails: uses
+```
+
 ## Trigger Conditions
 
 | Condition | Example |

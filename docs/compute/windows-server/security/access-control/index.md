@@ -183,6 +183,26 @@ Get-ADUser -Filter {PasswordNeverExpires -eq $true -and Enabled -eq $true} `
   Select-Object Name, SamAccountName, Description
 ```
 
+```d2
+direction: down
+
+auth: "Windows Server\nAuthentication" {shape: rectangle}
+administrator: "Administrator" {shape: rectangle}
+operator: "Operator" {shape: rectangle}
+auditor: "Auditor" {shape: rectangle}
+readonly: "Read-Only" {shape: rectangle}
+resources: Protected Resources {shape: cylinder}
+
+auth -> administrator: grants
+administrator -> resources: access
+auth -> operator: grants
+operator -> resources: access
+auth -> auditor: grants
+auditor -> resources: access
+auth -> readonly: grants
+readonly -> resources: access
+```
+
 ## Before you begin
 
 - **Access:** Local Administrator or Domain Admin on target hosts

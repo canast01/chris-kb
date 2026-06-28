@@ -51,3 +51,14 @@ curl -s -X PATCH \
   -d '{"os_version":"RHEL 9.3"}' \
   "https://<instance>.service-now.com/api/now/table/cmdb_ci_server/<sys_id>"
 ```
+
+```d2
+direction: down
+
+component_a: "Component A" {shape: rectangle}
+component_b: "Component B" {shape: rectangle}
+component_c: "Component C" {shape: rectangle}
+
+component_a -> component_b: uses
+component_b -> component_c: uses
+```

@@ -11,6 +11,23 @@ Alerts reference covering ONTAP EMS Alerts, AutoSupport Notifications, SNMP Aler
 *Applies to: ONTAP 9.x*
 </div>
 
+```d2
+direction: down
+
+ontap_ems_alerts: "ONTAP EMS Alerts" {shape: rectangle}
+autosupport_notifications: "AutoSupport Notifications" {shape: rectangle}
+snmp_alerting: "SNMP Alerting" {shape: rectangle}
+bluexp_alerts_keystone_cloud_manager: "BlueXP Alerts (Keystone / Cloud Manager)" {shape: rectangle}
+alert_triage_priority: "Alert Triage Priority" {shape: rectangle}
+resolving_health_alerts: "Resolving Health Alerts" {shape: rectangle}
+
+ontap_ems_alerts -> autosupport_notifications: uses
+autosupport_notifications -> snmp_alerting: uses
+snmp_alerting -> bluexp_alerts_keystone_cloud_manager: uses
+bluexp_alerts_keystone_cloud_manager -> alert_triage_priority: uses
+alert_triage_priority -> resolving_health_alerts: uses
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

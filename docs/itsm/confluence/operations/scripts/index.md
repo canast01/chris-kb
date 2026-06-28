@@ -246,6 +246,13 @@ done <<< "$spaces"
 echo "Permission audit: $OUTPUT ($(wc -l < "$OUTPUT") rows)"
 ```
 
+```d2
+direction: down
+
+verify: "Verify" {shape: rectangle}
+
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

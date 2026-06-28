@@ -11,6 +11,17 @@ MySQL/MariaDB procedures: schema changes with `pt-online-schema-change`, user an
 *Applies to: RHEL / Ubuntu LTS*
 </div>
 
+```d2
+direction: right
+
+database_maintenance_procedures: "Database — Maintenance Procedures" {shape: rectangle}
+sql_server_maintenance: "SQL Server Maintenance" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+database_maintenance_procedures -> sql_server_maintenance
+sql_server_maintenance -> verify
+```
+
 ## Before you begin
 
 - **Access:** root or sudo-capable account on target hosts

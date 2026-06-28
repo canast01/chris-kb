@@ -11,6 +11,23 @@ TLS validation in Azure covers certificate management for App Gateway, App Servi
 *Applies to: Azure*
 </div>
 
+```d2
+direction: down
+
+tls_termination_points_in_azure: "TLS Termination Points in Azure" {shape: rectangle}
+app_gateway_tls_configuration: "App Gateway — TLS Configuration" {shape: rectangle}
+app_service_custom_domain_tls: "App Service — Custom Domain TLS" {shape: rectangle}
+key_vault_certificate_integration: "Key Vault Certificate Integration" {shape: rectangle}
+validating_tls_from_azure_endpoints: "Validating TLS from Azure Endpoints" {shape: rectangle}
+monitoring_cert_expiry_prometheus_bl: "Monitoring Cert Expiry — Prometheus Blackbox Exporter" {shape: rectangle}
+
+tls_termination_points_in_azure -> app_gateway_tls_configuration: uses
+app_gateway_tls_configuration -> app_service_custom_domain_tls: uses
+app_service_custom_domain_tls -> key_vault_certificate_integration: uses
+key_vault_certificate_integration -> validating_tls_from_azure_endpoints: uses
+validating_tls_from_azure_endpoints -> monitoring_cert_expiry_prometheus_bl: uses
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

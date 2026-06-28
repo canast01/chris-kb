@@ -11,6 +11,17 @@ SQL Server procedures: index rebuild and statistics update, user and role manage
 *Applies to: Windows Server 2019 / 2022*
 </div>
 
+```d2
+direction: right
+
+database_maintenance_procedures: "Database — Maintenance Procedures" {shape: rectangle}
+sql_server_maintenance: "SQL Server Maintenance" {shape: rectangle}
+verify: "Verify" {shape: rectangle}
+
+database_maintenance_procedures -> sql_server_maintenance
+sql_server_maintenance -> verify
+```
+
 ## Before you begin
 
 - **Access:** Local Administrator or Domain Admin on target hosts

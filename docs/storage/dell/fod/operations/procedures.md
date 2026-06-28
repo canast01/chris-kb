@@ -15,6 +15,23 @@ Procedures reference covering Incident Triage, Maintenance Window, Operational T
 
 ---
 
+```d2
+direction: right
+
+incident_triage: "Incident Triage" {shape: rectangle}
+maintenance_window: "Maintenance Window" {shape: rectangle}
+operational_tasks: "Operational Tasks" {shape: rectangle}
+activate_a_features_on_demand_licenc: "Activate a Features on Demand Licence" {shape: rectangle}
+renew_an_expiring_fod_licence: "Renew an Expiring FOD Licence" {shape: rectangle}
+list_all_active_fod_features: "List All Active FOD Features" {shape: rectangle}
+
+incident_triage -> maintenance_window
+maintenance_window -> operational_tasks
+operational_tasks -> activate_a_features_on_demand_licenc
+activate_a_features_on_demand_licenc -> renew_an_expiring_fod_licence
+renew_an_expiring_fod_licence -> list_all_active_fod_features
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

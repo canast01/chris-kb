@@ -11,6 +11,23 @@ Azure Load Balancer is a Layer 4 (TCP/UDP) load balancer for distributing inboun
 *Applies to: Azure*
 </div>
 
+```d2
+direction: down
+
+frontend_ips: "Frontend IPs" {shape: rectangle}
+backend_pools: "Backend Pools" {shape: rectangle}
+health_probes: "Health Probes" {shape: rectangle}
+load_balancing_rules: "Load Balancing Rules" {shape: rectangle}
+inbound_nat_rules: "Inbound NAT Rules" {shape: rectangle}
+sku_comparison: "SKU Comparison" {shape: rectangle}
+
+frontend_ips -> backend_pools: uses
+backend_pools -> health_probes: uses
+health_probes -> load_balancing_rules: uses
+load_balancing_rules -> inbound_nat_rules: uses
+inbound_nat_rules -> sku_comparison: uses
+```
+
 ## Frontend IPs
 
 ```bash

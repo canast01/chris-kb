@@ -10,6 +10,23 @@ Understanding what normal recovery looks like prevents unnecessary intervention 
 *Applies to: vSphere 7.x / 8.x*
 </div>
 
+```d2
+direction: down
+
+after_host_failure: "After Host Failure" {shape: rectangle}
+after_storage_failure: "After Storage Failure" {shape: rectangle}
+after_network_failure: "After Network Failure" {shape: rectangle}
+after_vsan_component_failure: "After vSAN Component Failure" {shape: rectangle}
+recovery_performance_impact: "Recovery Performance Impact" {shape: rectangle}
+when_to_escalate: "When to Escalate" {shape: rectangle}
+
+after_host_failure -> after_storage_failure: uses
+after_storage_failure -> after_network_failure: uses
+after_network_failure -> after_vsan_component_failure: uses
+after_vsan_component_failure -> recovery_performance_impact: uses
+recovery_performance_impact -> when_to_escalate: uses
+```
+
 ## After Host Failure
 
 | Phase | Expected Behavior | Timeframe |

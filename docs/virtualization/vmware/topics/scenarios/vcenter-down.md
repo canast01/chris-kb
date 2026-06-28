@@ -16,6 +16,23 @@ continue operating without vCenter — VMs keep running throughout.
 *Applies to: vSphere 7.x / 8.x*
 </div>
 
+```d2
+direction: down
+
+products_involved: "Products Involved" {shape: rectangle}
+1_confirm_the_scope_of_the_outage: "1. Confirm the Scope of the Outage" {shape: rectangle}
+2_check_vcsa_services_via_ssh: "2. Check VCSA Services via SSH" {shape: rectangle}
+3_check_disk_space_the_most_common_c: "3. Check Disk Space — the Most Common Cause" {shape: rectangle}
+4_use_vami_for_health_overview: "4. Use VAMI for Health Overview" {shape: rectangle}
+5_check_the_postgresql_embedded_data: "5. Check the PostgreSQL Embedded Database" {shape: rectangle}
+
+products_involved -> 1_confirm_the_scope_of_the_outage: uses
+1_confirm_the_scope_of_the_outage -> 2_check_vcsa_services_via_ssh: uses
+2_check_vcsa_services_via_ssh -> 3_check_disk_space_the_most_common_c: uses
+3_check_disk_space_the_most_common_c -> 4_use_vami_for_health_overview: uses
+4_use_vami_for_health_overview -> 5_check_the_postgresql_embedded_data: uses
+```
+
 ## Products Involved
 
 | Product | Role in This Scenario |

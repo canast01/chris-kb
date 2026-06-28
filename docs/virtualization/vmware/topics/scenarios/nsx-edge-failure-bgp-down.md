@@ -16,6 +16,23 @@ the physical network — and restoring connectivity with minimal downtime.
 *Applies to: vSphere 7.x / 8.x*
 </div>
 
+```d2
+direction: down
+
+products_involved: "Products Involved" {shape: rectangle}
+1_determine_scope_all_vms_or_specifi: "1. Determine Scope — All VMs or Specific VMs" {shape: rectangle}
+2_check_edge_cluster_health_in_nsx_m: "2. Check Edge Cluster Health in NSX Manager" {shape: rectangle}
+3_check_bgp_neighbor_state_on_the_t0: "3. Check BGP Neighbor State on the T0 Gateway" {shape: rectangle}
+4_ssh_to_the_edge_node_check_bgp_and: "4. SSH to the Edge Node — Check BGP and Routes" {shape: rectangle}
+5_check_tep_connectivity_edge_to_esx: "5. Check TEP Connectivity — Edge to ESXi Host Tunnels" {shape: rectangle}
+
+products_involved -> 1_determine_scope_all_vms_or_specifi: uses
+1_determine_scope_all_vms_or_specifi -> 2_check_edge_cluster_health_in_nsx_m: uses
+2_check_edge_cluster_health_in_nsx_m -> 3_check_bgp_neighbor_state_on_the_t0: uses
+3_check_bgp_neighbor_state_on_the_t0 -> 4_ssh_to_the_edge_node_check_bgp_and: uses
+4_ssh_to_the_edge_node_check_bgp_and -> 5_check_tep_connectivity_edge_to_esx: uses
+```
+
 ## Products Involved
 
 | Product | Role in This Scenario |

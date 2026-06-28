@@ -8,6 +8,21 @@ tags:
 LDAP Ports reference covering Overview, Port 389 and 636, Global Catalog Ports (3268 and 3269), Firewall Rules, StartTLS vs LDAPS and 1 more sections.
 </div>
 
+```d2
+direction: down
+
+port_389_and_636: "Port 389 and 636" {shape: rectangle}
+global_catalog_ports_3268_and_3269: "Global Catalog Ports (3268 and 3269)" {shape: rectangle}
+firewall_rules: "Firewall Rules" {shape: rectangle}
+starttls_vs_ldaps: "StartTLS vs LDAPS" {shape: rectangle}
+port_troubleshooting: "Port Troubleshooting" {shape: rectangle}
+
+port_389_and_636 -> global_catalog_ports_3268_and_3269: uses
+global_catalog_ports_3268_and_3269 -> firewall_rules: uses
+firewall_rules -> starttls_vs_ldaps: uses
+starttls_vs_ldaps -> port_troubleshooting: uses
+```
+
 ## Overview
 
 LDAP uses a small set of well-known TCP ports. All are required in different scenarios — plain LDAP for legacy compatibility, LDAPS for encrypted binds, and Global Catalog ports for forest-wide searches in Active Directory.

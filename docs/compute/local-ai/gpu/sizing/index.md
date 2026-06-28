@@ -10,6 +10,23 @@ tags:
 Selecting the right GPU — and the right number of them — depends on model size, task type (training vs inference), throughput requirements, and budget. This page provides a practical sizing framework.
 </div>
 
+```d2
+direction: down
+
+training_vs_inference_requirements: "Training vs Inference Requirements" {shape: rectangle}
+vram_sizing_guide: "VRAM Sizing Guide" {shape: rectangle}
+gpu_specifications_reference: "GPU Specifications Reference" {shape: rectangle}
+estimating_tokens_per_second: "Estimating Tokens Per Second" {shape: rectangle}
+cloud_instance_selection: "Cloud Instance Selection" {shape: rectangle}
+multigpu_strategies: "Multi-GPU Strategies" {shape: rectangle}
+
+training_vs_inference_requirements -> vram_sizing_guide: uses
+vram_sizing_guide -> gpu_specifications_reference: uses
+gpu_specifications_reference -> estimating_tokens_per_second: uses
+estimating_tokens_per_second -> cloud_instance_selection: uses
+cloud_instance_selection -> multigpu_strategies: uses
+```
+
 ## Training vs Inference Requirements
 
 | Aspect | Training | Inference |

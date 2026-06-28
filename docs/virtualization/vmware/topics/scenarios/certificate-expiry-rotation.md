@@ -15,6 +15,23 @@ again. This scenario covers identification, rotation order, and validation acros
 *Applies to: vSphere 7.x / 8.x*
 </div>
 
+```d2
+direction: down
+
+products_involved: "Products Involved" {shape: rectangle}
+1_identify_expiring_certificates: "1. Identify Expiring Certificates" {shape: rectangle}
+2_rotate_vcenter_vmca_certificate: "2. Rotate vCenter VMCA Certificate" {shape: rectangle}
+3_rotate_esxi_host_certificates: "3. Rotate ESXi Host Certificates" {shape: rectangle}
+4_rotate_nsx_manager_certificate: "4. Rotate NSX Manager Certificate" {shape: rectangle}
+5_rotate_aria_suite_product_certific: "5. Rotate Aria Suite Product Certificates via Aria SuiteLC" {shape: rectangle}
+
+products_involved -> 1_identify_expiring_certificates: uses
+1_identify_expiring_certificates -> 2_rotate_vcenter_vmca_certificate: uses
+2_rotate_vcenter_vmca_certificate -> 3_rotate_esxi_host_certificates: uses
+3_rotate_esxi_host_certificates -> 4_rotate_nsx_manager_certificate: uses
+4_rotate_nsx_manager_certificate -> 5_rotate_aria_suite_product_certific: uses
+```
+
 ## Products Involved
 
 | Product | Role in This Scenario |

@@ -11,6 +11,21 @@ Azure VPN Gateway provides encrypted connectivity between Azure VNets and on-pre
 *Applies to: Azure*
 </div>
 
+```d2
+direction: down
+
+sitetosite_connection: "Site-to-Site Connection" {shape: rectangle}
+pointtosite_configuration: "Point-to-Site Configuration" {shape: rectangle}
+bgp_configuration: "BGP Configuration" {shape: rectangle}
+activeactive_configuration: "Active-Active Configuration" {shape: rectangle}
+monitoring: "Monitoring" {shape: rectangle}
+
+sitetosite_connection -> pointtosite_configuration: uses
+pointtosite_configuration -> bgp_configuration: uses
+bgp_configuration -> activeactive_configuration: uses
+activeactive_configuration -> monitoring: uses
+```
+
 ## Site-to-Site Connection
 
 ```bash

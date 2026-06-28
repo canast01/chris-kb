@@ -13,6 +13,23 @@ CLI Reference reference covering EC2, S3, IAM, RDS, CloudWatch and 3 more sectio
 
 ---
 
+```d2
+direction: down
+
+s3: "S3" {shape: rectangle}
+iam: "IAM" {shape: rectangle}
+rds: "RDS" {shape: rectangle}
+cloudwatch: "CloudWatch" {shape: rectangle}
+vpc_networking: "VPC / Networking" {shape: rectangle}
+eks: "EKS" {shape: rectangle}
+
+s3 -> iam: uses
+iam -> rds: uses
+rds -> cloudwatch: uses
+cloudwatch -> vpc_networking: uses
+vpc_networking -> eks: uses
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

@@ -11,6 +11,23 @@ Azure Route Tables (User Defined Routes / UDRs) override Azure's default system 
 *Applies to: Azure*
 </div>
 
+```d2
+direction: down
+
+adding_user_defined_routes: "Adding User Defined Routes" {shape: rectangle}
+next_hop_types: "Next Hop Types" {shape: rectangle}
+bgp_route_propagation: "BGP Route Propagation" {shape: rectangle}
+associating_a_route_table_with_a_sub: "Associating a Route Table with a Subnet" {shape: rectangle}
+viewing_effective_routes: "Viewing Effective Routes" {shape: rectangle}
+forced_tunnelling_design: "Forced Tunnelling Design" {shape: rectangle}
+
+adding_user_defined_routes -> next_hop_types: uses
+next_hop_types -> bgp_route_propagation: uses
+bgp_route_propagation -> associating_a_route_table_with_a_sub: uses
+associating_a_route_table_with_a_sub -> viewing_effective_routes: uses
+viewing_effective_routes -> forced_tunnelling_design: uses
+```
+
 ## Adding User Defined Routes
 
 ```bash

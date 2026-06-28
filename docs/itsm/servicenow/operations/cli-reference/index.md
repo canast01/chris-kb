@@ -245,6 +245,13 @@ curl -s \
   "$INSTANCE/api/now/table/incident?sysparm_limit=5" | jq '.result[].number'
 ```
 
+```d2
+direction: down
+
+verify: "Verify" {shape: rectangle}
+
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

@@ -15,6 +15,32 @@ Azure access control is built on Azure Role-Based Access Control (RBAC).
 
 ---
 
+```d2
+direction: down
+
+auth: "Azure\nAuthentication" {shape: rectangle}
+rbac_fundamentals: "RBAC Fundamentals" {shape: rectangle}
+role_assignments: "Role Assignments" {shape: rectangle}
+custom_roles: "Custom Roles" {shape: rectangle}
+managed_identities: "Managed Identities" {shape: rectangle}
+service_principals: "Service Principals" {shape: rectangle}
+privileged_identity_management_pim: "Privileged Identity Management (PIM)" {shape: rectangle}
+resources: Protected Resources {shape: cylinder}
+
+auth -> rbac_fundamentals: grants
+rbac_fundamentals -> resources: access
+auth -> role_assignments: grants
+role_assignments -> resources: access
+auth -> custom_roles: grants
+custom_roles -> resources: access
+auth -> managed_identities: grants
+managed_identities -> resources: access
+auth -> service_principals: grants
+service_principals -> resources: access
+auth -> privileged_identity_management_pim: grants
+privileged_identity_management_pim -> resources: access
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

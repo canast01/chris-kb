@@ -28,6 +28,17 @@ CyberArk follows a structured upgrade sequence to preserve Vault integrity: the 
 - Review CyberArk release notes for breaking changes
 - Verify licence count covers current account inventory
 
+```d2
+direction: right
+
+plan: "Plan" {shape: oval}
+verify: "Verify" {shape: rectangle}
+validate: "Validate" {shape: oval}
+
+plan -> verify
+verify -> validate
+```
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

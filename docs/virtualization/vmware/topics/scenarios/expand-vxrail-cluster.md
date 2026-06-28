@@ -16,6 +16,23 @@ LCM upgrades and voids the support configuration.
 *Applies to: vSphere 7.x / 8.x*
 </div>
 
+```d2
+direction: down
+
+products_involved: "Products Involved" {shape: rectangle}
+1_hardware_prechecks_and_idrac: "1. Hardware Pre-Checks and iDRAC" {shape: rectangle}
+2_network_prechecks: "2. Network Pre-Checks" {shape: rectangle}
+3_discover_the_new_node_in_vxrail_ma: "3. Discover the New Node in VxRail Manager" {shape: rectangle}
+4_run_the_expansion_wizard: "4. Run the Expansion Wizard" {shape: rectangle}
+5_firmware_bundle_check_and_update: "5. Firmware Bundle Check and Update" {shape: rectangle}
+
+products_involved -> 1_hardware_prechecks_and_idrac: uses
+1_hardware_prechecks_and_idrac -> 2_network_prechecks: uses
+2_network_prechecks -> 3_discover_the_new_node_in_vxrail_ma: uses
+3_discover_the_new_node_in_vxrail_ma -> 4_run_the_expansion_wizard: uses
+4_run_the_expansion_wizard -> 5_firmware_bundle_check_and_update: uses
+```
+
 ## Products Involved
 
 | Product | Role in This Scenario |

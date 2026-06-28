@@ -9,6 +9,23 @@ tags:
 Azure Services Reference reference covering Compute Services, Networking Services, Identity Services, Storage Services, Monitoring Services and 1 more sections.
 </div>
 
+```d2
+direction: down
+
+compute_services: "Compute Services" {shape: rectangle}
+networking_services: "Networking Services" {shape: rectangle}
+identity_services: "Identity Services" {shape: rectangle}
+storage_services: "Storage Services" {shape: rectangle}
+monitoring_services: "Monitoring Services" {shape: rectangle}
+study_checklist: "Study Checklist" {shape: rectangle}
+
+compute_services -> networking_services: uses
+networking_services -> identity_services: uses
+identity_services -> storage_services: uses
+storage_services -> monitoring_services: uses
+monitoring_services -> study_checklist: uses
+```
+
 ## Compute Services
 
 | Service | Category | Key Facts |

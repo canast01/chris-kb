@@ -11,6 +11,23 @@ Practical notes on authenticating to the OpenAI API, working with rate limits, c
 *Applies to: OpenAI API*
 </div>
 
+```d2
+direction: down
+
+authentication: "Authentication" {shape: rectangle}
+rate_limits: "Rate Limits" {shape: rectangle}
+token_counting: "Token Counting" {shape: rectangle}
+error_codes: "Error Codes" {shape: rectangle}
+retry_with_exponential_backoff: "Retry with Exponential Backoff" {shape: rectangle}
+choosing_the_right_model: "Choosing the Right Model" {shape: rectangle}
+
+authentication -> rate_limits: uses
+rate_limits -> token_counting: uses
+token_counting -> error_codes: uses
+error_codes -> retry_with_exponential_backoff: uses
+retry_with_exponential_backoff -> choosing_the_right_model: uses
+```
+
 ## Authentication
 
 ```bash
