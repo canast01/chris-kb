@@ -8004,36 +8004,28 @@
 
 
 <h1 id="servicenow-access-control">ServiceNow Access Control<a class="headerlink" href="#servicenow-access-control" title="Permanent link">&para;</a></h1>
-<p><img alt="ServiceNow Access Control" src="../../../../assets/itsm-servicenow-security-access-control-index.svg" /></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>---
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>```d2
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>direction: down
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>root: &quot;ServiceNow\nAccess Control&quot; {shape: hexagon}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>access_control_lists_acls: &quot;Access Control Lists (ACLs)&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>resources: Protected Resources {shape: cylinder}
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>## Before you begin
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>- **Access:** Admin credentials on all affected systems
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>- **Change management:** security changes require CAB approval in most environments
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>- **Rollback plan:** document current state before any security control change
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>- **Testing:** validate in a non-production environment first where possible
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>root -&gt; access_control_lists_acls: role
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>access_control_lists_acls -&gt; resources: scoped
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>---
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>## Access Control Lists (ACLs)
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>ACLs define who can perform which operations on which data. Navigate to: System Security → Access Control (ACL).
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>### ACL Structure
 </code></pre></div>
-<h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
-<ul>
-<li><strong>Access:</strong> Admin credentials on all affected systems</li>
-<li><strong>Change management:</strong> security changes require CAB approval in most environments</li>
-<li><strong>Rollback plan:</strong> document current state before any security control change</li>
-<li><strong>Testing:</strong> validate in a non-production environment first where possible</li>
-</ul>
-<hr />
-<h2 id="access-control-lists-acls">Access Control Lists (ACLs)<a class="headerlink" href="#access-control-lists-acls" title="Permanent link">&para;</a></h2>
-<p>ACLs define who can perform which operations on which data. Navigate to: System Security → Access Control (ACL).</p>
-<h3 id="acl-structure">ACL Structure<a class="headerlink" href="#acl-structure" title="Permanent link">&para;</a></h3>
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>```yaml
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Name:       &lt;operation&gt;_&lt;table&gt;_&lt;field&gt;
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Operation:  read, write, create, delete, execute
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>Object:     Table name (e.g., incident, change_request)
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Name:       * (all fields) or specific field name
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>Type:       record (row-level) or field-level
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nt">Name</span><span class="p">:</span><span class="w">       </span><span class="l l-Scalar l-Scalar-Plain">&lt;operation&gt;_&lt;table&gt;_&lt;field&gt;</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nt">Operation</span><span class="p">:</span><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">read, write, create, delete, execute</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nt">Object</span><span class="p">:</span><span class="w">     </span><span class="l l-Scalar l-Scalar-Plain">Table name (e.g., incident, change_request)</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="nt">Name</span><span class="p">:</span><span class="w">       </span><span class="err">*</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">(all fields) or specific field name</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nt">Type</span><span class="p">:</span><span class="w">       </span><span class="l l-Scalar l-Scalar-Plain">record (row-level) or field-level</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1">// ACL Rule</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1">// Name: delete_incident</span>
@@ -8162,7 +8154,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 03:02:12 UTC"><span class="timeago" datetime="2026-06-28T03:02:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 03:02:12 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:29:13 UTC"><span class="timeago" datetime="2026-06-28T18:29:13+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:29:13 UTC">2026-06-28</span>
   </span>
 
     

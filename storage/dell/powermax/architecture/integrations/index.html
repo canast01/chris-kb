@@ -8817,7 +8817,7 @@ Integrations reference covering VMware Integration, Backup Integration, CloudIQ 
 *Applies to: PowerMax 2500 / 8500*
 </div>
 <p><img alt="PowerMax — Integrations" src="../../../../../assets/storage-dell-powermax-architecture-integrations.svg" /></p>
-<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqFkc1qwzAQhO96isX3krsPBTfpwVCD24ZcxcZeZFFHqyrKHyHvHtlNGlELep3Zb7UzarWjxms2OTitOi9EQ8aTyyGr-UCuwmMG522HlnLo6IiKzUXsNwd0JHWYVA5_8GxVDSKUD_FBDo-gUT1dxBqbr539w76M4r9s0_Ou1d9yw0Z7dtqowM4HsXyH6ldMshhi7km2Y2B2J9m3aANejDos7jrM4G1R1Mkd0dHSs-We1SmsiM6G5U1O8o62XqLVgfl4_VxCUZfJudsnwNMzTKuOzGmXkTktKzKTbUR-Kmlk34OIK-hX0rw=?" /></p>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp1UsFugkAQvfMVc2wP4kFjmj00QdTUpDTUbUkPXFaY6KawS5cFNcZ_7wBS06inmWTfezPz3qbSYGKlVgyM3Gyt4xR6hyYXewZh0wViD0cHoFKSwaeSZbFFg8CexuNRrFZz_gFeuIRjuRUFkgipCbXJ8EQcYYw4MPCa8odIDplUKZpTJwqD5w7nnBynznfCECYKmtrOrRMGtY_KookVD6cBDIGvgtsDsaS15_xLwosubRmrKFhwItSRzspbFJq5Fsl3VTCYtrWbuTa0A6LIifuGtnuKla_zPBJVZu9I5VpJq4kbdI1Um1YvkT8M_ExX6fI9Vg9cCP54RyJt89CGbJv1bashUjKSkqrx8hCrIbzOvPCOVuemWyeNx32sbhtk5HGvNdLrUWTdP9g5u4XfWBAFONCLs1Uu2XOt2P-E3gSXjr5GWcwwR2sOl0NdkV7jmqs4sMlo4vwCwPHivw==?" /></p>
 <h2 id="vmware-integration">VMware Integration<a class="headerlink" href="#vmware-integration" title="Permanent link">&para;</a></h2>
 <p>PowerMax integrates with VMware vSphere via several paths:</p>
 <ul>
@@ -8854,68 +8854,10 @@ Integrations reference covering VMware Integration, Backup Integration, CloudIQ 
 <li>Retain at least one local admin account as a break-glass credential in the password vault.</li>
 </ul>
 <h2 id="integration-topology">Integration Topology<a class="headerlink" href="#integration-topology" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart LR
-    subgraph "VMware Layer"
-        VC["vCenter\n(SPBM / SRM)"]
-        ESX["ESXi Hosts\n(VMFS / vVols)"]
-        VASA["VASA Provider\n(Dell)"]
-        SRA["SRA Adapter\n(SRM failover)"]
-    end
-    subgraph "Backup Layer"
-        VBR["Veeam / NetBackup\n/ CommVault"]
-        PROXY["Backup Proxy\n(linked clone mount)"]
-    end
-    subgraph "Monitoring Layer"
-        CIQ["CloudIQ\n(SaaS — dell.com)"]
-        SA["SupportAssist\n(auto SR creation)"]
-    end
-    subgraph "Directory Layer"
-        AD["Active Directory\n/ LDAP"]
-    end
-    subgraph "PowerMax Array"
-        UNI["Unisphere\nREST API :8443"]
-        ARRAY[("PowerMax\nArray")]
-        SNAPVX["SnapVX\nEngine"]
-        UNI --&gt; ARRAY
-        ARRAY --&gt; SNAPVX
-    end
-
-    VC --&gt;|"VASA capabilities"| VASA --&gt; UNI
-    ESX --&gt;|"FC / NVMe-oF"| ARRAY
-    SRA --&gt;|"REST API"| UNI
-    VBR --&gt;|"REST API\nsnap establish/link"| UNI
-    PROXY --&gt;|"FC / iSCSI\nlinked clone"| ARRAY
-    UNI --&gt;|"HTTPS telemetry"| CIQ
-    UNI --&gt;|"SupportAssist\ncall-home"| SA
-    AD --&gt;|"LDAPS :636\nbind + group lookup"| UNI
-
-    classDef vmw fill:#2563eb,stroke:#1d4ed8,color:#fff
-    classDef bkp fill:#7c3aed,stroke:#6d28d9,color:#fff
-    classDef mon fill:#0f766e,stroke:#0d9488,color:#fff
-    classDef dir fill:#92400e,stroke:#78350f,color:#fff
-    classDef arr fill:#be123c,stroke:#9f1239,color:#fff
-    class VC,ESX,VASA,SRA vmw
-    class VBR,PROXY bkp
-    class CIQ,SA mon
-    class AD dir
-    class UNI,ARRAY,SNAPVX arr</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp1U8tu2zAQvOsr9tgerBwSBIUOBRQ_kABRoZqukIMva2lrE6FIlaQVG0GAfkS_sF_SpWzVbmOdSJE7s7OjYSUtlV4anYCV642PorZ-QUsJFFlY4RH3ZOE1AmjLBNoxaU92qT-I_C6DKxDz7CO8ug02DAlUqNeK3ric3C6BqXiScG-cdwwpsplgSFsY5QZALTrk1qlIIbemlVXXa0JKDQCc5XoxTyGtsDkqm2fwHaUyLdmLqLcoWmH5vG0SuOvW8yFXlvsTYc1Kv5A_FCz1FYxNXRe4Vf6ykMaa3f4vYR6-WIuS-pkqKJXRNKSlNlp6w22zw0bq9ZmgUv5IYKzMtnr4GoZDFPD75y-o2JO4NPWQL8GWbdMY61PnpPOMxa037BWUljD88iFBVZcJY3mcSb89U4RVAilnpqXTdTDocZLmA4yNeSFbIwciD7sMd5Bai_uOb6tlAt-0dM2GLC31fCoWkOYPkHy6ubm-PB4G9Hu2Y2m5Z985Op0RGpuWGwteiyeY6rXUdJmUhcDo84G77xEODhRhjsPbiNsyHPcfp8iW2OBKKukluejsOlT3FsTcpb_jJ_LP1XGq2Thkr8hoZGZ9Kef8f5YEeqeOcY45vMNFSx3m4GfpcaWk21yFbPbILr2DWqQYC8afhzk6bxKAxxTHXV7vF4tcgCdFNXm7HywOzpWo1GhjajrlLsbq_RwhXgKS2-vb6A-vCp04?" /></p>
 <h2 id="rest-api">REST API<a class="headerlink" href="#rest-api" title="Permanent link">&para;</a></h2>
 <p>PowerMax exposes a REST API through Unisphere for PowerMax (RESTAPI):</p>
-<pre class="mermaid"><code>sequenceDiagram
-    participant Client as Automation Client
-    participant UNI as Unisphere :8443
-    participant ARRAY as PowerMax Array
-
-    Client-&gt;&gt;UNI: POST /restapi/system/Version&lt;br/&gt;(Basic Auth: admin:password)
-    UNI--&gt;&gt;Client: 200 OK + session cookie
-    Client-&gt;&gt;UNI: GET /restapi/91/system/symmetrix&lt;br/&gt;(cookie)
-    UNI-&gt;&gt;ARRAY: query array list
-    ARRAY--&gt;&gt;UNI: SID list
-    UNI--&gt;&gt;Client: 200 OK + symmetrixId[]
-    Client-&gt;&gt;UNI: POST /sloprovisioning/symmetrix/{SID}/storagegroup&lt;br/&gt;{storageGroupId, slo, srp}
-    UNI-&gt;&gt;ARRAY: create storage group
-    ARRAY--&gt;&gt;UNI: created
-    UNI--&gt;&gt;Client: 201 Created</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/plantuml/svg/eNp9UsFOAjEQve9XTDhplCwoB-VgWNGQjVEIiIkRD83uBBp32zrTVTaEf7dlFxVRL51O5r157zXtsRVkizwLjKsykUYoC42osDoXVmoF_Uyisg0QXF93kVMl2SyQELpnnc7pBje9i3dBI_2OdCuWEBGJcoOJxuPoMQiqldC88CTowmg4uYeQ0NkyMuSSLebhAxI7KzN1cClYJuDcLQ4DT2g6Yr2iCyetFgxv4AgY2eMh0fpF4r7I4Pqbxnl7K8NlnqMluXRCFbUWuajcOuZrgVSC8Ckgk2yDatD8XD2Jr6rBP-62MnH69PzXC3CmDek36XNINf_yFq6cxDpkq0nMcU66MDO1qtuBb-P0GBzdHWTWPwMkhMIi1HjY8PdCVKD0twxt6NfDHqrU_5sPTd26_w==?" /></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Base URL format</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>https://&lt;unisphere-host&gt;:8443/univmax/restapi/&lt;version&gt;/
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
@@ -8971,7 +8913,7 @@ Integrations reference covering VMware Integration, Backup Integration, CloudIQ 
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 03:02:12 UTC"><span class="timeago" datetime="2026-06-28T03:02:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 03:02:12 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:29:13 UTC"><span class="timeago" datetime="2026-06-28T18:29:13+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:29:13 UTC">2026-06-28</span>
   </span>
 
     

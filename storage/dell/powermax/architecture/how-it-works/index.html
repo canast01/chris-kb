@@ -2254,10 +2254,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#mermaid-diagram-io-architecture" class="md-nav__link">
+  <a href="#io-architecture" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Mermaid Diagram: I/O Architecture
+        I/O Architecture
       
     </span>
   </a>
@@ -8861,7 +8861,7 @@ Internal architecture and data-path reference: Director architecture, Global Cac
 *Applies to: PowerMax 2500 / 8500*
 </div>
 <p><img alt="Dell PowerMax — How It Works" src="../../../../../assets/storage-dell-powermax-architecture-how-it-works.svg" /></p>
-<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqVUstOwzAQvOcr9tgeGtQce0DqgwgORagBTkjITja1RWpHthFUVf8db-KQQlMJTmtrZsez4y2kwdxJrWZg5Fa4KBLaOjuDWypwiADEtL3BHA5WsBo91fcwta3wSHgS8MUQfoyieucVHvQHmjX7hFEmHcJ83GiX-MpmkBqt3ORGFbBq7GhjX9QoXcIVyGyZ3fl6_7zG8fD7vNFYsPztTIK6JjoFp6GsmBUXFExRksRmlfbdw8xGhbikDCnd_Mv7np3vK6kKNMcwHEyug0GpHBrFKigZNzIPxgkPom1UyVlUi--o-GBUl2fi_5iJ_3km3nvm5PldSVsLNJ751B199jum2BZ3qNxg6u2exWJKan5D4rAKy_DZ_ts6StJSkjhEcEqh5Yqb_-tIYfCMJjdYVzJntN_ekd2r3LeyULPH-WZ8Yv-nkdb-b7TzENAv9MUQMA==?" /></p>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqllLFuwjAQhvc8xY0wACJjhkoBmpaBqiJtp0qV7RhsNdiR44oixHN175PVlxhIS1CLOiXR_-f833e5ZNJwZqVWERi5FDYIhC5tGcEtXmAbAIhh_QQxbEtBCu6s7h2iljnfoR56fdSm74KgWLkK93rNzYy8QyeVlkPcrWov-AuJIDFa2d61ymBSxdGmfFadZAwDkOk4nbrr3dOMd9vPXzKscZNrSnIYEya4e3kyj2fw-QHzeDrpDWEljdGGZ2dK0CrGiLDX7yna3SZboH0-SX5zLnJSCvRifEjwyZ2yObrZJpcq42bnWUDvyvezNojJamDYkW8T5TorKTeKQcZLS5ZN1WdLMVxBrPDNoeTD1BMJTyYyOkyEtk7kLHz6f_j0Mvj0Avj0z_Cph0_b4VMPn7bCp3v49AQ-PcKnCP9NybIQ3LgEj_tbB21FlKu24sq2cqr3si-GWM1tVN-vztgvR08ne0tYW8K-n2XTgsvYrz6SvakZ2vAil4zg_8Alqroc-G4HkD7E824jvg8SQZ38pxAehC-9CW8N?" /></p>
 <h2 id="architecture-overview">Architecture Overview<a class="headerlink" href="#architecture-overview" title="Permanent link">&para;</a></h2>
 <p>PowerMax is Dell's flagship enterprise all-NVMe storage array, purpose-built for mission-critical tier-1 workloads including mainframe, OLTP databases, ERP platforms, and financial transaction systems. It uses a massively parallel director-based architecture: multiple independent processing boards (Directors) share access to a large global DRAM cache and back-end NVMe flash drives.</p>
 <p>Two models are available:</p>
@@ -8925,61 +8925,8 @@ Internal architecture and data-path reference: Director architecture, Global Cac
 <li>Cache is RAID-1 mirrored across directors within the same engine — a single director failure does not cause data loss</li>
 </ul>
 <p><strong>Vault protection:</strong> In the event of a power failure, PowerMax uses battery-backed NVRAM to safely flush the contents of global cache to a dedicated vault area on the NVMe drives. On power restoration, the array replays the vault log and restores the cache to its pre-failure state before accepting new host I/O.</p>
-<h2 id="mermaid-diagram-io-architecture">Mermaid Diagram: I/O Architecture<a class="headerlink" href="#mermaid-diagram-io-architecture" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart LR
-    subgraph HOSTS["Host Layer"]
-        H1["Production Hosts\nOracle / SQL / SAP\nFC / iSCSI / FICON"]
-    end
-
-    subgraph FEDIR["Front-End Directors"]
-        FA1["FA Director A\nFC / iSCSI ports\nMasking Views"]
-        FA2["FA Director B\nFC / iSCSI ports\nMasking Views"]
-    end
-
-    subgraph CACHE["Global Cache"]
-        GC["DRAM Cache\nTens–hundreds of GB\nRAID-1 across directors\nVault on power loss"]
-    end
-
-    subgraph BEDIR["Back-End Directors"]
-        DA1["DA Director A\nNVMe drive control\nRAID-5/6 protection"]
-        DA2["DA Director B\nNVMe drive control\nRAID-5/6 protection"]
-    end
-
-    subgraph NVME["NVMe Flash"]
-        DRV["NVMe Drive Bays\neTLC / SCM\nRAID protected"]
-    end
-
-    subgraph SRDF["SRDF Replication"]
-        RA1["RA Director A\nRDF Group links"]
-        RA2["RA Director B\nRDF Group links"]
-    end
-
-    REMOTE["Remote PowerMax\nSRDF/S or SRDF/A target"]
-
-    H1 --&gt;|"FC / iSCSI host I/O"| FA1
-    H1 --&gt;|"FC / iSCSI host I/O"| FA2
-    FA1 --&gt; GC
-    FA2 --&gt; GC
-    GC --&gt; DA1
-    GC --&gt; DA2
-    DA1 --&gt; DRV
-    DA2 --&gt; DRV
-    GC --&gt; RA1
-    GC --&gt; RA2
-    RA1 --&gt;|"SRDF/S or SRDF/A\nRDF protocol over FC or IP"| REMOTE
-    RA2 --&gt;|"SRDF/S or SRDF/A"| REMOTE
-
-    classDef host fill:#1d4ed8,stroke:#1e3a8a,color:#fff
-    classDef dir fill:#15803d,stroke:#14532d,color:#fff
-    classDef cache fill:#15803d,stroke:#14532d,color:#fff
-    classDef nvme fill:#b45309,stroke:#92400e,color:#fff
-    classDef srdf fill:#7c3aed,stroke:#5b21b6,color:#fff
-
-    class H1 host
-    class FA1,FA2,DA1,DA2 dir
-    class GC cache
-    class DRV nvme
-    class RA1,RA2,REMOTE srdf</code></pre>
+<h2 id="io-architecture">I/O Architecture<a class="headerlink" href="#io-architecture" title="Permanent link">&para;</a></h2>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqlVE2P2jAQvedXzB8giEjtIYdKgTRsJFhoUnHiYmznQ2RtNA5s0Wp_V-_9ZR3bsG122apqT07ejN97vJkgWpS8b7WKAdu66YOg0aY3MdzRAQt2lghPAUAziWGNWhxds6uarVoh452EH9-h_LJwR7LeqmwGY2jLWZnTmeWz1T08mYYdJGmQGFN1J5-D5yCoCMlQq370WQlInRWNxglWjBSz5AWFZEB80GgNLJnZt6qGTSsfzS0VSxQNiab_RER2OeMNgfNO71gHM_vmrNY8hrRIlh7aqrujEiiFAV3BnNSKJE9HExvPhh27fmRYJd-R2BEyZXx_IxBhA0mHgdxvlhIEticJnGJE3V3UPow_wgF172d7Oxhhg0mHwfwHIblXpwfCHEfWMdN433i6YKnjnbIz5S2_LuwMytnSC1zJpXjh5ueuVUKiozYoqhjKIs2gkIeu5cz7IAG0wRTDYGzfHPXxAMSxf2cz0AZQDAP4i4vkBuUDuaXL7oS1fpS4ZN-2yhocl0Bc7imBnmEt-1s0_kMLmwmMPkElQ7_wvxbTliEfr972Rbf7PIftcosa1txD0QC6PlhwJ0PaqrdQFPiKBexMQ5qhh6IB9PtFO6AQX7FdwCi4Vi14De91Vj58uwea6w70if566HdSPV9fCaI_EQQ_AX9ZkBg=?" /></p>
 <h2 id="srdf-replication">SRDF Replication<a class="headerlink" href="#srdf-replication" title="Permanent link">&para;</a></h2>
 <p>SRDF (Symmetrix Remote Data Facility) is PowerMax's native replication protocol, used for disaster recovery and metro high availability. SRDF operates at the volume (device) level — individual devices or groups of devices are paired between a source (R1) and a target (R2) PowerMax.</p>
 <p><strong>SRDF/S — Synchronous</strong></p>
@@ -9125,9 +9072,9 @@ Internal architecture and data-path reference: Director architecture, Global Cac
 </table>
 <h2 id="srdf-replication-topology-r1r2-groups-director-ports-and-modes">SRDF Replication Topology — R1/R2 Groups, Director Ports, and Modes<a class="headerlink" href="#srdf-replication-topology-r1r2-groups-director-ports-and-modes" title="Permanent link">&para;</a></h2>
 <p><strong>Part 1 — R1 site internal write path:</strong> host I/O enters through FA directors, stages in Global Cache, and splits to either back-end NVMe (normal destage) or the RA directors (replication path).</p>
-<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp1kkFu2zAQRfc6xd8XjhAH7UKLArQEOUHhNJCKrAwEtERJRFjSGFIwjMBAD9G7dN-j9CQlKaFxWncnzXDmzfw_rSTROGl0BpL94JJkMNbZDA9k2jFmcBsieEmAIcNn4o0SqFiOnz9Qswfcsnu21WWOmyXWu9SiHbladHxHssGLHfhe-OaewnWvxCk5JUnHM5QMRYQbsmDpaqsDB2XsK-u8vgsf948bkZb5Vm-4fZa6x6MUBwuhO0ONaDEIEpcgSd9kWCuz4wo5bwaBX9--o5ZOwA9bVGyDJb6s3gVGxe6KxTW-SiJDot1qphSCDDiQL7CwjvdiQnWSfPwSkPxOVVGeLfVKjOIRf_K6Vq9ro45PQtGazLjH9VbX_i-tUR91M5DRZrRBF9Xas4EwaicVqiVY_sleGibC-FsY-wu2nGEMzJ7TYs8I0-YQa3Zj1wm_TyuU47DC_cfV1hOLf1wNDqJU3A5Y8aMHRLnfpx-wJ-Om4_vTsDkqqVtBp_kOrwYsPiKeS36mgD-gEA8eT4o4gya47G0PiTAJD1v5maN5c5z41eTCLPOeu-FNis8pNqV-A5hGDro=?" /></p>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp1UkFu2zAQvOsV8wFHiIv0oEMBRoLioHUaSEVOBoK1SElEGDIgKQRGYKCP6F9671P6kpKU6ySoeyLBXc7MziyXVnReGl3AymH0WTYa512BW2v4lCpYxRe8ZMBY4KulTgk0rMSvn2jZLVbshm10XeLDElfb3IFPpBY9ba3s8OJGehIBPLCQHpTYZ_ss66lAzVAlcmMdWH6ZIAKkbMv2Ol5u7tYir8uNXpN7kHrAnRTP7hRiNnQFrpTZkkJJ3Sjw-_sPtNILBGVVw9YRr2HX1eIcj9JaYwXfaKYUnm3oclCkOUZhBXppnT9JYoPopqrfqH5lSe5Yug_GNa9zoU0t4dNwvtFtOPMW7U53ozXaTG6jV0ZxN4vApL1UaJZg5eeTYyYGes_AjgzLAwMDc28pEloMNXqwnfpeBOVcKE_uP-nwwFH9k06MY2Hqo5MX-ceTNvWKXNiT2I463nFJu6BDfPtSIkdbrvEouKTj526npObC7g-7dzZi8QlpRcpZePInLE18j1HPfnmDLoYd0o-FqJri5GE452n4-27pbA7m4P8T-fFdiQ4lNpd4oklTZH8AURcNOA==?" /></p>
 <p><strong>Part 2 — Inter-site SRDF topology:</strong> the two RA director pairs connect over dedicated links; SRDF/S holds the host ACK until Site B confirms, SRDF/A releases the host immediately and transmits delta sets periodically.</p>
-<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp9k0tu20AMhvc6BZfJwg-pSBcGWkCxYsNo3RqykW60GUu0NYg0I8zIboUgRe6Q3qX7HiUnKTnyq6mTnU2RP3_y42TSYFpLrQZg5DqvPc8IfwBzWSOE8Pz4C-JoBJHL0sbCvQdgKSEOD0GYJ4qTxkZvKvATNad_vbkrnjcqzY1WemMpafYVPkAf7m0uKqSGVC7UusAHEhUvRMNT0WAn2joK7UvVn-_6YDHVKrPn1B88r5Dqzg5gomo0HTfdZ464eQr6wEZdKFGjIfQg-hZNIcNMpqLGLFFT8QP8PpQW4sXi0COToqSm7L8Qg9bYUYWmmMzgwofx8oYkqZx-XCYqVA1VWnKXItS6QMM9_hd9YBjBDsb1azCCt2HEmKLcooUdle-G1MjD8JOFpUjvyMCeNsmcRxO8jebfFiGtragF8aiJTlhVhaRPrq0FqWgrGZpXKK1TajUu9FIUMBRpju0RufkTFcXhFP78Ji-TqONDKY3RhuHEQasPtNO1VGsQBsW5Fl7Gs0ThyQ7DHil_uZ0ijAphc7gWDR8Vt7jqvYfK6Lp9IAe9tKFjohlYDre0mgAi3MqUxrtYRDe39pJXIrKOVgWB3hh2pLQpaShdkfjM6FIzccNZrXPSXwlZ6O353fCr7FofOh_BXXLX3WxLdGVEidZliNMMOsgjCUBSbsC_en584sfi7WW4gK6sa4N9SOxDIvDaLxxwaOiFraQp-WZinzgkaokrYgC5tjXQTYG0doOZ15Yf6gRdQXN0czgDBs5JDkuGjA-ZkYvh1vsLxZ6JqQ==?" /></p>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp1U8tu2zAQvOsr9tgeFFsq0oOBFmCsujAat4FkpBdfNtJaJkKRBqm6FYIU-Yf2X3rvp-RLuqTkPBr7ZHs5HM7OjCtpqWyl0ROwst60UWQxmUAhWwIB93e_Ic9mkAWUsQ5uIgDHgFzEBfz940_rZKUL_hwVUHS63FijzTe30vnFF3gHY7hxG9wS8zMF6lrRLXNgzyH2HOnAIUC4_0l-vhmDO0RzG0VK6ms3gbluycZB9bmfBJ2KD7yiMFrp2RRGkH3NFv7NBf6AZAyNg3y5PCxR4aQX83jfWJhf-OtCd1BJx-CSjiizmA4-nh3zMX3hY04lyR05GAz9bplgpcX0k4MrLK-hNZAnRyxNX1j6nE5ARapFdlVst0ryWGpeqSJ7ZIW6ZMqPylyhgimWGwqL9DutdJaLYGUu5lmcQCOtNZYqfjUFdqaWuga0hIfIo8qrzcQTR8SIOT9fLig2swfa09Hbg9fXCt2GGTweZv4HnGHnnumj5blPvJguoKFKPuooO24Nb-1l0I5NSyGjnSzZkFfL7MOle-2dwyo2WnWgjW1QqW6YhUTAaFijVGZ32Dv_JzpxCcTvIRT0JFSxj3RtsSEXEPgUwW0L8YCj1gExcwfJ6f3dL9_-aE_jL3CzTly6H-F-hGnUn_hBiK40ei1tM5SGv7o26pEPEOQmdMPD-zb43D0gZFSRz5J8YH7WGz_4H0C0i_4BCCdp8w==?" /></p>
 <p>Key points illustrated:</p>
 <ul>
 <li><strong>SRDF/S (synchronous):</strong> The R1 Global Cache holds the host write and does not issue the ACK until the remote RA director at Site B has confirmed the write is in the R2 cache. Every millisecond of RTT on the inter-site link adds directly to host write latency — this is why SRDF/S is limited to metro distances of less than 10 ms RTT.</li>
@@ -9223,7 +9170,7 @@ Internal architecture and data-path reference: Director architecture, Global Cac
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 14:55:01 UTC"><span class="timeago" datetime="2026-06-28T14:55:01+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 14:55:01 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:29:13 UTC"><span class="timeago" datetime="2026-06-28T18:29:13+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:29:13 UTC">2026-06-28</span>
   </span>
 
     
