@@ -7735,23 +7735,7 @@ Firewall port reference for Veeam Backup & Replication. Covers VBR server, backu
 *Applies to: Veeam Backup & Replication v12.x*
 </div>
 <p><img alt="Veeam — Ports and Network Requirements" src="../../../../assets/backup-veeam-architecture-ports.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>center: &quot;Veeam&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>inbound_client_to_vbr_server: &quot;Inbound — Client to VBR Server&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>vbr_server_to_backup_infrastructure: &quot;VBR Server to Backup Infrastructure&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>backup_proxy_to_vmware_infrastructur: &quot;Backup Proxy to VMware Infrastructure&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>backup_proxy_to_backup_repository_da: &quot;Backup Proxy to Backup Repository (Data Transfer)&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>guest_processing_applicationaware: &quot;Guest Processing (Application-Aware)&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>scaleout_backup_repository_sobr_obje: &quot;Scale-Out Backup Repository (SOBR) — Object Storage (Capacit&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>center -&gt; inbound_client_to_vbr_server
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>center -&gt; vbr_server_to_backup_infrastructure
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>center -&gt; backup_proxy_to_vmware_infrastructur
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>center -&gt; backup_proxy_to_backup_repository_da
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>center -&gt; guest_processing_applicationaware
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>center -&gt; scaleout_backup_repository_sobr_obje
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqdkkFuwjAQRfc5xYgVLLgAi0pApYpFRUUqttbEDME02JY9pqAKqYfoCXuSxmkEQbIo6tLJy_vj_FkpR5KV0SNwqtxwlknSTG4EvSUR7nrw4TdoaQQbOmBp9ClTujBBr4SsVI0KNmJfOOHJ7ZvPZr-v4fvzC6YNAmxgOVlA3iAXY0xGXVZ0yi6G6CtQvgUrlF479OyC5OAoTnSWROWkoWB2RSXtrc86czg28-7e0dG1v9a3wpeINTM_R-w_Ae3ZkTVesXFHscJEQHtenDHoPyIjvDrUfk1ukAwrA3mOWZK8V7oUaG2lJMYWMU5cJz1FJga1DPTHF2g4jlRa7iVWZAInruBNXZIpttGfR2w4D5y6Qz6fLAZN__Oalgx5_RxLgv4ULUrFyeR28WD4ALc2rIPdsTQd-p4luIGnKu3gf5bSYe_5x9kPcCpb5Q==?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
 <li>Veeam B&amp;R uses a dynamic data mover port range (2500–5000 TCP) for backup data transfer — this range must be open between proxies, repositories, and VBR server</li>
@@ -8192,23 +8176,23 @@ Firewall port reference for Veeam Backup & Replication. Covers VBR server, backu
 </table>
 <hr />
 <h2 id="verify">Verify<a class="headerlink" href="#verify" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># From admin workstation — test VBR REST API</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;%{http_code}&quot;</span><span class="w"> </span>https://&lt;vbr-server&gt;:9396/api/v1/serverInfo
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># From VBR Server — test proxy reachability</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Test-NetConnection<span class="w"> </span>-ComputerName<span class="w"> </span>&lt;proxy-hostname&gt;<span class="w"> </span>-Port<span class="w"> </span><span class="m">9392</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># From proxy — test vCenter API port</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>nc<span class="w"> </span>-zv<span class="w"> </span>&lt;vcenter-fqdn&gt;<span class="w"> </span><span class="m">443</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># From proxy — test ESXi agent port</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>nc<span class="w"> </span>-zv<span class="w"> </span>&lt;esxi-ip&gt;<span class="w"> </span><span class="m">902</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># From proxy — test repository data mover port</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>Test-NetConnection<span class="w"> </span>-ComputerName<span class="w"> </span>&lt;repo-server&gt;<span class="w"> </span>-Port<span class="w"> </span><span class="m">2500</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="c1"># From VBR Server — test guest processing port (Windows guest)</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>Test-NetConnection<span class="w"> </span>-ComputerName<span class="w"> </span>&lt;vm-ip&gt;<span class="w"> </span>-Port<span class="w"> </span><span class="m">6160</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># From admin workstation — test VBR REST API</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;%{http_code}&quot;</span><span class="w"> </span>https://&lt;vbr-server&gt;:9396/api/v1/serverInfo
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># From VBR Server — test proxy reachability</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>Test-NetConnection<span class="w"> </span>-ComputerName<span class="w"> </span>&lt;proxy-hostname&gt;<span class="w"> </span>-Port<span class="w"> </span><span class="m">9392</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># From proxy — test vCenter API port</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>nc<span class="w"> </span>-zv<span class="w"> </span>&lt;vcenter-fqdn&gt;<span class="w"> </span><span class="m">443</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># From proxy — test ESXi agent port</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>nc<span class="w"> </span>-zv<span class="w"> </span>&lt;esxi-ip&gt;<span class="w"> </span><span class="m">902</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># From proxy — test repository data mover port</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>Test-NetConnection<span class="w"> </span>-ComputerName<span class="w"> </span>&lt;repo-server&gt;<span class="w"> </span>-Port<span class="w"> </span><span class="m">2500</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># From VBR Server — test guest processing port (Windows guest)</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>Test-NetConnection<span class="w"> </span>-ComputerName<span class="w"> </span>&lt;vm-ip&gt;<span class="w"> </span>-Port<span class="w"> </span><span class="m">6160</span>
 </code></pre></div>
 <hr />
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>

@@ -9372,23 +9372,7 @@ VCF health checks: SDDC Manager health API, `lcm health check`, workload domain 
 </div>
 
 <p>VCF Daily Health Check — Coverage Map</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>hub: &quot;VMware Cloud Foundation\nOperations&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>run_this_routine: &quot;Run This Routine&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>common_operational_issues: &quot;Common Operational Issues&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>sddc_manager_service_health: &quot;SDDC Manager Service Health&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>workload_domain_health: &quot;Workload Domain Health&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>esxi_host_pool_health: &quot;ESXi Host Pool Health&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>certificate_expiry_check: &quot;Certificate Expiry Check&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>hub -&gt; run_this_routine
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>hub -&gt; common_operational_issues
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>hub -&gt; sddc_manager_service_health
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>hub -&gt; workload_domain_health
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>hub -&gt; esxi_host_pool_health
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>hub -&gt; certificate_expiry_check
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp9kctOwzAQRff5ilH2_EAWbJKisqiKmgpYIFnGHuJRE0_kBw1C_XfyIERCaXfWPeNj-Y4mhyoQ2wwcVSYkiYnvGaTPu7N0CHnNUcMDR6vlMPVm9y268ehT-PZGtpiBwU5WbC-Ji1YEQ144joFsj9JDtHDsIzhM0XJreFjaqsZLorhp2Aqe3bIW5H1E3wvykcF-YfA4slWT11qJRlpZoRMe3ScpFAZlHUzvKosih91EoZwobEe6ajuzO9UstdDcSLKL6OUXQDGCWw70HQnDPoiWuV4Um_KVYNvn8NTntwwKXaAPUjKgwK4l9yWUQXUaylkQbEYE-YBWPcNq4e4e_m9pzq9uYR64Ue48st7YTFe7-Hv-yjeTH8-G-KY=?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Access:</strong> vCenter read-only minimum; Administrator role for remediation steps</li>
@@ -9400,22 +9384,22 @@ VCF health checks: SDDC Manager health API, `lcm health check`, workload domain 
 <h2 id="run-this-routine">Run This Routine<a class="headerlink" href="#run-this-routine" title="Permanent link">&para;</a></h2>
 <ol>
 <li><strong>SDDC Manager service health</strong> — query the system health API and review the JSON output for any non-OK status:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin@local:password&#39;</span><span class="w"> </span>https://sddc-manager/v1/system/health<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin@local:password&#39;</span><span class="w"> </span>https://sddc-manager/v1/system/health<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
 </code></pre></div></li>
 <li><strong>Domain health overview</strong> — SDDC Manager UI → Dashboard → confirm all domains show green status across vCenter, NSX, and vSAN.</li>
 <li><strong>Credential rotation status</strong> — check no ESXi credentials are expired or pending rotation:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin@local:password&#39;</span><span class="w"> </span><span class="s1">&#39;https://sddc-manager/v1/credentials?resourceType=ESXI&#39;</span>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin@local:password&#39;</span><span class="w"> </span><span class="s1">&#39;https://sddc-manager/v1/credentials?resourceType=ESXI&#39;</span>
 </code></pre></div></li>
 <li><strong>Certificate expiry check</strong> — SDDC Manager → Security → Certificate Management → review all certificates; flag any expiring within 30 days.</li>
 <li><strong>LCM bundle status</strong> — SDDC Manager → Lifecycle Management → check for available updates; note any bundles downloaded but not applied.</li>
 <li><strong>Precheck execution</strong> — SDDC Manager → Lifecycle Management → Precheck → run precheck for management domain and review results before any upgrade window.</li>
 <li><strong>Commissioned hosts in free pool</strong> — SDDC Manager → Inventory → Hosts → count Unassigned hosts; alert if free pool is empty (no capacity for domain expansion).</li>
 <li><strong>NSX manager cluster status</strong> — verify all NSX manager nodes are online and cluster is stable:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span>https://&lt;nsx&gt;/api/v1/cluster/status
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span>https://&lt;nsx&gt;/api/v1/cluster/status
 </code></pre></div></li>
 <li><strong>vSAN health across all domains</strong> — for each workload domain: vCenter → Cluster → Monitor → vSAN Health → confirm no red or yellow alerts.</li>
 <li><strong>SDDC Manager audit log review</strong> — scan recent audit entries for unexpected API calls, failed logins, or credential changes:
-    <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>tail<span class="w"> </span>-50<span class="w"> </span>/var/log/vmware/vcf/commonsvcs/audit.log
+    <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>tail<span class="w"> </span>-50<span class="w"> </span>/var/log/vmware/vcf/commonsvcs/audit.log
 </code></pre></div></li>
 </ol>
 <h2 id="common-operational-issues">Common Operational Issues<a class="headerlink" href="#common-operational-issues" title="Permanent link">&para;</a></h2>
@@ -9465,23 +9449,23 @@ VCF health checks: SDDC Manager health API, `lcm health check`, workload domain 
 <h2 id="sddc-manager-service-health">SDDC Manager Service Health<a class="headerlink" href="#sddc-manager-service-health" title="Permanent link">&para;</a></h2>
 <p><img alt="SDDC Manager Service Health" src="../../../../../assets/virtualization-vmware-vmware-cloud-found-hc-sddc-manager-service-health.svg" /></p>
 <p>All core VCF services must be running on SDDC Manager. SSH to SDDC Manager and verify:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># SSH to SDDC Manager appliance</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>ssh<span class="w"> </span>vcf@sddc-manager.example.local
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Check core VCF services — all must show: active (running)</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>systemctl<span class="w"> </span>status<span class="w"> </span>vcf-operationsmanager
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>systemctl<span class="w"> </span>status<span class="w"> </span>vcf-commonsvcs
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>systemctl<span class="w"> </span>status<span class="w"> </span>vcf-domainmanager
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>systemctl<span class="w"> </span>status<span class="w"> </span>nginx
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># Bulk check: list all vcf services and their states</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>systemctl<span class="w"> </span>list-units<span class="w"> </span><span class="s1">&#39;vcf-*&#39;</span><span class="w"> </span>--state<span class="o">=</span>failed
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="c1"># Expected output: 0 loaded units (no failed services)</span>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="c1"># If any service is failed, restart it</span>
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>vcf-operationsmanager<span class="w">   </span><span class="c1"># example</span>
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="c1"># Then re-check status; if restart fails, check journal</span>
-<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>vcf-operationsmanager<span class="w"> </span>--since<span class="w"> </span><span class="s2">&quot;30 minutes ago&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># SSH to SDDC Manager appliance</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ssh<span class="w"> </span>vcf@sddc-manager.example.local
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Check core VCF services — all must show: active (running)</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>systemctl<span class="w"> </span>status<span class="w"> </span>vcf-operationsmanager
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>systemctl<span class="w"> </span>status<span class="w"> </span>vcf-commonsvcs
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>systemctl<span class="w"> </span>status<span class="w"> </span>vcf-domainmanager
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>systemctl<span class="w"> </span>status<span class="w"> </span>nginx
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Bulk check: list all vcf services and their states</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>systemctl<span class="w"> </span>list-units<span class="w"> </span><span class="s1">&#39;vcf-*&#39;</span><span class="w"> </span>--state<span class="o">=</span>failed
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="c1"># Expected output: 0 loaded units (no failed services)</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="c1"># If any service is failed, restart it</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>vcf-operationsmanager<span class="w">   </span><span class="c1"># example</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="c1"># Then re-check status; if restart fails, check journal</span>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>vcf-operationsmanager<span class="w"> </span>--since<span class="w"> </span><span class="s2">&quot;30 minutes ago&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
 </code></pre></div>
 <hr />
 <h2 id="workload-domain-health">Workload Domain Health<a class="headerlink" href="#workload-domain-health" title="Permanent link">&para;</a></h2>
@@ -9492,25 +9476,25 @@ VCF health checks: SDDC Manager health API, `lcm health check`, workload domain 
 <li>Red / Failed: treat as P1; component is unreachable or has failed validation</li>
 <li><strong>Per-domain component check</strong>: click the domain → review the <strong>Components</strong> tab → vCenter, ESXi hosts, vSAN cluster, and NSX segment must all show healthy</li>
 <li><strong>API-based domain status query</strong>:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span>https://sddc-manager.example.com/v1/domains<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">&#39;&quot;name&quot;|&quot;status&quot;&#39;</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Expected: &quot;status&quot;: &quot;SUCCEEDED&quot; for every domain</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># &quot;FAILED&quot; or &quot;PARTIALLY_SUCCESSFUL&quot; require investigation</span>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span>https://sddc-manager.example.com/v1/domains<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">&#39;&quot;name&quot;|&quot;status&quot;&#39;</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Expected: &quot;status&quot;: &quot;SUCCEEDED&quot; for every domain</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># &quot;FAILED&quot; or &quot;PARTIALLY_SUCCESSFUL&quot; require investigation</span>
 </code></pre></div></li>
 </ol>
 <hr />
 <h2 id="esxi-host-pool-health">ESXi Host Pool Health<a class="headerlink" href="#esxi-host-pool-health" title="Permanent link">&para;</a></h2>
 <p><img alt="ESXi Host Pool Health" src="../../../../../assets/virtualization-vmware-vmware-cloud-found-hc-esxi-host-pool-health.svg" /></p>
 <p>Hosts not assigned to a domain (free pool) provide capacity for domain expansion. Hosts in a failed state block commissioning.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Query all hosts and their assignment status</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span>https://sddc-manager.example.com/v1/hosts<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">&#39;&quot;fqdn&quot;|&quot;status&quot;&#39;</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1"># Expected statuses:</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="c1">#   &quot;ASSIGNED&quot;   — host is active in a workload domain</span>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1">#   &quot;UNASSIGNED&quot; — host is in the free pool, available for commissioning</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="c1">#   &quot;FAILED&quot;     — host has a problem; investigate before attempting assignment</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Query all hosts and their assignment status</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>https://sddc-manager.example.com/v1/hosts<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">&#39;&quot;fqdn&quot;|&quot;status&quot;&#39;</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Expected statuses:</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1">#   &quot;ASSIGNED&quot;   — host is active in a workload domain</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1">#   &quot;UNASSIGNED&quot; — host is in the free pool, available for commissioning</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1">#   &quot;FAILED&quot;     — host has a problem; investigate before attempting assignment</span>
 </code></pre></div>
 <p>UI check: SDDC Manager → <strong>Inventory</strong> → <strong>Hosts</strong> → filter by <strong>Status: FAILED</strong> — any results require immediate attention.</p>
 <p>For hosts in FAILED state: check ESXi connectivity (ping FQDN), verify management vmkernel adapter is up, and review SDDC Manager task logs under <strong>Administration → Tasks</strong>.</p>
@@ -9523,15 +9507,15 @@ VCF health checks: SDDC Manager health API, `lcm health check`, workload domain 
 <li>Alert threshold: <strong>60 days</strong> before expiry — initiate renewal immediately</li>
 <li>Components to check: SDDC Manager, vCenter (per domain), NSX Manager (per domain), ESXi (if externally managed)</li>
 <li><strong>API bulk certificate query</strong>:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Check vCenter certificates across all domains</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span><span class="s2">&quot;https://sddc-manager.example.com/v1/certificates?resourceType=VCENTER&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">&#39;&quot;expirationDate&quot;|&quot;commonName&quot;&#39;</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="c1"># Check NSX Manager certificates</span>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w">  </span><span class="s2">&quot;https://sddc-manager.example.com/v1/certificates?resourceType=NSX_MANAGER&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="w">  </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">&#39;&quot;expirationDate&quot;|&quot;commonName&quot;&#39;</span>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Check vCenter certificates across all domains</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span><span class="s2">&quot;https://sddc-manager.example.com/v1/certificates?resourceType=VCENTER&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">&#39;&quot;expirationDate&quot;|&quot;commonName&quot;&#39;</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="c1"># Check NSX Manager certificates</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="w">  </span><span class="s2">&quot;https://sddc-manager.example.com/v1/certificates?resourceType=NSX_MANAGER&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="w">  </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">&#39;&quot;expirationDate&quot;|&quot;commonName&quot;&#39;</span>
 </code></pre></div></li>
 <li><strong>Certificate renewal</strong>: SDDC Manager → Certificate Management → select the component → <strong>Generate CSR</strong> → submit to CA → <strong>Import Certificate</strong> → SDDC Manager distributes the new cert to the component automatically</li>
 </ol>
@@ -9542,11 +9526,11 @@ VCF health checks: SDDC Manager health API, `lcm health check`, workload domain 
 <ol>
 <li><strong>UI check</strong>: SDDC Manager → <strong>Administration</strong> → <strong>Backup and Restore</strong> → verify <strong>Last Successful Backup</strong> timestamp — alert if older than 24 hours</li>
 <li><strong>Backup target reachability</strong>:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># From SDDC Manager, test SFTP backup target reachability</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>ssh<span class="w"> </span>vcf@sddc-manager.example.local
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>curl<span class="w"> </span>-v<span class="w"> </span>sftp://backup-server.example.local:22<span class="w"> </span>--user<span class="w"> </span>backupuser:password<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Connected|refused|timeout&quot;</span>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Or ping the target</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>ping<span class="w"> </span>-c<span class="w"> </span><span class="m">4</span><span class="w"> </span>backup-server.example.local
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># From SDDC Manager, test SFTP backup target reachability</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>ssh<span class="w"> </span>vcf@sddc-manager.example.local
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>curl<span class="w"> </span>-v<span class="w"> </span>sftp://backup-server.example.local:22<span class="w"> </span>--user<span class="w"> </span>backupuser:password<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Connected|refused|timeout&quot;</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Or ping the target</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>ping<span class="w"> </span>-c<span class="w"> </span><span class="m">4</span><span class="w"> </span>backup-server.example.local
 </code></pre></div></li>
 <li><strong>Trigger a manual backup</strong>: SDDC Manager → Administration → Backup and Restore → <strong>Backup Now</strong> → monitor task completion in <strong>Administration → Tasks</strong></li>
 <li><strong>Verify backup file on target</strong>: SSH to the backup SFTP server → confirm a new file exists with today's date in the configured backup directory</li>
@@ -9555,34 +9539,34 @@ VCF health checks: SDDC Manager health API, `lcm health check`, workload domain 
 <h2 id="nsx-manager-health-within-vcf">NSX Manager Health (within VCF)<a class="headerlink" href="#nsx-manager-health-within-vcf" title="Permanent link">&para;</a></h2>
 <p><img alt="NSX Manager Health (within VCF)" src="../../../../../assets/virtualization-vmware-vmware-cloud-found-hc-nsx-manager-health-within-vcf.svg" /></p>
 <p>All three NSX Manager nodes must be active and the management cluster must be stable.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Query NSX manager cluster status</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span>https://nsx-manager.example.com/api/v1/cluster/status<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">  </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">&#39;&quot;overall_status&quot;|&quot;mgmt_cluster_status&quot;&#39;</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="c1"># Expected: &quot;STABLE&quot; for both fields</span>
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="c1"># &quot;DEGRADED&quot; or &quot;UNSTABLE&quot; = one or more NSX manager nodes are unreachable or not elected</span>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="c1"># Check individual node status</span>
-<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="w">  </span>https://nsx-manager.example.com/api/v1/cluster/nodes<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="w">  </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">&#39;&quot;display_name&quot;|&quot;manager_role&quot;|&quot;connectivity_status&quot;&#39;</span>
-<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="c1"># All nodes must show: &quot;connectivity_status&quot;: &quot;CONNECTED&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Query NSX manager cluster status</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span>https://nsx-manager.example.com/api/v1/cluster/status<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">  </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">&#39;&quot;overall_status&quot;|&quot;mgmt_cluster_status&quot;&#39;</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="c1"># Expected: &quot;STABLE&quot; for both fields</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="c1"># &quot;DEGRADED&quot; or &quot;UNSTABLE&quot; = one or more NSX manager nodes are unreachable or not elected</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="c1"># Check individual node status</span>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="w">  </span>https://nsx-manager.example.com/api/v1/cluster/nodes<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="w">  </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">&#39;&quot;display_name&quot;|&quot;manager_role&quot;|&quot;connectivity_status&quot;&#39;</span>
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="c1"># All nodes must show: &quot;connectivity_status&quot;: &quot;CONNECTED&quot;</span>
 </code></pre></div>
 <p>UI check: NSX Manager → <strong>System</strong> → <strong>Overview</strong> — the cluster health indicator must show green for all three manager nodes and the controller cluster.</p>
 <hr />
 <h2 id="vcenter-health-within-vcf">vCenter Health (within VCF)<a class="headerlink" href="#vcenter-health-within-vcf" title="Permanent link">&para;</a></h2>
 <p><img alt="vCenter Health (within VCF)" src="../../../../../assets/virtualization-vmware-vmware-cloud-found-hc-vcenter-health-within-vcf.svg" /></p>
 <p>Each VCF workload domain has a dedicated vCenter; verify all are healthy.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Check vCenter overall health for each domain&#39;s vCenter</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-k<span class="w"> </span>-u<span class="w"> </span>administrator@vsphere.local:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">  </span>https://vcenter.example.com/rest/appliance/health/overall
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># Expected response: {&quot;value&quot;:&quot;green&quot;}</span>
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="c1"># &quot;yellow&quot; = degraded service; &quot;red&quot; = critical service failure</span>
-<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>
-<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="c1"># Check individual service health</span>
-<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-k<span class="w"> </span>-u<span class="w"> </span>administrator@vsphere.local:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="w">  </span>https://vcenter.example.com/rest/appliance/health/services<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="w">  </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">&#39;&quot;name&quot;|&quot;health&quot;&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Check vCenter overall health for each domain&#39;s vCenter</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-k<span class="w"> </span>-u<span class="w"> </span>administrator@vsphere.local:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span>https://vcenter.example.com/rest/appliance/health/overall
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Expected response: {&quot;value&quot;:&quot;green&quot;}</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="c1"># &quot;yellow&quot; = degraded service; &quot;red&quot; = critical service failure</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># Check individual service health</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-k<span class="w"> </span>-u<span class="w"> </span>administrator@vsphere.local:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="w">  </span>https://vcenter.example.com/rest/appliance/health/services<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="w">  </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">&#39;&quot;name&quot;|&quot;health&quot;&#39;</span>
 </code></pre></div>
 <p>UI check: vCenter → <strong>Administration</strong> → <strong>Appliance</strong> → <strong>Health</strong> — all service health indicators must be green.</p>
 <p>If vCenter shows red: SSH to the vCenter appliance → <code>service-control --status --all</code> → restart the failing service → re-check health endpoint.</p>
@@ -9645,10 +9629,10 @@ VCF health checks: SDDC Manager health API, `lcm health check`, workload domain 
 <li><strong>Downloaded</strong>: ready for upgrade scheduling</li>
 <li><strong>Download failed</strong>: investigate connectivity</li>
 <li><strong>If download fails — check internet access or proxy</strong>:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Test depot reachability from SDDC Manager</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>curl<span class="w"> </span>-sv<span class="w"> </span>https://depot.vmware.com<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Connected|SSL|refused|timeout&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-10
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="c1"># If behind a proxy, verify proxy setting in SDDC Manager:</span>
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># Administration → Network Settings → Proxy — confirm proxy FQDN and port are correct</span>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Test depot reachability from SDDC Manager</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>curl<span class="w"> </span>-sv<span class="w"> </span>https://depot.vmware.com<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Connected|SSL|refused|timeout&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-10
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="c1"># If behind a proxy, verify proxy setting in SDDC Manager:</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># Administration → Network Settings → Proxy — confirm proxy FQDN and port are correct</span>
 </code></pre></div></li>
 <li><strong>Manual depot sync</strong>: SDDC Manager → Lifecycle Management → Bundle Management → <strong>Sync Now</strong> — forces re-check of available bundles from the VMware depot</li>
 <li><strong>Offline depot</strong>: for air-gapped environments, upload bundles manually via SDDC Manager → Lifecycle Management → <strong>Offline Bundle Upload</strong>; verify the bundle checksum matches the manifest</li>

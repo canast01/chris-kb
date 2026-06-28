@@ -7967,25 +7967,7 @@ This guide covers the end-to-end deployment of a NetApp ONTAP cluster — from p
     s8["✓ Verify"]
     s0 --&gt; s1 --&gt; s2 --&gt; s3 --&gt; s4 --&gt; s5 --&gt; s6 --&gt; s7 --&gt; s8
     style s8 fill:#2e7d32,color:#fff,stroke:#1b5e20</code></pre>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>plan: &quot;Plan&quot; {shape: oval}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>phase_1_physical_layer: &quot;Phase 1 — Physical Layer&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>phase_2_initial_cluster_setup: &quot;Phase 2 — Initial Cluster Setup&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>phase_3_cluster_configuration: &quot;Phase 3 — Cluster Configuration&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>phase_4_network_configuration: &quot;Phase 4 — Network Configuration&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>phase_5_storage_provisioning: &quot;Phase 5 — Storage Provisioning&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>phase_6_data_protection: &quot;Phase 6 — Data Protection&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>validate: &quot;Validate&quot; {shape: oval}
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>plan -&gt; phase_1_physical_layer
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>phase_1_physical_layer -&gt; phase_2_initial_cluster_setup
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>phase_2_initial_cluster_setup -&gt; phase_3_cluster_configuration
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>phase_3_cluster_configuration -&gt; phase_4_network_configuration
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>phase_4_network_configuration -&gt; phase_5_storage_provisioning
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>phase_5_storage_provisioning -&gt; phase_6_data_protection
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>phase_6_data_protection -&gt; validate
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNkktqwzAYhPc-xY_3XeS5yKKbdFMIxRDIVvw4qi0qJCHJCaEUeoiesCepJD8UWkt0Zdkz8xkxc2aa1pZJsQPNmtYWheLoXsrKPUp4Ny0qugN5Qf5RqBYNJQui2pthNXLC8Ua1N3sBFvD9-QXVIMLBixHh_4Oi4XTkLAkTzDKHqXlnLNXEUNupCbcMuOfeA_veA0fvyVBXE62W4pU1ncb-egN1FagjbX_vyVDXRFB7lfotQV0H6kvv-Td1Q4yVGhtKlJYXZpybiWaCbgL02FugurNkmFtyRoseaMdiB9w24J6c6lmDOktyZTNHcR_L03D8PYUwE3h4hPlNJKYSA4ny89OI8UTL-Q3EeKLOfNkxPt9bttQY_lNQqjgfGZsofgADuF9K?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Access:</strong> Root/admin access to both nodes via serial console (Node 1 first), and SSH access to the cluster management LIF after initial setup. Out-of-band management access (BMC/SP) must be configured and reachable before any cluster work begins.</li>
@@ -8026,14 +8008,14 @@ This guide covers the end-to-end deployment of a NetApp ONTAP cluster — from p
 <p>Verify shelf IDs are unique before powering on. Change shelf IDs using the ID button on the IOM module if needed, then power-cycle the shelf to apply.</p>
 <h3 id="oob-management-bmc-sp">OOB Management (BMC / SP)<a class="headerlink" href="#oob-management-bmc-sp" title="Permanent link">&para;</a></h3>
 <p>Each node has a Service Processor (SP) or Baseboard Management Controller (BMC) accessible on the e0M port:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a># After initial network config, reach the SP via SSH:
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ssh admin@&lt;SP-IP&gt;
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a># Check SP firmware version:
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>sp show-firmware
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a># Update SP firmware if required:
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>system service-processor image update -node &lt;node&gt; -package &lt;package-url&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a># After initial network config, reach the SP via SSH:
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ssh admin@&lt;SP-IP&gt;
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a># Check SP firmware version:
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>sp show-firmware
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a># Update SP firmware if required:
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>system service-processor image update -node &lt;node&gt; -package &lt;package-url&gt;
 </code></pre></div>
 <p>Assign static IP addresses to both SP/BMC interfaces from your OOB management VLAN before powering up the controllers. This is done via DHCP reservation or direct serial console configuration during first boot.</p>
 <h3 id="power-sequencing">Power Sequencing<a class="headerlink" href="#power-sequencing" title="Permanent link">&para;</a></h3>
@@ -8058,15 +8040,15 @@ This guide covers the end-to-end deployment of a NetApp ONTAP cluster — from p
 <p>Connect a serial cable (or USB-to-serial adapter) to the console port on Node 1. Use 9600 baud, 8N1. Power on Node 1 and watch the boot sequence. ONTAP will load from the internal boot device.</p>
 <p>When the system reaches the boot menu, select option <strong>1</strong> (Boot normal) if running a pre-installed factory image, or option <strong>4</strong> (Clean configuration and initialize all disks) for a fresh install from a downloaded image.</p>
 <p>If installing from a downloaded ONTAP image:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a># At the boot menu prompt, boot from the network image:
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>Esc+5   → Boot menu
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>Select option 7 (Install new software first)
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>Enter the URL of the ONTAP image package: http://&lt;http-server&gt;/ontap-9.12.1-image.tgz
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a># At the boot menu prompt, boot from the network image:
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Esc+5   → Boot menu
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Select option 7 (Install new software first)
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>Enter the URL of the ONTAP image package: http://&lt;http-server&gt;/ontap-9.12.1-image.tgz
 </code></pre></div>
 <p>Allow the node to complete the installation and reboot automatically.</p>
 <h3 id="running-the-cluster-setup-wizard">Running the Cluster Setup Wizard<a class="headerlink" href="#running-the-cluster-setup-wizard" title="Permanent link">&para;</a></h3>
 <p>After the first clean boot, ONTAP starts the setup wizard automatically. If it does not, trigger it manually:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>cluster setup
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>cluster setup
 </code></pre></div>
 <p>The wizard prompts for the following values. Prepare these before starting:</p>
 <table>
@@ -8118,80 +8100,80 @@ This guide covers the end-to-end deployment of a NetApp ONTAP cluster — from p
 <p>Work through each prompt. The wizard creates the cluster, sets the admin credentials, and assigns Node 1 as the first cluster node.</p>
 <h3 id="joining-node-2">Joining Node 2<a class="headerlink" href="#joining-node-2" title="Permanent link">&para;</a></h3>
 <p>After completing the wizard on Node 1, connect a serial console to Node 2 and power it on. When it boots and presents the setup prompt:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a># On Node 2 console:
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>cluster setup
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>Do you want to create a new cluster or join an existing cluster? [create/join] join
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>Enter the cluster management IP address: 10.10.10.100
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>Enter the admin password: &lt;password&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a># On Node 2 console:
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>cluster setup
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>Do you want to create a new cluster or join an existing cluster? [create/join] join
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>Enter the cluster management IP address: 10.10.10.100
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>Enter the admin password: &lt;password&gt;
 </code></pre></div>
 <p>Node 2 will contact Node 1, exchange keys, and join the cluster. Verify on Node 1:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>cluster show
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Node                  Health  Eligibility
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>--------------------- ------- ------------
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>prod-ontap-01-01      true    true
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>prod-ontap-01-02      true    true
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>cluster show
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>Node                  Health  Eligibility
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>--------------------- ------- ------------
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>prod-ontap-01-01      true    true
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>prod-ontap-01-02      true    true
 </code></pre></div>
 <hr />
 <h2 id="phase-3-cluster-configuration">Phase 3 — Cluster Configuration<a class="headerlink" href="#phase-3-cluster-configuration" title="Permanent link">&para;</a></h2>
 <p><strong>Exit criterion:</strong> All required licenses installed, NTP synchronised, AutoSupport enabled and verified with a test message, and the cluster registered with Active IQ.</p>
 <h3 id="license-installation">License Installation<a class="headerlink" href="#license-installation" title="Permanent link">&para;</a></h3>
 <p>ONTAP uses capacity-based or feature-based licenses depending on the platform generation. For systems using per-feature license keys:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a># Add a license key:
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>system license add -license-code XXXXXXXXXXXXXXXX
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a># Add multiple keys at once (space-separated):
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>system license add -license-code KEY1 KEY2 KEY3 KEY4
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a># Verify installed licenses:
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>system license show
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>Package           Type    Description                       Expiration
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>----------------- ------- --------------------------------- ----------
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>NFS               site    NFS License                       -
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>CIFS              site    CIFS License                      -
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>iSCSI             site    iSCSI License                     -
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>FCP               site    FCP License                       -
-<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>FlexClone         site    FlexClone License                 -
-<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>SnapMirror        site    SnapMirror License                -
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a># Add a license key:
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>system license add -license-code XXXXXXXXXXXXXXXX
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a># Add multiple keys at once (space-separated):
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>system license add -license-code KEY1 KEY2 KEY3 KEY4
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a># Verify installed licenses:
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>system license show
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>Package           Type    Description                       Expiration
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>----------------- ------- --------------------------------- ----------
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>NFS               site    NFS License                       -
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>CIFS              site    CIFS License                      -
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>iSCSI             site    iSCSI License                     -
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>FCP               site    FCP License                       -
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>FlexClone         site    FlexClone License                 -
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>SnapMirror        site    SnapMirror License                -
 </code></pre></div>
 <p>For ONTAP 9.10+ systems with capacity-based licensing (NLF files), upload the NLF file received from NetApp:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>system license add -license-code @/path/to/license.nlf
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>system license add -license-code @/path/to/license.nlf
 </code></pre></div>
 <h3 id="ntp-and-timezone">NTP and Timezone<a class="headerlink" href="#ntp-and-timezone" title="Permanent link">&para;</a></h3>
 <p>Accurate time is critical for cluster operations, SnapMirror, CIFS Kerberos, and audit logs.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a># Create NTP server associations:
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>cluster time-service ntp server create -server 10.10.1.123
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>cluster time-service ntp server create -server 10.10.1.124
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a># Verify NTP status:
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>cluster time-service ntp server show
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a># Set the cluster timezone:
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>cluster date modify -timezone Europe/London
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a># Verify cluster time:
-<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>cluster date show
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a># Create NTP server associations:
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>cluster time-service ntp server create -server 10.10.1.123
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>cluster time-service ntp server create -server 10.10.1.124
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a># Verify NTP status:
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>cluster time-service ntp server show
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a># Set the cluster timezone:
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>cluster date modify -timezone Europe/London
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a># Verify cluster time:
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>cluster date show
 </code></pre></div>
 <h3 id="autosupport-configuration">AutoSupport Configuration<a class="headerlink" href="#autosupport-configuration" title="Permanent link">&para;</a></h3>
 <p>AutoSupport sends diagnostic data to NetApp support and feeds the Active IQ Digital Advisor dashboard. Configure it before production traffic begins.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a># Enable AutoSupport on all nodes with SMTP transport:
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>autosupport modify -node * \
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>  -state enable \
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>  -transport smtp \
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>  -mail-hosts smtp.corp.example.com \
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>  -from ontap-asup@corp.example.com \
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>  -to support-team@corp.example.com \
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>  -support enable
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>
-<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a># Verify AutoSupport config:
-<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>autosupport show -node *
-<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>
-<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a># Send a test AutoSupport message:
-<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>autosupport invoke -node * -type test -message &quot;ONTAP deployment test&quot;
-<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>
-<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a># Confirm delivery:
-<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>autosupport history show -node * -type test
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a># Enable AutoSupport on all nodes with SMTP transport:
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>autosupport modify -node * \
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>  -state enable \
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>  -transport smtp \
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>  -mail-hosts smtp.corp.example.com \
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>  -from ontap-asup@corp.example.com \
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>  -to support-team@corp.example.com \
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>  -support enable
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a># Verify AutoSupport config:
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>autosupport show -node *
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a># Send a test AutoSupport message:
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>autosupport invoke -node * -type test -message &quot;ONTAP deployment test&quot;
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a># Confirm delivery:
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>autosupport history show -node * -type test
 </code></pre></div>
 <h3 id="active-iq-registration">Active IQ Registration<a class="headerlink" href="#active-iq-registration" title="Permanent link">&para;</a></h3>
 <p>Register the cluster with the NetApp Active IQ Digital Advisor portal to receive health and risk advisories:</p>
@@ -8206,409 +8188,409 @@ This guide covers the end-to-end deployment of a NetApp ONTAP cluster — from p
 <p><strong>Exit criterion:</strong> All management and data LIFs are up, reachable from their respective subnets, and failover groups are configured to allow non-disruptive LIF migration between nodes.</p>
 <h3 id="cluster-interconnect-verification">Cluster Interconnect Verification<a class="headerlink" href="#cluster-interconnect-verification" title="Permanent link">&para;</a></h3>
 <p>For switchless two-node clusters, verify the cluster interconnect is healthy:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a># Confirm cluster ports are up:
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>network port show -role cluster
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a># Check cluster interconnect health:
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>cluster interconnect show
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>Node           Link  Speed(Mbps)  IsPartial  IsPresent
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>-------------- ----  -----------  ---------  ---------
-<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>node1:e0a      up    100000       false      true
-<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>node1:e0b      up    100000       false      true
-<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>node2:e0a      up    100000       false      true
-<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>node2:e0b      up    100000       false      true
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a># Confirm cluster ports are up:
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>network port show -role cluster
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a># Check cluster interconnect health:
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>cluster interconnect show
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>Node           Link  Speed(Mbps)  IsPartial  IsPresent
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>-------------- ----  -----------  ---------  ---------
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>node1:e0a      up    100000       false      true
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>node1:e0b      up    100000       false      true
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>node2:e0a      up    100000       false      true
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>node2:e0b      up    100000       false      true
 </code></pre></div>
 <h3 id="management-lif-configuration">Management LIF Configuration<a class="headerlink" href="#management-lif-configuration" title="Permanent link">&para;</a></h3>
 <p>Node management LIFs provide per-node SSH access, separate from the cluster management LIF created during setup:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a># Create node management LIF for Node 2 (Node 1 is created by cluster setup):
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>network interface create \
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>  -vserver prod-ontap-01 \
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>  -lif node2_mgmt \
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>  -role node-mgmt \
-<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>  -home-node prod-ontap-01-02 \
-<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>  -home-port e0M \
-<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>  -address 10.10.10.102 \
-<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>  -netmask 255.255.255.0
-<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>
-<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a># Verify management LIFs:
-<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>network interface show -role node-mgmt
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a># Create node management LIF for Node 2 (Node 1 is created by cluster setup):
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>network interface create \
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>  -vserver prod-ontap-01 \
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>  -lif node2_mgmt \
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>  -role node-mgmt \
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>  -home-node prod-ontap-01-02 \
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>  -home-port e0M \
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>  -address 10.10.10.102 \
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>  -netmask 255.255.255.0
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a># Verify management LIFs:
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>network interface show -role node-mgmt
 </code></pre></div>
 <h3 id="broadcast-domains-and-failover-groups">Broadcast Domains and Failover Groups<a class="headerlink" href="#broadcast-domains-and-failover-groups" title="Permanent link">&para;</a></h3>
 <p>Broadcast domains define the Layer 2 reachability scope for LIF failover. ONTAP auto-creates broadcast domains based on LLDP/CDP discovery during setup, but verify and adjust:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a># Show existing broadcast domains:
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>network port broadcast-domain show
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a># Add a port to a broadcast domain if missing:
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>network port broadcast-domain add-ports \
-<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>  -broadcast-domain Data \
-<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>  -ports prod-ontap-01-01:e0c,prod-ontap-01-02:e0c
-<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>
-<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a># Create a failover group for the data subnet:
-<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>network interface failover-groups create \
-<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>  -vserver prod-ontap-01 \
-<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>  -failover-group data-fg \
-<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>  -targets prod-ontap-01-01:e0c,prod-ontap-01-02:e0c
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a># Show existing broadcast domains:
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>network port broadcast-domain show
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a># Add a port to a broadcast domain if missing:
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>network port broadcast-domain add-ports \
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>  -broadcast-domain Data \
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>  -ports prod-ontap-01-01:e0c,prod-ontap-01-02:e0c
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a># Create a failover group for the data subnet:
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>network interface failover-groups create \
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>  -vserver prod-ontap-01 \
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>  -failover-group data-fg \
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>  -targets prod-ontap-01-01:e0c,prod-ontap-01-02:e0c
 </code></pre></div>
 <h3 id="data-lif-creation">Data LIF Creation<a class="headerlink" href="#data-lif-creation" title="Permanent link">&para;</a></h3>
 <p>Data LIFs are created per SVM (Storage Virtual Machine). Create the SVMs first (Phase 5), then return here, or create the LIFs as part of SVM creation. Example for an NFS SVM:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a># Create NFS data LIF on Node 1:
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>network interface create \
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>  -vserver svm_nfs \
-<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>  -lif nfs_lif_01 \
-<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>  -role data \
-<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>  -data-protocol nfs \
-<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>  -home-node prod-ontap-01-01 \
-<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>  -home-port e0c \
-<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>  -address 10.10.20.10 \
-<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>  -netmask 255.255.255.0 \
-<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>  -failover-group data-fg \
-<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>  -firewall-policy data \
-<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>  -auto-revert true
-<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>
-<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a># Create NFS data LIF on Node 2 (for HA):
-<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a>network interface create \
-<a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a>  -vserver svm_nfs \
-<a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a>  -lif nfs_lif_02 \
-<a id="__codelineno-13-19" name="__codelineno-13-19" href="#__codelineno-13-19"></a>  -role data \
-<a id="__codelineno-13-20" name="__codelineno-13-20" href="#__codelineno-13-20"></a>  -data-protocol nfs \
-<a id="__codelineno-13-21" name="__codelineno-13-21" href="#__codelineno-13-21"></a>  -home-node prod-ontap-01-02 \
-<a id="__codelineno-13-22" name="__codelineno-13-22" href="#__codelineno-13-22"></a>  -home-port e0c \
-<a id="__codelineno-13-23" name="__codelineno-13-23" href="#__codelineno-13-23"></a>  -address 10.10.20.11 \
-<a id="__codelineno-13-24" name="__codelineno-13-24" href="#__codelineno-13-24"></a>  -netmask 255.255.255.0 \
-<a id="__codelineno-13-25" name="__codelineno-13-25" href="#__codelineno-13-25"></a>  -failover-group data-fg \
-<a id="__codelineno-13-26" name="__codelineno-13-26" href="#__codelineno-13-26"></a>  -firewall-policy data \
-<a id="__codelineno-13-27" name="__codelineno-13-27" href="#__codelineno-13-27"></a>  -auto-revert true
-<a id="__codelineno-13-28" name="__codelineno-13-28" href="#__codelineno-13-28"></a>
-<a id="__codelineno-13-29" name="__codelineno-13-29" href="#__codelineno-13-29"></a># Verify all LIFs are up:
-<a id="__codelineno-13-30" name="__codelineno-13-30" href="#__codelineno-13-30"></a>network interface show -vserver svm_nfs
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a># Create NFS data LIF on Node 1:
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>network interface create \
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>  -vserver svm_nfs \
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>  -lif nfs_lif_01 \
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>  -role data \
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>  -data-protocol nfs \
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>  -home-node prod-ontap-01-01 \
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>  -home-port e0c \
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>  -address 10.10.20.10 \
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>  -netmask 255.255.255.0 \
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>  -failover-group data-fg \
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>  -firewall-policy data \
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>  -auto-revert true
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a># Create NFS data LIF on Node 2 (for HA):
+<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a>network interface create \
+<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a>  -vserver svm_nfs \
+<a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a>  -lif nfs_lif_02 \
+<a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a>  -role data \
+<a id="__codelineno-12-20" name="__codelineno-12-20" href="#__codelineno-12-20"></a>  -data-protocol nfs \
+<a id="__codelineno-12-21" name="__codelineno-12-21" href="#__codelineno-12-21"></a>  -home-node prod-ontap-01-02 \
+<a id="__codelineno-12-22" name="__codelineno-12-22" href="#__codelineno-12-22"></a>  -home-port e0c \
+<a id="__codelineno-12-23" name="__codelineno-12-23" href="#__codelineno-12-23"></a>  -address 10.10.20.11 \
+<a id="__codelineno-12-24" name="__codelineno-12-24" href="#__codelineno-12-24"></a>  -netmask 255.255.255.0 \
+<a id="__codelineno-12-25" name="__codelineno-12-25" href="#__codelineno-12-25"></a>  -failover-group data-fg \
+<a id="__codelineno-12-26" name="__codelineno-12-26" href="#__codelineno-12-26"></a>  -firewall-policy data \
+<a id="__codelineno-12-27" name="__codelineno-12-27" href="#__codelineno-12-27"></a>  -auto-revert true
+<a id="__codelineno-12-28" name="__codelineno-12-28" href="#__codelineno-12-28"></a>
+<a id="__codelineno-12-29" name="__codelineno-12-29" href="#__codelineno-12-29"></a># Verify all LIFs are up:
+<a id="__codelineno-12-30" name="__codelineno-12-30" href="#__codelineno-12-30"></a>network interface show -vserver svm_nfs
 </code></pre></div>
 <p>For iSCSI SVMs, repeat with <code>-data-protocol iscsi</code> and iSCSI-subnet IPs.</p>
 <hr />
 <h2 id="phase-5-storage-provisioning">Phase 5 — Storage Provisioning<a class="headerlink" href="#phase-5-storage-provisioning" title="Permanent link">&para;</a></h2>
 <p><strong>Exit criterion:</strong> Aggregates created on both nodes, SVMs created for each protocol, volumes provisioned, and NFS exports or iSCSI LUNs accessible from at least one test host.</p>
 <h3 id="disk-visibility-and-assignment">Disk Visibility and Assignment<a class="headerlink" href="#disk-visibility-and-assignment" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a># List all visible disks (unassigned shown with Owner = -):
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>storage disk show
-<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
-<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a># List unowned disks explicitly:
-<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>storage disk show -container-type unassigned
-<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>
-<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a># Assign disks to nodes (auto-assign is enabled by default; disable for manual control):
-<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>storage disk option modify -node prod-ontap-01-01 -autoassign off
-<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>storage disk option modify -node prod-ontap-01-02 -autoassign off
-<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>
-<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a># Manually assign a range of disks to Node 1:
-<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a>storage disk assign -disk 1.0.0 -owner prod-ontap-01-01
-<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a>storage disk assign -disk 1.0.1 -owner prod-ontap-01-01
-<a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a>
-<a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a># Bulk assign all unassigned disks to Node 1 (use with caution):
-<a id="__codelineno-14-16" name="__codelineno-14-16" href="#__codelineno-14-16"></a>storage disk assign -node prod-ontap-01-01 -all true
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a># List all visible disks (unassigned shown with Owner = -):
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>storage disk show
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a># List unowned disks explicitly:
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>storage disk show -container-type unassigned
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a># Assign disks to nodes (auto-assign is enabled by default; disable for manual control):
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>storage disk option modify -node prod-ontap-01-01 -autoassign off
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>storage disk option modify -node prod-ontap-01-02 -autoassign off
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a># Manually assign a range of disks to Node 1:
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>storage disk assign -disk 1.0.0 -owner prod-ontap-01-01
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>storage disk assign -disk 1.0.1 -owner prod-ontap-01-01
+<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>
+<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a># Bulk assign all unassigned disks to Node 1 (use with caution):
+<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a>storage disk assign -node prod-ontap-01-01 -all true
 </code></pre></div>
 <p>For AFF systems with NSDs (NVMe SSDs), disk assignment is automatic when shelves are cabled in the recommended HA multipath pattern.</p>
 <h3 id="aggregate-creation">Aggregate Creation<a class="headerlink" href="#aggregate-creation" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a># Create an aggregate on Node 1 using RAID-DP (standard for SAS/SSD):
-<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>storage aggregate create \
-<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>  -aggregate aggr1_node1 \
-<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>  -node prod-ontap-01-01 \
-<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>  -diskcount 22 \
-<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>  -raidtype raid_dp
-<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>
-<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a># Create an aggregate on Node 2:
-<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>storage aggregate create \
-<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>  -aggregate aggr1_node2 \
-<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>  -node prod-ontap-01-02 \
-<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>  -diskcount 22 \
-<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>  -raidtype raid_dp
-<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>
-<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a># Verify aggregate status:
-<a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a>storage aggregate show
-<a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a>
-<a id="__codelineno-15-18" name="__codelineno-15-18" href="#__codelineno-15-18"></a>Aggregate     Size Available Used% State   #Vols  Nodes       RAID Status
-<a id="__codelineno-15-19" name="__codelineno-15-19" href="#__codelineno-15-19"></a>----------- ----- --------- ----- ------- ------ ----------- ------------
-<a id="__codelineno-15-20" name="__codelineno-15-20" href="#__codelineno-15-20"></a>aggr1_node1  40TB    38.1TB    4%  online       0 node1       raid_dp, normal
-<a id="__codelineno-15-21" name="__codelineno-15-21" href="#__codelineno-15-21"></a>aggr1_node2  40TB    38.1TB    4%  online       0 node2       raid_dp, normal
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a># Create an aggregate on Node 1 using RAID-DP (standard for SAS/SSD):
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>storage aggregate create \
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>  -aggregate aggr1_node1 \
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>  -node prod-ontap-01-01 \
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>  -diskcount 22 \
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>  -raidtype raid_dp
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a># Create an aggregate on Node 2:
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>storage aggregate create \
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>  -aggregate aggr1_node2 \
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>  -node prod-ontap-01-02 \
+<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a>  -diskcount 22 \
+<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a>  -raidtype raid_dp
+<a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a>
+<a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a># Verify aggregate status:
+<a id="__codelineno-14-16" name="__codelineno-14-16" href="#__codelineno-14-16"></a>storage aggregate show
+<a id="__codelineno-14-17" name="__codelineno-14-17" href="#__codelineno-14-17"></a>
+<a id="__codelineno-14-18" name="__codelineno-14-18" href="#__codelineno-14-18"></a>Aggregate     Size Available Used% State   #Vols  Nodes       RAID Status
+<a id="__codelineno-14-19" name="__codelineno-14-19" href="#__codelineno-14-19"></a>----------- ----- --------- ----- ------- ------ ----------- ------------
+<a id="__codelineno-14-20" name="__codelineno-14-20" href="#__codelineno-14-20"></a>aggr1_node1  40TB    38.1TB    4%  online       0 node1       raid_dp, normal
+<a id="__codelineno-14-21" name="__codelineno-14-21" href="#__codelineno-14-21"></a>aggr1_node2  40TB    38.1TB    4%  online       0 node2       raid_dp, normal
 </code></pre></div>
 <p>For AFF NVMe platforms, use <code>-raidtype raid_tec</code> (Triple Erasure Coding) which is the default and provides higher fault tolerance.</p>
 <h3 id="svm-creation">SVM Creation<a class="headerlink" href="#svm-creation" title="Permanent link">&para;</a></h3>
 <p>Create separate SVMs per protocol for isolation and independent LIF failover:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a># Create an NFS SVM:
-<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>vserver create \
-<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>  -vserver svm_nfs \
-<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>  -aggregate aggr1_node1 \
-<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>  -rootvolume svm_nfs_root \
-<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>  -rootvolume-security-style unix \
-<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>  -language C.UTF-8
-<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>
-<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a># Create a SAN (iSCSI) SVM:
-<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a>vserver create \
-<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a>  -vserver svm_iscsi \
-<a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a>  -aggregate aggr1_node1 \
-<a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a>  -rootvolume svm_iscsi_root \
-<a id="__codelineno-16-14" name="__codelineno-16-14" href="#__codelineno-16-14"></a>  -rootvolume-security-style unix \
-<a id="__codelineno-16-15" name="__codelineno-16-15" href="#__codelineno-16-15"></a>  -language C.UTF-8
-<a id="__codelineno-16-16" name="__codelineno-16-16" href="#__codelineno-16-16"></a>
-<a id="__codelineno-16-17" name="__codelineno-16-17" href="#__codelineno-16-17"></a># Enable the appropriate protocols on each SVM:
-<a id="__codelineno-16-18" name="__codelineno-16-18" href="#__codelineno-16-18"></a>vserver add-protocols -vserver svm_nfs -protocols nfs
-<a id="__codelineno-16-19" name="__codelineno-16-19" href="#__codelineno-16-19"></a>vserver add-protocols -vserver svm_iscsi -protocols iscsi
-<a id="__codelineno-16-20" name="__codelineno-16-20" href="#__codelineno-16-20"></a>
-<a id="__codelineno-16-21" name="__codelineno-16-21" href="#__codelineno-16-21"></a># Start the iSCSI service:
-<a id="__codelineno-16-22" name="__codelineno-16-22" href="#__codelineno-16-22"></a>iscsi create -vserver svm_iscsi
-<a id="__codelineno-16-23" name="__codelineno-16-23" href="#__codelineno-16-23"></a>iscsi start -vserver svm_iscsi
-<a id="__codelineno-16-24" name="__codelineno-16-24" href="#__codelineno-16-24"></a>
-<a id="__codelineno-16-25" name="__codelineno-16-25" href="#__codelineno-16-25"></a># Verify SVM list:
-<a id="__codelineno-16-26" name="__codelineno-16-26" href="#__codelineno-16-26"></a>vserver show
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a># Create an NFS SVM:
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>vserver create \
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>  -vserver svm_nfs \
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>  -aggregate aggr1_node1 \
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>  -rootvolume svm_nfs_root \
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>  -rootvolume-security-style unix \
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>  -language C.UTF-8
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a># Create a SAN (iSCSI) SVM:
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>vserver create \
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>  -vserver svm_iscsi \
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>  -aggregate aggr1_node1 \
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>  -rootvolume svm_iscsi_root \
+<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>  -rootvolume-security-style unix \
+<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a>  -language C.UTF-8
+<a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a>
+<a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a># Enable the appropriate protocols on each SVM:
+<a id="__codelineno-15-18" name="__codelineno-15-18" href="#__codelineno-15-18"></a>vserver add-protocols -vserver svm_nfs -protocols nfs
+<a id="__codelineno-15-19" name="__codelineno-15-19" href="#__codelineno-15-19"></a>vserver add-protocols -vserver svm_iscsi -protocols iscsi
+<a id="__codelineno-15-20" name="__codelineno-15-20" href="#__codelineno-15-20"></a>
+<a id="__codelineno-15-21" name="__codelineno-15-21" href="#__codelineno-15-21"></a># Start the iSCSI service:
+<a id="__codelineno-15-22" name="__codelineno-15-22" href="#__codelineno-15-22"></a>iscsi create -vserver svm_iscsi
+<a id="__codelineno-15-23" name="__codelineno-15-23" href="#__codelineno-15-23"></a>iscsi start -vserver svm_iscsi
+<a id="__codelineno-15-24" name="__codelineno-15-24" href="#__codelineno-15-24"></a>
+<a id="__codelineno-15-25" name="__codelineno-15-25" href="#__codelineno-15-25"></a># Verify SVM list:
+<a id="__codelineno-15-26" name="__codelineno-15-26" href="#__codelineno-15-26"></a>vserver show
 </code></pre></div>
 <h3 id="volume-creation">Volume Creation<a class="headerlink" href="#volume-creation" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a># Create an NFS data volume:
-<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>volume create \
-<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>  -vserver svm_nfs \
-<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>  -volume vol_data_01 \
-<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>  -aggregate aggr1_node1 \
-<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>  -size 2TB \
-<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>  -security-style unix \
-<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>  -junction-path /data01 \
-<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>  -percent-snapshot-space 10
-<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>
-<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a># Create a volume for iSCSI (no junction path needed):
-<a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a>volume create \
-<a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a>  -vserver svm_iscsi \
-<a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a>  -volume vol_lun_01 \
-<a id="__codelineno-17-15" name="__codelineno-17-15" href="#__codelineno-17-15"></a>  -aggregate aggr1_node1 \
-<a id="__codelineno-17-16" name="__codelineno-17-16" href="#__codelineno-17-16"></a>  -size 1TB \
-<a id="__codelineno-17-17" name="__codelineno-17-17" href="#__codelineno-17-17"></a>  -security-style ntfs
-<a id="__codelineno-17-18" name="__codelineno-17-18" href="#__codelineno-17-18"></a>
-<a id="__codelineno-17-19" name="__codelineno-17-19" href="#__codelineno-17-19"></a># Verify volumes:
-<a id="__codelineno-17-20" name="__codelineno-17-20" href="#__codelineno-17-20"></a>volume show -vserver svm_nfs
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a># Create an NFS data volume:
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>volume create \
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>  -vserver svm_nfs \
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>  -volume vol_data_01 \
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>  -aggregate aggr1_node1 \
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>  -size 2TB \
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>  -security-style unix \
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>  -junction-path /data01 \
+<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>  -percent-snapshot-space 10
+<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a>
+<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a># Create a volume for iSCSI (no junction path needed):
+<a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a>volume create \
+<a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a>  -vserver svm_iscsi \
+<a id="__codelineno-16-14" name="__codelineno-16-14" href="#__codelineno-16-14"></a>  -volume vol_lun_01 \
+<a id="__codelineno-16-15" name="__codelineno-16-15" href="#__codelineno-16-15"></a>  -aggregate aggr1_node1 \
+<a id="__codelineno-16-16" name="__codelineno-16-16" href="#__codelineno-16-16"></a>  -size 1TB \
+<a id="__codelineno-16-17" name="__codelineno-16-17" href="#__codelineno-16-17"></a>  -security-style ntfs
+<a id="__codelineno-16-18" name="__codelineno-16-18" href="#__codelineno-16-18"></a>
+<a id="__codelineno-16-19" name="__codelineno-16-19" href="#__codelineno-16-19"></a># Verify volumes:
+<a id="__codelineno-16-20" name="__codelineno-16-20" href="#__codelineno-16-20"></a>volume show -vserver svm_nfs
 </code></pre></div>
 <h3 id="nfs-export-policy">NFS Export Policy<a class="headerlink" href="#nfs-export-policy" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a># Create an export policy allowing the ESXi management subnet:
-<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>vserver export-policy create -vserver svm_nfs -policyname prod_nfs_policy
-<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>
-<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>export-policy rule create \
-<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>  -vserver svm_nfs \
-<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>  -policyname prod_nfs_policy \
-<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a>  -clientmatch 10.10.20.0/24 \
-<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>  -rorule sys \
-<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a>  -rwrule sys \
-<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a>  -superuser sys \
-<a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a>  -anon 65534
-<a id="__codelineno-18-12" name="__codelineno-18-12" href="#__codelineno-18-12"></a>
-<a id="__codelineno-18-13" name="__codelineno-18-13" href="#__codelineno-18-13"></a># Apply the export policy to the volume:
-<a id="__codelineno-18-14" name="__codelineno-18-14" href="#__codelineno-18-14"></a>volume modify -vserver svm_nfs -volume vol_data_01 -policy prod_nfs_policy
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a># Create an export policy allowing the ESXi management subnet:
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>vserver export-policy create -vserver svm_nfs -policyname prod_nfs_policy
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>export-policy rule create \
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>  -vserver svm_nfs \
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>  -policyname prod_nfs_policy \
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>  -clientmatch 10.10.20.0/24 \
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>  -rorule sys \
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>  -rwrule sys \
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>  -superuser sys \
+<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a>  -anon 65534
+<a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a>
+<a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a># Apply the export policy to the volume:
+<a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a>volume modify -vserver svm_nfs -volume vol_data_01 -policy prod_nfs_policy
 </code></pre></div>
 <h3 id="iscsi-lun-and-initiator-group-igroup-creation">iSCSI LUN and Initiator Group (igroup) Creation<a class="headerlink" href="#iscsi-lun-and-initiator-group-igroup-creation" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a># Create a LUN inside the iSCSI volume:
-<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>lun create \
-<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>  -vserver svm_iscsi \
-<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>  -volume vol_lun_01 \
-<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>  -lun lun_db_01 \
-<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>  -size 500GB \
-<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a>  -ostype linux
-<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>
-<a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a># Create an initiator group for Linux hosts:
-<a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a>igroup create \
-<a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a>  -vserver svm_iscsi \
-<a id="__codelineno-19-12" name="__codelineno-19-12" href="#__codelineno-19-12"></a>  -igroup igrp_linux_db \
-<a id="__codelineno-19-13" name="__codelineno-19-13" href="#__codelineno-19-13"></a>  -protocol iscsi \
-<a id="__codelineno-19-14" name="__codelineno-19-14" href="#__codelineno-19-14"></a>  -ostype linux \
-<a id="__codelineno-19-15" name="__codelineno-19-15" href="#__codelineno-19-15"></a>  -initiator iqn.1994-05.com.redhat:hostname01
-<a id="__codelineno-19-16" name="__codelineno-19-16" href="#__codelineno-19-16"></a>
-<a id="__codelineno-19-17" name="__codelineno-19-17" href="#__codelineno-19-17"></a># Add additional initiators if needed:
-<a id="__codelineno-19-18" name="__codelineno-19-18" href="#__codelineno-19-18"></a>igroup add -vserver svm_iscsi -igroup igrp_linux_db -initiator iqn.1994-05.com.redhat:hostname02
-<a id="__codelineno-19-19" name="__codelineno-19-19" href="#__codelineno-19-19"></a>
-<a id="__codelineno-19-20" name="__codelineno-19-20" href="#__codelineno-19-20"></a># Map the LUN to the initiator group:
-<a id="__codelineno-19-21" name="__codelineno-19-21" href="#__codelineno-19-21"></a>lun map \
-<a id="__codelineno-19-22" name="__codelineno-19-22" href="#__codelineno-19-22"></a>  -vserver svm_iscsi \
-<a id="__codelineno-19-23" name="__codelineno-19-23" href="#__codelineno-19-23"></a>  -volume vol_lun_01 \
-<a id="__codelineno-19-24" name="__codelineno-19-24" href="#__codelineno-19-24"></a>  -lun lun_db_01 \
-<a id="__codelineno-19-25" name="__codelineno-19-25" href="#__codelineno-19-25"></a>  -igroup igrp_linux_db \
-<a id="__codelineno-19-26" name="__codelineno-19-26" href="#__codelineno-19-26"></a>  -lun-id 0
-<a id="__codelineno-19-27" name="__codelineno-19-27" href="#__codelineno-19-27"></a>
-<a id="__codelineno-19-28" name="__codelineno-19-28" href="#__codelineno-19-28"></a># Verify the mapping:
-<a id="__codelineno-19-29" name="__codelineno-19-29" href="#__codelineno-19-29"></a>lun show -vserver svm_iscsi
-<a id="__codelineno-19-30" name="__codelineno-19-30" href="#__codelineno-19-30"></a>lun mapping show -vserver svm_iscsi
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a># Create a LUN inside the iSCSI volume:
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>lun create \
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>  -vserver svm_iscsi \
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>  -volume vol_lun_01 \
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>  -lun lun_db_01 \
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>  -size 500GB \
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a>  -ostype linux
+<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>
+<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a># Create an initiator group for Linux hosts:
+<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a>igroup create \
+<a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a>  -vserver svm_iscsi \
+<a id="__codelineno-18-12" name="__codelineno-18-12" href="#__codelineno-18-12"></a>  -igroup igrp_linux_db \
+<a id="__codelineno-18-13" name="__codelineno-18-13" href="#__codelineno-18-13"></a>  -protocol iscsi \
+<a id="__codelineno-18-14" name="__codelineno-18-14" href="#__codelineno-18-14"></a>  -ostype linux \
+<a id="__codelineno-18-15" name="__codelineno-18-15" href="#__codelineno-18-15"></a>  -initiator iqn.1994-05.com.redhat:hostname01
+<a id="__codelineno-18-16" name="__codelineno-18-16" href="#__codelineno-18-16"></a>
+<a id="__codelineno-18-17" name="__codelineno-18-17" href="#__codelineno-18-17"></a># Add additional initiators if needed:
+<a id="__codelineno-18-18" name="__codelineno-18-18" href="#__codelineno-18-18"></a>igroup add -vserver svm_iscsi -igroup igrp_linux_db -initiator iqn.1994-05.com.redhat:hostname02
+<a id="__codelineno-18-19" name="__codelineno-18-19" href="#__codelineno-18-19"></a>
+<a id="__codelineno-18-20" name="__codelineno-18-20" href="#__codelineno-18-20"></a># Map the LUN to the initiator group:
+<a id="__codelineno-18-21" name="__codelineno-18-21" href="#__codelineno-18-21"></a>lun map \
+<a id="__codelineno-18-22" name="__codelineno-18-22" href="#__codelineno-18-22"></a>  -vserver svm_iscsi \
+<a id="__codelineno-18-23" name="__codelineno-18-23" href="#__codelineno-18-23"></a>  -volume vol_lun_01 \
+<a id="__codelineno-18-24" name="__codelineno-18-24" href="#__codelineno-18-24"></a>  -lun lun_db_01 \
+<a id="__codelineno-18-25" name="__codelineno-18-25" href="#__codelineno-18-25"></a>  -igroup igrp_linux_db \
+<a id="__codelineno-18-26" name="__codelineno-18-26" href="#__codelineno-18-26"></a>  -lun-id 0
+<a id="__codelineno-18-27" name="__codelineno-18-27" href="#__codelineno-18-27"></a>
+<a id="__codelineno-18-28" name="__codelineno-18-28" href="#__codelineno-18-28"></a># Verify the mapping:
+<a id="__codelineno-18-29" name="__codelineno-18-29" href="#__codelineno-18-29"></a>lun show -vserver svm_iscsi
+<a id="__codelineno-18-30" name="__codelineno-18-30" href="#__codelineno-18-30"></a>lun mapping show -vserver svm_iscsi
 </code></pre></div>
 <hr />
 <h2 id="phase-6-data-protection">Phase 6 — Data Protection<a class="headerlink" href="#phase-6-data-protection" title="Permanent link">&para;</a></h2>
 <p><strong>Exit criterion:</strong> Snapshot policies assigned to all data volumes, SnapMirror peer relationships established with the DR cluster, at least one SnapMirror relationship initialised and showing <code>Snapmirrored</code> state.</p>
 <h3 id="snapshot-policies">Snapshot Policies<a class="headerlink" href="#snapshot-policies" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a># Show existing default policies:
-<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>volume snapshot policy show
-<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>
-<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a># Create a custom snapshot policy (hourly, daily, weekly):
-<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>volume snapshot policy create \
-<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>  -policy prod_snap_policy \
-<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a>  -enabled true \
-<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a>  -schedule1 hourly \
-<a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a>  -count1 6 \
-<a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a>  -schedule2 daily \
-<a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a>  -count2 7 \
-<a id="__codelineno-20-12" name="__codelineno-20-12" href="#__codelineno-20-12"></a>  -schedule3 weekly \
-<a id="__codelineno-20-13" name="__codelineno-20-13" href="#__codelineno-20-13"></a>  -count3 4
-<a id="__codelineno-20-14" name="__codelineno-20-14" href="#__codelineno-20-14"></a>
-<a id="__codelineno-20-15" name="__codelineno-20-15" href="#__codelineno-20-15"></a># Assign the policy to a volume:
-<a id="__codelineno-20-16" name="__codelineno-20-16" href="#__codelineno-20-16"></a>volume modify -vserver svm_nfs -volume vol_data_01 -snapshot-policy prod_snap_policy
-<a id="__codelineno-20-17" name="__codelineno-20-17" href="#__codelineno-20-17"></a>
-<a id="__codelineno-20-18" name="__codelineno-20-18" href="#__codelineno-20-18"></a># Verify snapshots are being created:
-<a id="__codelineno-20-19" name="__codelineno-20-19" href="#__codelineno-20-19"></a>volume snapshot show -vserver svm_nfs -volume vol_data_01
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a># Show existing default policies:
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>volume snapshot policy show
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a># Create a custom snapshot policy (hourly, daily, weekly):
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>volume snapshot policy create \
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>  -policy prod_snap_policy \
+<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a>  -enabled true \
+<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>  -schedule1 hourly \
+<a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a>  -count1 6 \
+<a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a>  -schedule2 daily \
+<a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a>  -count2 7 \
+<a id="__codelineno-19-12" name="__codelineno-19-12" href="#__codelineno-19-12"></a>  -schedule3 weekly \
+<a id="__codelineno-19-13" name="__codelineno-19-13" href="#__codelineno-19-13"></a>  -count3 4
+<a id="__codelineno-19-14" name="__codelineno-19-14" href="#__codelineno-19-14"></a>
+<a id="__codelineno-19-15" name="__codelineno-19-15" href="#__codelineno-19-15"></a># Assign the policy to a volume:
+<a id="__codelineno-19-16" name="__codelineno-19-16" href="#__codelineno-19-16"></a>volume modify -vserver svm_nfs -volume vol_data_01 -snapshot-policy prod_snap_policy
+<a id="__codelineno-19-17" name="__codelineno-19-17" href="#__codelineno-19-17"></a>
+<a id="__codelineno-19-18" name="__codelineno-19-18" href="#__codelineno-19-18"></a># Verify snapshots are being created:
+<a id="__codelineno-19-19" name="__codelineno-19-19" href="#__codelineno-19-19"></a>volume snapshot show -vserver svm_nfs -volume vol_data_01
 </code></pre></div>
 <h3 id="cluster-peer-relationship">Cluster Peer Relationship<a class="headerlink" href="#cluster-peer-relationship" title="Permanent link">&para;</a></h3>
 <p>SnapMirror requires peering between the source and destination clusters before any relationships can be created.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a># On the SOURCE cluster — create the peer relationship:
-<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>cluster peer create \
-<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>  -peer-addrs 10.10.30.100 \
-<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>  -username admin
-<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>
-<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a># Enter the passphrase when prompted (must match on both clusters).
-<a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a>
-<a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a># On the DESTINATION cluster — accept the peer offer:
-<a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a>cluster peer create \
-<a id="__codelineno-21-10" name="__codelineno-21-10" href="#__codelineno-21-10"></a>  -peer-addrs 10.10.10.100 \
-<a id="__codelineno-21-11" name="__codelineno-21-11" href="#__codelineno-21-11"></a>  -username admin
-<a id="__codelineno-21-12" name="__codelineno-21-12" href="#__codelineno-21-12"></a>
-<a id="__codelineno-21-13" name="__codelineno-21-13" href="#__codelineno-21-13"></a># Verify peer relationship on both clusters:
-<a id="__codelineno-21-14" name="__codelineno-21-14" href="#__codelineno-21-14"></a>cluster peer show
-<a id="__codelineno-21-15" name="__codelineno-21-15" href="#__codelineno-21-15"></a>
-<a id="__codelineno-21-16" name="__codelineno-21-16" href="#__codelineno-21-16"></a>Peer Cluster Name         Cluster Serial Number  Availability   Authentication
-<a id="__codelineno-21-17" name="__codelineno-21-17" href="#__codelineno-21-17"></a>------------------------- ---------------------- -------------- ---------------
-<a id="__codelineno-21-18" name="__codelineno-21-18" href="#__codelineno-21-18"></a>dr-ontap-01               123456789              Available      ok
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a># On the SOURCE cluster — create the peer relationship:
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>cluster peer create \
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>  -peer-addrs 10.10.30.100 \
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a>  -username admin
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>
+<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a># Enter the passphrase when prompted (must match on both clusters).
+<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a>
+<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a># On the DESTINATION cluster — accept the peer offer:
+<a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a>cluster peer create \
+<a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a>  -peer-addrs 10.10.10.100 \
+<a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a>  -username admin
+<a id="__codelineno-20-12" name="__codelineno-20-12" href="#__codelineno-20-12"></a>
+<a id="__codelineno-20-13" name="__codelineno-20-13" href="#__codelineno-20-13"></a># Verify peer relationship on both clusters:
+<a id="__codelineno-20-14" name="__codelineno-20-14" href="#__codelineno-20-14"></a>cluster peer show
+<a id="__codelineno-20-15" name="__codelineno-20-15" href="#__codelineno-20-15"></a>
+<a id="__codelineno-20-16" name="__codelineno-20-16" href="#__codelineno-20-16"></a>Peer Cluster Name         Cluster Serial Number  Availability   Authentication
+<a id="__codelineno-20-17" name="__codelineno-20-17" href="#__codelineno-20-17"></a>------------------------- ---------------------- -------------- ---------------
+<a id="__codelineno-20-18" name="__codelineno-20-18" href="#__codelineno-20-18"></a>dr-ontap-01               123456789              Available      ok
 </code></pre></div>
 <h3 id="svm-peer-relationship">SVM Peer Relationship<a class="headerlink" href="#svm-peer-relationship" title="Permanent link">&para;</a></h3>
 <p>After the cluster peer is established, create SVM-level peers:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a># On the source cluster:
-<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>vserver peer create \
-<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>  -vserver svm_nfs \
-<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a>  -peer-vserver svm_nfs_dr \
-<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a>  -peer-cluster dr-ontap-01 \
-<a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a>  -applications snapmirror
-<a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a>
-<a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a># On the destination cluster — accept the SVM peer:
-<a id="__codelineno-22-9" name="__codelineno-22-9" href="#__codelineno-22-9"></a>vserver peer accept -vserver svm_nfs_dr -peer-vserver svm_nfs
-<a id="__codelineno-22-10" name="__codelineno-22-10" href="#__codelineno-22-10"></a>
-<a id="__codelineno-22-11" name="__codelineno-22-11" href="#__codelineno-22-11"></a># Verify:
-<a id="__codelineno-22-12" name="__codelineno-22-12" href="#__codelineno-22-12"></a>vserver peer show
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a># On the source cluster:
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>vserver peer create \
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>  -vserver svm_nfs \
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>  -peer-vserver svm_nfs_dr \
+<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>  -peer-cluster dr-ontap-01 \
+<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a>  -applications snapmirror
+<a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a>
+<a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a># On the destination cluster — accept the SVM peer:
+<a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a>vserver peer accept -vserver svm_nfs_dr -peer-vserver svm_nfs
+<a id="__codelineno-21-10" name="__codelineno-21-10" href="#__codelineno-21-10"></a>
+<a id="__codelineno-21-11" name="__codelineno-21-11" href="#__codelineno-21-11"></a># Verify:
+<a id="__codelineno-21-12" name="__codelineno-21-12" href="#__codelineno-21-12"></a>vserver peer show
 </code></pre></div>
 <h3 id="snapmirror-relationship-and-initialisation">SnapMirror Relationship and Initialisation<a class="headerlink" href="#snapmirror-relationship-and-initialisation" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a># On the DESTINATION cluster — create the SnapMirror relationship:
-<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>snapmirror create \
-<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>  -source-path prod-ontap-01://svm_nfs/vol_data_01 \
-<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a>  -destination-path dr-ontap-01://svm_nfs_dr/vol_data_01_dr \
-<a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a>  -type DP \
-<a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a>  -policy MirrorAllSnapshots \
-<a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a>  -schedule daily
-<a id="__codelineno-23-8" name="__codelineno-23-8" href="#__codelineno-23-8"></a>
-<a id="__codelineno-23-9" name="__codelineno-23-9" href="#__codelineno-23-9"></a># Initialise the relationship (triggers baseline transfer):
-<a id="__codelineno-23-10" name="__codelineno-23-10" href="#__codelineno-23-10"></a>snapmirror initialize \
-<a id="__codelineno-23-11" name="__codelineno-23-11" href="#__codelineno-23-11"></a>  -destination-path dr-ontap-01://svm_nfs_dr/vol_data_01_dr
-<a id="__codelineno-23-12" name="__codelineno-23-12" href="#__codelineno-23-12"></a>
-<a id="__codelineno-23-13" name="__codelineno-23-13" href="#__codelineno-23-13"></a># Monitor initialisation progress:
-<a id="__codelineno-23-14" name="__codelineno-23-14" href="#__codelineno-23-14"></a>snapmirror show -destination-path dr-ontap-01://svm_nfs_dr/vol_data_01_dr
-<a id="__codelineno-23-15" name="__codelineno-23-15" href="#__codelineno-23-15"></a>
-<a id="__codelineno-23-16" name="__codelineno-23-16" href="#__codelineno-23-16"></a># Expected final state:
-<a id="__codelineno-23-17" name="__codelineno-23-17" href="#__codelineno-23-17"></a>#   Mirror State: Snapmirrored
-<a id="__codelineno-23-18" name="__codelineno-23-18" href="#__codelineno-23-18"></a>#   Relationship Status: Idle
-<a id="__codelineno-23-19" name="__codelineno-23-19" href="#__codelineno-23-19"></a>#   Lag Time: 0:02:00
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a># On the DESTINATION cluster — create the SnapMirror relationship:
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>snapmirror create \
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>  -source-path prod-ontap-01://svm_nfs/vol_data_01 \
+<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a>  -destination-path dr-ontap-01://svm_nfs_dr/vol_data_01_dr \
+<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a>  -type DP \
+<a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a>  -policy MirrorAllSnapshots \
+<a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a>  -schedule daily
+<a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a>
+<a id="__codelineno-22-9" name="__codelineno-22-9" href="#__codelineno-22-9"></a># Initialise the relationship (triggers baseline transfer):
+<a id="__codelineno-22-10" name="__codelineno-22-10" href="#__codelineno-22-10"></a>snapmirror initialize \
+<a id="__codelineno-22-11" name="__codelineno-22-11" href="#__codelineno-22-11"></a>  -destination-path dr-ontap-01://svm_nfs_dr/vol_data_01_dr
+<a id="__codelineno-22-12" name="__codelineno-22-12" href="#__codelineno-22-12"></a>
+<a id="__codelineno-22-13" name="__codelineno-22-13" href="#__codelineno-22-13"></a># Monitor initialisation progress:
+<a id="__codelineno-22-14" name="__codelineno-22-14" href="#__codelineno-22-14"></a>snapmirror show -destination-path dr-ontap-01://svm_nfs_dr/vol_data_01_dr
+<a id="__codelineno-22-15" name="__codelineno-22-15" href="#__codelineno-22-15"></a>
+<a id="__codelineno-22-16" name="__codelineno-22-16" href="#__codelineno-22-16"></a># Expected final state:
+<a id="__codelineno-22-17" name="__codelineno-22-17" href="#__codelineno-22-17"></a>#   Mirror State: Snapmirrored
+<a id="__codelineno-22-18" name="__codelineno-22-18" href="#__codelineno-22-18"></a>#   Relationship Status: Idle
+<a id="__codelineno-22-19" name="__codelineno-22-19" href="#__codelineno-22-19"></a>#   Lag Time: 0:02:00
 </code></pre></div>
 <h3 id="snapmirror-schedule">SnapMirror Schedule<a class="headerlink" href="#snapmirror-schedule" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a># Create a SnapMirror schedule for more frequent updates (e.g. every 4 hours):
-<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>job schedule cron create \
-<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>  -name sm_4h \
-<a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a>  -hour 0,4,8,12,16,20 \
-<a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a>  -minute 0
-<a id="__codelineno-24-6" name="__codelineno-24-6" href="#__codelineno-24-6"></a>
-<a id="__codelineno-24-7" name="__codelineno-24-7" href="#__codelineno-24-7"></a># Apply the schedule to the relationship:
-<a id="__codelineno-24-8" name="__codelineno-24-8" href="#__codelineno-24-8"></a>snapmirror modify \
-<a id="__codelineno-24-9" name="__codelineno-24-9" href="#__codelineno-24-9"></a>  -destination-path dr-ontap-01://svm_nfs_dr/vol_data_01_dr \
-<a id="__codelineno-24-10" name="__codelineno-24-10" href="#__codelineno-24-10"></a>  -schedule sm_4h
-<a id="__codelineno-24-11" name="__codelineno-24-11" href="#__codelineno-24-11"></a>
-<a id="__codelineno-24-12" name="__codelineno-24-12" href="#__codelineno-24-12"></a># Verify schedule:
-<a id="__codelineno-24-13" name="__codelineno-24-13" href="#__codelineno-24-13"></a>snapmirror show -fields schedule -destination-path dr-ontap-01://svm_nfs_dr/vol_data_01_dr
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a># Create a SnapMirror schedule for more frequent updates (e.g. every 4 hours):
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>job schedule cron create \
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>  -name sm_4h \
+<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a>  -hour 0,4,8,12,16,20 \
+<a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a>  -minute 0
+<a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a>
+<a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a># Apply the schedule to the relationship:
+<a id="__codelineno-23-8" name="__codelineno-23-8" href="#__codelineno-23-8"></a>snapmirror modify \
+<a id="__codelineno-23-9" name="__codelineno-23-9" href="#__codelineno-23-9"></a>  -destination-path dr-ontap-01://svm_nfs_dr/vol_data_01_dr \
+<a id="__codelineno-23-10" name="__codelineno-23-10" href="#__codelineno-23-10"></a>  -schedule sm_4h
+<a id="__codelineno-23-11" name="__codelineno-23-11" href="#__codelineno-23-11"></a>
+<a id="__codelineno-23-12" name="__codelineno-23-12" href="#__codelineno-23-12"></a># Verify schedule:
+<a id="__codelineno-23-13" name="__codelineno-23-13" href="#__codelineno-23-13"></a>snapmirror show -fields schedule -destination-path dr-ontap-01://svm_nfs_dr/vol_data_01_dr
 </code></pre></div>
 <hr />
 <h2 id="phase-7-validation">Phase 7 — Validation<a class="headerlink" href="#phase-7-validation" title="Permanent link">&para;</a></h2>
 <p><strong>Exit criterion:</strong> All checks below pass. Cluster is healthy, all LIFs are on home ports, SnapMirror lag is within the defined RPO, and AutoSupport test message is confirmed received by NetApp.</p>
 <h3 id="cluster-health">Cluster Health<a class="headerlink" href="#cluster-health" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a># Overall cluster health (both nodes must show Health: true):
-<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>cluster show
-<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>
-<a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a># Node-level hardware health:
-<a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a>system node show -fields health,model,serial-number,uptime
-<a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a>
-<a id="__codelineno-25-7" name="__codelineno-25-7" href="#__codelineno-25-7"></a># Check for any active EMS alerts:
-<a id="__codelineno-25-8" name="__codelineno-25-8" href="#__codelineno-25-8"></a>event log show -severity ERROR -time-range 1h
-<a id="__codelineno-25-9" name="__codelineno-25-9" href="#__codelineno-25-9"></a>
-<a id="__codelineno-25-10" name="__codelineno-25-10" href="#__codelineno-25-10"></a># Confirm no disks are in failed or unassigned state:
-<a id="__codelineno-25-11" name="__codelineno-25-11" href="#__codelineno-25-11"></a>storage disk show -broken
-<a id="__codelineno-25-12" name="__codelineno-25-12" href="#__codelineno-25-12"></a>storage disk show -container-type unassigned
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a># Overall cluster health (both nodes must show Health: true):
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>cluster show
+<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>
+<a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a># Node-level hardware health:
+<a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a>system node show -fields health,model,serial-number,uptime
+<a id="__codelineno-24-6" name="__codelineno-24-6" href="#__codelineno-24-6"></a>
+<a id="__codelineno-24-7" name="__codelineno-24-7" href="#__codelineno-24-7"></a># Check for any active EMS alerts:
+<a id="__codelineno-24-8" name="__codelineno-24-8" href="#__codelineno-24-8"></a>event log show -severity ERROR -time-range 1h
+<a id="__codelineno-24-9" name="__codelineno-24-9" href="#__codelineno-24-9"></a>
+<a id="__codelineno-24-10" name="__codelineno-24-10" href="#__codelineno-24-10"></a># Confirm no disks are in failed or unassigned state:
+<a id="__codelineno-24-11" name="__codelineno-24-11" href="#__codelineno-24-11"></a>storage disk show -broken
+<a id="__codelineno-24-12" name="__codelineno-24-12" href="#__codelineno-24-12"></a>storage disk show -container-type unassigned
 </code></pre></div>
 <h3 id="aggregate-and-volume-status">Aggregate and Volume Status<a class="headerlink" href="#aggregate-and-volume-status" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a># All aggregates must be online:
-<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>storage aggregate show -fields state,size,usedsize,availsize
-<a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a>
-<a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a># All volumes must be online:
-<a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a>volume show -fields state,size,used,available,percent-used
-<a id="__codelineno-26-6" name="__codelineno-26-6" href="#__codelineno-26-6"></a>
-<a id="__codelineno-26-7" name="__codelineno-26-7" href="#__codelineno-26-7"></a># Check for volumes approaching capacity (&gt;80%):
-<a id="__codelineno-26-8" name="__codelineno-26-8" href="#__codelineno-26-8"></a>volume show -fields percent-used | sort -k2 -n | tail -10
+<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a># All aggregates must be online:
+<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>storage aggregate show -fields state,size,usedsize,availsize
+<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>
+<a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a># All volumes must be online:
+<a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a>volume show -fields state,size,used,available,percent-used
+<a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a>
+<a id="__codelineno-25-7" name="__codelineno-25-7" href="#__codelineno-25-7"></a># Check for volumes approaching capacity (&gt;80%):
+<a id="__codelineno-25-8" name="__codelineno-25-8" href="#__codelineno-25-8"></a>volume show -fields percent-used | sort -k2 -n | tail -10
 </code></pre></div>
 <h3 id="network-validation">Network Validation<a class="headerlink" href="#network-validation" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a># All LIFs must be on their home ports (Is Home = true):
-<a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a>network interface show -fields home-port,curr-port,is-home
-<a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a>
-<a id="__codelineno-27-4" name="__codelineno-27-4" href="#__codelineno-27-4"></a># Revert any LIFs that have failed over:
-<a id="__codelineno-27-5" name="__codelineno-27-5" href="#__codelineno-27-5"></a>network interface revert -vserver * -lif *
-<a id="__codelineno-27-6" name="__codelineno-27-6" href="#__codelineno-27-6"></a>
-<a id="__codelineno-27-7" name="__codelineno-27-7" href="#__codelineno-27-7"></a># Ping test from each node to gateway and DNS:
-<a id="__codelineno-27-8" name="__codelineno-27-8" href="#__codelineno-27-8"></a>network ping -lif cluster_mgmt -destination 10.10.10.1
-<a id="__codelineno-27-9" name="__codelineno-27-9" href="#__codelineno-27-9"></a>network ping -lif cluster_mgmt -destination 10.10.1.53
+<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a># All LIFs must be on their home ports (Is Home = true):
+<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>network interface show -fields home-port,curr-port,is-home
+<a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a>
+<a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a># Revert any LIFs that have failed over:
+<a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a>network interface revert -vserver * -lif *
+<a id="__codelineno-26-6" name="__codelineno-26-6" href="#__codelineno-26-6"></a>
+<a id="__codelineno-26-7" name="__codelineno-26-7" href="#__codelineno-26-7"></a># Ping test from each node to gateway and DNS:
+<a id="__codelineno-26-8" name="__codelineno-26-8" href="#__codelineno-26-8"></a>network ping -lif cluster_mgmt -destination 10.10.10.1
+<a id="__codelineno-26-9" name="__codelineno-26-9" href="#__codelineno-26-9"></a>network ping -lif cluster_mgmt -destination 10.10.1.53
 </code></pre></div>
 <h3 id="lun-connectivity-test">LUN Connectivity Test<a class="headerlink" href="#lun-connectivity-test" title="Permanent link">&para;</a></h3>
 <p>From a Linux host that has been logged into the iSCSI LUN:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a><span class="c1"># Discover iSCSI targets:</span>
-<a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a>iscsiadm<span class="w"> </span>-m<span class="w"> </span>discovery<span class="w"> </span>-t<span class="w"> </span>sendtargets<span class="w"> </span>-p<span class="w"> </span><span class="m">10</span>.10.20.10
-<a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a>
-<a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a><span class="c1"># Login to the target:</span>
-<a id="__codelineno-28-5" name="__codelineno-28-5" href="#__codelineno-28-5"></a>iscsiadm<span class="w"> </span>-m<span class="w"> </span>node<span class="w"> </span>-T<span class="w"> </span>iqn.1992-08.com.netapp:sn.xxxxxx<span class="w"> </span>-p<span class="w"> </span><span class="m">10</span>.10.20.10<span class="w"> </span>--login
-<a id="__codelineno-28-6" name="__codelineno-28-6" href="#__codelineno-28-6"></a>
-<a id="__codelineno-28-7" name="__codelineno-28-7" href="#__codelineno-28-7"></a><span class="c1"># Verify block device appears:</span>
-<a id="__codelineno-28-8" name="__codelineno-28-8" href="#__codelineno-28-8"></a>lsblk<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>sd
-<a id="__codelineno-28-9" name="__codelineno-28-9" href="#__codelineno-28-9"></a>
-<a id="__codelineno-28-10" name="__codelineno-28-10" href="#__codelineno-28-10"></a><span class="c1"># Run a basic write test:</span>
-<a id="__codelineno-28-11" name="__codelineno-28-11" href="#__codelineno-28-11"></a>dd<span class="w"> </span><span class="k">if</span><span class="o">=</span>/dev/zero<span class="w"> </span><span class="nv">of</span><span class="o">=</span>/dev/sdb<span class="w"> </span><span class="nv">bs</span><span class="o">=</span>1M<span class="w"> </span><span class="nv">count</span><span class="o">=</span><span class="m">100</span><span class="w"> </span><span class="nv">oflag</span><span class="o">=</span>direct
+<div class="highlight"><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a><span class="c1"># Discover iSCSI targets:</span>
+<a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a>iscsiadm<span class="w"> </span>-m<span class="w"> </span>discovery<span class="w"> </span>-t<span class="w"> </span>sendtargets<span class="w"> </span>-p<span class="w"> </span><span class="m">10</span>.10.20.10
+<a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a>
+<a id="__codelineno-27-4" name="__codelineno-27-4" href="#__codelineno-27-4"></a><span class="c1"># Login to the target:</span>
+<a id="__codelineno-27-5" name="__codelineno-27-5" href="#__codelineno-27-5"></a>iscsiadm<span class="w"> </span>-m<span class="w"> </span>node<span class="w"> </span>-T<span class="w"> </span>iqn.1992-08.com.netapp:sn.xxxxxx<span class="w"> </span>-p<span class="w"> </span><span class="m">10</span>.10.20.10<span class="w"> </span>--login
+<a id="__codelineno-27-6" name="__codelineno-27-6" href="#__codelineno-27-6"></a>
+<a id="__codelineno-27-7" name="__codelineno-27-7" href="#__codelineno-27-7"></a><span class="c1"># Verify block device appears:</span>
+<a id="__codelineno-27-8" name="__codelineno-27-8" href="#__codelineno-27-8"></a>lsblk<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>sd
+<a id="__codelineno-27-9" name="__codelineno-27-9" href="#__codelineno-27-9"></a>
+<a id="__codelineno-27-10" name="__codelineno-27-10" href="#__codelineno-27-10"></a><span class="c1"># Run a basic write test:</span>
+<a id="__codelineno-27-11" name="__codelineno-27-11" href="#__codelineno-27-11"></a>dd<span class="w"> </span><span class="k">if</span><span class="o">=</span>/dev/zero<span class="w"> </span><span class="nv">of</span><span class="o">=</span>/dev/sdb<span class="w"> </span><span class="nv">bs</span><span class="o">=</span>1M<span class="w"> </span><span class="nv">count</span><span class="o">=</span><span class="m">100</span><span class="w"> </span><span class="nv">oflag</span><span class="o">=</span>direct
 </code></pre></div>
 <h3 id="nfs-mount-test">NFS Mount Test<a class="headerlink" href="#nfs-mount-test" title="Permanent link">&para;</a></h3>
 <p>From a Linux host:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a><span class="c1"># Show available exports:</span>
-<a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a>showmount<span class="w"> </span>-e<span class="w"> </span><span class="m">10</span>.10.20.10
-<a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a>
-<a id="__codelineno-29-4" name="__codelineno-29-4" href="#__codelineno-29-4"></a><span class="c1"># Mount the NFS export:</span>
-<a id="__codelineno-29-5" name="__codelineno-29-5" href="#__codelineno-29-5"></a>mount<span class="w"> </span>-t<span class="w"> </span>nfs<span class="w"> </span>-o<span class="w"> </span><span class="nv">nfsvers</span><span class="o">=</span><span class="m">3</span><span class="w"> </span><span class="m">10</span>.10.20.10:/data01<span class="w"> </span>/mnt/test
-<a id="__codelineno-29-6" name="__codelineno-29-6" href="#__codelineno-29-6"></a>
-<a id="__codelineno-29-7" name="__codelineno-29-7" href="#__codelineno-29-7"></a><span class="c1"># Write and read test:</span>
-<a id="__codelineno-29-8" name="__codelineno-29-8" href="#__codelineno-29-8"></a>dd<span class="w"> </span><span class="k">if</span><span class="o">=</span>/dev/urandom<span class="w"> </span><span class="nv">of</span><span class="o">=</span>/mnt/test/testfile<span class="w"> </span><span class="nv">bs</span><span class="o">=</span>1M<span class="w"> </span><span class="nv">count</span><span class="o">=</span><span class="m">100</span>
-<a id="__codelineno-29-9" name="__codelineno-29-9" href="#__codelineno-29-9"></a>md5sum<span class="w"> </span>/mnt/test/testfile
+<div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a><span class="c1"># Show available exports:</span>
+<a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a>showmount<span class="w"> </span>-e<span class="w"> </span><span class="m">10</span>.10.20.10
+<a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a>
+<a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a><span class="c1"># Mount the NFS export:</span>
+<a id="__codelineno-28-5" name="__codelineno-28-5" href="#__codelineno-28-5"></a>mount<span class="w"> </span>-t<span class="w"> </span>nfs<span class="w"> </span>-o<span class="w"> </span><span class="nv">nfsvers</span><span class="o">=</span><span class="m">3</span><span class="w"> </span><span class="m">10</span>.10.20.10:/data01<span class="w"> </span>/mnt/test
+<a id="__codelineno-28-6" name="__codelineno-28-6" href="#__codelineno-28-6"></a>
+<a id="__codelineno-28-7" name="__codelineno-28-7" href="#__codelineno-28-7"></a><span class="c1"># Write and read test:</span>
+<a id="__codelineno-28-8" name="__codelineno-28-8" href="#__codelineno-28-8"></a>dd<span class="w"> </span><span class="k">if</span><span class="o">=</span>/dev/urandom<span class="w"> </span><span class="nv">of</span><span class="o">=</span>/mnt/test/testfile<span class="w"> </span><span class="nv">bs</span><span class="o">=</span>1M<span class="w"> </span><span class="nv">count</span><span class="o">=</span><span class="m">100</span>
+<a id="__codelineno-28-9" name="__codelineno-28-9" href="#__codelineno-28-9"></a>md5sum<span class="w"> </span>/mnt/test/testfile
 </code></pre></div>
 <h3 id="snapmirror-lag-check">SnapMirror Lag Check<a class="headerlink" href="#snapmirror-lag-check" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a># Confirm lag is within RPO on all relationships:
-<a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a>snapmirror show -fields lag-time,mirror-state,relationship-status
-<a id="__codelineno-30-3" name="__codelineno-30-3" href="#__codelineno-30-3"></a>
-<a id="__codelineno-30-4" name="__codelineno-30-4" href="#__codelineno-30-4"></a># All relationships must show:
-<a id="__codelineno-30-5" name="__codelineno-30-5" href="#__codelineno-30-5"></a>#   Mirror State: Snapmirrored
-<a id="__codelineno-30-6" name="__codelineno-30-6" href="#__codelineno-30-6"></a>#   Relationship Status: Idle
-<a id="__codelineno-30-7" name="__codelineno-30-7" href="#__codelineno-30-7"></a>#   Lag Time: within defined RPO
+<div class="highlight"><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a># Confirm lag is within RPO on all relationships:
+<a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a>snapmirror show -fields lag-time,mirror-state,relationship-status
+<a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a>
+<a id="__codelineno-29-4" name="__codelineno-29-4" href="#__codelineno-29-4"></a># All relationships must show:
+<a id="__codelineno-29-5" name="__codelineno-29-5" href="#__codelineno-29-5"></a>#   Mirror State: Snapmirrored
+<a id="__codelineno-29-6" name="__codelineno-29-6" href="#__codelineno-29-6"></a>#   Relationship Status: Idle
+<a id="__codelineno-29-7" name="__codelineno-29-7" href="#__codelineno-29-7"></a>#   Lag Time: within defined RPO
 </code></pre></div>
 <h3 id="autosupport-validation">AutoSupport Validation<a class="headerlink" href="#autosupport-validation" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a># Send a test AutoSupport message:
-<a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a>autosupport invoke -node * -type test -message &quot;ONTAP deployment complete — validation test&quot;
-<a id="__codelineno-31-3" name="__codelineno-31-3" href="#__codelineno-31-3"></a>
-<a id="__codelineno-31-4" name="__codelineno-31-4" href="#__codelineno-31-4"></a># Check delivery status:
-<a id="__codelineno-31-5" name="__codelineno-31-5" href="#__codelineno-31-5"></a>autosupport history show -node * -type test
-<a id="__codelineno-31-6" name="__codelineno-31-6" href="#__codelineno-31-6"></a>
-<a id="__codelineno-31-7" name="__codelineno-31-7" href="#__codelineno-31-7"></a># Log in to https://activeiq.netapp.com and confirm:
-<a id="__codelineno-31-8" name="__codelineno-31-8" href="#__codelineno-31-8"></a># - Both nodes appear in the system inventory
-<a id="__codelineno-31-9" name="__codelineno-31-9" href="#__codelineno-31-9"></a># - No critical risks are flagged
-<a id="__codelineno-31-10" name="__codelineno-31-10" href="#__codelineno-31-10"></a># - AutoSupport history shows the test message received
+<div class="highlight"><pre><span></span><code><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a># Send a test AutoSupport message:
+<a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a>autosupport invoke -node * -type test -message &quot;ONTAP deployment complete — validation test&quot;
+<a id="__codelineno-30-3" name="__codelineno-30-3" href="#__codelineno-30-3"></a>
+<a id="__codelineno-30-4" name="__codelineno-30-4" href="#__codelineno-30-4"></a># Check delivery status:
+<a id="__codelineno-30-5" name="__codelineno-30-5" href="#__codelineno-30-5"></a>autosupport history show -node * -type test
+<a id="__codelineno-30-6" name="__codelineno-30-6" href="#__codelineno-30-6"></a>
+<a id="__codelineno-30-7" name="__codelineno-30-7" href="#__codelineno-30-7"></a># Log in to https://activeiq.netapp.com and confirm:
+<a id="__codelineno-30-8" name="__codelineno-30-8" href="#__codelineno-30-8"></a># - Both nodes appear in the system inventory
+<a id="__codelineno-30-9" name="__codelineno-30-9" href="#__codelineno-30-9"></a># - No critical risks are flagged
+<a id="__codelineno-30-10" name="__codelineno-30-10" href="#__codelineno-30-10"></a># - AutoSupport history shows the test message received
 </code></pre></div>
 <hr />
 <h2 id="verify">Verify<a class="headerlink" href="#verify" title="Permanent link">&para;</a></h2>

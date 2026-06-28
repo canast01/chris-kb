@@ -7526,25 +7526,7 @@ CyberArk PAM support escalation: how to run the DiagnosticTool, collect componen
 *Applies to: CyberArk PAM (Self-Hosted) 12.x / 13.x*
 </div>
 <p><img alt="CyberArk — Escalation" src="../../../../assets/security-cyberark-troubleshooting-escalation-index.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>@startuml
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>skinparam sequenceArrowThickness 1.5
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>skinparam roundcorner 5
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>actor &quot;On-Call Engineer&quot; as ENG
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>participant &quot;Escalation\nSystem&quot; as SYS
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>participant &quot;Vendor Support&quot; as SUP
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>ENG -&gt; SYS: Severity Levels
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>SYS --&gt; ENG: Output
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>ENG -&gt; SYS: Pre-Escalation Triage Checklist
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>SYS --&gt; ENG: Output
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>ENG -&gt; SYS: Step-by-Step Data Collection
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>SYS --&gt; ENG: Output
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>ENG -&gt; SUP: Escalate with diagnostic bundle
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>SUP --&gt; ENG: Case / resolution path
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>@enduml
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/plantuml/svg/eNqFkTFPAzEMhff8Cqv7gRi6dEBFR8WCaKVrkZBY3NTqRZc6wXao-u_JFaTSBaZYyffec-y5GoqVQ3Q6BM4oeAClj0Ls6UEkHdd98AOTKtzdTH9BkgrvfBImgalz6C0JTJbctBgjLHgfmEgmgAqLlydXRRZ8yMgGk4V6jGgh8Tt3JzU6nLnurbvmXol31bUrOSexb2azcq4aQnM_8jPo6JMk2AmeaxHV1Uto6mNlZrAslotd8Suh5pIPawm4J2h78kMMav_qO6PcbE_NeMIjGkKbYiQ_uv0p3qxm8BNMcAzWw65Gc9L6X9jWYUZyFbroW1SCWxDSFMu52YzWOzevUxkX9gUUVZHE?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Access:</strong> Admin credentials to PVWA (<code>Administrator</code> account or equivalent); RDP/local access to the Vault server</li>
@@ -7647,101 +7629,101 @@ CyberArk PAM support escalation: how to run the DiagnosticTool, collect componen
 <h2 id="step-by-step-data-collection">Step-by-Step Data Collection<a class="headerlink" href="#step-by-step-data-collection" title="Permanent link">&para;</a></h2>
 <p>Collect all of the following before opening an SR.</p>
 <h3 id="1-run-the-cyberark-diagnostictool-on-the-vault-server">1. Run the CyberArk DiagnosticTool on the Vault server<a class="headerlink" href="#1-run-the-cyberark-diagnostictool-on-the-vault-server" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># RDP to the Vault server as a local admin (not a domain account)</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c"># Navigate to the DiagnosticTool directory</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nb">cd </span><span class="s2">&quot;C:\Program Files (x86)\CyberArk\Password Vault\Diagnostics&quot;</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c"># Run the tool — collects logs, configuration, and component health</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="p">.\</span><span class="n">DiagnosticTool</span><span class="p">.</span><span class="n">exe</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c"># The tool creates an output ZIP in the same directory</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c"># Example: DiagnosticToolOutput_2026-06-15_11-00-00.zip</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="nb">Get-ChildItem</span> <span class="s2">&quot;C:\Program Files (x86)\CyberArk\Password Vault\Diagnostics\*.zip&quot;</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">LastWriteTime</span> <span class="n">-Descending</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">1</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># RDP to the Vault server as a local admin (not a domain account)</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c"># Navigate to the DiagnosticTool directory</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nb">cd </span><span class="s2">&quot;C:\Program Files (x86)\CyberArk\Password Vault\Diagnostics&quot;</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c"># Run the tool — collects logs, configuration, and component health</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="p">.\</span><span class="n">DiagnosticTool</span><span class="p">.</span><span class="n">exe</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c"># The tool creates an output ZIP in the same directory</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c"># Example: DiagnosticToolOutput_2026-06-15_11-00-00.zip</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="nb">Get-ChildItem</span> <span class="s2">&quot;C:\Program Files (x86)\CyberArk\Password Vault\Diagnostics\*.zip&quot;</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">LastWriteTime</span> <span class="n">-Descending</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">1</span>
 </code></pre></div>
 <h3 id="2-collect-component-versions">2. Collect component versions<a class="headerlink" href="#2-collect-component-versions" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Vault version — from PVWA Admin UI</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c"># PVWA → Administration → System Health → click Vault component</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c"># Or check registry on Vault server:</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nb">Get-ItemProperty</span> <span class="n">HKLM</span><span class="p">:\</span><span class="n">SOFTWARE</span><span class="p">\</span><span class="n">WOW6432Node</span><span class="p">\</span><span class="n">CyberArk</span><span class="p">\</span><span class="n">CyberArk</span><span class="p">*</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">PSChildName</span><span class="p">,</span> <span class="n">DisplayVersion</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c"># Get PVWA version</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="nb">Get-Content</span> <span class="s2">&quot;C:\inetpub\wwwroot\PasswordVault\Version.txt&quot;</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c"># Get CPM version (on CPM server)</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="nb">Get-ItemProperty</span> <span class="n">HKLM</span><span class="p">:\</span><span class="n">SOFTWARE</span><span class="p">\</span><span class="n">WOW6432Node</span><span class="p">\</span><span class="n">CyberArk</span><span class="p">\</span><span class="n">CyberArk</span><span class="p">*</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">PSChildName</span><span class="p">,</span> <span class="n">DisplayVersion</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c"># Get PSM version (on PSM server)</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="nb">Get-ItemProperty</span> <span class="n">HKLM</span><span class="p">:\</span><span class="n">SOFTWARE</span><span class="p">\</span><span class="n">WOW6432Node</span><span class="p">\</span><span class="n">CyberArk</span><span class="p">\</span><span class="n">CyberArk</span><span class="p">*</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">PSChildName</span><span class="p">,</span> <span class="n">DisplayVersion</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Vault version — from PVWA Admin UI</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c"># PVWA → Administration → System Health → click Vault component</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c"># Or check registry on Vault server:</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nb">Get-ItemProperty</span> <span class="n">HKLM</span><span class="p">:\</span><span class="n">SOFTWARE</span><span class="p">\</span><span class="n">WOW6432Node</span><span class="p">\</span><span class="n">CyberArk</span><span class="p">\</span><span class="n">CyberArk</span><span class="p">*</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">PSChildName</span><span class="p">,</span> <span class="n">DisplayVersion</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c"># Get PVWA version</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="nb">Get-Content</span> <span class="s2">&quot;C:\inetpub\wwwroot\PasswordVault\Version.txt&quot;</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c"># Get CPM version (on CPM server)</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="nb">Get-ItemProperty</span> <span class="n">HKLM</span><span class="p">:\</span><span class="n">SOFTWARE</span><span class="p">\</span><span class="n">WOW6432Node</span><span class="p">\</span><span class="n">CyberArk</span><span class="p">\</span><span class="n">CyberArk</span><span class="p">*</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">PSChildName</span><span class="p">,</span> <span class="n">DisplayVersion</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c"># Get PSM version (on PSM server)</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="nb">Get-ItemProperty</span> <span class="n">HKLM</span><span class="p">:\</span><span class="n">SOFTWARE</span><span class="p">\</span><span class="n">WOW6432Node</span><span class="p">\</span><span class="n">CyberArk</span><span class="p">\</span><span class="n">CyberArk</span><span class="p">*</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">PSChildName</span><span class="p">,</span> <span class="n">DisplayVersion</span>
 </code></pre></div>
 <h3 id="3-collect-component-logs-manually-if-diagnostictool-fails">3. Collect component logs manually (if DiagnosticTool fails)<a class="headerlink" href="#3-collect-component-logs-manually-if-diagnostictool-fails" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Vault server — PrivateArk Server log</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nv">$logPath</span> <span class="p">=</span> <span class="s2">&quot;C:\PrivateArk\Logs&quot;</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="nb">Get-ChildItem</span> <span class="nv">$logPath</span> <span class="n">-Filter</span> <span class="s2">&quot;*.log&quot;</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">LastWriteTime</span> <span class="n">-Descending</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">5</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="nb">Copy-Item</span> <span class="s2">&quot;$logPath\ITAlog.log&quot;</span> <span class="n">C</span><span class="p">:\</span><span class="n">Temp</span><span class="p">\</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="nb">Copy-Item</span> <span class="s2">&quot;$logPath\PrivateArk.log&quot;</span> <span class="n">C</span><span class="p">:\</span><span class="n">Temp</span><span class="p">\</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c"># Windows Event logs from Vault server (Application + System, last 48h)</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="nv">$start</span> <span class="p">=</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddHours</span><span class="p">(-</span><span class="n">48</span><span class="p">)</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="nb">Get-WinEvent</span> <span class="n">-LogName</span> <span class="n">Application</span> <span class="n">-StartTime</span> <span class="nv">$start</span> <span class="p">|</span> <span class="nb">Export-Csv</span> <span class="n">C</span><span class="p">:\</span><span class="n">Temp</span><span class="p">\</span><span class="n">AppEventLog</span><span class="p">.</span><span class="n">csv</span> <span class="n">-NoTypeInformation</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="nb">Get-WinEvent</span> <span class="n">-LogName</span> <span class="n">System</span>    <span class="n">-StartTime</span> <span class="nv">$start</span> <span class="p">|</span> <span class="nb">Export-Csv</span> <span class="n">C</span><span class="p">:\</span><span class="n">Temp</span><span class="p">\</span><span class="n">SysEventLog</span><span class="p">.</span><span class="n">csv</span> <span class="n">-NoTypeInformation</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="c"># PVWA logs</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="nv">$pvwaLog</span> <span class="p">=</span> <span class="s2">&quot;C:\inetpub\wwwroot\PasswordVault\Logs&quot;</span>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="nb">Copy-Item</span> <span class="s2">&quot;$pvwaLog\CyberArk.log&quot;</span> <span class="n">C</span><span class="p">:\</span><span class="n">Temp</span><span class="p">\</span>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="c"># CPM log (on CPM server)</span>
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="nb">Copy-Item</span> <span class="s2">&quot;C:\Program Files (x86)\CyberArk\Password Manager\Logs\PMConsole.log&quot;</span> <span class="n">C</span><span class="p">:\</span><span class="n">Temp</span><span class="p">\</span>
-<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>
-<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="c"># PSM log (on PSM server)</span>
-<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="nb">Copy-Item</span> <span class="s2">&quot;C:\Program Files (x86)\CyberArk\PSM\Logs\PSMConsole.log&quot;</span> <span class="n">C</span><span class="p">:\</span><span class="n">Temp</span><span class="p">\</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Vault server — PrivateArk Server log</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nv">$logPath</span> <span class="p">=</span> <span class="s2">&quot;C:\PrivateArk\Logs&quot;</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nb">Get-ChildItem</span> <span class="nv">$logPath</span> <span class="n">-Filter</span> <span class="s2">&quot;*.log&quot;</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">LastWriteTime</span> <span class="n">-Descending</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">5</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="nb">Copy-Item</span> <span class="s2">&quot;$logPath\ITAlog.log&quot;</span> <span class="n">C</span><span class="p">:\</span><span class="n">Temp</span><span class="p">\</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nb">Copy-Item</span> <span class="s2">&quot;$logPath\PrivateArk.log&quot;</span> <span class="n">C</span><span class="p">:\</span><span class="n">Temp</span><span class="p">\</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c"># Windows Event logs from Vault server (Application + System, last 48h)</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="nv">$start</span> <span class="p">=</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddHours</span><span class="p">(-</span><span class="n">48</span><span class="p">)</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="nb">Get-WinEvent</span> <span class="n">-LogName</span> <span class="n">Application</span> <span class="n">-StartTime</span> <span class="nv">$start</span> <span class="p">|</span> <span class="nb">Export-Csv</span> <span class="n">C</span><span class="p">:\</span><span class="n">Temp</span><span class="p">\</span><span class="n">AppEventLog</span><span class="p">.</span><span class="n">csv</span> <span class="n">-NoTypeInformation</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="nb">Get-WinEvent</span> <span class="n">-LogName</span> <span class="n">System</span>    <span class="n">-StartTime</span> <span class="nv">$start</span> <span class="p">|</span> <span class="nb">Export-Csv</span> <span class="n">C</span><span class="p">:\</span><span class="n">Temp</span><span class="p">\</span><span class="n">SysEventLog</span><span class="p">.</span><span class="n">csv</span> <span class="n">-NoTypeInformation</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c"># PVWA logs</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="nv">$pvwaLog</span> <span class="p">=</span> <span class="s2">&quot;C:\inetpub\wwwroot\PasswordVault\Logs&quot;</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="nb">Copy-Item</span> <span class="s2">&quot;$pvwaLog\CyberArk.log&quot;</span> <span class="n">C</span><span class="p">:\</span><span class="n">Temp</span><span class="p">\</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="c"># CPM log (on CPM server)</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="nb">Copy-Item</span> <span class="s2">&quot;C:\Program Files (x86)\CyberArk\Password Manager\Logs\PMConsole.log&quot;</span> <span class="n">C</span><span class="p">:\</span><span class="n">Temp</span><span class="p">\</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="c"># PSM log (on PSM server)</span>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="nb">Copy-Item</span> <span class="s2">&quot;C:\Program Files (x86)\CyberArk\PSM\Logs\PSMConsole.log&quot;</span> <span class="n">C</span><span class="p">:\</span><span class="n">Temp</span><span class="p">\</span>
 </code></pre></div>
 <h3 id="4-capture-pvwa-system-health">4. Capture PVWA System Health<a class="headerlink" href="#4-capture-pvwa-system-health" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># API approach — get component health programmatically</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nv">$pvwaUrl</span> <span class="p">=</span> <span class="s2">&quot;https://&lt;pvwa-fqdn&gt;/PasswordVault&quot;</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c"># Get auth token</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="nv">$body</span> <span class="p">=</span> <span class="p">@{</span><span class="n">username</span><span class="p">=</span><span class="s2">&quot;Administrator&quot;</span><span class="p">;</span> <span class="n">password</span><span class="p">=</span><span class="s2">&quot;&lt;password&gt;&quot;</span><span class="p">}</span> <span class="p">|</span> <span class="nb">ConvertTo-Json</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="nv">$auth</span> <span class="p">=</span> <span class="nb">Invoke-RestMethod</span> <span class="n">-Uri</span> <span class="s2">&quot;$pvwaUrl/API/auth/CyberArk/Logon&quot;</span> <span class="n">-Method</span> <span class="n">POST</span> <span class="n">-Body</span> <span class="nv">$body</span> <span class="n">-ContentType</span> <span class="s2">&quot;application/json&quot;</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="nv">$token</span> <span class="p">=</span> <span class="nv">$auth</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c"># Get system health</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="nb">Invoke-RestMethod</span> <span class="n">-Uri</span> <span class="s2">&quot;$pvwaUrl/API/ComponentsMonitoringSummary&quot;</span> <span class="p">`</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>  <span class="n">-Method</span> <span class="n">GET</span> <span class="n">-Headers</span> <span class="p">@{</span><span class="n">Authorization</span> <span class="p">=</span> <span class="s2">&quot;Bearer $token&quot;</span><span class="p">}</span> <span class="p">|</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>  <span class="nb">ConvertTo-Json</span> <span class="n">-Depth</span> <span class="n">10</span> <span class="p">|</span> <span class="nb">Out-File</span> <span class="n">C</span><span class="p">:\</span><span class="n">Temp</span><span class="p">\</span><span class="n">SystemHealth</span><span class="p">.</span><span class="n">json</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="c"># Logoff</span>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="nb">Invoke-RestMethod</span> <span class="n">-Uri</span> <span class="s2">&quot;$pvwaUrl/API/auth/Logoff&quot;</span> <span class="n">-Method</span> <span class="n">POST</span> <span class="n">-Headers</span> <span class="p">@{</span><span class="n">Authorization</span> <span class="p">=</span> <span class="s2">&quot;Bearer $token&quot;</span><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># API approach — get component health programmatically</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nv">$pvwaUrl</span> <span class="p">=</span> <span class="s2">&quot;https://&lt;pvwa-fqdn&gt;/PasswordVault&quot;</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c"># Get auth token</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="nv">$body</span> <span class="p">=</span> <span class="p">@{</span><span class="n">username</span><span class="p">=</span><span class="s2">&quot;Administrator&quot;</span><span class="p">;</span> <span class="n">password</span><span class="p">=</span><span class="s2">&quot;&lt;password&gt;&quot;</span><span class="p">}</span> <span class="p">|</span> <span class="nb">ConvertTo-Json</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="nv">$auth</span> <span class="p">=</span> <span class="nb">Invoke-RestMethod</span> <span class="n">-Uri</span> <span class="s2">&quot;$pvwaUrl/API/auth/CyberArk/Logon&quot;</span> <span class="n">-Method</span> <span class="n">POST</span> <span class="n">-Body</span> <span class="nv">$body</span> <span class="n">-ContentType</span> <span class="s2">&quot;application/json&quot;</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="nv">$token</span> <span class="p">=</span> <span class="nv">$auth</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c"># Get system health</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="nb">Invoke-RestMethod</span> <span class="n">-Uri</span> <span class="s2">&quot;$pvwaUrl/API/ComponentsMonitoringSummary&quot;</span> <span class="p">`</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>  <span class="n">-Method</span> <span class="n">GET</span> <span class="n">-Headers</span> <span class="p">@{</span><span class="n">Authorization</span> <span class="p">=</span> <span class="s2">&quot;Bearer $token&quot;</span><span class="p">}</span> <span class="p">|</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>  <span class="nb">ConvertTo-Json</span> <span class="n">-Depth</span> <span class="n">10</span> <span class="p">|</span> <span class="nb">Out-File</span> <span class="n">C</span><span class="p">:\</span><span class="n">Temp</span><span class="p">\</span><span class="n">SystemHealth</span><span class="p">.</span><span class="n">json</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="c"># Logoff</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="nb">Invoke-RestMethod</span> <span class="n">-Uri</span> <span class="s2">&quot;$pvwaUrl/API/auth/Logoff&quot;</span> <span class="n">-Method</span> <span class="n">POST</span> <span class="n">-Headers</span> <span class="p">@{</span><span class="n">Authorization</span> <span class="p">=</span> <span class="s2">&quot;Bearer $token&quot;</span><span class="p">}</span>
 </code></pre></div>
 <h3 id="5-write-the-timeline">5. Write the timeline<a class="headerlink" href="#5-write-the-timeline" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>CyberArk Vault version: 13.2.0
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>PVWA version: 13.2.0
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>CPM version: 13.2.0
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>PSM version: 13.2.0
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>Vault server: vault01.corp.local (Windows Server 2022)
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>PVWA server: pvwa01.corp.local
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>Issue first observed: 2026-06-15 09:30 UTC
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>Last known good state: 2026-06-15 08:00 UTC
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>Error observed:
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>  - Users receiving &quot;Vault connection error&quot; on PVWA login
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>  - CPM jobs showing &quot;PSMGW008E: Cannot connect to vault&quot;
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>  - ITAlog showing repeated &quot;Authentication failure&quot; entries
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>
-<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>Steps already taken:
-<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>  - Verified PrivateArk Server service is running
-<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>  - Confirmed port 1858 reachable from PVWA server
-<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>  - Did NOT restart PrivateArk Server
-<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>
-<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>Changes in 24h before issue:
-<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>  - Windows Update applied to Vault server (KB5034441)
-<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>  - No CyberArk config changes
-<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>
-<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>Blast radius:
-<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a>  - All PVWA users cannot log in
-<a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a>  - CPM cannot perform any password changes
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>CyberArk Vault version: 13.2.0
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>PVWA version: 13.2.0
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>CPM version: 13.2.0
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>PSM version: 13.2.0
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>Vault server: vault01.corp.local (Windows Server 2022)
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>PVWA server: pvwa01.corp.local
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>Issue first observed: 2026-06-15 09:30 UTC
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>Last known good state: 2026-06-15 08:00 UTC
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>Error observed:
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>  - Users receiving &quot;Vault connection error&quot; on PVWA login
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>  - CPM jobs showing &quot;PSMGW008E: Cannot connect to vault&quot;
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>  - ITAlog showing repeated &quot;Authentication failure&quot; entries
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>Steps already taken:
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>  - Verified PrivateArk Server service is running
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>  - Confirmed port 1858 reachable from PVWA server
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>  - Did NOT restart PrivateArk Server
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>
+<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>Changes in 24h before issue:
+<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a>  - Windows Update applied to Vault server (KB5034441)
+<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a>  - No CyberArk config changes
+<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a>
+<a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a>Blast radius:
+<a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a>  - All PVWA users cannot log in
+<a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a>  - CPM cannot perform any password changes
 </code></pre></div>
 <hr />
 <h2 id="how-to-open-a-cyberark-support-case">How to Open a CyberArk Support Case<a class="headerlink" href="#how-to-open-a-cyberark-support-case" title="Permanent link">&para;</a></h2>
@@ -7841,28 +7823,28 @@ CyberArk PAM support escalation: how to run the DiagnosticTool, collect componen
 </table>
 <hr />
 <h2 id="useful-commands-for-case-updates">Useful Commands for Case Updates<a class="headerlink" href="#useful-commands-for-case-updates" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># Quick state snapshot for each case update</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">Get-Service</span> <span class="s2">&quot;PrivateArk*&quot;</span><span class="p">,</span><span class="s2">&quot;CyberArk*&quot;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Status</span><span class="p">,</span> <span class="n">StartType</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c"># Test Vault connectivity from PVWA server</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="nb">Test-NetConnection</span> <span class="n">-ComputerName</span> <span class="p">&lt;</span><span class="n">vault-hostname</span><span class="p">&gt;</span> <span class="n">-Port</span> <span class="n">1858</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c"># Last 50 ITAlog entries (on Vault server)</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="nb">Get-Content</span> <span class="s2">&quot;C:\PrivateArk\Logs\ITAlog.log&quot;</span> <span class="n">-Tail</span> <span class="n">50</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c"># Safe count and account count via PVWA API (substitute token from auth step)</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="nb">Invoke-RestMethod</span> <span class="n">-Uri</span> <span class="s2">&quot;https://&lt;pvwa&gt;/PasswordVault/API/Safes?limit=1&quot;</span> <span class="p">`</span>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>  <span class="n">-Method</span> <span class="n">GET</span> <span class="n">-Headers</span> <span class="p">@{</span><span class="n">Authorization</span> <span class="p">=</span> <span class="s2">&quot;Bearer $token&quot;</span><span class="p">}</span> <span class="p">|</span>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>  <span class="nb">Select-Object</span> <span class="n">-ExpandProperty</span> <span class="n">Total</span>
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="c"># CPM pending jobs count</span>
-<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="nb">Get-Content</span> <span class="s2">&quot;C:\Program Files (x86)\CyberArk\Password Manager\Logs\PMConsole.log&quot;</span> <span class="n">-Tail</span> <span class="n">100</span> <span class="p">|</span>
-<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>  <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span> <span class="o">-match</span> <span class="s2">&quot;ERROR|FAIL|pending&quot;</span> <span class="p">}</span>
-<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>
-<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a><span class="c"># Windows Event log for PrivateArk-specific errors</span>
-<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a><span class="nb">Get-WinEvent</span> <span class="n">-LogName</span> <span class="n">Application</span> <span class="n">-MaxEvents</span> <span class="n">100</span> <span class="p">|</span>
-<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a>  <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">ProviderName</span> <span class="o">-like</span> <span class="s2">&quot;*CyberArk*&quot;</span> <span class="o">-or</span> <span class="nv">$_</span><span class="p">.</span><span class="n">ProviderName</span> <span class="o">-like</span> <span class="s2">&quot;*PrivateArk*&quot;</span> <span class="p">}</span> <span class="p">|</span>
-<a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a>  <span class="nb">Select-Object</span> <span class="n">TimeCreated</span><span class="p">,</span> <span class="n">Id</span><span class="p">,</span> <span class="n">LevelDisplayName</span><span class="p">,</span> <span class="n">Message</span> <span class="p">|</span> <span class="nb">Format-List</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># Quick state snapshot for each case update</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">Get-Service</span> <span class="s2">&quot;PrivateArk*&quot;</span><span class="p">,</span><span class="s2">&quot;CyberArk*&quot;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Status</span><span class="p">,</span> <span class="n">StartType</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c"># Test Vault connectivity from PVWA server</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="nb">Test-NetConnection</span> <span class="n">-ComputerName</span> <span class="p">&lt;</span><span class="n">vault-hostname</span><span class="p">&gt;</span> <span class="n">-Port</span> <span class="n">1858</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c"># Last 50 ITAlog entries (on Vault server)</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="nb">Get-Content</span> <span class="s2">&quot;C:\PrivateArk\Logs\ITAlog.log&quot;</span> <span class="n">-Tail</span> <span class="n">50</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c"># Safe count and account count via PVWA API (substitute token from auth step)</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="nb">Invoke-RestMethod</span> <span class="n">-Uri</span> <span class="s2">&quot;https://&lt;pvwa&gt;/PasswordVault/API/Safes?limit=1&quot;</span> <span class="p">`</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>  <span class="n">-Method</span> <span class="n">GET</span> <span class="n">-Headers</span> <span class="p">@{</span><span class="n">Authorization</span> <span class="p">=</span> <span class="s2">&quot;Bearer $token&quot;</span><span class="p">}</span> <span class="p">|</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>  <span class="nb">Select-Object</span> <span class="n">-ExpandProperty</span> <span class="n">Total</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="c"># CPM pending jobs count</span>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="nb">Get-Content</span> <span class="s2">&quot;C:\Program Files (x86)\CyberArk\Password Manager\Logs\PMConsole.log&quot;</span> <span class="n">-Tail</span> <span class="n">100</span> <span class="p">|</span>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>  <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span> <span class="o">-match</span> <span class="s2">&quot;ERROR|FAIL|pending&quot;</span> <span class="p">}</span>
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="c"># Windows Event log for PrivateArk-specific errors</span>
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a><span class="nb">Get-WinEvent</span> <span class="n">-LogName</span> <span class="n">Application</span> <span class="n">-MaxEvents</span> <span class="n">100</span> <span class="p">|</span>
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>  <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">ProviderName</span> <span class="o">-like</span> <span class="s2">&quot;*CyberArk*&quot;</span> <span class="o">-or</span> <span class="nv">$_</span><span class="p">.</span><span class="n">ProviderName</span> <span class="o">-like</span> <span class="s2">&quot;*PrivateArk*&quot;</span> <span class="p">}</span> <span class="p">|</span>
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>  <span class="nb">Select-Object</span> <span class="n">TimeCreated</span><span class="p">,</span> <span class="n">Id</span><span class="p">,</span> <span class="n">LevelDisplayName</span><span class="p">,</span> <span class="n">Message</span> <span class="p">|</span> <span class="nb">Format-List</span>
 </code></pre></div>
 <hr />
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>

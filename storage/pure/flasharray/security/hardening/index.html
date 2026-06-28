@@ -8274,19 +8274,7 @@ Hardening reference covering Hardening Checklist, Step-by-Step Controls, Post-Ha
 <p><img alt="FlashArray — Hardening — Diagram" src="../../../../../assets/storage-pure-flasharray-security-hardening-diagram.svg" /></p>
 <p>This page covers the ordered hardening steps to apply on every new FlashArray before it enters production, along with the rationale and CLI commands for each control. Apply these steps after initial network and identity configuration and before connecting any production hosts.</p>
 <hr />
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: down
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>external: External / Untrusted {shape: rectangle}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>hardening_checklist: &quot;Hardening Checklist&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>stepbystep_controls: &quot;Step-by-Step Controls&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>posthardening_verification: &quot;Post-Hardening Verification&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>core: &quot;FlashArray Core&quot; {shape: hexagon}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>external -&gt; hardening_checklist: traffic in
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>hardening_checklist -&gt; stepbystep_controls
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>stepbystep_controls -&gt; posthardening_verification
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>posthardening_verification -&gt; core: secured path
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp9UbGKwzAM3fMVInvonqFQyh0dD452LYqjxuaMHGT3rqHk3yvTlnRwb7GtJz1J77l3Qia5wC304Y-rii6JhNG38PF4wQr2nOQcE_VwjRZHaiGzkAdPc2VRemLHw9FYMj_exdRCvXuisH2idYmtXcduyufRBB0TfFT2t8ZNNzX5hu0DL_LHENOywS-JOzmDd0X1lyabZZPDS7bYzARRoP70GO1GBCedLbSUWrrgEHhebIJmDUUDkuBJZ4HjkkGZVlBeciOXvhf5j_5MvAuKZM6inzdistUN7ay5bQ==?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Access:</strong> Storage admin credentials (cluster admin or equivalent)</li>
@@ -8397,57 +8385,57 @@ Hardening reference covering Hardening Checklist, Step-by-Step Controls, Post-Ha
 <h2 id="step-by-step-controls">Step-by-Step Controls<a class="headerlink" href="#step-by-step-controls" title="Permanent link">&para;</a></h2>
 <h3 id="1-change-default-credentials-and-create-named-admin-accounts">1. Change Default Credentials and Create Named Admin Accounts<a class="headerlink" href="#1-change-default-credentials-and-create-named-admin-accounts" title="Permanent link">&para;</a></h3>
 <p>The factory default <code>pureuser</code> account uses a password printed on the array chassis label. This password is shared knowledge by anyone who has physically accessed the array.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Change pureuser password to a strong randomly-generated credential</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>pureadmin<span class="w"> </span>setattr<span class="w"> </span>pureuser<span class="w"> </span>--password
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># Enter a 20+ character random password at the prompt</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Create named admin accounts for the storage team</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>pureadmin<span class="w"> </span>create<span class="w"> </span>--role<span class="w"> </span>array_admin<span class="w"> </span>s.jones
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>pureadmin<span class="w"> </span>create<span class="w"> </span>--role<span class="w"> </span>storage_admin<span class="w"> </span>p.smith
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>pureadmin<span class="w"> </span>create<span class="w"> </span>--role<span class="w"> </span>ops_admin<span class="w"> </span>oncall-storage
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Set passwords for named accounts</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>pureadmin<span class="w"> </span>setattr<span class="w"> </span>s.jones<span class="w"> </span>--password
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>pureadmin<span class="w"> </span>setattr<span class="w"> </span>p.smith<span class="w"> </span>--password
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>pureadmin<span class="w"> </span>setattr<span class="w"> </span>oncall-storage<span class="w"> </span>--password
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Change pureuser password to a strong randomly-generated credential</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>pureadmin<span class="w"> </span>setattr<span class="w"> </span>pureuser<span class="w"> </span>--password
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c1"># Enter a 20+ character random password at the prompt</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Create named admin accounts for the storage team</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>pureadmin<span class="w"> </span>create<span class="w"> </span>--role<span class="w"> </span>array_admin<span class="w"> </span>s.jones
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>pureadmin<span class="w"> </span>create<span class="w"> </span>--role<span class="w"> </span>storage_admin<span class="w"> </span>p.smith
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>pureadmin<span class="w"> </span>create<span class="w"> </span>--role<span class="w"> </span>ops_admin<span class="w"> </span>oncall-storage
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Set passwords for named accounts</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>pureadmin<span class="w"> </span>setattr<span class="w"> </span>s.jones<span class="w"> </span>--password
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>pureadmin<span class="w"> </span>setattr<span class="w"> </span>p.smith<span class="w"> </span>--password
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>pureadmin<span class="w"> </span>setattr<span class="w"> </span>oncall-storage<span class="w"> </span>--password
 </code></pre></div>
 <p>Store the <code>pureuser</code> credentials in the organisation's PAM vault (CyberArk, HashiCorp Vault, etc.) with access restricted to the on-call and emergency procedures. Document the vault path in the array's CMDB record.</p>
 <hr />
 <h3 id="2-configure-adldap-authentication">2. Configure AD/LDAP Authentication<a class="headerlink" href="#2-configure-adldap-authentication" title="Permanent link">&para;</a></h3>
 <p>After AD integration, individual named local accounts can be removed for human admin access — role assignment comes from AD group membership.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Join to Active Directory</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>puredirectoryservice<span class="w"> </span>setattr<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span>--base-dn<span class="w"> </span><span class="s2">&quot;DC=example,DC=com&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">    </span>--bind-user<span class="w"> </span><span class="s2">&quot;svc-pure-bind&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">    </span>--bind-password<span class="w"> </span><span class="s2">&quot;&lt;password&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">    </span>--domain<span class="w"> </span><span class="s2">&quot;example.com&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">    </span>--uri<span class="w"> </span><span class="s2">&quot;ldaps://dc01.example.com&quot;</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Test the connection</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>pureds<span class="w"> </span>check
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># Map AD groups to Purity roles</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>pureadmin<span class="w"> </span>setattr<span class="w"> </span>--role<span class="w"> </span>array_admin<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">    </span>--group<span class="w"> </span><span class="s2">&quot;CN=pure-array-admins,OU=Groups,DC=example,DC=com&quot;</span>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>pureadmin<span class="w"> </span>setattr<span class="w"> </span>--role<span class="w"> </span>storage_admin<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="w">    </span>--group<span class="w"> </span><span class="s2">&quot;CN=pure-storage-admins,OU=Groups,DC=example,DC=com&quot;</span>
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>pureadmin<span class="w"> </span>setattr<span class="w"> </span>--role<span class="w"> </span>ops_admin<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="w">    </span>--group<span class="w"> </span><span class="s2">&quot;CN=pure-ops,OU=Groups,DC=example,DC=com&quot;</span>
-<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>
-<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>pureadmin<span class="w"> </span>setattr<span class="w"> </span>--role<span class="w"> </span><span class="nb">readonly</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="w">    </span>--group<span class="w"> </span><span class="s2">&quot;CN=pure-readonly,OU=Groups,DC=example,DC=com&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Join to Active Directory</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>puredirectoryservice<span class="w"> </span>setattr<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span>--base-dn<span class="w"> </span><span class="s2">&quot;DC=example,DC=com&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">    </span>--bind-user<span class="w"> </span><span class="s2">&quot;svc-pure-bind&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">    </span>--bind-password<span class="w"> </span><span class="s2">&quot;&lt;password&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">    </span>--domain<span class="w"> </span><span class="s2">&quot;example.com&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">    </span>--uri<span class="w"> </span><span class="s2">&quot;ldaps://dc01.example.com&quot;</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># Test the connection</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>pureds<span class="w"> </span>check
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c1"># Map AD groups to Purity roles</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>pureadmin<span class="w"> </span>setattr<span class="w"> </span>--role<span class="w"> </span>array_admin<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">    </span>--group<span class="w"> </span><span class="s2">&quot;CN=pure-array-admins,OU=Groups,DC=example,DC=com&quot;</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>pureadmin<span class="w"> </span>setattr<span class="w"> </span>--role<span class="w"> </span>storage_admin<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="w">    </span>--group<span class="w"> </span><span class="s2">&quot;CN=pure-storage-admins,OU=Groups,DC=example,DC=com&quot;</span>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>pureadmin<span class="w"> </span>setattr<span class="w"> </span>--role<span class="w"> </span>ops_admin<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="w">    </span>--group<span class="w"> </span><span class="s2">&quot;CN=pure-ops,OU=Groups,DC=example,DC=com&quot;</span>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>pureadmin<span class="w"> </span>setattr<span class="w"> </span>--role<span class="w"> </span><span class="nb">readonly</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="w">    </span>--group<span class="w"> </span><span class="s2">&quot;CN=pure-readonly,OU=Groups,DC=example,DC=com&quot;</span>
 </code></pre></div>
 <p>Validate: log out and log back in with a domain account in each role group to confirm access works before removing or downgrading local accounts.</p>
 <hr />
 <h3 id="3-enforce-mfa-via-saml-sso">3. Enforce MFA via SAML SSO<a class="headerlink" href="#3-enforce-mfa-via-saml-sso" title="Permanent link">&para;</a></h3>
 <p>SAML SSO delegates authentication to an enterprise IdP (Okta, Azure AD, ADFS) that enforces MFA. This is the preferred mechanism for production arrays where compliance requires MFA for privileged access.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Enable SSO (after configuring SAML in the IdP and Purity GUI)</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>pureadmin<span class="w"> </span>global<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>--single-sign-on
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Verify SSO is enabled</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>pureadmin<span class="w"> </span>global<span class="w"> </span>list
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Enable SSO (after configuring SAML in the IdP and Purity GUI)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>pureadmin<span class="w"> </span>global<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>--single-sign-on
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Verify SSO is enabled</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>pureadmin<span class="w"> </span>global<span class="w"> </span>list
 </code></pre></div>
 <p>See the <a href="authentication/index.md">Authentication</a> page for full SAML configuration steps. SAML integration requires Purity//FA 6.0 or later.</p>
 <p>If SAML is not feasible in the short term, compensate with:
@@ -8487,14 +8475,14 @@ Hardening reference covering Hardening Checklist, Step-by-Step Controls, Post-Ha
 <hr />
 <h3 id="5-install-a-ca-signed-tls-certificate">5. Install a CA-Signed TLS Certificate<a class="headerlink" href="#5-install-a-ca-signed-tls-certificate" title="Permanent link">&para;</a></h3>
 <p>The factory default is a self-signed certificate that generates browser warnings and prevents proper certificate pinning in automation tools.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># View the current certificate (confirm it is currently self-signed)</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>purearray<span class="w"> </span>list<span class="w"> </span>--ssl-certificate
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Install a CA-signed certificate (PEM format: cert + intermediates + key combined)</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>purearray<span class="w"> </span>setattr<span class="w"> </span>--tls-certificate<span class="w"> </span>/path/to/combined.pem
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Verify the new certificate is active</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>purearray<span class="w"> </span>list<span class="w"> </span>--ssl-certificate
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># View the current certificate (confirm it is currently self-signed)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>purearray<span class="w"> </span>list<span class="w"> </span>--ssl-certificate
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Install a CA-signed certificate (PEM format: cert + intermediates + key combined)</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>purearray<span class="w"> </span>setattr<span class="w"> </span>--tls-certificate<span class="w"> </span>/path/to/combined.pem
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Verify the new certificate is active</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>purearray<span class="w"> </span>list<span class="w"> </span>--ssl-certificate
 </code></pre></div>
 <p>Requirements:
 - RSA 4096 or ECDSA P-256 key
@@ -8504,50 +8492,50 @@ Hardening reference covering Hardening Checklist, Step-by-Step Controls, Post-Ha
 <hr />
 <h3 id="6-disable-unused-protocols">6. Disable Unused Protocols<a class="headerlink" href="#6-disable-unused-protocols" title="Permanent link">&para;</a></h3>
 <p>Reduce the attack surface by disabling protocols that are not in use.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Check which protocols are currently enabled</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>purenetwork<span class="w"> </span>list
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>pureport<span class="w"> </span>list
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check which protocols are currently enabled</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>purenetwork<span class="w"> </span>list
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>pureport<span class="w"> </span>list
 </code></pre></div>
 <p><strong>If iSCSI is not in use (FC-only environment):</strong></p>
 <p>Disable iSCSI interfaces at the network level — set the iSCSI interface IP to <code>0.0.0.0</code> or down the interface via <code>purenetwork setattr</code>. Coordinate with Pure Support before disabling any interface if unsure.</p>
 <p><strong>If SNMP is not required:</strong></p>
 <p>Do not configure SNMP at all — Purity only enables SNMP if an SNMP community or trap destination is configured. If SNMP was previously configured for a legacy integration:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># List SNMP configuration</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>puresnmp<span class="w"> </span>list
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>puresnmptrap<span class="w"> </span>list
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Remove legacy SNMPv1/v2c communities if present</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>puresnmp<span class="w"> </span>delete<span class="w"> </span>&lt;community_name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># List SNMP configuration</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>puresnmp<span class="w"> </span>list
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>puresnmptrap<span class="w"> </span>list
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># Remove legacy SNMPv1/v2c communities if present</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>puresnmp<span class="w"> </span>delete<span class="w"> </span>&lt;community_name&gt;
 </code></pre></div>
 <p><strong>SSH access:</strong></p>
 <p>SSH to the management interface is enabled by default and required for Purity CLI access. Do not disable SSH — restrict access at the network layer instead (step 4).</p>
 <hr />
 <h3 id="7-configure-snmpv3-and-disable-legacy-snmp">7. Configure SNMPv3 and Disable Legacy SNMP<a class="headerlink" href="#7-configure-snmpv3-and-disable-legacy-snmp" title="Permanent link">&para;</a></h3>
 <p>If SNMP monitoring is required, use SNMPv3 with <code>authPriv</code> security level only (authentication + encryption). Never use SNMPv1 or SNMPv2c — they transmit community strings in plaintext and provide no access control.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Configure SNMPv3 monitoring user</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>puresnmp<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">    </span>--version<span class="w"> </span>v3<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">    </span>--auth-protocol<span class="w"> </span>SHA<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">    </span>--auth-passphrase<span class="w"> </span><span class="s2">&quot;&lt;auth_pass_20_chars&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">    </span>--privacy-protocol<span class="w"> </span>AES<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">    </span>--privacy-passphrase<span class="w"> </span><span class="s2">&quot;&lt;priv_pass_20_chars&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="w">    </span>--user<span class="w"> </span>svc-snmp-monitor<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="w">    </span>monitoring-v3
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="c1"># Configure SNMPv3 trap destination</span>
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>puresnmptrap<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="w">    </span>--version<span class="w"> </span>v3<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="w">    </span>--auth-protocol<span class="w"> </span>SHA<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="w">    </span>--auth-passphrase<span class="w"> </span><span class="s2">&quot;&lt;auth_pass_20_chars&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a><span class="w">    </span>--privacy-protocol<span class="w"> </span>AES<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a><span class="w">    </span>--privacy-passphrase<span class="w"> </span><span class="s2">&quot;&lt;priv_pass_20_chars&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a><span class="w">    </span>--user<span class="w"> </span>svc-snmp-monitor<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a><span class="w">    </span>--host<span class="w"> </span>&lt;nms_ip&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a><span class="w">    </span>nms-trap-v3
-<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>
-<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a><span class="c1"># Verify</span>
-<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>puresnmp<span class="w"> </span>list
-<a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a>puresnmptrap<span class="w"> </span>list
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Configure SNMPv3 monitoring user</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>puresnmp<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">    </span>--version<span class="w"> </span>v3<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">    </span>--auth-protocol<span class="w"> </span>SHA<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">    </span>--auth-passphrase<span class="w"> </span><span class="s2">&quot;&lt;auth_pass_20_chars&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">    </span>--privacy-protocol<span class="w"> </span>AES<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">    </span>--privacy-passphrase<span class="w"> </span><span class="s2">&quot;&lt;priv_pass_20_chars&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">    </span>--user<span class="w"> </span>svc-snmp-monitor<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">    </span>monitoring-v3
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="c1"># Configure SNMPv3 trap destination</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>puresnmptrap<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="w">    </span>--version<span class="w"> </span>v3<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="w">    </span>--auth-protocol<span class="w"> </span>SHA<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="w">    </span>--auth-passphrase<span class="w"> </span><span class="s2">&quot;&lt;auth_pass_20_chars&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="w">    </span>--privacy-protocol<span class="w"> </span>AES<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="w">    </span>--privacy-passphrase<span class="w"> </span><span class="s2">&quot;&lt;priv_pass_20_chars&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a><span class="w">    </span>--user<span class="w"> </span>svc-snmp-monitor<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a><span class="w">    </span>--host<span class="w"> </span>&lt;nms_ip&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a><span class="w">    </span>nms-trap-v3
+<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a>
+<a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a><span class="c1"># Verify</span>
+<a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a>puresnmp<span class="w"> </span>list
+<a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a>puresnmptrap<span class="w"> </span>list
 </code></pre></div>
 <p>Ensure no SNMPv1 or v2c communities exist: <code>puresnmp list</code> should show only v3 entries.</p>
 <hr />
@@ -8558,46 +8546,46 @@ Hardening reference covering Hardening Checklist, Step-by-Step Controls, Post-Ha
 - [ ] Confirm all production protection group schedules are correct — retention windows, frequency, and replication targets
 - [ ] Confirm the Purity eradication timer (default 24 hours for destroyed volumes) is set appropriately — SafeMode can extend this
 - [ ] Brief the storage team: once SafeMode is enabled, snapshot deletion operations require Pure Support involvement</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Verify SafeMode status (after enablement)</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>purearray<span class="w"> </span>list<span class="w"> </span>--safemode
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Verify SafeMode status (after enablement)</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>purearray<span class="w"> </span>list<span class="w"> </span>--safemode
 </code></pre></div>
 <hr />
 <h3 id="9-verify-encryption-at-rest">9. Verify Encryption at Rest<a class="headerlink" href="#9-verify-encryption-at-rest" title="Permanent link">&para;</a></h3>
 <p>Encryption at rest is always-on and requires no configuration. Verify it is active after initial setup:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Verify encryption is active</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>purearray<span class="w"> </span>list<span class="w"> </span>--encryption
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Verify all drives are SEDs (self-encrypting drives)</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>puredrive<span class="w"> </span>list<span class="w"> </span>--spec
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="c1"># Look for &#39;encryption_enabled: true&#39; or equivalent in the output</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Verify encryption is active</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>purearray<span class="w"> </span>list<span class="w"> </span>--encryption
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Verify all drives are SEDs (self-encrypting drives)</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>puredrive<span class="w"> </span>list<span class="w"> </span>--spec
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="c1"># Look for &#39;encryption_enabled: true&#39; or equivalent in the output</span>
 </code></pre></div>
 <p>If KMIP external key management is required, configure it now. See <a href="encryption/index.md">Encryption</a> for the full KMIP configuration procedure.</p>
 <hr />
 <h3 id="10-verify-replication-tls">10. Verify Replication TLS<a class="headerlink" href="#10-verify-replication-tls" title="Permanent link">&para;</a></h3>
 <p>Inter-array replication uses TLS by default. Verify the connection is established and encrypted:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># List connected remote arrays and their connection status</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>purearray<span class="w"> </span>list<span class="w"> </span>--connection
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Verify replication protection groups have active targets</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>purepgroup<span class="w"> </span>list<span class="w"> </span>--replication
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># List connected remote arrays and their connection status</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>purearray<span class="w"> </span>list<span class="w"> </span>--connection
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Verify replication protection groups have active targets</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>purepgroup<span class="w"> </span>list<span class="w"> </span>--replication
 </code></pre></div>
 <p>If the array is not yet connected to a remote array, this step is deferred until replication is configured.</p>
 <hr />
 <h3 id="11-configure-syslogaudit-forwarding-to-siem">11. Configure Syslog/Audit Forwarding to SIEM<a class="headerlink" href="#11-configure-syslogaudit-forwarding-to-siem" title="Permanent link">&para;</a></h3>
 <p>Local audit logs can potentially be modified by a compromised <code>array_admin</code> account. Forward all logs to an external SIEM immediately so the log record is preserved off-array.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Configure TLS syslog to SIEM (preferred — use TCP TLS for integrity)</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>puresyslog<span class="w"> </span>create<span class="w"> </span>--uri<span class="w"> </span>tls://&lt;siem_ip&gt;:6514<span class="w"> </span>siem-tls
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># UDP syslog (fallback only — not recommended for audit purposes)</span>
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>puresyslog<span class="w"> </span>create<span class="w"> </span>--uri<span class="w"> </span>udp://&lt;siem_ip&gt;:514<span class="w"> </span>siem-udp
-<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>
-<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="c1"># List configured syslog destinations</span>
-<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>puresyslog<span class="w"> </span>list
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Configure TLS syslog to SIEM (preferred — use TCP TLS for integrity)</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>puresyslog<span class="w"> </span>create<span class="w"> </span>--uri<span class="w"> </span>tls://&lt;siem_ip&gt;:6514<span class="w"> </span>siem-tls
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># UDP syslog (fallback only — not recommended for audit purposes)</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>puresyslog<span class="w"> </span>create<span class="w"> </span>--uri<span class="w"> </span>udp://&lt;siem_ip&gt;:514<span class="w"> </span>siem-udp
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># List configured syslog destinations</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>puresyslog<span class="w"> </span>list
 </code></pre></div>
 <p>Verify syslog delivery by checking the SIEM for log events from the array management IP. Generate a test event:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Generate a test audit event (e.g., run a read-only command)</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>purearray<span class="w"> </span>list
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="c1"># Check the SIEM for the corresponding audit log entry within 60 seconds</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Generate a test audit event (e.g., run a read-only command)</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>purearray<span class="w"> </span>list
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="c1"># Check the SIEM for the corresponding audit log entry within 60 seconds</span>
 </code></pre></div>
 <p>Configure SIEM alerts for:
 - Multiple failed login attempts from the same source IP (brute force indicator)
@@ -8608,28 +8596,28 @@ Hardening reference covering Hardening Checklist, Step-by-Step Controls, Post-Ha
 <hr />
 <h3 id="12-set-session-idle-timeout">12. Set Session Idle Timeout<a class="headerlink" href="#12-set-session-idle-timeout" title="Permanent link">&para;</a></h3>
 <p>Unattended CLI or GUI sessions with admin-level privileges are a security risk. Set the idle timeout to 15 minutes.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Set CLI/GUI session idle timeout (in minutes)</span>
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>purearray<span class="w"> </span>setattr<span class="w"> </span>--idle-timeout<span class="w"> </span><span class="m">15</span>
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
-<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c1"># Verify</span>
-<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>purearray<span class="w"> </span>list<span class="w"> </span>--idle-timeout
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Set CLI/GUI session idle timeout (in minutes)</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>purearray<span class="w"> </span>setattr<span class="w"> </span>--idle-timeout<span class="w"> </span><span class="m">15</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># Verify</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>purearray<span class="w"> </span>list<span class="w"> </span>--idle-timeout
 </code></pre></div>
 <p>This applies to both SSH (CLI) and HTTPS (GUI) sessions. A session that has been idle for 15 minutes will require re-authentication.</p>
 <hr />
 <h3 id="13-audit-and-disable-unused-api-tokens">13. Audit and Disable Unused API Tokens<a class="headerlink" href="#13-audit-and-disable-unused-api-tokens" title="Permanent link">&para;</a></h3>
 <p>Service account API tokens that are unused represent permanent credentials with no expiry. Audit them after initial setup and at least quarterly.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># List all accounts and their API token status</span>
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>pureadmin<span class="w"> </span>list<span class="w"> </span>--api-token
-<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
-<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c1"># Identify the last-used timestamp for each token</span>
-<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>pureadmin<span class="w"> </span>list<span class="w"> </span>--api-token<span class="w"> </span>--expose
-<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="c1"># Compare &#39;last_used&#39; timestamp against expected usage pattern</span>
-<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>
-<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="c1"># Revoke a token that is no longer needed (without deleting the account)</span>
-<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>pureadmin<span class="w"> </span>delete<span class="w"> </span>svc-old<span class="w"> </span>--api-token
-<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>
-<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a><span class="c1"># Delete an account and its token if the integration no longer exists</span>
-<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a>pureadmin<span class="w"> </span>delete<span class="w"> </span>svc-decommissioned
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># List all accounts and their API token status</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>pureadmin<span class="w"> </span>list<span class="w"> </span>--api-token
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c1"># Identify the last-used timestamp for each token</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>pureadmin<span class="w"> </span>list<span class="w"> </span>--api-token<span class="w"> </span>--expose
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="c1"># Compare &#39;last_used&#39; timestamp against expected usage pattern</span>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="c1"># Revoke a token that is no longer needed (without deleting the account)</span>
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>pureadmin<span class="w"> </span>delete<span class="w"> </span>svc-old<span class="w"> </span>--api-token
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a><span class="c1"># Delete an account and its token if the integration no longer exists</span>
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>pureadmin<span class="w"> </span>delete<span class="w"> </span>svc-decommissioned
 </code></pre></div>
 <p>Establish a quarterly review process:
 1. Export the API token inventory to a ticket or spreadsheet
@@ -8638,58 +8626,58 @@ Hardening reference covering Hardening Checklist, Step-by-Step Controls, Post-Ha
 <hr />
 <h3 id="14-configure-smtp-with-tls-for-alert-emails">14. Configure SMTP with TLS for Alert Emails<a class="headerlink" href="#14-configure-smtp-with-tls-for-alert-emails" title="Permanent link">&para;</a></h3>
 <p>Alert emails contain operational data about the array. Use STARTTLS or SMTPS to protect them in transit.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># Configure SMTP relay with TLS</span>
-<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>puresmtp<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="w">    </span>--username<span class="w"> </span><span class="s2">&quot;pure-alerts@example.com&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="w">    </span>--password<span class="w"> </span><span class="s2">&quot;&lt;smtp_password&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="w">    </span>--relay-host<span class="w"> </span><span class="s2">&quot;smtp.example.com&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="w">    </span>--relay-host-port<span class="w"> </span><span class="m">587</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="w">    </span>--sender-domain<span class="w"> </span><span class="s2">&quot;example.com&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a><span class="w">    </span>default
-<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>
-<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a><span class="c1"># Add alert notification recipients</span>
-<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>purealert<span class="w"> </span>create<span class="w"> </span>--email<span class="w"> </span>storage-team@example.com<span class="w"> </span>storage-team
-<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>purealert<span class="w"> </span>create<span class="w"> </span>--email<span class="w"> </span>oncall@example.com<span class="w"> </span>oncall
-<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>
-<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a><span class="c1"># Verify SMTP configuration</span>
-<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a>puresmtp<span class="w"> </span>list
-<a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a>
-<a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a><span class="c1"># Send a test alert to confirm delivery</span>
-<a id="__codelineno-15-18" name="__codelineno-15-18" href="#__codelineno-15-18"></a>purealert<span class="w"> </span><span class="nb">test</span><span class="w"> </span>storage-team
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Configure SMTP relay with TLS</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>puresmtp<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="w">    </span>--username<span class="w"> </span><span class="s2">&quot;pure-alerts@example.com&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="w">    </span>--password<span class="w"> </span><span class="s2">&quot;&lt;smtp_password&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="w">    </span>--relay-host<span class="w"> </span><span class="s2">&quot;smtp.example.com&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="w">    </span>--relay-host-port<span class="w"> </span><span class="m">587</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="w">    </span>--sender-domain<span class="w"> </span><span class="s2">&quot;example.com&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="w">    </span>default
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a><span class="c1"># Add alert notification recipients</span>
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>purealert<span class="w"> </span>create<span class="w"> </span>--email<span class="w"> </span>storage-team@example.com<span class="w"> </span>storage-team
+<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a>purealert<span class="w"> </span>create<span class="w"> </span>--email<span class="w"> </span>oncall@example.com<span class="w"> </span>oncall
+<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a>
+<a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a><span class="c1"># Verify SMTP configuration</span>
+<a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a>puresmtp<span class="w"> </span>list
+<a id="__codelineno-14-16" name="__codelineno-14-16" href="#__codelineno-14-16"></a>
+<a id="__codelineno-14-17" name="__codelineno-14-17" href="#__codelineno-14-17"></a><span class="c1"># Send a test alert to confirm delivery</span>
+<a id="__codelineno-14-18" name="__codelineno-14-18" href="#__codelineno-14-18"></a>purealert<span class="w"> </span><span class="nb">test</span><span class="w"> </span>storage-team
 </code></pre></div>
 <hr />
 <h2 id="post-hardening-verification">Post-Hardening Verification<a class="headerlink" href="#post-hardening-verification" title="Permanent link">&para;</a></h2>
 <p>Run the following checks after completing all hardening steps:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Confirm array name, version, and general status</span>
-<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>purearray<span class="w"> </span>list
-<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>
-<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="c1"># Confirm no critical alerts from hardening changes</span>
-<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>purealert<span class="w"> </span>list
-<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>
-<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="c1"># Confirm AD authentication is working</span>
-<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>pureds<span class="w"> </span>check
-<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>pureds<span class="w"> </span>list
-<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a>
-<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a><span class="c1"># Confirm TLS certificate is from a CA (not self-signed)</span>
-<a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a>purearray<span class="w"> </span>list<span class="w"> </span>--ssl-certificate
-<a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a>
-<a id="__codelineno-16-14" name="__codelineno-16-14" href="#__codelineno-16-14"></a><span class="c1"># Confirm SNMPv3 is the only SNMP configuration</span>
-<a id="__codelineno-16-15" name="__codelineno-16-15" href="#__codelineno-16-15"></a>puresnmp<span class="w"> </span>list
-<a id="__codelineno-16-16" name="__codelineno-16-16" href="#__codelineno-16-16"></a>
-<a id="__codelineno-16-17" name="__codelineno-16-17" href="#__codelineno-16-17"></a><span class="c1"># Confirm syslog destinations are active</span>
-<a id="__codelineno-16-18" name="__codelineno-16-18" href="#__codelineno-16-18"></a>puresyslog<span class="w"> </span>list
-<a id="__codelineno-16-19" name="__codelineno-16-19" href="#__codelineno-16-19"></a>
-<a id="__codelineno-16-20" name="__codelineno-16-20" href="#__codelineno-16-20"></a><span class="c1"># Confirm session timeout is set</span>
-<a id="__codelineno-16-21" name="__codelineno-16-21" href="#__codelineno-16-21"></a>purearray<span class="w"> </span>list<span class="w"> </span>--idle-timeout
-<a id="__codelineno-16-22" name="__codelineno-16-22" href="#__codelineno-16-22"></a>
-<a id="__codelineno-16-23" name="__codelineno-16-23" href="#__codelineno-16-23"></a><span class="c1"># Confirm SafeMode status</span>
-<a id="__codelineno-16-24" name="__codelineno-16-24" href="#__codelineno-16-24"></a>purearray<span class="w"> </span>list<span class="w"> </span>--safemode
-<a id="__codelineno-16-25" name="__codelineno-16-25" href="#__codelineno-16-25"></a>
-<a id="__codelineno-16-26" name="__codelineno-16-26" href="#__codelineno-16-26"></a><span class="c1"># Confirm encryption is active</span>
-<a id="__codelineno-16-27" name="__codelineno-16-27" href="#__codelineno-16-27"></a>purearray<span class="w"> </span>list<span class="w"> </span>--encryption
-<a id="__codelineno-16-28" name="__codelineno-16-28" href="#__codelineno-16-28"></a>
-<a id="__codelineno-16-29" name="__codelineno-16-29" href="#__codelineno-16-29"></a><span class="c1"># Audit log: confirm recent hardening actions are captured</span>
-<a id="__codelineno-16-30" name="__codelineno-16-30" href="#__codelineno-16-30"></a>pureaudit<span class="w"> </span>list<span class="w"> </span>--sort<span class="w"> </span>time-<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-30
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># Confirm array name, version, and general status</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>purearray<span class="w"> </span>list
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="c1"># Confirm no critical alerts from hardening changes</span>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>purealert<span class="w"> </span>list
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="c1"># Confirm AD authentication is working</span>
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>pureds<span class="w"> </span>check
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>pureds<span class="w"> </span>list
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a><span class="c1"># Confirm TLS certificate is from a CA (not self-signed)</span>
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>purearray<span class="w"> </span>list<span class="w"> </span>--ssl-certificate
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>
+<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a><span class="c1"># Confirm SNMPv3 is the only SNMP configuration</span>
+<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a>puresnmp<span class="w"> </span>list
+<a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a>
+<a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a><span class="c1"># Confirm syslog destinations are active</span>
+<a id="__codelineno-15-18" name="__codelineno-15-18" href="#__codelineno-15-18"></a>puresyslog<span class="w"> </span>list
+<a id="__codelineno-15-19" name="__codelineno-15-19" href="#__codelineno-15-19"></a>
+<a id="__codelineno-15-20" name="__codelineno-15-20" href="#__codelineno-15-20"></a><span class="c1"># Confirm session timeout is set</span>
+<a id="__codelineno-15-21" name="__codelineno-15-21" href="#__codelineno-15-21"></a>purearray<span class="w"> </span>list<span class="w"> </span>--idle-timeout
+<a id="__codelineno-15-22" name="__codelineno-15-22" href="#__codelineno-15-22"></a>
+<a id="__codelineno-15-23" name="__codelineno-15-23" href="#__codelineno-15-23"></a><span class="c1"># Confirm SafeMode status</span>
+<a id="__codelineno-15-24" name="__codelineno-15-24" href="#__codelineno-15-24"></a>purearray<span class="w"> </span>list<span class="w"> </span>--safemode
+<a id="__codelineno-15-25" name="__codelineno-15-25" href="#__codelineno-15-25"></a>
+<a id="__codelineno-15-26" name="__codelineno-15-26" href="#__codelineno-15-26"></a><span class="c1"># Confirm encryption is active</span>
+<a id="__codelineno-15-27" name="__codelineno-15-27" href="#__codelineno-15-27"></a>purearray<span class="w"> </span>list<span class="w"> </span>--encryption
+<a id="__codelineno-15-28" name="__codelineno-15-28" href="#__codelineno-15-28"></a>
+<a id="__codelineno-15-29" name="__codelineno-15-29" href="#__codelineno-15-29"></a><span class="c1"># Audit log: confirm recent hardening actions are captured</span>
+<a id="__codelineno-15-30" name="__codelineno-15-30" href="#__codelineno-15-30"></a>pureaudit<span class="w"> </span>list<span class="w"> </span>--sort<span class="w"> </span>time-<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-30
 </code></pre></div>
 <p>Document the completion date, the engineer who performed the hardening, and the Purity version at time of hardening in the array's CMDB record. Schedule a re-review at the next major Purity upgrade or 12 months, whichever comes first.</p>
 <hr />

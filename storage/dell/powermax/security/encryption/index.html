@@ -9023,25 +9023,7 @@ Encryption reference covering Overview, Data at Rest Encryption (D@RE), Data in 
 *Applies to: PowerMax 2500 / 8500*
 </div>
 <p><img alt="PowerMax — Encryption" src="../../../../../assets/storage-dell-powermax-security-encryption.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: down
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>external: External / Untrusted {shape: rectangle}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>data_at_rest_encryption_dre: &quot;Data at Rest Encryption (D@RE)&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>data_in_flight_encryption_srdf_encry: &quot;Data in Flight Encryption — SRDF Encryption&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>management_traffic_tls_encryption: &quot;Management Traffic — TLS Encryption&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>encryption_key_rotation: &quot;Encryption Key Rotation&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>compliance_reference: &quot;Compliance Reference&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>encryption_verification_checklist: &quot;Encryption Verification Checklist&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>core: &quot;PowerMax Core&quot; {shape: hexagon}
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>external -&gt; data_at_rest_encryption_dre: traffic in
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>data_at_rest_encryption_dre -&gt; data_in_flight_encryption_srdf_encry
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>data_in_flight_encryption_srdf_encry -&gt; management_traffic_tls_encryption
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>management_traffic_tls_encryption -&gt; encryption_key_rotation
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>encryption_key_rotation -&gt; compliance_reference
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>compliance_reference -&gt; encryption_verification_checklist
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>encryption_verification_checklist -&gt; core: secured path
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNk01ugzAQhfecYpRVu6i6Z1FVys-miVSRtFtrZAawQgyyJ02iKlIP0RP2JLUJIaSC0B32PH8zmveIlSHJqtAhxMVOBwHtmYzGPIRp_QWP8KbZbC1TDJ82w5JC8K9QpzkdgxgZBbIwZFmQluZQeqCIjdONJq4KyBC5KkybKtxNnqPp_agXqLRIcpVmV0hr4uR0PpOVhlkla7N_vr5hGU1mrbvORhvUmNKGNAs2mCRKCs5tq6Hrsmg0sDppKvxqvhyit-Ze00GYgrFmtkZ9oQNEdaWTIotNmSvUktyCEzKO6tc6bq7dZuvroSk-yCg3f9VLyIzkOleWr-d5b2lgfNb0TFYZ_FrsyCxwD2N3vggz2mNa6OMlUfDwBDezUnvgPL2VqQYzkJB_xcjDBlMwnBOP6bG7Lwb-SZe3nYb_4XcbOWz1qadftSW5Ne53LpGz4BeSKoXD?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Access:</strong> Storage admin credentials (cluster admin or equivalent)</li>
@@ -9095,19 +9077,19 @@ Encryption reference covering Overview, Data at Rest Encryption (D@RE), Data in 
 <li>Drive retirement and secure disposal do not require physical destruction — a cryptographic erase (key destruction) renders drive data unrecoverable instantly.</li>
 </ul>
 <h3 id="confirming-dre-status">Confirming D@RE Status<a class="headerlink" href="#confirming-dre-status" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Check encryption status via Unisphere REST API</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>admin:password<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>https://&lt;unisphere-host&gt;:8443/univmax/restapi/100/system/symmetrix/&lt;SID&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;encry&quot;</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># Check D@RE status via SYMCLI</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>show<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;encrypt\|D@RE\|dare&quot;</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># Verify encryption on a specific storage resource pool</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>list<span class="w"> </span>-srp<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;encrypt&quot;</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c1"># Via Unisphere GUI:</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># System → Hardware → Drives → select a drive → Properties → Encryption: Enabled</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Check encryption status via Unisphere REST API</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>admin:password<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>https://&lt;unisphere-host&gt;:8443/univmax/restapi/100/system/symmetrix/&lt;SID&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;encry&quot;</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># Check D@RE status via SYMCLI</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>show<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;encrypt\|D@RE\|dare&quot;</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1"># Verify encryption on a specific storage resource pool</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>list<span class="w"> </span>-srp<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;encrypt&quot;</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="c1"># Via Unisphere GUI:</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># System → Hardware → Drives → select a drive → Properties → Encryption: Enabled</span>
 </code></pre></div>
 <h3 id="key-management-modes">Key Management Modes<a class="headerlink" href="#key-management-modes" title="Permanent link">&para;</a></h3>
 <table>
@@ -9186,15 +9168,15 @@ Encryption reference covering Overview, Data at Rest Encryption (D@RE), Data in 
 </blockquote>
 <h3 id="drive-retirement-and-cryptographic-erase">Drive Retirement and Cryptographic Erase<a class="headerlink" href="#drive-retirement-and-cryptographic-erase" title="Permanent link">&para;</a></h3>
 <p>When retiring a failed or end-of-life drive:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Initiate cryptographic erase (key destruction) on a specific physical drive</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># This is typically done via Unisphere when removing a drive from an enclosure</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Unisphere → System → Hardware → Drive Bay → select drive → Cryptographic Erase</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Via SYMCLI (requires StorageAdmin or Administrator role):</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>sympd<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>erase<span class="w"> </span>&lt;pd_name&gt;<span class="w"> </span>-noprompt
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Verify the drive shows as erased (all data unrecoverable)</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>sympd<span class="w"> </span>show<span class="w"> </span>&lt;pd_name&gt;<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;erase\|state&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Initiate cryptographic erase (key destruction) on a specific physical drive</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># This is typically done via Unisphere when removing a drive from an enclosure</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># Unisphere → System → Hardware → Drive Bay → select drive → Cryptographic Erase</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Via SYMCLI (requires StorageAdmin or Administrator role):</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>sympd<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>erase<span class="w"> </span>&lt;pd_name&gt;<span class="w"> </span>-noprompt
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Verify the drive shows as erased (all data unrecoverable)</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>sympd<span class="w"> </span>show<span class="w"> </span>&lt;pd_name&gt;<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;erase\|state&quot;</span>
 </code></pre></div>
 <p>After cryptographic erase, drives can be returned to Dell or disposed of via standard e-waste without additional physical destruction. Document the erase event for compliance records.</p>
 <h2 id="data-in-flight-encryption-srdf-encryption">Data in Flight Encryption — SRDF Encryption<a class="headerlink" href="#data-in-flight-encryption-srdf-encryption" title="Permanent link">&para;</a></h2>
@@ -9203,24 +9185,24 @@ Encryption reference covering Overview, Data at Rest Encryption (D@RE), Data in 
 <p><strong>Important:</strong> SRDF encryption must be enabled on both the R1 and R2 arrays simultaneously. Mixed encrypted/unencrypted RDF groups are not supported.</p>
 </blockquote>
 <h3 id="srdf-encryption-configuration">SRDF Encryption Configuration<a class="headerlink" href="#srdf-encryption-configuration" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Check current encryption state for an RDF group</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdfg_id&gt;<span class="w"> </span>list<span class="w"> </span>-v<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;encrypt&quot;</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Enable SRDF encryption on an RDF group (both arrays must be at compatible code level)</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># This is a disruptive operation — suspend SRDF first</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdfg_id&gt;<span class="w"> </span><span class="nb">suspend</span><span class="w"> </span>-noprompt
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># Configure encryption via Unisphere:</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># SRDF → RDF Groups → select RDFG → Edit → Enable Encryption</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="c1"># Or via SYMCLI:</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdfg_id&gt;<span class="w"> </span><span class="nb">set</span><span class="w"> </span>-encrypt<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>-noprompt
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="c1"># Resume replication after enabling encryption</span>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdfg_id&gt;<span class="w"> </span>resume<span class="w"> </span>-noprompt
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="c1"># Verify encryption is active</span>
-<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdfg_id&gt;<span class="w"> </span>list<span class="w"> </span>-v<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;encrypt&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check current encryption state for an RDF group</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdfg_id&gt;<span class="w"> </span>list<span class="w"> </span>-v<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;encrypt&quot;</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Enable SRDF encryption on an RDF group (both arrays must be at compatible code level)</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># This is a disruptive operation — suspend SRDF first</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdfg_id&gt;<span class="w"> </span><span class="nb">suspend</span><span class="w"> </span>-noprompt
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Configure encryption via Unisphere:</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># SRDF → RDF Groups → select RDFG → Edit → Enable Encryption</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># Or via SYMCLI:</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdfg_id&gt;<span class="w"> </span><span class="nb">set</span><span class="w"> </span>-encrypt<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>-noprompt
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="c1"># Resume replication after enabling encryption</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdfg_id&gt;<span class="w"> </span>resume<span class="w"> </span>-noprompt
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="c1"># Verify encryption is active</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdfg_id&gt;<span class="w"> </span>list<span class="w"> </span>-v<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;encrypt&quot;</span>
 </code></pre></div>
 <h3 id="srdf-encryption-scope">SRDF Encryption Scope<a class="headerlink" href="#srdf-encryption-scope" title="Permanent link">&para;</a></h3>
 <table>
@@ -9329,43 +9311,43 @@ Encryption reference covering Overview, Data at Rest Encryption (D@RE), Data in 
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Verify TLS version in use from a management host</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;unisphere-host&gt;:8443<span class="w"> </span>-tls1_2<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Protocol&quot;</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;unisphere-host&gt;:8443<span class="w"> </span>-tls1_3<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Protocol&quot;</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Confirm TLS 1.0 is disabled (should fail)</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;unisphere-host&gt;:8443<span class="w"> </span>-tls1<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;handshake failure\|no protocols&quot;</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># List accepted cipher suites</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>nmap<span class="w"> </span>--script<span class="w"> </span>ssl-enum-ciphers<span class="w"> </span>-p<span class="w"> </span><span class="m">8443</span><span class="w"> </span>&lt;unisphere-host&gt;
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># Check certificate details</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;unisphere-host&gt;:8443<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-text<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Subject:|Issuer:|Not After:|Subject Alternative&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Verify TLS version in use from a management host</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;unisphere-host&gt;:8443<span class="w"> </span>-tls1_2<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Protocol&quot;</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;unisphere-host&gt;:8443<span class="w"> </span>-tls1_3<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Protocol&quot;</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Confirm TLS 1.0 is disabled (should fail)</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;unisphere-host&gt;:8443<span class="w"> </span>-tls1<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;handshake failure\|no protocols&quot;</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># List accepted cipher suites</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>nmap<span class="w"> </span>--script<span class="w"> </span>ssl-enum-ciphers<span class="w"> </span>-p<span class="w"> </span><span class="m">8443</span><span class="w"> </span>&lt;unisphere-host&gt;
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="c1"># Check certificate details</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;unisphere-host&gt;:8443<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-text<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Subject:|Issuer:|Not After:|Subject Alternative&quot;</span>
 </code></pre></div>
 <h3 id="symapi-daemon-tls-solutions-enabler">SYMAPI Daemon TLS (Solutions Enabler)<a class="headerlink" href="#symapi-daemon-tls-solutions-enabler" title="Permanent link">&para;</a></h3>
 <p>The SYMAPI network daemon supports TLS for client-to-daemon communication. Enable in the <code>netcnfg</code> file:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># /var/symapi/config/netcnfg — SECURE flag enables TLS</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>SYMAPI_SERVER<span class="w"> </span>-<span class="w"> </span><span class="m">192</span>.168.1.10<span class="w"> </span>-<span class="w"> </span><span class="m">000123456789</span><span class="w"> </span>-<span class="w"> </span><span class="m">2707</span><span class="w"> </span>SECURE
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Verify daemon is listening on TLS-enabled port</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>netstat<span class="w"> </span>-tlnp<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="m">2707</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Test TLS connection to the SYMAPI daemon</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span><span class="m">192</span>.168.1.10:2707<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Protocol|Cipher&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># /var/symapi/config/netcnfg — SECURE flag enables TLS</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>SYMAPI_SERVER<span class="w"> </span>-<span class="w"> </span><span class="m">192</span>.168.1.10<span class="w"> </span>-<span class="w"> </span><span class="m">000123456789</span><span class="w"> </span>-<span class="w"> </span><span class="m">2707</span><span class="w"> </span>SECURE
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Verify daemon is listening on TLS-enabled port</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>netstat<span class="w"> </span>-tlnp<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="m">2707</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Test TLS connection to the SYMAPI daemon</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span><span class="m">192</span>.168.1.10:2707<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Protocol|Cipher&quot;</span>
 </code></pre></div>
 <h2 id="encryption-key-rotation">Encryption Key Rotation<a class="headerlink" href="#encryption-key-rotation" title="Permanent link">&para;</a></h2>
 <p>Regular key rotation limits the exposure window of any compromised key.</p>
 <h3 id="embedded-ekms-key-rotation">Embedded EKMS Key Rotation<a class="headerlink" href="#embedded-ekms-key-rotation" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Initiate a key rotation on the embedded EKMS</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># This is typically done via Unisphere:</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1"># Settings → Security → Encryption Key Management → Rotate Keys</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Monitor key rotation progress</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>show<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;key\|rotation&quot;</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># Key rotation is non-disruptive — production I/O continues during rotation</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1"># Each drive&#39;s DEK is re-wrapped with the new KEK without decrypting/re-encrypting drive media</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Initiate a key rotation on the embedded EKMS</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># This is typically done via Unisphere:</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># Settings → Security → Encryption Key Management → Rotate Keys</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># Monitor key rotation progress</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>show<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;key\|rotation&quot;</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># Key rotation is non-disruptive — production I/O continues during rotation</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="c1"># Each drive&#39;s DEK is re-wrapped with the new KEK without decrypting/re-encrypting drive media</span>
 </code></pre></div>
 <h3 id="external-kmip-key-rotation">External KMIP Key Rotation<a class="headerlink" href="#external-kmip-key-rotation" title="Permanent link">&para;</a></h3>
 <p>When using an external KMIP server, key rotation is initiated from the KMIP server's management interface:</p>

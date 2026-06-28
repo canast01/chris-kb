@@ -9325,23 +9325,7 @@ Install and Upgrade reference covering Horizon Agent Installation in Golden Imag
 - <code>RTAV</code> — Real-Time Audio-Video</p>
 <p>Shut down the VM and take a snapshot before creating a pool.</p>
 <hr />
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>hub: &quot;Horizon\nOperations&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>uag_deployment: &quot;UAG Deployment&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>app_volumes_manager_installation: &quot;App Volumes Manager Installation&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>upgrade_order: &quot;Upgrade Order&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>upgrade_a_connection_server_rolling: &quot;Upgrade a Connection Server (Rolling)&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>version_compatibility_reference: &quot;Version Compatibility Reference&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>postinstall_verification: &quot;Post-Install Verification&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>hub -&gt; uag_deployment
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>hub -&gt; app_volumes_manager_installation
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>hub -&gt; upgrade_order
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>hub -&gt; upgrade_a_connection_server_rolling
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>hub -&gt; version_compatibility_reference
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>hub -&gt; postinstall_verification
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqFkcFOwzAMhu99CqsnOOwFdkCaQAIOaGiInpAir_XSSGkSOenEQHt3ErKWgsp2tPP595_fjWKqg7JmCaxkG4qi7bdLKB8sqw9r3szaEWMCfAmfvkVHS2jpHaU1x6JHKRpy2h46MiGOva7u4W5s_EykJWikpmOBzom91X1HXnRoUBILZXxArTEbKVfOQZUReMoIPE6QWd3eScaGhOWGOFnJNaxTfXYCRW2NyTEIT7yPjthqrYyc6CDcjhS8fFNwtcnY9ax-JHySrG3nou-t0iocBNOOmEwd2bLKRFSeELAZiFlVZ3045SXiBrVT9ZDbc3xanIKCavI2K5QuDYsb-H3EoXvpTOP0NPa_zTPJDuiFkAbsv18XXz0aBwM=?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Access:</strong> vCenter read-only minimum; Administrator role for remediation steps</li>
@@ -9356,34 +9340,34 @@ Install and Upgrade reference covering Horizon Agent Installation in Golden Imag
 </div>
 <h2 id="uag-deployment">UAG Deployment<a class="headerlink" href="#uag-deployment" title="Permanent link">&para;</a></h2>
 <p>UAG is deployed from OVA. Use PowerShell for repeatable deployment:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Download UAG OVA and deploy-ova-uag.ps1 from VMware</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c"># Edit uag.ini config file:</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="no">[General]</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="n">source</span><span class="p">=</span><span class="n">VMware-Unified-Access-Gateway</span><span class="p">-&lt;</span><span class="n">version</span><span class="p">&gt;.</span><span class="n">ova</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="n">target</span><span class="p">=</span><span class="n">vi</span><span class="p">://</span><span class="n">administrator</span><span class="nv">@vsphere</span><span class="p">.</span><span class="k">local:</span><span class="n">password</span><span class="nv">@vcenter</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">local</span><span class="p">/...</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="n">deploymentOption</span><span class="p">=</span><span class="n">onenic</span>  <span class="c"># or twonic, threenic for DMZ placement</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="n">netInternet</span><span class="p">=</span><span class="n">VM</span> <span class="n">Network</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="n">netManagementNetwork</span><span class="p">=</span><span class="n">VM</span> <span class="n">Network</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="n">netBackendNetwork</span><span class="p">=</span><span class="n">VM</span> <span class="n">Network</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="no">[Horizon]</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="n">proxyDestinationUrl</span><span class="p">=</span><span class="n">https</span><span class="p">://</span><span class="n">horizon-cs01</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="k">local:</span><span class="n">443</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="n">proxyDestinationUrlThumbprints</span><span class="p">=</span><span class="n">sha1</span><span class="p">:&lt;</span><span class="n">cs01-thumbprint</span><span class="p">&gt;</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="c"># Deploy</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="n">pwsh</span> <span class="n">deploy-ova-uag</span><span class="p">.</span><span class="n">ps1</span> <span class="n">uag</span><span class="p">.</span><span class="n">ini</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Download UAG OVA and deploy-ova-uag.ps1 from VMware</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c"># Edit uag.ini config file:</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="no">[General]</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="n">source</span><span class="p">=</span><span class="n">VMware-Unified-Access-Gateway</span><span class="p">-&lt;</span><span class="n">version</span><span class="p">&gt;.</span><span class="n">ova</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="n">target</span><span class="p">=</span><span class="n">vi</span><span class="p">://</span><span class="n">administrator</span><span class="nv">@vsphere</span><span class="p">.</span><span class="k">local:</span><span class="n">password</span><span class="nv">@vcenter</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">local</span><span class="p">/...</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="n">deploymentOption</span><span class="p">=</span><span class="n">onenic</span>  <span class="c"># or twonic, threenic for DMZ placement</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="n">netInternet</span><span class="p">=</span><span class="n">VM</span> <span class="n">Network</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="n">netManagementNetwork</span><span class="p">=</span><span class="n">VM</span> <span class="n">Network</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="n">netBackendNetwork</span><span class="p">=</span><span class="n">VM</span> <span class="n">Network</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="no">[Horizon]</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="n">proxyDestinationUrl</span><span class="p">=</span><span class="n">https</span><span class="p">://</span><span class="n">horizon-cs01</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="k">local:</span><span class="n">443</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="n">proxyDestinationUrlThumbprints</span><span class="p">=</span><span class="n">sha1</span><span class="p">:&lt;</span><span class="n">cs01-thumbprint</span><span class="p">&gt;</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="c"># Deploy</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="n">pwsh</span> <span class="n">deploy-ova-uag</span><span class="p">.</span><span class="n">ps1</span> <span class="n">uag</span><span class="p">.</span><span class="n">ini</span>
 </code></pre></div>
 <p>Post-deployment, configure Edge Service settings via UAG Admin UI (port 9443) or REST API.</p>
 <hr />
 <h2 id="app-volumes-manager-installation">App Volumes Manager Installation<a class="headerlink" href="#app-volumes-manager-installation" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Deploy App Volumes Manager on Windows Server</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="n">App-Volumes-Manager</span><span class="p">-&lt;</span><span class="n">version</span><span class="p">&gt;.</span><span class="n">exe</span> <span class="p">/</span><span class="n">silent</span> <span class="p">/</span><span class="n">norestart</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c"># Configure SQL database connection during wizard</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c"># Default port: HTTPS 443</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c"># After install, register Connection Servers:</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c"># App Volumes Manager → Configuration → Managers → Register new</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Deploy App Volumes Manager on Windows Server</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="n">App-Volumes-Manager</span><span class="p">-&lt;</span><span class="n">version</span><span class="p">&gt;.</span><span class="n">exe</span> <span class="p">/</span><span class="n">silent</span> <span class="p">/</span><span class="n">norestart</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c"># Configure SQL database connection during wizard</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c"># Default port: HTTPS 443</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c"># After install, register Connection Servers:</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c"># App Volumes Manager → Configuration → Managers → Register new</span>
 </code></pre></div>
 <hr />
 <h2 id="upgrade-order">Upgrade Order<a class="headerlink" href="#upgrade-order" title="Permanent link">&para;</a></h2>
@@ -9401,21 +9385,21 @@ Install and Upgrade reference covering Horizon Agent Installation in Golden Imag
 </blockquote>
 <hr />
 <h2 id="upgrade-a-connection-server-rolling">Upgrade a Connection Server (Rolling)<a class="headerlink" href="#upgrade-a-connection-server-rolling" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># 1. Put the CS being upgraded into Quiesce mode (drains sessions)</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c">#    Horizon Console → Settings → Servers → [CS] → Set Maintenance Mode: Quiesce</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c"># 2. Wait for sessions to drain or force-migrate</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c"># 3. Run the new installer (upgrade in-place)</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="n">VMware-Horizon-Connection-Server-x86_64</span><span class="p">-&lt;</span><span class="nb">new-version</span><span class="p">&gt;.</span><span class="n">exe</span> <span class="p">/</span><span class="n">silent</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c"># 4. Verify service is running</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="nb">Get-Service</span> <span class="n">-Name</span> <span class="s2">&quot;VMware Horizon View Connection Server&quot;</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="c"># 5. Disable maintenance mode</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c">#    Horizon Console → Settings → Servers → [CS] → Disable Maintenance Mode</span>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="c"># 6. Proceed to next Connection Server</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># 1. Put the CS being upgraded into Quiesce mode (drains sessions)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c">#    Horizon Console → Settings → Servers → [CS] → Set Maintenance Mode: Quiesce</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c"># 2. Wait for sessions to drain or force-migrate</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c"># 3. Run the new installer (upgrade in-place)</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="n">VMware-Horizon-Connection-Server-x86_64</span><span class="p">-&lt;</span><span class="nb">new-version</span><span class="p">&gt;.</span><span class="n">exe</span> <span class="p">/</span><span class="n">silent</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c"># 4. Verify service is running</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="nb">Get-Service</span> <span class="n">-Name</span> <span class="s2">&quot;VMware Horizon View Connection Server&quot;</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c"># 5. Disable maintenance mode</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c">#    Horizon Console → Settings → Servers → [CS] → Disable Maintenance Mode</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="c"># 6. Proceed to next Connection Server</span>
 </code></pre></div>
 <hr />
 <h2 id="version-compatibility-reference">Version Compatibility Reference<a class="headerlink" href="#version-compatibility-reference" title="Permanent link">&para;</a></h2>
@@ -9424,11 +9408,11 @@ Install and Upgrade reference covering Horizon Agent Installation in Golden Imag
 - Key dependencies: Horizon ↔ vSphere ↔ App Volumes ↔ DEM ↔ vSAN</p>
 <hr />
 <h2 id="post-install-verification">Post-Install Verification<a class="headerlink" href="#post-install-verification" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Verify all Connection Servers are healthy after upgrade</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">Get-HVLocalSession</span>  <span class="c"># should return sessions from all CS nodes</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c"># Horizon Console → Dashboard → all servers green</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c"># Test desktop provisioning — create a test pool, provision 1 desktop, confirm it connects</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Verify all Connection Servers are healthy after upgrade</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Get-HVLocalSession</span>  <span class="c"># should return sessions from all CS nodes</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c"># Horizon Console → Dashboard → all servers green</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c"># Test desktop provisioning — create a test pool, provision 1 desktop, confirm it connects</span>
 </code></pre></div>
 <hr />
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>

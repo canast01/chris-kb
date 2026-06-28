@@ -9361,30 +9361,7 @@ How It Works (VMware Platform) reference covering Site Topology, Test Failover W
 </div>
 <p><img alt="SRM — How It Works (VMware Platform)" src="../../../../../assets/virtualization-vmware-srm-architecture-how-it-works.svg" /></p>
 <h2 id="site-topology">Site Topology<a class="headerlink" href="#site-topology" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>protected: Protected Site {
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>  vc_p: vCenter Server {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>  srm_p: SRM Server {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>  vms: Protected VMs {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>  storage_p: Production Storage {shape: cylinder}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>  vc_p -&gt; srm_p
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>  srm_p -&gt; vms: protect
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>  vms -&gt; storage_p
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>}
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>recovery: Recovery Site {
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>  vc_r: vCenter Server {shape: rectangle}
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>  srm_r: SRM Server {shape: rectangle}
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>  placeholders: Placeholder VMs {shape: rectangle}
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>  storage_r: Recovery Storage {shape: cylinder}
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>  vc_r -&gt; srm_r
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>  srm_r -&gt; placeholders
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>}
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>protected.srm_p -&gt; recovery.srm_r: SRM pairing (TCP 443)
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>protected.storage_p -&gt; recovery.storage_r: Replication (SRA / vSphere Replication)
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNkTFvwyAQhXd-xY3JkHRIJg-VqsyRIhN1rRA-2UgE0JkgRZH_e8E2DhmadDI-3t377tEoQumVNRWQajvPmCPrYwmbCk75CFx5hDsDCPLHVRAOaDwScKQQP_e-Ew7jhCgWptU4RGVPlyTl9fGlLFz60uj72P8xzlsSLaaRUd1cR2jgU3VpkTetTIM0zKiw-ZxAMlAqjJbzmhPBKMsGbGAsWtuIfKugnk9PEdD_I6D3ETgtJHZWR-6UxePvfRpUAr7OgnIWlMlSofROiy-vv13iyllsi3WcUKRMC6vz4QT7_W5dNuYgn5tLYqeVFOMDrnj9BR8QuOuQsLxas18L5Oin?" /></p>
 <p>SRM operates across two paired sites: a <strong>protected site</strong> (production) and a <strong>recovery site</strong> (DR). Each site requires:</p>
 <ul>
 <li>vCenter Server</li>
@@ -9466,28 +9443,7 @@ How It Works (VMware Platform) reference covering Site Topology, Test Failover W
 <p>Planned migration is fully reversible via <strong>Failback</strong> once you have re-protected (reversed replication).</p>
 <hr />
 <h2 id="disaster-recovery-failover">Disaster Recovery Failover<a class="headerlink" href="#disaster-recovery-failover" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>@startuml
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>skinparam sequenceArrowThickness 1.5
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>skinparam roundcorner 5
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>actor &quot;SRM Admin&quot; as Admin
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>participant &quot;SRM\n(Protected Site)&quot; as SRM_P
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>participant &quot;SRM\n(Recovery Site)&quot; as SRM_R
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>participant &quot;Storage SRA&quot; as SRA
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>participant &quot;vCenter\n(Recovery)&quot; as VC_R
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>participant &quot;Recovered VMs&quot; as VMS
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>Admin -&gt; SRM_R: Execute Recovery Plan
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>SRM_R -&gt; SRM_P: Notify protected site (if reachable)
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>SRM_R -&gt; SRA: Invoke failover snapshot
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>SRA --&gt; SRM_R: Storage volumes ready
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>SRM_R -&gt; VC_R: Remove placeholder VMs
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>SRM_R -&gt; VC_R: Register recovered VMs (priority order)
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>VC_R -&gt; VMS: Power on — highest priority first
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>VMS --&gt; SRM_R: VM heartbeat OK
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>SRM_R -&gt; Admin: Recovery report (RPO achieved)
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>@enduml
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/plantuml/svg/eNptkr1Ow0AQhPt7ihVVUgSJIo0LFCuiQMjESlAqJHQ5b-JT7Duzt3ZIx0PwhDwJa-fPBDpL-83czMiTwJq4LgsVttZVmnQJAd9rdAZjIr97ya3ZOgwB7m7HPYh87TLjySHBWClt2BPcLOYJxFlp3Q3ocPhSwrM1ttKOO-DVDVLyjIYxg4VlHHawXN7S_-A5Gt8g7a_Y-RUr7-sNyik-IvFvoJmiY6Se4cFrOb22Ot4l3TIJByZZKNW1gdH94fUIHj7Q1IxwzpcW2qnueKLSCJ492_UeqnPjIC1gYNdAqE2uVwUO-6I4gkfX-C3CWtuiNYbgdBVyz4LFMLoEOFVufFGXGFrDbH_xaotFkq4UE6gKbTD3RSZ-0uovtbFB1hGPXncYVGQ9Wd6DJ1EOVUt3qmQRQep3ovAOvj-_ILebHAPDWbG2FFgJ2I-8TCBH2XqFmmH2dInRjRtdtiSsPDEM5ukMZCaLDWZDNUGXtf_qDzk36PA=?" /></p>
 <p>Used when the protected site is unavailable (power failure, network loss, site disaster).</p>
 <ol>
 <li>Operator initiates <strong>Run</strong> (Recovery) from the Recovery Plan.</li>

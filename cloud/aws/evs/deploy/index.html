@@ -8578,25 +8578,7 @@ EVS cluster deployment: prerequisites, VPC setup, cluster creation via AWS conso
 *Applies to: Amazon EVS*
 </div>
 <p><img alt="Amazon EVS — Deploy" src="../../../../assets/cloud-aws-evs-deploy-index.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>plan: &quot;Plan&quot; {shape: oval}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>prerequisites: &quot;Prerequisites&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>create_evs_cluster_aws_cli: &quot;Create EVS Cluster (AWS CLI)&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>vcf_initial_configuration: &quot;VCF Initial Configuration&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>hcx_deployment_onpremises_side: &quot;HCX Deployment (On-Premises Side)&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>network_extension_setup: &quot;Network Extension Setup&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>postdeploy_validation_checklist: &quot;Post-Deploy Validation Checklist&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>validate: &quot;Validate&quot; {shape: oval}
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>plan -&gt; prerequisites
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>prerequisites -&gt; create_evs_cluster_aws_cli
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>create_evs_cluster_aws_cli -&gt; vcf_initial_configuration
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>vcf_initial_configuration -&gt; hcx_deployment_onpremises_side
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>hcx_deployment_onpremises_side -&gt; network_extension_setup
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>network_extension_setup -&gt; postdeploy_validation_checklist
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>postdeploy_validation_checklist -&gt; validate
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqFkcFuwjAMhu99CqsndugLcJg0dUxDQhsSEtstilJDLUKSJSkwTbz7kqYwmFo4tdb_-4_tryKLwpNWY7C0rn2WGclDkc_DJ4cfV3ODY9A7Lo-ZsWjxqyFHHl30XNZ_5pjI1VriMRMWuUeGO8eEbJxHy_g-_lNoL1sRJssFlEmE0dNHKGbTh960nVgxUuSJSya0WtG6sTwNny_LF5gmDcpLrTepFgdWoZH6e4vKM63Calty6JijKljz1_ITns8GGL2rYt5ZYBEs_QMq9HttNwwPHpULjzOHvjEh7y0pMDkpsIhKb4rRzqfhWDg7Ve0aTNQoNpKcj4cPjiKNB8uzBcqTpf96yRi363rwP-AWPhSPcEX6mnuUh7HeIB4bBwkOs41tt3HdoRkDBsAMAWtPcJvCPUrttt2Zs1_AAEcU?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Access:</strong> admin credentials for the target system and any upstream dependencies (DNS, NTP, vCenter, directory services)</li>
@@ -8636,168 +8618,168 @@ EVS cluster deployment: prerequisites, VPC setup, cluster creation via AWS conso
 <h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
 <h3 id="aws-account-prerequisites">AWS Account Prerequisites<a class="headerlink" href="#aws-account-prerequisites" title="Permanent link">&para;</a></h3>
 <p>Before submitting a cluster creation request, verify that your account has sufficient capacity for <code>i4i.metal</code> instances. The default quota is 0 in most regions. Request the quota increase early — AWS typically takes 1-3 business days to approve i4i.metal increases.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>aws<span class="w"> </span>service-quotas<span class="w"> </span>request-service-quota-increase<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span>--service-code<span class="w"> </span>ec2<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>--quota-code<span class="w"> </span>L-34B43A08<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>--desired-value<span class="w"> </span><span class="m">6</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>--region<span class="w"> </span>us-east-1
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>aws<span class="w"> </span>service-quotas<span class="w"> </span>request-service-quota-increase<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span>--service-code<span class="w"> </span>ec2<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>--quota-code<span class="w"> </span>L-34B43A08<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span>--desired-value<span class="w"> </span><span class="m">6</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span>--region<span class="w"> </span>us-east-1
 </code></pre></div>
 <p>Track the request until it reaches <code>CASE_CLOSED</code> with the new limit applied:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>aws<span class="w"> </span>service-quotas<span class="w"> </span>get-requested-service-quota-change<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span>--request-id<span class="w"> </span>&lt;request-id&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;RequestedQuota.Status&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>aws<span class="w"> </span>service-quotas<span class="w"> </span>get-requested-service-quota-change<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span>--request-id<span class="w"> </span>&lt;request-id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;RequestedQuota.Status&#39;</span>
 </code></pre></div>
 <h3 id="networking-prerequisites">Networking Prerequisites<a class="headerlink" href="#networking-prerequisites" title="Permanent link">&para;</a></h3>
 <p>The VPC must have DNS resolution and DNS hostnames enabled. EVS relies on AWS-provided DNS for internal service discovery during bootstrapping.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Create VPC with DNS enabled</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>aws<span class="w"> </span>ec2<span class="w"> </span>create-vpc<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>--cidr-block<span class="w"> </span><span class="m">10</span>.0.0.0/16<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>--tag-specifications<span class="w"> </span><span class="s1">&#39;ResourceType=vpc,Tags=[{Key=Name,Value=evs-vpc}]&#39;</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>aws<span class="w"> </span>ec2<span class="w"> </span>modify-vpc-attribute<span class="w"> </span>--vpc-id<span class="w"> </span>vpc-xxx<span class="w"> </span>--enable-dns-support
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>aws<span class="w"> </span>ec2<span class="w"> </span>modify-vpc-attribute<span class="w"> </span>--vpc-id<span class="w"> </span>vpc-xxx<span class="w"> </span>--enable-dns-hostnames
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># Set DHCP options to point to your DNS server (required for VCF name resolution)</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>aws<span class="w"> </span>ec2<span class="w"> </span>create-dhcp-options<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">  </span>--dhcp-configurations<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">    </span><span class="s2">&quot;Key=domain-name-servers,Values=[10.0.0.2,169.254.169.253]&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">    </span><span class="s2">&quot;Key=domain-name,Values=[vcf.internal]&quot;</span>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>aws<span class="w"> </span>ec2<span class="w"> </span>associate-dhcp-options<span class="w"> </span>--dhcp-options-id<span class="w"> </span>dopt-xxx<span class="w"> </span>--vpc-id<span class="w"> </span>vpc-xxx
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="c1"># Create required subnets</span>
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>aws<span class="w"> </span>ec2<span class="w"> </span>create-subnet<span class="w"> </span>--vpc-id<span class="w"> </span>vpc-xxx<span class="w"> </span>--cidr-block<span class="w"> </span><span class="m">10</span>.0.0.0/20<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="w">  </span>--availability-zone<span class="w"> </span>us-east-1a<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="w">  </span>--tag-specifications<span class="w"> </span><span class="s1">&#39;ResourceType=subnet,Tags=[{Key=Name,Value=evs-management}]&#39;</span>
-<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>
-<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>aws<span class="w"> </span>ec2<span class="w"> </span>create-subnet<span class="w"> </span>--vpc-id<span class="w"> </span>vpc-xxx<span class="w"> </span>--cidr-block<span class="w"> </span><span class="m">10</span>.0.16.0/20<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a><span class="w">  </span>--availability-zone<span class="w"> </span>us-east-1a<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a><span class="w">  </span>--tag-specifications<span class="w"> </span><span class="s1">&#39;ResourceType=subnet,Tags=[{Key=Name,Value=evs-vtep}]&#39;</span>
-<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>
-<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a><span class="c1"># Internet gateway — required for initial ESXi host provisioning even if you use Direct Connect</span>
-<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>aws<span class="w"> </span>ec2<span class="w"> </span>create-internet-gateway<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a><span class="w">  </span>--tag-specifications<span class="w"> </span><span class="s1">&#39;ResourceType=internet-gateway,Tags=[{Key=Name,Value=evs-igw}]&#39;</span>
-<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>aws<span class="w"> </span>ec2<span class="w"> </span>attach-internet-gateway<span class="w"> </span>--internet-gateway-id<span class="w"> </span>igw-xxx<span class="w"> </span>--vpc-id<span class="w"> </span>vpc-xxx
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Create VPC with DNS enabled</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>aws<span class="w"> </span>ec2<span class="w"> </span>create-vpc<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>--cidr-block<span class="w"> </span><span class="m">10</span>.0.0.0/16<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>--tag-specifications<span class="w"> </span><span class="s1">&#39;ResourceType=vpc,Tags=[{Key=Name,Value=evs-vpc}]&#39;</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>aws<span class="w"> </span>ec2<span class="w"> </span>modify-vpc-attribute<span class="w"> </span>--vpc-id<span class="w"> </span>vpc-xxx<span class="w"> </span>--enable-dns-support
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>aws<span class="w"> </span>ec2<span class="w"> </span>modify-vpc-attribute<span class="w"> </span>--vpc-id<span class="w"> </span>vpc-xxx<span class="w"> </span>--enable-dns-hostnames
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Set DHCP options to point to your DNS server (required for VCF name resolution)</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>aws<span class="w"> </span>ec2<span class="w"> </span>create-dhcp-options<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">  </span>--dhcp-configurations<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">    </span><span class="s2">&quot;Key=domain-name-servers,Values=[10.0.0.2,169.254.169.253]&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">    </span><span class="s2">&quot;Key=domain-name,Values=[vcf.internal]&quot;</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>aws<span class="w"> </span>ec2<span class="w"> </span>associate-dhcp-options<span class="w"> </span>--dhcp-options-id<span class="w"> </span>dopt-xxx<span class="w"> </span>--vpc-id<span class="w"> </span>vpc-xxx
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="c1"># Create required subnets</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>aws<span class="w"> </span>ec2<span class="w"> </span>create-subnet<span class="w"> </span>--vpc-id<span class="w"> </span>vpc-xxx<span class="w"> </span>--cidr-block<span class="w"> </span><span class="m">10</span>.0.0.0/20<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="w">  </span>--availability-zone<span class="w"> </span>us-east-1a<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="w">  </span>--tag-specifications<span class="w"> </span><span class="s1">&#39;ResourceType=subnet,Tags=[{Key=Name,Value=evs-management}]&#39;</span>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>aws<span class="w"> </span>ec2<span class="w"> </span>create-subnet<span class="w"> </span>--vpc-id<span class="w"> </span>vpc-xxx<span class="w"> </span>--cidr-block<span class="w"> </span><span class="m">10</span>.0.16.0/20<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="w">  </span>--availability-zone<span class="w"> </span>us-east-1a<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="w">  </span>--tag-specifications<span class="w"> </span><span class="s1">&#39;ResourceType=subnet,Tags=[{Key=Name,Value=evs-vtep}]&#39;</span>
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>
+<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a><span class="c1"># Internet gateway — required for initial ESXi host provisioning even if you use Direct Connect</span>
+<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a>aws<span class="w"> </span>ec2<span class="w"> </span>create-internet-gateway<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a><span class="w">  </span>--tag-specifications<span class="w"> </span><span class="s1">&#39;ResourceType=internet-gateway,Tags=[{Key=Name,Value=evs-igw}]&#39;</span>
+<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a>aws<span class="w"> </span>ec2<span class="w"> </span>attach-internet-gateway<span class="w"> </span>--internet-gateway-id<span class="w"> </span>igw-xxx<span class="w"> </span>--vpc-id<span class="w"> </span>vpc-xxx
 </code></pre></div>
 <h3 id="direct-connect-prerequisites">Direct Connect Prerequisites<a class="headerlink" href="#direct-connect-prerequisites" title="Permanent link">&para;</a></h3>
 <p>HCX requires low-latency connectivity between on-premises and EVS. Create a private VIF and attach it to your Virtual Gateway or Transit Gateway before starting HCX deployment. Test connectivity from on-premises to the EVS management subnet before proceeding.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Verify private VIF is in available state</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>aws<span class="w"> </span>directconnect<span class="w"> </span>describe-virtual-interfaces<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;virtualInterfaces[?virtualInterfaceType==`private`].[virtualInterfaceId,virtualInterfaceState]&#39;</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Confirm route is advertised to the EVS management subnet from your VGW</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>aws<span class="w"> </span>ec2<span class="w"> </span>describe-route-tables<span class="w"> </span>--filters<span class="w"> </span><span class="nv">Name</span><span class="o">=</span>vpc-id,Values<span class="o">=</span>vpc-xxx<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;RouteTables[].Routes[?GatewayId!=null]&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Verify private VIF is in available state</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>aws<span class="w"> </span>directconnect<span class="w"> </span>describe-virtual-interfaces<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;virtualInterfaces[?virtualInterfaceType==`private`].[virtualInterfaceId,virtualInterfaceState]&#39;</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Confirm route is advertised to the EVS management subnet from your VGW</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>aws<span class="w"> </span>ec2<span class="w"> </span>describe-route-tables<span class="w"> </span>--filters<span class="w"> </span><span class="nv">Name</span><span class="o">=</span>vpc-id,Values<span class="o">=</span>vpc-xxx<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;RouteTables[].Routes[?GatewayId!=null]&#39;</span>
 </code></pre></div>
 <h3 id="iam-prerequisites">IAM Prerequisites<a class="headerlink" href="#iam-prerequisites" title="Permanent link">&para;</a></h3>
 <p>The user or role performing cluster operations needs the following minimum permissions. Attach this policy to your deployment role before running <code>create-environment</code>.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="p">{</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span><span class="nt">&quot;Version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2012-10-17&quot;</span><span class="p">,</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="nt">&quot;Statement&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">    </span><span class="p">{</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">      </span><span class="nt">&quot;Effect&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Allow&quot;</span><span class="p">,</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">      </span><span class="nt">&quot;Action&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">        </span><span class="s2">&quot;evs:*&quot;</span><span class="p">,</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">        </span><span class="s2">&quot;ec2:*&quot;</span><span class="p">,</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">        </span><span class="s2">&quot;secretsmanager:GetSecretValue&quot;</span><span class="p">,</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">        </span><span class="s2">&quot;iam:CreateServiceLinkedRole&quot;</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">      </span><span class="p">],</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="w">      </span><span class="nt">&quot;Resource&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="w">    </span><span class="p">}</span>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="w">  </span><span class="p">]</span>
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="p">{</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="nt">&quot;Version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2012-10-17&quot;</span><span class="p">,</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="nt">&quot;Statement&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">    </span><span class="p">{</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">      </span><span class="nt">&quot;Effect&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Allow&quot;</span><span class="p">,</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">      </span><span class="nt">&quot;Action&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">        </span><span class="s2">&quot;evs:*&quot;</span><span class="p">,</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">        </span><span class="s2">&quot;ec2:*&quot;</span><span class="p">,</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">        </span><span class="s2">&quot;secretsmanager:GetSecretValue&quot;</span><span class="p">,</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">        </span><span class="s2">&quot;iam:CreateServiceLinkedRole&quot;</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">      </span><span class="p">],</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">      </span><span class="nt">&quot;Resource&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="w">  </span><span class="p">]</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="p">}</span>
 </code></pre></div>
 <p>Create the EVS service-linked role manually if it does not already exist in the account:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>aws<span class="w"> </span>iam<span class="w"> </span>create-service-linked-role<span class="w"> </span>--aws-service-name<span class="w"> </span>elasticvmwareservice.amazonaws.com
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1"># Verify it was created</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>aws<span class="w"> </span>iam<span class="w"> </span>get-role<span class="w"> </span>--role-name<span class="w"> </span>AWSServiceRoleForAmazonEVS<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;Role.Arn&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>aws<span class="w"> </span>iam<span class="w"> </span>create-service-linked-role<span class="w"> </span>--aws-service-name<span class="w"> </span>elasticvmwareservice.amazonaws.com
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># Verify it was created</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>aws<span class="w"> </span>iam<span class="w"> </span>get-role<span class="w"> </span>--role-name<span class="w"> </span>AWSServiceRoleForAmazonEVS<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;Role.Arn&#39;</span>
 </code></pre></div>
 <p>Security groups for EVS require specific ports. Create the management SG before cluster creation:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>aws<span class="w"> </span>ec2<span class="w"> </span>create-security-group<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span>--group-name<span class="w"> </span>evs-management-sg<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span>--description<span class="w"> </span><span class="s2">&quot;EVS Management Security Group&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span>--vpc-id<span class="w"> </span>vpc-xxx
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="c1"># Add minimum required ingress rules</span>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="nv">SGID</span><span class="o">=</span><span class="k">$(</span>aws<span class="w"> </span>ec2<span class="w"> </span>describe-security-groups<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="w">  </span>--filters<span class="w"> </span><span class="nv">Name</span><span class="o">=</span>group-name,Values<span class="o">=</span>evs-management-sg<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;SecurityGroups[0].GroupId&#39;</span><span class="w"> </span>--output<span class="w"> </span>text<span class="k">)</span>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>aws<span class="w"> </span>ec2<span class="w"> </span>authorize-security-group-ingress<span class="w"> </span>--group-id<span class="w"> </span><span class="nv">$SGID</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="w">  </span>--ip-permissions<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="w">    </span><span class="s1">&#39;IpProtocol=tcp,FromPort=443,ToPort=443,IpRanges=[{CidrIp=10.0.0.0/8}]&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="w">    </span><span class="s1">&#39;IpProtocol=tcp,FromPort=902,ToPort=902,IpRanges=[{CidrIp=10.0.0.0/8}]&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="w">    </span><span class="s1">&#39;IpProtocol=tcp,FromPort=5671,ToPort=5671,IpRanges=[{CidrIp=10.0.0.0/8}]&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a><span class="w">    </span><span class="s1">&#39;IpProtocol=tcp,FromPort=8301,ToPort=8301,IpRanges=[{CidrIp=10.0.0.0/8}]&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>aws<span class="w"> </span>ec2<span class="w"> </span>create-security-group<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span>--group-name<span class="w"> </span>evs-management-sg<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>--description<span class="w"> </span><span class="s2">&quot;EVS Management Security Group&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span>--vpc-id<span class="w"> </span>vpc-xxx
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># Add minimum required ingress rules</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="nv">SGID</span><span class="o">=</span><span class="k">$(</span>aws<span class="w"> </span>ec2<span class="w"> </span>describe-security-groups<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">  </span>--filters<span class="w"> </span><span class="nv">Name</span><span class="o">=</span>group-name,Values<span class="o">=</span>evs-management-sg<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;SecurityGroups[0].GroupId&#39;</span><span class="w"> </span>--output<span class="w"> </span>text<span class="k">)</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>aws<span class="w"> </span>ec2<span class="w"> </span>authorize-security-group-ingress<span class="w"> </span>--group-id<span class="w"> </span><span class="nv">$SGID</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="w">  </span>--ip-permissions<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="w">    </span><span class="s1">&#39;IpProtocol=tcp,FromPort=443,ToPort=443,IpRanges=[{CidrIp=10.0.0.0/8}]&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="w">    </span><span class="s1">&#39;IpProtocol=tcp,FromPort=902,ToPort=902,IpRanges=[{CidrIp=10.0.0.0/8}]&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="w">    </span><span class="s1">&#39;IpProtocol=tcp,FromPort=5671,ToPort=5671,IpRanges=[{CidrIp=10.0.0.0/8}]&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="w">    </span><span class="s1">&#39;IpProtocol=tcp,FromPort=8301,ToPort=8301,IpRanges=[{CidrIp=10.0.0.0/8}]&#39;</span>
 </code></pre></div>
 <p>Create the SSH key pair for ESXi DCUI access:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>aws<span class="w"> </span>ec2<span class="w"> </span>create-key-pair<span class="w"> </span>--key-name<span class="w"> </span>evs-cluster-key<span class="w"> </span>--output<span class="w"> </span>text<span class="w"> </span>&gt;<span class="w"> </span>evs-cluster-key.pem
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>chmod<span class="w"> </span><span class="m">400</span><span class="w"> </span>evs-cluster-key.pem
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>aws<span class="w"> </span>ec2<span class="w"> </span>create-key-pair<span class="w"> </span>--key-name<span class="w"> </span>evs-cluster-key<span class="w"> </span>--output<span class="w"> </span>text<span class="w"> </span>&gt;<span class="w"> </span>evs-cluster-key.pem
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>chmod<span class="w"> </span><span class="m">400</span><span class="w"> </span>evs-cluster-key.pem
 </code></pre></div>
 <h2 id="create-evs-cluster-aws-cli">Create EVS Cluster (AWS CLI)<a class="headerlink" href="#create-evs-cluster-aws-cli" title="Permanent link">&para;</a></h2>
 <p>Submit the cluster with all required parameters. The <code>connectivityInfo</code> block references the VPC created in the previous step. The <code>initialVlanSubnetTags</code> tells EVS which existing subnets to use for management and VTEP traffic.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>aws<span class="w"> </span>evs<span class="w"> </span>create-environment<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="w">  </span>--environment-name<span class="w"> </span>prod-evs-cluster-01<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span>--vcf-version<span class="w"> </span>VCF-5.1<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">  </span>--connectivity-info<span class="w"> </span><span class="s1">&#39;{</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="s1">    &quot;vpcId&quot;: &quot;vpc-xxx&quot;,</span>
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="s1">    &quot;privateRouteServerPeerings&quot;: [</span>
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="s1">      {</span>
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="s1">        &quot;routeServerId&quot;: &quot;rs-xxx&quot;</span>
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="s1">      }</span>
-<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="s1">    ]</span>
-<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="s1">  }&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="w">  </span>--initial-vlan-subnet-tags<span class="w"> </span><span class="s1">&#39;[</span>
-<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="s1">    {</span>
-<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a><span class="s1">      &quot;key&quot;: &quot;Name&quot;,</span>
-<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a><span class="s1">      &quot;value&quot;: &quot;evs-management&quot;</span>
-<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a><span class="s1">    },</span>
-<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a><span class="s1">    {</span>
-<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a><span class="s1">      &quot;key&quot;: &quot;Name&quot;,</span>
-<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a><span class="s1">      &quot;value&quot;: &quot;evs-vtep&quot;</span>
-<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a><span class="s1">    }</span>
-<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a><span class="s1">  ]&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a><span class="w">  </span>--hosts<span class="w"> </span><span class="s1">&#39;[</span>
-<a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a><span class="s1">    {&quot;instanceType&quot;: &quot;i4i.metal&quot;, &quot;keyName&quot;: &quot;evs-cluster-key&quot;},</span>
-<a id="__codelineno-9-24" name="__codelineno-9-24" href="#__codelineno-9-24"></a><span class="s1">    {&quot;instanceType&quot;: &quot;i4i.metal&quot;, &quot;keyName&quot;: &quot;evs-cluster-key&quot;},</span>
-<a id="__codelineno-9-25" name="__codelineno-9-25" href="#__codelineno-9-25"></a><span class="s1">    {&quot;instanceType&quot;: &quot;i4i.metal&quot;, &quot;keyName&quot;: &quot;evs-cluster-key&quot;}</span>
-<a id="__codelineno-9-26" name="__codelineno-9-26" href="#__codelineno-9-26"></a><span class="s1">  ]&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-27" name="__codelineno-9-27" href="#__codelineno-9-27"></a><span class="w">  </span>--tags<span class="w"> </span><span class="s1">&#39;Environment=prod,Cluster=evs-01&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>aws<span class="w"> </span>evs<span class="w"> </span>create-environment<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">  </span>--environment-name<span class="w"> </span>prod-evs-cluster-01<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span>--vcf-version<span class="w"> </span>VCF-5.1<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span>--connectivity-info<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="s1">    &quot;vpcId&quot;: &quot;vpc-xxx&quot;,</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="s1">    &quot;privateRouteServerPeerings&quot;: [</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="s1">      {</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="s1">        &quot;routeServerId&quot;: &quot;rs-xxx&quot;</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="s1">      }</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="s1">    ]</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="s1">  }&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="w">  </span>--initial-vlan-subnet-tags<span class="w"> </span><span class="s1">&#39;[</span>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="s1">    {</span>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="s1">      &quot;key&quot;: &quot;Name&quot;,</span>
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="s1">      &quot;value&quot;: &quot;evs-management&quot;</span>
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="s1">    },</span>
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a><span class="s1">    {</span>
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a><span class="s1">      &quot;key&quot;: &quot;Name&quot;,</span>
+<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a><span class="s1">      &quot;value&quot;: &quot;evs-vtep&quot;</span>
+<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a><span class="s1">    }</span>
+<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a><span class="s1">  ]&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a><span class="w">  </span>--hosts<span class="w"> </span><span class="s1">&#39;[</span>
+<a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a><span class="s1">    {&quot;instanceType&quot;: &quot;i4i.metal&quot;, &quot;keyName&quot;: &quot;evs-cluster-key&quot;},</span>
+<a id="__codelineno-8-24" name="__codelineno-8-24" href="#__codelineno-8-24"></a><span class="s1">    {&quot;instanceType&quot;: &quot;i4i.metal&quot;, &quot;keyName&quot;: &quot;evs-cluster-key&quot;},</span>
+<a id="__codelineno-8-25" name="__codelineno-8-25" href="#__codelineno-8-25"></a><span class="s1">    {&quot;instanceType&quot;: &quot;i4i.metal&quot;, &quot;keyName&quot;: &quot;evs-cluster-key&quot;}</span>
+<a id="__codelineno-8-26" name="__codelineno-8-26" href="#__codelineno-8-26"></a><span class="s1">  ]&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-27" name="__codelineno-8-27" href="#__codelineno-8-27"></a><span class="w">  </span>--tags<span class="w"> </span><span class="s1">&#39;Environment=prod,Cluster=evs-01&#39;</span>
 </code></pre></div>
 <p>Capture the environment ID from the response, then poll until the state reaches <code>CREATED</code>. The transition from <code>CREATING</code> to <code>CREATED</code> normally takes 90-120 minutes.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="nv">ENV_ID</span><span class="o">=</span><span class="k">$(</span>aws<span class="w"> </span>evs<span class="w"> </span>list-environments<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;environments[?name==`prod-evs-cluster-01`].environmentId&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span>--output<span class="w"> </span>text<span class="k">)</span>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="k">until</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>aws<span class="w"> </span>evs<span class="w"> </span>get-environment<span class="w"> </span>--environment-id<span class="w"> </span><span class="nv">$ENV_ID</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;environment.state&#39;</span><span class="w"> </span>--output<span class="w"> </span>text<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;CREATED&quot;</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>date<span class="k">)</span><span class="s2">: still creating...&quot;</span>
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="w">  </span>sleep<span class="w"> </span><span class="m">120</span>
-<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="k">done</span>
-<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Cluster CREATED&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="nv">ENV_ID</span><span class="o">=</span><span class="k">$(</span>aws<span class="w"> </span>evs<span class="w"> </span>list-environments<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;environments[?name==`prod-evs-cluster-01`].environmentId&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span>--output<span class="w"> </span>text<span class="k">)</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="k">until</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>aws<span class="w"> </span>evs<span class="w"> </span>get-environment<span class="w"> </span>--environment-id<span class="w"> </span><span class="nv">$ENV_ID</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;environment.state&#39;</span><span class="w"> </span>--output<span class="w"> </span>text<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;CREATED&quot;</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>date<span class="k">)</span><span class="s2">: still creating...&quot;</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="w">  </span>sleep<span class="w"> </span><span class="m">120</span>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="k">done</span>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Cluster CREATED&quot;</span>
 </code></pre></div>
 <p>Verify all hosts reached the <code>CREATED</code> state before proceeding:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>aws<span class="w"> </span>evs<span class="w"> </span>list-environment-hosts<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="w">  </span>--environment-id<span class="w"> </span><span class="nv">$ENV_ID</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;environmentHosts[].{HostId:hostId,State:state,InstanceType:instanceType}&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="w">  </span>--output<span class="w"> </span>table
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>aws<span class="w"> </span>evs<span class="w"> </span>list-environment-hosts<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="w">  </span>--environment-id<span class="w"> </span><span class="nv">$ENV_ID</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;environmentHosts[].{HostId:hostId,State:state,InstanceType:instanceType}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">  </span>--output<span class="w"> </span>table
 </code></pre></div>
 <p>Retrieve the SDDC Manager URL from the environment details:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>aws<span class="w"> </span>evs<span class="w"> </span>get-environment<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="w">  </span>--environment-id<span class="w"> </span><span class="nv">$ENV_ID</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;environment.sddcManagerUrl&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">  </span>--output<span class="w"> </span>text
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>aws<span class="w"> </span>evs<span class="w"> </span>get-environment<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="w">  </span>--environment-id<span class="w"> </span><span class="nv">$ENV_ID</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;environment.sddcManagerUrl&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="w">  </span>--output<span class="w"> </span>text
 </code></pre></div>
 <h2 id="vcf-initial-configuration">VCF Initial Configuration<a class="headerlink" href="#vcf-initial-configuration" title="Permanent link">&para;</a></h2>
 <h3 id="retrieve-credentials">Retrieve Credentials<a class="headerlink" href="#retrieve-credentials" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>aws<span class="w"> </span>secretsmanager<span class="w"> </span>get-secret-value<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="w">  </span>--secret-id<span class="w"> </span>/evs/prod-evs-cluster-01/sddc-manager-credentials<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="w">  </span>--query<span class="w"> </span>SecretString<span class="w"> </span>--output<span class="w"> </span>text<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
-<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>
-<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>aws<span class="w"> </span>secretsmanager<span class="w"> </span>get-secret-value<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="w">  </span>--secret-id<span class="w"> </span>/evs/prod-evs-cluster-01/vcenter-credentials<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="w">  </span>--query<span class="w"> </span>SecretString<span class="w"> </span>--output<span class="w"> </span>text<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>aws<span class="w"> </span>secretsmanager<span class="w"> </span>get-secret-value<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="w">  </span>--secret-id<span class="w"> </span>/evs/prod-evs-cluster-01/sddc-manager-credentials<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">  </span>--query<span class="w"> </span>SecretString<span class="w"> </span>--output<span class="w"> </span>text<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>aws<span class="w"> </span>secretsmanager<span class="w"> </span>get-secret-value<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="w">  </span>--secret-id<span class="w"> </span>/evs/prod-evs-cluster-01/vcenter-credentials<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="w">  </span>--query<span class="w"> </span>SecretString<span class="w"> </span>--output<span class="w"> </span>text<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
 </code></pre></div>
 <h3 id="access-sddc-manager-and-vcenter">Access SDDC Manager and vCenter<a class="headerlink" href="#access-sddc-manager-and-vcenter" title="Permanent link">&para;</a></h3>
 <p>Log in to SDDC Manager at the URL returned above. Change the default passwords immediately after first login. The vCenter URL is visible under SDDC Manager → vCenters; use <code>administrator@vsphere.local</code> with the password from Secrets Manager.</p>
@@ -8806,19 +8788,19 @@ EVS cluster deployment: prerequisites, VPC setup, cluster creation via AWS conso
 <p>SDDC Manager UI path: Administration → Network Settings → NTP Configuration → Add NTP Server</p>
 <p>Use at minimum two NTP sources. Prefer AWS Time Sync Service (<code>169.254.169.123</code>) as the primary source for EVS environments.</p>
 <p>Verify all hosts are synchronized after applying:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="k">for</span><span class="w"> </span>HOST<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="k">$(</span>aws<span class="w"> </span>evs<span class="w"> </span>list-environment-hosts<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="w">  </span>--environment-id<span class="w"> </span><span class="nv">$ENV_ID</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;environmentHosts[].hostId&#39;</span><span class="w"> </span>--output<span class="w"> </span>text<span class="k">)</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
-<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Host: </span><span class="nv">$HOST</span><span class="s2">&quot;</span>
-<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="w">  </span>aws<span class="w"> </span>evs<span class="w"> </span>get-environment-host<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="w">    </span>--environment-id<span class="w"> </span><span class="nv">$ENV_ID</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="w">    </span>--host-id<span class="w"> </span><span class="nv">$HOST</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="w">    </span>--query<span class="w"> </span><span class="s1">&#39;environmentHost.ipAddress&#39;</span><span class="w"> </span>--output<span class="w"> </span>text
-<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a><span class="k">done</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="k">for</span><span class="w"> </span>HOST<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="k">$(</span>aws<span class="w"> </span>evs<span class="w"> </span>list-environment-hosts<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="w">  </span>--environment-id<span class="w"> </span><span class="nv">$ENV_ID</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;environmentHosts[].hostId&#39;</span><span class="w"> </span>--output<span class="w"> </span>text<span class="k">)</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Host: </span><span class="nv">$HOST</span><span class="s2">&quot;</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="w">  </span>aws<span class="w"> </span>evs<span class="w"> </span>get-environment-host<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="w">    </span>--environment-id<span class="w"> </span><span class="nv">$ENV_ID</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="w">    </span>--host-id<span class="w"> </span><span class="nv">$HOST</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="w">    </span>--query<span class="w"> </span><span class="s1">&#39;environmentHost.ipAddress&#39;</span><span class="w"> </span>--output<span class="w"> </span>text
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="k">done</span>
 </code></pre></div>
 <p>SSH to each ESXi host and confirm:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>esxcli<span class="w"> </span>system<span class="w"> </span><span class="nb">time</span><span class="w"> </span>get
-<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>ntpq<span class="w"> </span>-p
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>esxcli<span class="w"> </span>system<span class="w"> </span><span class="nb">time</span><span class="w"> </span>get
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>ntpq<span class="w"> </span>-p
 </code></pre></div>
 <h3 id="configure-dns-entries">Configure DNS Entries<a class="headerlink" href="#configure-dns-entries" title="Permanent link">&para;</a></h3>
 <p>Create forward and reverse DNS records for all VCF components before running any SDDC Manager workflows. Missing DNS entries cause workflow failures during domain deployment and certificate generation.</p>
@@ -8854,14 +8836,14 @@ EVS cluster deployment: prerequisites, VPC setup, cluster creation via AWS conso
 </tbody>
 </table>
 <p>Verify DNS resolution is functional from within the EVS management subnet before proceeding:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>nslookup<span class="w"> </span>sddc-manager.vcf.internal<span class="w"> </span>&lt;your-dns-server&gt;
-<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>nslookup<span class="w"> </span>vcenter.vcf.internal<span class="w"> </span>&lt;your-dns-server&gt;
-<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>nslookup<span class="w"> </span>nsx-mgr-01.vcf.internal<span class="w"> </span>&lt;your-dns-server&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>nslookup<span class="w"> </span>sddc-manager.vcf.internal<span class="w"> </span>&lt;your-dns-server&gt;
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>nslookup<span class="w"> </span>vcenter.vcf.internal<span class="w"> </span>&lt;your-dns-server&gt;
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>nslookup<span class="w"> </span>nsx-mgr-01.vcf.internal<span class="w"> </span>&lt;your-dns-server&gt;
 </code></pre></div>
 <h3 id="verify-vsan-cluster-health">Verify vSAN Cluster Health<a class="headerlink" href="#verify-vsan-cluster-health" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># vCenter → Cluster → vSAN → Skyline Health</span>
-<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="c1"># All checks must pass before deploying workloads</span>
-<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="c1"># Pay attention to: disk balance, capacity, network health, and data integrity</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># vCenter → Cluster → vSAN → Skyline Health</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="c1"># All checks must pass before deploying workloads</span>
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="c1"># Pay attention to: disk balance, capacity, network health, and data integrity</span>
 </code></pre></div>
 <h3 id="enable-vsphere-ha">Enable vSphere HA<a class="headerlink" href="#enable-vsphere-ha" title="Permanent link">&para;</a></h3>
 <p>Enable HA on the cluster immediately after verifying vSAN health. Configure admission control to reserve capacity for at least one host failure.</p>
@@ -8882,19 +8864,19 @@ EVS cluster deployment: prerequisites, VPC setup, cluster creation via AWS conso
 <li>Apply to: all vSAN datastores in the cluster</li>
 </ul>
 <h2 id="hcx-deployment-on-premises-side">HCX Deployment (On-Premises Side)<a class="headerlink" href="#hcx-deployment-on-premises-side" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># 1. Download HCX OVA from EVS console → HCX tab</span>
-<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="c1"># 2. Deploy HCX Manager OVA on on-premises vCenter</span>
-<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="c1">#    - Assign management IP, DNS, NTP</span>
-<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="c1">#    - Activate with HCX license key from EVS console</span>
-<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>
-<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a><span class="c1"># 3. Pair on-prem HCX Manager with EVS HCX Cloud</span>
-<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a><span class="c1">#    - HCX Manager UI → Site Pairing → Add Site</span>
-<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a><span class="c1">#    - URL: https://&lt;evs-hcx-cloud-ip&gt;</span>
-<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a><span class="c1">#    - Credentials from EVS Secrets Manager</span>
-<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a>
-<a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a><span class="c1"># 4. Create Service Mesh (compute profile + service mesh)</span>
-<a id="__codelineno-18-12" name="__codelineno-18-12" href="#__codelineno-18-12"></a><span class="c1">#    - Compute profile: select on-prem hosts and datastores</span>
-<a id="__codelineno-18-13" name="__codelineno-18-13" href="#__codelineno-18-13"></a><span class="c1">#    - Service mesh: pair with EVS site → deploys IX, WAN opt, NE appliances</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># 1. Download HCX OVA from EVS console → HCX tab</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="c1"># 2. Deploy HCX Manager OVA on on-premises vCenter</span>
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="c1">#    - Assign management IP, DNS, NTP</span>
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="c1">#    - Activate with HCX license key from EVS console</span>
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a><span class="c1"># 3. Pair on-prem HCX Manager with EVS HCX Cloud</span>
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a><span class="c1">#    - HCX Manager UI → Site Pairing → Add Site</span>
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a><span class="c1">#    - URL: https://&lt;evs-hcx-cloud-ip&gt;</span>
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a><span class="c1">#    - Credentials from EVS Secrets Manager</span>
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>
+<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a><span class="c1"># 4. Create Service Mesh (compute profile + service mesh)</span>
+<a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a><span class="c1">#    - Compute profile: select on-prem hosts and datastores</span>
+<a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a><span class="c1">#    - Service mesh: pair with EVS site → deploys IX, WAN opt, NE appliances</span>
 </code></pre></div>
 <h2 id="network-extension-setup">Network Extension Setup<a class="headerlink" href="#network-extension-setup" title="Permanent link">&para;</a></h2>
 <p>Create a Network Extension before migrating any VMs that cannot be re-IPed. NE stretches a Layer 2 segment between on-premises and EVS so that VMs retain their original IP addresses after migration. The NE appliance is deployed as part of the HCX Service Mesh.</p>
@@ -8907,24 +8889,24 @@ EVS cluster deployment: prerequisites, VPC setup, cluster creation via AWS conso
 <li>Submit — the extension deploys in 3-5 minutes</li>
 </ol>
 <p>Verify the extension status from HCX Manager:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1"># HCX Manager REST API — retrieve NE status</span>
-<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;admin:&lt;password&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="w">  </span><span class="s2">&quot;https://&lt;hcx-manager-ip&gt;/hybridity/api/networks/extension&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Accept: application/json&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.data[] | {network: .displayName, state: .state}&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># HCX Manager REST API — retrieve NE status</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;admin:&lt;password&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="w">  </span><span class="s2">&quot;https://&lt;hcx-manager-ip&gt;/hybridity/api/networks/extension&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Accept: application/json&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.data[] | {network: .displayName, state: .state}&#39;</span>
 </code></pre></div>
 <p>Expected state: <code>UP</code>. A state of <code>DEGRADED</code> indicates a connectivity issue between the NE appliances. Check that UDP 4500 (IPSEC NAT-T) and TCP 443 are open between the on-premises HCX appliance and the EVS HCX Cloud appliance.</p>
 <h2 id="post-deploy-validation-checklist">Post-Deploy Validation Checklist<a class="headerlink" href="#post-deploy-validation-checklist" title="Permanent link">&para;</a></h2>
 <h3 id="check-1-evs-environment-state">Check 1: EVS Environment State<a class="headerlink" href="#check-1-evs-environment-state" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>aws<span class="w"> </span>evs<span class="w"> </span>get-environment<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="w">  </span>--environment-id<span class="w"> </span><span class="nv">$ENV_ID</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;environment.state&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="w">  </span>--output<span class="w"> </span>text
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>aws<span class="w"> </span>evs<span class="w"> </span>get-environment<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="w">  </span>--environment-id<span class="w"> </span><span class="nv">$ENV_ID</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;environment.state&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="w">  </span>--output<span class="w"> </span>text
 </code></pre></div>
 <p>Expected output: <code>CREATED</code>. Any other state requires investigation in AWS CloudTrail and SDDC Manager logs.</p>
 <h3 id="check-2-all-hosts-connected-in-vcenter">Check 2: All Hosts Connected in vCenter<a class="headerlink" href="#check-2-all-hosts-connected-in-vcenter" title="Permanent link">&para;</a></h3>
 <p>Log in to vCenter and navigate to the cluster. All three ESXi hosts must appear in <code>Connected</code> state. A host in <code>Disconnected</code> or <code>Not Responding</code> state indicates a management network or DNS issue.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="c1"># PowerCLI equivalent (run from a jump host with network access to vCenter)</span>
-<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>Get-VMHost<span class="w"> </span><span class="p">|</span><span class="w"> </span>Select<span class="w"> </span>Name,<span class="w"> </span>ConnectionState,<span class="w"> </span>PowerState<span class="w"> </span><span class="p">|</span><span class="w"> </span>Format-Table<span class="w"> </span>-AutoSize
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># PowerCLI equivalent (run from a jump host with network access to vCenter)</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>Get-VMHost<span class="w"> </span><span class="p">|</span><span class="w"> </span>Select<span class="w"> </span>Name,<span class="w"> </span>ConnectionState,<span class="w"> </span>PowerState<span class="w"> </span><span class="p">|</span><span class="w"> </span>Format-Table<span class="w"> </span>-AutoSize
 </code></pre></div>
 <h3 id="check-3-vsan-health-green">Check 3: vSAN Health Green<a class="headerlink" href="#check-3-vsan-health-green" title="Permanent link">&para;</a></h3>
 <p>vCenter → Cluster → Monitor → vSAN → Skyline Health. Every health check must show green before deploying workload VMs. Pay particular attention to:</p>
@@ -8937,9 +8919,9 @@ EVS cluster deployment: prerequisites, VPC setup, cluster creation via AWS conso
 <p>NSX Manager UI → System → Overview. All three NSX Manager nodes must show <code>Stable</code>. Transport nodes (the ESXi hosts) must show <code>Success</code> under the Transport Nodes tab.</p>
 <h3 id="check-5-test-vm-internet-reachability">Check 5: Test VM Internet Reachability<a class="headerlink" href="#check-5-test-vm-internet-reachability" title="Permanent link">&para;</a></h3>
 <p>Deploy a minimal test VM on the vSAN datastore and verify it can reach the internet through the T0 router. This confirms the NSX-T uplink, T0, and T1 routing are functional end-to-end.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="c1"># From the test VM</span>
-<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>ping<span class="w"> </span>-c<span class="w"> </span><span class="m">4</span><span class="w"> </span><span class="m">8</span>.8.8.8
-<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>curl<span class="w"> </span>-s<span class="w"> </span>https://ifconfig.me
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="c1"># From the test VM</span>
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>ping<span class="w"> </span>-c<span class="w"> </span><span class="m">4</span><span class="w"> </span><span class="m">8</span>.8.8.8
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>curl<span class="w"> </span>-s<span class="w"> </span>https://ifconfig.me
 </code></pre></div>
 <h3 id="check-6-hcx-service-mesh-status">Check 6: HCX Service Mesh Status<a class="headerlink" href="#check-6-hcx-service-mesh-status" title="Permanent link">&para;</a></h3>
 <p>HCX Manager → Interconnect → Service Mesh. All appliances (IX, WAN Opt, NE) must show <code>Green</code> under the Status column. A yellow or red status requires checking the HCX system events log.</p>
@@ -8947,21 +8929,21 @@ EVS cluster deployment: prerequisites, VPC setup, cluster creation via AWS conso
 <p>Verify that SDDC Manager can rotate VCF component passwords. This confirms Secrets Manager integration is functioning and that SDDC Manager has the credentials it needs to manage all components.</p>
 <p>SDDC Manager UI path: Security → Password Management → Rotate</p>
 <p>Select one non-critical component (for example, an NSX Manager local account) and run a test rotation. Confirm the new credential is reflected in AWS Secrets Manager after the rotation completes:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>aws<span class="w"> </span>secretsmanager<span class="w"> </span>get-secret-value<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a><span class="w">  </span>--secret-id<span class="w"> </span>/evs/prod-evs-cluster-01/sddc-manager-credentials<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;SecretString&#39;</span><span class="w"> </span>--output<span class="w"> </span>text<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.lastRotated
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>aws<span class="w"> </span>secretsmanager<span class="w"> </span>get-secret-value<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="w">  </span>--secret-id<span class="w"> </span>/evs/prod-evs-cluster-01/sddc-manager-credentials<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;SecretString&#39;</span><span class="w"> </span>--output<span class="w"> </span>text<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.lastRotated
 </code></pre></div>
 <h3 id="check-8-bidirectional-dns-resolution">Check 8: Bidirectional DNS Resolution<a class="headerlink" href="#check-8-bidirectional-dns-resolution" title="Permanent link">&para;</a></h3>
 <p>Verify DNS works in both directions: from a VM inside EVS to on-premises hostnames, and from on-premises hosts to EVS component names.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="c1"># From a test VM inside EVS — resolve on-premises hostname</span>
-<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>nslookup<span class="w"> </span>&lt;on-prem-hostname&gt;<span class="w"> </span>&lt;on-prem-dns-server-ip&gt;
-<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>
-<a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a><span class="c1"># From on-premises jump host — resolve EVS components</span>
-<a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a>nslookup<span class="w"> </span>vcenter.vcf.internal<span class="w"> </span>&lt;evs-dns-server-ip&gt;
-<a id="__codelineno-24-6" name="__codelineno-24-6" href="#__codelineno-24-6"></a>nslookup<span class="w"> </span>sddc-manager.vcf.internal<span class="w"> </span>&lt;evs-dns-server-ip&gt;
-<a id="__codelineno-24-7" name="__codelineno-24-7" href="#__codelineno-24-7"></a>
-<a id="__codelineno-24-8" name="__codelineno-24-8" href="#__codelineno-24-8"></a><span class="c1"># Verify vCenter is reachable from on-premises over Direct Connect</span>
-<a id="__codelineno-24-9" name="__codelineno-24-9" href="#__codelineno-24-9"></a>curl<span class="w"> </span>-k<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;%{http_code}&quot;</span><span class="w"> </span>https://vcenter.vcf.internal/ui/
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="c1"># From a test VM inside EVS — resolve on-premises hostname</span>
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>nslookup<span class="w"> </span>&lt;on-prem-hostname&gt;<span class="w"> </span>&lt;on-prem-dns-server-ip&gt;
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>
+<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a><span class="c1"># From on-premises jump host — resolve EVS components</span>
+<a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a>nslookup<span class="w"> </span>vcenter.vcf.internal<span class="w"> </span>&lt;evs-dns-server-ip&gt;
+<a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a>nslookup<span class="w"> </span>sddc-manager.vcf.internal<span class="w"> </span>&lt;evs-dns-server-ip&gt;
+<a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a>
+<a id="__codelineno-23-8" name="__codelineno-23-8" href="#__codelineno-23-8"></a><span class="c1"># Verify vCenter is reachable from on-premises over Direct Connect</span>
+<a id="__codelineno-23-9" name="__codelineno-23-9" href="#__codelineno-23-9"></a>curl<span class="w"> </span>-k<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;%{http_code}&quot;</span><span class="w"> </span>https://vcenter.vcf.internal/ui/
 </code></pre></div>
 <p>Expected: <code>200</code> for the curl check. DNS failures in either direction indicate a DHCP options or forwarder misconfiguration that must be resolved before running any migrations.</p>
 <hr />

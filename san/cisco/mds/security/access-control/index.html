@@ -7901,25 +7901,7 @@ Cisco MDS access control: RBAC role assignment with `role name`, network-admin v
 </div>
 <p><img alt="MDS — Access Control" src="../../../../../assets/san-cisco-mds-security-access-control.svg" /></p>
 <hr />
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: down
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>external: External / Untrusted {shape: rectangle}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>access_control_architecture: &quot;Access Control Architecture&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>aaa_integration_tacacs_radius: &quot;AAA Integration (TACACS+ / RADIUS)&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>management_plane_acls: &quot;Management Plane ACLs&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>vsan_isolation_as_an_access_control_: &quot;VSAN Isolation as an Access Control Boundary&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>zoning_as_dataplane_access_control: &quot;Zoning as Data-Plane Access Control&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>audit_logging: &quot;Audit Logging&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>core: &quot;Cisco MDS Core&quot; {shape: hexagon}
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>external -&gt; access_control_architecture: traffic in
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>access_control_architecture -&gt; aaa_integration_tacacs_radius
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>aaa_integration_tacacs_radius -&gt; management_plane_acls
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>management_plane_acls -&gt; vsan_isolation_as_an_access_control_
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>vsan_isolation_as_an_access_control_ -&gt; zoning_as_dataplane_access_control
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>zoning_as_dataplane_access_control -&gt; audit_logging
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>audit_logging -&gt; core: secured path
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNUrFOwzAQ3fMVp04gVLF3QDIpQ6UWIUIZWKyT7SaW0nNlO1BA_XfspKVpZaXdcn7v3l3uPamtEl4bmoA0X5RlauuVJawn8LT_gntYkreN80rCr6twoyYQu5DKWu0yFEI5x4UJJFNztKLSPsCNDbwRa1HIOxRYDx0l1RC5Jq9Ki3Et7lGgcNyi1I2LeozB7IjDzRvLWV7chS1f2XS2LG6TsmskLNVakeebGklxFHWUW_y_w0t8B5bPXVLh0yFx7Uzd7YWOh_rs34Pge8GeYXagATpAgrMjPJqGJNrv5JwfQ5rKqC_R42HZ_pgw5aMlRfVpII33q59MSV-3kdrz2pRlaI_XjDXMuzrZIUxrY66dMLCYFkG-71yltlga2h2DA-MHGIyEt7haaQGahqLTygxlYTgpsT3peToJkX6NwVelIIpddvEKo9sb9B079S_CnT1OiXAyCRv0VfYHrqlqww==?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Access:</strong> Storage admin credentials (cluster admin or equivalent)</li>
@@ -7959,134 +7941,134 @@ Cisco MDS access control: RBAC role assignment with `role name`, network-admin v
   class DENY block</code></pre>
 <h3 id="vsan-scoped-roles">VSAN-Scoped Roles<a class="headerlink" href="#vsan-scoped-roles" title="Permanent link">&para;</a></h3>
 <p>For environments where different teams own different VSANs, VSAN-scoped roles restrict a user's configuration rights to specific VSANs:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Create a VSAN-scoped role for VSAN 20 (replication team)</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>role<span class="w"> </span>name<span class="w"> </span>repl-admin
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>vsan<span class="w"> </span>policy<span class="w"> </span>permit
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">    </span>permit<span class="w"> </span>vsan<span class="w"> </span><span class="m">20</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>rule<span class="w"> </span><span class="m">1</span><span class="w"> </span>permit<span class="w"> </span>read-write<span class="w"> </span>feature<span class="w"> </span>zone
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span>rule<span class="w"> </span><span class="m">2</span><span class="w"> </span>permit<span class="w"> </span>read-write<span class="w"> </span>feature<span class="w"> </span>vsan
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span>rule<span class="w"> </span><span class="m">10</span><span class="w"> </span>permit<span class="w"> </span><span class="nb">read</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>username<span class="w"> </span>repladmin<span class="w"> </span>role<span class="w"> </span>repl-admin
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Create a VSAN-scoped role for VSAN 20 (replication team)</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>role<span class="w"> </span>name<span class="w"> </span>repl-admin
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>vsan<span class="w"> </span>policy<span class="w"> </span>permit
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">    </span>permit<span class="w"> </span>vsan<span class="w"> </span><span class="m">20</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span>rule<span class="w"> </span><span class="m">1</span><span class="w"> </span>permit<span class="w"> </span>read-write<span class="w"> </span>feature<span class="w"> </span>zone
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">  </span>rule<span class="w"> </span><span class="m">2</span><span class="w"> </span>permit<span class="w"> </span>read-write<span class="w"> </span>feature<span class="w"> </span>vsan
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">  </span>rule<span class="w"> </span><span class="m">10</span><span class="w"> </span>permit<span class="w"> </span><span class="nb">read</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>username<span class="w"> </span>repladmin<span class="w"> </span>role<span class="w"> </span>repl-admin
 </code></pre></div>
 <hr />
 <h2 id="aaa-integration-tacacs-radius">AAA Integration (TACACS+ / RADIUS)<a class="headerlink" href="#aaa-integration-tacacs-radius" title="Permanent link">&para;</a></h2>
 <p>Local user accounts should be limited to break-glass scenarios. All operational access should authenticate via TACACS+ (preferred) or RADIUS.</p>
 <h3 id="tacacs-configuration">TACACS+ Configuration<a class="headerlink" href="#tacacs-configuration" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Define TACACS+ servers</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>tacacs-server<span class="w"> </span>host<span class="w"> </span><span class="m">10</span>.10.1.10<span class="w"> </span>key<span class="w"> </span><span class="m">7</span><span class="w"> </span>&lt;encrypted-key&gt;
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>tacacs-server<span class="w"> </span>host<span class="w"> </span><span class="m">10</span>.10.1.11<span class="w"> </span>key<span class="w"> </span><span class="m">7</span><span class="w"> </span>&lt;encrypted-key&gt;
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Create AAA server group</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>aaa<span class="w"> </span>group<span class="w"> </span>server<span class="w"> </span>tacacs+<span class="w"> </span>TACACS-SERVERS
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span>server<span class="w"> </span><span class="m">10</span>.10.1.10
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span>server<span class="w"> </span><span class="m">10</span>.10.1.11
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Configure authentication: TACACS+ first, local as fallback</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>aaa<span class="w"> </span>authentication<span class="w"> </span>login<span class="w"> </span>default<span class="w"> </span>group<span class="w"> </span>TACACS-SERVERS<span class="w"> </span><span class="nb">local</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Configure authorization: TACACS+ for commands</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>aaa<span class="w"> </span>authorization<span class="w"> </span>commands<span class="w"> </span>default<span class="w"> </span>group<span class="w"> </span>TACACS-SERVERS<span class="w"> </span><span class="nb">local</span>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="c1"># Configure accounting: log all exec and config commands</span>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>aaa<span class="w"> </span>accounting<span class="w"> </span>default<span class="w"> </span>group<span class="w"> </span>TACACS-SERVERS
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Define TACACS+ servers</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>tacacs-server<span class="w"> </span>host<span class="w"> </span><span class="m">10</span>.10.1.10<span class="w"> </span>key<span class="w"> </span><span class="m">7</span><span class="w"> </span>&lt;encrypted-key&gt;
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>tacacs-server<span class="w"> </span>host<span class="w"> </span><span class="m">10</span>.10.1.11<span class="w"> </span>key<span class="w"> </span><span class="m">7</span><span class="w"> </span>&lt;encrypted-key&gt;
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Create AAA server group</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>aaa<span class="w"> </span>group<span class="w"> </span>server<span class="w"> </span>tacacs+<span class="w"> </span>TACACS-SERVERS
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span>server<span class="w"> </span><span class="m">10</span>.10.1.10
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">  </span>server<span class="w"> </span><span class="m">10</span>.10.1.11
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Configure authentication: TACACS+ first, local as fallback</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>aaa<span class="w"> </span>authentication<span class="w"> </span>login<span class="w"> </span>default<span class="w"> </span>group<span class="w"> </span>TACACS-SERVERS<span class="w"> </span><span class="nb">local</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Configure authorization: TACACS+ for commands</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>aaa<span class="w"> </span>authorization<span class="w"> </span>commands<span class="w"> </span>default<span class="w"> </span>group<span class="w"> </span>TACACS-SERVERS<span class="w"> </span><span class="nb">local</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="c1"># Configure accounting: log all exec and config commands</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>aaa<span class="w"> </span>accounting<span class="w"> </span>default<span class="w"> </span>group<span class="w"> </span>TACACS-SERVERS
 </code></pre></div>
 <h3 id="role-mapping-via-tacacs">Role Mapping via TACACS+<a class="headerlink" href="#role-mapping-via-tacacs" title="Permanent link">&para;</a></h3>
 <p>TACACS+ can return the NX-OS role as an AV-pair in the authorization response, eliminating the need for local role configuration:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Cisco AV-pair in TACACS+ user profile (ISE / TACACS+ server config):</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>cisco-av-pair<span class="w"> </span><span class="o">=</span><span class="w"> </span>shell:roles*<span class="s2">&quot;network-admin&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Cisco AV-pair in TACACS+ user profile (ISE / TACACS+ server config):</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>cisco-av-pair<span class="w"> </span><span class="o">=</span><span class="w"> </span>shell:roles*<span class="s2">&quot;network-admin&quot;</span>
 </code></pre></div>
 <p>When the AV-pair is returned, NX-OS assigns the role dynamically at login. No local role assignment is required beyond the user account existing (or not — TACACS+ can create dynamic accounts).</p>
 <h3 id="testing-aaa">Testing AAA<a class="headerlink" href="#testing-aaa" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Test TACACS+ authentication for a specific user</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">test</span><span class="w"> </span>aaa<span class="w"> </span>group<span class="w"> </span>TACACS-SERVERS<span class="w"> </span>&lt;username&gt;<span class="w"> </span>&lt;password&gt;
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Verify TACACS+ server reachability</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>show<span class="w"> </span>tacacs-server
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>show<span class="w"> </span>tacacs-server<span class="w"> </span>statistics
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Verify AAA configuration</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>show<span class="w"> </span>aaa
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Test TACACS+ authentication for a specific user</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">test</span><span class="w"> </span>aaa<span class="w"> </span>group<span class="w"> </span>TACACS-SERVERS<span class="w"> </span>&lt;username&gt;<span class="w"> </span>&lt;password&gt;
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Verify TACACS+ server reachability</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>show<span class="w"> </span>tacacs-server
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>show<span class="w"> </span>tacacs-server<span class="w"> </span>statistics
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># Verify AAA configuration</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>show<span class="w"> </span>aaa
 </code></pre></div>
 <hr />
 <h2 id="management-plane-acls">Management Plane ACLs<a class="headerlink" href="#management-plane-acls" title="Permanent link">&para;</a></h2>
 <p>Restrict SSH and SNMP access to the switch management interface to authorised source IP ranges only.</p>
 <h3 id="ssh-management-access-acl">SSH / Management Access ACL<a class="headerlink" href="#ssh-management-access-acl" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Define the management source subnet</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>ip<span class="w"> </span>access-list<span class="w"> </span>MGMT-ACL
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="m">10</span><span class="w"> </span>permit<span class="w"> </span>tcp<span class="w"> </span><span class="m">10</span>.10.0.0/24<span class="w"> </span>any<span class="w"> </span>eq<span class="w"> </span><span class="m">22</span><span class="w">    </span><span class="c1"># SSH from management subnet</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span><span class="m">20</span><span class="w"> </span>permit<span class="w"> </span>tcp<span class="w"> </span><span class="m">10</span>.10.0.0/24<span class="w"> </span>any<span class="w"> </span>eq<span class="w"> </span><span class="m">443</span><span class="w">   </span><span class="c1"># HTTPS from management subnet</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span><span class="m">30</span><span class="w"> </span>deny<span class="w"> </span>ip<span class="w"> </span>any<span class="w"> </span>any<span class="w"> </span>log
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Apply to mgmt0 interface (inbound)</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>interface<span class="w"> </span>mgmt0
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">  </span>ip<span class="w"> </span>access-group<span class="w"> </span>MGMT-ACL<span class="w"> </span><span class="k">in</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="c1"># Verify</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>show<span class="w"> </span>ip<span class="w"> </span>access-lists<span class="w"> </span>MGMT-ACL
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>show<span class="w"> </span>running-config<span class="w"> </span>interface<span class="w"> </span>mgmt0
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Define the management source subnet</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ip<span class="w"> </span>access-list<span class="w"> </span>MGMT-ACL
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="m">10</span><span class="w"> </span>permit<span class="w"> </span>tcp<span class="w"> </span><span class="m">10</span>.10.0.0/24<span class="w"> </span>any<span class="w"> </span>eq<span class="w"> </span><span class="m">22</span><span class="w">    </span><span class="c1"># SSH from management subnet</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span><span class="m">20</span><span class="w"> </span>permit<span class="w"> </span>tcp<span class="w"> </span><span class="m">10</span>.10.0.0/24<span class="w"> </span>any<span class="w"> </span>eq<span class="w"> </span><span class="m">443</span><span class="w">   </span><span class="c1"># HTTPS from management subnet</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span><span class="m">30</span><span class="w"> </span>deny<span class="w"> </span>ip<span class="w"> </span>any<span class="w"> </span>any<span class="w"> </span>log
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Apply to mgmt0 interface (inbound)</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>interface<span class="w"> </span>mgmt0
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">  </span>ip<span class="w"> </span>access-group<span class="w"> </span>MGMT-ACL<span class="w"> </span><span class="k">in</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># Verify</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>show<span class="w"> </span>ip<span class="w"> </span>access-lists<span class="w"> </span>MGMT-ACL
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>show<span class="w"> </span>running-config<span class="w"> </span>interface<span class="w"> </span>mgmt0
 </code></pre></div>
 <h3 id="snmp-source-restriction">SNMP Source Restriction<a class="headerlink" href="#snmp-source-restriction" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Restrict SNMP polling to NMS subnet</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>ip<span class="w"> </span>access-list<span class="w"> </span>SNMP-ACL
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span><span class="m">10</span><span class="w"> </span>permit<span class="w"> </span>udp<span class="w"> </span><span class="m">10</span>.10.2.0/24<span class="w"> </span>any<span class="w"> </span>eq<span class="w"> </span><span class="m">161</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span><span class="m">20</span><span class="w"> </span>deny<span class="w"> </span>udp<span class="w"> </span>any<span class="w"> </span>any<span class="w"> </span>eq<span class="w"> </span><span class="m">161</span><span class="w"> </span>log
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># Restrict SNMP trap delivery (optional — traps are outbound)</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Apply inbound on mgmt0 for polling:</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>interface<span class="w"> </span>mgmt0
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">  </span>ip<span class="w"> </span>access-group<span class="w"> </span>SNMP-ACL<span class="w"> </span><span class="k">in</span><span class="w">   </span><span class="c1"># if separate from MGMT-ACL</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Restrict SNMP polling to NMS subnet</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>ip<span class="w"> </span>access-list<span class="w"> </span>SNMP-ACL
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="m">10</span><span class="w"> </span>permit<span class="w"> </span>udp<span class="w"> </span><span class="m">10</span>.10.2.0/24<span class="w"> </span>any<span class="w"> </span>eq<span class="w"> </span><span class="m">161</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span><span class="m">20</span><span class="w"> </span>deny<span class="w"> </span>udp<span class="w"> </span>any<span class="w"> </span>any<span class="w"> </span>eq<span class="w"> </span><span class="m">161</span><span class="w"> </span>log
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1"># Restrict SNMP trap delivery (optional — traps are outbound)</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Apply inbound on mgmt0 for polling:</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>interface<span class="w"> </span>mgmt0
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">  </span>ip<span class="w"> </span>access-group<span class="w"> </span>SNMP-ACL<span class="w"> </span><span class="k">in</span><span class="w">   </span><span class="c1"># if separate from MGMT-ACL</span>
 </code></pre></div>
 <hr />
 <h2 id="vsan-isolation-as-an-access-control-boundary">VSAN Isolation as an Access Control Boundary<a class="headerlink" href="#vsan-isolation-as-an-access-control-boundary" title="Permanent link">&para;</a></h2>
 <p>VSANs are the primary data-plane isolation mechanism. Hosts in different VSANs cannot communicate without explicit Inter-VSAN Routing (IVR) policy.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Confirm no production host or storage ports remain in VSAN 1 (default — insecure)</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>show<span class="w"> </span>vsan<span class="w"> </span><span class="m">1</span><span class="w"> </span>membership
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="c1"># Any F_Ports listed are a configuration error — move them to a named production VSAN</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1"># Verify VSAN separation</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>show<span class="w"> </span>vsan<span class="w"> </span>membership
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># Each port should be in exactly one named VSAN</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="c1"># Verify ISL trunk carries only the intended VSANs</span>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>show<span class="w"> </span>trunk
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="c1"># Restrict to required VSANs only</span>
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>interface<span class="w"> </span>fc2/1
-<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="w">  </span>switchport<span class="w"> </span>trunk<span class="w"> </span>allowed<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>,20,99<span class="w">   </span><span class="c1"># explicit allowlist — remove vsan 1</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Confirm no production host or storage ports remain in VSAN 1 (default — insecure)</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>show<span class="w"> </span>vsan<span class="w"> </span><span class="m">1</span><span class="w"> </span>membership
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1"># Any F_Ports listed are a configuration error — move them to a named production VSAN</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Verify VSAN separation</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>show<span class="w"> </span>vsan<span class="w"> </span>membership
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Each port should be in exactly one named VSAN</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1"># Verify ISL trunk carries only the intended VSANs</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>show<span class="w"> </span>trunk
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="c1"># Restrict to required VSANs only</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>interface<span class="w"> </span>fc2/1
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="w">  </span>switchport<span class="w"> </span>trunk<span class="w"> </span>allowed<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>,20,99<span class="w">   </span><span class="c1"># explicit allowlist — remove vsan 1</span>
 </code></pre></div>
 <hr />
 <h2 id="zoning-as-data-plane-access-control">Zoning as Data-Plane Access Control<a class="headerlink" href="#zoning-as-data-plane-access-control" title="Permanent link">&para;</a></h2>
 <p>Zoning enforces which initiator-target pairs can communicate within a VSAN. Use enhanced zoning (default-deny) to ensure that non-zoned devices cannot communicate.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Enable enhanced zoning on all production VSANs</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>zone<span class="w"> </span>mode<span class="w"> </span>enhanced<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>zone<span class="w"> </span>mode<span class="w"> </span>enhanced<span class="w"> </span>vsan<span class="w"> </span><span class="m">20</span>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># Confirm mode</span>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>show<span class="w"> </span>zone<span class="w"> </span>status<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># Mode: Enhanced</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c1"># Default-deny: enabled</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Enable enhanced zoning on all production VSANs</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>zone<span class="w"> </span>mode<span class="w"> </span>enhanced<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>zone<span class="w"> </span>mode<span class="w"> </span>enhanced<span class="w"> </span>vsan<span class="w"> </span><span class="m">20</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1"># Confirm mode</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>show<span class="w"> </span>zone<span class="w"> </span>status<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># Mode: Enhanced</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="c1"># Default-deny: enabled</span>
 </code></pre></div>
 <p>In enhanced mode, any device not explicitly included in an active zone cannot communicate with any other device in the VSAN, regardless of FLOGI state. This is the required production standard.</p>
 <hr />
 <h2 id="audit-logging">Audit Logging<a class="headerlink" href="#audit-logging" title="Permanent link">&para;</a></h2>
 <p>All configuration changes should be logged with user identity and command content.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Enable accounting for all commands</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>aaa<span class="w"> </span>accounting<span class="w"> </span>default<span class="w"> </span>group<span class="w"> </span>TACACS-SERVERS
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Forward syslog including accounting events to SIEM</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>logging<span class="w"> </span>server<span class="w"> </span><span class="m">10</span>.10.3.50<span class="w"> </span><span class="m">5</span><span class="w"> </span>facility<span class="w"> </span>local7
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>logging<span class="w"> </span>server<span class="w"> </span><span class="m">10</span>.10.3.51<span class="w"> </span><span class="m">5</span><span class="w"> </span>facility<span class="w"> </span>local7
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="c1"># Set local syslog level</span>
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>logging<span class="w"> </span>level<span class="w"> </span>aaa<span class="w"> </span><span class="m">6</span>
-<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>logging<span class="w"> </span>level<span class="w"> </span>zone<span class="w"> </span><span class="m">6</span>
-<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>logging<span class="w"> </span>level<span class="w"> </span>flogi<span class="w"> </span><span class="m">6</span>
-<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>
-<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="c1"># Verify accounting log</span>
-<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>show<span class="w"> </span>accounting<span class="w"> </span>log
-<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>
-<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a><span class="c1"># Confirm syslog forwarding</span>
-<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>show<span class="w"> </span>logging<span class="w"> </span>server
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Enable accounting for all commands</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>aaa<span class="w"> </span>accounting<span class="w"> </span>default<span class="w"> </span>group<span class="w"> </span>TACACS-SERVERS
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Forward syslog including accounting events to SIEM</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>logging<span class="w"> </span>server<span class="w"> </span><span class="m">10</span>.10.3.50<span class="w"> </span><span class="m">5</span><span class="w"> </span>facility<span class="w"> </span>local7
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>logging<span class="w"> </span>server<span class="w"> </span><span class="m">10</span>.10.3.51<span class="w"> </span><span class="m">5</span><span class="w"> </span>facility<span class="w"> </span>local7
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c1"># Set local syslog level</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>logging<span class="w"> </span>level<span class="w"> </span>aaa<span class="w"> </span><span class="m">6</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>logging<span class="w"> </span>level<span class="w"> </span>zone<span class="w"> </span><span class="m">6</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>logging<span class="w"> </span>level<span class="w"> </span>flogi<span class="w"> </span><span class="m">6</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="c1"># Verify accounting log</span>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>show<span class="w"> </span>accounting<span class="w"> </span>log
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="c1"># Confirm syslog forwarding</span>
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>show<span class="w"> </span>logging<span class="w"> </span>server
 </code></pre></div>
 <hr />
 <h2 id="access-control-checklist">Access Control Checklist<a class="headerlink" href="#access-control-checklist" title="Permanent link">&para;</a></h2>

@@ -8199,23 +8199,7 @@ PostgreSQL authentication — pg_hba.conf methods (scram-sha-256, md5, peer, lda
 *Applies to: RHEL / Ubuntu LTS*
 </div>
 <p><img alt="PostgreSQL — Authentication" src="../../../../../assets/compute-linux-postgresql-security-authentication.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: down
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>external: External / Untrusted {shape: rectangle}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>authentication_methods: &quot;Authentication Methods&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>pghbaconf_configuration: &quot;pg_hba.conf Configuration&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>password_management: &quot;Password Management&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>ssl_client_certificate_auth: &quot;SSL Client Certificate Auth&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>ldap_authentication: &quot;LDAP Authentication&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>core: &quot;PostgreSQL Core&quot; {shape: hexagon}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>external -&gt; authentication_methods: traffic in
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>authentication_methods -&gt; pghbaconf_configuration
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>pghbaconf_configuration -&gt; password_management
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>password_management -&gt; ssl_client_certificate_auth
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>ssl_client_certificate_auth -&gt; ldap_authentication
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>ldap_authentication -&gt; core: secured path
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp9UsFqwzAMvecrRO7b7jkMSrZbCx1hZ6PZimNI7GA7tFD677WasizM6cUYPb0n-T0r40lG42wFyp1sUdA5krfYV_D5uMEbfNvopxBJwSV0OFIFzEKre7oWOMWObDQSWUcMFDunQgXlbgXAYQbKnMaoux-UzraCD6Mnj_NS5ahFgl65DPVfLK-DIZycV2JAi5qGND5pHB9VOPxWs-wQeiF7k2AhyUfT8uok-IFJpWn2UN9RqBcU-JVZtV7hKNbmJJX9x-4Ia2eybOk88eouRO2p-UqzU2Vp7eiM2tnrkhi8vMNWFtFjm_YFYzfiYvJGCFvh3Cn__c5lwK1PzH1mPFMzTubc5dbZtkBy8um3jpjEb7rvFAs=?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Access:</strong> root or sudo-capable account on target hosts</li>
@@ -8268,42 +8252,42 @@ PostgreSQL authentication — pg_hba.conf methods (scram-sha-256, md5, peer, lda
 </tbody>
 </table>
 <h2 id="pg_hbaconf-configuration">pg_hba.conf Configuration<a class="headerlink" href="#pg_hbaconf-configuration" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a># /etc/postgresql/16/main/pg_hba.conf
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a># Local (socket): postgres via peer; all others via scram
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>local   all   postgres                   peer
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>local   all   all                        scram-sha-256
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a># Remote: scram for app subnet; reject everything else
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>host    app_prod   appuser   10.0.1.0/24   scram-sha-256
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>host    all        all       0.0.0.0/0     reject
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a># /etc/postgresql/16/main/pg_hba.conf
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a># Local (socket): postgres via peer; all others via scram
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>local   all   postgres                   peer
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>local   all   all                        scram-sha-256
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a># Remote: scram for app subnet; reject everything else
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>host    app_prod   appuser   10.0.1.0/24   scram-sha-256
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>host    all        all       0.0.0.0/0     reject
 </code></pre></div>
 <p>After editing: <code>sudo systemctl reload postgresql-16</code>
 Or from psql: <code>SELECT pg_reload_conf();</code></p>
 <h2 id="password-management">Password Management<a class="headerlink" href="#password-management" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1">-- Set / change password</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="k">ALTER</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="n">appuser</span><span class="w"> </span><span class="k">WITH</span><span class="w"> </span><span class="k">ENCRYPTED</span><span class="w"> </span><span class="n">PASSWORD</span><span class="w"> </span><span class="s1">&#39;NewPass1!&#39;</span><span class="p">;</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1">-- Expire password (force reset on next login)</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="k">ALTER</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="n">appuser</span><span class="w"> </span><span class="k">VALID</span><span class="w"> </span><span class="k">UNTIL</span><span class="w"> </span><span class="s1">&#39;2026-12-31&#39;</span><span class="p">;</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1">-- Check password expiry</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">usename</span><span class="p">,</span><span class="w"> </span><span class="n">valuntil</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">pg_user</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1">-- Set / change password</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="k">ALTER</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="n">appuser</span><span class="w"> </span><span class="k">WITH</span><span class="w"> </span><span class="k">ENCRYPTED</span><span class="w"> </span><span class="n">PASSWORD</span><span class="w"> </span><span class="s1">&#39;NewPass1!&#39;</span><span class="p">;</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1">-- Expire password (force reset on next login)</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="k">ALTER</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="n">appuser</span><span class="w"> </span><span class="k">VALID</span><span class="w"> </span><span class="k">UNTIL</span><span class="w"> </span><span class="s1">&#39;2026-12-31&#39;</span><span class="p">;</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1">-- Check password expiry</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">usename</span><span class="p">,</span><span class="w"> </span><span class="n">valuntil</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">pg_user</span><span class="p">;</span>
 </code></pre></div>
 <h2 id="ssl-client-certificate-auth">SSL Client Certificate Auth<a class="headerlink" href="#ssl-client-certificate-auth" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a># pg_hba.conf
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>hostssl  app_prod  certuser  10.0.1.0/24  cert  clientcert=verify-full
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a># pg_hba.conf
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>hostssl  app_prod  certuser  10.0.1.0/24  cert  clientcert=verify-full
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Connect with client cert</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>psql<span class="w"> </span><span class="s2">&quot;host=db.example.com dbname=app_prod user=certuser \</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="s2">  sslcert=/etc/ssl/client.crt \</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="s2">  sslkey=/etc/ssl/client.key \</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="s2">  sslrootcert=/etc/ssl/ca.crt \</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="s2">  sslmode=verify-full&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Connect with client cert</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>psql<span class="w"> </span><span class="s2">&quot;host=db.example.com dbname=app_prod user=certuser \</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="s2">  sslcert=/etc/ssl/client.crt \</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="s2">  sslkey=/etc/ssl/client.key \</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="s2">  sslrootcert=/etc/ssl/ca.crt \</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="s2">  sslmode=verify-full&quot;</span>
 </code></pre></div>
 <h2 id="ldap-authentication">LDAP Authentication<a class="headerlink" href="#ldap-authentication" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a># pg_hba.conf
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>host  all  all  10.0.1.0/24  ldap  ldapserver=ldap.example.com  ldapbasedn=&quot;dc=example,dc=com&quot;  ldapsearchattribute=sAMAccountName
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a># pg_hba.conf
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>host  all  all  10.0.1.0/24  ldap  ldapserver=ldap.example.com  ldapbasedn=&quot;dc=example,dc=com&quot;  ldapsearchattribute=sAMAccountName
 </code></pre></div>
 <hr />
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>

@@ -7873,21 +7873,7 @@
 Daily Infrastructure Health Checks reference covering Overview, Morning Check Routine, What to Look For, Escalation Decision Tree, Documentation and Handover and 1 more sections.
 </div>
 <p><img alt="Daily Infrastructure Health Checks" src="../../../../assets/backup-dr-operations-health-checks-daily-checks-index.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>center: &quot;DR Operations&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>morning_check_routine: &quot;Morning Check Routine&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>what_to_look_for: &quot;What to Look For&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>escalation_decision_tree: &quot;Escalation Decision Tree&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>documentation_and_handover: &quot;Documentation and Handover&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>common_daily_check_commands: &quot;Common Daily Check Commands&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>center -&gt; morning_check_routine
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>center -&gt; what_to_look_for
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>center -&gt; escalation_decision_tree
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>center -&gt; documentation_and_handover
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>center -&gt; common_daily_check_commands
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp9kU1qxDAMhfc-hci-F8iim6Sli5bCMNClMY4am0mswfb0hzJ3rzQxrSmebox5n_UkPU8-os2eQg_Rzy4rZTFkjD104w6ejxiN0NTBV3LmiD04_DAzhbNaKQYfZm0d2oOOdMo-MO-eNh0G0WG36b_10s-EecGzencm60x6ITroV5KmLyxBJnhkCe4pNuswWbNc5tITWp_kkiNK87sfBGNBsGfU9JnInlZed7MyYdKOD3rb1q8hsA4PBTa9LK2rzGP88lkiEYlLEpsNFwqj0BLMUGjTrfwC3NxCM-aK_w2xQtdyqp5cj6B69M9u6hvTydSk?" /></p>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>A consistent daily check routine catches issues before they escalate into incidents. The goal is not to review everything — it is to confirm that the most critical systems are healthy, recent changes have not caused drift, and nothing in overnight logs or alerts requires action before business hours begin.</p>
 <hr />
@@ -7971,17 +7957,17 @@ Daily Infrastructure Health Checks reference covering Overview, Morning Check Ro
 </ul>
 <hr />
 <h2 id="common-daily-check-commands">Common Daily Check Commands<a class="headerlink" href="#common-daily-check-commands" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Disk usage — filesystems over 80%</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>df<span class="w"> </span>-h<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;NR&gt;1 &amp;&amp; $5+0 &gt; 80 {print}&#39;</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Services that are not running (systemd)</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>systemctl<span class="w"> </span>list-units<span class="w"> </span>--state<span class="o">=</span>failed
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Last backup job exit codes (example: restic)</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>restic-backup.service<span class="w"> </span>--since<span class="w"> </span><span class="s2">&quot;yesterday&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Certificate expiry check (example: openssl)</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>hostname:443<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-enddate
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Disk usage — filesystems over 80%</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>df<span class="w"> </span>-h<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;NR&gt;1 &amp;&amp; $5+0 &gt; 80 {print}&#39;</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Services that are not running (systemd)</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>systemctl<span class="w"> </span>list-units<span class="w"> </span>--state<span class="o">=</span>failed
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Last backup job exit codes (example: restic)</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>restic-backup.service<span class="w"> </span>--since<span class="w"> </span><span class="s2">&quot;yesterday&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Certificate expiry check (example: openssl)</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>hostname:443<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-enddate
 </code></pre></div>
 <p>Add environment-specific commands as you test and verify them.</p>
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>

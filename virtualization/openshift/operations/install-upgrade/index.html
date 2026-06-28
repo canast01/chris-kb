@@ -7699,25 +7699,7 @@ OCP upgrade channels, EUS (Extended Update Support) path, version lifecycle, upg
 *Applies to: OpenShift 4.x*
 </div>
 <p><img alt="OpenShift — Install &amp; Upgrade" src="../../../../assets/virtualization-openshift-operations-install-upgrade-index.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>plan: &quot;Plan&quot; {shape: oval}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>upgrade_flow: &quot;Upgrade Flow&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>channel_selection: &quot;Channel Selection&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>upgrade_prerequisites_checklist: &quot;Upgrade Prerequisites Checklist&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>standard_upgrade_procedure: &quot;Standard Upgrade Procedure&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>upgrade_command_reference: &quot;Upgrade Command Reference&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>pause_worker_machineconfigpool: &quot;Pause Worker MachineConfigPool&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>validate: &quot;Validate&quot; {shape: oval}
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>plan -&gt; upgrade_flow
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>upgrade_flow -&gt; channel_selection
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>channel_selection -&gt; upgrade_prerequisites_checklist
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>upgrade_prerequisites_checklist -&gt; standard_upgrade_procedure
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>standard_upgrade_procedure -&gt; upgrade_command_reference
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>upgrade_command_reference -&gt; pause_worker_machineconfigpool
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>pause_worker_machineconfigpool -&gt; validate
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqFkT1uxCAQhXufYuQ-F9hiG0vpIllZZVMiBGMbLQYCOFtEe_eAbWQS_2wFw3vzZsTHhUXmhVYnsKLtfFEYSUNR1uEo4cd11OAJ9DeVj2IwraUcSSP1PVg-phJeQ7lYYx5VrcRHwTqqFEriUKYhZTW9wSW9bXamScaixa9BOOHREdYhu0nhfDa8zh1QJcdmqgsXTi0nS7xmyAcbbOVlFmFJnsXDDZnu-9BILDZhEcUw262aNHhP2maSoYNDctf2hpb0lHVCIdOqEa3RWkYU0QCfowHeJkM1Gupg2MwMuASnPi5zna__YY6g4eUMOdU_iKO4QriGmmfs8HrGM0bswzngls9ekdhnFNuOv_0JlRiQ_rj4BSj1OcE=?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Access:</strong> Admin credentials on all affected systems</li>
@@ -7779,18 +7761,18 @@ OCP upgrade channels, EUS (Extended Update Support) path, version lifecycle, upg
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Check current channel</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>oc<span class="w"> </span>get<span class="w"> </span>clusterversion<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.items[0].spec.channel}&#39;</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Switch channel</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>oc<span class="w"> </span>adm<span class="w"> </span>upgrade<span class="w"> </span>channel<span class="w"> </span>stable-4.14
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Or via patch</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>oc<span class="w"> </span>patch<span class="w"> </span>clusterversion<span class="w"> </span>version<span class="w"> </span>--type<span class="o">=</span>json<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">  </span>-p<span class="w"> </span><span class="s1">&#39;[{&quot;op&quot;:&quot;add&quot;,&quot;path&quot;:&quot;/spec/channel&quot;,&quot;value&quot;:&quot;stable-4.14&quot;}]&#39;</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># List available versions after channel switch</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>oc<span class="w"> </span>adm<span class="w"> </span>upgrade
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Check current channel</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>oc<span class="w"> </span>get<span class="w"> </span>clusterversion<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.items[0].spec.channel}&#39;</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Switch channel</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>oc<span class="w"> </span>adm<span class="w"> </span>upgrade<span class="w"> </span>channel<span class="w"> </span>stable-4.14
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Or via patch</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>oc<span class="w"> </span>patch<span class="w"> </span>clusterversion<span class="w"> </span>version<span class="w"> </span>--type<span class="o">=</span>json<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">  </span>-p<span class="w"> </span><span class="s1">&#39;[{&quot;op&quot;:&quot;add&quot;,&quot;path&quot;:&quot;/spec/channel&quot;,&quot;value&quot;:&quot;stable-4.14&quot;}]&#39;</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># List available versions after channel switch</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>oc<span class="w"> </span>adm<span class="w"> </span>upgrade
 </code></pre></div>
 <p><strong>EUS channels</strong> apply only to even-numbered minor versions (4.10, 4.12, 4.14, 4.16). Subscriptions to an EUS channel unlock the EUS-to-EUS upgrade path; odd-version intermediate releases are not available in EUS channels.</p>
 <h2 id="upgrade-prerequisites-checklist">Upgrade Prerequisites Checklist<a class="headerlink" href="#upgrade-prerequisites-checklist" title="Permanent link">&para;</a></h2>
@@ -7841,37 +7823,37 @@ OCP upgrade channels, EUS (Extended Update Support) path, version lifecycle, upg
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Single-liner health pre-check</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>oc<span class="w"> </span>get<span class="w"> </span>co<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;True.*False.*False&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;^NAME&quot;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>oc<span class="w"> </span>get<span class="w"> </span>nodes<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot; Ready&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;^NAME&quot;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>oc<span class="w"> </span>get<span class="w"> </span>mcp<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;^NAME&quot;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Pre-checks PASSED&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Single-liner health pre-check</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>oc<span class="w"> </span>get<span class="w"> </span>co<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;True.*False.*False&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;^NAME&quot;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>oc<span class="w"> </span>get<span class="w"> </span>nodes<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot; Ready&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;^NAME&quot;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>oc<span class="w"> </span>get<span class="w"> </span>mcp<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;^NAME&quot;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Pre-checks PASSED&quot;</span>
 </code></pre></div>
 <h2 id="standard-upgrade-procedure">Standard Upgrade Procedure<a class="headerlink" href="#standard-upgrade-procedure" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># 1. Set channel</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>oc<span class="w"> </span>adm<span class="w"> </span>upgrade<span class="w"> </span>channel<span class="w"> </span>stable-4.14
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># 2. Review available versions and recommended path</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>oc<span class="w"> </span>adm<span class="w"> </span>upgrade
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># 3. Trigger upgrade to specific version (recommended — never use --to-latest in prod)</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>oc<span class="w"> </span>adm<span class="w"> </span>upgrade<span class="w"> </span>--to<span class="o">=</span><span class="m">4</span>.14.5
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># 4. Monitor ClusterVersion</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>oc<span class="w"> </span>get<span class="w"> </span>clusterversion<span class="w"> </span>-w
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="c1"># Progressing=True while upgrading; Progressing=False + version updated = done</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="c1"># 5. Monitor cluster operators (update sequentially, ~30-60 min total)</span>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>oc<span class="w"> </span>get<span class="w"> </span>co<span class="w"> </span>-w
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="c1"># 6. Monitor node upgrades (MCO drains and reboots)</span>
-<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>oc<span class="w"> </span>get<span class="w"> </span>nodes<span class="w"> </span>-w
-<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>oc<span class="w"> </span>get<span class="w"> </span>mcp<span class="w"> </span>-w
-<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="c1"># MachineConfigPool: UPDATED=True, DEGRADED=False = done</span>
-<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>
-<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a><span class="c1"># 7. Confirm completion</span>
-<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>oc<span class="w"> </span>get<span class="w"> </span>clusterversion
-<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a><span class="c1"># STATUS field: &quot;Cluster version is 4.14.5&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># 1. Set channel</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>oc<span class="w"> </span>adm<span class="w"> </span>upgrade<span class="w"> </span>channel<span class="w"> </span>stable-4.14
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># 2. Review available versions and recommended path</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>oc<span class="w"> </span>adm<span class="w"> </span>upgrade
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># 3. Trigger upgrade to specific version (recommended — never use --to-latest in prod)</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>oc<span class="w"> </span>adm<span class="w"> </span>upgrade<span class="w"> </span>--to<span class="o">=</span><span class="m">4</span>.14.5
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># 4. Monitor ClusterVersion</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>oc<span class="w"> </span>get<span class="w"> </span>clusterversion<span class="w"> </span>-w
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># Progressing=True while upgrading; Progressing=False + version updated = done</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="c1"># 5. Monitor cluster operators (update sequentially, ~30-60 min total)</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>oc<span class="w"> </span>get<span class="w"> </span>co<span class="w"> </span>-w
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="c1"># 6. Monitor node upgrades (MCO drains and reboots)</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>oc<span class="w"> </span>get<span class="w"> </span>nodes<span class="w"> </span>-w
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>oc<span class="w"> </span>get<span class="w"> </span>mcp<span class="w"> </span>-w
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="c1"># MachineConfigPool: UPDATED=True, DEGRADED=False = done</span>
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="c1"># 7. Confirm completion</span>
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>oc<span class="w"> </span>get<span class="w"> </span>clusterversion
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a><span class="c1"># STATUS field: &quot;Cluster version is 4.14.5&quot;</span>
 </code></pre></div>
 <h2 id="upgrade-command-reference">Upgrade Command Reference<a class="headerlink" href="#upgrade-command-reference" title="Permanent link">&para;</a></h2>
 <table>
@@ -7922,61 +7904,61 @@ OCP upgrade channels, EUS (Extended Update Support) path, version lifecycle, upg
 </table>
 <h2 id="pause-worker-machineconfigpool">Pause Worker MachineConfigPool<a class="headerlink" href="#pause-worker-machineconfigpool" title="Permanent link">&para;</a></h2>
 <p>Pausing the worker MCP prevents worker nodes from rebooting during control plane upgrade. Required for EUS-to-EUS; optional for standard upgrades to reduce disruption window.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Pause workers before upgrade</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>oc<span class="w"> </span>patch<span class="w"> </span>mcp<span class="w"> </span>worker<span class="w"> </span>--type<span class="w"> </span>merge<span class="w"> </span>-p<span class="w"> </span><span class="s1">&#39;{&quot;spec&quot;:{&quot;paused&quot;:true}}&#39;</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Verify paused</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>oc<span class="w"> </span>get<span class="w"> </span>mcp<span class="w"> </span>worker<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.spec.paused}&#39;</span><span class="w">    </span><span class="c1"># → true</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Trigger upgrade (only control plane reboots)</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>oc<span class="w"> </span>adm<span class="w"> </span>upgrade<span class="w"> </span>--to<span class="o">=</span><span class="m">4</span>.14.5
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>oc<span class="w"> </span>get<span class="w"> </span>co<span class="w"> </span>-w<span class="w">                          </span><span class="c1"># Wait for all operators to complete</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># After control plane done — resume workers</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>oc<span class="w"> </span>patch<span class="w"> </span>mcp<span class="w"> </span>worker<span class="w"> </span>--type<span class="w"> </span>merge<span class="w"> </span>-p<span class="w"> </span><span class="s1">&#39;{&quot;spec&quot;:{&quot;paused&quot;:false}}&#39;</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>oc<span class="w"> </span>get<span class="w"> </span>mcp<span class="w"> </span>-w<span class="w">                         </span><span class="c1"># Watch worker pool drain+reboot</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Pause workers before upgrade</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>oc<span class="w"> </span>patch<span class="w"> </span>mcp<span class="w"> </span>worker<span class="w"> </span>--type<span class="w"> </span>merge<span class="w"> </span>-p<span class="w"> </span><span class="s1">&#39;{&quot;spec&quot;:{&quot;paused&quot;:true}}&#39;</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Verify paused</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>oc<span class="w"> </span>get<span class="w"> </span>mcp<span class="w"> </span>worker<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.spec.paused}&#39;</span><span class="w">    </span><span class="c1"># → true</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Trigger upgrade (only control plane reboots)</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>oc<span class="w"> </span>adm<span class="w"> </span>upgrade<span class="w"> </span>--to<span class="o">=</span><span class="m">4</span>.14.5
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>oc<span class="w"> </span>get<span class="w"> </span>co<span class="w"> </span>-w<span class="w">                          </span><span class="c1"># Wait for all operators to complete</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="c1"># After control plane done — resume workers</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>oc<span class="w"> </span>patch<span class="w"> </span>mcp<span class="w"> </span>worker<span class="w"> </span>--type<span class="w"> </span>merge<span class="w"> </span>-p<span class="w"> </span><span class="s1">&#39;{&quot;spec&quot;:{&quot;paused&quot;:false}}&#39;</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>oc<span class="w"> </span>get<span class="w"> </span>mcp<span class="w"> </span>-w<span class="w">                         </span><span class="c1"># Watch worker pool drain+reboot</span>
 </code></pre></div>
 <blockquote>
 <p><strong>Warning:</strong> Do not leave worker MCP paused after upgrade completes. Nodes will be out of sync with the cluster config until resumed.</p>
 </blockquote>
 <h2 id="eus-to-eus-upgrade-eg-412-414">EUS-to-EUS Upgrade (e.g. 4.12 → 4.14)<a class="headerlink" href="#eus-to-eus-upgrade-eg-412-414" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># 1. Switch to EUS channel for source version</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>oc<span class="w"> </span>patch<span class="w"> </span>clusterversion<span class="w"> </span>version<span class="w"> </span>--type<span class="o">=</span>json<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>-p<span class="w"> </span><span class="s1">&#39;[{&quot;op&quot;:&quot;add&quot;,&quot;path&quot;:&quot;/spec/channel&quot;,&quot;value&quot;:&quot;eus-4.12&quot;}]&#39;</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># 2. Pause worker MachineConfigPool</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>oc<span class="w"> </span>patch<span class="w"> </span>mcp<span class="w"> </span>worker<span class="w"> </span>--type<span class="o">=</span>merge<span class="w"> </span>-p<span class="w"> </span><span class="s1">&#39;{&quot;spec&quot;:{&quot;paused&quot;:true}}&#39;</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># 3. Upgrade to intermediate version (4.13.z) — required even for EUS skip</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>oc<span class="w"> </span>adm<span class="w"> </span>upgrade<span class="w"> </span>--to<span class="o">=</span><span class="m">4</span>.13.27<span class="w">          </span><span class="c1"># Check oc adm upgrade for correct z-stream</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>oc<span class="w"> </span>get<span class="w"> </span>co<span class="w"> </span>-w<span class="w">                          </span><span class="c1"># Wait for operators to complete</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="c1"># 4. Switch to EUS channel for intermediate</span>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>oc<span class="w"> </span>patch<span class="w"> </span>clusterversion<span class="w"> </span>version<span class="w"> </span>--type<span class="o">=</span>json<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="w">  </span>-p<span class="w"> </span><span class="s1">&#39;[{&quot;op&quot;:&quot;add&quot;,&quot;path&quot;:&quot;/spec/channel&quot;,&quot;value&quot;:&quot;eus-4.14&quot;}]&#39;</span>
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="c1"># 5. Upgrade to 4.14 target</span>
-<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>oc<span class="w"> </span>adm<span class="w"> </span>upgrade<span class="w"> </span>--to<span class="o">=</span><span class="m">4</span>.14.5
-<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>oc<span class="w"> </span>get<span class="w"> </span>co<span class="w"> </span>-w
-<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>
-<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a><span class="c1"># 6. Unpause workers (they upgrade from 4.12 config directly to 4.14)</span>
-<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>oc<span class="w"> </span>patch<span class="w"> </span>mcp<span class="w"> </span>worker<span class="w"> </span>--type<span class="o">=</span>merge<span class="w"> </span>-p<span class="w"> </span><span class="s1">&#39;{&quot;spec&quot;:{&quot;paused&quot;:false}}&#39;</span>
-<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>oc<span class="w"> </span>get<span class="w"> </span>mcp<span class="w"> </span>-w
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># 1. Switch to EUS channel for source version</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>oc<span class="w"> </span>patch<span class="w"> </span>clusterversion<span class="w"> </span>version<span class="w"> </span>--type<span class="o">=</span>json<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>-p<span class="w"> </span><span class="s1">&#39;[{&quot;op&quot;:&quot;add&quot;,&quot;path&quot;:&quot;/spec/channel&quot;,&quot;value&quot;:&quot;eus-4.12&quot;}]&#39;</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># 2. Pause worker MachineConfigPool</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>oc<span class="w"> </span>patch<span class="w"> </span>mcp<span class="w"> </span>worker<span class="w"> </span>--type<span class="o">=</span>merge<span class="w"> </span>-p<span class="w"> </span><span class="s1">&#39;{&quot;spec&quot;:{&quot;paused&quot;:true}}&#39;</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># 3. Upgrade to intermediate version (4.13.z) — required even for EUS skip</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>oc<span class="w"> </span>adm<span class="w"> </span>upgrade<span class="w"> </span>--to<span class="o">=</span><span class="m">4</span>.13.27<span class="w">          </span><span class="c1"># Check oc adm upgrade for correct z-stream</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>oc<span class="w"> </span>get<span class="w"> </span>co<span class="w"> </span>-w<span class="w">                          </span><span class="c1"># Wait for operators to complete</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="c1"># 4. Switch to EUS channel for intermediate</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>oc<span class="w"> </span>patch<span class="w"> </span>clusterversion<span class="w"> </span>version<span class="w"> </span>--type<span class="o">=</span>json<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="w">  </span>-p<span class="w"> </span><span class="s1">&#39;[{&quot;op&quot;:&quot;add&quot;,&quot;path&quot;:&quot;/spec/channel&quot;,&quot;value&quot;:&quot;eus-4.14&quot;}]&#39;</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="c1"># 5. Upgrade to 4.14 target</span>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>oc<span class="w"> </span>adm<span class="w"> </span>upgrade<span class="w"> </span>--to<span class="o">=</span><span class="m">4</span>.14.5
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>oc<span class="w"> </span>get<span class="w"> </span>co<span class="w"> </span>-w
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="c1"># 6. Unpause workers (they upgrade from 4.12 config directly to 4.14)</span>
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>oc<span class="w"> </span>patch<span class="w"> </span>mcp<span class="w"> </span>worker<span class="w"> </span>--type<span class="o">=</span>merge<span class="w"> </span>-p<span class="w"> </span><span class="s1">&#39;{&quot;spec&quot;:{&quot;paused&quot;:false}}&#39;</span>
+<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>oc<span class="w"> </span>get<span class="w"> </span>mcp<span class="w"> </span>-w
 </code></pre></div>
 <h2 id="multi-hop-upgrade">Multi-Hop Upgrade<a class="headerlink" href="#multi-hop-upgrade" title="Permanent link">&para;</a></h2>
 <p>OCP upgrade graph enforces version adjacency. Some versions require traversing an intermediate release. The upgrade graph at <code>access.redhat.com/labs/ocpupgradegraph</code> shows valid paths.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Check if direct path exists</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>oc<span class="w"> </span>adm<span class="w"> </span>upgrade
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1"># If desired version not listed, an intermediate hop is required</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Upgrade to intermediate first</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>oc<span class="w"> </span>adm<span class="w"> </span>upgrade<span class="w"> </span>--to<span class="o">=</span><span class="m">4</span>.13.27
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Wait for completion, then:</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>oc<span class="w"> </span>adm<span class="w"> </span>upgrade<span class="w"> </span>--to<span class="o">=</span><span class="m">4</span>.14.5
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># For disconnected (specific image digest)</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>oc<span class="w"> </span>adm<span class="w"> </span>upgrade<span class="w"> </span>--to-image<span class="o">=</span>quay.local:8443/ocp4/openshift/release:4.14.5-x86_64<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="w">  </span>--allow-explicit-upgrade
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Check if direct path exists</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>oc<span class="w"> </span>adm<span class="w"> </span>upgrade
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># If desired version not listed, an intermediate hop is required</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># Upgrade to intermediate first</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>oc<span class="w"> </span>adm<span class="w"> </span>upgrade<span class="w"> </span>--to<span class="o">=</span><span class="m">4</span>.13.27
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Wait for completion, then:</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>oc<span class="w"> </span>adm<span class="w"> </span>upgrade<span class="w"> </span>--to<span class="o">=</span><span class="m">4</span>.14.5
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># For disconnected (specific image digest)</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>oc<span class="w"> </span>adm<span class="w"> </span>upgrade<span class="w"> </span>--to-image<span class="o">=</span>quay.local:8443/ocp4/openshift/release:4.14.5-x86_64<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="w">  </span>--allow-explicit-upgrade
 </code></pre></div>
 <h2 id="ocp-version-lifecycle">OCP Version Lifecycle<a class="headerlink" href="#ocp-version-lifecycle" title="Permanent link">&para;</a></h2>
 <table>
@@ -8080,20 +8062,20 @@ OCP upgrade channels, EUS (Extended Update Support) path, version lifecycle, upg
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Investigate stalled upgrade</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>oc<span class="w"> </span>get<span class="w"> </span>clusterversion<span class="w"> </span>-o<span class="w"> </span>yaml<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A30<span class="w"> </span><span class="s2">&quot;conditions:&quot;</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>oc<span class="w"> </span>describe<span class="w"> </span>co<span class="w"> </span>&lt;degraded-operator&gt;
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1"># Force-resume a stuck operator (use only on RH guidance)</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>oc<span class="w"> </span>patch<span class="w"> </span>co<span class="w"> </span>&lt;operator&gt;<span class="w"> </span>--type<span class="o">=</span>json<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">  </span>-p<span class="w"> </span><span class="s1">&#39;[{&quot;op&quot;:&quot;remove&quot;,&quot;path&quot;:&quot;/status/conditions&quot;}]&#39;</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="c1"># Check what&#39;s blocking a node drain</span>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>oc<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-A<span class="w"> </span>--field-selector<span class="o">=</span>spec.nodeName<span class="o">=</span>&lt;node&gt;
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>oc<span class="w"> </span>get<span class="w"> </span>pdb<span class="w"> </span>-A
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>
-<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="c1"># etcd backup restore — see backup-restore page</span>
-<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="c1"># etcdctl snapshot restore → re-bootstrap control plane</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Investigate stalled upgrade</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>oc<span class="w"> </span>get<span class="w"> </span>clusterversion<span class="w"> </span>-o<span class="w"> </span>yaml<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A30<span class="w"> </span><span class="s2">&quot;conditions:&quot;</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>oc<span class="w"> </span>describe<span class="w"> </span>co<span class="w"> </span>&lt;degraded-operator&gt;
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Force-resume a stuck operator (use only on RH guidance)</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>oc<span class="w"> </span>patch<span class="w"> </span>co<span class="w"> </span>&lt;operator&gt;<span class="w"> </span>--type<span class="o">=</span>json<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">  </span>-p<span class="w"> </span><span class="s1">&#39;[{&quot;op&quot;:&quot;remove&quot;,&quot;path&quot;:&quot;/status/conditions&quot;}]&#39;</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1"># Check what&#39;s blocking a node drain</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>oc<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-A<span class="w"> </span>--field-selector<span class="o">=</span>spec.nodeName<span class="o">=</span>&lt;node&gt;
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>oc<span class="w"> </span>get<span class="w"> </span>pdb<span class="w"> </span>-A
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="c1"># etcd backup restore — see backup-restore page</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="c1"># etcdctl snapshot restore → re-bootstrap control plane</span>
 </code></pre></div>
 <hr />
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>

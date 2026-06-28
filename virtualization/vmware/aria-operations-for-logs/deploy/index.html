@@ -8981,25 +8981,7 @@ End-to-end deployment guide for VMware Aria Operations for Logs (vRLI). Covers p
     s7["✓ Verify"]
     s0 --&gt; s1 --&gt; s2 --&gt; s3 --&gt; s4 --&gt; s5 --&gt; s6 --&gt; s7
     style s7 fill:#2e7d32,color:#fff,stroke:#1b5e20</code></pre>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>plan: &quot;Plan&quot; {shape: oval}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>phase_1_predeployment_prerequisites: &quot;Phase 1 — Pre-Deployment Prerequisites&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>phase_2_master_node_deployment: &quot;Phase 2 — Master Node Deployment&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>phase_3_worker_node_deployment: &quot;Phase 3 — Worker Node Deployment&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>phase_4_log_sources_and_agent_instal: &quot;Phase 4 — Log Sources and Agent Installation&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>phase_5_content_packs_alerts_and_for: &quot;Phase 5 — Content Packs, Alerts, and Forwarding&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>phase_6_endtoend_validation: &quot;Phase 6 — End-to-End Validation&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>validate: &quot;Validate&quot; {shape: oval}
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>plan -&gt; phase_1_predeployment_prerequisites
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>phase_1_predeployment_prerequisites -&gt; phase_2_master_node_deployment
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>phase_2_master_node_deployment -&gt; phase_3_worker_node_deployment
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>phase_3_worker_node_deployment -&gt; phase_4_log_sources_and_agent_instal
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>phase_4_log_sources_and_agent_instal -&gt; phase_5_content_packs_alerts_and_for
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>phase_5_content_packs_alerts_and_for -&gt; phase_6_endtoend_validation
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>phase_6_endtoend_validation -&gt; validate
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqVkt1KwzAYhs97FR87Xg_2e7ADYfgDgkpB0MMQms82LEtqkjlEBC_CK_RKTNKuAdmyetKQ8uR5Q76XcY2l5UquQPOqtlnWCOo2o8ItI_gwNW1wBeqNis-sqalBMiGNRoaNUO9blNbvNL7uuOEWjT_pKZjAz9c3FBrzqx7124hGu78ClZXAQ8SUbKmxqIlUDEnM6u3TYL8PEDw4CGJKwjsje6U3Ce8seJ8D9A_vnAhVEaN2ukRDqGSEVv5puDSWit4-D_Y7VcFji4JDYe1RuA2ooH4WiaQFKZW04dlpuXFZArVtI1-U7pMWIemyRaHw6BjWgR2H0Bul91QzLqtE2JKgZFa5D3Hz54y2RekyliHjWrLcqtwt8NQzR52dwv0cdST-LVgoH-QXMKBpQ9oYVacadaZwUXCqOmeaFQXpjgwqUpSlazCoK1F2dMypCvijh2lmv2Mtme8=?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Access:</strong> vCenter Administrator role and SSH access to VCSA/ESXi hosts</li>
@@ -9011,9 +8993,9 @@ End-to-end deployment guide for VMware Aria Operations for Logs (vRLI). Covers p
 <hr />
 <h2 id="phase-1-pre-deployment-prerequisites">Phase 1 — Pre-Deployment Prerequisites<a class="headerlink" href="#phase-1-pre-deployment-prerequisites" title="Permanent link">&para;</a></h2>
 <p><strong>Exit criterion:</strong> DNS resolves with PTR records, firewall ports are open, NTP is confirmed, and ingest rate is estimated.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Verify DNS from management workstation</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>nslookup<span class="w"> </span>vrli-master.example.local<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>nslookup<span class="w"> </span>&lt;planned-master-ip&gt;
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>nslookup<span class="w"> </span>vrli-worker-01.example.local<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>nslookup<span class="w"> </span>vrli-vip.example.local
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Verify DNS from management workstation</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>nslookup<span class="w"> </span>vrli-master.example.local<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>nslookup<span class="w"> </span>&lt;planned-master-ip&gt;
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>nslookup<span class="w"> </span>vrli-worker-01.example.local<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>nslookup<span class="w"> </span>vrli-vip.example.local
 </code></pre></div>
 <p>Required firewall ports:</p>
 <table>
@@ -9052,9 +9034,9 @@ End-to-end deployment guide for VMware Aria Operations for Logs (vRLI). Covers p
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Test from a log source before deployment</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>nc<span class="w"> </span>-vzu<span class="w"> </span>vrli-master.example.local<span class="w"> </span><span class="m">514</span><span class="w">    </span><span class="c1"># UDP syslog</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>nc<span class="w"> </span>-vz<span class="w"> </span>vrli-master.example.local<span class="w"> </span><span class="m">9543</span><span class="w">   </span><span class="c1"># CFAPI agent port</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Test from a log source before deployment</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>nc<span class="w"> </span>-vzu<span class="w"> </span>vrli-master.example.local<span class="w"> </span><span class="m">514</span><span class="w">    </span><span class="c1"># UDP syslog</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>nc<span class="w"> </span>-vz<span class="w"> </span>vrli-master.example.local<span class="w"> </span><span class="m">9543</span><span class="w">   </span><span class="c1"># CFAPI agent port</span>
 </code></pre></div>
 <p>Ingest sizing:</p>
 <table>
@@ -9087,13 +9069,13 @@ End-to-end deployment guide for VMware Aria Operations for Logs (vRLI). Covers p
 <hr />
 <h2 id="phase-2-master-node-deployment">Phase 2 — Master Node Deployment<a class="headerlink" href="#phase-2-master-node-deployment" title="Permanent link">&para;</a></h2>
 <p><strong>Exit criterion:</strong> Master node is in Running state; admin UI is accessible at port 443; setup wizard is complete.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>vSphere Client → Deploy OVF Template → select Aria Ops for Logs OVA
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>→ Target: cluster → SSD-backed datastore
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>→ Customise:
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    Hostname: vrli-master.example.local  ·  IP: 10.0.1.30/24
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>    Gateway: 10.0.1.1  ·  DNS: 10.0.1.5  ·  NTP: ntp.example.local
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>    Root password: &lt;strong password&gt;
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>→ Power on (first-boot takes 5–10 min; Cassandra index initialises)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>vSphere Client → Deploy OVF Template → select Aria Ops for Logs OVA
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>→ Target: cluster → SSD-backed datastore
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>→ Customise:
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    Hostname: vrli-master.example.local  ·  IP: 10.0.1.30/24
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>    Gateway: 10.0.1.1  ·  DNS: 10.0.1.5  ·  NTP: ntp.example.local
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    Root password: &lt;strong password&gt;
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>→ Power on (first-boot takes 5–10 min; Cassandra index initialises)
 </code></pre></div>
 <p>Setup wizard at <code>https://vrli-master.example.local</code>:</p>
 <ol>
@@ -9102,89 +9084,89 @@ End-to-end deployment guide for VMware Aria Operations for Logs (vRLI). Covers p
 <li>Enter licence key (free tier: 25 OSI; production licence for scale).</li>
 <li>Master initialises log index → transitions to <strong>Running</strong> state.</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>ssh<span class="w"> </span>root@vrli-master.example.local
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>li-admin<span class="w"> </span>status<span class="w">          </span><span class="c1"># cluster status: MASTER</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>li-admin<span class="w"> </span>cluster<span class="w">         </span><span class="c1"># single node: Active</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>df<span class="w"> </span>-h<span class="w"> </span>/storage/core<span class="w">      </span><span class="c1"># confirm disk mounted</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ssh<span class="w"> </span>root@vrli-master.example.local
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>li-admin<span class="w"> </span>status<span class="w">          </span><span class="c1"># cluster status: MASTER</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>li-admin<span class="w"> </span>cluster<span class="w">         </span><span class="c1"># single node: Active</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>df<span class="w"> </span>-h<span class="w"> </span>/storage/core<span class="w">      </span><span class="c1"># confirm disk mounted</span>
 </code></pre></div>
 <hr />
 <h2 id="phase-3-worker-node-deployment">Phase 3 — Worker Node Deployment<a class="headerlink" href="#phase-3-worker-node-deployment" title="Permanent link">&para;</a></h2>
 <p><strong>Exit criterion:</strong> All worker nodes show Active in Administration → Cluster; no Missing Shards warning; ingestion is distributed.</p>
 <p>Deploy each worker OVA with the same customisation parameters, but in the setup wizard select <strong>Join Cluster</strong>:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Setup wizard → Deployment Type: Join Cluster
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>→ Master node IP: 10.0.1.30  ·  Admin credentials: admin / &lt;password&gt;
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>→ Worker joins and synchronises from master automatically
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Setup wizard → Deployment Type: Join Cluster
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>→ Master node IP: 10.0.1.30  ·  Admin credentials: admin / &lt;password&gt;
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>→ Worker joins and synchronises from master automatically
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># From master — confirm all nodes joined and active</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:&lt;password&gt;&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span><span class="s2">&quot;https://vrli-master.example.local/api/v2/cluster/nodes&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.nodes[] | {hostname: .hostname, state: .state, role: .role}&#39;</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Expected: all nodes state: ACTIVE</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># From master — confirm all nodes joined and active</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:&lt;password&gt;&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="s2">&quot;https://vrli-master.example.local/api/v2/cluster/nodes&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.nodes[] | {hostname: .hostname, state: .state, role: .role}&#39;</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># Expected: all nodes state: ACTIVE</span>
 </code></pre></div>
 <p>Configure VIP for HA (if using a load balancer):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Administration → Cluster → Configuration → Set VIP: 10.0.1.35
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>(point all log sources at the VIP, not individual node IPs)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Administration → Cluster → Configuration → Set VIP: 10.0.1.35
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>(point all log sources at the VIP, not individual node IPs)
 </code></pre></div>
 <hr />
 <h2 id="phase-4-log-sources-and-agent-installation">Phase 4 — Log Sources and Agent Installation<a class="headerlink" href="#phase-4-log-sources-and-agent-installation" title="Permanent link">&para;</a></h2>
 <p><strong>Exit criterion:</strong> vSphere content pack is active, ESXi syslog is auto-configured on all hosts, CFAPI agents are reporting, and at least one syslog source is sending events to Explore Logs.</p>
 <h3 id="vsphere-integration-auto-configures-esxi-syslog">vSphere Integration (Auto-configures ESXi syslog)<a class="headerlink" href="#vsphere-integration-auto-configures-esxi-syslog" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Administration → vSphere Integration → Add vCenter
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>→ FQDN: vcenter.example.local
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>→ Credentials: svc-vrli-ro@example.local (read-only)
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>→ Enable: Configure ESXi Syslog Automatically
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>→ Save
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Administration → vSphere Integration → Add vCenter
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>→ FQDN: vcenter.example.local
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>→ Credentials: svc-vrli-ro@example.local (read-only)
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>→ Enable: Configure ESXi Syslog Automatically
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>→ Save
 </code></pre></div>
 <p>Aria Logs pushes the syslog target to every ESXi host via vCenter — no manual per-host configuration needed.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Verify on any ESXi host</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>syslog<span class="w"> </span>config<span class="w"> </span>get
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="c1"># RemoteHost: udp://vrli-master.example.local:514</span>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>esxcli<span class="w"> </span>system<span class="w"> </span>syslog<span class="w"> </span>reload
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Verify on any ESXi host</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>syslog<span class="w"> </span>config<span class="w"> </span>get
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="c1"># RemoteHost: udp://vrli-master.example.local:514</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>esxcli<span class="w"> </span>system<span class="w"> </span>syslog<span class="w"> </span>reload
 </code></pre></div>
 <h3 id="cfapi-agent-on-linux-vms">CFAPI Agent on Linux VMs<a class="headerlink" href="#cfapi-agent-on-linux-vms" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Download agent: Administration → Agents → Download Agent</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>chmod<span class="w"> </span>+x<span class="w"> </span>VMware-Log-Insight-Agent-&lt;version&gt;.bin
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>./VMware-Log-Insight-Agent-&lt;version&gt;.bin<span class="w"> </span>--<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">  </span>--ip<span class="w"> </span>vrli-master.example.local<span class="w"> </span>--port<span class="w"> </span><span class="m">9543</span><span class="w"> </span>--ssl<span class="o">=</span>yes
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>/etc/init.d/vmware-log-insight-agent<span class="w"> </span>status
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Download agent: Administration → Agents → Download Agent</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>chmod<span class="w"> </span>+x<span class="w"> </span>VMware-Log-Insight-Agent-&lt;version&gt;.bin
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>./VMware-Log-Insight-Agent-&lt;version&gt;.bin<span class="w"> </span>--<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">  </span>--ip<span class="w"> </span>vrli-master.example.local<span class="w"> </span>--port<span class="w"> </span><span class="m">9543</span><span class="w"> </span>--ssl<span class="o">=</span>yes
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>/etc/init.d/vmware-log-insight-agent<span class="w"> </span>status
 </code></pre></div>
 <p>Syslog from network devices: point switches and firewalls at the VIP on UDP 514. For TLS syslog on port 6514, download the Aria Logs CA cert from Administration → SSL and install it on each source before enabling TCP 6514.</p>
 <hr />
 <h2 id="phase-5-content-packs-alerts-and-forwarding">Phase 5 — Content Packs, Alerts, and Forwarding<a class="headerlink" href="#phase-5-content-packs-alerts-and-forwarding" title="Permanent link">&para;</a></h2>
 <p><strong>Exit criterion:</strong> VMware content packs are installed and dashboards show data. Alert queries are active. Log forwarding is configured if a SIEM is in scope.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Administration → Content Packs → Marketplace
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>→ Install: VMware - vSphere      (ESXi, vCenter, vSAN log patterns)
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>→ Install: VMware - NSX-T        (DFW events, manager audit logs)
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>→ Install: Linux                 (auth, kernel, syslog patterns)
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>→ Install: Windows               (event log, application logs)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>Administration → Content Packs → Marketplace
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>→ Install: VMware - vSphere      (ESXi, vCenter, vSAN log patterns)
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>→ Install: VMware - NSX-T        (DFW events, manager audit logs)
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>→ Install: Linux                 (auth, kernel, syslog patterns)
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>→ Install: Windows               (event log, application logs)
 </code></pre></div>
 <p>Configure alert queries:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>Alerts → Alert Definitions → New Alert
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>→ Name: ESXi-NFS-Latency
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>→ Query: text CONTAINS &quot;NFS: Waiting too long for response&quot;
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>→ Condition: Count &gt; 5 per 5 minutes  ·  Severity: Warning
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>
-<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>→ Name: vCenter-Auth-Failure
-<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>→ Query: appname = vpxd AND text CONTAINS &quot;Login failure&quot;
-<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>→ Condition: Count &gt; 10 per 1 minute  ·  Severity: Critical
-<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>
-<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>Notifications → Add: Email smtp.example.local:25 · Webhook Slack/PagerDuty
-<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>Forwarding → splunk-hf.example.local:514 · filter: tags CONTAINS &quot;security&quot;
-<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>Archiving → Active retention: 30 days · NFS archive for 90-day compliance tier
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Alerts → Alert Definitions → New Alert
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>→ Name: ESXi-NFS-Latency
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>→ Query: text CONTAINS &quot;NFS: Waiting too long for response&quot;
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>→ Condition: Count &gt; 5 per 5 minutes  ·  Severity: Warning
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>→ Name: vCenter-Auth-Failure
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>→ Query: appname = vpxd AND text CONTAINS &quot;Login failure&quot;
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>→ Condition: Count &gt; 10 per 1 minute  ·  Severity: Critical
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>Notifications → Add: Email smtp.example.local:25 · Webhook Slack/PagerDuty
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>Forwarding → splunk-hf.example.local:514 · filter: tags CONTAINS &quot;security&quot;
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>Archiving → Active retention: 30 days · NFS archive for 90-day compliance tier
 </code></pre></div>
 <hr />
 <h2 id="phase-6-end-to-end-validation">Phase 6 — End-to-End Validation<a class="headerlink" href="#phase-6-end-to-end-validation" title="Permanent link">&para;</a></h2>
 <p><strong>Exit criterion:</strong> All checks below pass. Retention policy confirmed. Hand off to operations.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>ssh<span class="w"> </span>root@vrli-master.example.local
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>li-admin<span class="w"> </span>cluster<span class="w">   </span><span class="c1"># all nodes: ACTIVE, no MISSING_SHARDS</span>
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>li-admin<span class="w"> </span>stats<span class="w">     </span><span class="c1"># eventsPerSecond: &gt; 0</span>
-<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>li-admin<span class="w"> </span>disk<span class="w">      </span><span class="c1"># /storage/core usage: &lt; 80%</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>ssh<span class="w"> </span>root@vrli-master.example.local
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>li-admin<span class="w"> </span>cluster<span class="w">   </span><span class="c1"># all nodes: ACTIVE, no MISSING_SHARDS</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>li-admin<span class="w"> </span>stats<span class="w">     </span><span class="c1"># eventsPerSecond: &gt; 0</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>li-admin<span class="w"> </span>disk<span class="w">      </span><span class="c1"># /storage/core usage: &lt; 80%</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Confirm version and node health via API</span>
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:&lt;password&gt;&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="w">  </span><span class="s2">&quot;https://vrli-master.example.local/api/v2/cluster/nodes&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.nodes[] | {hostname: .hostname, state: .state, version: .version}&#39;</span>
-<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="c1"># Expected: all nodes state ACTIVE, versions identical</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Confirm version and node health via API</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:&lt;password&gt;&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="w">  </span><span class="s2">&quot;https://vrli-master.example.local/api/v2/cluster/nodes&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.nodes[] | {hostname: .hostname, state: .state, version: .version}&#39;</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="c1"># Expected: all nodes state ACTIVE, versions identical</span>
 </code></pre></div>
 <table>
 <thead>

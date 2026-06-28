@@ -7336,23 +7336,7 @@ Deep dive into AOS distributed architecture — the five core services (Stargate
 </div>
 <p><img alt="Nutanix — Internals" src="../../../assets/virtualization-nutanix-internals-index.svg" /></p>
 <hr />
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>center: &quot;Nutanix AHV&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>architecture_overview: &quot;Architecture Overview&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>stargate_io_controller: &quot;Stargate — I/O Controller&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>cassandra_distributed_metadata_store: &quot;Cassandra — Distributed Metadata Store&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>zeus_zookeeper_cluster_config: &quot;Zeus / ZooKeeper — Cluster Config&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>curator_background_worker: &quot;Curator — Background Worker&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>medusa_metadata_access_layer: &quot;Medusa — Metadata Access Layer&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>center -&gt; architecture_overview
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>center -&gt; stargate_io_controller
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>center -&gt; cassandra_distributed_metadata_store
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>center -&gt; zeus_zookeeper_cluster_config
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>center -&gt; curator_background_worker
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>center -&gt; medusa_metadata_access_layer
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNksFOAjEQhu_7FBPuhjsHE1wPGkUOJJpwaYZ23G1YWjJtATEkPoRP6JPYLSvsoRBPTfp_8__TmSrNJL22ZgSsq9oXhSTjiUcweAkejd7B-OF1AJ-uxjWNoKYdVtYcCmRZax9rA5OwG-KNpm2sGvfuYdrdn-vbNDRVQ4fCeeQKPQlthbTGs22aFDzrBPj5-obH4RTKk5o1kugcGsUolHae9SJ4UmJFHhV6FM5bjgWD8g9LvvdnFCYdCrMWzWbsKTixt3ZJtCYWsgnOt6c177qK5vOowxDm1j4lImWUR6rtP1L53gNjDBULlMuKbTBKbC0v0xzKo5as7k46vCU967YiFRyen45SknOiwY9kOEly8js9eZwQeG6RrGf3IeDmFrI77-n5jfaA_2yqh18det_20hB7zLXRFL-ttSQh?" /></p>
 <h2 id="architecture-overview">Architecture Overview<a class="headerlink" href="#architecture-overview" title="Permanent link">&para;</a></h2>
 <hr />
 <h2 id="stargate-io-controller">Stargate — I/O Controller<a class="headerlink" href="#stargate-io-controller" title="Permanent link">&para;</a></h2>
@@ -7362,12 +7346,12 @@ Deep dive into AOS distributed architecture — the five core services (Stargate
 - <strong>Remote reads:</strong> If the data extent lives on another CVM's disk, Stargate routes the read to the appropriate CVM via internal network (1–5ms extra latency)
 - <strong>Locality preference:</strong> Stargate prefers to schedule VM disk I/O through the CVM on the same host (data locality). VMs are pinned to the host where their data lives when possible
 - <strong>EC-X (Erasure Coding):</strong> After data is written and "cold" (not accessed), Curator triggers EC compression of related extents to reduce space (analogous to RAID-5/6)</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Check Stargate health</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>genesis<span class="w"> </span>status<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>stargate
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>curl<span class="w"> </span>-s<span class="w"> </span>http://localhost:2009/<span class="w">   </span><span class="c1"># Stargate HTTP stats endpoint (on CVM)</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Stargate logs</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>tail<span class="w"> </span>-f<span class="w"> </span>/home/nutanix/data/logs/stargate.ERROR
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Check Stargate health</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>genesis<span class="w"> </span>status<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>stargate
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>curl<span class="w"> </span>-s<span class="w"> </span>http://localhost:2009/<span class="w">   </span><span class="c1"># Stargate HTTP stats endpoint (on CVM)</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Stargate logs</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>tail<span class="w"> </span>-f<span class="w"> </span>/home/nutanix/data/logs/stargate.ERROR
 </code></pre></div>
 <hr />
 <h2 id="cassandra-distributed-metadata-store">Cassandra — Distributed Metadata Store<a class="headerlink" href="#cassandra-distributed-metadata-store" title="Permanent link">&para;</a></h2>
@@ -7381,8 +7365,8 @@ Deep dive into AOS distributed architecture — the five core services (Stargate
 - Every CVM is a Cassandra node with a token range
 - Metadata is replicated RF=3 across CVMs (even for storage RF=2 clusters)
 - <code>nodetool status</code> shows ring health — all nodes must be <code>UN</code> (Up/Normal)</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>allssh<span class="w"> </span><span class="s2">&quot;nodetool status&quot;</span><span class="w">   </span><span class="c1"># check ring — all should be UN</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>allssh<span class="w"> </span><span class="s2">&quot;nodetool compactionstats&quot;</span><span class="w">  </span><span class="c1"># compaction queue (large = recovering)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>allssh<span class="w"> </span><span class="s2">&quot;nodetool status&quot;</span><span class="w">   </span><span class="c1"># check ring — all should be UN</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>allssh<span class="w"> </span><span class="s2">&quot;nodetool compactionstats&quot;</span><span class="w">  </span><span class="c1"># compaction queue (large = recovering)</span>
 </code></pre></div>
 <hr />
 <h2 id="zeus-zookeeper-cluster-config">Zeus / ZooKeeper — Cluster Config<a class="headerlink" href="#zeus-zookeeper-cluster-config" title="Permanent link">&para;</a></h2>
@@ -7391,11 +7375,11 @@ Deep dive into AOS distributed architecture — the five core services (Stargate
 - Node membership (which CVMs are in the cluster)
 - Service leader elections
 - Cluster-wide configuration parameters (DNS, NTP, VIP, RF)</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Print cluster configuration</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>zeus_config_printer<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-80
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Inspect ZooKeeper directly</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>/usr/local/zookeeper/bin/zkCli.sh<span class="w"> </span>-server<span class="w"> </span>localhost:9876
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Print cluster configuration</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>zeus_config_printer<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-80
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Inspect ZooKeeper directly</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>/usr/local/zookeeper/bin/zkCli.sh<span class="w"> </span>-server<span class="w"> </span>localhost:9876
 </code></pre></div>
 <hr />
 <h2 id="curator-background-worker">Curator — Background Worker<a class="headerlink" href="#curator-background-worker" title="Permanent link">&para;</a></h2>
@@ -7410,9 +7394,9 @@ Deep dive into AOS distributed architecture — the five core services (Stargate
 - <strong>Erasure Coding:</strong> Convert RF=2 extents to EC-X to save 50% space after data goes cold
 - <strong>Tiering:</strong> Move cold data from SSD to HDD tier (hybrid clusters)
 - <strong>Rebalancing:</strong> Redistribute extents when cluster imbalance exceeds threshold</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>curator_cli<span class="w"> </span>get_last_successful_scans<span class="w">     </span><span class="c1"># recent scan history</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>curator_cli<span class="w"> </span>display_curator_tasks<span class="w">          </span><span class="c1"># active tasks now</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>curator_cli<span class="w"> </span>get_scan_info<span class="w"> </span>--scan_id<span class="o">=</span>&lt;id&gt;<span class="w">  </span><span class="c1"># detailed scan results</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>curator_cli<span class="w"> </span>get_last_successful_scans<span class="w">     </span><span class="c1"># recent scan history</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>curator_cli<span class="w"> </span>display_curator_tasks<span class="w">          </span><span class="c1"># active tasks now</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>curator_cli<span class="w"> </span>get_scan_info<span class="w"> </span>--scan_id<span class="o">=</span>&lt;id&gt;<span class="w">  </span><span class="c1"># detailed scan results</span>
 </code></pre></div>
 <hr />
 <h2 id="medusa-metadata-access-layer">Medusa — Metadata Access Layer<a class="headerlink" href="#medusa-metadata-access-layer" title="Permanent link">&para;</a></h2>
@@ -7430,19 +7414,19 @@ Deep dive into AOS distributed architecture — the five core services (Stargate
 - <strong>QEMU</strong> — VM emulator (one QEMU process per running VM)
 - <strong>Open vSwitch (OVS)</strong> — virtual networking fabric; supports VLAN trunking and bonding
 - <strong>acropolis</strong> — Nutanix AHV management daemon (bridges acli/Prism to libvirt)</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># On AHV host (root required):</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>virsh<span class="w"> </span>list<span class="w"> </span>--all<span class="w">        </span><span class="c1"># all VMs including CVM</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>virsh<span class="w"> </span>nodeinfo<span class="w">          </span><span class="c1"># host CPU/memory</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>ovs-vsctl<span class="w"> </span>show<span class="w">          </span><span class="c1"># OVS switch config</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># On AHV host (root required):</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>virsh<span class="w"> </span>list<span class="w"> </span>--all<span class="w">        </span><span class="c1"># all VMs including CVM</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>virsh<span class="w"> </span>nodeinfo<span class="w">          </span><span class="c1"># host CPU/memory</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>ovs-vsctl<span class="w"> </span>show<span class="w">          </span><span class="c1"># OVS switch config</span>
 </code></pre></div>
 <hr />
 <h2 id="genesis-service-manager">Genesis — Service Manager<a class="headerlink" href="#genesis-service-manager" title="Permanent link">&para;</a></h2>
 <p><strong>Role:</strong> Genesis is the Nutanix equivalent of systemd for AOS services. It monitors and restarts all AOS services on each CVM.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>genesis<span class="w"> </span>status<span class="w">           </span><span class="c1"># list all services and state (UP/DOWN)</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>genesis<span class="w"> </span>restart<span class="w">          </span><span class="c1"># restart all services on this CVM</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>genesis<span class="w"> </span>status<span class="w">           </span><span class="c1"># list all services and state (UP/DOWN)</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>genesis<span class="w"> </span>restart<span class="w">          </span><span class="c1"># restart all services on this CVM</span>
 </code></pre></div>
 <p>Genesis itself is started by the OS init system. If genesis is completely crashed, it must be restarted at the OS level:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>nutanix-genesis
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>nutanix-genesis
 </code></pre></div></p>
 <hr />
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>

@@ -9180,17 +9180,7 @@ Access Control reference covering Service Account for API Automation, Separation
 <p>LCM RBAC — AD Groups → LCM Roles</p>
 <p>Assign the minimum role required for the automation task — use <code>LCM_CONTENT_DEVELOPER</code> for scripts that only query health; use <code>LCM_ADMIN</code> only for scripts that trigger upgrades or certificate replacements.</p>
 <hr />
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: down
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>external: External / Untrusted {shape: rectangle}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>separation_of_duties: &quot;Separation of Duties&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>auditing_access: &quot;Auditing Access&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>core: &quot;Aria Suite Lifecycle Core&quot; {shape: hexagon}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>external -&gt; separation_of_duties: traffic in
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>separation_of_duties -&gt; auditing_access
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>auditing_access -&gt; core: secured path
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNptkEELgzAMhe_-iuB97O5hINtuu8nOEtpUA9JKmzLH8L_POpkgvYWX94X3otmTEna2Au1etihoEvIWhwru2wRneFrxMQhp-IQeR6ogUWi7geYi0Ige043WmVZHYQoVlM1fBmfgtspljseoWdh2LSpFIaH1pkC9KllKOU_J6hmhiSwEDzak3moguC67Heppws7Zee8GpwvkU4tHY1gB22ytBB7iHuMnyy9bIBX98rIRpS--wx-DEw==?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Access:</strong> vCenter Administrator role</li>
@@ -9245,23 +9235,23 @@ Access Control reference covering Service Account for API Automation, Separation
 <hr />
 <h2 id="auditing-access">Auditing Access<a class="headerlink" href="#auditing-access" title="Permanent link">&para;</a></h2>
 <p>LCM logs all write operations (deploy, upgrade, certificate import) to the application log. Parse for audit records:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># List all login events</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;login\|authenticated\|logout&quot;</span><span class="w"> </span>/var/log/vmware/vrlcm/lcm-app.log<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;health\|ping&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-100
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># List all Locker write operations (certificate/password imports and updates)</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;locker\|certificate\|password&quot;</span><span class="w"> </span>/var/log/vmware/vrlcm/lcm-app.log<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;import\|update\|delete\|create&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-100
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># List all upgrade/deploy requests with user attribution</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;upgrade\|deploy\|install&quot;</span><span class="w"> </span>/var/log/vmware/vrlcm/lcm-app.log<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">  </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;user\|request&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-100
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># List all login events</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;login\|authenticated\|logout&quot;</span><span class="w"> </span>/var/log/vmware/vrlcm/lcm-app.log<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;health\|ping&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-100
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># List all Locker write operations (certificate/password imports and updates)</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;locker\|certificate\|password&quot;</span><span class="w"> </span>/var/log/vmware/vrlcm/lcm-app.log<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">  </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;import\|update\|delete\|create&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-100
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1"># List all upgrade/deploy requests with user attribution</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;upgrade\|deploy\|install&quot;</span><span class="w"> </span>/var/log/vmware/vrlcm/lcm-app.log<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">  </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;user\|request&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-100
 </code></pre></div>
 <p>For formal audit trails, forward the LCM syslog to Aria Operations for Logs or a SIEM:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Configure syslog forwarding from LCM appliance</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># Edit /etc/rsyslog.d/lcm-remote.conf (create if not present)</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;*.* @@vrli-prod-01.example.local:514&#39;</span><span class="w"> </span>&gt;<span class="w"> </span>/etc/rsyslog.d/lcm-remote.conf
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>rsyslog
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Configure syslog forwarding from LCM appliance</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># Edit /etc/rsyslog.d/lcm-remote.conf (create if not present)</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;*.* @@vrli-prod-01.example.local:514&#39;</span><span class="w"> </span>&gt;<span class="w"> </span>/etc/rsyslog.d/lcm-remote.conf
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>rsyslog
 </code></pre></div>
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>

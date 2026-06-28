@@ -7528,23 +7528,7 @@ CyberArk Privileged Access Manager (PAM) is built around the Digital Vault, an e
 <p><img alt="CyberArk — How It Works" src="../../../../assets/security-cyberark-architecture-how-it-works-index.svg" /></p>
 <p>The Central Policy Manager (CPM) rotates credentials automatically, the Privileged Session Manager (PSM) proxies and records sessions, and the Password Vault Web Access (PVWA) provides the web UI and REST API gateway.</p>
 <hr />
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>center: &quot;How It Works&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>component_overview: &quot;Component Overview&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>pam_component_topology: &quot;PAM Component Topology&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>network_topology: &quot;Network Topology&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>credential_checkout_sequence: &quot;Credential Checkout Sequence&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>high_availability_and_dr: &quot;High Availability and DR&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>dr_activation_flow: &quot;DR Activation Flow&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>center -&gt; component_overview
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>center -&gt; pam_component_topology
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>center -&gt; network_topology
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>center -&gt; credential_checkout_sequence
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>center -&gt; high_availability_and_dr
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>center -&gt; dr_activation_flow
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp9UctOwzAQvOcrVr3zAzkgRa0QHICqIHG0FnuJrbre4LgJFeq_44BpLGp6nZe9M8p4ksGwq8GbVoeqkuQC-RoWtzzCXYAX9tt-AZ-9xo5q0PSBLbtjJXnXsYtiwQP5wdAYPctfEB4TODunh9C1lo5Vhzsx-wN3bLk9RP-6uYc54zkRxQxHYYxfy90PP9Bln_SkYrhBK6QmueV9ED2978lJmi440bBMNDwlupinY20CBzQWX4014SDQKaG-G4wUNBkFkYLVppijvMC4xIDTGuLN8tTnagPNCYSbCBa9aTS4uobzWTKy3Hsm-FtqHnyht0z2Xx2Z5PzS6guD5-9k?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Access:</strong> Admin credentials on all affected systems</li>
@@ -7611,24 +7595,24 @@ CyberArk Privileged Access Manager (PAM) is built around the Digital Vault, an e
   class USER,TARGET,SIEM host</code></pre>
 <hr />
 <h2 id="network-topology">Network Topology<a class="headerlink" href="#network-topology" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>[Admin workstation / PAW]
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>         |
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>         | HTTPS (443)
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>         v
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>[PVWA (load-balanced pair)]  &lt;-- AD LDAP/LDAPS (389/636)
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>         |
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>         | Vault SDK (1858)
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>         v
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>[Digital Vault (primary)]  &lt;--&gt; [DR Vault]
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>         |                      (replication: 1858)
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>         |
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>    +---------+----------+
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>    |                    |
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>[CPM]                 [PSM (load-balanced)]
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>    |                    |
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>    | (target protocols) | RDP/SSH (through session)
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>    v                    v
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>[Target systems]     [Target systems]
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>[Admin workstation / PAW]
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>         |
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>         | HTTPS (443)
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>         v
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>[PVWA (load-balanced pair)]  &lt;-- AD LDAP/LDAPS (389/636)
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>         |
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>         | Vault SDK (1858)
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>         v
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>[Digital Vault (primary)]  &lt;--&gt; [DR Vault]
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>         |                      (replication: 1858)
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>         |
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>    +---------+----------+
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    |                    |
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>[CPM]                 [PSM (load-balanced)]
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>    |                    |
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>    | (target protocols) | RDP/SSH (through session)
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>    v                    v
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>[Target systems]     [Target systems]
 </code></pre></div>
 <p>Key ports:</p>
 <ul>

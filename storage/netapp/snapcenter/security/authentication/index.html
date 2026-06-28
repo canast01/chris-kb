@@ -8330,25 +8330,7 @@ SnapCenter authentication: AD/LDAP integration via Windows Authentication, servi
 </div>
 <p><img alt="SnapCenter — Authentication" src="../../../../../assets/storage-netapp-snapcenter-security-authentication.svg" /></p>
 <hr />
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: down
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>external: External / Untrusted {shape: rectangle}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>authentication_methods: &quot;Authentication Methods&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>active_directory_integration: &quot;Active Directory Integration&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>saml_20_mfa_integration_snapcenter_6: &quot;SAML 2.0 / MFA Integration (SnapCenter 6.0+)&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>service_account_authentication_ontap: &quot;Service Account Authentication — ONTAP&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>plugin_host_authentication: &quot;Plugin Host Authentication&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>session_and_token_management: &quot;Session and Token Management&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>core: &quot;SnapCenter Core&quot; {shape: hexagon}
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>external -&gt; authentication_methods: traffic in
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>authentication_methods -&gt; active_directory_integration
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>active_directory_integration -&gt; saml_20_mfa_integration_snapcenter_6
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>saml_20_mfa_integration_snapcenter_6 -&gt; service_account_authentication_ontap
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>service_account_authentication_ontap -&gt; plugin_host_authentication
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>plugin_host_authentication -&gt; session_and_token_management
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>session_and_token_management -&gt; core: secured path
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNU8FKw0AUvPcrHj0pYi099JCDEKqiYLRQPS-PzWuymOyG3U2tSMGP8Av9EncTNTUkIbeQeTNv8mYSC03cCiUDiNWrnExob0lLzAK4_nmCC3iWVpfGUgzvJsWCAvAslElGhwmWNiVpBUevw3KyqYpNANPwHwBRDUw7NZyHHbG4cqP0GxPSUqKxdjYNKxiufmG4a-BOPYN5xhZzlm_xWIoZiQV3nkizpdPdhNE9LGZz94nRTXisCicbN7qqRmE5m5-ddu8hvROcGHKuSmlZ6xZKWiz8nnoMwnoMWpf5-viEx4encN25o8jKREiWKtPWd8rrCoRbB7ZUe_wa442hjJlVL-TiQokJ5Y5X-axgcDA8eRiiP7hTjytNntfcauXeNKMp7TFR8tD0Cs4voa8xVuN2KzgI2VOqijxQlcEeefKYXowqTyU2IvxRDfFi_SkPFKB20R_pYN6eXOdniJfa_dwF2nTyDfQ4h2Q=?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Access:</strong> Storage admin credentials (cluster admin or equivalent)</li>
@@ -8389,35 +8371,35 @@ SnapCenter authentication: AD/LDAP integration via Windows Authentication, servi
 <hr />
 <h2 id="active-directory-integration">Active Directory Integration<a class="headerlink" href="#active-directory-integration" title="Permanent link">&para;</a></h2>
 <p>SnapCenter integrates with Active Directory for user authentication and group-based RBAC. Configure AD integration in Settings → Global Settings → Active Directory.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Connect to SnapCenter via PowerShell</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Open-SmConnection</span> <span class="n">-SMSbaseurl</span> <span class="n">https</span><span class="p">://</span><span class="n">snapcenter</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">com</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c"># Add an AD user with a specific SnapCenter role</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nb">Add-SmUser</span> <span class="n">-UserName</span> <span class="s2">&quot;CORP\jsmith&quot;</span> <span class="n">-RoleName</span> <span class="s2">&quot;Application Backup and Clone Admin&quot;</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c"># Add an AD group (all group members inherit the role)</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="nb">Add-SmUser</span> <span class="n">-UserName</span> <span class="s2">&quot;CORP\SnapCenter-Admins&quot;</span> <span class="n">-RoleName</span> <span class="s2">&quot;SnapCenter Admin&quot;</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="nb">Add-SmUser</span> <span class="n">-UserName</span> <span class="s2">&quot;CORP\DBA-Team&quot;</span> <span class="n">-RoleName</span> <span class="s2">&quot;Application Backup and Clone Admin&quot;</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="nb">Add-SmUser</span> <span class="n">-UserName</span> <span class="s2">&quot;CORP\Backup-Viewers&quot;</span> <span class="n">-RoleName</span> <span class="s2">&quot;Backup and Clone Viewer&quot;</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c"># List all users and their assigned roles</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="nb">Get-SmUser</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">UserName</span><span class="p">,</span> <span class="n">RoleName</span><span class="p">,</span> <span class="n">IsActive</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="c"># Remove an AD user from SnapCenter</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="nb">Remove-SmUser</span> <span class="n">-UserName</span> <span class="s2">&quot;CORP\jsmith&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Connect to SnapCenter via PowerShell</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Open-SmConnection</span> <span class="n">-SMSbaseurl</span> <span class="n">https</span><span class="p">://</span><span class="n">snapcenter</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">com</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c"># Add an AD user with a specific SnapCenter role</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nb">Add-SmUser</span> <span class="n">-UserName</span> <span class="s2">&quot;CORP\jsmith&quot;</span> <span class="n">-RoleName</span> <span class="s2">&quot;Application Backup and Clone Admin&quot;</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c"># Add an AD group (all group members inherit the role)</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="nb">Add-SmUser</span> <span class="n">-UserName</span> <span class="s2">&quot;CORP\SnapCenter-Admins&quot;</span> <span class="n">-RoleName</span> <span class="s2">&quot;SnapCenter Admin&quot;</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="nb">Add-SmUser</span> <span class="n">-UserName</span> <span class="s2">&quot;CORP\DBA-Team&quot;</span> <span class="n">-RoleName</span> <span class="s2">&quot;Application Backup and Clone Admin&quot;</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="nb">Add-SmUser</span> <span class="n">-UserName</span> <span class="s2">&quot;CORP\Backup-Viewers&quot;</span> <span class="n">-RoleName</span> <span class="s2">&quot;Backup and Clone Viewer&quot;</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="c"># List all users and their assigned roles</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="nb">Get-SmUser</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">UserName</span><span class="p">,</span> <span class="n">RoleName</span><span class="p">,</span> <span class="n">IsActive</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="c"># Remove an AD user from SnapCenter</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="nb">Remove-SmUser</span> <span class="n">-UserName</span> <span class="s2">&quot;CORP\jsmith&quot;</span>
 </code></pre></div>
 <h3 id="ad-authentication-troubleshooting">AD Authentication Troubleshooting<a class="headerlink" href="#ad-authentication-troubleshooting" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Verify the AD domain is reachable from the SnapCenter Server</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c"># (run on the SnapCenter Server Windows host)</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nb">Test-ComputerSecureChannel</span> <span class="n">-Server</span> <span class="n">corp</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">com</span> <span class="n">-Verbose</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c"># Test AD user authentication</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="nb">Test-Path</span> <span class="s2">&quot;AD:CN=jsmith,OU=Users,DC=corp,DC=example,DC=com&quot;</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c"># Check SnapCenter logs for AD authentication errors</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c"># Log location on SnapCenter Server:</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c"># C:\Program Files\NetApp\SnapCenter\SnapCenter Web App\log\</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c"># Look for LDAP or Kerberos errors</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Verify the AD domain is reachable from the SnapCenter Server</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c"># (run on the SnapCenter Server Windows host)</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nb">Test-ComputerSecureChannel</span> <span class="n">-Server</span> <span class="n">corp</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">com</span> <span class="n">-Verbose</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c"># Test AD user authentication</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="nb">Test-Path</span> <span class="s2">&quot;AD:CN=jsmith,OU=Users,DC=corp,DC=example,DC=com&quot;</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c"># Check SnapCenter logs for AD authentication errors</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c"># Log location on SnapCenter Server:</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c"># C:\Program Files\NetApp\SnapCenter\SnapCenter Web App\log\</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c"># Look for LDAP or Kerberos errors</span>
 </code></pre></div>
 <hr />
 <h2 id="saml-20-mfa-integration-snapcenter-60">SAML 2.0 / MFA Integration (SnapCenter 6.0+)<a class="headerlink" href="#saml-20-mfa-integration-snapcenter-60" title="Permanent link">&para;</a></h2>
@@ -8432,21 +8414,21 @@ SnapCenter authentication: AD/LDAP integration via Windows Authentication, servi
 <li>Save and test a SAML login</li>
 </ol>
 <h3 id="adfs-configuration-steps">ADFS Configuration Steps<a class="headerlink" href="#adfs-configuration-steps" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># On the ADFS server — add SnapCenter as a Relying Party Trust</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c"># (requires ADFS admin access)</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c"># 1. In ADFS Management, right-click &quot;Relying Party Trusts&quot; → Add Relying Party Trust</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c"># 2. Select &quot;Import data about the relying party from a file&quot;</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c"># 3. Upload the SnapCenter SP metadata XML downloaded from SnapCenter</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c"># After adding the Relying Party Trust, configure claim rules to pass</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c"># the UPN or SAMAccountName attribute as the NameID claim</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="c"># Example claim rule (Issuance Transform Rules):</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="c"># Rule type: Send LDAP Attributes as Claims</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c"># Attribute store: Active Directory</span>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="c"># LDAP Attribute: User-Principal-Name</span>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="c"># Outgoing Claim Type: Name ID</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># On the ADFS server — add SnapCenter as a Relying Party Trust</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c"># (requires ADFS admin access)</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c"># 1. In ADFS Management, right-click &quot;Relying Party Trusts&quot; → Add Relying Party Trust</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c"># 2. Select &quot;Import data about the relying party from a file&quot;</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c"># 3. Upload the SnapCenter SP metadata XML downloaded from SnapCenter</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c"># After adding the Relying Party Trust, configure claim rules to pass</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c"># the UPN or SAMAccountName attribute as the NameID claim</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c"># Example claim rule (Issuance Transform Rules):</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c"># Rule type: Send LDAP Attributes as Claims</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c"># Attribute store: Active Directory</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="c"># LDAP Attribute: User-Principal-Name</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="c"># Outgoing Claim Type: Name ID</span>
 </code></pre></div>
 <h3 id="saml-operational-notes">SAML Operational Notes<a class="headerlink" href="#saml-operational-notes" title="Permanent link">&para;</a></h3>
 <ul>
@@ -8458,20 +8440,20 @@ SnapCenter authentication: AD/LDAP integration via Windows Authentication, servi
 <h2 id="service-account-authentication-ontap">Service Account Authentication — ONTAP<a class="headerlink" href="#service-account-authentication-ontap" title="Permanent link">&para;</a></h2>
 <p>SnapCenter connects to ONTAP storage systems using credentials stored in the SnapCenter Credential Store. These credentials are used for all API calls to create snapshots, manage SnapMirror, and access LUN mappings.</p>
 <h3 id="credential-store-management">Credential Store Management<a class="headerlink" href="#credential-store-management" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Add ONTAP credentials to the SnapCenter Credential Store</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">Add-SmCredential</span> <span class="p">\</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    <span class="n">-Name</span> <span class="s2">&quot;ontap-svc-snapcenter&quot;</span> <span class="p">\</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    <span class="n">-AuthMode</span> <span class="n">UseWindowsCredentials</span><span class="p">:</span><span class="nv">$false</span> <span class="p">\</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>    <span class="n">-UserName</span> <span class="n">svc-snapcenter</span> <span class="p">\</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>    <span class="n">-Password</span> <span class="p">(</span><span class="nb">ConvertTo-SecureString</span> <span class="s2">&quot;password&quot;</span> <span class="n">-AsPlainText</span> <span class="n">-Force</span><span class="p">)</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c"># List all credentials stored in SnapCenter</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="nb">Get-SmCredential</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">UserName</span><span class="p">,</span> <span class="n">AuthMode</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c"># Update a credential (e.g., after password rotation)</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="nb">Set-SmCredential</span> <span class="p">\</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>    <span class="n">-Name</span> <span class="s2">&quot;ontap-svc-snapcenter&quot;</span> <span class="p">\</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>    <span class="n">-Password</span> <span class="p">(</span><span class="nb">ConvertTo-SecureString</span> <span class="s2">&quot;new-password&quot;</span> <span class="n">-AsPlainText</span> <span class="n">-Force</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Add ONTAP credentials to the SnapCenter Credential Store</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Add-SmCredential</span> <span class="p">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    <span class="n">-Name</span> <span class="s2">&quot;ontap-svc-snapcenter&quot;</span> <span class="p">\</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    <span class="n">-AuthMode</span> <span class="n">UseWindowsCredentials</span><span class="p">:</span><span class="nv">$false</span> <span class="p">\</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>    <span class="n">-UserName</span> <span class="n">svc-snapcenter</span> <span class="p">\</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>    <span class="n">-Password</span> <span class="p">(</span><span class="nb">ConvertTo-SecureString</span> <span class="s2">&quot;password&quot;</span> <span class="n">-AsPlainText</span> <span class="n">-Force</span><span class="p">)</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c"># List all credentials stored in SnapCenter</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="nb">Get-SmCredential</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">UserName</span><span class="p">,</span> <span class="n">AuthMode</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="c"># Update a credential (e.g., after password rotation)</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="nb">Set-SmCredential</span> <span class="p">\</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>    <span class="n">-Name</span> <span class="s2">&quot;ontap-svc-snapcenter&quot;</span> <span class="p">\</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>    <span class="n">-Password</span> <span class="p">(</span><span class="nb">ConvertTo-SecureString</span> <span class="s2">&quot;new-password&quot;</span> <span class="n">-AsPlainText</span> <span class="n">-Force</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="best-practices-for-ontap-service-account">Best Practices for ONTAP Service Account<a class="headerlink" href="#best-practices-for-ontap-service-account" title="Permanent link">&para;</a></h3>
 <ul>
@@ -8483,63 +8465,63 @@ SnapCenter authentication: AD/LDAP integration via Windows Authentication, servi
 <hr />
 <h2 id="plugin-host-authentication">Plugin Host Authentication<a class="headerlink" href="#plugin-host-authentication" title="Permanent link">&para;</a></h2>
 <p>SnapCenter agents on protected hosts authenticate using OS-level credentials stored in the SnapCenter Credential Store. The SnapCenter Server pushes plugin installers and executes pre/post scripts on the host using these credentials.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># Add Windows host credentials</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">Add-SmCredential</span> <span class="p">\</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>    <span class="n">-Name</span> <span class="s2">&quot;win-host-admin&quot;</span> <span class="p">\</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    <span class="n">-AuthMode</span> <span class="n">UseWindowsCredentials</span> <span class="p">\</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>    <span class="n">-UserName</span> <span class="s2">&quot;CORP\snapcenter-svc&quot;</span> <span class="p">\</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>    <span class="n">-Password</span> <span class="p">(</span><span class="nb">ConvertTo-SecureString</span> <span class="s2">&quot;password&quot;</span> <span class="n">-AsPlainText</span> <span class="n">-Force</span><span class="p">)</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c"># Add Linux host credentials (used for Oracle, SAP HANA, UNIX plugin hosts)</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="nb">Add-SmCredential</span> <span class="p">\</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>    <span class="n">-Name</span> <span class="s2">&quot;linux-host-root&quot;</span> <span class="p">\</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>    <span class="n">-AuthMode</span> <span class="n">UseSudoCredentials</span> <span class="p">\</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>    <span class="n">-UserName</span> <span class="n">root</span> <span class="p">\</span>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>    <span class="n">-Password</span> <span class="p">(</span><span class="nb">ConvertTo-SecureString</span> <span class="s2">&quot;password&quot;</span> <span class="n">-AsPlainText</span> <span class="n">-Force</span><span class="p">)</span>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="c"># Assign credentials to a host when adding it to SnapCenter</span>
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="nb">Add-SmHost</span> <span class="p">\</span>
-<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>    <span class="n">-HostName</span> <span class="n">dbhost01</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">com</span> <span class="p">\</span>
-<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>    <span class="n">-HostType</span> <span class="n">Windows</span> <span class="p">\</span>
-<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>    <span class="n">-Credential</span> <span class="s2">&quot;win-host-admin&quot;</span> <span class="p">\</span>
-<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>    <span class="n">-PluginCode</span> <span class="n">SCW</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Add Windows host credentials</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">Add-SmCredential</span> <span class="p">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    <span class="n">-Name</span> <span class="s2">&quot;win-host-admin&quot;</span> <span class="p">\</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    <span class="n">-AuthMode</span> <span class="n">UseWindowsCredentials</span> <span class="p">\</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>    <span class="n">-UserName</span> <span class="s2">&quot;CORP\snapcenter-svc&quot;</span> <span class="p">\</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>    <span class="n">-Password</span> <span class="p">(</span><span class="nb">ConvertTo-SecureString</span> <span class="s2">&quot;password&quot;</span> <span class="n">-AsPlainText</span> <span class="n">-Force</span><span class="p">)</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c"># Add Linux host credentials (used for Oracle, SAP HANA, UNIX plugin hosts)</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="nb">Add-SmCredential</span> <span class="p">\</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>    <span class="n">-Name</span> <span class="s2">&quot;linux-host-root&quot;</span> <span class="p">\</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>    <span class="n">-AuthMode</span> <span class="n">UseSudoCredentials</span> <span class="p">\</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>    <span class="n">-UserName</span> <span class="n">root</span> <span class="p">\</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>    <span class="n">-Password</span> <span class="p">(</span><span class="nb">ConvertTo-SecureString</span> <span class="s2">&quot;password&quot;</span> <span class="n">-AsPlainText</span> <span class="n">-Force</span><span class="p">)</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="c"># Assign credentials to a host when adding it to SnapCenter</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="nb">Add-SmHost</span> <span class="p">\</span>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>    <span class="n">-HostName</span> <span class="n">dbhost01</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">com</span> <span class="p">\</span>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>    <span class="n">-HostType</span> <span class="n">Windows</span> <span class="p">\</span>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>    <span class="n">-Credential</span> <span class="s2">&quot;win-host-admin&quot;</span> <span class="p">\</span>
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>    <span class="n">-PluginCode</span> <span class="n">SCW</span>
 </code></pre></div>
 <h3 id="linux-host-sudo-configuration">Linux Host sudo Configuration<a class="headerlink" href="#linux-host-sudo-configuration" title="Permanent link">&para;</a></h3>
 <p>For Linux plugin hosts, the SnapCenter agent typically runs as a non-root user with sudo access for specific commands. Configure <code>/etc/sudoers</code> on each Linux plugin host:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># /etc/sudoers — allow the SnapCenter plugin user to run required commands without a password prompt</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># Add this entry using visudo — do not edit /etc/sudoers directly</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>snapcenter<span class="w"> </span><span class="nv">ALL</span><span class="o">=(</span>ALL<span class="o">)</span><span class="w"> </span>NOPASSWD:<span class="w"> </span>/bin/mount,<span class="w"> </span>/bin/umount,<span class="w"> </span>/sbin/multipath,<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">    </span>/sbin/fdisk,<span class="w"> </span>/usr/sbin/dmsetup,<span class="w"> </span>/opt/NetApp/snapcenter/spl/bin/*
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Verify the sudoers entry is valid</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>sudo<span class="w"> </span>-l<span class="w"> </span>-U<span class="w"> </span>snapcenter
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># /etc/sudoers — allow the SnapCenter plugin user to run required commands without a password prompt</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># Add this entry using visudo — do not edit /etc/sudoers directly</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>snapcenter<span class="w"> </span><span class="nv">ALL</span><span class="o">=(</span>ALL<span class="o">)</span><span class="w"> </span>NOPASSWD:<span class="w"> </span>/bin/mount,<span class="w"> </span>/bin/umount,<span class="w"> </span>/sbin/multipath,<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">    </span>/sbin/fdisk,<span class="w"> </span>/usr/sbin/dmsetup,<span class="w"> </span>/opt/NetApp/snapcenter/spl/bin/*
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Verify the sudoers entry is valid</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>sudo<span class="w"> </span>-l<span class="w"> </span>-U<span class="w"> </span>snapcenter
 </code></pre></div>
 <hr />
 <h2 id="session-and-token-management">Session and Token Management<a class="headerlink" href="#session-and-token-management" title="Permanent link">&para;</a></h2>
 <p>SnapCenter REST API authentication uses tokens with a configurable session lifetime. Tokens expire after inactivity to limit the exposure window.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Obtain an API token</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://snapcenter.example.com/api/4.9/auth/login&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">    </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">    </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="s1">        &quot;UserOperationContext&quot;: {</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="s1">            &quot;User&quot;: {</span>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="s1">                &quot;Name&quot;: &quot;admin&quot;,</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="s1">                &quot;Passphrase&quot;: &quot;&lt;password&gt;&quot;,</span>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="s1">                &quot;Rolename&quot;: &quot;SnapCenter Admin&quot;</span>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="s1">            }</span>
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="s1">        }</span>
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="s1">    }&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
-<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="c1"># Returns: { &quot;Token&quot;: &quot;...&quot; }</span>
-<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>
-<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="c1"># Use the token in subsequent API calls</span>
-<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="s2">&quot;&lt;token-from-login&gt;&quot;</span>
-<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://snapcenter.example.com/api/4.9/resourcegroups&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a><span class="w">    </span>-H<span class="w"> </span><span class="s2">&quot;token: </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
-<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>
-<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a><span class="c1"># Logout — invalidate the token</span>
-<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://snapcenter.example.com/api/4.9/auth/logout&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a><span class="w">    </span>-H<span class="w"> </span><span class="s2">&quot;token: </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Obtain an API token</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://snapcenter.example.com/api/4.9/auth/login&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">    </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">    </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="s1">        &quot;UserOperationContext&quot;: {</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="s1">            &quot;User&quot;: {</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="s1">                &quot;Name&quot;: &quot;admin&quot;,</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="s1">                &quot;Passphrase&quot;: &quot;&lt;password&gt;&quot;,</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="s1">                &quot;Rolename&quot;: &quot;SnapCenter Admin&quot;</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="s1">            }</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="s1">        }</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="s1">    }&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="c1"># Returns: { &quot;Token&quot;: &quot;...&quot; }</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="c1"># Use the token in subsequent API calls</span>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="s2">&quot;&lt;token-from-login&gt;&quot;</span>
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://snapcenter.example.com/api/4.9/resourcegroups&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a><span class="w">    </span>-H<span class="w"> </span><span class="s2">&quot;token: </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>
+<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a><span class="c1"># Logout — invalidate the token</span>
+<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://snapcenter.example.com/api/4.9/auth/logout&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a><span class="w">    </span>-H<span class="w"> </span><span class="s2">&quot;token: </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span>
 </code></pre></div>
 <h2 id="for-automation-scripts-always-log-out-at-the-end-of-the-script-to-invalidate-the-token-do-not-hardcode-credentials-in-scripts-retrieve-them-from-a-secrets-vault-at-runtime">For automation scripts, always log out at the end of the script to invalidate the token. Do not hardcode credentials in scripts — retrieve them from a secrets vault at runtime.<a class="headerlink" href="#for-automation-scripts-always-log-out-at-the-end-of-the-script-to-invalidate-the-token-do-not-hardcode-credentials-in-scripts-retrieve-them-from-a-secrets-vault-at-runtime" title="Permanent link">&para;</a></h2>
 <h2 id="related-reference">Related Reference<a class="headerlink" href="#related-reference" title="Permanent link">&para;</a></h2>

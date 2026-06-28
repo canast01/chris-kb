@@ -9514,25 +9514,7 @@
 *Applies to: vSphere 7.x / 8.x*
 </div>
 <p><img alt="vCenter Certificate Rotation Runbook" src="../../../../../assets/virtualization-vmware-operations-runbooks-certificate-rotati.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>@startuml
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>skinparam sequenceArrowThickness 1.5
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>skinparam roundcorner 5
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>actor &quot;Responder&quot; as A
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>participant &quot;Runbooks System&quot; as B
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>participant &quot;Dependent System&quot; as C
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>A -&gt; B: Run This Routine
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>B --&gt; A: OK
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>A -&gt; B: Post-rotation verification
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>B --&gt; A: OK
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>A -&gt; B: Troubleshooting
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>B --&gt; A: OK
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>A -&gt; B: Verify
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>B --&gt; A: OK
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>@enduml
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/plantuml/svg/eNpt0LGOwjAMBuA9T2Gx96QbWBhQW267AQQVewjmiNraxXbuxNtjGE4gsSX6v_yyU6tFsTIOQftMU5Q4guKlICVsRPivO-fUE6rC58f8CQkXOiYWQoF5CDEZC8y2qBPTEWUGUaEJbi2nPEUyDwsdmHuF3VUNxwdpX8kXTujP_fhkViE0UC2hXYBXgE-ksOVimTC0UHnSLGD9_Y82rFYJW7TMBL8o-ZTT4_KWd77KYUA9M3vlz1uzv5dcX6JQ-6T3j7sBokhmqQ==?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Access:</strong> Admin credentials on all affected systems</li>
@@ -9553,14 +9535,14 @@
 </li>
 <li>
 <p><strong>Check current certificate expiry</strong>:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># SSH to VCSA as root</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="k">for</span><span class="w"> </span>cert<span class="w"> </span><span class="k">in</span><span class="w"> </span>/etc/vmware-vpx/ssl/rui.crt<span class="w"> </span>/etc/vmware/vmca/cacert.pem<span class="p">;</span><span class="w"> </span><span class="k">do</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== </span><span class="nv">$cert</span><span class="s2"> ===&quot;</span><span class="p">;</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-in<span class="w"> </span><span class="nv">$cert</span><span class="w"> </span>-noout<span class="w"> </span>-dates<span class="p">;</span><span class="w"> </span><span class="k">done</span>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># SSH to VCSA as root</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="k">for</span><span class="w"> </span>cert<span class="w"> </span><span class="k">in</span><span class="w"> </span>/etc/vmware-vpx/ssl/rui.crt<span class="w"> </span>/etc/vmware/vmca/cacert.pem<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== </span><span class="nv">$cert</span><span class="s2"> ===&quot;</span><span class="p">;</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-in<span class="w"> </span><span class="nv">$cert</span><span class="w"> </span>-noout<span class="w"> </span>-dates<span class="p">;</span><span class="w"> </span><span class="k">done</span>
 </code></pre></div></p>
 </li>
 <li>
 <p><strong>Check vCenter services are healthy</strong> — all services must be Running before rotation:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>service-control<span class="w"> </span>--status<span class="w"> </span>--all<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>running
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>service-control<span class="w"> </span>--status<span class="w"> </span>--all<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>running
 </code></pre></div>
    No output = all services running. Address any stopped services before continuing.</p>
 </li>
@@ -9571,20 +9553,20 @@
 <hr />
 <h3 id="option-a-renew-vmca-signed-machine-ssl-most-common">Option A — Renew VMCA-signed Machine SSL (most common)<a class="headerlink" href="#option-a-renew-vmca-signed-machine-ssl-most-common" title="Permanent link">&para;</a></h3>
 <p>Used when: Machine SSL cert is expiring; VMCA root is still valid.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># On the VCSA via SSH:</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>/usr/lib/vmware-vmca/bin/certificate-manager
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># On the VCSA via SSH:</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>/usr/lib/vmware-vmca/bin/certificate-manager
 </code></pre></div>
 <p>Choose option <strong>3</strong> (Replace Machine SSL certificate with VMCA Certificate):
 - Confirm environment details when prompted
 - The tool replaces the Machine SSL cert, restarts <code>nginx</code> and <code>vsphere-client</code>
 - vCenter will be briefly unreachable (~2–5 min)</p>
 <p>Verify:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>vcenter.example.local:443<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-dates
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>vcenter.example.local:443<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-dates
 </code></pre></div></p>
 <hr />
 <h3 id="option-b-renew-vmca-root-and-all-dependent-certificates">Option B — Renew VMCA root and all dependent certificates<a class="headerlink" href="#option-b-renew-vmca-root-and-all-dependent-certificates" title="Permanent link">&para;</a></h3>
 <p>Used when: VMCA root itself is expiring or needs to be replaced.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>/usr/lib/vmware-vmca/bin/certificate-manager
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>/usr/lib/vmware-vmca/bin/certificate-manager
 </code></pre></div>
 <p>Choose option <strong>8</strong> (Reset all certificates) — this:
 1. Generates a new VMCA root
@@ -9598,10 +9580,10 @@
 <ol>
 <li>
 <p><strong>Generate a CSR on the VCSA</strong>:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>/usr/lib/vmware-vmca/bin/certificate-manager
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># Option 1: Generate CSR</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1"># Fill in: FQDN, IP SANs, org details</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Output: /tmp/ssl/machine_ssl.csr</span>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>/usr/lib/vmware-vmca/bin/certificate-manager
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># Option 1: Generate CSR</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># Fill in: FQDN, IP SANs, org details</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Output: /tmp/ssl/machine_ssl.csr</span>
 </code></pre></div></p>
 </li>
 <li>
@@ -9609,25 +9591,25 @@
 </li>
 <li>
 <p><strong>Import the signed cert</strong>:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>/usr/lib/vmware-vmca/bin/certificate-manager
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="c1"># Option 1: Replace Machine SSL cert → Import certificate</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="c1"># Provide: signed cert file, private key file, CA chain file</span>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>/usr/lib/vmware-vmca/bin/certificate-manager
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># Option 1: Replace Machine SSL cert → Import certificate</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1"># Provide: signed cert file, private key file, CA chain file</span>
 </code></pre></div></p>
 </li>
 </ol>
 <hr />
 <h2 id="post-rotation-verification">Post-rotation verification<a class="headerlink" href="#post-rotation-verification" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># 1. Confirm Machine SSL cert is new</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>vcenter.example.local:443<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-subject<span class="w"> </span>-dates
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># 2. Confirm all services are running</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>service-control<span class="w"> </span>--status<span class="w"> </span>--all<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>running
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># 3. Log into vCenter Web Client — confirm login works without cert warning</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c1"># If browser shows a cert warning: import the new VMCA root into trusted CAs in browser/OS</span>
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># 4. Check ESXi host connection state</span>
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>esxcli<span class="w"> </span>system<span class="w"> </span>certificate<span class="w"> </span>list<span class="w">  </span><span class="c1"># run on each host</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># 1. Confirm Machine SSL cert is new</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>vcenter.example.local:443<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-subject<span class="w"> </span>-dates
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># 2. Confirm all services are running</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>service-control<span class="w"> </span>--status<span class="w"> </span>--all<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>running
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># 3. Log into vCenter Web Client — confirm login works without cert warning</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="c1"># If browser shows a cert warning: import the new VMCA root into trusted CAs in browser/OS</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="c1"># 4. Check ESXi host connection state</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>esxcli<span class="w"> </span>system<span class="w"> </span>certificate<span class="w"> </span>list<span class="w">  </span><span class="c1"># run on each host</span>
 </code></pre></div>
 <hr />
 <h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>

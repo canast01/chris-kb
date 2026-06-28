@@ -8214,23 +8214,7 @@ Firewall port reference for Microsoft SQL Server. Covers the default instance, n
 *Applies to: SQL Server 2019 / 2022*
 </div>
 <p><img alt="SQL Server — Ports and Network Requirements" src="../../../../../assets/compute-windows-server-sql-server-architecture-ports.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>center: &quot;SQL Server&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>inbound_client_application_connectio: &quot;Inbound — Client / Application Connections&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>inbound_remote_management_ssms_power: &quot;Inbound — Remote Management (SSMS, PowerShell)&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>always_on_availability_groups_ag: &quot;Always On Availability Groups (AG)&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>sql_server_replication_and_linked_se: &quot;SQL Server Replication and Linked Servers&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>sql_agent_mail_database_mail: &quot;SQL Agent Mail (Database Mail)&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>sql_server_integration_services_ssis: &quot;SQL Server Integration Services (SSIS)&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>center -&gt; inbound_client_application_connectio
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>center -&gt; inbound_remote_management_ssms_power
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>center -&gt; always_on_availability_groups_ag
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>center -&gt; sql_server_replication_and_linked_se
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>center -&gt; sql_agent_mail_database_mail
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>center -&gt; sql_server_integration_services_ssis
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNkk1qwzAQhfc-xZBVCi3dZ1EwKYRAQn90ADGxB1lEll3JSRpKoYfoCXuSjhS3dorTZCnNx7w3bybXjrJGV3YCTquiSZKMbENuAiPxtABBbktuBG--wJomUNArqsq-J9quqo3NZWY08xLr2ugMQyOZVdbGntxjfsDg6-MTphGFW0g7GKY_sPWdSrCEVhnqdByVVUOyRIuKyiDpfellXe2i177Oc0Rh-YvCWIiluIbHAIuCjLka1EKzw72XPAJuURtcaaObvVSu2tReomKdNCLwYCHtITCLCIzT2XBn_2Kkj1HyIF1SyIMZbdeUc_UocR6iy4gxWESsrfqTIjwxR1OyNZljgyv0FF9t8zSUORltYHzf1uPzrG3NR6HcwXb40hl5XoH2x7bnHRa_Ahbin4thhfba4OYOLrmoAfy_w-jh53bbQy9Z1h_8VOzDXU9mmXwD8EZTmA==?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
 <li>SQL Server default instance listens on TCP 1433 — this is the standard port for all client connections</li>
@@ -8478,20 +8462,20 @@ Firewall port reference for Microsoft SQL Server. Covers the default instance, n
 </table>
 <hr />
 <h2 id="verify">Verify<a class="headerlink" href="#verify" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># From app server — test SQL port</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Test-NetConnection</span> <span class="n">-ComputerName</span> <span class="p">&lt;</span><span class="n">sql-server</span><span class="p">&gt;</span> <span class="n">-Port</span> <span class="n">1433</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c"># From admin workstation — test SSMS connection</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="n">sqlcmd</span> <span class="n">-S</span> <span class="p">&lt;</span><span class="n">sql-server</span><span class="p">&gt;</span> <span class="n">-Q</span> <span class="s2">&quot;SELECT @@VERSION&quot;</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c"># From SQL Server — test AG replica connectivity</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="nb">Test-NetConnection</span> <span class="n">-ComputerName</span> <span class="p">&lt;</span><span class="n">replica-sql-server</span><span class="p">&gt;</span> <span class="n">-Port</span> <span class="n">5022</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c"># From SQL Server — check AG health</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="nb">Invoke-Sqlcmd</span> <span class="n">-Query</span> <span class="s2">&quot;SELECT replica_server_name, synchronization_health_desc FROM sys.dm_hadr_availability_replica_states r JOIN sys.availability_replicas ar ON r.replica_id = ar.replica_id&quot;</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c"># Verify SQL Browser is running (if using named instances)</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="nb">Get-Service</span> <span class="n">SQLBrowser</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># From app server — test SQL port</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Test-NetConnection</span> <span class="n">-ComputerName</span> <span class="p">&lt;</span><span class="n">sql-server</span><span class="p">&gt;</span> <span class="n">-Port</span> <span class="n">1433</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c"># From admin workstation — test SSMS connection</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="n">sqlcmd</span> <span class="n">-S</span> <span class="p">&lt;</span><span class="n">sql-server</span><span class="p">&gt;</span> <span class="n">-Q</span> <span class="s2">&quot;SELECT @@VERSION&quot;</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c"># From SQL Server — test AG replica connectivity</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="nb">Test-NetConnection</span> <span class="n">-ComputerName</span> <span class="p">&lt;</span><span class="n">replica-sql-server</span><span class="p">&gt;</span> <span class="n">-Port</span> <span class="n">5022</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c"># From SQL Server — check AG health</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="nb">Invoke-Sqlcmd</span> <span class="n">-Query</span> <span class="s2">&quot;SELECT replica_server_name, synchronization_health_desc FROM sys.dm_hadr_availability_replica_states r JOIN sys.availability_replicas ar ON r.replica_id = ar.replica_id&quot;</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c"># Verify SQL Browser is running (if using named instances)</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="nb">Get-Service</span> <span class="n">SQLBrowser</span>
 </code></pre></div>
 <hr />
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>

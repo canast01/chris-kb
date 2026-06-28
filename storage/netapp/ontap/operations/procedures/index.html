@@ -8698,23 +8698,7 @@ ONTAP day-2 procedures — change readiness, rolling node upgrades, volume and L
 *Applies to: ONTAP 9.x*
 </div>
 
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>hub: &quot;NetApp ONTAP\nOperations&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>svm_volume_lun_hierarchy: &quot;SVM / Volume / LUN Hierarchy&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>change_readiness: &quot;Change Readiness&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>rolling_node_upgrade_sequence: &quot;Rolling Node Upgrade Sequence&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>maintenance_window: &quot;Maintenance Window&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>postchange_validation: &quot;Post-Change Validation&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>incident_triage: &quot;Incident Triage&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>hub -&gt; svm_volume_lun_hierarchy
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>hub -&gt; change_readiness
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>hub -&gt; rolling_node_upgrade_sequence
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>hub -&gt; maintenance_window
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>hub -&gt; postchange_validation
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>hub -&gt; incident_triage
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp9kctqwzAQRff-isH70L0XhdBNC40T8nA3BaFagySQR64kOy0l_175oQZStysN98xcdGeEdlgHbakAp6UKWaa6twLyEsO6bWFbHte7V9q26PjQ5XP48oq3WIDCDy4tXTLfN6y3pmuQmY6Y0rHX1eozuhyqDdxBNcJYPJ9KeEz46jT8gJM0eMlqFQtkDrnQhN5Hj4dRgn2SFuecNUaTZGQFsq6VjsfX43uHVMfOfD9xKCOH08ThMPNFx4ZrCkg8cnbWJOw52myuIryM4uJsa32Yk_TcaMGnBee7qK_mPNUPWLTQVGuBFFhwmsshwtOswHFUFqeG48HqHv46SeK3a076v2tMTb83k8hi7gRvEmXfYHXnAQ==?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Access:</strong> Storage admin credentials (cluster admin or equivalent)</li>
@@ -8885,70 +8869,70 @@ ONTAP day-2 procedures — change readiness, rolling node upgrades, volume and L
 <p>SVMs are logical storage containers within an ONTAP cluster. Each SVM has its own namespaces, LIFs, and protocol configurations.</p>
 <h3 id="list-svms">List SVMs<a class="headerlink" href="#list-svms" title="Permanent link">&para;</a></h3>
 <p><img alt="List SVMs" src="../../../../../assets/ontap-proc-list-svms.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>vserver<span class="w"> </span>show
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>vserver<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>type,state,admin-state
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>vserver<span class="w"> </span>show
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>vserver<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>type,state,admin-state
 </code></pre></div>
 <h3 id="svm-health">SVM Health<a class="headerlink" href="#svm-health" title="Permanent link">&para;</a></h3>
 <p><img alt="SVM Health" src="../../../../../assets/ontap-proc-svm-health.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Confirm all SVMs are running</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>vserver<span class="w"> </span>show<span class="w"> </span>-state<span class="w"> </span>!running
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Check SVM root volume health</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>volume<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;svm_name&gt;_root
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Confirm all SVMs are running</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>vserver<span class="w"> </span>show<span class="w"> </span>-state<span class="w"> </span>!running
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Check SVM root volume health</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>volume<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;svm_name&gt;_root
 </code></pre></div>
 <h3 id="create-an-svm">Create an SVM<a class="headerlink" href="#create-an-svm" title="Permanent link">&para;</a></h3>
 <p><img alt="Create an SVM" src="../../../../../assets/ontap-proc-create-an-svm.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>vserver<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span>-aggregate<span class="w"> </span>&lt;aggr_name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">    </span>-rootvolume<span class="w"> </span>&lt;svm_name&gt;_root<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">    </span>-rootvolume-security-style<span class="w"> </span>unix
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>vserver<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span>-aggregate<span class="w"> </span>&lt;aggr_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">    </span>-rootvolume<span class="w"> </span>&lt;svm_name&gt;_root<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">    </span>-rootvolume-security-style<span class="w"> </span>unix
 </code></pre></div>
 <h3 id="lif-management">LIF Management<a class="headerlink" href="#lif-management" title="Permanent link">&para;</a></h3>
 <p><img alt="LIF Management" src="../../../../../assets/ontap-proc-lif-management.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># List LIFs for an SVM</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>network<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Create a data LIF</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>network<span class="w"> </span>interface<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">    </span>-lif<span class="w"> </span>&lt;lif_name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">    </span>-role<span class="w"> </span>data<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">    </span>-home-node<span class="w"> </span>&lt;node_name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">    </span>-home-port<span class="w"> </span>e0c<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">    </span>-address<span class="w"> </span>&lt;ip&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">    </span>-netmask<span class="w"> </span>&lt;mask&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">    </span>-data-protocol<span class="w"> </span>nfs,cifs
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="c1"># Migrate a LIF to a different port</span>
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>network<span class="w"> </span>interface<span class="w"> </span>migrate<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span>-lif<span class="w"> </span>&lt;lif_name&gt;<span class="w"> </span>-dest-node<span class="w"> </span>&lt;node&gt;<span class="w"> </span>-dest-port<span class="w"> </span>&lt;port&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># List LIFs for an SVM</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>network<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Create a data LIF</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>network<span class="w"> </span>interface<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">    </span>-lif<span class="w"> </span>&lt;lif_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">    </span>-role<span class="w"> </span>data<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">    </span>-home-node<span class="w"> </span>&lt;node_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">    </span>-home-port<span class="w"> </span>e0c<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">    </span>-address<span class="w"> </span>&lt;ip&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">    </span>-netmask<span class="w"> </span>&lt;mask&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">    </span>-data-protocol<span class="w"> </span>nfs,cifs
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="c1"># Migrate a LIF to a different port</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>network<span class="w"> </span>interface<span class="w"> </span>migrate<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span>-lif<span class="w"> </span>&lt;lif_name&gt;<span class="w"> </span>-dest-node<span class="w"> </span>&lt;node&gt;<span class="w"> </span>-dest-port<span class="w"> </span>&lt;port&gt;
 </code></pre></div>
 <h3 id="dns-configuration-per-svm">DNS Configuration per SVM<a class="headerlink" href="#dns-configuration-per-svm" title="Permanent link">&para;</a></h3>
 <p><img alt="DNS Configuration per SVM" src="../../../../../assets/ontap-proc-dns-configuration-per-svm.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>vserver<span class="w"> </span>services<span class="w"> </span>name-service<span class="w"> </span>dns<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>vserver<span class="w"> </span>services<span class="w"> </span>name-service<span class="w"> </span>dns<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">    </span>-domains<span class="w"> </span>&lt;domain&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">    </span>-name-servers<span class="w"> </span>&lt;dns_ip1&gt;,&lt;dns_ip2&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>vserver<span class="w"> </span>services<span class="w"> </span>name-service<span class="w"> </span>dns<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>vserver<span class="w"> </span>services<span class="w"> </span>name-service<span class="w"> </span>dns<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">    </span>-domains<span class="w"> </span>&lt;domain&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">    </span>-name-servers<span class="w"> </span>&lt;dns_ip1&gt;,&lt;dns_ip2&gt;
 </code></pre></div>
 <h3 id="nis-ldap-lookup">NIS / LDAP Lookup<a class="headerlink" href="#nis-ldap-lookup" title="Permanent link">&para;</a></h3>
 <p><img alt="NIS / LDAP Lookup" src="../../../../../assets/ontap-proc-nis-ldap-lookup.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>vserver<span class="w"> </span>services<span class="w"> </span>name-service<span class="w"> </span>ns-switch<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>vserver<span class="w"> </span>services<span class="w"> </span>name-service<span class="w"> </span>ldap<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>vserver<span class="w"> </span>services<span class="w"> </span>name-service<span class="w"> </span>ns-switch<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>vserver<span class="w"> </span>services<span class="w"> </span>name-service<span class="w"> </span>ldap<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
 </code></pre></div>
 <h3 id="stop-start-an-svm">Stop / Start an SVM<a class="headerlink" href="#stop-start-an-svm" title="Permanent link">&para;</a></h3>
 <p><img alt="Stop / Start an SVM" src="../../../../../assets/ontap-proc-stop-start-an-svm.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>vserver<span class="w"> </span>stop<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>vserver<span class="w"> </span>start<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>vserver<span class="w"> </span>stop<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>vserver<span class="w"> </span>start<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
 </code></pre></div>
 <h3 id="delete-an-svm">Delete an SVM<a class="headerlink" href="#delete-an-svm" title="Permanent link">&para;</a></h3>
 <p><img alt="Delete an SVM" src="../../../../../assets/ontap-proc-delete-an-svm.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Ensure no volumes except root</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>volume<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Delete root volume and SVM</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>vserver<span class="w"> </span>delete<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Ensure no volumes except root</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>volume<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Delete root volume and SVM</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>vserver<span class="w"> </span>delete<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
 </code></pre></div>
 <h3 id="svm-common-issues">SVM Common Issues<a class="headerlink" href="#svm-common-issues" title="Permanent link">&para;</a></h3>
 <p><img alt="SVM Common Issues" src="../../../../../assets/ontap-proc-svm-common-issues.svg" /></p>
@@ -8987,71 +8971,71 @@ ONTAP day-2 procedures — change readiness, rolling node upgrades, volume and L
 <h2 id="volume-management">Volume Management<a class="headerlink" href="#volume-management" title="Permanent link">&para;</a></h2>
 <h3 id="list-volumes">List Volumes<a class="headerlink" href="#list-volumes" title="Permanent link">&para;</a></h3>
 <p><img alt="List Volumes" src="../../../../../assets/ontap-proc-list-volumes.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>volume<span class="w"> </span>show
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>volume<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>volume<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>size,used,available,percent-used,state
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>volume<span class="w"> </span>show
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>volume<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>volume<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>size,used,available,percent-used,state
 </code></pre></div>
 <h3 id="volume-health">Volume Health<a class="headerlink" href="#volume-health" title="Permanent link">&para;</a></h3>
 <p><img alt="Volume Health" src="../../../../../assets/ontap-proc-volume-health.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Show offline or restricted volumes</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>volume<span class="w"> </span>show<span class="w"> </span>-state<span class="w"> </span>!online
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Show volumes nearing capacity</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>volume<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>percent-used<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;$2 &gt; 80&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Show offline or restricted volumes</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>volume<span class="w"> </span>show<span class="w"> </span>-state<span class="w"> </span>!online
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Show volumes nearing capacity</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>volume<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>percent-used<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;$2 &gt; 80&#39;</span>
 </code></pre></div>
 <h3 id="create-a-volume">Create a Volume<a class="headerlink" href="#create-a-volume" title="Permanent link">&para;</a></h3>
 <p><img alt="Create a Volume" src="../../../../../assets/ontap-proc-create-a-volume.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>volume<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">    </span>-volume<span class="w"> </span>&lt;vol_name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="w">    </span>-aggregate<span class="w"> </span>&lt;aggr_name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="w">    </span>-size<span class="w"> </span>500G<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="w">    </span>-junction-path<span class="w"> </span>/&lt;vol_name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="w">    </span>-security-style<span class="w"> </span>unix
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>volume<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">    </span>-volume<span class="w"> </span>&lt;vol_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">    </span>-aggregate<span class="w"> </span>&lt;aggr_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">    </span>-size<span class="w"> </span>500G<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="w">    </span>-junction-path<span class="w"> </span>/&lt;vol_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="w">    </span>-security-style<span class="w"> </span>unix
 </code></pre></div>
 <h3 id="resize-a-volume">Resize a Volume<a class="headerlink" href="#resize-a-volume" title="Permanent link">&para;</a></h3>
 <p><img alt="Resize a Volume" src="../../../../../assets/ontap-proc-resize-a-volume.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>volume<span class="w"> </span>size<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol_name&gt;<span class="w"> </span>-new-size<span class="w"> </span>1T
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>volume<span class="w"> </span>size<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol_name&gt;<span class="w"> </span>-new-size<span class="w"> </span>1T
 </code></pre></div>
 <h3 id="volume-autosize">Volume Autosize<a class="headerlink" href="#volume-autosize" title="Permanent link">&para;</a></h3>
 <p><img alt="Volume Autosize" src="../../../../../assets/ontap-proc-volume-autosize.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>volume<span class="w"> </span>autosize<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol_name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="w">    </span>-mode<span class="w"> </span>grow_shrink<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="w">    </span>-maximum-size<span class="w"> </span>2T<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="w">    </span>-grow-threshold-percent<span class="w"> </span><span class="m">85</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>volume<span class="w"> </span>autosize<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="w">    </span>-mode<span class="w"> </span>grow_shrink<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">    </span>-maximum-size<span class="w"> </span>2T<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">    </span>-grow-threshold-percent<span class="w"> </span><span class="m">85</span>
 </code></pre></div>
 <h3 id="volume-efficiency-deduplication-compression">Volume Efficiency (Deduplication / Compression)<a class="headerlink" href="#volume-efficiency-deduplication-compression" title="Permanent link">&para;</a></h3>
 <p><img alt="Volume Efficiency (Deduplication / Compression)" src="../../../../../assets/ontap-proc-volume-efficiency-deduplication-compression.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Check efficiency state</span>
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>volume<span class="w"> </span>efficiency<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol_name&gt;
-<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
-<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c1"># Enable efficiency</span>
-<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>volume<span class="w"> </span>efficiency<span class="w"> </span>on<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol_name&gt;
-<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>
-<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="c1"># Run deduplication manually</span>
-<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>volume<span class="w"> </span>efficiency<span class="w"> </span>start<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol_name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Check efficiency state</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>volume<span class="w"> </span>efficiency<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol_name&gt;
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c1"># Enable efficiency</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>volume<span class="w"> </span>efficiency<span class="w"> </span>on<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol_name&gt;
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="c1"># Run deduplication manually</span>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>volume<span class="w"> </span>efficiency<span class="w"> </span>start<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol_name&gt;
 </code></pre></div>
 <h3 id="move-a-volume-between-aggregates">Move a Volume (Between Aggregates)<a class="headerlink" href="#move-a-volume-between-aggregates" title="Permanent link">&para;</a></h3>
 <p><img alt="Move a Volume (Between Aggregates)" src="../../../../../assets/ontap-proc-move-a-volume-between-aggregates.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>volume<span class="w"> </span>move<span class="w"> </span>start<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="w">    </span>-volume<span class="w"> </span>&lt;vol_name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="w">    </span>-destination-aggregate<span class="w"> </span>&lt;dest_aggr&gt;
-<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>
-<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>volume<span class="w"> </span>move<span class="w"> </span>show
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>volume<span class="w"> </span>move<span class="w"> </span>start<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="w">    </span>-volume<span class="w"> </span>&lt;vol_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="w">    </span>-destination-aggregate<span class="w"> </span>&lt;dest_aggr&gt;
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>volume<span class="w"> </span>move<span class="w"> </span>show
 </code></pre></div>
 <h3 id="take-a-volume-offline-online">Take a Volume Offline / Online<a class="headerlink" href="#take-a-volume-offline-online" title="Permanent link">&para;</a></h3>
 <p><img alt="Take a Volume Offline / Online" src="../../../../../assets/ontap-proc-take-a-volume-offline-online.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>volume<span class="w"> </span>offline<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol_name&gt;
-<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>volume<span class="w"> </span>online<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol_name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>volume<span class="w"> </span>offline<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol_name&gt;
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>volume<span class="w"> </span>online<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol_name&gt;
 </code></pre></div>
 <h3 id="delete-a-volume">Delete a Volume<a class="headerlink" href="#delete-a-volume" title="Permanent link">&para;</a></h3>
 <p><img alt="Delete a Volume" src="../../../../../assets/ontap-proc-delete-a-volume.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># Offline first</span>
-<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>volume<span class="w"> </span>offline<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol_name&gt;
-<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>
-<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="c1"># Delete</span>
-<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>volume<span class="w"> </span>delete<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol_name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Offline first</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>volume<span class="w"> </span>offline<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol_name&gt;
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="c1"># Delete</span>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>volume<span class="w"> </span>delete<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol_name&gt;
 </code></pre></div>
 <h3 id="volume-common-issues">Volume Common Issues<a class="headerlink" href="#volume-common-issues" title="Permanent link">&para;</a></h3>
 <p><img alt="Volume Common Issues" src="../../../../../assets/ontap-proc-volume-common-issues.svg" /></p>
@@ -9091,69 +9075,69 @@ ONTAP day-2 procedures — change readiness, rolling node upgrades, volume and L
 <p>ONTAP supports NFS, SMB/CIFS, iSCSI, FCP (Fibre Channel), and NVMe over Fabrics. Protocol access is configured per SVM.</p>
 <h3 id="nfs">NFS<a class="headerlink" href="#nfs" title="Permanent link">&para;</a></h3>
 <p><img alt="NFS" src="../../../../../assets/ontap-proc-nfs.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># Check NFS service status per SVM</span>
-<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>nfs<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
-<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>
-<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="c1"># List NFS exports</span>
-<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>vserver<span class="w"> </span>nfs<span class="w"> </span>export-policy<span class="w"> </span>rule<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
-<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>
-<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a><span class="c1"># Show NFS clients connected</span>
-<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>nfs<span class="w"> </span>connected-client<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># Check NFS service status per SVM</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>nfs<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="c1"># List NFS exports</span>
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>vserver<span class="w"> </span>nfs<span class="w"> </span>export-policy<span class="w"> </span>rule<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a><span class="c1"># Show NFS clients connected</span>
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>nfs<span class="w"> </span>connected-client<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
 </code></pre></div>
 <h3 id="smbcifs">SMB/CIFS<a class="headerlink" href="#smbcifs" title="Permanent link">&para;</a></h3>
 <p><img alt="SMB/CIFS" src="../../../../../assets/ontap-proc-smb-cifs.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1"># Check CIFS server status</span>
-<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>cifs<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
-<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>
-<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="c1"># List CIFS shares</span>
-<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>share<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
-<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>
-<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a><span class="c1"># Show active CIFS sessions</span>
-<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>cifs<span class="w"> </span>session<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># Check CIFS server status</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>cifs<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="c1"># List CIFS shares</span>
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>share<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a><span class="c1"># Show active CIFS sessions</span>
+<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>cifs<span class="w"> </span>session<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
 </code></pre></div>
 <h3 id="iscsi">iSCSI<a class="headerlink" href="#iscsi" title="Permanent link">&para;</a></h3>
 <p><img alt="iSCSI" src="../../../../../assets/ontap-proc-iscsi.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># Check iSCSI service status</span>
-<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>iscsi<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
-<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>
-<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="c1"># List iSCSI LIFs</span>
-<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>network<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span>-data-protocol<span class="w"> </span>iscsi
-<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>
-<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a><span class="c1"># Show connected iSCSI initiators</span>
-<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a>iscsi<span class="w"> </span>initiator<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
-<a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a>
-<a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a><span class="c1"># Show iSCSI target portal groups</span>
-<a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a>iscsi<span class="w"> </span>tpgroup<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1"># Check iSCSI service status</span>
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>iscsi<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="c1"># List iSCSI LIFs</span>
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>network<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span>-data-protocol<span class="w"> </span>iscsi
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>
+<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a><span class="c1"># Show connected iSCSI initiators</span>
+<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>iscsi<span class="w"> </span>initiator<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
+<a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a>
+<a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a><span class="c1"># Show iSCSI target portal groups</span>
+<a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a>iscsi<span class="w"> </span>tpgroup<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
 </code></pre></div>
 <h3 id="fcp-fibre-channel">FCP (Fibre Channel)<a class="headerlink" href="#fcp-fibre-channel" title="Permanent link">&para;</a></h3>
 <p><img alt="FCP (Fibre Channel)" src="../../../../../assets/ontap-proc-fcp-fibre-channel.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="c1"># Check FCP service status</span>
-<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>fcp<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
-<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>
-<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="c1"># List FCP LIFs (FC target ports)</span>
-<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>network<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span>-data-protocol<span class="w"> </span>fcp
-<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a>
-<a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a><span class="c1"># Show connected FC initiators</span>
-<a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a>fcp<span class="w"> </span>initiator<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
-<a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a>
-<a id="__codelineno-21-10" name="__codelineno-21-10" href="#__codelineno-21-10"></a><span class="c1"># Show FC target adapter status</span>
-<a id="__codelineno-21-11" name="__codelineno-21-11" href="#__codelineno-21-11"></a>system<span class="w"> </span>node<span class="w"> </span>hardware<span class="w"> </span>unified-connect<span class="w"> </span>show
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># Check FCP service status</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>fcp<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="c1"># List FCP LIFs (FC target ports)</span>
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>network<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span>-data-protocol<span class="w"> </span>fcp
+<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>
+<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a><span class="c1"># Show connected FC initiators</span>
+<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a>fcp<span class="w"> </span>initiator<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
+<a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a>
+<a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a><span class="c1"># Show FC target adapter status</span>
+<a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a>system<span class="w"> </span>node<span class="w"> </span>hardware<span class="w"> </span>unified-connect<span class="w"> </span>show
 </code></pre></div>
 <h3 id="protocol-on-lif-verification">Protocol on LIF Verification<a class="headerlink" href="#protocol-on-lif-verification" title="Permanent link">&para;</a></h3>
 <p><img alt="Protocol on LIF Verification" src="../../../../../assets/ontap-proc-protocol-on-lif-verification.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="c1"># Show all data LIFs and their protocols</span>
-<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>network<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span>-role<span class="w"> </span>data<span class="w"> </span>-fields<span class="w"> </span>vserver,lif,address,data-protocol
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="c1"># Show all data LIFs and their protocols</span>
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>network<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span>-role<span class="w"> </span>data<span class="w"> </span>-fields<span class="w"> </span>vserver,lif,address,data-protocol
 </code></pre></div>
 <h3 id="enabledisable-a-protocol-on-an-svm">Enable/Disable a Protocol on an SVM<a class="headerlink" href="#enabledisable-a-protocol-on-an-svm" title="Permanent link">&para;</a></h3>
 <p><img alt="Enable/Disable a Protocol on an SVM" src="../../../../../assets/ontap-proc-enable-disable-a-protocol-on-an-svm.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="c1"># Enable NFS</span>
-<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>vserver<span class="w"> </span>nfs<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span>-v3<span class="w"> </span>enabled<span class="w"> </span>-v4.1<span class="w"> </span>enabled
-<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>
-<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a><span class="c1"># Enable CIFS (requires AD join)</span>
-<a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a>cifs<span class="w"> </span>setup<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
-<a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a>
-<a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a><span class="c1"># Enable iSCSI</span>
-<a id="__codelineno-23-8" name="__codelineno-23-8" href="#__codelineno-23-8"></a>iscsi<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="c1"># Enable NFS</span>
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>vserver<span class="w"> </span>nfs<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span>-v3<span class="w"> </span>enabled<span class="w"> </span>-v4.1<span class="w"> </span>enabled
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>
+<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a><span class="c1"># Enable CIFS (requires AD join)</span>
+<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a>cifs<span class="w"> </span>setup<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
+<a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a>
+<a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a><span class="c1"># Enable iSCSI</span>
+<a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a>iscsi<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
 </code></pre></div>
 <h3 id="protocol-common-issues">Protocol Common Issues<a class="headerlink" href="#protocol-common-issues" title="Permanent link">&para;</a></h3>
 <p><img alt="Protocol Common Issues" src="../../../../../assets/ontap-proc-protocol-common-issues.svg" /></p>

@@ -8579,38 +8579,26 @@ Tags are the primary mechanism for attributing Azure costs to teams, projects, e
 *Applies to: Azure*
 </div>
 <p><img alt="Cost Allocation Tags" src="../../../../assets/cloud-azure-cost-cost-allocation-tags-index.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>center: &quot;Azure&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>enforcement_with_policy: &quot;Enforcement with Policy&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>cost_allocation_rules: &quot;Cost Allocation Rules&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>tag_inheritance: &quot;Tag Inheritance&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>reporting_on_tag_coverage: &quot;Reporting on Tag Coverage&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>center -&gt; enforcement_with_policy
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>center -&gt; cost_allocation_rules
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>center -&gt; tag_inheritance
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>center -&gt; reporting_on_tag_coverage
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp1kL0KwzAMhHc_hcjeF8hQCKFDtxK6G-OqtsC1g-L0l7x77ZI2oSTrfbo7SSdi1JGCL4HJ2CiERh-RSyiqZ89YwKuzqsUSLN6VCX4Q6M-BNV7SnLxRtLINjvQjOXYTgUzg8CFTRu5S3jgchA5dlMq5oFWul9w77FJGnXSofjo0WV9MiMpI8haZkqITK47KwH5SFl2MbeBI3shUmiN0uCIrk_3Nl0EqzmH1yBaTxk_BZgsrL5lNLJ4743_HzMjqwuINKXqj0A==?" /></p>
 <h2 id="enforcement-with-policy">Enforcement with Policy<a class="headerlink" href="#enforcement-with-policy" title="Permanent link">&para;</a></h2>
 <p>Use Azure Policy to enforce tag presence and valid values. The built-in <code>Require a tag on resources</code> and <code>Require a tag and its value on resources</code> policies cover most cases.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Assign built-in &quot;Require a tag on resources&quot; policy at subscription scope</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>az<span class="w"> </span>policy<span class="w"> </span>assignment<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;require-cost-centre-tag&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>--policy<span class="w"> </span><span class="s2">&quot;871b6d14-10aa-478d-b590-94f262ecfa99&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>--scope<span class="w"> </span><span class="s2">&quot;/subscriptions/&lt;subscription-id&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span>--params<span class="w"> </span><span class="s1">&#39;{&quot;tagName&quot;: {&quot;value&quot;: &quot;cost-centre&quot;}}&#39;</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># List all policy assignments on a subscription</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>az<span class="w"> </span>policy<span class="w"> </span>assignment<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">  </span>--scope<span class="w"> </span><span class="s2">&quot;/subscriptions/&lt;subscription-id&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">  </span>--output<span class="w"> </span>table
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Check compliance state for the assignment</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>az<span class="w"> </span>policy<span class="w"> </span>state<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">  </span>--policy-assignment<span class="w"> </span><span class="s2">&quot;require-cost-centre-tag&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;[?complianceState==&#39;NonCompliant&#39;].{Resource:resourceId}&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="w">  </span>--output<span class="w"> </span>table
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Assign built-in &quot;Require a tag on resources&quot; policy at subscription scope</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>az<span class="w"> </span>policy<span class="w"> </span>assignment<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;require-cost-centre-tag&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span>--policy<span class="w"> </span><span class="s2">&quot;871b6d14-10aa-478d-b590-94f262ecfa99&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span>--scope<span class="w"> </span><span class="s2">&quot;/subscriptions/&lt;subscription-id&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">  </span>--params<span class="w"> </span><span class="s1">&#39;{&quot;tagName&quot;: {&quot;value&quot;: &quot;cost-centre&quot;}}&#39;</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># List all policy assignments on a subscription</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>az<span class="w"> </span>policy<span class="w"> </span>assignment<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">  </span>--scope<span class="w"> </span><span class="s2">&quot;/subscriptions/&lt;subscription-id&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">  </span>--output<span class="w"> </span>table
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Check compliance state for the assignment</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>az<span class="w"> </span>policy<span class="w"> </span>state<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">  </span>--policy-assignment<span class="w"> </span><span class="s2">&quot;require-cost-centre-tag&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;[?complianceState==&#39;NonCompliant&#39;].{Resource:resourceId}&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="w">  </span>--output<span class="w"> </span>table
 </code></pre></div>
 <h3 id="policy-effect-options-for-tag-enforcement">Policy Effect Options for Tag Enforcement<a class="headerlink" href="#policy-effect-options-for-tag-enforcement" title="Permanent link">&para;</a></h3>
 <table>
@@ -8638,33 +8626,33 @@ Tags are the primary mechanism for attributing Azure costs to teams, projects, e
 <p>Start with <code>Audit</code> to baseline compliance, then switch to <code>Deny</code> or <code>Modify</code> after a remediation sprint.</p>
 <h2 id="cost-allocation-rules">Cost Allocation Rules<a class="headerlink" href="#cost-allocation-rules" title="Permanent link">&para;</a></h2>
 <p>In Microsoft Cost Management, cost allocation rules let you redistribute shared costs (e.g., a shared networking subscription) to other subscriptions or resource groups based on tag-defined proportions.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Cost allocation rules are managed via the Cost Management REST API or portal.</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># Use the CLI to verify tag coverage before configuring allocation:</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Count resources per team tag value</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>az<span class="w"> </span>resource<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;sort_by([].{Team:tags.team, Name:name}, &amp;Team)&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span>--output<span class="w"> </span>table
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Cost allocation rules are managed via the Cost Management REST API or portal.</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># Use the CLI to verify tag coverage before configuring allocation:</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Count resources per team tag value</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>az<span class="w"> </span>resource<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;sort_by([].{Team:tags.team, Name:name}, &amp;Team)&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span>--output<span class="w"> </span>table
 </code></pre></div>
 <h2 id="tag-inheritance">Tag Inheritance<a class="headerlink" href="#tag-inheritance" title="Permanent link">&para;</a></h2>
 <p>Tags do not automatically inherit from resource group to child resources. Use the <code>Inherit a tag from the resource group</code> built-in policy to propagate resource group tags.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Assign tag inheritance policy for &#39;environment&#39; tag</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>az<span class="w"> </span>policy<span class="w"> </span>assignment<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;inherit-environment-tag&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>--policy<span class="w"> </span><span class="s2">&quot;96670d01-0a4d-4649-9c89-2d3abc0a5025&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span>--scope<span class="w"> </span><span class="s2">&quot;/subscriptions/&lt;subscription-id&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span>--params<span class="w"> </span><span class="s1">&#39;{&quot;tagName&quot;: {&quot;value&quot;: &quot;environment&quot;}}&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Assign tag inheritance policy for &#39;environment&#39; tag</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>az<span class="w"> </span>policy<span class="w"> </span>assignment<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;inherit-environment-tag&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>--policy<span class="w"> </span><span class="s2">&quot;96670d01-0a4d-4649-9c89-2d3abc0a5025&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>--scope<span class="w"> </span><span class="s2">&quot;/subscriptions/&lt;subscription-id&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span>--params<span class="w"> </span><span class="s1">&#39;{&quot;tagName&quot;: {&quot;value&quot;: &quot;environment&quot;}}&#39;</span>
 </code></pre></div>
 <h2 id="reporting-on-tag-coverage">Reporting on Tag Coverage<a class="headerlink" href="#reporting-on-tag-coverage" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Export all resources with their tags to JSON for audit</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>az<span class="w"> </span>resource<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;[].{Name:name, RG:resourceGroup, Tags:tags}&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>--output<span class="w"> </span>json<span class="w"> </span>&gt;<span class="w"> </span>resource-tags-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.json
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># Resources with no tags at all</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>az<span class="w"> </span>resource<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;[?tags == null || tags == {}].{Name:name, RG:resourceGroup, Type:type}&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">  </span>--output<span class="w"> </span>table
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Export all resources with their tags to JSON for audit</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>az<span class="w"> </span>resource<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;[].{Name:name, RG:resourceGroup, Tags:tags}&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>--output<span class="w"> </span>json<span class="w"> </span>&gt;<span class="w"> </span>resource-tags-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.json
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># Resources with no tags at all</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>az<span class="w"> </span>resource<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;[?tags == null || tags == {}].{Name:name, RG:resourceGroup, Type:type}&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">  </span>--output<span class="w"> </span>table
 </code></pre></div>
 
 

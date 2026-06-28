@@ -6999,23 +6999,7 @@ Complete procedure: prepare nested ESXi hosts, fill in the VCF configuration wor
 </div>
 <p><img alt="Lab 4 Guide — VCF on Nested ESXi Step-by-Step" src="../../../assets/labs-vcf-nested-guide.svg" /></p>
 <hr />
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>center: &quot;Vcf Nested&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>phase_1_prepare_four_nested_esxi_hos: &quot;Phase 1 — Prepare Four Nested ESXi Hosts&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>phase_2_fill_in_the_vcf_configuratio: &quot;Phase 2 — Fill In the VCF Configuration Workbook&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>phase_3_deploy_cloud_builder: &quot;Phase 3 — Deploy Cloud Builder&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>phase_4_run_predeployment_validation: &quot;Phase 4 — Run Pre-Deployment Validation&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>phase_5_deploy_the_management_domain: &quot;Phase 5 — Deploy the Management Domain&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>phase_6_postdeployment: &quot;Phase 6 — Post-Deployment&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>center -&gt; phase_1_prepare_four_nested_esxi_hos
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>center -&gt; phase_2_fill_in_the_vcf_configuratio
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>center -&gt; phase_3_deploy_cloud_builder
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>center -&gt; phase_4_run_predeployment_validation
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>center -&gt; phase_5_deploy_the_management_domain
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>center -&gt; phase_6_postdeployment
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNkk1OwzAQRvc5xaj7Lvq76IIFLRUsQBVIhd3IjSeJVdeO7KQqQkgcghNyEmynTStSWaz99L3xN8OFobQSWs3AiLyokiQlVZGZQW-dZvBEtiLegw9bsJJmUNCB5Vp9JmXBLOEAS0MlM4SZrg2qQCPZg8BCW5ex8hgM4OfrG1YNCkuHHoPh7uVNwL22lT07_EBM5ZJOliFmQkoUCquCcJ9mmGqVibw2zE3eWobBsnQoPChwKKznS5hfoApetdlutN5GbCPkVEr9jqnUNcdNLSQPfTSWUbAsAgJzj8Btg0Qyx2hq5btqoneuYtwzKThrqj9mj0P2c618V_1Fy8K6ZSOSyWlw39KOKZZTEHG9Y-IsmVx-wLf02KKwCGjEMcXSLev8izZ12qzYPV7MfTXoeGDQv4H_HFEHj19DB7--zg4W31AHj3fdwf_WlvwCU-xJwQ==?" /></p>
 <h2 id="phase-1-prepare-four-nested-esxi-hosts">Phase 1 — Prepare Four Nested ESXi Hosts<a class="headerlink" href="#phase-1-prepare-four-nested-esxi-hosts" title="Permanent link">&para;</a></h2>
 <p>Build four nested ESXi VMs using the same process as Lab 1 (Phase 2–3). VCF requires exactly 4 hosts for the initial management domain.</p>
 <p><strong>1.1 VM settings for each VCF nested ESXi host</strong></p>
@@ -7092,9 +7076,9 @@ Complete procedure: prepare nested ESXi hosts, fill in the VCF configuration wor
 <p><strong>1.3 DNS and NTP</strong></p>
 <p>For VCF, DNS is mandatory. Add forward and reverse entries for all 4 ESXi hosts, plus Cloud Builder, vCenter, NSX Manager (×3), and SDDC Manager. Use a VM running BIND or Windows DNS, or add all entries to the physical host's <code>/etc/hosts</code> file.</p>
 <p>All hosts must point to the same NTP source (e.g., <code>pool.ntp.org</code> or your router):
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># On each nested ESXi host (DCUI &gt; Configure Management Network &gt; Custom DNS Suffixes / NTP)</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>ntp<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--server<span class="w"> </span>pool.ntp.org
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>esxcli<span class="w"> </span>system<span class="w"> </span>ntp<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--enabled<span class="w"> </span><span class="nb">true</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># On each nested ESXi host (DCUI &gt; Configure Management Network &gt; Custom DNS Suffixes / NTP)</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>ntp<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--server<span class="w"> </span>pool.ntp.org
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>esxcli<span class="w"> </span>system<span class="w"> </span>ntp<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--enabled<span class="w"> </span><span class="nb">true</span>
 </code></pre></div></p>
 <hr />
 <h2 id="phase-2-fill-in-the-vcf-configuration-workbook">Phase 2 — Fill In the VCF Configuration Workbook<a class="headerlink" href="#phase-2-fill-in-the-vcf-configuration-workbook" title="Permanent link">&para;</a></h2>
@@ -7228,8 +7212,8 @@ Complete procedure: prepare nested ESXi hosts, fill in the VCF configuration wor
 <p><strong>5.2 Monitor progress</strong></p>
 <p>Cloud Builder shows a live task timeline. Total time: <strong>2–4 hours</strong> for a nested environment.</p>
 <p>If a task fails, Cloud Builder logs are at <code>/var/log/vmware/vcf/</code> on the Cloud Builder VM:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># SSH into Cloud Builder (192.168.10.5)</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>tail<span class="w"> </span>-100f<span class="w"> </span>/var/log/vmware/vcf/bringup/vcf-bringup.log
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># SSH into Cloud Builder (192.168.10.5)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>tail<span class="w"> </span>-100f<span class="w"> </span>/var/log/vmware/vcf/bringup/vcf-bringup.log
 </code></pre></div></p>
 <hr />
 <h2 id="phase-6-post-deployment">Phase 6 — Post-Deployment<a class="headerlink" href="#phase-6-post-deployment" title="Permanent link">&para;</a></h2>

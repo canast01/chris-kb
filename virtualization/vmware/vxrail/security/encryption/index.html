@@ -10260,25 +10260,7 @@ Encryption reference for VxRail in the VMware product context. Covers vSAN data-
 </div>
 <p><img alt="VxRail — Encryption" src="../../../../../assets/virtualization-vmware-vxrail-security-encryption.svg" /></p>
 <hr />
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: down
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>external: External / Untrusted {shape: rectangle}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>vsan_dataatrest_encryption: &quot;vSAN Data-at-Rest Encryption&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>vsan_dataintransit_encryption: &quot;vSAN Data-in-Transit Encryption&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>idrac_https_enforcement: &quot;iDRAC HTTPS Enforcement&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>secure_boot_on_esxi_nodes: &quot;Secure Boot on ESXi Nodes&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>vxrail_manager_tls: &quot;VxRail Manager TLS&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>native_key_provider_backup: &quot;Native Key Provider Backup&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>core: &quot;VxRail Core&quot; {shape: hexagon}
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>external -&gt; vsan_dataatrest_encryption: traffic in
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>vsan_dataatrest_encryption -&gt; vsan_dataintransit_encryption
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>vsan_dataintransit_encryption -&gt; idrac_https_enforcement
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>idrac_https_enforcement -&gt; secure_boot_on_esxi_nodes
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>secure_boot_on_esxi_nodes -&gt; vxrail_manager_tls
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>vxrail_manager_tls -&gt; native_key_provider_backup
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>native_key_provider_backup -&gt; core: secured path
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqFkk1rwzAMhu_5FWL3sHsPg37BYFspTTZ2M6qtNqapHGw3Sxn977OT0jKWZDfbr_TY5pHSlqTXhiegzBcnCTWeLGM5geV1BY_wzt6enCcF367AiiYQu5D3JV2S2iELhR7RW3JeEEt7rjrmQ51NV7AIYYo-3YQYlrf4YZSmw53ITg8CNad5V_EfUyuLUhTeVy7AdsZKOhL7QNOLzXQOz3m-zgLklvRSHMmTJbE1xgvDglyjBRtFLnCyNoNZyMAwLLNPDauY9f-xsahLcUTGPVnhy4j4aDbhEN66Q8hfs95eRq9rEgc6i8qaWqsA2KI8nKrAWLUhvNAZ1tcQZm3Yy5LG0v3medjdywpqcG_4cp8ISJ9gzHXQtdtpCZpHRuIXpE_x-ADE9gGbQ5Zjy6C6YantQ_946lEXC4eljPiKjZ2B7hEKKvRF8gNPm1WV?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Access:</strong> vCenter Administrator role</li>
@@ -10312,24 +10294,24 @@ Encryption reference for VxRail in the VMware product context. Covers vSAN data-
 <h3 id="enable-vsan-at-rest-encryption">Enable vSAN At-Rest Encryption<a class="headerlink" href="#enable-vsan-at-rest-encryption" title="Permanent link">&para;</a></h3>
 <p><strong>vCenter → Cluster → Configure → vSAN → Services → Encryption → Edit → Enable Encryption</strong></p>
 <p>Or via PowerCLI:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Enable vSAN data-at-rest encryption (PowerCLI)</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c"># Ensure a KMS or NKP is already configured and healthy in vCenter before running</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nb">Set-VsanClusterConfiguration</span> <span class="n">-Cluster</span> <span class="s2">&quot;VxRail-Cluster&quot;</span> <span class="n">-EncryptionEnabled</span> <span class="nv">$true</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Enable vSAN data-at-rest encryption (PowerCLI)</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c"># Ensure a KMS or NKP is already configured and healthy in vCenter before running</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nb">Set-VsanClusterConfiguration</span> <span class="n">-Cluster</span> <span class="s2">&quot;VxRail-Cluster&quot;</span> <span class="n">-EncryptionEnabled</span> <span class="nv">$true</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Verify vSAN encryption status after enabling (PowerCLI)</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">Get-VsanClusterConfiguration</span> <span class="n">-Cluster</span> <span class="s2">&quot;VxRail-Cluster&quot;</span> <span class="p">|</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="nb">Select-Object</span> <span class="n">-ExpandProperty</span> <span class="n">EncryptionConfig</span> <span class="p">|</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="nb">Select-Object</span> <span class="n">Enabled</span><span class="p">,</span> <span class="n">KmsProvider</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Verify vSAN encryption status after enabling (PowerCLI)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Get-VsanClusterConfiguration</span> <span class="n">-Cluster</span> <span class="s2">&quot;VxRail-Cluster&quot;</span> <span class="p">|</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="nb">Select-Object</span> <span class="n">-ExpandProperty</span> <span class="n">EncryptionConfig</span> <span class="p">|</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    <span class="nb">Select-Object</span> <span class="n">Enabled</span><span class="p">,</span> <span class="n">KmsProvider</span>
 </code></pre></div>
 <h3 id="monitor-the-rebuild">Monitor the Rebuild<a class="headerlink" href="#monitor-the-rebuild" title="Permanent link">&para;</a></h3>
 <p>After enabling encryption, monitor resync progress — do not perform any other cluster changes until the rebuild completes.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Monitor vSAN resync progress during encryption rebuild (PowerCLI)</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="k">while</span> <span class="p">(</span><span class="nv">$true</span><span class="p">)</span> <span class="p">{</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    <span class="nv">$resync</span> <span class="p">=</span> <span class="nb">Get-VsanResyncProgress</span> <span class="n">-Cluster</span> <span class="s2">&quot;VxRail-Cluster&quot;</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;</span><span class="p">$(</span><span class="nb">Get-Date</span> <span class="n">-Format</span> <span class="s1">&#39;HH:mm:ss&#39;</span><span class="p">)</span><span class="s2"> — Resync: </span><span class="p">$(</span><span class="nv">$resync</span><span class="p">.</span><span class="n">BytesToSync</span><span class="p">)</span><span class="s2"> bytes remaining&quot;</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>    <span class="k">if</span> <span class="p">(</span><span class="nv">$resync</span><span class="p">.</span><span class="n">BytesToSync</span> <span class="o">-eq</span> <span class="n">0</span><span class="p">)</span> <span class="p">{</span> <span class="nb">Write-Host</span> <span class="s2">&quot;Resync complete.&quot;</span><span class="p">;</span> <span class="k">break</span> <span class="p">}</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>    <span class="nb">Start-Sleep</span> <span class="n">-Seconds</span> <span class="n">60</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Monitor vSAN resync progress during encryption rebuild (PowerCLI)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="k">while</span> <span class="p">(</span><span class="nv">$true</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="nv">$resync</span> <span class="p">=</span> <span class="nb">Get-VsanResyncProgress</span> <span class="n">-Cluster</span> <span class="s2">&quot;VxRail-Cluster&quot;</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;</span><span class="p">$(</span><span class="nb">Get-Date</span> <span class="n">-Format</span> <span class="s1">&#39;HH:mm:ss&#39;</span><span class="p">)</span><span class="s2"> — Resync: </span><span class="p">$(</span><span class="nv">$resync</span><span class="p">.</span><span class="n">BytesToSync</span><span class="p">)</span><span class="s2"> bytes remaining&quot;</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>    <span class="k">if</span> <span class="p">(</span><span class="nv">$resync</span><span class="p">.</span><span class="n">BytesToSync</span> <span class="o">-eq</span> <span class="n">0</span><span class="p">)</span> <span class="p">{</span> <span class="nb">Write-Host</span> <span class="s2">&quot;Resync complete.&quot;</span><span class="p">;</span> <span class="k">break</span> <span class="p">}</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    <span class="nb">Start-Sleep</span> <span class="n">-Seconds</span> <span class="n">60</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="p">}</span>
 </code></pre></div>
 <hr />
 <h2 id="vsan-data-in-transit-encryption">vSAN Data-in-Transit Encryption<a class="headerlink" href="#vsan-data-in-transit-encryption" title="Permanent link">&para;</a></h2>
@@ -10369,68 +10351,68 @@ Encryption reference for VxRail in the VMware product context. Covers vSAN data-
 <p>Enable in-transit encryption on all production VxRail clusters. The overhead is negligible on modern hardware with AES-NI CPU extensions, and no maintenance window or data rebuild is required.</p>
 <h3 id="enable-vsan-in-transit-encryption">Enable vSAN In-Transit Encryption<a class="headerlink" href="#enable-vsan-in-transit-encryption" title="Permanent link">&para;</a></h3>
 <p><strong>vCenter → Cluster → Configure → vSAN → Services → Data In-Transit Encryption → Edit → Enable</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Enable vSAN in-transit encryption (PowerCLI)</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">Set-VsanClusterConfiguration</span> <span class="n">-Cluster</span> <span class="s2">&quot;VxRail-Cluster&quot;</span> <span class="n">-DataInTransitEncryptionEnabled</span> <span class="nv">$true</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Enable vSAN in-transit encryption (PowerCLI)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Set-VsanClusterConfiguration</span> <span class="n">-Cluster</span> <span class="s2">&quot;VxRail-Cluster&quot;</span> <span class="n">-DataInTransitEncryptionEnabled</span> <span class="nv">$true</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># Verify in-transit encryption state (PowerCLI)</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">Get-VsanClusterConfiguration</span> <span class="n">-Cluster</span> <span class="s2">&quot;VxRail-Cluster&quot;</span> <span class="p">|</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>    <span class="nb">Select-Object</span> <span class="n">-ExpandProperty</span> <span class="n">DataInTransitEncryptionConfig</span> <span class="p">|</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    <span class="nb">Select-Object</span> <span class="n">Enabled</span><span class="p">,</span> <span class="n">RekeyInterval</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Verify in-transit encryption state (PowerCLI)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">Get-VsanClusterConfiguration</span> <span class="n">-Cluster</span> <span class="s2">&quot;VxRail-Cluster&quot;</span> <span class="p">|</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    <span class="nb">Select-Object</span> <span class="n">-ExpandProperty</span> <span class="n">DataInTransitEncryptionConfig</span> <span class="p">|</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    <span class="nb">Select-Object</span> <span class="n">Enabled</span><span class="p">,</span> <span class="n">RekeyInterval</span>
 </code></pre></div>
 <p>In-transit encryption uses a rekey interval (default 30 minutes) to rotate the session keys. The default is appropriate for most environments.</p>
 <hr />
 <h2 id="idrac-https-enforcement">iDRAC HTTPS Enforcement<a class="headerlink" href="#idrac-https-enforcement" title="Permanent link">&para;</a></h2>
 <p>iDRAC management interfaces must use HTTPS only. HTTP and Telnet provide unencrypted access to the OOB management network and must be disabled.</p>
 <h3 id="enforce-https-disable-http-and-telnet">Enforce HTTPS, Disable HTTP and Telnet<a class="headerlink" href="#enforce-https-disable-http-and-telnet" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Disable HTTP access on iDRAC (allow HTTPS only)</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.Webserver.HttpPort<span class="w"> </span><span class="m">0</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.Webserver.HttpsPort<span class="w"> </span><span class="m">443</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Disable Telnet (should be disabled by default, verify)</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.Serial.Enable<span class="w"> </span><span class="m">0</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Disable HTTP access on iDRAC (allow HTTPS only)</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.Webserver.HttpPort<span class="w"> </span><span class="m">0</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.Webserver.HttpsPort<span class="w"> </span><span class="m">443</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># Disable Telnet (should be disabled by default, verify)</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.Serial.Enable<span class="w"> </span><span class="m">0</span>
 </code></pre></div>
 <h3 id="check-and-replace-the-idrac-ssl-certificate">Check and Replace the iDRAC SSL Certificate<a class="headerlink" href="#check-and-replace-the-idrac-ssl-certificate" title="Permanent link">&para;</a></h3>
 <p>iDRAC ships with a self-signed certificate. Replace it with a certificate signed by the organisation's internal CA.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Check current iDRAC SSL certificate details</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>racadm<span class="w"> </span>sslkeyupload<span class="w"> </span>-t<span class="w"> </span><span class="m">2</span><span class="w"> </span>-f<span class="w"> </span>server.key
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>racadm<span class="w"> </span>sslcertupload<span class="w"> </span>-t<span class="w"> </span><span class="m">2</span><span class="w"> </span>-f<span class="w"> </span>server.crt
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1"># View the currently installed certificate</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>racadm<span class="w"> </span>sslcertview<span class="w"> </span>-t<span class="w"> </span><span class="m">2</span>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="c1"># Generate a CSR from iDRAC for CA signing</span>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>racadm<span class="w"> </span>sslcsrgen<span class="w"> </span>-f<span class="w"> </span>/tmp/idrac.csr<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="w">  </span>-c<span class="w"> </span><span class="s2">&quot;AU&quot;</span><span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;NSW&quot;</span><span class="w"> </span>-l<span class="w"> </span><span class="s2">&quot;Sydney&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="w">  </span>-o<span class="w"> </span><span class="s2">&quot;ExampleOrg&quot;</span><span class="w"> </span>-ou<span class="w"> </span><span class="s2">&quot;Infra&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="w">  </span>-cn<span class="w"> </span><span class="s2">&quot;idrac-vxrail-node01.example.local&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Check current iDRAC SSL certificate details</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>racadm<span class="w"> </span>sslkeyupload<span class="w"> </span>-t<span class="w"> </span><span class="m">2</span><span class="w"> </span>-f<span class="w"> </span>server.key
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>racadm<span class="w"> </span>sslcertupload<span class="w"> </span>-t<span class="w"> </span><span class="m">2</span><span class="w"> </span>-f<span class="w"> </span>server.crt
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># View the currently installed certificate</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>racadm<span class="w"> </span>sslcertview<span class="w"> </span>-t<span class="w"> </span><span class="m">2</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># Generate a CSR from iDRAC for CA signing</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>racadm<span class="w"> </span>sslcsrgen<span class="w"> </span>-f<span class="w"> </span>/tmp/idrac.csr<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="w">  </span>-c<span class="w"> </span><span class="s2">&quot;AU&quot;</span><span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;NSW&quot;</span><span class="w"> </span>-l<span class="w"> </span><span class="s2">&quot;Sydney&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="w">  </span>-o<span class="w"> </span><span class="s2">&quot;ExampleOrg&quot;</span><span class="w"> </span>-ou<span class="w"> </span><span class="s2">&quot;Infra&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="w">  </span>-cn<span class="w"> </span><span class="s2">&quot;idrac-vxrail-node01.example.local&quot;</span>
 </code></pre></div>
 <p>After the CA signs the CSR, upload the signed certificate:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Upload signed certificate and key to iDRAC</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>racadm<span class="w"> </span>sslcertupload<span class="w"> </span>-t<span class="w"> </span><span class="m">2</span><span class="w"> </span>-f<span class="w"> </span>/tmp/idrac.crt
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>racadm<span class="w"> </span>sslkeyupload<span class="w"> </span>-t<span class="w"> </span><span class="m">2</span><span class="w"> </span>-f<span class="w"> </span>/tmp/idrac.key
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>racadm<span class="w"> </span>racreset
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># iDRAC will restart to apply the new certificate — allow 2 minutes</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Upload signed certificate and key to iDRAC</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>racadm<span class="w"> </span>sslcertupload<span class="w"> </span>-t<span class="w"> </span><span class="m">2</span><span class="w"> </span>-f<span class="w"> </span>/tmp/idrac.crt
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>racadm<span class="w"> </span>sslkeyupload<span class="w"> </span>-t<span class="w"> </span><span class="m">2</span><span class="w"> </span>-f<span class="w"> </span>/tmp/idrac.key
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>racadm<span class="w"> </span>racreset
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1"># iDRAC will restart to apply the new certificate — allow 2 minutes</span>
 </code></pre></div>
 <hr />
 <h2 id="secure-boot-on-esxi-nodes">Secure Boot on ESXi Nodes<a class="headerlink" href="#secure-boot-on-esxi-nodes" title="Permanent link">&para;</a></h2>
 <p>Secure Boot verifies the digital signatures of ESXi VIBs (software packages) at boot time using UEFI. Any unsigned or tampered VIB causes the boot to fail, protecting against rootkit injection and firmware-level tampering.</p>
 <p>All VxRail nodes should have Secure Boot enabled. VxRail LCM includes iDRAC and BIOS firmware updates as part of its upgrade bundles — staying current on LCM versions keeps Secure Boot policies aligned with the installed ESXi version.</p>
 <h3 id="check-secure-boot-status-via-racadm">Check Secure Boot Status via RACADM<a class="headerlink" href="#check-secure-boot-status-via-racadm" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Check Secure Boot status via RACADM on each node</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>racadm<span class="w"> </span>get<span class="w"> </span>BIOS.SysProfileSettings.SecureBoot
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="c1"># Expected output: SecureBoot=Enabled</span>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="c1"># Check iDRAC firmware version (kept current by VxRail LCM)</span>
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>racadm<span class="w"> </span>getversion<span class="w"> </span>-f<span class="w"> </span>idrac
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="c1"># Check BIOS version</span>
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>racadm<span class="w"> </span>getversion<span class="w"> </span>-f<span class="w"> </span>bios
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Check Secure Boot status via RACADM on each node</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>racadm<span class="w"> </span>get<span class="w"> </span>BIOS.SysProfileSettings.SecureBoot
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="c1"># Expected output: SecureBoot=Enabled</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># Check iDRAC firmware version (kept current by VxRail LCM)</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>racadm<span class="w"> </span>getversion<span class="w"> </span>-f<span class="w"> </span>idrac
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c1"># Check BIOS version</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>racadm<span class="w"> </span>getversion<span class="w"> </span>-f<span class="w"> </span>bios
 </code></pre></div>
 <h3 id="enable-secure-boot-via-racadm">Enable Secure Boot via RACADM<a class="headerlink" href="#enable-secure-boot-via-racadm" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Enable Secure Boot via RACADM (requires node reboot)</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>BIOS.SysProfileSettings.SecureBoot<span class="w"> </span>Enabled
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>racadm<span class="w"> </span>jobqueue<span class="w"> </span>create<span class="w"> </span>BIOS.Setup.1-1<span class="w"> </span>-r<span class="w"> </span>pwrcycle<span class="w"> </span>-s<span class="w"> </span>TIME_NOW
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Node will reboot and apply BIOS settings — allow 5 minutes</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Enable Secure Boot via RACADM (requires node reboot)</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>BIOS.SysProfileSettings.SecureBoot<span class="w"> </span>Enabled
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>racadm<span class="w"> </span>jobqueue<span class="w"> </span>create<span class="w"> </span>BIOS.Setup.1-1<span class="w"> </span>-r<span class="w"> </span>pwrcycle<span class="w"> </span>-s<span class="w"> </span>TIME_NOW
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Node will reboot and apply BIOS settings — allow 5 minutes</span>
 </code></pre></div>
 <p><strong>Note:</strong> Enabling Secure Boot on a node with unsigned VIBs will prevent ESXi from booting. Confirm all installed VIBs are signed before enabling. VxRail-managed nodes with standard LCM builds will have signed VIBs. Custom VIBs from third-party vendors must be verified before enabling Secure Boot.</p>
 <hr />
@@ -10439,32 +10421,32 @@ Encryption reference for VxRail in the VMware product context. Covers vSAN data-
 <h3 id="certificate-management">Certificate Management<a class="headerlink" href="#certificate-management" title="Permanent link">&para;</a></h3>
 <p>VxRail Manager ships with a self-signed certificate. Replace with a CA-signed certificate for production use.</p>
 <p><strong>Replace VxRail Manager TLS certificate:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Upload a CA-signed certificate and key to VxRail Manager</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">  </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Basic </span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span>-n<span class="w"> </span><span class="s1">&#39;mystic:password&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="w">  </span>-F<span class="w"> </span><span class="s2">&quot;certificate=@/tmp/vxrail-manager.crt&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="w">  </span>-F<span class="w"> </span><span class="s2">&quot;private_key=@/tmp/vxrail-manager.key&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="w">  </span><span class="s2">&quot;https://&lt;vxrail-manager-ip&gt;/rest/vxm/v1/system/certificate&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Upload a CA-signed certificate and key to VxRail Manager</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Basic </span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span>-n<span class="w"> </span><span class="s1">&#39;mystic:password&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">  </span>-F<span class="w"> </span><span class="s2">&quot;certificate=@/tmp/vxrail-manager.crt&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="w">  </span>-F<span class="w"> </span><span class="s2">&quot;private_key=@/tmp/vxrail-manager.key&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="w">  </span><span class="s2">&quot;https://&lt;vxrail-manager-ip&gt;/rest/vxm/v1/system/certificate&quot;</span>
 </code></pre></div>
 <p>After uploading, VxRail Manager will restart its web service to apply the new certificate. Allow 2–3 minutes for the service to come back online. Reconnect the vCenter plugin after the certificate change.</p>
 <h3 id="certificate-renewal">Certificate Renewal<a class="headerlink" href="#certificate-renewal" title="Permanent link">&para;</a></h3>
 <p>VxRail Manager certificates must be renewed before expiry. Set a calendar reminder 60 days before the certificate expiration date. The renewal process is identical to the initial upload — generate a new CSR, have it signed by the CA, and upload via the API.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Generate a new CSR from VxRail Manager</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">  </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Basic </span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span>-n<span class="w"> </span><span class="s1">&#39;mystic:password&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
-<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="s1">    &quot;common_name&quot;: &quot;vxrail-manager.example.local&quot;,</span>
-<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="s1">    &quot;country&quot;: &quot;AU&quot;,</span>
-<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="s1">    &quot;state&quot;: &quot;NSW&quot;,</span>
-<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="s1">    &quot;locality&quot;: &quot;Sydney&quot;,</span>
-<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="s1">    &quot;organization&quot;: &quot;ExampleOrg&quot;,</span>
-<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a><span class="s1">    &quot;organizational_unit&quot;: &quot;Infra&quot;</span>
-<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a><span class="s1">  }&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a><span class="w">  </span><span class="s2">&quot;https://&lt;vxrail-manager-ip&gt;/rest/vxm/v1/system/certificate/csr&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a><span class="w">  </span>-o<span class="w"> </span>/tmp/vxrail-manager.csr
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Generate a new CSR from VxRail Manager</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">  </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Basic </span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span>-n<span class="w"> </span><span class="s1">&#39;mystic:password&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="s1">    &quot;common_name&quot;: &quot;vxrail-manager.example.local&quot;,</span>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="s1">    &quot;country&quot;: &quot;AU&quot;,</span>
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="s1">    &quot;state&quot;: &quot;NSW&quot;,</span>
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="s1">    &quot;locality&quot;: &quot;Sydney&quot;,</span>
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a><span class="s1">    &quot;organization&quot;: &quot;ExampleOrg&quot;,</span>
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a><span class="s1">    &quot;organizational_unit&quot;: &quot;Infra&quot;</span>
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a><span class="s1">  }&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a><span class="w">  </span><span class="s2">&quot;https://&lt;vxrail-manager-ip&gt;/rest/vxm/v1/system/certificate/csr&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a><span class="w">  </span>-o<span class="w"> </span>/tmp/vxrail-manager.csr
 </code></pre></div>
 <hr />
 <h2 id="native-key-provider-backup">Native Key Provider Backup<a class="headerlink" href="#native-key-provider-backup" title="Permanent link">&para;</a></h2>
@@ -10472,11 +10454,11 @@ Encryption reference for VxRail in the VMware product context. Covers vSAN data-
 <h3 id="download-the-nkp-backup">Download the NKP Backup<a class="headerlink" href="#download-the-nkp-backup" title="Permanent link">&para;</a></h3>
 <p><strong>vCenter → Administration → Key Providers → [NKP Name] → Backup</strong></p>
 <p>This downloads an encrypted <code>.p12</code> file containing the key material. The backup file is itself password-protected.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c"># Verify NKP is healthy and the cluster is using it (PowerCLI)</span>
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="nb">Get-KeyProvider</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Type</span><span class="p">,</span> <span class="n">Connected</span><span class="p">,</span> <span class="n">Primary</span>
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="nb">Get-VsanClusterConfiguration</span> <span class="n">-Cluster</span> <span class="s2">&quot;VxRail-Cluster&quot;</span> <span class="p">|</span>
-<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>    <span class="nb">Select-Object</span> <span class="n">-ExpandProperty</span> <span class="n">EncryptionConfig</span> <span class="p">|</span>
-<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>    <span class="nb">Select-Object</span> <span class="n">KmsProvider</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c"># Verify NKP is healthy and the cluster is using it (PowerCLI)</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="nb">Get-KeyProvider</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Type</span><span class="p">,</span> <span class="n">Connected</span><span class="p">,</span> <span class="n">Primary</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="nb">Get-VsanClusterConfiguration</span> <span class="n">-Cluster</span> <span class="s2">&quot;VxRail-Cluster&quot;</span> <span class="p">|</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>    <span class="nb">Select-Object</span> <span class="n">-ExpandProperty</span> <span class="n">EncryptionConfig</span> <span class="p">|</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>    <span class="nb">Select-Object</span> <span class="n">KmsProvider</span>
 </code></pre></div>
 <h3 id="nkp-backup-storage-requirements">NKP Backup Storage Requirements<a class="headerlink" href="#nkp-backup-storage-requirements" title="Permanent link">&para;</a></h3>
 <table>

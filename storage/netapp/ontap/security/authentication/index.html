@@ -8412,25 +8412,7 @@ Authentication in ONTAP controls how administrators and service accounts gain ac
 *Applies to: ONTAP 9.x*
 </div>
 <p><img alt="ONTAP — Authentication" src="../../../../../assets/storage-netapp-ontap-security-authentication.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: down
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>external: External / Untrusted {shape: rectangle}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>authentication_flow: &quot;Authentication Flow&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>authentication_methods_summary: &quot;Authentication Methods Summary&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>local_accounts: &quot;Local Accounts&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>ssh_public_key_authentication: &quot;SSH Public Key Authentication&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>active_directory_cifs_authentication: &quot;Active Directory / CIFS Authentication&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>ldap_integration: &quot;LDAP Integration&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>core: &quot;NetApp ONTAP Core&quot; {shape: hexagon}
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>external -&gt; authentication_flow: traffic in
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>authentication_flow -&gt; authentication_methods_summary
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>authentication_methods_summary -&gt; local_accounts
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>local_accounts -&gt; ssh_public_key_authentication
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>ssh_public_key_authentication -&gt; active_directory_cifs_authentication
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>active_directory_cifs_authentication -&gt; ldap_integration
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>ldap_integration -&gt; core: secured path
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNk1FrgzAUhd_9FRffx959GEi7srKuK7g9hyxea1hMJIlrZfS_L9EWUUPnmxzPOd7cL-ZcI7NcyQRydZJRhGeLWlKRwPP1CR7hU1rdGIs5_JqS1piAT1F5FHiJaGNLlJYz6ntIIdQpgTgdqbBxarwgXaEtVW6IaaqK6nZe9NYbIOsNwU6hGBWEMqYaaY3r2HkB0qsQzBhTkrr5EpyRb2zJeCxXkWUvcOjewyu2MJ4qfDK31x8kebdhpVvCeGHmxWlng_XN5ta92m6yJV8QOa0JlxaP-ta2W6cH2A5SMMeUdkK8R5vWNbzvP1xm5bTBXOKZHpW8DPcBHp4gSNpqWhRuK1yGbkIgNkH8zw3wBWOeE7zecBfefbTdgAtILcLZDTuBMqPkTT0Bg6zR7qeqqS2jP8UnU_g=?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Access:</strong> Storage admin credentials (cluster admin or equivalent)</li>
@@ -8508,42 +8490,42 @@ Authentication in ONTAP controls how administrators and service accounts gain ac
 <h2 id="local-accounts">Local Accounts<a class="headerlink" href="#local-accounts" title="Permanent link">&para;</a></h2>
 <p>ONTAP supports local admin accounts at both the cluster level and the SVM level. Local accounts are independent of Active Directory and are used for break-glass access and service accounts.</p>
 <h3 id="managing-local-accounts">Managing Local Accounts<a class="headerlink" href="#managing-local-accounts" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># List all login accounts across all SVMs</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>security<span class="w"> </span>login<span class="w"> </span>show
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># List accounts for a specific SVM</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>security<span class="w"> </span>login<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Show account details including role and last login</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>security<span class="w"> </span>login<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>username,application,authmethod,role,is-account-locked
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Create a local account with password authentication</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>security<span class="w"> </span>login<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">    </span>-username<span class="w"> </span>&lt;user&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">    </span>-application<span class="w"> </span>ssh<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">    </span>-authentication-method<span class="w"> </span>password<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">    </span>-role<span class="w"> </span>admin<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;cluster-or-svm&gt;
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="c1"># Create a local account with public key authentication</span>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>security<span class="w"> </span>login<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="w">    </span>-username<span class="w"> </span>svc-monitor<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="w">    </span>-application<span class="w"> </span>ssh<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="w">    </span>-authentication-method<span class="w"> </span>publickey<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="w">    </span>-role<span class="w"> </span>monitor-role<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;cluster-name&gt;
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="c1"># Change a user password</span>
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>security<span class="w"> </span>login<span class="w"> </span>password<span class="w"> </span>-username<span class="w"> </span>&lt;user&gt;<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a><span class="c1"># Lock an account (disable access without deleting)</span>
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>security<span class="w"> </span>login<span class="w"> </span>lock<span class="w"> </span>-username<span class="w"> </span>&lt;user&gt;<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a><span class="c1"># Unlock an account</span>
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>security<span class="w"> </span>login<span class="w"> </span>unlock<span class="w"> </span>-username<span class="w"> </span>&lt;user&gt;<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a><span class="c1"># Delete an account</span>
-<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>security<span class="w"> </span>login<span class="w"> </span>delete<span class="w"> </span>-username<span class="w"> </span>&lt;user&gt;<span class="w"> </span>-application<span class="w"> </span>ssh<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># List all login accounts across all SVMs</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>security<span class="w"> </span>login<span class="w"> </span>show
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># List accounts for a specific SVM</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>security<span class="w"> </span>login<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Show account details including role and last login</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>security<span class="w"> </span>login<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>username,application,authmethod,role,is-account-locked
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Create a local account with password authentication</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>security<span class="w"> </span>login<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">    </span>-username<span class="w"> </span>&lt;user&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">    </span>-application<span class="w"> </span>ssh<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">    </span>-authentication-method<span class="w"> </span>password<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">    </span>-role<span class="w"> </span>admin<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;cluster-or-svm&gt;
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="c1"># Create a local account with public key authentication</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>security<span class="w"> </span>login<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="w">    </span>-username<span class="w"> </span>svc-monitor<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="w">    </span>-application<span class="w"> </span>ssh<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="w">    </span>-authentication-method<span class="w"> </span>publickey<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="w">    </span>-role<span class="w"> </span>monitor-role<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;cluster-name&gt;
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="c1"># Change a user password</span>
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>security<span class="w"> </span>login<span class="w"> </span>password<span class="w"> </span>-username<span class="w"> </span>&lt;user&gt;<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a><span class="c1"># Lock an account (disable access without deleting)</span>
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>security<span class="w"> </span>login<span class="w"> </span>lock<span class="w"> </span>-username<span class="w"> </span>&lt;user&gt;<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a><span class="c1"># Unlock an account</span>
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>security<span class="w"> </span>login<span class="w"> </span>unlock<span class="w"> </span>-username<span class="w"> </span>&lt;user&gt;<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a><span class="c1"># Delete an account</span>
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>security<span class="w"> </span>login<span class="w"> </span>delete<span class="w"> </span>-username<span class="w"> </span>&lt;user&gt;<span class="w"> </span>-application<span class="w"> </span>ssh<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
 </code></pre></div>
 <h3 id="built-in-accounts">Built-in Accounts<a class="headerlink" href="#built-in-accounts" title="Permanent link">&para;</a></h3>
 <table>
@@ -8573,155 +8555,155 @@ Authentication in ONTAP controls how administrators and service accounts gain ac
 </tbody>
 </table>
 <p>Always lock the <code>diag</code> account on production clusters:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>security<span class="w"> </span>login<span class="w"> </span>lock<span class="w"> </span>-username<span class="w"> </span>diag<span class="w"> </span>-vserver<span class="w"> </span>&lt;cluster-name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>security<span class="w"> </span>login<span class="w"> </span>lock<span class="w"> </span>-username<span class="w"> </span>diag<span class="w"> </span>-vserver<span class="w"> </span>&lt;cluster-name&gt;
 </code></pre></div>
 <hr />
 <h2 id="ssh-public-key-authentication">SSH Public Key Authentication<a class="headerlink" href="#ssh-public-key-authentication" title="Permanent link">&para;</a></h2>
 <p>Public key authentication is required for admin accounts and service accounts in production environments. Password authentication for SSH should be disabled for the <code>admin</code> account once key access is confirmed.</p>
 <h3 id="adding-public-keys">Adding Public Keys<a class="headerlink" href="#adding-public-keys" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Add a public key for an existing user account</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>security<span class="w"> </span>login<span class="w"> </span>publickey<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span>-username<span class="w"> </span>admin<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">    </span>-index<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">    </span>-publickey<span class="w"> </span><span class="s2">&quot;ssh-rsa AAAA...rest_of_key...user@host&quot;</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Add an Ed25519 key (preferred for new keys)</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>security<span class="w"> </span>login<span class="w"> </span>publickey<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">    </span>-username<span class="w"> </span>svc-ansible<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">    </span>-index<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">    </span>-publickey<span class="w"> </span><span class="s2">&quot;ssh-ed25519 AAAA...key...user@host&quot;</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c1"># List all configured public keys</span>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>security<span class="w"> </span>login<span class="w"> </span>publickey<span class="w"> </span>show
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="c1"># Show public keys for a specific user</span>
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>security<span class="w"> </span>login<span class="w"> </span>publickey<span class="w"> </span>show<span class="w"> </span>-username<span class="w"> </span>admin
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Add a public key for an existing user account</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>security<span class="w"> </span>login<span class="w"> </span>publickey<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span>-username<span class="w"> </span>admin<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">    </span>-index<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">    </span>-publickey<span class="w"> </span><span class="s2">&quot;ssh-rsa AAAA...rest_of_key...user@host&quot;</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Add an Ed25519 key (preferred for new keys)</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>security<span class="w"> </span>login<span class="w"> </span>publickey<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">    </span>-username<span class="w"> </span>svc-ansible<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">    </span>-index<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">    </span>-publickey<span class="w"> </span><span class="s2">&quot;ssh-ed25519 AAAA...key...user@host&quot;</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># List all configured public keys</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>security<span class="w"> </span>login<span class="w"> </span>publickey<span class="w"> </span>show
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="c1"># Show public keys for a specific user</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>security<span class="w"> </span>login<span class="w"> </span>publickey<span class="w"> </span>show<span class="w"> </span>-username<span class="w"> </span>admin
 </code></pre></div>
 <h3 id="requiring-key-only-authentication">Requiring Key-Only Authentication<a class="headerlink" href="#requiring-key-only-authentication" title="Permanent link">&para;</a></h3>
 <p>After confirming key authentication works, disable password auth for the admin account:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Verify key authentication is working first (test in a separate SSH session)</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># Then remove the password-based login method</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>security<span class="w"> </span>login<span class="w"> </span>delete<span class="w"> </span>-username<span class="w"> </span>admin<span class="w"> </span>-application<span class="w"> </span>ssh<span class="w"> </span>-authentication-method<span class="w"> </span>password
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Confirm only publickey auth remains for admin</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>security<span class="w"> </span>login<span class="w"> </span>show<span class="w"> </span>-username<span class="w"> </span>admin
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Verify key authentication is working first (test in a separate SSH session)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># Then remove the password-based login method</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>security<span class="w"> </span>login<span class="w"> </span>delete<span class="w"> </span>-username<span class="w"> </span>admin<span class="w"> </span>-application<span class="w"> </span>ssh<span class="w"> </span>-authentication-method<span class="w"> </span>password
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Confirm only publickey auth remains for admin</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>security<span class="w"> </span>login<span class="w"> </span>show<span class="w"> </span>-username<span class="w"> </span>admin
 </code></pre></div>
 <h3 id="key-rotation">Key Rotation<a class="headerlink" href="#key-rotation" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Add the new key (index 1) before removing the old one</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>security<span class="w"> </span>login<span class="w"> </span>publickey<span class="w"> </span>create<span class="w"> </span>-username<span class="w"> </span>admin<span class="w"> </span>-index<span class="w"> </span><span class="m">1</span><span class="w"> </span>-publickey<span class="w"> </span><span class="s2">&quot;ssh-ed25519 AAAA...new_key&quot;</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># After confirming new key works, delete the old key</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>security<span class="w"> </span>login<span class="w"> </span>publickey<span class="w"> </span>delete<span class="w"> </span>-username<span class="w"> </span>admin<span class="w"> </span>-index<span class="w"> </span><span class="m">0</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Renumber index if needed</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>security<span class="w"> </span>login<span class="w"> </span>publickey<span class="w"> </span>modify<span class="w"> </span>-username<span class="w"> </span>admin<span class="w"> </span>-index<span class="w"> </span><span class="m">1</span><span class="w"> </span>-new-index<span class="w"> </span><span class="m">0</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Add the new key (index 1) before removing the old one</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>security<span class="w"> </span>login<span class="w"> </span>publickey<span class="w"> </span>create<span class="w"> </span>-username<span class="w"> </span>admin<span class="w"> </span>-index<span class="w"> </span><span class="m">1</span><span class="w"> </span>-publickey<span class="w"> </span><span class="s2">&quot;ssh-ed25519 AAAA...new_key&quot;</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># After confirming new key works, delete the old key</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>security<span class="w"> </span>login<span class="w"> </span>publickey<span class="w"> </span>delete<span class="w"> </span>-username<span class="w"> </span>admin<span class="w"> </span>-index<span class="w"> </span><span class="m">0</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Renumber index if needed</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>security<span class="w"> </span>login<span class="w"> </span>publickey<span class="w"> </span>modify<span class="w"> </span>-username<span class="w"> </span>admin<span class="w"> </span>-index<span class="w"> </span><span class="m">1</span><span class="w"> </span>-new-index<span class="w"> </span><span class="m">0</span>
 </code></pre></div>
 <hr />
 <h2 id="active-directory-cifs-authentication">Active Directory / CIFS Authentication<a class="headerlink" href="#active-directory-cifs-authentication" title="Permanent link">&para;</a></h2>
 <p>Joining an SVM to Active Directory enables CIFS/SMB file access using Kerberos authentication and allows domain accounts to be used for ONTAP management login.</p>
 <h3 id="joining-an-svm-to-active-directory">Joining an SVM to Active Directory<a class="headerlink" href="#joining-an-svm-to-active-directory" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Join an SVM to Active Directory for CIFS/SMB</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># Requires Domain Admin credentials at join time</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">    </span>-cifs-server<span class="w"> </span>&lt;netbios-name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">    </span>-domain<span class="w"> </span>&lt;domain.corp&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">    </span>-ou<span class="w"> </span><span class="s2">&quot;OU=StorageServers,DC=domain,DC=corp&quot;</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1"># Verify CIFS domain join and DC connectivity</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>domain<span class="w"> </span>info<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="c1"># Check AD join status</span>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-fields<span class="w"> </span>ad-status
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="c1"># Check which DCs the SVM is communicating with</span>
-<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>domain<span class="w"> </span>discovered-servers<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Join an SVM to Active Directory for CIFS/SMB</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># Requires Domain Admin credentials at join time</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">    </span>-cifs-server<span class="w"> </span>&lt;netbios-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">    </span>-domain<span class="w"> </span>&lt;domain.corp&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">    </span>-ou<span class="w"> </span><span class="s2">&quot;OU=StorageServers,DC=domain,DC=corp&quot;</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="c1"># Verify CIFS domain join and DC connectivity</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>domain<span class="w"> </span>info<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="c1"># Check AD join status</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-fields<span class="w"> </span>ad-status
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="c1"># Check which DCs the SVM is communicating with</span>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>domain<span class="w"> </span>discovered-servers<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
 </code></pre></div>
 <h3 id="domain-account-management-login">Domain Account Management Login<a class="headerlink" href="#domain-account-management-login" title="Permanent link">&para;</a></h3>
 <p>Domain accounts can be granted ONTAP management access without requiring a local account:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Grant an AD user SSH access with a specific role</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>security<span class="w"> </span>login<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">    </span>-username<span class="w"> </span><span class="s2">&quot;DOMAIN\\admin-user&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">    </span>-application<span class="w"> </span>ssh<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">    </span>-authentication-method<span class="w"> </span>domain<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">    </span>-role<span class="w"> </span>admin<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;cluster-name&gt;
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="c1"># Grant an AD group access (ONTAP 9.8+)</span>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>security<span class="w"> </span>login<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="w">    </span>-username<span class="w"> </span><span class="s2">&quot;DOMAIN\\StorageAdmins&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="w">    </span>-application<span class="w"> </span>ssh<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="w">    </span>-authentication-method<span class="w"> </span>domain<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="w">    </span>-role<span class="w"> </span>admin<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;cluster-name&gt;
-<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>
-<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a><span class="c1"># Verify domain login configuration</span>
-<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>security<span class="w"> </span>login<span class="w"> </span>show<span class="w"> </span>-authentication-method<span class="w"> </span>domain
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Grant an AD user SSH access with a specific role</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>security<span class="w"> </span>login<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">    </span>-username<span class="w"> </span><span class="s2">&quot;DOMAIN\\admin-user&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">    </span>-application<span class="w"> </span>ssh<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">    </span>-authentication-method<span class="w"> </span>domain<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">    </span>-role<span class="w"> </span>admin<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;cluster-name&gt;
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1"># Grant an AD group access (ONTAP 9.8+)</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>security<span class="w"> </span>login<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="w">    </span>-username<span class="w"> </span><span class="s2">&quot;DOMAIN\\StorageAdmins&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="w">    </span>-application<span class="w"> </span>ssh<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="w">    </span>-authentication-method<span class="w"> </span>domain<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="w">    </span>-role<span class="w"> </span>admin<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;cluster-name&gt;
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="c1"># Verify domain login configuration</span>
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>security<span class="w"> </span>login<span class="w"> </span>show<span class="w"> </span>-authentication-method<span class="w"> </span>domain
 </code></pre></div>
 <hr />
 <h2 id="ldap-integration">LDAP Integration<a class="headerlink" href="#ldap-integration" title="Permanent link">&para;</a></h2>
 <p>LDAP is used for name service lookups — resolving NFS UIDs and GIDs to usernames, and mapping Windows SIDs to UNIX IDs for mixed-security volumes.</p>
 <h3 id="ldap-client-configuration">LDAP Client Configuration<a class="headerlink" href="#ldap-client-configuration" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Create an LDAP client configuration</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>vserver<span class="w"> </span>services<span class="w"> </span>name-service<span class="w"> </span>ldap<span class="w"> </span>client<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">    </span>-client-config<span class="w"> </span>&lt;ldap-config-name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">    </span>-servers<span class="w"> </span>&lt;ldap-server-ip&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">    </span>-base-dn<span class="w"> </span><span class="s2">&quot;DC=domain,DC=corp&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">    </span>-schema<span class="w"> </span>RFC-2307<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w">    </span>-bind-dn<span class="w"> </span><span class="s2">&quot;CN=svc-ontap-ldap,OU=Service Accounts,DC=domain,DC=corp&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="w">    </span>-bind-password<span class="w"> </span>&lt;password&gt;
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="c1"># Apply LDAP client config to the SVM</span>
-<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>vserver<span class="w"> </span>services<span class="w"> </span>name-service<span class="w"> </span>ldap<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="w">    </span>-client-config<span class="w"> </span>&lt;ldap-config-name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="w">    </span>-client-enabled<span class="w"> </span><span class="nb">true</span>
-<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>
-<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a><span class="c1"># Show LDAP configuration for an SVM</span>
-<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a>vserver<span class="w"> </span>services<span class="w"> </span>name-service<span class="w"> </span>ldap<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
-<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a>
-<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a><span class="c1"># Test LDAP connectivity</span>
-<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a>vserver<span class="w"> </span>services<span class="w"> </span>name-service<span class="w"> </span>ldap<span class="w"> </span>check<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Create an LDAP client configuration</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>vserver<span class="w"> </span>services<span class="w"> </span>name-service<span class="w"> </span>ldap<span class="w"> </span>client<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">    </span>-client-config<span class="w"> </span>&lt;ldap-config-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">    </span>-servers<span class="w"> </span>&lt;ldap-server-ip&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">    </span>-base-dn<span class="w"> </span><span class="s2">&quot;DC=domain,DC=corp&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">    </span>-schema<span class="w"> </span>RFC-2307<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="w">    </span>-bind-dn<span class="w"> </span><span class="s2">&quot;CN=svc-ontap-ldap,OU=Service Accounts,DC=domain,DC=corp&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="w">    </span>-bind-password<span class="w"> </span>&lt;password&gt;
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="c1"># Apply LDAP client config to the SVM</span>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>vserver<span class="w"> </span>services<span class="w"> </span>name-service<span class="w"> </span>ldap<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="w">    </span>-client-config<span class="w"> </span>&lt;ldap-config-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="w">    </span>-client-enabled<span class="w"> </span><span class="nb">true</span>
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a><span class="c1"># Show LDAP configuration for an SVM</span>
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>vserver<span class="w"> </span>services<span class="w"> </span>name-service<span class="w"> </span>ldap<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a><span class="c1"># Test LDAP connectivity</span>
+<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>vserver<span class="w"> </span>services<span class="w"> </span>name-service<span class="w"> </span>ldap<span class="w"> </span>check<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
 </code></pre></div>
 <h3 id="name-service-switch">Name Service Switch<a class="headerlink" href="#name-service-switch" title="Permanent link">&para;</a></h3>
 <p>The name service switch defines the order in which ONTAP resolves user and group information:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Show name service lookup order</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>vserver<span class="w"> </span>services<span class="w"> </span>name-service<span class="w"> </span>ns-switch<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Configure lookup order (files first, then LDAP for passwd/group)</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>vserver<span class="w"> </span>services<span class="w"> </span>name-service<span class="w"> </span>ns-switch<span class="w"> </span>modify<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="w">    </span>-database<span class="w"> </span>passwd<span class="w"> </span>-sources<span class="w"> </span>files,ldap
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>vserver<span class="w"> </span>services<span class="w"> </span>name-service<span class="w"> </span>ns-switch<span class="w"> </span>modify<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="w">    </span>-database<span class="w"> </span>group<span class="w"> </span>-sources<span class="w"> </span>files,ldap
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>vserver<span class="w"> </span>services<span class="w"> </span>name-service<span class="w"> </span>ns-switch<span class="w"> </span>modify<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="w">    </span>-database<span class="w"> </span>netgroup<span class="w"> </span>-sources<span class="w"> </span>files,ldap
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Show name service lookup order</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>vserver<span class="w"> </span>services<span class="w"> </span>name-service<span class="w"> </span>ns-switch<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Configure lookup order (files first, then LDAP for passwd/group)</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>vserver<span class="w"> </span>services<span class="w"> </span>name-service<span class="w"> </span>ns-switch<span class="w"> </span>modify<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">    </span>-database<span class="w"> </span>passwd<span class="w"> </span>-sources<span class="w"> </span>files,ldap
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>vserver<span class="w"> </span>services<span class="w"> </span>name-service<span class="w"> </span>ns-switch<span class="w"> </span>modify<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w">    </span>-database<span class="w"> </span>group<span class="w"> </span>-sources<span class="w"> </span>files,ldap
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>vserver<span class="w"> </span>services<span class="w"> </span>name-service<span class="w"> </span>ns-switch<span class="w"> </span>modify<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="w">    </span>-database<span class="w"> </span>netgroup<span class="w"> </span>-sources<span class="w"> </span>files,ldap
 </code></pre></div>
 <hr />
 <h2 id="snmpv3-authentication">SNMPv3 Authentication<a class="headerlink" href="#snmpv3-authentication" title="Permanent link">&para;</a></h2>
 <p>SNMP is used for monitoring integration (Nagios, Zabbix, Prometheus via SNMP exporters). Only SNMPv3 should be used in production — SNMPv1 and v2c transmit community strings in plaintext.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Configure an SNMPv3 user with authentication and privacy (AES-128 encryption)</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>system<span class="w"> </span>snmp<span class="w"> </span>user<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">    </span>-username<span class="w"> </span>snmpv3monitor<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">    </span>-authmethod<span class="w"> </span>sha<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">    </span>-authpassword<span class="w"> </span>&lt;auth-passphrase&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="w">    </span>-privmethod<span class="w"> </span>aes128<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="w">    </span>-privpassword<span class="w"> </span>&lt;priv-passphrase&gt;
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>
-<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="c1"># Add an SNMPv3 trap host (monitoring server)</span>
-<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>system<span class="w"> </span>snmp<span class="w"> </span>traphost<span class="w"> </span>add<span class="w"> </span>-ipaddr<span class="w"> </span>&lt;monitoring-host-ip&gt;<span class="w"> </span>-username<span class="w"> </span>snmpv3monitor
-<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>
-<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="c1"># Verify SNMP configuration</span>
-<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>system<span class="w"> </span>snmp<span class="w"> </span>show
-<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>system<span class="w"> </span>snmp<span class="w"> </span>user<span class="w"> </span>show
-<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>
-<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a><span class="c1"># Delete all SNMPv1/v2c community strings</span>
-<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a>system<span class="w"> </span>snmp<span class="w"> </span>community<span class="w"> </span>delete<span class="w"> </span>-community-name<span class="w"> </span>public
-<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a>system<span class="w"> </span>snmp<span class="w"> </span>community<span class="w"> </span>delete<span class="w"> </span>-community-name<span class="w"> </span>&lt;any-other-community&gt;
-<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a>
-<a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a><span class="c1"># Confirm no v1/v2c communities remain</span>
-<a id="__codelineno-10-21" name="__codelineno-10-21" href="#__codelineno-10-21"></a>system<span class="w"> </span>snmp<span class="w"> </span>community<span class="w"> </span>show
-<a id="__codelineno-10-22" name="__codelineno-10-22" href="#__codelineno-10-22"></a><span class="c1"># Expected: no entries</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Configure an SNMPv3 user with authentication and privacy (AES-128 encryption)</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>system<span class="w"> </span>snmp<span class="w"> </span>user<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">    </span>-username<span class="w"> </span>snmpv3monitor<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">    </span>-authmethod<span class="w"> </span>sha<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="w">    </span>-authpassword<span class="w"> </span>&lt;auth-passphrase&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="w">    </span>-privmethod<span class="w"> </span>aes128<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="w">    </span>-privpassword<span class="w"> </span>&lt;priv-passphrase&gt;
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="c1"># Add an SNMPv3 trap host (monitoring server)</span>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>system<span class="w"> </span>snmp<span class="w"> </span>traphost<span class="w"> </span>add<span class="w"> </span>-ipaddr<span class="w"> </span>&lt;monitoring-host-ip&gt;<span class="w"> </span>-username<span class="w"> </span>snmpv3monitor
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="c1"># Verify SNMP configuration</span>
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>system<span class="w"> </span>snmp<span class="w"> </span>show
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>system<span class="w"> </span>snmp<span class="w"> </span>user<span class="w"> </span>show
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a><span class="c1"># Delete all SNMPv1/v2c community strings</span>
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>system<span class="w"> </span>snmp<span class="w"> </span>community<span class="w"> </span>delete<span class="w"> </span>-community-name<span class="w"> </span>public
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>system<span class="w"> </span>snmp<span class="w"> </span>community<span class="w"> </span>delete<span class="w"> </span>-community-name<span class="w"> </span>&lt;any-other-community&gt;
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a><span class="c1"># Confirm no v1/v2c communities remain</span>
+<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a>system<span class="w"> </span>snmp<span class="w"> </span>community<span class="w"> </span>show
+<a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a><span class="c1"># Expected: no entries</span>
 </code></pre></div>
 <p>Recommended SNMPv3 security levels:</p>
 <table>
@@ -8754,16 +8736,16 @@ Authentication in ONTAP controls how administrators and service accounts gain ac
 <h2 id="saml-sso-for-system-manager">SAML SSO for System Manager<a class="headerlink" href="#saml-sso-for-system-manager" title="Permanent link">&para;</a></h2>
 <p>ONTAP 9.8+ supports SAML 2.0-based single sign-on for the System Manager web UI. This integrates with enterprise identity providers (ADFS, Okta, Azure AD) to enforce corporate MFA and session policies.</p>
 <h3 id="saml-configuration-overview">SAML Configuration Overview<a class="headerlink" href="#saml-configuration-overview" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Enable SAML on the cluster</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>security<span class="w"> </span>saml-sp<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">    </span>-idp-uri<span class="w"> </span>&lt;idp-metadata-url&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="w">    </span>-sp-host<span class="w"> </span>&lt;cluster-management-fqdn&gt;
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>
-<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="c1"># Show SAML SP configuration</span>
-<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>security<span class="w"> </span>saml-sp<span class="w"> </span>show
-<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>
-<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="c1"># Show SAML IdP configuration</span>
-<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>security<span class="w"> </span>saml-sp<span class="w"> </span>idp<span class="w"> </span>show
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Enable SAML on the cluster</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>security<span class="w"> </span>saml-sp<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">    </span>-idp-uri<span class="w"> </span>&lt;idp-metadata-url&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">    </span>-sp-host<span class="w"> </span>&lt;cluster-management-fqdn&gt;
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="c1"># Show SAML SP configuration</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>security<span class="w"> </span>saml-sp<span class="w"> </span>show
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="c1"># Show SAML IdP configuration</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>security<span class="w"> </span>saml-sp<span class="w"> </span>idp<span class="w"> </span>show
 </code></pre></div>
 <p>SAML configuration requires:
 1. Download the ONTAP SP metadata from <code>https://&lt;cluster-mgmt&gt;/saml-service-provider-metadata.xml</code>
@@ -8772,35 +8754,35 @@ Authentication in ONTAP controls how administrators and service accounts gain ac
 4. Test login via System Manager — ONTAP redirects to the IdP for authentication</p>
 <h3 id="saml-bypass-break-glass">SAML Bypass (Break-Glass)<a class="headerlink" href="#saml-bypass-break-glass" title="Permanent link">&para;</a></h3>
 <p>SAML enforcement locks out password-based System Manager login. Maintain a local <code>admin</code> account with SSH key access as a break-glass method in case the IdP is unavailable.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># SAML applies to HTTP (System Manager) only</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="c1"># SSH with local admin account always works regardless of SAML state</span>
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="c1"># Verify local admin SSH key access before enabling SAML</span>
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>security<span class="w"> </span>login<span class="w"> </span>show<span class="w"> </span>-username<span class="w"> </span>admin<span class="w"> </span>-application<span class="w"> </span>ssh
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># SAML applies to HTTP (System Manager) only</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="c1"># SSH with local admin account always works regardless of SAML state</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="c1"># Verify local admin SSH key access before enabling SAML</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>security<span class="w"> </span>login<span class="w"> </span>show<span class="w"> </span>-username<span class="w"> </span>admin<span class="w"> </span>-application<span class="w"> </span>ssh
 </code></pre></div>
 <hr />
 <h2 id="kerberos-for-nfs">Kerberos for NFS<a class="headerlink" href="#kerberos-for-nfs" title="Permanent link">&para;</a></h2>
 <p>NFSv4.1 with Kerberos (krb5, krb5i, krb5p) provides strong authentication and optional integrity/privacy for NFS data. This is required in environments with compliance mandates for in-flight encryption of NAS traffic.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Check NFS Kerberos configuration on an SVM</span>
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>vserver<span class="w"> </span>nfs<span class="w"> </span>kerberos<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
-<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c1"># Enable Kerberos on a specific NFS LIF</span>
-<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>vserver<span class="w"> </span>nfs<span class="w"> </span>kerberos<span class="w"> </span>interface<span class="w"> </span><span class="nb">enable</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="w">    </span>-lif<span class="w"> </span>&lt;lif_name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="w">    </span>-spn<span class="w"> </span>nfs/&lt;lif_fqdn&gt;@&lt;KERBEROS_REALM&gt;
-<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>
-<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="c1"># Show Kerberos realms configured</span>
-<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>vserver<span class="w"> </span>nfs<span class="w"> </span>kerberos<span class="w"> </span>realm<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
-<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>
-<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a><span class="c1"># Create a Kerberos realm configuration</span>
-<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>vserver<span class="w"> </span>nfs<span class="w"> </span>kerberos<span class="w"> </span>realm<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a><span class="w">    </span>-realm<span class="w"> </span>&lt;KERBEROS_REALM&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a><span class="w">    </span>-kdc-vendor<span class="w"> </span>Microsoft<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a><span class="w">    </span>-kdc-ip<span class="w"> </span>&lt;domain-controller-ip&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-19" name="__codelineno-13-19" href="#__codelineno-13-19"></a><span class="w">    </span>-kdc-port<span class="w"> </span><span class="m">88</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-20" name="__codelineno-13-20" href="#__codelineno-13-20"></a><span class="w">    </span>-adserver-ip<span class="w"> </span>&lt;domain-controller-ip&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-21" name="__codelineno-13-21" href="#__codelineno-13-21"></a><span class="w">    </span>-adserver-name<span class="w"> </span>&lt;dc-hostname&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Check NFS Kerberos configuration on an SVM</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>vserver<span class="w"> </span>nfs<span class="w"> </span>kerberos<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># Enable Kerberos on a specific NFS LIF</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>vserver<span class="w"> </span>nfs<span class="w"> </span>kerberos<span class="w"> </span>interface<span class="w"> </span><span class="nb">enable</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="w">    </span>-lif<span class="w"> </span>&lt;lif_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="w">    </span>-spn<span class="w"> </span>nfs/&lt;lif_fqdn&gt;@&lt;KERBEROS_REALM&gt;
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="c1"># Show Kerberos realms configured</span>
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>vserver<span class="w"> </span>nfs<span class="w"> </span>kerberos<span class="w"> </span>realm<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a><span class="c1"># Create a Kerberos realm configuration</span>
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>vserver<span class="w"> </span>nfs<span class="w"> </span>kerberos<span class="w"> </span>realm<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a><span class="w">    </span>-realm<span class="w"> </span>&lt;KERBEROS_REALM&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a><span class="w">    </span>-kdc-vendor<span class="w"> </span>Microsoft<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a><span class="w">    </span>-kdc-ip<span class="w"> </span>&lt;domain-controller-ip&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a><span class="w">    </span>-kdc-port<span class="w"> </span><span class="m">88</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-20" name="__codelineno-12-20" href="#__codelineno-12-20"></a><span class="w">    </span>-adserver-ip<span class="w"> </span>&lt;domain-controller-ip&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-21" name="__codelineno-12-21" href="#__codelineno-12-21"></a><span class="w">    </span>-adserver-name<span class="w"> </span>&lt;dc-hostname&gt;
 </code></pre></div>
 <p>Kerberos security flavors for NFS exports:</p>
 <table>
@@ -8834,13 +8816,13 @@ Authentication in ONTAP controls how administrators and service accounts gain ac
 </tbody>
 </table>
 <p>Configure the required flavor in the NFS export policy rule:</p>
-<h2 id="vserver-export-policy-rule-modify-vserver-svm-policyname-policy-ruleindex-1-rorule-krb5p-rwrule-krb5p-superuser-krb5p"><div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>vserver<span class="w"> </span>export-policy<span class="w"> </span>rule<span class="w"> </span>modify<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="w">    </span>-policyname<span class="w"> </span>&lt;policy&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="w">    </span>-ruleindex<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="w">    </span>-rorule<span class="w"> </span>krb5p<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="w">    </span>-rwrule<span class="w"> </span>krb5p<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="w">    </span>-superuser<span class="w"> </span>krb5p
+<h2 id="vserver-export-policy-rule-modify-vserver-svm-policyname-policy-ruleindex-1-rorule-krb5p-rwrule-krb5p-superuser-krb5p"><div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>vserver<span class="w"> </span>export-policy<span class="w"> </span>rule<span class="w"> </span>modify<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="w">    </span>-policyname<span class="w"> </span>&lt;policy&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="w">    </span>-ruleindex<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="w">    </span>-rorule<span class="w"> </span>krb5p<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="w">    </span>-rwrule<span class="w"> </span>krb5p<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="w">    </span>-superuser<span class="w"> </span>krb5p
 </code></pre></div><a class="headerlink" href="#vserver-export-policy-rule-modify-vserver-svm-policyname-policy-ruleindex-1-rorule-krb5p-rwrule-krb5p-superuser-krb5p" title="Permanent link">&para;</a></h2>
 <h2 id="related-reference">Related Reference<a class="headerlink" href="#related-reference" title="Permanent link">&para;</a></h2>
 <ul>

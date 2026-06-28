@@ -7547,23 +7547,7 @@ Ceph's RADOS layer stores all data as objects. Clients calculate data placement 
     PRI --&gt; SEC2
     SEC1 --&gt; ACK
     SEC2 --&gt; ACK</code></pre>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>center: &quot;Ceph&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>daemon_roles: &quot;Daemon Roles&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>bluestore_internals: &quot;BlueStore Internals&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>pg_lifecycle: &quot;PG Lifecycle&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>crush_deep_dive: &quot;CRUSH Deep Dive&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>mon_quorum: &quot;MON Quorum&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>osd_heartbeat_and_failure_detection: &quot;OSD Heartbeat and Failure Detection&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>center -&gt; daemon_roles
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>center -&gt; bluestore_internals
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>center -&gt; pg_lifecycle
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>center -&gt; crush_deep_dive
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>center -&gt; mon_quorum
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>center -&gt; osd_heartbeat_and_failure_detection
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNkM1OAzEMhO95CmvvvMAeONAVFAla6Ipz5CbuJlKaLPlBINR3JyldNUI5cPTnGcszUnsSUTvbg9eTiowJspF8D92KZtXBd1A4Uw-KPnFy9sQk0tFZ7p2hkFXDeYRdGa_qchTtZOjE9iZRiM4T1-WwRVNsd5mOhcLjQpvueeJGH0h8CZMX3csDPC1jUy98CopLoplL_VEsq93buIYhExgyabpKoPfkfDpmw_N2A6_noal1QXJF6OOeMHK0kh9Qm5TzSYpLl912HGC9qCCr4P5XlT-5qJrXL_XDzS3URVe40We1rfuq8J9aqs01egX_kZH9ABrMzlc=?" /></p>
 <h2 id="daemon-roles">Daemon Roles<a class="headerlink" href="#daemon-roles" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -7657,11 +7641,11 @@ Ceph's RADOS layer stores all data as objects. Clients calculate data placement 
 </tbody>
 </table>
 <p>If WAL/DB are co-located on the same SSD as data, performance degrades significantly under heavy write load. Always separate WAL/DB to NVMe for production HDD-based OSDs.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Check BlueStore device layout for a specific OSD</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ceph<span class="w"> </span>osd<span class="w"> </span>metadata<span class="w"> </span>osd.0<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">&#39;bluefs|bluestore&#39;</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Check BlueStore stats</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>ceph<span class="w"> </span>daemon<span class="w"> </span>osd.0<span class="w"> </span>perf<span class="w"> </span>dump<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>bluefs
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Check BlueStore device layout for a specific OSD</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ceph<span class="w"> </span>osd<span class="w"> </span>metadata<span class="w"> </span>osd.0<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">&#39;bluefs|bluestore&#39;</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Check BlueStore stats</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>ceph<span class="w"> </span>daemon<span class="w"> </span>osd.0<span class="w"> </span>perf<span class="w"> </span>dump<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>bluefs
 </code></pre></div>
 <h2 id="pg-lifecycle">PG Lifecycle<a class="headerlink" href="#pg-lifecycle" title="Permanent link">&para;</a></h2>
 <table>
@@ -7725,13 +7709,13 @@ Ceph's RADOS layer stores all data as objects. Clients calculate data placement 
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># PG health commands</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ceph<span class="w"> </span>pg<span class="w"> </span>stat
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>ceph<span class="w"> </span>pg<span class="w"> </span>dump_stuck<span class="w">                      </span><span class="c1"># show PGs stuck in non-clean state</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>ceph<span class="w"> </span>pg<span class="w"> </span>dump_stuck<span class="w"> </span>inactive
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>ceph<span class="w"> </span>pg<span class="w"> </span>dump_stuck<span class="w"> </span>unclean
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>ceph<span class="w"> </span>pg<span class="w"> </span>&lt;pg-id&gt;<span class="w"> </span>query<span class="w">                   </span><span class="c1"># detailed PG state and peer list</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>ceph<span class="w"> </span>health<span class="w"> </span>detail<span class="w">                      </span><span class="c1"># full breakdown of health warnings</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># PG health commands</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ceph<span class="w"> </span>pg<span class="w"> </span>stat
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>ceph<span class="w"> </span>pg<span class="w"> </span>dump_stuck<span class="w">                      </span><span class="c1"># show PGs stuck in non-clean state</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>ceph<span class="w"> </span>pg<span class="w"> </span>dump_stuck<span class="w"> </span>inactive
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>ceph<span class="w"> </span>pg<span class="w"> </span>dump_stuck<span class="w"> </span>unclean
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>ceph<span class="w"> </span>pg<span class="w"> </span>&lt;pg-id&gt;<span class="w"> </span>query<span class="w">                   </span><span class="c1"># detailed PG state and peer list</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>ceph<span class="w"> </span>health<span class="w"> </span>detail<span class="w">                      </span><span class="c1"># full breakdown of health warnings</span>
 </code></pre></div>
 <h2 id="crush-deep-dive">CRUSH Deep Dive<a class="headerlink" href="#crush-deep-dive" title="Permanent link">&para;</a></h2>
 <p>CRUSH (Controlled Replication Under Scalable Hashing) is a pseudo-random placement algorithm. Clients compute OSD targets locally — no central lookup.</p>
@@ -7773,26 +7757,26 @@ Ceph's RADOS layer stores all data as objects. Clients calculate data placement 
 </tbody>
 </table>
 <p><strong>OSD weight</strong> is set in TB of raw capacity. A 4 TB disk gets weight <code>4.0</code>; a 2 TB disk gets <code>2.0</code>. CRUSH distributes data proportionally to weight.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># View CRUSH tree</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ceph<span class="w"> </span>osd<span class="w"> </span>crush<span class="w"> </span>tree<span class="w"> </span>--show-shadow
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Set OSD weight manually (use with caution — autoscale handles this)</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>ceph<span class="w"> </span>osd<span class="w"> </span>crush<span class="w"> </span>reweight<span class="w"> </span>osd.5<span class="w"> </span><span class="m">3</span>.6
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Key CRUSH tunables</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>ceph<span class="w"> </span>osd<span class="w"> </span>crush<span class="w"> </span>show-tunables
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># chooseleaf_descend_once: 1 = descent once per failure domain (faster, fewer retries)</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># straw2: current default algorithm; provides best-balanced distribution</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="c1"># Set optimal tunables for Luminous+</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>ceph<span class="w"> </span>osd<span class="w"> </span>crush<span class="w"> </span>tunables<span class="w"> </span>optimal
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="c1"># Compile/decompile for manual CRUSH map editing</span>
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>ceph<span class="w"> </span>osd<span class="w"> </span>getcrushmap<span class="w"> </span>-o<span class="w"> </span>crush.bin
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>crushtool<span class="w"> </span>-d<span class="w"> </span>crush.bin<span class="w"> </span>-o<span class="w"> </span>crush.txt
-<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="c1"># Edit crush.txt to add/modify buckets and rules</span>
-<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>crushtool<span class="w"> </span>-c<span class="w"> </span>crush.txt<span class="w"> </span>-o<span class="w"> </span>crush-new.bin
-<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>ceph<span class="w"> </span>osd<span class="w"> </span>setcrushmap<span class="w"> </span>-i<span class="w"> </span>crush-new.bin
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># View CRUSH tree</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ceph<span class="w"> </span>osd<span class="w"> </span>crush<span class="w"> </span>tree<span class="w"> </span>--show-shadow
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Set OSD weight manually (use with caution — autoscale handles this)</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>ceph<span class="w"> </span>osd<span class="w"> </span>crush<span class="w"> </span>reweight<span class="w"> </span>osd.5<span class="w"> </span><span class="m">3</span>.6
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Key CRUSH tunables</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>ceph<span class="w"> </span>osd<span class="w"> </span>crush<span class="w"> </span>show-tunables
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># chooseleaf_descend_once: 1 = descent once per failure domain (faster, fewer retries)</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># straw2: current default algorithm; provides best-balanced distribution</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># Set optimal tunables for Luminous+</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>ceph<span class="w"> </span>osd<span class="w"> </span>crush<span class="w"> </span>tunables<span class="w"> </span>optimal
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="c1"># Compile/decompile for manual CRUSH map editing</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>ceph<span class="w"> </span>osd<span class="w"> </span>getcrushmap<span class="w"> </span>-o<span class="w"> </span>crush.bin
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>crushtool<span class="w"> </span>-d<span class="w"> </span>crush.bin<span class="w"> </span>-o<span class="w"> </span>crush.txt
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="c1"># Edit crush.txt to add/modify buckets and rules</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>crushtool<span class="w"> </span>-c<span class="w"> </span>crush.txt<span class="w"> </span>-o<span class="w"> </span>crush-new.bin
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>ceph<span class="w"> </span>osd<span class="w"> </span>setcrushmap<span class="w"> </span>-i<span class="w"> </span>crush-new.bin
 </code></pre></div>
 <h2 id="mon-quorum">MON Quorum<a class="headerlink" href="#mon-quorum" title="Permanent link">&para;</a></h2>
 <p>MONs use the <strong>Paxos</strong> consensus protocol to maintain authoritative cluster maps. A majority must agree before any map update (OSD up/down, PG changes) is committed.</p>
@@ -7823,16 +7807,16 @@ Ceph's RADOS layer stores all data as objects. Clients calculate data placement 
 </tbody>
 </table>
 <p>Quorum loss = cluster freezes all write operations. Existing reads may continue briefly from stale maps but will eventually stall.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Verify MON quorum status</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ceph<span class="w"> </span>mon<span class="w"> </span>stat
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>ceph<span class="w"> </span>mon<span class="w"> </span>dump
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>ceph<span class="w"> </span>quorum_status<span class="w"> </span>--format<span class="w"> </span>json-pretty
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># Check MON clock skew (must be &lt; 0.05 s; &gt; 0.1 s causes quorum issues)</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>ceph<span class="w"> </span>time-sync-status
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># Remove a failed MON</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>ceph<span class="w"> </span>mon<span class="w"> </span>remove<span class="w"> </span>&lt;mon-id&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Verify MON quorum status</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ceph<span class="w"> </span>mon<span class="w"> </span>stat
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>ceph<span class="w"> </span>mon<span class="w"> </span>dump
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>ceph<span class="w"> </span>quorum_status<span class="w"> </span>--format<span class="w"> </span>json-pretty
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># Check MON clock skew (must be &lt; 0.05 s; &gt; 0.1 s causes quorum issues)</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>ceph<span class="w"> </span>time-sync-status
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># Remove a failed MON</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>ceph<span class="w"> </span>mon<span class="w"> </span>remove<span class="w"> </span>&lt;mon-id&gt;
 </code></pre></div>
 <h2 id="osd-heartbeat-and-failure-detection">OSD Heartbeat and Failure Detection<a class="headerlink" href="#osd-heartbeat-and-failure-detection" title="Permanent link">&para;</a></h2>
 <p>OSDs send heartbeat pings to their peers and to the MONs on a regular interval.</p>
@@ -7872,18 +7856,18 @@ Ceph's RADOS layer stores all data as objects. Clients calculate data placement 
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Check OSD up/in status</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>ceph<span class="w"> </span>osd<span class="w"> </span>stat
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>ceph<span class="w"> </span>osd<span class="w"> </span>dump<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">&#39;up|down|in|out&#39;</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># Manually mark an OSD out (triggers recovery immediately)</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>ceph<span class="w"> </span>osd<span class="w"> </span>out<span class="w"> </span>osd.7
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># Adjust recovery throttle (increase for faster recovery, lower for less I/O impact)</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>ceph<span class="w"> </span>tell<span class="w"> </span>osd.*<span class="w"> </span>injectargs<span class="w"> </span><span class="s1">&#39;--osd-recovery-max-active 5&#39;</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="c1"># View OSD heartbeat peers</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>ceph<span class="w"> </span>daemon<span class="w"> </span>osd.0<span class="w"> </span>dump_watchers
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check OSD up/in status</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ceph<span class="w"> </span>osd<span class="w"> </span>stat
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>ceph<span class="w"> </span>osd<span class="w"> </span>dump<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">&#39;up|down|in|out&#39;</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Manually mark an OSD out (triggers recovery immediately)</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>ceph<span class="w"> </span>osd<span class="w"> </span>out<span class="w"> </span>osd.7
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Adjust recovery throttle (increase for faster recovery, lower for less I/O impact)</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>ceph<span class="w"> </span>tell<span class="w"> </span>osd.*<span class="w"> </span>injectargs<span class="w"> </span><span class="s1">&#39;--osd-recovery-max-active 5&#39;</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># View OSD heartbeat peers</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>ceph<span class="w"> </span>daemon<span class="w"> </span>osd.0<span class="w"> </span>dump_watchers
 </code></pre></div>
 <h2 id="storage-pool-types">Storage Pool Types<a class="headerlink" href="#storage-pool-types" title="Permanent link">&para;</a></h2>
 <table>
@@ -7927,49 +7911,49 @@ Ceph's RADOS layer stores all data as objects. Clients calculate data placement 
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Replicated pool (default) — stores N copies</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>ceph<span class="w"> </span>osd<span class="w"> </span>pool<span class="w"> </span>create<span class="w"> </span>rbd-pool<span class="w"> </span><span class="m">64</span><span class="w"> </span>replicated
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>ceph<span class="w"> </span>osd<span class="w"> </span>pool<span class="w"> </span><span class="nb">set</span><span class="w"> </span>rbd-pool<span class="w"> </span>size<span class="w"> </span><span class="m">3</span><span class="w">          </span><span class="c1"># 3 replicas</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>ceph<span class="w"> </span>osd<span class="w"> </span>pool<span class="w"> </span><span class="nb">set</span><span class="w"> </span>rbd-pool<span class="w"> </span>min_size<span class="w"> </span><span class="m">2</span><span class="w">      </span><span class="c1"># minimum replicas for writes</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># Erasure-coded pool — stores data + parity chunks (like RAID)</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>ceph<span class="w"> </span>osd<span class="w"> </span>erasure-code-profile<span class="w"> </span><span class="nb">set</span><span class="w"> </span>my-ec<span class="w"> </span><span class="nv">k</span><span class="o">=</span><span class="m">4</span><span class="w"> </span><span class="nv">m</span><span class="o">=</span><span class="m">2</span><span class="w">   </span><span class="c1"># 4 data + 2 parity chunks</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>ceph<span class="w"> </span>osd<span class="w"> </span>pool<span class="w"> </span>create<span class="w"> </span>ec-pool<span class="w"> </span><span class="m">64</span><span class="w"> </span>erasure<span class="w"> </span>my-ec
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># Enable RBD overwrites on EC pool (requires BlueStore OSDs)</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>ceph<span class="w"> </span>osd<span class="w"> </span>pool<span class="w"> </span><span class="nb">set</span><span class="w"> </span>ec-pool<span class="w"> </span>allow_ec_overwrites<span class="w"> </span><span class="nb">true</span>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="c1"># List pool details</span>
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>ceph<span class="w"> </span>osd<span class="w"> </span>pool<span class="w"> </span>ls<span class="w"> </span>detail
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>ceph<span class="w"> </span>osd<span class="w"> </span>pool<span class="w"> </span>get<span class="w"> </span>rbd-pool<span class="w"> </span>all
-<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>
-<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="c1"># Set application tag (required for PG autoscaler to work correctly)</span>
-<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>ceph<span class="w"> </span>osd<span class="w"> </span>pool<span class="w"> </span>application<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>rbd-pool<span class="w"> </span>rbd
-<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>ceph<span class="w"> </span>osd<span class="w"> </span>pool<span class="w"> </span>application<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>cephfs-data<span class="w"> </span>cephfs
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Replicated pool (default) — stores N copies</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>ceph<span class="w"> </span>osd<span class="w"> </span>pool<span class="w"> </span>create<span class="w"> </span>rbd-pool<span class="w"> </span><span class="m">64</span><span class="w"> </span>replicated
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>ceph<span class="w"> </span>osd<span class="w"> </span>pool<span class="w"> </span><span class="nb">set</span><span class="w"> </span>rbd-pool<span class="w"> </span>size<span class="w"> </span><span class="m">3</span><span class="w">          </span><span class="c1"># 3 replicas</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>ceph<span class="w"> </span>osd<span class="w"> </span>pool<span class="w"> </span><span class="nb">set</span><span class="w"> </span>rbd-pool<span class="w"> </span>min_size<span class="w"> </span><span class="m">2</span><span class="w">      </span><span class="c1"># minimum replicas for writes</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1"># Erasure-coded pool — stores data + parity chunks (like RAID)</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>ceph<span class="w"> </span>osd<span class="w"> </span>erasure-code-profile<span class="w"> </span><span class="nb">set</span><span class="w"> </span>my-ec<span class="w"> </span><span class="nv">k</span><span class="o">=</span><span class="m">4</span><span class="w"> </span><span class="nv">m</span><span class="o">=</span><span class="m">2</span><span class="w">   </span><span class="c1"># 4 data + 2 parity chunks</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>ceph<span class="w"> </span>osd<span class="w"> </span>pool<span class="w"> </span>create<span class="w"> </span>ec-pool<span class="w"> </span><span class="m">64</span><span class="w"> </span>erasure<span class="w"> </span>my-ec
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># Enable RBD overwrites on EC pool (requires BlueStore OSDs)</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>ceph<span class="w"> </span>osd<span class="w"> </span>pool<span class="w"> </span><span class="nb">set</span><span class="w"> </span>ec-pool<span class="w"> </span>allow_ec_overwrites<span class="w"> </span><span class="nb">true</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="c1"># List pool details</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>ceph<span class="w"> </span>osd<span class="w"> </span>pool<span class="w"> </span>ls<span class="w"> </span>detail
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>ceph<span class="w"> </span>osd<span class="w"> </span>pool<span class="w"> </span>get<span class="w"> </span>rbd-pool<span class="w"> </span>all
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="c1"># Set application tag (required for PG autoscaler to work correctly)</span>
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>ceph<span class="w"> </span>osd<span class="w"> </span>pool<span class="w"> </span>application<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>rbd-pool<span class="w"> </span>rbd
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>ceph<span class="w"> </span>osd<span class="w"> </span>pool<span class="w"> </span>application<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>cephfs-data<span class="w"> </span>cephfs
 </code></pre></div>
 <h2 id="cluster-health-quick-reference">Cluster Health Quick Reference<a class="headerlink" href="#cluster-health-quick-reference" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Overall status — always start here</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>ceph<span class="w"> </span>status
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>ceph<span class="w"> </span>health<span class="w"> </span>detail
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1"># OSD status</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>ceph<span class="w"> </span>osd<span class="w"> </span>stat
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>ceph<span class="w"> </span>osd<span class="w"> </span>tree
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>ceph<span class="w"> </span>osd<span class="w"> </span>df<span class="w">                  </span><span class="c1"># per-OSD utilisation %</span>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="c1"># PG status</span>
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>ceph<span class="w"> </span>pg<span class="w"> </span>stat
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>ceph<span class="w"> </span>pg<span class="w"> </span>dump_stuck<span class="w">           </span><span class="c1"># PGs not in active+clean</span>
-<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>
-<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="c1"># Pool usage</span>
-<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>ceph<span class="w"> </span>df<span class="w"> </span>detail
-<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>
-<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a><span class="c1"># MON quorum</span>
-<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>ceph<span class="w"> </span>mon<span class="w"> </span>stat
-<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>ceph<span class="w"> </span>quorum_status<span class="w"> </span>--format<span class="w"> </span>json-pretty
-<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>
-<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a><span class="c1"># Live I/O stats</span>
-<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>ceph<span class="w"> </span>-w<span class="w">                      </span><span class="c1"># watch real-time cluster events</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Overall status — always start here</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>ceph<span class="w"> </span>status
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>ceph<span class="w"> </span>health<span class="w"> </span>detail
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># OSD status</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>ceph<span class="w"> </span>osd<span class="w"> </span>stat
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>ceph<span class="w"> </span>osd<span class="w"> </span>tree
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>ceph<span class="w"> </span>osd<span class="w"> </span>df<span class="w">                  </span><span class="c1"># per-OSD utilisation %</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># PG status</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>ceph<span class="w"> </span>pg<span class="w"> </span>stat
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>ceph<span class="w"> </span>pg<span class="w"> </span>dump_stuck<span class="w">           </span><span class="c1"># PGs not in active+clean</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="c1"># Pool usage</span>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>ceph<span class="w"> </span>df<span class="w"> </span>detail
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="c1"># MON quorum</span>
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>ceph<span class="w"> </span>mon<span class="w"> </span>stat
+<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>ceph<span class="w"> </span>quorum_status<span class="w"> </span>--format<span class="w"> </span>json-pretty
+<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a>
+<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a><span class="c1"># Live I/O stats</span>
+<a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a>ceph<span class="w"> </span>-w<span class="w">                      </span><span class="c1"># watch real-time cluster events</span>
 </code></pre></div>
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>

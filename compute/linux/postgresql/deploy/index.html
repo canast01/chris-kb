@@ -7971,25 +7971,7 @@ PostgreSQL initial deployment — installation on RHEL/Ubuntu, postgresql.conf b
     s0 --&gt; s1 --&gt; s2 --&gt; s3 --&gt; s4 --&gt; s5 --&gt; s6 --&gt; s7 --&gt; s8
     style s7 fill:#2e7d32,color:#fff,stroke:#1b5e20
     style s8 fill:#2e7d32,color:#fff,stroke:#1b5e20</code></pre>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>plan: &quot;Plan&quot; {shape: oval}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>install_on_rhel_rocky: &quot;Install on RHEL / Rocky&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>install_on_ubuntu: &quot;Install on Ubuntu&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>initial_configuration_postgresqlconf: &quot;Initial Configuration (`postgresql.conf`)&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>pghbaconf_access_control: &quot;`pg_hba.conf` Access Control&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>firewall: &quot;Firewall&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>create_application_user_and_database: &quot;Create Application User and Database&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>validate: &quot;Validate&quot; {shape: oval}
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>plan -&gt; install_on_rhel_rocky
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>install_on_rhel_rocky -&gt; install_on_ubuntu
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>install_on_ubuntu -&gt; initial_configuration_postgresqlconf
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>initial_configuration_postgresqlconf -&gt; pghbaconf_access_control
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>pghbaconf_access_control -&gt; firewall
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>firewall -&gt; create_application_user_and_database
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>create_application_user_and_database -&gt; validate
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNkTFPwzAQhff8ilMmGIC9A1JVQCAxoEpldS6Om1hYtrEdEEL8d-6SlNCSiExx7t57Z99X6aBk0s6uIOi6SVnmDdJP_kSfHD5jg16twL2h-cq0jQmNEc6K0CgjgpMvH6R96OvgLGzvbx_hCrbcGe08A21t1FFGW7Y2tcf-XVebceqk0Qjp7F7XbUC-tvAupjqo-Gq43oV1Mtj8lsFZMQovWVmcTw7xdVMi9wVKqWLkaSk4Q8GFrwU1ezesuzZP4fZk1p52-07vIu_dcJzUyaAwKYHeGy37V7VRBYG2EhUmLDGSId90MliPMtiRDEgGN4NsMp_YacrhjOfheEq2ow4X1zCJeBr8ibyn-ZdvL_sf3SK-HDaHaJYdmw4sfqBwccniF9HhsMOWs29QnT4v?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Access:</strong> root or sudo-capable account on target hosts</li>
@@ -8000,47 +7982,47 @@ PostgreSQL initial deployment — installation on RHEL/Ubuntu, postgresql.conf b
 </ul>
 <hr />
 <h2 id="install-on-rhel-rocky">Install on RHEL / Rocky<a class="headerlink" href="#install-on-rhel-rocky" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>sudo<span class="w"> </span>dnf<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>https://download.postgresql.org/pub/repos/yum/reporpms/EL-9-x86_64/pgdg-redhat-repo-latest.noarch.rpm
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>sudo<span class="w"> </span>dnf<span class="w"> </span>-qy<span class="w"> </span>module<span class="w"> </span>disable<span class="w"> </span>postgresql
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>sudo<span class="w"> </span>dnf<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>postgresql16-server
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>sudo<span class="w"> </span>/usr/pgsql-16/bin/postgresql-16-setup<span class="w"> </span>initdb
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>--now<span class="w"> </span>postgresql-16
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>sudo<span class="w"> </span>dnf<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>https://download.postgresql.org/pub/repos/yum/reporpms/EL-9-x86_64/pgdg-redhat-repo-latest.noarch.rpm
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>sudo<span class="w"> </span>dnf<span class="w"> </span>-qy<span class="w"> </span>module<span class="w"> </span>disable<span class="w"> </span>postgresql
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>sudo<span class="w"> </span>dnf<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>postgresql16-server
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>sudo<span class="w"> </span>/usr/pgsql-16/bin/postgresql-16-setup<span class="w"> </span>initdb
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>--now<span class="w"> </span>postgresql-16
 </code></pre></div>
 <h2 id="install-on-ubuntu">Install on Ubuntu<a class="headerlink" href="#install-on-ubuntu" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>postgresql<span class="w"> </span>postgresql-contrib
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>--now<span class="w"> </span>postgresql
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>postgresql<span class="w"> </span>postgresql-contrib
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>--now<span class="w"> </span>postgresql
 </code></pre></div>
 <h2 id="initial-configuration-postgresqlconf">Initial Configuration (<code>postgresql.conf</code>)<a class="headerlink" href="#initial-configuration-postgresqlconf" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="na">listen_addresses</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#39;localhost&#39;</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="na">max_connections</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">100</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="na">shared_buffers</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">2GB</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="na">effective_cache_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">6GB</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="na">maintenance_work_mem</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">512MB</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="na">work_mem</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">16MB</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="na">wal_level</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">replica</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="na">archive_mode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">on</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="na">archive_command</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#39;cp %p /backup/wal/%f&#39;</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="na">log_min_duration_statement</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1000</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="na">listen_addresses</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#39;localhost&#39;</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="na">max_connections</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">100</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="na">shared_buffers</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">2GB</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="na">effective_cache_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">6GB</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="na">maintenance_work_mem</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">512MB</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="na">work_mem</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">16MB</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="na">wal_level</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">replica</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="na">archive_mode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">on</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="na">archive_command</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#39;cp %p /backup/wal/%f&#39;</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="na">log_min_duration_statement</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1000</span>
 </code></pre></div>
 <h2 id="pg_hbaconf-access-control"><code>pg_hba.conf</code> Access Control<a class="headerlink" href="#pg_hbaconf-access-control" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a># TYPE  DATABASE  USER      ADDRESS          METHOD
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>local   all       postgres                   peer
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>host    app_prod  appuser   10.0.1.0/24      scram-sha-256
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>host    all       all       127.0.0.1/32     scram-sha-256
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a># TYPE  DATABASE  USER      ADDRESS          METHOD
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>local   all       postgres                   peer
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>host    app_prod  appuser   10.0.1.0/24      scram-sha-256
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>host    all       all       127.0.0.1/32     scram-sha-256
 </code></pre></div>
 <p>After editing: <code>sudo systemctl reload postgresql-16</code></p>
 <h2 id="firewall">Firewall<a class="headerlink" href="#firewall" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>sudo<span class="w"> </span>firewall-cmd<span class="w"> </span>--add-rich-rule<span class="o">=</span><span class="s1">&#39;rule family=ipv4 source address=10.0.1.0/24 port port=5432 protocol=tcp accept&#39;</span><span class="w"> </span>--permanent
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>sudo<span class="w"> </span>firewall-cmd<span class="w"> </span>--reload
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>sudo<span class="w"> </span>firewall-cmd<span class="w"> </span>--add-rich-rule<span class="o">=</span><span class="s1">&#39;rule family=ipv4 source address=10.0.1.0/24 port port=5432 protocol=tcp accept&#39;</span><span class="w"> </span>--permanent
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>sudo<span class="w"> </span>firewall-cmd<span class="w"> </span>--reload
 </code></pre></div>
 <h2 id="create-application-user-and-database">Create Application User and Database<a class="headerlink" href="#create-application-user-and-database" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="n">appuser</span><span class="w"> </span><span class="k">WITH</span><span class="w"> </span><span class="k">ENCRYPTED</span><span class="w"> </span><span class="n">PASSWORD</span><span class="w"> </span><span class="s1">&#39;StrongPass1!&#39;</span><span class="p">;</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">DATABASE</span><span class="w"> </span><span class="n">app_prod</span><span class="w"> </span><span class="k">OWNER</span><span class="w"> </span><span class="n">appuser</span><span class="p">;</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="k">GRANT</span><span class="w"> </span><span class="k">ALL</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">DATABASE</span><span class="w"> </span><span class="n">app_prod</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">appuser</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="n">appuser</span><span class="w"> </span><span class="k">WITH</span><span class="w"> </span><span class="k">ENCRYPTED</span><span class="w"> </span><span class="n">PASSWORD</span><span class="w"> </span><span class="s1">&#39;StrongPass1!&#39;</span><span class="p">;</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">DATABASE</span><span class="w"> </span><span class="n">app_prod</span><span class="w"> </span><span class="k">OWNER</span><span class="w"> </span><span class="n">appuser</span><span class="p">;</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="k">GRANT</span><span class="w"> </span><span class="k">ALL</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">DATABASE</span><span class="w"> </span><span class="n">app_prod</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">appuser</span><span class="p">;</span>
 </code></pre></div>
 <h2 id="validation">Validation<a class="headerlink" href="#validation" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SELECT version(); SHOW shared_buffers;&quot;</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>psql<span class="w"> </span>-U<span class="w"> </span>appuser<span class="w"> </span>-h<span class="w"> </span><span class="m">127</span>.0.0.1<span class="w"> </span>-d<span class="w"> </span>app_prod<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SELECT 1 AS alive;&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SELECT version(); SHOW shared_buffers;&quot;</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>psql<span class="w"> </span>-U<span class="w"> </span>appuser<span class="w"> </span>-h<span class="w"> </span><span class="m">127</span>.0.0.1<span class="w"> </span>-d<span class="w"> </span>app_prod<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SELECT 1 AS alive;&quot;</span>
 </code></pre></div>
 <hr />
 <h2 id="verify">Verify<a class="headerlink" href="#verify" title="Permanent link">&para;</a></h2>

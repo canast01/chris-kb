@@ -9512,23 +9512,7 @@ vCenter High Availability (VCHA) deploys three vCenter instances — active, pas
     A --&gt;|heartbeat| HN
     HN --&gt;|heartbeat| W
     P --&gt;|quorum check| W</code></pre>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>center: &quot;Vcha Internals&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>3node_topology: &quot;3-Node Topology&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>state_synchronisation: &quot;State Synchronisation&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>failover_trigger_and_sequence: &quot;Failover Trigger and Sequence&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>splitbrain_prevention: &quot;Split-Brain Prevention&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>vcenter_ha_vs_recovery_options: &quot;vCenter HA vs Recovery Options&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>vcha_requirements: &quot;VCHA Requirements&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>center -&gt; 3node_topology
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>center -&gt; state_synchronisation
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>center -&gt; failover_trigger_and_sequence
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>center -&gt; splitbrain_prevention
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>center -&gt; vcenter_ha_vs_recovery_options
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>center -&gt; vcha_requirements
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp9UcFOxCAUvPcrXnrvaW89mOgmRi9qtpu9EmyfhaQ-EJDYmP13H5Zoa3BPhJl5wzBv0A77oA214PSoQlX1SAFdC_WpVxLu04Xk5Gv49EpabEHhhxwNnasdmQFFMNZMZpx5Ytc8MALHjPyOpDckjROeKx9kQOFn6pUzpL1cHq-7hEO3xYsOL1JPJqITgROPfEoahMe3d6SelfVt5uG48MA8dJkvZ7KTDs9OahLWYeQCcqaENzeJgKcfomgRl9qEkiJ6wURKMAtj04Rnr7j_FsDdNUQPhyyAx0Xwjye7OQ7OO3rl6WRz2rPBYYUVJ_MSobmC7ZJWRHERK_5izWufUnkr_nIzG-Gf71ZftIz4mg==?" /></p>
 <h2 id="3-node-topology">3-Node Topology<a class="headerlink" href="#3-node-topology" title="Permanent link">&para;</a></h2>
 <p>VCHA requires exactly three participants. Each runs as a separate VCSA VM.</p>
 <table>
@@ -9742,10 +9726,10 @@ vCenter High Availability (VCHA) deploys three vCenter instances — active, pas
 <li>Passive promotes; reconnect vSphere Client to the same cluster IP after ~4 min.</li>
 </ol>
 <p><strong>Via REST API:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Trigger failover using vCenter REST API (authenticate first to get session token)</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;vmware-api-session-id: &lt;SESSION_TOKEN&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span><span class="s2">&quot;https://&lt;VCENTER_FQDN&gt;/api/vcenter/vcha/cluster?action=failover_vcha&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Trigger failover using vCenter REST API (authenticate first to get session token)</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;vmware-api-session-id: &lt;SESSION_TOKEN&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span><span class="s2">&quot;https://&lt;VCENTER_FQDN&gt;/api/vcenter/vcha/cluster?action=failover_vcha&quot;</span>
 </code></pre></div>
 <p>The <code>vcha.failover</code> operation is idempotent if passive is already active; returns HTTP 204 on success.</p>
 <p><strong>Post-failover validation:</strong></p>

@@ -9282,23 +9282,7 @@ Firewall port reference for VMware Tanzu (vSphere with Tanzu / TKG). Covers the 
 *Applies to: vSphere with Tanzu (TKGs) 7.x/8.x / TKG 2.x*
 </div>
 <p><img alt="Tanzu — Ports and Network Requirements" src="../../../../../assets/virtualization-vmware-tanzu-architecture-ports.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>center: &quot;Tanzu&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>inbound_admin_to_supervisor_control_: &quot;Inbound — Admin to Supervisor Control Plane&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>inbound_access_to_tkg_workload_clust: &quot;Inbound — Access to TKG Workload Clusters&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>supervisor_to_vsphere_infrastructure: &quot;Supervisor to vSphere Infrastructure&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>supervisor_tkg_to_container_registri: &quot;Supervisor / TKG to Container Registries&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>tanzu_mission_control_tmc_saas: &quot;Tanzu Mission Control (TMC — SaaS)&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>tkg_cluster_internal: &quot;TKG Cluster Internal&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>center -&gt; inbound_admin_to_supervisor_control_
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>center -&gt; inbound_access_to_tkg_workload_clust
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>center -&gt; supervisor_to_vsphere_infrastructure
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>center -&gt; supervisor_tkg_to_container_registri
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>center -&gt; tanzu_mission_control_tmc_saas
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>center -&gt; tkg_cluster_internal
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNks9KxDAQxu99iqEnPYj3PQjSgyyyIHbBYxjTsQ3bTZZJWkURfAif0Cdx0nbXrnT_XHIIv5nvy_elMEw6GGdnwKasQpJosoF4BukS7XuTwoevcEMzqOgNS2c_E2OfXWMLhcXaWBWc8s2GuDXesdLOBna1kvF5j8HP1zfcRhSCg3yHQtaj8FCjpT-ZaAdtWdNISGvyPiqFValeHa9qh4XSdePDf6EOjUrL-zt4GlDIIkrsJ2VG9kWi9ZuKmJSxL4w-cKNDwzKQjqzL-jbvMJjvYSf3i3_RiCmhscSKqTQybfb3X3fuRSXbgvA4gDT9hhC7UmvjvVS5ayGstfKIflsmLHpgl_3FcpF1ueWI-eX0ZrGs-_gkEzkt1nGfGBxSlQz668n54T_B1Q2c83Gm8CP1j_BzajyAH2plhB8PeAxO5JX8AthASps=?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
 <li>vSphere with Tanzu uses the Supervisor Cluster as the management plane — it runs on ESXi hosts managed by vCenter</li>
@@ -9582,20 +9566,20 @@ Firewall port reference for VMware Tanzu (vSphere with Tanzu / TKG). Covers the 
 </table>
 <hr />
 <h2 id="verify">Verify<a class="headerlink" href="#verify" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># From kubectl client — test Supervisor API</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>kubectl<span class="w"> </span>--server<span class="o">=</span>https://&lt;supervisor-vip&gt;:6443<span class="w"> </span>cluster-info
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># From TKG cluster node — test overlay</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>nc<span class="w"> </span>-zu<span class="w"> </span>&lt;peer-node-ip&gt;<span class="w"> </span><span class="m">6081</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># From TKG cluster node — test image registry</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;%{http_code}&quot;</span><span class="w"> </span>https://&lt;harbor-host&gt;/v2/
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># From TKG node — test TMC connectivity</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;%{http_code}&quot;</span><span class="w"> </span>https://tmc.cloud.vmware.com/
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># OCI check — workload cluster status</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>tanzu<span class="w"> </span>cluster<span class="w"> </span>list
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># From kubectl client — test Supervisor API</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>kubectl<span class="w"> </span>--server<span class="o">=</span>https://&lt;supervisor-vip&gt;:6443<span class="w"> </span>cluster-info
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># From TKG cluster node — test overlay</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>nc<span class="w"> </span>-zu<span class="w"> </span>&lt;peer-node-ip&gt;<span class="w"> </span><span class="m">6081</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># From TKG cluster node — test image registry</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;%{http_code}&quot;</span><span class="w"> </span>https://&lt;harbor-host&gt;/v2/
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># From TKG node — test TMC connectivity</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;%{http_code}&quot;</span><span class="w"> </span>https://tmc.cloud.vmware.com/
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># OCI check — workload cluster status</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>tanzu<span class="w"> </span>cluster<span class="w"> </span>list
 </code></pre></div>
 <hr />
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>

@@ -8129,35 +8129,19 @@ An iSCSI target is the storage-side endpoint — a port on an array, NAS gateway
 <p><img alt="iSCSI Targets" src="../../../../assets/networking-protocols-iscsi-targets-index.svg" /></p>
 <div class="highlight"><pre><span></span><code>    iSCSI TARGET STRUCTURE
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>center: &quot;iSCSI&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>target_address_format: &quot;Target Address Format&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>target_portal_groups: &quot;Target Portal Groups&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>discovery_methods: &quot;Discovery Methods&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>host_initiator_group_mapping: &quot;Host / Initiator Group Mapping&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>verifying_target_connectivity: &quot;Verifying Target Connectivity&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>common_issues: &quot;Common Issues&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>center -&gt; target_address_format
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>center -&gt; target_portal_groups
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>center -&gt; discovery_methods
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>center -&gt; host_initiator_group_mapping
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>center -&gt; verifying_target_connectivity
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>center -&gt; common_issues
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp9UU1rwzAMvedXiN7L7jkMRsa2HAqDjl6NSVRH0FjGVsvC2H-f4yRrSk2Pfl-ynlry2AixLcGT6aQoGrSCvoQN7at9vYGf0GmHJXT4rQ3b30K0NyhKt63HENSRfa8l6r8SDi8TDm8Jv_rHOdqaE_4nOPaiT8p4PrtwDfhMMLwnOOtvKTR8QT-oHqXjdjS_LhjsJizr7DiIIktCWthPo1WvnSNrYshHpOEJ6kUwfQJ2kyCbGEfScYismrdq2Nqx0gvJECMPCw_zetWKzyY23PdsFYVwxnGzKr2hTu-sY74ZbJ8he5x7_qb6FX3X7Ip71N1K9rCQle5mzeIPpBrxDw==?" /></p>
 <h2 id="target-address-format">Target Address Format<a class="headerlink" href="#target-address-format" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>iqn.2020-01.com.purestorage:flasharray-m70-ct0   (target IQN)
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>192.168.10.10:3260                                 (portal — IP:port)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>iqn.2020-01.com.purestorage:flasharray-m70-ct0   (target IQN)
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>192.168.10.10:3260                                 (portal — IP:port)
 </code></pre></div>
 <p>TCP port 3260 is the standard iSCSI port.</p>
 <h2 id="target-portal-groups">Target Portal Groups<a class="headerlink" href="#target-portal-groups" title="Permanent link">&para;</a></h2>
 <p>A <strong>Target Portal Group (TPG)</strong> is a set of IP addresses (portals) through which a target is reachable. Arrays typically present multiple portals for load distribution and redundancy.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Linux — show discovered targets and their portals</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>iscsiadm<span class="w"> </span>-m<span class="w"> </span>node<span class="w"> </span>-o<span class="w"> </span>show
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Show all portal addresses for a discovered target</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>iscsiadm<span class="w"> </span>-m<span class="w"> </span>node<span class="w"> </span>--targetname<span class="w"> </span>&lt;IQN&gt;<span class="w"> </span>-o<span class="w"> </span>show<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>portal
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Linux — show discovered targets and their portals</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>iscsiadm<span class="w"> </span>-m<span class="w"> </span>node<span class="w"> </span>-o<span class="w"> </span>show
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Show all portal addresses for a discovered target</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>iscsiadm<span class="w"> </span>-m<span class="w"> </span>node<span class="w"> </span>--targetname<span class="w"> </span>&lt;IQN&gt;<span class="w"> </span>-o<span class="w"> </span>show<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>portal
 </code></pre></div>
 <h2 id="discovery-methods">Discovery Methods<a class="headerlink" href="#discovery-methods" title="Permanent link">&para;</a></h2>
 <table>
@@ -8186,14 +8170,14 @@ An iSCSI target is the storage-side endpoint — a port on an array, NAS gateway
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Linux — SendTargets discovery</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>iscsiadm<span class="w"> </span>-m<span class="w"> </span>discovery<span class="w"> </span>-t<span class="w"> </span>sendtargets<span class="w"> </span>-p<span class="w"> </span>&lt;target-ip&gt;:3260
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Linux — list discovered targets</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>iscsiadm<span class="w"> </span>-m<span class="w"> </span>node
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Linux — remove stale target record</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>iscsiadm<span class="w"> </span>-m<span class="w"> </span>node<span class="w"> </span>-o<span class="w"> </span>delete<span class="w"> </span>-T<span class="w"> </span>&lt;IQN&gt;<span class="w"> </span>-p<span class="w"> </span>&lt;ip&gt;:3260
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Linux — SendTargets discovery</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>iscsiadm<span class="w"> </span>-m<span class="w"> </span>discovery<span class="w"> </span>-t<span class="w"> </span>sendtargets<span class="w"> </span>-p<span class="w"> </span>&lt;target-ip&gt;:3260
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Linux — list discovered targets</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>iscsiadm<span class="w"> </span>-m<span class="w"> </span>node
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Linux — remove stale target record</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>iscsiadm<span class="w"> </span>-m<span class="w"> </span>node<span class="w"> </span>-o<span class="w"> </span>delete<span class="w"> </span>-T<span class="w"> </span>&lt;IQN&gt;<span class="w"> </span>-p<span class="w"> </span>&lt;ip&gt;:3260
 </code></pre></div>
 <h2 id="host-initiator-group-mapping">Host / Initiator Group Mapping<a class="headerlink" href="#host-initiator-group-mapping" title="Permanent link">&para;</a></h2>
 <p>All storage arrays require the initiator IQN to be registered in a host or initiator group before a LUN is visible:</p>
@@ -8224,14 +8208,14 @@ An iSCSI target is the storage-side endpoint — a port on an array, NAS gateway
 </tbody>
 </table>
 <h2 id="verifying-target-connectivity">Verifying Target Connectivity<a class="headerlink" href="#verifying-target-connectivity" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check target portal is reachable (TCP handshake)</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>nc<span class="w"> </span>-zv<span class="w"> </span>&lt;target-ip&gt;<span class="w"> </span><span class="m">3260</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Discover targets</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>iscsiadm<span class="w"> </span>-m<span class="w"> </span>discovery<span class="w"> </span>-t<span class="w"> </span>sendtargets<span class="w"> </span>-p<span class="w"> </span>&lt;target-ip&gt;
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Show active sessions to a target</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>iscsiadm<span class="w"> </span>-m<span class="w"> </span>session<span class="w"> </span>-P<span class="w"> </span><span class="m">3</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A10<span class="w"> </span>&lt;IQN&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Check target portal is reachable (TCP handshake)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>nc<span class="w"> </span>-zv<span class="w"> </span>&lt;target-ip&gt;<span class="w"> </span><span class="m">3260</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Discover targets</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>iscsiadm<span class="w"> </span>-m<span class="w"> </span>discovery<span class="w"> </span>-t<span class="w"> </span>sendtargets<span class="w"> </span>-p<span class="w"> </span>&lt;target-ip&gt;
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Show active sessions to a target</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>iscsiadm<span class="w"> </span>-m<span class="w"> </span>session<span class="w"> </span>-P<span class="w"> </span><span class="m">3</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A10<span class="w"> </span>&lt;IQN&gt;
 </code></pre></div>
 <h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
 <table>

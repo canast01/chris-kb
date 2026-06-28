@@ -9028,25 +9028,7 @@ Authentication reference covering Overview, Unisphere Local Accounts, Active Dir
 *Applies to: PowerMax 2500 / 8500*
 </div>
 <p><img alt="PowerMax — Authentication" src="../../../../../assets/storage-dell-powermax-security-authentication.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: down
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>external: External / Untrusted {shape: rectangle}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>unisphere_local_accounts: &quot;Unisphere Local Accounts&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>active_directory_ldap_integration: &quot;Active Directory / LDAP Integration&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>role_mapping: &quot;Role Mapping&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>multifactor_authentication_mfa: &quot;Multi-Factor Authentication (MFA)&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>solutions_enabler_symcli_authenticat: &quot;Solutions Enabler (SYMCLI) Authentication&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>audit_logging: &quot;Audit Logging&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>core: &quot;PowerMax Core&quot; {shape: hexagon}
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>external -&gt; unisphere_local_accounts: traffic in
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>unisphere_local_accounts -&gt; active_directory_ldap_integration
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>active_directory_ldap_integration -&gt; role_mapping
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>role_mapping -&gt; multifactor_authentication_mfa
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>multifactor_authentication_mfa -&gt; solutions_enabler_symcli_authenticat
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>solutions_enabler_symcli_authenticat -&gt; audit_logging
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>audit_logging -&gt; core: secured path
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNk02LwjAQhu_-iqEnPcjee1gofoBgQVY87CnMptM2kCYlH6uy-N83aRV1qau3Tt8370z6TAthiDuhVQqF3qvRiA6OjEKZwuL8BG-wU85466iAH1tjSynEU6gqSaeRV8K2NRliUnOUDDnXXjmbQrK7SLCOEmRnKRnKwTDHN7Gim0ibI5MFtkwoR5XBfsQk6zwwv3jCbOt5toHV1TWYbbQk1mDbClWFmI9QQt6Xg_7GSydKjD0YeleTcoJ38awpMSTk0TBddg7I7hwwzpfZZDDWaumjxTJS-CXJMHtsuBS3PUL49mKDRW-D8fYzn61Xkz-thr-jL4QLLKqqv2wW6wCgqwdPcG3Ci2Sj92RyPMAs1FdjTQestDpddwOm7_CYujNYloKDUA9XIwY8xf18IWLMLdk7zFH8H-MTyjHgFWAvUe1ufAvmHlOUewqWuDfhR2vR1aNfkkFaww==?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Access:</strong> Storage admin credentials (cluster admin or equivalent)</li>
@@ -9080,13 +9062,13 @@ Authentication reference covering Overview, Unisphere Local Accounts, Active Dir
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Check local user accounts via Unisphere REST API</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>admin:password<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>https://&lt;unisphere-host&gt;:8443/univmax/restapi/100/system/user<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># List users from SYMCLI (solutions enabler CLI)</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>symuserdb<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Check local user accounts via Unisphere REST API</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>admin:password<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>https://&lt;unisphere-host&gt;:8443/univmax/restapi/100/system/user<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># List users from SYMCLI (solutions enabler CLI)</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>symuserdb<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;
 </code></pre></div>
 <p><strong>Break-glass account policy:</strong>
 - Always retain at least one named local admin account in a privileged access vault (CyberArk, Thycotic, etc.) even when LDAP is the primary authentication method.
@@ -9185,19 +9167,19 @@ Authentication reference covering Overview, Unisphere Local Accounts, Active Dir
 </table>
 <h3 id="ldap-connectivity-test-pre-configuration-validation">LDAP Connectivity Test (Pre-configuration Validation)<a class="headerlink" href="#ldap-connectivity-test-pre-configuration-validation" title="Permanent link">&para;</a></h3>
 <p>Before configuring LDAP in Unisphere, test connectivity from the Unisphere management host:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Test LDAP bind from the Unisphere host (Linux)</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ldapsearch<span class="w"> </span>-H<span class="w"> </span>ldap://ldap.corp.example.com:389<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>-D<span class="w"> </span><span class="s2">&quot;CN=svc-powermax,OU=Service Accounts,DC=corp,DC=example,DC=com&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>-w<span class="w"> </span><span class="s1">&#39;ServiceAccountPassword&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>-b<span class="w"> </span><span class="s2">&quot;DC=corp,DC=example,DC=com&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span><span class="s2">&quot;(sAMAccountName=testuser)&quot;</span><span class="w"> </span>cn<span class="w"> </span>sAMAccountName
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Test LDAPS (port 636 — TLS)</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>ldapsearch<span class="w"> </span>-H<span class="w"> </span>ldaps://ldap.corp.example.com:636<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">  </span>-D<span class="w"> </span><span class="s2">&quot;CN=svc-powermax,OU=Service Accounts,DC=corp,DC=example,DC=com&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">  </span>-w<span class="w"> </span><span class="s1">&#39;ServiceAccountPassword&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">  </span>-b<span class="w"> </span><span class="s2">&quot;DC=corp,DC=example,DC=com&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">  </span><span class="s2">&quot;(sAMAccountName=testuser)&quot;</span><span class="w"> </span>cn
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Test LDAP bind from the Unisphere host (Linux)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ldapsearch<span class="w"> </span>-H<span class="w"> </span>ldap://ldap.corp.example.com:389<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>-D<span class="w"> </span><span class="s2">&quot;CN=svc-powermax,OU=Service Accounts,DC=corp,DC=example,DC=com&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>-w<span class="w"> </span><span class="s1">&#39;ServiceAccountPassword&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>-b<span class="w"> </span><span class="s2">&quot;DC=corp,DC=example,DC=com&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span><span class="s2">&quot;(sAMAccountName=testuser)&quot;</span><span class="w"> </span>cn<span class="w"> </span>sAMAccountName
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Test LDAPS (port 636 — TLS)</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>ldapsearch<span class="w"> </span>-H<span class="w"> </span>ldaps://ldap.corp.example.com:636<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">  </span>-D<span class="w"> </span><span class="s2">&quot;CN=svc-powermax,OU=Service Accounts,DC=corp,DC=example,DC=com&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">  </span>-w<span class="w"> </span><span class="s1">&#39;ServiceAccountPassword&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">  </span>-b<span class="w"> </span><span class="s2">&quot;DC=corp,DC=example,DC=com&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">  </span><span class="s2">&quot;(sAMAccountName=testuser)&quot;</span><span class="w"> </span>cn
 </code></pre></div>
 <p>A successful bind returning the test user's attributes confirms LDAP connectivity. If the test fails, resolve the connectivity issue before configuring Unisphere — an incorrect LDAP configuration can lock administrators out.</p>
 <h2 id="role-mapping">Role Mapping<a class="headerlink" href="#role-mapping" title="Permanent link">&para;</a></h2>
@@ -9251,69 +9233,69 @@ Authentication reference covering Overview, Unisphere Local Accounts, Active Dir
 <h2 id="solutions-enabler-symcli-authentication">Solutions Enabler (SYMCLI) Authentication<a class="headerlink" href="#solutions-enabler-symcli-authentication" title="Permanent link">&para;</a></h2>
 <p>SYMCLI runs on management hosts and communicates with the array via the SYMAPI daemon. Authentication is controlled at the OS and daemon level — there is no separate login prompt for SYMCLI commands.</p>
 <h3 id="daemon-user-configuration">Daemon User Configuration<a class="headerlink" href="#daemon-user-configuration" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># File controlling which OS users can connect to the SYMAPI daemon</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>/var/symapi/config/daemon_users<span class="w">   </span><span class="c1"># Linux/Unix</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Format: &lt;username&gt; &lt;role&gt; &lt;host&gt;</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Example entries:</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>admin<span class="w">    </span>Administrator<span class="w">  </span>*
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>storadm<span class="w">  </span>StorageAdmin<span class="w">   </span><span class="m">192</span>.168.10.0/24
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>monitor<span class="w">  </span>Monitor<span class="w">        </span><span class="m">192</span>.168.10.50
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># File controlling which OS users can connect to the SYMAPI daemon</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>/var/symapi/config/daemon_users<span class="w">   </span><span class="c1"># Linux/Unix</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Format: &lt;username&gt; &lt;role&gt; &lt;host&gt;</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Example entries:</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>admin<span class="w">    </span>Administrator<span class="w">  </span>*
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>storadm<span class="w">  </span>StorageAdmin<span class="w">   </span><span class="m">192</span>.168.10.0/24
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>monitor<span class="w">  </span>Monitor<span class="w">        </span><span class="m">192</span>.168.10.50
 </code></pre></div>
 <p>Restrict SYMAPI daemon access:
 - Only named service accounts and operations users should appear in <code>daemon_users</code>.
 - Restrict by source IP where possible.
 - Do not use <code>root</code> as the SYMAPI runtime account.</p>
 <h3 id="symapi-network-configuration">SYMAPI Network Configuration<a class="headerlink" href="#symapi-network-configuration" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># File listing which arrays the SE host can connect to</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>/var/symapi/config/netcnfg<span class="w">   </span><span class="c1"># Linux/Unix</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Example: restrict to specific array and SE host</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># SYMAPI_SERVER - IP_ADDRESS - &lt;sid&gt; - &lt;port&gt;</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>SYMAPI_SERVER<span class="w"> </span>-<span class="w"> </span><span class="m">192</span>.168.1.10<span class="w"> </span>-<span class="w"> </span><span class="m">000123456789</span><span class="w"> </span>-<span class="w"> </span><span class="m">2707</span><span class="w"> </span>SECURE
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Confirm SE daemon is running</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>service<span class="w"> </span>storsrvd<span class="w"> </span>status<span class="w">      </span><span class="c1"># Red Hat/CentOS/Oracle Linux</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>systemctl<span class="w"> </span>status<span class="w"> </span>storsrvd<span class="w">    </span><span class="c1"># systemd-based Linux</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># File listing which arrays the SE host can connect to</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>/var/symapi/config/netcnfg<span class="w">   </span><span class="c1"># Linux/Unix</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Example: restrict to specific array and SE host</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># SYMAPI_SERVER - IP_ADDRESS - &lt;sid&gt; - &lt;port&gt;</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>SYMAPI_SERVER<span class="w"> </span>-<span class="w"> </span><span class="m">192</span>.168.1.10<span class="w"> </span>-<span class="w"> </span><span class="m">000123456789</span><span class="w"> </span>-<span class="w"> </span><span class="m">2707</span><span class="w"> </span>SECURE
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># Confirm SE daemon is running</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>service<span class="w"> </span>storsrvd<span class="w"> </span>status<span class="w">      </span><span class="c1"># Red Hat/CentOS/Oracle Linux</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>systemctl<span class="w"> </span>status<span class="w"> </span>storsrvd<span class="w">    </span><span class="c1"># systemd-based Linux</span>
 </code></pre></div>
 <h3 id="se-authentication-for-scripts">SE Authentication for Scripts<a class="headerlink" href="#se-authentication-for-scripts" title="Permanent link">&para;</a></h3>
 <p>For automation scripts that run SYMCLI commands, use a dedicated service account:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Check which user SYMCLI is running as</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>whoami
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>id
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># Run SYMCLI via sudo as the dedicated service account</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>sudo<span class="w"> </span>-u<span class="w"> </span>storadm<span class="w"> </span>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>show
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># For scripted workflows using Solutions Enabler environment variables</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="nb">export</span><span class="w"> </span><span class="nv">SYMCLI_OFFLINE</span><span class="o">=</span><span class="m">0</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="nb">export</span><span class="w"> </span><span class="nv">SYMCLI_SID</span><span class="o">=</span><span class="m">000123456789</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>symcfg<span class="w"> </span>list
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check which user SYMCLI is running as</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>whoami
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>id
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Run SYMCLI via sudo as the dedicated service account</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>sudo<span class="w"> </span>-u<span class="w"> </span>storadm<span class="w"> </span>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>show
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># For scripted workflows using Solutions Enabler environment variables</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="nb">export</span><span class="w"> </span><span class="nv">SYMCLI_OFFLINE</span><span class="o">=</span><span class="m">0</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="nb">export</span><span class="w"> </span><span class="nv">SYMCLI_SID</span><span class="o">=</span><span class="m">000123456789</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>symcfg<span class="w"> </span>list
 </code></pre></div>
 <h2 id="audit-logging">Audit Logging<a class="headerlink" href="#audit-logging" title="Permanent link">&para;</a></h2>
 <p>All configuration changes on PowerMax are recorded as audit events accessible via SYMCLI and Unisphere. Audit logs capture the user, timestamp, action, affected object, and result.</p>
 <h3 id="view-audit-events">View Audit Events<a class="headerlink" href="#view-audit-events" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># List all recent audit events (SYMCLI)</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>symaudit<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Verbose listing with timestamps and user information</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>symaudit<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>-v
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Filter audit events for a specific user</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>symaudit<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>-v<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;&lt;username&gt;&quot;</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># Filter for destructive operations only</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>symaudit<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>-v<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-iE<span class="w"> </span><span class="s2">&quot;Delete|Remove|Terminate|Failover|Split&quot;</span>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="c1"># Export audit log to file</span>
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>symaudit<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>-v<span class="w"> </span>&gt;<span class="w"> </span>/tmp/powermax_audit_<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.txt
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>
-<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="c1"># Array system events (includes hardware and state events)</span>
-<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>symevent<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>-v
-<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>
-<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a><span class="c1"># Events from a specific time window</span>
-<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a>symevent<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>-start_time<span class="w"> </span><span class="s2">&quot;05/01/2026 00:00:00&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a><span class="w">  </span>-end_time<span class="w"> </span><span class="s2">&quot;05/07/2026 23:59:59&quot;</span><span class="w"> </span>-v
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># List all recent audit events (SYMCLI)</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>symaudit<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Verbose listing with timestamps and user information</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>symaudit<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>-v
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Filter audit events for a specific user</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>symaudit<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>-v<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;&lt;username&gt;&quot;</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># Filter for destructive operations only</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>symaudit<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>-v<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-iE<span class="w"> </span><span class="s2">&quot;Delete|Remove|Terminate|Failover|Split&quot;</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="c1"># Export audit log to file</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>symaudit<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>-v<span class="w"> </span>&gt;<span class="w"> </span>/tmp/powermax_audit_<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.txt
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="c1"># Array system events (includes hardware and state events)</span>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>symevent<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>-v
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="c1"># Events from a specific time window</span>
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>symevent<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>-start_time<span class="w"> </span><span class="s2">&quot;05/01/2026 00:00:00&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a><span class="w">  </span>-end_time<span class="w"> </span><span class="s2">&quot;05/07/2026 23:59:59&quot;</span><span class="w"> </span>-v
 </code></pre></div>
 <h3 id="audit-log-forwarding-to-siem">Audit Log Forwarding to SIEM<a class="headerlink" href="#audit-log-forwarding-to-siem" title="Permanent link">&para;</a></h3>
 <p>Export audit logs to a SIEM (Splunk, IBM QRadar, Microsoft Sentinel) via syslog from the Unisphere host:</p>
@@ -9391,48 +9373,48 @@ Authentication reference covering Overview, Unisphere Local Accounts, Active Dir
 </table>
 <h3 id="rest-api-token-authentication">REST API Token Authentication<a class="headerlink" href="#rest-api-token-authentication" title="Permanent link">&para;</a></h3>
 <p>For programmatic access to the Unisphere REST API, use session tokens rather than passing credentials in every request:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Obtain a session token (POST to /session endpoint)</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span>-u<span class="w"> </span><span class="s2">&quot;admin:password&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">  </span>https://&lt;unisphere-host&gt;:8443/univmax/restapi/system/Version<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">  </span>-c<span class="w"> </span>/tmp/pmx_session_cookies.txt<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">  </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;%{http_code}&quot;</span><span class="k">)</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;HTTP Status: </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="c1"># Use session cookie for subsequent requests</span>
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-b<span class="w"> </span>/tmp/pmx_session_cookies.txt<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="w">  </span>https://&lt;unisphere-host&gt;:8443/univmax/restapi/100/system/symmetrix<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
-<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>
-<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a><span class="c1"># PyU4V (Python library) — handles token management automatically</span>
-<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>pip<span class="w"> </span>install<span class="w"> </span>PyU4V
-<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>
-<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>python3<span class="w"> </span><span class="s">&lt;&lt;&#39;EOF&#39;</span>
-<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a><span class="s">import PyU4V</span>
-<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a><span class="s">conn = PyU4V.PyU4V(username=&quot;admin&quot;, password=&quot;password&quot;,</span>
-<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a><span class="s">                   server_ip=&quot;unisphere-host&quot;, port=8443, verify=False,</span>
-<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a><span class="s">                   array_id=&quot;000123456789&quot;)</span>
-<a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a><span class="s">arrays = conn.common.get_array_list()</span>
-<a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a><span class="s">print(arrays)</span>
-<a id="__codelineno-7-26" name="__codelineno-7-26" href="#__codelineno-7-26"></a><span class="s">conn.close_session()</span>
-<a id="__codelineno-7-27" name="__codelineno-7-27" href="#__codelineno-7-27"></a><span class="s">EOF</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Obtain a session token (POST to /session endpoint)</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span>-u<span class="w"> </span><span class="s2">&quot;admin:password&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span>https://&lt;unisphere-host&gt;:8443/univmax/restapi/system/Version<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">  </span>-c<span class="w"> </span>/tmp/pmx_session_cookies.txt<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">  </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;%{http_code}&quot;</span><span class="k">)</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;HTTP Status: </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="c1"># Use session cookie for subsequent requests</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-b<span class="w"> </span>/tmp/pmx_session_cookies.txt<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="w">  </span>https://&lt;unisphere-host&gt;:8443/univmax/restapi/100/system/symmetrix<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="c1"># PyU4V (Python library) — handles token management automatically</span>
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>pip<span class="w"> </span>install<span class="w"> </span>PyU4V
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>
+<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>python3<span class="w"> </span><span class="s">&lt;&lt;&#39;EOF&#39;</span>
+<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a><span class="s">import PyU4V</span>
+<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a><span class="s">conn = PyU4V.PyU4V(username=&quot;admin&quot;, password=&quot;password&quot;,</span>
+<a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a><span class="s">                   server_ip=&quot;unisphere-host&quot;, port=8443, verify=False,</span>
+<a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a><span class="s">                   array_id=&quot;000123456789&quot;)</span>
+<a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a><span class="s">arrays = conn.common.get_array_list()</span>
+<a id="__codelineno-6-25" name="__codelineno-6-25" href="#__codelineno-6-25"></a><span class="s">print(arrays)</span>
+<a id="__codelineno-6-26" name="__codelineno-6-26" href="#__codelineno-6-26"></a><span class="s">conn.close_session()</span>
+<a id="__codelineno-6-27" name="__codelineno-6-27" href="#__codelineno-6-27"></a><span class="s">EOF</span>
 </code></pre></div>
 <h2 id="certificate-management">Certificate Management<a class="headerlink" href="#certificate-management" title="Permanent link">&para;</a></h2>
 <p>Unisphere uses TLS certificates for HTTPS. Replacing the default self-signed certificate with a CA-signed certificate is required for production environments.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Generate a CSR from the Unisphere host (Linux vApp)</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>openssl<span class="w"> </span>req<span class="w"> </span>-new<span class="w"> </span>-newkey<span class="w"> </span>rsa:4096<span class="w"> </span>-nodes<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span>-keyout<span class="w"> </span>/tmp/unisphere.key<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span>-out<span class="w"> </span>/tmp/unisphere.csr<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">  </span>-subj<span class="w"> </span><span class="s2">&quot;/C=GB/O=Example Corp/CN=unisphere.corp.example.com&quot;</span>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># Submit CSR to internal CA; receive signed certificate (unisphere.crt)</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="c1"># Import certificate into Unisphere:</span>
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># Unisphere → Settings → Security → Certificates → Import Certificate</span>
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="c1"># Upload: unisphere.crt (signed cert) + unisphere.key (private key)</span>
-<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="c1"># Unisphere service restarts automatically after import</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Generate a CSR from the Unisphere host (Linux vApp)</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>openssl<span class="w"> </span>req<span class="w"> </span>-new<span class="w"> </span>-newkey<span class="w"> </span>rsa:4096<span class="w"> </span>-nodes<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span>-keyout<span class="w"> </span>/tmp/unisphere.key<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span>-out<span class="w"> </span>/tmp/unisphere.csr<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">  </span>-subj<span class="w"> </span><span class="s2">&quot;/C=GB/O=Example Corp/CN=unisphere.corp.example.com&quot;</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># Submit CSR to internal CA; receive signed certificate (unisphere.crt)</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="c1"># Import certificate into Unisphere:</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="c1"># Unisphere → Settings → Security → Certificates → Import Certificate</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="c1"># Upload: unisphere.crt (signed cert) + unisphere.key (private key)</span>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="c1"># Unisphere service restarts automatically after import</span>
 </code></pre></div>
 <table>
 <thead>
@@ -9460,17 +9442,17 @@ Authentication reference covering Overview, Unisphere Local Accounts, Active Dir
 </tr>
 </tbody>
 </table>
-<h2 id="check-unisphere-certificate-expiry-from-a-management-host-echo-openssl-s_client-connect-unisphere-host8443-2devnull-openssl-x509-noout-dates-monitor-certificate-expiry-cron-friendly-exits-non-zero-if-30-days-remain-expiryecho-openssl-s_client-connect-unisphere-host8443-2devnull-openssl-x509-noout-enddate-cut-d-f2-days-date-d-expiry-s-date-s-86400-echo-certificate-expires-in-days-days-days-lt-30-echo-warning-certificate-renewal-required-exit-1-exit-0"><div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Check Unisphere certificate expiry from a management host</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;unisphere-host&gt;:8443<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-dates
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="c1"># Monitor certificate expiry (cron-friendly; exits non-zero if &lt;30 days remain)</span>
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="nv">expiry</span><span class="o">=</span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;unisphere-host&gt;:8443<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-enddate<span class="w"> </span><span class="p">|</span><span class="w"> </span>cut<span class="w"> </span>-d<span class="o">=</span><span class="w"> </span>-f2<span class="k">)</span>
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="nv">days</span><span class="o">=</span><span class="k">$((</span><span class="w"> </span><span class="o">(</span><span class="w"> </span><span class="k">$(</span>date<span class="w"> </span>-d<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$expiry</span><span class="s2">&quot;</span><span class="w"> </span>+%s<span class="k">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="k">$(</span>date<span class="w"> </span>+%s<span class="k">)</span><span class="w"> </span><span class="o">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="m">86400</span><span class="w"> </span><span class="k">))</span>
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Certificate expires in </span><span class="nv">$days</span><span class="s2"> days&quot;</span>
-<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="o">[[</span><span class="w"> </span><span class="nv">$days</span><span class="w"> </span>-lt<span class="w"> </span><span class="m">30</span><span class="w"> </span><span class="o">]]</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;WARNING: Certificate renewal required&quot;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
-<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="nb">exit</span><span class="w"> </span><span class="m">0</span>
+<h2 id="check-unisphere-certificate-expiry-from-a-management-host-echo-openssl-s_client-connect-unisphere-host8443-2devnull-openssl-x509-noout-dates-monitor-certificate-expiry-cron-friendly-exits-non-zero-if-30-days-remain-expiryecho-openssl-s_client-connect-unisphere-host8443-2devnull-openssl-x509-noout-enddate-cut-d-f2-days-date-d-expiry-s-date-s-86400-echo-certificate-expires-in-days-days-days-lt-30-echo-warning-certificate-renewal-required-exit-1-exit-0"><div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Check Unisphere certificate expiry from a management host</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;unisphere-host&gt;:8443<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-dates
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># Monitor certificate expiry (cron-friendly; exits non-zero if &lt;30 days remain)</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="nv">expiry</span><span class="o">=</span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;unisphere-host&gt;:8443<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-enddate<span class="w"> </span><span class="p">|</span><span class="w"> </span>cut<span class="w"> </span>-d<span class="o">=</span><span class="w"> </span>-f2<span class="k">)</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="nv">days</span><span class="o">=</span><span class="k">$((</span><span class="w"> </span><span class="o">(</span><span class="w"> </span><span class="k">$(</span>date<span class="w"> </span>-d<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$expiry</span><span class="s2">&quot;</span><span class="w"> </span>+%s<span class="k">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="k">$(</span>date<span class="w"> </span>+%s<span class="k">)</span><span class="w"> </span><span class="o">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="m">86400</span><span class="w"> </span><span class="k">))</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Certificate expires in </span><span class="nv">$days</span><span class="s2"> days&quot;</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="o">[[</span><span class="w"> </span><span class="nv">$days</span><span class="w"> </span>-lt<span class="w"> </span><span class="m">30</span><span class="w"> </span><span class="o">]]</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;WARNING: Certificate renewal required&quot;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="nb">exit</span><span class="w"> </span><span class="m">0</span>
 </code></pre></div><a class="headerlink" href="#check-unisphere-certificate-expiry-from-a-management-host-echo-openssl-s_client-connect-unisphere-host8443-2devnull-openssl-x509-noout-dates-monitor-certificate-expiry-cron-friendly-exits-non-zero-if-30-days-remain-expiryecho-openssl-s_client-connect-unisphere-host8443-2devnull-openssl-x509-noout-enddate-cut-d-f2-days-date-d-expiry-s-date-s-86400-echo-certificate-expires-in-days-days-days-lt-30-echo-warning-certificate-renewal-required-exit-1-exit-0" title="Permanent link">&para;</a></h2>
 <h2 id="related-reference">Related Reference<a class="headerlink" href="#related-reference" title="Permanent link">&para;</a></h2>
 <ul>

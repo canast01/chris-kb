@@ -8183,23 +8183,7 @@ Brings a new physical server, VM, or cloud instance into full production managem
 *Applies to: ServiceNow*
 </div>
 <p><img alt="System Onboarding Procedure" src="../../../../assets/itsm-servicenow-lifecycle-system-onboarding-index.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>center: &quot;ServiceNow&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>onboarding_stages: &quot;Onboarding Stages&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>2_os_hardening_and_security_baseline: &quot;2. OS Hardening and Security Baseline&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>3_monitoring_and_logging: &quot;3. Monitoring and Logging&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>4_backup_configuration: &quot;4. Backup Configuration&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>5_ansible_inventory_registration: &quot;5. Ansible Inventory Registration&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>6_cmdb_entry: &quot;6. CMDB Entry&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>center -&gt; onboarding_stages
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>center -&gt; 2_os_hardening_and_security_baseline
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>center -&gt; 3_monitoring_and_logging
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>center -&gt; 4_backup_configuration
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>center -&gt; 5_ansible_inventory_registration
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>center -&gt; 6_cmdb_entry
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNkc1OwzAQhO95ilXu5NC_Qw5ItCCBRKlEHsBynK1jka4r2ylEqO-O0ybBEkZwSzzfjNezlTIonNKUg1GydkkikByaHNICzUkJfNHvKXzamh8xhxo_uNR0TjSVmptKkWTWcYnWG3bTGRSXs29ffwkn2eA5mTFtWe05pN7NqWIWRWuU61jJLTaKvCGdZbAr4HHkwHNQDBysBy56wZwdNCmnzRjfaCn9tw-dZ7CdtEvk81WLBi38POKtPTKhaa9ka_i1qHSR-Ql6BTahEg1Z-hGsKhtkik6-Wm06ZlAq66a4ZQZ3VwaeRgZeAyYavGLiUJXM46bzIasMNtv7NTz0_1HDsFm4uYUf2wu0_-wnwH9rO0DiPQbAXx0FaPjq5Aucyf9e?" /></p>
 <h2 id="onboarding-stages">Onboarding Stages<a class="headerlink" href="#onboarding-stages" title="Permanent link">&para;</a></h2>
 <pre class="mermaid"><code>flowchart LR
     A[Provisioned] --&gt; B[Identity &amp;\nNetworking]
@@ -8209,99 +8193,99 @@ Brings a new physical server, VM, or cloud instance into full production managem
     E --&gt; F[CMDB &amp;\nDocumentation]
     F --&gt; G[Handover to\nApp / Ops Team]</code></pre>
 <h2 id="2-os-hardening-and-security-baseline">2. OS Hardening and Security Baseline<a class="headerlink" href="#2-os-hardening-and-security-baseline" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Apply CIS baseline via Ansible</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ansible-playbook<span class="w"> </span>-i<span class="w"> </span>inventory/<span class="w"> </span>security/cis-baseline.yml<span class="w"> </span>--limit<span class="w"> </span>&lt;hostname&gt;
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># SELinux enforcing</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>sed<span class="w"> </span>-i<span class="w"> </span><span class="s1">&#39;s/^SELINUX=.*/SELINUX=enforcing/&#39;</span><span class="w"> </span>/etc/selinux/config
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>setenforce<span class="w"> </span><span class="m">1</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Disable unnecessary services</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>systemctl<span class="w"> </span>disable<span class="w"> </span>--now<span class="w"> </span>bluetooth<span class="w"> </span>avahi-daemon<span class="w"> </span>cups<span class="w"> </span>rpcbind<span class="w"> </span>postfix
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># SSH hardening</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>cat<span class="w"> </span>&gt;<span class="w"> </span>/etc/ssh/sshd_config.d/hardening.conf<span class="w"> </span><span class="s">&lt;&lt;EOF</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="s">PermitRootLogin no</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="s">PasswordAuthentication no</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="s">MaxAuthTries 3</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="s">ClientAliveInterval 300</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="s">ClientAliveCountMax 2</span>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="s">X11Forwarding no</span>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="s">AllowGroups sshusers admins</span>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="s">EOF</span>
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>systemctl<span class="w"> </span>reload<span class="w"> </span>sshd
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="c1"># Host firewall</span>
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>firewall-cmd<span class="w"> </span>--set-default-zone<span class="o">=</span>drop
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>firewall-cmd<span class="w"> </span>--permanent<span class="w"> </span>--add-service<span class="o">=</span>ssh
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>firewall-cmd<span class="w"> </span>--permanent<span class="w"> </span>--add-rich-rule<span class="o">=</span><span class="s1">&#39;rule family=&quot;ipv4&quot; source address=&quot;10.0.0.0/8&quot; service name=&quot;ssh&quot; accept&#39;</span>
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>firewall-cmd<span class="w"> </span>--reload
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Apply CIS baseline via Ansible</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ansible-playbook<span class="w"> </span>-i<span class="w"> </span>inventory/<span class="w"> </span>security/cis-baseline.yml<span class="w"> </span>--limit<span class="w"> </span>&lt;hostname&gt;
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># SELinux enforcing</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>sed<span class="w"> </span>-i<span class="w"> </span><span class="s1">&#39;s/^SELINUX=.*/SELINUX=enforcing/&#39;</span><span class="w"> </span>/etc/selinux/config
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>setenforce<span class="w"> </span><span class="m">1</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># Disable unnecessary services</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>systemctl<span class="w"> </span>disable<span class="w"> </span>--now<span class="w"> </span>bluetooth<span class="w"> </span>avahi-daemon<span class="w"> </span>cups<span class="w"> </span>rpcbind<span class="w"> </span>postfix
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># SSH hardening</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>cat<span class="w"> </span>&gt;<span class="w"> </span>/etc/ssh/sshd_config.d/hardening.conf<span class="w"> </span><span class="s">&lt;&lt;EOF</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="s">PermitRootLogin no</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="s">PasswordAuthentication no</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="s">MaxAuthTries 3</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="s">ClientAliveInterval 300</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="s">ClientAliveCountMax 2</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="s">X11Forwarding no</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="s">AllowGroups sshusers admins</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="s">EOF</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>systemctl<span class="w"> </span>reload<span class="w"> </span>sshd
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="c1"># Host firewall</span>
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>firewall-cmd<span class="w"> </span>--set-default-zone<span class="o">=</span>drop
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>firewall-cmd<span class="w"> </span>--permanent<span class="w"> </span>--add-service<span class="o">=</span>ssh
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>firewall-cmd<span class="w"> </span>--permanent<span class="w"> </span>--add-rich-rule<span class="o">=</span><span class="s1">&#39;rule family=&quot;ipv4&quot; source address=&quot;10.0.0.0/8&quot; service name=&quot;ssh&quot; accept&#39;</span>
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>firewall-cmd<span class="w"> </span>--reload
 </code></pre></div>
 <h3 id="cyberark-pam-registration">CyberArk PAM Registration<a class="headerlink" href="#cyberark-pam-registration" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nt">CyberArk UI</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Accounts → Safes → &lt;Environment&gt;-Safe → Add Account</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">Account type</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Linux / Windows</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">Platform</span><span class="p p-Indicator">:</span><span class="w">     </span><span class="l l-Scalar l-Scalar-Plain">LinuxSSH / WinServerLocal</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">Address</span><span class="p p-Indicator">:</span><span class="w">      </span><span class="l l-Scalar l-Scalar-Plain">&lt;hostname&gt;.example.com</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">Username</span><span class="p p-Indicator">:</span><span class="w">     </span><span class="l l-Scalar l-Scalar-Plain">ansible / svc-admin</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nt">CyberArk UI</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Accounts → Safes → &lt;Environment&gt;-Safe → Add Account</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">Account type</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Linux / Windows</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">Platform</span><span class="p p-Indicator">:</span><span class="w">     </span><span class="l l-Scalar l-Scalar-Plain">LinuxSSH / WinServerLocal</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">Address</span><span class="p p-Indicator">:</span><span class="w">      </span><span class="l l-Scalar l-Scalar-Plain">&lt;hostname&gt;.example.com</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">Username</span><span class="p p-Indicator">:</span><span class="w">     </span><span class="l l-Scalar l-Scalar-Plain">ansible / svc-admin</span>
 </code></pre></div>
 <h2 id="3-monitoring-and-logging">3. Monitoring and Logging<a class="headerlink" href="#3-monitoring-and-logging" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Install Prometheus node_exporter</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>useradd<span class="w"> </span>-r<span class="w"> </span>-s<span class="w"> </span>/sbin/nologin<span class="w"> </span>node_exporter
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>curl<span class="w"> </span>-sL<span class="w"> </span>https://github.com/prometheus/node_exporter/releases/download/v1.8.0/node_exporter-1.8.0.linux-amd64.tar.gz<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>tar<span class="w"> </span>xz<span class="w"> </span>-C<span class="w"> </span>/tmp/
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>install<span class="w"> </span>-m<span class="w"> </span><span class="m">755</span><span class="w"> </span>/tmp/node_exporter-*/node_exporter<span class="w"> </span>/usr/local/bin/
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>cat<span class="w"> </span>&gt;<span class="w"> </span>/etc/systemd/system/node_exporter.service<span class="w"> </span><span class="s">&lt;&lt;EOF</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="s">[Unit]</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="s">Description=Prometheus Node Exporter</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="s">After=network.target</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="s">[Service]</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="s">User=node_exporter</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="s">ExecStart=/usr/local/bin/node_exporter</span>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="s">Restart=on-failure</span>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="s">[Install]</span>
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="s">WantedBy=multi-user.target</span>
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="s">EOF</span>
-<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>
-<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>systemctl<span class="w"> </span>daemon-reload
-<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>--now<span class="w"> </span>node_exporter
-<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>curl<span class="w"> </span>-s<span class="w"> </span>http://localhost:9100/metrics<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-3
-<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>
-<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a><span class="c1"># Log forwarding to central syslog</span>
-<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;*.* @syslog.example.com:514&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>/etc/rsyslog.conf
-<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>rsyslog
-<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>
-<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a><span class="c1"># Verify host visible in monitoring</span>
-<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>curl<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;http://prometheus:9090/api/v1/query?query=up{instance=&#39;&lt;hostname&gt;:9100&#39;}&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import sys,json; r=json.load(sys.stdin)[&#39;data&#39;][&#39;result&#39;]; print(&#39;UP&#39; if r and r[0][&#39;value&#39;][1]==&#39;1&#39; else &#39;NOT VISIBLE&#39;)&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Install Prometheus node_exporter</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>useradd<span class="w"> </span>-r<span class="w"> </span>-s<span class="w"> </span>/sbin/nologin<span class="w"> </span>node_exporter
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>curl<span class="w"> </span>-sL<span class="w"> </span>https://github.com/prometheus/node_exporter/releases/download/v1.8.0/node_exporter-1.8.0.linux-amd64.tar.gz<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>tar<span class="w"> </span>xz<span class="w"> </span>-C<span class="w"> </span>/tmp/
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>install<span class="w"> </span>-m<span class="w"> </span><span class="m">755</span><span class="w"> </span>/tmp/node_exporter-*/node_exporter<span class="w"> </span>/usr/local/bin/
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>cat<span class="w"> </span>&gt;<span class="w"> </span>/etc/systemd/system/node_exporter.service<span class="w"> </span><span class="s">&lt;&lt;EOF</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="s">[Unit]</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="s">Description=Prometheus Node Exporter</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="s">After=network.target</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="s">[Service]</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="s">User=node_exporter</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="s">ExecStart=/usr/local/bin/node_exporter</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="s">Restart=on-failure</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="s">[Install]</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="s">WantedBy=multi-user.target</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="s">EOF</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>systemctl<span class="w"> </span>daemon-reload
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>--now<span class="w"> </span>node_exporter
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>curl<span class="w"> </span>-s<span class="w"> </span>http://localhost:9100/metrics<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-3
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="c1"># Log forwarding to central syslog</span>
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;*.* @syslog.example.com:514&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>/etc/rsyslog.conf
+<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>rsyslog
+<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a>
+<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a><span class="c1"># Verify host visible in monitoring</span>
+<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a>curl<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;http://prometheus:9090/api/v1/query?query=up{instance=&#39;&lt;hostname&gt;:9100&#39;}&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import sys,json; r=json.load(sys.stdin)[&#39;data&#39;][&#39;result&#39;]; print(&#39;UP&#39; if r and r[0][&#39;value&#39;][1]==&#39;1&#39; else &#39;NOT VISIBLE&#39;)&quot;</span>
 </code></pre></div>
 <h2 id="4-backup-configuration">4. Backup Configuration<a class="headerlink" href="#4-backup-configuration" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Veeam — add to backup job</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nv">$job</span> <span class="p">=</span> <span class="nb">Get-VBRJob</span> <span class="n">-Name</span> <span class="s2">&quot;Production Linux VMs&quot;</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="nv">$vm</span> <span class="p">=</span> <span class="nb">Find-VBRViEntity</span> <span class="n">-Name</span> <span class="s2">&quot;&lt;hostname&gt;&quot;</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="nb">Add-VBRViJobObject</span> <span class="n">-Job</span> <span class="nv">$job</span> <span class="n">-Entities</span> <span class="nv">$vm</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c"># Run first backup and verify</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="nb">Start-VBRJob</span> <span class="n">-Job</span> <span class="nv">$job</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="nb">Get-VBRSession</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="n">JobName</span> <span class="o">-eq</span> <span class="s2">&quot;Production Linux VMs&quot;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-Last</span> <span class="n">1</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Veeam — add to backup job</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nv">$job</span> <span class="p">=</span> <span class="nb">Get-VBRJob</span> <span class="n">-Name</span> <span class="s2">&quot;Production Linux VMs&quot;</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="nv">$vm</span> <span class="p">=</span> <span class="nb">Find-VBRViEntity</span> <span class="n">-Name</span> <span class="s2">&quot;&lt;hostname&gt;&quot;</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="nb">Add-VBRViJobObject</span> <span class="n">-Job</span> <span class="nv">$job</span> <span class="n">-Entities</span> <span class="nv">$vm</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c"># Run first backup and verify</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="nb">Start-VBRJob</span> <span class="n">-Job</span> <span class="nv">$job</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="nb">Get-VBRSession</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="n">JobName</span> <span class="o">-eq</span> <span class="s2">&quot;Production Linux VMs&quot;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-Last</span> <span class="n">1</span>
 </code></pre></div>
 <h2 id="5-ansible-inventory-registration">5. Ansible Inventory Registration<a class="headerlink" href="#5-ansible-inventory-registration" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Add to inventory</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>cat<span class="w"> </span>&gt;&gt;<span class="w"> </span>inventory/production/hosts.yml<span class="w"> </span><span class="s">&lt;&lt;EOF</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="s">    &lt;hostname&gt;.example.com:</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="s">      ansible_host: &lt;ip&gt;</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="s">EOF</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Host-specific vars</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>mkdir<span class="w"> </span>-p<span class="w"> </span>inventory/production/host_vars/&lt;hostname&gt;.example.com/
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>cat<span class="w"> </span>&gt;<span class="w"> </span>inventory/production/host_vars/&lt;hostname&gt;.example.com/main.yml<span class="w"> </span><span class="s">&lt;&lt;EOF</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="s">environment: production</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="s">role: &lt;app_role&gt;</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="s">owner: &lt;team&gt;</span>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="s">EOF</span>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="c1"># Verify connectivity</span>
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>ansible<span class="w"> </span>&lt;hostname&gt;.example.com<span class="w"> </span>-i<span class="w"> </span>inventory/production/<span class="w"> </span>-m<span class="w"> </span>ansible.builtin.ping
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Add to inventory</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>cat<span class="w"> </span>&gt;&gt;<span class="w"> </span>inventory/production/hosts.yml<span class="w"> </span><span class="s">&lt;&lt;EOF</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="s">    &lt;hostname&gt;.example.com:</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="s">      ansible_host: &lt;ip&gt;</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="s">EOF</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Host-specific vars</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>mkdir<span class="w"> </span>-p<span class="w"> </span>inventory/production/host_vars/&lt;hostname&gt;.example.com/
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>cat<span class="w"> </span>&gt;<span class="w"> </span>inventory/production/host_vars/&lt;hostname&gt;.example.com/main.yml<span class="w"> </span><span class="s">&lt;&lt;EOF</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="s">environment: production</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="s">role: &lt;app_role&gt;</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="s">owner: &lt;team&gt;</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="s">EOF</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="c1"># Verify connectivity</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>ansible<span class="w"> </span>&lt;hostname&gt;.example.com<span class="w"> </span>-i<span class="w"> </span>inventory/production/<span class="w"> </span>-m<span class="w"> </span>ansible.builtin.ping
 </code></pre></div>
 <h2 id="6-cmdb-entry">6. CMDB Entry<a class="headerlink" href="#6-cmdb-entry" title="Permanent link">&para;</a></h2>
 <table>

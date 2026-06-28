@@ -9327,25 +9327,7 @@ vSAN access control is implemented through vCenter's Role-Based Access Control (
 *Applies to: vSAN 7.x / 8.x*
 </div>
 <p><img alt="vSAN — Access Control" src="../../../../../assets/virtualization-vmware-vsan-security-access-control.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: down
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>external: External / Untrusted {shape: rectangle}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>custom_roles: &quot;Custom Roles&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>assigning_permissions: &quot;Assigning Permissions&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>storage_policy_access_control: &quot;Storage Policy Access Control&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>vsan_datastore_access: &quot;vSAN Datastore Access&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>privileged_access_governance: &quot;Privileged Access Governance&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>access_control_for_stretched_cluster: &quot;Access Control for Stretched Clusters&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>core: &quot;vSAN Core&quot; {shape: hexagon}
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>external -&gt; custom_roles: traffic in
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>custom_roles -&gt; assigning_permissions
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>assigning_permissions -&gt; storage_policy_access_control
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>storage_policy_access_control -&gt; vsan_datastore_access
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>vsan_datastore_access -&gt; privileged_access_governance
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>privileged_access_governance -&gt; access_control_for_stretched_cluster
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>access_control_for_stretched_cluster -&gt; core: secured path
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNkkFrxCAQhe_5FUPupfccCiEtvZWlYc8iZmIEdwzqplvK_veqSTYEJOxNfc_nzHx2yqLwylAFnfmhosCbR0tcV_CxrOAVzuTt1Xns4M8NfMQK4i1OUuO9EEExF2aNRldB2aQtfMdtmfNz55QkRZKNaC8q7AzFi_V6DqftPJsQHrBcIhuNVuKXcSHQOSZMqNKEwst21uGUdKiTDs2sZxMnx4l13PMYjUtiSJra-gve1_MlKZswWjUpjRK7tR5ppjg_EsFYnh7yWs7nQ85PadcU641lzlv0YggvCB1p2Di0XW8QbNCuNmhmW75gERpaO2zCejMNeOPS0H37DPDyBnvM3vK-VwIU7fhHY5Zvnnq0H8I8Rh2vZ8nleUb7EaZDhqmzJ5g8BS7NM83fobjagGrkfij-Ac4LVog=?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Access:</strong> vCenter Administrator role</li>
@@ -9357,61 +9339,61 @@ vSAN access control is implemented through vCenter's Role-Based Access Control (
 <h2 id="custom-roles">Custom Roles<a class="headerlink" href="#custom-roles" title="Permanent link">&para;</a></h2>
 <h3 id="vsan-read-only-role-monitoring">vSAN Read-Only Role (Monitoring)<a class="headerlink" href="#vsan-read-only-role-monitoring" title="Permanent link">&para;</a></h3>
 <p>For monitoring systems (Aria Operations, Nagios, custom scripts) that only need to read vSAN status.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nv">$monitorPrivileges</span> <span class="p">=</span> <span class="p">@(</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    <span class="s2">&quot;System.Anonymous&quot;</span><span class="p">,</span> <span class="s2">&quot;System.Read&quot;</span><span class="p">,</span> <span class="s2">&quot;System.View&quot;</span><span class="p">,</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="s2">&quot;VsanHealth.ClusterHealth.Get&quot;</span><span class="p">,</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    <span class="s2">&quot;StorageProfile.View&quot;</span><span class="p">,</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    <span class="s2">&quot;Datastore.Browse&quot;</span><span class="p">,</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    <span class="s2">&quot;Performance.ModifyIntervals&quot;</span><span class="p">,</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>    <span class="s2">&quot;Global.VCServer&quot;</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="p">)</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="nb">New-VIRole</span> <span class="n">-Name</span> <span class="s2">&quot;vSAN-Monitor-RO&quot;</span> <span class="p">`</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>    <span class="n">-Privilege</span> <span class="p">(</span><span class="nb">Get-VIPrivilege</span> <span class="n">-Id</span> <span class="nv">$monitorPrivileges</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nv">$monitorPrivileges</span> <span class="p">=</span> <span class="p">@(</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="s2">&quot;System.Anonymous&quot;</span><span class="p">,</span> <span class="s2">&quot;System.Read&quot;</span><span class="p">,</span> <span class="s2">&quot;System.View&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="s2">&quot;VsanHealth.ClusterHealth.Get&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="s2">&quot;StorageProfile.View&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="s2">&quot;Datastore.Browse&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="s2">&quot;Performance.ModifyIntervals&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="s2">&quot;Global.VCServer&quot;</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="p">)</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="nb">New-VIRole</span> <span class="n">-Name</span> <span class="s2">&quot;vSAN-Monitor-RO&quot;</span> <span class="p">`</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    <span class="n">-Privilege</span> <span class="p">(</span><span class="nb">Get-VIPrivilege</span> <span class="n">-Id</span> <span class="nv">$monitorPrivileges</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="vsan-policy-administrator">vSAN Policy Administrator<a class="headerlink" href="#vsan-policy-administrator" title="Permanent link">&para;</a></h3>
 <p>For users who design and manage storage policies but do not manage physical hardware.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nv">$policyAdminPrivileges</span> <span class="p">=</span> <span class="p">@(</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    <span class="s2">&quot;System.Anonymous&quot;</span><span class="p">,</span> <span class="s2">&quot;System.Read&quot;</span><span class="p">,</span> <span class="s2">&quot;System.View&quot;</span><span class="p">,</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="s2">&quot;StorageProfile.View&quot;</span><span class="p">,</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="s2">&quot;StorageProfile.Update&quot;</span><span class="p">,</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>    <span class="s2">&quot;VsanHealth.ClusterHealth.Get&quot;</span><span class="p">,</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    <span class="s2">&quot;Datastore.Browse&quot;</span><span class="p">,</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>    <span class="s2">&quot;VirtualMachine.Config.ChangeTracking&quot;</span>  <span class="c"># needed to apply policy changes to VMs</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="p">)</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="nb">New-VIRole</span> <span class="n">-Name</span> <span class="s2">&quot;vSAN-PolicyAdmin&quot;</span> <span class="p">`</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>    <span class="n">-Privilege</span> <span class="p">(</span><span class="nb">Get-VIPrivilege</span> <span class="n">-Id</span> <span class="nv">$policyAdminPrivileges</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nv">$policyAdminPrivileges</span> <span class="p">=</span> <span class="p">@(</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    <span class="s2">&quot;System.Anonymous&quot;</span><span class="p">,</span> <span class="s2">&quot;System.Read&quot;</span><span class="p">,</span> <span class="s2">&quot;System.View&quot;</span><span class="p">,</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="s2">&quot;StorageProfile.View&quot;</span><span class="p">,</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    <span class="s2">&quot;StorageProfile.Update&quot;</span><span class="p">,</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    <span class="s2">&quot;VsanHealth.ClusterHealth.Get&quot;</span><span class="p">,</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    <span class="s2">&quot;Datastore.Browse&quot;</span><span class="p">,</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>    <span class="s2">&quot;VirtualMachine.Config.ChangeTracking&quot;</span>  <span class="c"># needed to apply policy changes to VMs</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="p">)</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="nb">New-VIRole</span> <span class="n">-Name</span> <span class="s2">&quot;vSAN-PolicyAdmin&quot;</span> <span class="p">`</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>    <span class="n">-Privilege</span> <span class="p">(</span><span class="nb">Get-VIPrivilege</span> <span class="n">-Id</span> <span class="nv">$policyAdminPrivileges</span><span class="p">)</span>
 </code></pre></div>
 <hr />
 <h2 id="assigning-permissions">Assigning Permissions<a class="headerlink" href="#assigning-permissions" title="Permanent link">&para;</a></h2>
 <h3 id="assign-role-to-ad-group">Assign Role to AD Group<a class="headerlink" href="#assign-role-to-ad-group" title="Permanent link">&para;</a></h3>
 <p>Always assign permissions to AD groups, not individual users. This simplifies onboarding and offboarding.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Assign vSAN-StorageOperator role to an AD group on the cluster</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">New-VIPermission</span> <span class="p">`</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    <span class="n">-Entity</span> <span class="p">(</span><span class="nb">Get-Cluster</span> <span class="s2">&quot;VSAN-LON-01&quot;</span><span class="p">)</span> <span class="p">`</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    <span class="n">-Principal</span> <span class="s2">&quot;EXAMPLE\vSAN-Operators&quot;</span> <span class="p">`</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>    <span class="n">-Role</span> <span class="s2">&quot;vSAN-StorageOperator&quot;</span> <span class="p">`</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>    <span class="n">-Propagate</span> <span class="nv">$true</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c"># Assign monitoring role to a service account</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="nb">New-VIPermission</span> <span class="p">`</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>    <span class="n">-Entity</span> <span class="p">(</span><span class="nb">Get-Cluster</span> <span class="s2">&quot;VSAN-LON-01&quot;</span><span class="p">)</span> <span class="p">`</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>    <span class="n">-Principal</span> <span class="s2">&quot;EXAMPLE\svc-aria-vcenter&quot;</span> <span class="p">`</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>    <span class="n">-Role</span> <span class="s2">&quot;vSAN-Monitor-RO&quot;</span> <span class="p">`</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>    <span class="n">-Propagate</span> <span class="nv">$true</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Assign vSAN-StorageOperator role to an AD group on the cluster</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">New-VIPermission</span> <span class="p">`</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="n">-Entity</span> <span class="p">(</span><span class="nb">Get-Cluster</span> <span class="s2">&quot;VSAN-LON-01&quot;</span><span class="p">)</span> <span class="p">`</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="n">-Principal</span> <span class="s2">&quot;EXAMPLE\vSAN-Operators&quot;</span> <span class="p">`</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>    <span class="n">-Role</span> <span class="s2">&quot;vSAN-StorageOperator&quot;</span> <span class="p">`</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    <span class="n">-Propagate</span> <span class="nv">$true</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c"># Assign monitoring role to a service account</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="nb">New-VIPermission</span> <span class="p">`</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>    <span class="n">-Entity</span> <span class="p">(</span><span class="nb">Get-Cluster</span> <span class="s2">&quot;VSAN-LON-01&quot;</span><span class="p">)</span> <span class="p">`</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>    <span class="n">-Principal</span> <span class="s2">&quot;EXAMPLE\svc-aria-vcenter&quot;</span> <span class="p">`</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>    <span class="n">-Role</span> <span class="s2">&quot;vSAN-Monitor-RO&quot;</span> <span class="p">`</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>    <span class="n">-Propagate</span> <span class="nv">$true</span>
 </code></pre></div>
 <p><strong>From vCenter UI:</strong>
 Cluster → Permissions → Add → select identity source → search for group or user → select role → check Propagate</p>
 <h3 id="verify-effective-permissions">Verify Effective Permissions<a class="headerlink" href="#verify-effective-permissions" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># List all permissions on a cluster</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">Get-VIPermission</span> <span class="n">-Entity</span> <span class="p">(</span><span class="nb">Get-Cluster</span> <span class="s2">&quot;VSAN-LON-01&quot;</span><span class="p">)</span> <span class="p">|</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    <span class="nb">Select </span><span class="n">Principal</span><span class="p">,</span> <span class="n">Role</span><span class="p">,</span> <span class="n">Propagate</span> <span class="p">|</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    <span class="nb">Format-Table</span> <span class="n">-AutoSize</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c"># Check what a specific user can do</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="nv">$cluster</span> <span class="p">=</span> <span class="nb">Get-Cluster</span> <span class="s2">&quot;VSAN-LON-01&quot;</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="nb">Get-VIPermission</span> <span class="n">-Entity</span> <span class="nv">$cluster</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Principal</span> <span class="o">-like</span> <span class="s2">&quot;*StorageOps*&quot;</span> <span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># List all permissions on a cluster</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Get-VIPermission</span> <span class="n">-Entity</span> <span class="p">(</span><span class="nb">Get-Cluster</span> <span class="s2">&quot;VSAN-LON-01&quot;</span><span class="p">)</span> <span class="p">|</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    <span class="nb">Select </span><span class="n">Principal</span><span class="p">,</span> <span class="n">Role</span><span class="p">,</span> <span class="n">Propagate</span> <span class="p">|</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    <span class="nb">Format-Table</span> <span class="n">-AutoSize</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c"># Check what a specific user can do</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="nv">$cluster</span> <span class="p">=</span> <span class="nb">Get-Cluster</span> <span class="s2">&quot;VSAN-LON-01&quot;</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="nb">Get-VIPermission</span> <span class="n">-Entity</span> <span class="nv">$cluster</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Principal</span> <span class="o">-like</span> <span class="s2">&quot;*StorageOps*&quot;</span> <span class="p">}</span>
 </code></pre></div>
 <hr />
 <h2 id="storage-policy-access-control">Storage Policy Access Control<a class="headerlink" href="#storage-policy-access-control" title="Permanent link">&para;</a></h2>
@@ -9438,9 +9420,9 @@ Cluster → Permissions → Add → select identity source → search for group 
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># Check storage policy permissions</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">Get-VIPermission</span> <span class="n">-Entity</span> <span class="p">(</span><span class="nb">Get-vCenter</span><span class="p">)</span> <span class="p">|</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>    <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Role</span> <span class="o">-match</span> <span class="s2">&quot;PolicyAdmin\|Administrator&quot;</span> <span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Check storage policy permissions</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">Get-VIPermission</span> <span class="n">-Entity</span> <span class="p">(</span><span class="nb">Get-vCenter</span><span class="p">)</span> <span class="p">|</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Role</span> <span class="o">-match</span> <span class="s2">&quot;PolicyAdmin\|Administrator&quot;</span> <span class="p">}</span>
 </code></pre></div>
 <p><strong>Protect production policies:</strong> Do not allow VM owners or application teams to modify or create storage policies. Only the storage team should manage the canonical policy set.</p>
 <hr />
@@ -9451,14 +9433,14 @@ Cluster → Permissions → Add → select identity source → search for group 
 <li><strong>Storage Policy compliance:</strong> The vSAN datastore only accepts objects that comply with the assigned storage policy.</li>
 </ol>
 <p><strong>Restrict access to the vSAN datastore by cluster:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># Remove Read-Only access inherited from parent for a non-privileged group</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c"># (Add No Access permission at the datastore level to block inheritance)</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="nv">$vsanDS</span> <span class="p">=</span> <span class="nb">Get-Datastore</span> <span class="s2">&quot;vsanDatastore&quot;</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="nb">New-VIPermission</span> <span class="p">`</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>    <span class="n">-Entity</span> <span class="nv">$vsanDS</span> <span class="p">`</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>    <span class="n">-Principal</span> <span class="s2">&quot;EXAMPLE\AppTeam-NonPrivileged&quot;</span> <span class="p">`</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>    <span class="n">-Role</span> <span class="s2">&quot;NoAccess&quot;</span> <span class="p">`</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>    <span class="n">-Propagate</span> <span class="nv">$false</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># Remove Read-Only access inherited from parent for a non-privileged group</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c"># (Add No Access permission at the datastore level to block inheritance)</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="nv">$vsanDS</span> <span class="p">=</span> <span class="nb">Get-Datastore</span> <span class="s2">&quot;vsanDatastore&quot;</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="nb">New-VIPermission</span> <span class="p">`</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>    <span class="n">-Entity</span> <span class="nv">$vsanDS</span> <span class="p">`</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>    <span class="n">-Principal</span> <span class="s2">&quot;EXAMPLE\AppTeam-NonPrivileged&quot;</span> <span class="p">`</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>    <span class="n">-Role</span> <span class="s2">&quot;NoAccess&quot;</span> <span class="p">`</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>    <span class="n">-Propagate</span> <span class="nv">$false</span>
 </code></pre></div>
 <hr />
 <h2 id="privileged-access-governance">Privileged Access Governance<a class="headerlink" href="#privileged-access-governance" title="Permanent link">&para;</a></h2>
@@ -9472,15 +9454,15 @@ Cluster → Permissions → Add → select identity source → search for group 
 <p>Review and rotate break-glass credentials at least quarterly.</p>
 <h3 id="audit-access-reviews">Audit Access Reviews<a class="headerlink" href="#audit-access-reviews" title="Permanent link">&para;</a></h3>
 <p>Perform a quarterly review of vCenter permissions:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c"># Export all permissions across the vCenter inventory</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nv">$allPerms</span> <span class="p">=</span> <span class="p">@()</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="nv">$allObjects</span> <span class="p">=</span> <span class="nb">Get-View</span> <span class="n">-ViewType</span> <span class="n">All</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">MoRef</span><span class="p">.</span><span class="nb">Type </span><span class="n">-in</span> <span class="p">@(</span><span class="s2">&quot;ClusterComputeResource&quot;</span><span class="p">,</span><span class="s2">&quot;HostSystem&quot;</span><span class="p">,</span><span class="s2">&quot;Datastore&quot;</span><span class="p">,</span><span class="s2">&quot;Datacenter&quot;</span><span class="p">)</span> <span class="p">}</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="k">foreach</span> <span class="p">(</span><span class="nv">$obj</span> <span class="k">in</span> <span class="nv">$allObjects</span><span class="p">)</span> <span class="p">{</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>    <span class="nv">$perms</span> <span class="p">=</span> <span class="nb">Get-VIPermission</span> <span class="n">-Entity</span> <span class="p">(</span><span class="nb">Get-VIObject</span> <span class="n">-MoRef</span> <span class="nv">$obj</span><span class="p">.</span><span class="n">MoRef</span><span class="p">)</span> <span class="n">-ErrorAction</span> <span class="n">SilentlyContinue</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>    <span class="nv">$allPerms</span> <span class="p">+=</span> <span class="nv">$perms</span>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="p">}</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="nv">$allPerms</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">Entity</span><span class="p">,</span> <span class="n">Principal</span><span class="p">,</span> <span class="n">Role</span><span class="p">,</span> <span class="n">Propagate</span> <span class="p">|</span>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>    <span class="nb">Export-Csv</span> <span class="s2">&quot;vcenter_permissions_</span><span class="p">$(</span><span class="nb">Get-Date</span> <span class="n">-Format</span> <span class="n">yyyyMMdd</span><span class="p">)</span><span class="s2">.csv&quot;</span> <span class="n">-NoTypeInformation</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># Export all permissions across the vCenter inventory</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nv">$allPerms</span> <span class="p">=</span> <span class="p">@()</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="nv">$allObjects</span> <span class="p">=</span> <span class="nb">Get-View</span> <span class="n">-ViewType</span> <span class="n">All</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">MoRef</span><span class="p">.</span><span class="nb">Type </span><span class="n">-in</span> <span class="p">@(</span><span class="s2">&quot;ClusterComputeResource&quot;</span><span class="p">,</span><span class="s2">&quot;HostSystem&quot;</span><span class="p">,</span><span class="s2">&quot;Datastore&quot;</span><span class="p">,</span><span class="s2">&quot;Datacenter&quot;</span><span class="p">)</span> <span class="p">}</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="k">foreach</span> <span class="p">(</span><span class="nv">$obj</span> <span class="k">in</span> <span class="nv">$allObjects</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>    <span class="nv">$perms</span> <span class="p">=</span> <span class="nb">Get-VIPermission</span> <span class="n">-Entity</span> <span class="p">(</span><span class="nb">Get-VIObject</span> <span class="n">-MoRef</span> <span class="nv">$obj</span><span class="p">.</span><span class="n">MoRef</span><span class="p">)</span> <span class="n">-ErrorAction</span> <span class="n">SilentlyContinue</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>    <span class="nv">$allPerms</span> <span class="p">+=</span> <span class="nv">$perms</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="p">}</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="nv">$allPerms</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">Entity</span><span class="p">,</span> <span class="n">Principal</span><span class="p">,</span> <span class="n">Role</span><span class="p">,</span> <span class="n">Propagate</span> <span class="p">|</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>    <span class="nb">Export-Csv</span> <span class="s2">&quot;vcenter_permissions_</span><span class="p">$(</span><span class="nb">Get-Date</span> <span class="n">-Format</span> <span class="n">yyyyMMdd</span><span class="p">)</span><span class="s2">.csv&quot;</span> <span class="n">-NoTypeInformation</span>
 </code></pre></div>
 <p>Review the export for:
 - Accounts that should no longer have access (leavers, role changes).
@@ -9537,12 +9519,12 @@ Cluster → Permissions → Add → select identity source → search for group 
 <li>Only the vSAN service account and vCenter itself need write access to the witness.</li>
 <li>Do not join the witness host to the same AD OU as production hosts — it is a lower-privilege asset.</li>
 </ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c"># Assign read-only access to the witness host for monitoring only</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nb">New-VIPermission</span> <span class="p">`</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>    <span class="n">-Entity</span> <span class="p">(</span><span class="nb">Get-VMHost</span> <span class="s2">&quot;vsanwitness-lon.example.com&quot;</span><span class="p">)</span> <span class="p">`</span>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>    <span class="n">-Principal</span> <span class="s2">&quot;EXAMPLE\vSAN-Operators&quot;</span> <span class="p">`</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>    <span class="n">-Role</span> <span class="s2">&quot;ReadOnly&quot;</span> <span class="p">`</span>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>    <span class="n">-Propagate</span> <span class="nv">$false</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c"># Assign read-only access to the witness host for monitoring only</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nb">New-VIPermission</span> <span class="p">`</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>    <span class="n">-Entity</span> <span class="p">(</span><span class="nb">Get-VMHost</span> <span class="s2">&quot;vsanwitness-lon.example.com&quot;</span><span class="p">)</span> <span class="p">`</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>    <span class="n">-Principal</span> <span class="s2">&quot;EXAMPLE\vSAN-Operators&quot;</span> <span class="p">`</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>    <span class="n">-Role</span> <span class="s2">&quot;ReadOnly&quot;</span> <span class="p">`</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>    <span class="n">-Propagate</span> <span class="nv">$false</span>
 </code></pre></div>
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>

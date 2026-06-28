@@ -8579,23 +8579,7 @@ A policy assignment connects a policy definition or initiative (policy set) to a
 *Applies to: Azure*
 </div>
 <p><img alt="Policy and Initiative Assignments" src="../../../../assets/cloud-azure-governance-assignments-index.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>center: &quot;Azure&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>policy_assignment_scope_hierarchy: &quot;Policy Assignment Scope Hierarchy&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>creating_a_policy_assignment: &quot;Creating a Policy Assignment&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>assignment_scope: &quot;Assignment Scope&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>parameters: &quot;Parameters&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>exemptions: &quot;Exemptions&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>assignment_managed_identity: &quot;Assignment Managed Identity&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>center -&gt; policy_assignment_scope_hierarchy
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>center -&gt; creating_a_policy_assignment
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>center -&gt; assignment_scope
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>center -&gt; parameters
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>center -&gt; exemptions
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>center -&gt; assignment_managed_identity
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqFkcEKwjAMhu99iuDdF9hBEBH0IAg-QAldaAOuK20Fp_jutjrnnEWPab7--fOnZk8qcmsr8KxNFEKRjeQrmC0vJ08zuAaDjiowdEbd2ptw7ZFVJzEE1rZJtAyqdSQNk0evTJf-7h8MLAcGDpmBzYt56-b5aPWRbkJ5wshWS5RfQ5Loqm8Dwpd-UW9qMS81cVT859BjQymFkFcZiiJLZ2pcDjCz66H456dBi5pqyXWqOHaf1nbPLmz7blGtvxTMF_D3JCP2V8gjbKo1njYkMnp851AWmS4s7its65s=?" /></p>
 <h2 id="policy-assignment-scope-hierarchy">Policy Assignment Scope Hierarchy<a class="headerlink" href="#policy-assignment-scope-hierarchy" title="Permanent link">&para;</a></h2>
 <pre class="mermaid"><code>flowchart TD
     mgScope["Management Group Scope\nbroadest — all child subs inherit"]
@@ -8607,41 +8591,41 @@ A policy assignment connects a policy definition or initiative (policy set) to a
     mgScope --&gt;|"inherits down"| subScope --&gt;|"inherits down"| rgScope --&gt;|"inherits down"| resourceScope
     resourceScope -.-&gt;|"override"| exempt</code></pre>
 <h2 id="creating-a-policy-assignment">Creating a Policy Assignment<a class="headerlink" href="#creating-a-policy-assignment" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Assign a built-in policy by definition ID</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>az<span class="w"> </span>policy<span class="w"> </span>assignment<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;deny-public-ip&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>--policy<span class="w"> </span><span class="s2">&quot;9daedab3-fb2d-461e-b861-71790eead4f6&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>--scope<span class="w"> </span><span class="s2">&quot;/subscriptions/&lt;subscription-id&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span>--description<span class="w"> </span><span class="s2">&quot;Deny creation of public IP addresses&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span>--display-name<span class="w"> </span><span class="s2">&quot;Deny Public IP Addresses&quot;</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># Assign policy at resource group scope</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>az<span class="w"> </span>policy<span class="w"> </span>assignment<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;require-tags-rg&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">  </span>--policy<span class="w"> </span><span class="s2">&quot;96670d01-0a4d-4649-9c89-2d3abc0a5025&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">  </span>--scope<span class="w"> </span><span class="s2">&quot;/subscriptions/&lt;sub-id&gt;/resourceGroups/rg-production&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">  </span>--params<span class="w"> </span><span class="s1">&#39;{&quot;tagName&quot;: {&quot;value&quot;: &quot;environment&quot;}}&#39;</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="c1"># Assign policy at management group scope</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>az<span class="w"> </span>policy<span class="w"> </span>assignment<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;audit-storage-https&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="w">  </span>--policy<span class="w"> </span><span class="s2">&quot;404c3081-a854-4457-ae30-26a93ef643f9&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="w">  </span>--scope<span class="w"> </span><span class="s2">&quot;/providers/Microsoft.Management/managementGroups/mg-platform&quot;</span>
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="c1"># List all assignments on a scope</span>
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>az<span class="w"> </span>policy<span class="w"> </span>assignment<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="w">  </span>--scope<span class="w"> </span><span class="s2">&quot;/subscriptions/&lt;subscription-id&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="w">  </span>--output<span class="w"> </span>table
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a><span class="c1"># Show a specific assignment</span>
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>az<span class="w"> </span>policy<span class="w"> </span>assignment<span class="w"> </span>show<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;deny-public-ip&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a><span class="w">  </span>--scope<span class="w"> </span><span class="s2">&quot;/subscriptions/&lt;subscription-id&gt;&quot;</span>
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a><span class="c1"># Delete an assignment</span>
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>az<span class="w"> </span>policy<span class="w"> </span>assignment<span class="w"> </span>delete<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;deny-public-ip&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a><span class="w">  </span>--scope<span class="w"> </span><span class="s2">&quot;/subscriptions/&lt;subscription-id&gt;&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Assign a built-in policy by definition ID</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>az<span class="w"> </span>policy<span class="w"> </span>assignment<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;deny-public-ip&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span>--policy<span class="w"> </span><span class="s2">&quot;9daedab3-fb2d-461e-b861-71790eead4f6&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span>--scope<span class="w"> </span><span class="s2">&quot;/subscriptions/&lt;subscription-id&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">  </span>--description<span class="w"> </span><span class="s2">&quot;Deny creation of public IP addresses&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">  </span>--display-name<span class="w"> </span><span class="s2">&quot;Deny Public IP Addresses&quot;</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1"># Assign policy at resource group scope</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>az<span class="w"> </span>policy<span class="w"> </span>assignment<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;require-tags-rg&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">  </span>--policy<span class="w"> </span><span class="s2">&quot;96670d01-0a4d-4649-9c89-2d3abc0a5025&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">  </span>--scope<span class="w"> </span><span class="s2">&quot;/subscriptions/&lt;sub-id&gt;/resourceGroups/rg-production&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">  </span>--params<span class="w"> </span><span class="s1">&#39;{&quot;tagName&quot;: {&quot;value&quot;: &quot;environment&quot;}}&#39;</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># Assign policy at management group scope</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>az<span class="w"> </span>policy<span class="w"> </span>assignment<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;audit-storage-https&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="w">  </span>--policy<span class="w"> </span><span class="s2">&quot;404c3081-a854-4457-ae30-26a93ef643f9&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="w">  </span>--scope<span class="w"> </span><span class="s2">&quot;/providers/Microsoft.Management/managementGroups/mg-platform&quot;</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="c1"># List all assignments on a scope</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>az<span class="w"> </span>policy<span class="w"> </span>assignment<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="w">  </span>--scope<span class="w"> </span><span class="s2">&quot;/subscriptions/&lt;subscription-id&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="w">  </span>--output<span class="w"> </span>table
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a><span class="c1"># Show a specific assignment</span>
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>az<span class="w"> </span>policy<span class="w"> </span>assignment<span class="w"> </span>show<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;deny-public-ip&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a><span class="w">  </span>--scope<span class="w"> </span><span class="s2">&quot;/subscriptions/&lt;subscription-id&gt;&quot;</span>
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a><span class="c1"># Delete an assignment</span>
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>az<span class="w"> </span>policy<span class="w"> </span>assignment<span class="w"> </span>delete<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;deny-public-ip&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a><span class="w">  </span>--scope<span class="w"> </span><span class="s2">&quot;/subscriptions/&lt;subscription-id&gt;&quot;</span>
 </code></pre></div>
 <h2 id="assignment-scope">Assignment Scope<a class="headerlink" href="#assignment-scope" title="Permanent link">&para;</a></h2>
 <p>The scope of an assignment determines which resources are evaluated.</p>
@@ -8679,55 +8663,55 @@ A policy assignment connects a policy definition or initiative (policy set) to a
 <p>Assignments inherit downward — a policy assigned at MG scope applies to all subscriptions and resource groups within that MG.</p>
 <h2 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">&para;</a></h2>
 <p>Policy parameters allow a single policy definition to be reused across assignments with different configuration values.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Assign policy with multiple parameters</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>az<span class="w"> </span>policy<span class="w"> </span>assignment<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;allowed-locations&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>--policy<span class="w"> </span><span class="s2">&quot;e56962a6-4747-49cd-b67b-bf8b01975c4f&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>--scope<span class="w"> </span><span class="s2">&quot;/subscriptions/&lt;subscription-id&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span>--params<span class="w"> </span><span class="s1">&#39;{</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="s1">    &quot;listOfAllowedLocations&quot;: {</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="s1">      &quot;value&quot;: [&quot;uksouth&quot;, &quot;ukwest&quot;, &quot;northeurope&quot;]</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="s1">    }</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="s1">  }&#39;</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># View the parameters of an existing assignment</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>az<span class="w"> </span>policy<span class="w"> </span>assignment<span class="w"> </span>show<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;allowed-locations&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">  </span>--scope<span class="w"> </span><span class="s2">&quot;/subscriptions/&lt;subscription-id&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;parameters&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Assign policy with multiple parameters</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>az<span class="w"> </span>policy<span class="w"> </span>assignment<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;allowed-locations&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>--policy<span class="w"> </span><span class="s2">&quot;e56962a6-4747-49cd-b67b-bf8b01975c4f&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>--scope<span class="w"> </span><span class="s2">&quot;/subscriptions/&lt;subscription-id&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span>--params<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="s1">    &quot;listOfAllowedLocations&quot;: {</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="s1">      &quot;value&quot;: [&quot;uksouth&quot;, &quot;ukwest&quot;, &quot;northeurope&quot;]</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="s1">    }</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="s1">  }&#39;</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c1"># View the parameters of an existing assignment</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>az<span class="w"> </span>policy<span class="w"> </span>assignment<span class="w"> </span>show<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;allowed-locations&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">  </span>--scope<span class="w"> </span><span class="s2">&quot;/subscriptions/&lt;subscription-id&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;parameters&quot;</span>
 </code></pre></div>
 <h2 id="exemptions">Exemptions<a class="headerlink" href="#exemptions" title="Permanent link">&para;</a></h2>
 <p>Specific resources or resource groups can be excluded from an assignment using exclusions (set at assignment time) or exemptions (created post-assignment).</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Add an exclusion scope at assignment creation time</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>az<span class="w"> </span>policy<span class="w"> </span>assignment<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;deny-public-ip&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>--policy<span class="w"> </span><span class="s2">&quot;9daedab3-fb2d-461e-b861-71790eead4f6&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span>--scope<span class="w"> </span><span class="s2">&quot;/subscriptions/&lt;subscription-id&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span>--not-scopes<span class="w"> </span><span class="s2">&quot;/subscriptions/&lt;sub-id&gt;/resourceGroups/rg-legacy&quot;</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># Create an exemption for a specific resource after assignment</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>az<span class="w"> </span>policy<span class="w"> </span>exemption<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;legacy-vm-exemption&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">  </span>--policy-assignment<span class="w"> </span><span class="s2">&quot;/subscriptions/&lt;sub-id&gt;/providers/Microsoft.Authorization/policyAssignments/deny-public-ip&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">  </span>--scope<span class="w"> </span><span class="s2">&quot;/subscriptions/&lt;sub-id&gt;/resourceGroups/rg-legacy/providers/Microsoft.Compute/virtualMachines/vm-legacy-01&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">  </span>--exemption-category<span class="w"> </span>Waiver<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="w">  </span>--expires-on<span class="w"> </span><span class="m">2026</span>-12-31T00:00:00Z
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Add an exclusion scope at assignment creation time</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>az<span class="w"> </span>policy<span class="w"> </span>assignment<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;deny-public-ip&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>--policy<span class="w"> </span><span class="s2">&quot;9daedab3-fb2d-461e-b861-71790eead4f6&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>--scope<span class="w"> </span><span class="s2">&quot;/subscriptions/&lt;subscription-id&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span>--not-scopes<span class="w"> </span><span class="s2">&quot;/subscriptions/&lt;sub-id&gt;/resourceGroups/rg-legacy&quot;</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Create an exemption for a specific resource after assignment</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>az<span class="w"> </span>policy<span class="w"> </span>exemption<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;legacy-vm-exemption&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">  </span>--policy-assignment<span class="w"> </span><span class="s2">&quot;/subscriptions/&lt;sub-id&gt;/providers/Microsoft.Authorization/policyAssignments/deny-public-ip&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">  </span>--scope<span class="w"> </span><span class="s2">&quot;/subscriptions/&lt;sub-id&gt;/resourceGroups/rg-legacy/providers/Microsoft.Compute/virtualMachines/vm-legacy-01&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">  </span>--exemption-category<span class="w"> </span>Waiver<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">  </span>--expires-on<span class="w"> </span><span class="m">2026</span>-12-31T00:00:00Z
 </code></pre></div>
 <h2 id="assignment-managed-identity">Assignment Managed Identity<a class="headerlink" href="#assignment-managed-identity" title="Permanent link">&para;</a></h2>
 <p>Policies with the <code>deployIfNotExists</code> or <code>modify</code> effect require a managed identity to perform remediation actions.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Assign policy with system-assigned managed identity for remediation</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>az<span class="w"> </span>policy<span class="w"> </span>assignment<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;deploy-diag-settings&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>--policy<span class="w"> </span><span class="s2">&quot;&lt;policy-definition-id&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span>--scope<span class="w"> </span><span class="s2">&quot;/subscriptions/&lt;subscription-id&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span>--mi-system-assigned<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">  </span>--location<span class="w"> </span>uksouth
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># List assignments that have a managed identity</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>az<span class="w"> </span>policy<span class="w"> </span>assignment<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">  </span>--scope<span class="w"> </span><span class="s2">&quot;/subscriptions/&lt;subscription-id&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;[?identity != null].{Name:name, IdentityType:identity.type}&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">  </span>--output<span class="w"> </span>table
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Assign policy with system-assigned managed identity for remediation</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>az<span class="w"> </span>policy<span class="w"> </span>assignment<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;deploy-diag-settings&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>--policy<span class="w"> </span><span class="s2">&quot;&lt;policy-definition-id&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span>--scope<span class="w"> </span><span class="s2">&quot;/subscriptions/&lt;subscription-id&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span>--mi-system-assigned<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span>--location<span class="w"> </span>uksouth
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># List assignments that have a managed identity</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>az<span class="w"> </span>policy<span class="w"> </span>assignment<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">  </span>--scope<span class="w"> </span><span class="s2">&quot;/subscriptions/&lt;subscription-id&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;[?identity != null].{Name:name, IdentityType:identity.type}&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">  </span>--output<span class="w"> </span>table
 </code></pre></div>
 <h2 id="common-assignment-patterns">Common Assignment Patterns<a class="headerlink" href="#common-assignment-patterns" title="Permanent link">&para;</a></h2>
 <table>

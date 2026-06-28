@@ -7706,25 +7706,7 @@ Health Checks reference covering Environment Health, Package Management, Schedul
 *Applies to: Python 3.x*
 </div>
 <p><img alt="Python Automation — Health Checks" src="../../../../assets/automation-python-operations-health-checks-index.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>begin_checks: &quot;Begin Checks&quot; {shape: oval}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>run_this_routine: &quot;Run This Routine&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>package_management: &quot;Package Management&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>scheduled_scripts: &quot;Scheduled Scripts&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>python_automation_health_check_flow: &quot;Python Automation Health Check Flow&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>incident_triage: &quot;Incident Triage&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>verify: &quot;Verify&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>generate_report: &quot;Generate Report&quot; {shape: oval}
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>begin_checks -&gt; run_this_routine
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>run_this_routine -&gt; package_management
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>package_management -&gt; scheduled_scripts
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>scheduled_scripts -&gt; python_automation_health_check_flow
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>python_automation_health_check_flow -&gt; incident_triage
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>incident_triage -&gt; verify
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>verify -&gt; generate_report
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNkc1qwzAQhO9-isX3vIAPhabQn0OhOKFXocobS8SWjLxOCCXvXq3kptQWtCdbH7Or0UxjPCoyzlbgTaupKD6wNVYojeo4VlBu-QgP8VjC56jlgBW4k-yuhZ-sIG1G4d1ExgZe1pOFfUBQJ_QzwvdI23Z4LQapjrJF0UsbPj1aCpNvCcLrDWZnx-CsmTpsxKi8GYg97r4Z7BLL33oh7ayQE7le8pOFRtmRTm8Vh86d2UZUwf1NBc9RlSKAx6DKbjdWmSaYFuRN8B82vcwE9pFkp07ozeESxO_xJ6tp0aKXhMLj4DxH9TQTqCNZ1vKrQtjcwbKnVXEsWpeS6YmFqwbWncR9f8f9n0p41SLbZdYsSUHOeTJYpFZ8AXzQFHg=?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Access:</strong> Admin credentials on all affected systems</li>
@@ -7734,38 +7716,38 @@ Health Checks reference covering Environment Health, Package Management, Schedul
 </ul>
 <hr />
 <h2 id="run-this-routine">Run This Routine<a class="headerlink" href="#run-this-routine" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># 1. Python version</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>python3<span class="w"> </span>--version<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>pip3<span class="w"> </span>--version
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># 2. Virtual environment status</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>ls<span class="w"> </span>-la<span class="w"> </span>~/.venv/<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;No default venv&quot;</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># 3. Installed packages — key automation libraries</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>pip3<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;requests|boto3|azure|vmware|ansible|paramiko&quot;</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># 4. Dependency conflicts</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>pip3<span class="w"> </span>check
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># 5. Script syntax check (sample)</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>python3<span class="w"> </span>-m<span class="w"> </span>py_compile<span class="w"> </span>&lt;script.py&gt;<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;OK&quot;</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="c1"># 6. Cron / scheduled script health — verify expected jobs present</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>crontab<span class="w"> </span>-l<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>python
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># 1. Python version</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>python3<span class="w"> </span>--version<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>pip3<span class="w"> </span>--version
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># 2. Virtual environment status</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>ls<span class="w"> </span>-la<span class="w"> </span>~/.venv/<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;No default venv&quot;</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># 3. Installed packages — key automation libraries</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>pip3<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;requests|boto3|azure|vmware|ansible|paramiko&quot;</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># 4. Dependency conflicts</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>pip3<span class="w"> </span>check
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># 5. Script syntax check (sample)</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>python3<span class="w"> </span>-m<span class="w"> </span>py_compile<span class="w"> </span>&lt;script.py&gt;<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;OK&quot;</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># 6. Cron / scheduled script health — verify expected jobs present</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>crontab<span class="w"> </span>-l<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>python
 </code></pre></div>
 <p><strong>Check pyenv version (if using pyenv)</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>pyenv<span class="w"> </span>version
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>cat<span class="w"> </span>.python-version
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>pyenv<span class="w"> </span>version
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>cat<span class="w"> </span>.python-version
 </code></pre></div>
 <p>The <code>.python-version</code> file records the required Python version for the project. <code>pyenv</code> activates it automatically when entering the directory.</p>
 <p><strong>Verify virtual environment is active</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nb">echo</span><span class="w"> </span><span class="nv">$VIRTUAL_ENV</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import sys; print(sys.prefix)&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nb">echo</span><span class="w"> </span><span class="nv">$VIRTUAL_ENV</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import sys; print(sys.prefix)&quot;</span>
 </code></pre></div>
 <p>If <code>VIRTUAL_ENV</code> is empty, activate the venv before running scripts:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nb">source</span><span class="w"> </span>/opt/automation/venv/bin/activate
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nb">source</span><span class="w"> </span>/opt/automation/venv/bin/activate
 </code></pre></div>
 <p><strong>Check for environment variable completeness</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import os; print([k for k in [&#39;API_URL&#39;,&#39;API_TOKEN&#39;,&#39;LOG_DIR&#39;] if k not in os.environ])&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import os; print([k for k in [&#39;API_URL&#39;,&#39;API_TOKEN&#39;,&#39;LOG_DIR&#39;] if k not in os.environ])&quot;</span>
 </code></pre></div>
 <p>Replace the list with the environment variables your scripts require.</p>
 <p><strong>Key health indicators</strong></p>
@@ -7804,27 +7786,27 @@ Health Checks reference covering Environment Health, Package Management, Schedul
 <h2 id="package-management">Package Management<a class="headerlink" href="#package-management" title="Permanent link">&para;</a></h2>
 <p>Package version drift causes subtle breakage when an upstream library changes its API. Conflicts between installed packages can cause import failures that only surface at runtime.</p>
 <p><strong>List installed packages</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>pip3<span class="w"> </span>list
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>pip3<span class="w"> </span>list<span class="w"> </span>--outdated
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>pip3<span class="w"> </span>list
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>pip3<span class="w"> </span>list<span class="w"> </span>--outdated
 </code></pre></div>
 <p><strong>Check for dependency conflicts</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>pip3<span class="w"> </span>check
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>pip3<span class="w"> </span>check
 </code></pre></div>
 <p>Any output from <code>pip3 check</code> indicates a broken dependency graph that must be resolved.</p>
 <p><strong>Audit for known CVEs</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>pip3<span class="w"> </span>install<span class="w"> </span>safety
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>safety<span class="w"> </span>check
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>pip3<span class="w"> </span>install<span class="w"> </span>safety
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>safety<span class="w"> </span>check
 </code></pre></div>
 <p><strong>Export current dependencies (freeze)</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>pip3<span class="w"> </span>freeze<span class="w"> </span>&gt;<span class="w"> </span>requirements-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.txt
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>pip3<span class="w"> </span>freeze<span class="w"> </span>&gt;<span class="w"> </span>requirements-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.txt
 </code></pre></div>
 <p><strong>Install from pinned requirements</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>pip3<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>pip3<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
 </code></pre></div>
 <p><strong>Verify a specific critical library is importable</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import requests; print(requests.__version__)&quot;</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import boto3; print(boto3.__version__)&quot;</span>
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import paramiko; print(paramiko.__version__)&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import requests; print(requests.__version__)&quot;</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import boto3; print(boto3.__version__)&quot;</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import paramiko; print(paramiko.__version__)&quot;</span>
 </code></pre></div>
 <p><strong>Key health indicators</strong></p>
 <table>
@@ -7862,27 +7844,27 @@ Health Checks reference covering Environment Health, Package Management, Schedul
 <h2 id="scheduled-scripts">Scheduled Scripts<a class="headerlink" href="#scheduled-scripts" title="Permanent link">&para;</a></h2>
 <p>Python automation scripts commonly run on a schedule via cron or systemd timers. Silent failures in scheduled scripts are a frequent source of undetected automation gaps.</p>
 <p><strong>List all cron jobs running Python scripts</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>crontab<span class="w"> </span>-l<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>python
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>crontab<span class="w"> </span>-l<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>python
 </code></pre></div>
 <p><strong>Check system-wide cron for Python jobs</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>grep<span class="w"> </span>-r<span class="w"> </span><span class="s2">&quot;python&quot;</span><span class="w"> </span>/etc/cron.d/<span class="w"> </span>/etc/cron.daily/<span class="w"> </span>/etc/cron.hourly/<span class="w"> </span>/etc/cron.weekly/<span class="w"> </span><span class="m">2</span>&gt;/dev/null
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>grep<span class="w"> </span>-r<span class="w"> </span><span class="s2">&quot;python&quot;</span><span class="w"> </span>/etc/cron.d/<span class="w"> </span>/etc/cron.daily/<span class="w"> </span>/etc/cron.hourly/<span class="w"> </span>/etc/cron.weekly/<span class="w"> </span><span class="m">2</span>&gt;/dev/null
 </code></pre></div>
 <p><strong>Check cron daemon is running</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>systemctl<span class="w"> </span>status<span class="w"> </span>cron
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="c1"># or on RHEL/CentOS:</span>
-<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>systemctl<span class="w"> </span>status<span class="w"> </span>crond
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>systemctl<span class="w"> </span>status<span class="w"> </span>cron
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="c1"># or on RHEL/CentOS:</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>systemctl<span class="w"> </span>status<span class="w"> </span>crond
 </code></pre></div>
 <p><strong>Review recent cron execution log</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>grep<span class="w"> </span>CRON<span class="w"> </span>/var/log/syslog<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
-<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="c1"># or on RHEL/CentOS:</span>
-<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>grep<span class="w"> </span>CRON<span class="w"> </span>/var/log/cron<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>grep<span class="w"> </span>CRON<span class="w"> </span>/var/log/syslog<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="c1"># or on RHEL/CentOS:</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>grep<span class="w"> </span>CRON<span class="w"> </span>/var/log/cron<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
 </code></pre></div>
 <p><strong>Check systemd timer units (alternative to cron)</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>systemctl<span class="w"> </span>list-timers<span class="w"> </span>--all<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>python
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>systemctl<span class="w"> </span>list-timers<span class="w"> </span>--all<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>python
 </code></pre></div>
 <p><strong>Verify script output log (if scripts redirect output)</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># Example: check last run time and exit status from a log file</span>
-<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>tail<span class="w"> </span>-20<span class="w"> </span>/var/log/automation/&lt;script-name&gt;.log
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Example: check last run time and exit status from a log file</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>tail<span class="w"> </span>-20<span class="w"> </span>/var/log/automation/&lt;script-name&gt;.log
 </code></pre></div>
 <p><strong>Key health indicators</strong></p>
 <table>
@@ -7927,8 +7909,8 @@ Health Checks reference covering Environment Health, Package Management, Schedul
 <p><strong>On alert or issue:</strong>
 1. Identify the failing script and the last successful run time — check cron logs (<code>grep CRON /var/log/syslog</code>) and script log files
 2. Reproduce the failure manually in a test shell to get the full traceback:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="nb">source</span><span class="w"> </span>/opt/automation/venv/bin/activate
-<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>python3<span class="w"> </span>/opt/automation/scripts/failing_script.py<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tee<span class="w"> </span>/tmp/debug_run.log
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="nb">source</span><span class="w"> </span>/opt/automation/venv/bin/activate
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>python3<span class="w"> </span>/opt/automation/scripts/failing_script.py<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tee<span class="w"> </span>/tmp/debug_run.log
 </code></pre></div>
 3. Check the error type in the traceback to determine the root cause category
 4. Apply the appropriate fix from the triage table below

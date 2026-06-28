@@ -8533,23 +8533,7 @@ Firewall and security-group port reference for AWS infrastructure. Covers manage
 *Applies to: AWS VPC, EC2, ELB, RDS, S3, IAM*
 </div>
 <p><img alt="AWS — Ports and Network Requirements" src="../../../../assets/cloud-aws-architecture-ports.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>center: &quot;AWS&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>network_zones: &quot;Network Zones&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>outbound_onpremises_to_aws_apis: &quot;Outbound — On-Premises to AWS APIs&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>ec2_instance_management: &quot;EC2 Instance Management&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>load_balancer_alb_nlb_publicfacing: &quot;Load Balancer (ALB / NLB) — Public-Facing&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>rds_database: &quot;RDS / Database&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>s3_endpoint_access: &quot;S3 — Endpoint Access&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>center -&gt; network_zones
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>center -&gt; outbound_onpremises_to_aws_apis
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>center -&gt; ec2_instance_management
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>center -&gt; load_balancer_alb_nlb_publicfacing
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>center -&gt; rds_database
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>center -&gt; s3_endpoint_access
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqFkcFKA0EMhu_7FKEnPRShvfUgbG2FQm2LPQheQnY27g5uM8vMlIpS8CF8Qp_E2XXQLa70MIfk__Ink-TasvLayASsLkqfJIrFs53AIH3YDuDNlVTzBEp-ocLIMRH2B2Of8dUIu0CtvmN4bOJfvnElKSo-JmbvM7OXHI3UlnfasUNvkA4OqdaNxzoS8Pn-AWsZbiIG3kCYAtLNot-a1Qi1uBAqxh0JFbwL4wfL-c0IFlGBux-l16UylGNGVcNapCpDCa_eZ5VWT6S0FMFwGSCYRggu0uUUrmC1nF62Q29aeHjb0r1NbO4wJ08ZuSAM7mfbUD-Lid4KN0aWvDZaPJJS7JpVbcdtv3kUIG2F3vp4SRhew8nROvkzp-mQ_2y6Q5zfYgfubqOT_vvl5AsTfvQO?" /></p>
 <h2 id="network-zones">Network Zones<a class="headerlink" href="#network-zones" title="Permanent link">&para;</a></h2>
 <p><img alt="AWS — Ports and Network Requirements — Diagram" src="../../../../assets/cloud-aws-architecture-ports-diagram.svg" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
@@ -8817,20 +8801,20 @@ Firewall and security-group port reference for AWS infrastructure. Covers manage
 </tbody>
 </table>
 <h2 id="verify">Verify<a class="headerlink" href="#verify" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># From on-premises — test AWS API connectivity</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;%{http_code}&quot;</span><span class="w"> </span>https://ec2.us-east-1.amazonaws.com/
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># AWS CLI connectivity test</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>aws<span class="w"> </span>sts<span class="w"> </span>get-caller-identity
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># From EC2 Linux instance — test SSM connectivity</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;%{http_code}&quot;</span><span class="w"> </span>https://ssm.us-east-1.amazonaws.com/
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Check security group rules for an instance</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>aws<span class="w"> </span>ec2<span class="w"> </span>describe-security-groups<span class="w"> </span>--group-ids<span class="w"> </span>&lt;sg-id&gt;
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Verify VPC flow logs for traffic analysis</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>aws<span class="w"> </span>ec2<span class="w"> </span>describe-flow-logs<span class="w"> </span>--filter<span class="w"> </span><span class="nv">Name</span><span class="o">=</span>resource-id,Values<span class="o">=</span>&lt;vpc-id&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># From on-premises — test AWS API connectivity</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;%{http_code}&quot;</span><span class="w"> </span>https://ec2.us-east-1.amazonaws.com/
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># AWS CLI connectivity test</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>aws<span class="w"> </span>sts<span class="w"> </span>get-caller-identity
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># From EC2 Linux instance — test SSM connectivity</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;%{http_code}&quot;</span><span class="w"> </span>https://ssm.us-east-1.amazonaws.com/
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Check security group rules for an instance</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>aws<span class="w"> </span>ec2<span class="w"> </span>describe-security-groups<span class="w"> </span>--group-ids<span class="w"> </span>&lt;sg-id&gt;
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Verify VPC flow logs for traffic analysis</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>aws<span class="w"> </span>ec2<span class="w"> </span>describe-flow-logs<span class="w"> </span>--filter<span class="w"> </span><span class="nv">Name</span><span class="o">=</span>resource-id,Values<span class="o">=</span>&lt;vpc-id&gt;
 </code></pre></div>
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>

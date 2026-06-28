@@ -8227,23 +8227,7 @@ Firewall port reference for Pure Storage FlashArray. Covers Purity management, i
 *Applies to: Purity//FA 6.x*
 </div>
 <p><img alt="Pure FlashArray — Ports and Network Requirements" src="../../../../../assets/storage-pure-flasharray-architecture-ports.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>center: &quot;FlashArray&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>inbound_management_traffic: &quot;Inbound — Management Traffic&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>outbound_array_to_external: &quot;Outbound — Array to External&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>pure1_cloud_management_outbound: &quot;Pure1 Cloud Management (Outbound)&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>data_protocols_iscsi: &quot;Data Protocols — iSCSI&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>data_protocols_nvmeoftcp_purity_63: &quot;Data Protocols — NVMe-oF/TCP (Purity 6.3+)&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>activecluster_synchronous_replicatio: &quot;ActiveCluster — Synchronous Replication&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>center -&gt; inbound_management_traffic
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>center -&gt; outbound_array_to_external
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>center -&gt; pure1_cloud_management_outbound
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>center -&gt; data_protocols_iscsi
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>center -&gt; data_protocols_nvmeoftcp_purity_63
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>center -&gt; activecluster_synchronous_replicatio
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNkkFqwzAQRfc-xZBVSklLCWThRSG4DWSR1jShWzGVFVugaIwkh4QS6CF6wp6ksh0nLig0W82b_z_zlUkjuJOkYzAyL1wUcaGdMDEMZgptMTUG9wP4tAWWIoZC7DAnfYik_qBKZ2yDGnOx8TvMGVyvJfeb83YIP1_fsDgBsGqBs1ptjTpX4hBR5VpBrA2ZIyZ2PoZG5fVej8NGsEkEjuD5CAT1ysqIB8YVVX8ydjZeNK0JSGqiH3LYmd0EdTN0yEpDjjgpy6TlVnqxJ_8Maffc5JTLZDm_RkNvN4LWjpfMh5ZuzybjsOLL-0KMaHa_SlIYpg0Lk7vxbTgp-lq3gqvK-jMxu9e8MKSpssyIUkmOvnXvM22wpMUam-UZhbcTqoMmx98Co0e4_CN60OWae9A_3fXIUBuXx4FD9-Br7hX9AnmGMhY=?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
 <li>FlashArray has two network roles: management (mgmt0/mgmt1) and data (iSCSI/NVMe-oF/Fibre Channel ports)</li>
@@ -8587,25 +8571,25 @@ Firewall port reference for Pure Storage FlashArray. Covers Purity management, i
 </table>
 <hr />
 <h2 id="verify">Verify<a class="headerlink" href="#verify" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># From admin workstation — test API</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;%{http_code}&quot;</span><span class="w"> </span>https://&lt;array-mgmt-ip&gt;/api/2.x/array
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># Expected: 401 (auth required) or 200 with token</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># From admin workstation — test SSH</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>ssh<span class="w"> </span>pureuser@&lt;array-mgmt-ip&gt;
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># From iSCSI host — discover targets</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>iscsiadm<span class="w"> </span>-m<span class="w"> </span>discovery<span class="w"> </span>-t<span class="w"> </span>sendtargets<span class="w"> </span>-p<span class="w"> </span>&lt;array-iscsi-port-ip&gt;:3260
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># From NVMe/TCP host — discover controllers</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>nvme<span class="w"> </span>discover<span class="w"> </span>-t<span class="w"> </span>tcp<span class="w"> </span>-a<span class="w"> </span>&lt;array-nvme-ip&gt;<span class="w"> </span>-s<span class="w"> </span><span class="m">4420</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="c1"># From Purity CLI — check replication connectivity (ActiveCluster)</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>purepod<span class="w"> </span>list
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>purereplication<span class="w"> </span>list
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="c1"># From Purity CLI — check Pure1 connectivity</span>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>purearray<span class="w"> </span>list<span class="w"> </span>--connection
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># From admin workstation — test API</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;%{http_code}&quot;</span><span class="w"> </span>https://&lt;array-mgmt-ip&gt;/api/2.x/array
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c1"># Expected: 401 (auth required) or 200 with token</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># From admin workstation — test SSH</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>ssh<span class="w"> </span>pureuser@&lt;array-mgmt-ip&gt;
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># From iSCSI host — discover targets</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>iscsiadm<span class="w"> </span>-m<span class="w"> </span>discovery<span class="w"> </span>-t<span class="w"> </span>sendtargets<span class="w"> </span>-p<span class="w"> </span>&lt;array-iscsi-port-ip&gt;:3260
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># From NVMe/TCP host — discover controllers</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>nvme<span class="w"> </span>discover<span class="w"> </span>-t<span class="w"> </span>tcp<span class="w"> </span>-a<span class="w"> </span>&lt;array-nvme-ip&gt;<span class="w"> </span>-s<span class="w"> </span><span class="m">4420</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="c1"># From Purity CLI — check replication connectivity (ActiveCluster)</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>purepod<span class="w"> </span>list
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>purereplication<span class="w"> </span>list
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="c1"># From Purity CLI — check Pure1 connectivity</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>purearray<span class="w"> </span>list<span class="w"> </span>--connection
 </code></pre></div>
 <hr />
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>

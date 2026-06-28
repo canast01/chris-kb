@@ -8129,21 +8129,7 @@ TLS (LDAP) reference covering Overview, Certificate Requirements for LDAPS, Conf
 <p><img alt="TLS (LDAP)" src="../../../../assets/networking-protocols-ldap-tls-index.svg" /></p>
 <div class="highlight"><pre><span></span><code>    STARTTLS vs LDAPS
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>center: &quot;LDAP&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>certificate_requirements_for_ldaps: &quot;Certificate Requirements for LDAPS&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>configuring_ldaps_on_active_director: &quot;Configuring LDAPS on Active Directory&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>channel_binding_and_ldap_signing: &quot;Channel Binding and LDAP Signing&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>ldapclientintegrity_client_side: &quot;LdapClientIntegrity (Client Side)&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>testing_tls_configuration: &quot;Testing TLS Configuration&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>center -&gt; certificate_requirements_for_ldaps
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>center -&gt; configuring_ldaps_on_active_director
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>center -&gt; channel_binding_and_ldap_signing
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>center -&gt; ldapclientintegrity_client_side
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>center -&gt; testing_tls_configuration
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNkbFOxDAMhvc-hdUJBl6gA9LRW5BuQPT2KDRuaqk4R5JDnBDvjtPcqRmKylj7y2f3tyGPfSTHDXiyY6yqHjmib6A-7HcvNXyHUZ-wgRG_tHX8I30faaBeR1QeP84ieJcnQQ3Oq8noU5C37QLBawGBQJDE3WJOC2i2E4rb8UD27IltVinHSst-n6jMvKlLm7ULlmXgGHYzBvsrdlkfMGpmnNQbsUlDNJt5kApkWQpJnhF4yggIMg-BLiOr3uToJ5JfJEnPeooXlb_FbDClKUQ7V55vBNzlgpgN3q96I4aY9oxTULdwdD5Xfcw9OB46aMvequl6V3h4hO0LlvA_TlLiGwEX6EZmBflnCtUvxZ8Fsw==?" /></p>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>LDAPS (LDAP over TLS on port 636) and StartTLS (TLS upgrade on port 389) protect LDAP traffic from eavesdropping and tampering. Active Directory enforces LDAP channel binding and signing requirements via KB4520412 and related updates. Misconfigured TLS is a common cause of bind failures after patch cycles.</p>
 <table>
@@ -8180,79 +8166,79 @@ TLS (LDAP) reference covering Overview, Certificate Requirements for LDAPS, Conf
 <li>Enhanced Key Usage includes <strong>Server Authentication</strong> (OID 1.3.6.1.5.5.7.3.1)</li>
 <li>Not expired and trusted by clients (issued by an enterprise or public CA)</li>
 </ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Check the LDAPS certificate presented by a DC</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>dc01.corp.example.com:636<span class="w"> </span>-showcerts<span class="w"> </span>&lt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-text<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Subject:|DNS:|Not After&quot;</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Test full TLS handshake</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>dc01.corp.example.com:636<span class="w"> </span>&lt;/dev/null
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Check the LDAPS certificate presented by a DC</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>dc01.corp.example.com:636<span class="w"> </span>-showcerts<span class="w"> </span>&lt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-text<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Subject:|DNS:|Not After&quot;</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Test full TLS handshake</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>dc01.corp.example.com:636<span class="w"> </span>&lt;/dev/null
 </code></pre></div>
 <h2 id="configuring-ldaps-on-active-directory">Configuring LDAPS on Active Directory<a class="headerlink" href="#configuring-ldaps-on-active-directory" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># LDAPS is enabled automatically when a valid certificate is installed on the DC.</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c"># Request a certificate from your enterprise CA:</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nv">$cert</span> <span class="p">=</span> <span class="nb">Get-Certificate</span> <span class="n">-Template</span> <span class="s2">&quot;DomainController&quot;</span> <span class="n">-CertStoreLocation</span> <span class="s2">&quot;Cert:\LocalMachine\My&quot;</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c"># Verify the DC is listening on 636 after certificate is installed</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="n">netstat</span> <span class="n">-an</span> <span class="p">|</span> <span class="n">findstr</span> <span class="s2">&quot;:636&quot;</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c"># Test LDAPS from a Windows client</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="nb">Test-NetConnection</span> <span class="n">-ComputerName</span> <span class="n">dc01</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">com</span> <span class="n">-Port</span> <span class="n">636</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># LDAPS is enabled automatically when a valid certificate is installed on the DC.</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c"># Request a certificate from your enterprise CA:</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nv">$cert</span> <span class="p">=</span> <span class="nb">Get-Certificate</span> <span class="n">-Template</span> <span class="s2">&quot;DomainController&quot;</span> <span class="n">-CertStoreLocation</span> <span class="s2">&quot;Cert:\LocalMachine\My&quot;</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c"># Verify the DC is listening on 636 after certificate is installed</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="n">netstat</span> <span class="n">-an</span> <span class="p">|</span> <span class="n">findstr</span> <span class="s2">&quot;:636&quot;</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c"># Test LDAPS from a Windows client</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="nb">Test-NetConnection</span> <span class="n">-ComputerName</span> <span class="n">dc01</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">com</span> <span class="n">-Port</span> <span class="n">636</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Test LDAPS bind from Linux</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ldapsearch<span class="w"> </span>-H<span class="w"> </span>ldaps://dc01.corp.example.com:636<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">           </span>-D<span class="w"> </span><span class="s2">&quot;svc-ldap@corp.example.com&quot;</span><span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;P@ssw0rd!&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">           </span>-b<span class="w"> </span><span class="s2">&quot;DC=corp,DC=example,DC=com&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">           </span><span class="s2">&quot;(objectClass=domain)&quot;</span><span class="w"> </span>dn
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Disable certificate verification for testing only (never in production)</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="nv">LDAPTLS_REQCERT</span><span class="o">=</span>never<span class="w"> </span>ldapsearch<span class="w"> </span>-H<span class="w"> </span>ldaps://dc01.corp.example.com:636<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">           </span>-D<span class="w"> </span><span class="s2">&quot;svc-ldap@corp.example.com&quot;</span><span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;P@ssw0rd!&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">           </span>-b<span class="w"> </span><span class="s2">&quot;&quot;</span><span class="w"> </span>-s<span class="w"> </span>base<span class="w"> </span><span class="s2">&quot;(objectClass=*)&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Test LDAPS bind from Linux</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ldapsearch<span class="w"> </span>-H<span class="w"> </span>ldaps://dc01.corp.example.com:636<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">           </span>-D<span class="w"> </span><span class="s2">&quot;svc-ldap@corp.example.com&quot;</span><span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;P@ssw0rd!&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">           </span>-b<span class="w"> </span><span class="s2">&quot;DC=corp,DC=example,DC=com&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">           </span><span class="s2">&quot;(objectClass=domain)&quot;</span><span class="w"> </span>dn
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Disable certificate verification for testing only (never in production)</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="nv">LDAPTLS_REQCERT</span><span class="o">=</span>never<span class="w"> </span>ldapsearch<span class="w"> </span>-H<span class="w"> </span>ldaps://dc01.corp.example.com:636<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">           </span>-D<span class="w"> </span><span class="s2">&quot;svc-ldap@corp.example.com&quot;</span><span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;P@ssw0rd!&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">           </span>-b<span class="w"> </span><span class="s2">&quot;&quot;</span><span class="w"> </span>-s<span class="w"> </span>base<span class="w"> </span><span class="s2">&quot;(objectClass=*)&quot;</span>
 </code></pre></div>
 <h2 id="channel-binding-and-ldap-signing">Channel Binding and LDAP Signing<a class="headerlink" href="#channel-binding-and-ldap-signing" title="Permanent link">&para;</a></h2>
 <p>Enforced via Group Policy or registry. Required for security hardening (Microsoft guidance post-2020).</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Check current LDAP server integrity setting</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">Get-ItemProperty</span> <span class="s2">&quot;HKLM:\SYSTEM\CurrentControlSet\Services\NTDS\Parameters&quot;</span> <span class="p">|</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    <span class="nb">Select-Object</span> <span class="n">LDAPServerIntegrity</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c"># Set LDAP signing to Required (2) on the DC</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="nb">Set-ItemProperty</span> <span class="n">-Path</span> <span class="s2">&quot;HKLM:\SYSTEM\CurrentControlSet\Services\NTDS\Parameters&quot;</span> <span class="p">`</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>                 <span class="n">-Name</span> <span class="s2">&quot;LDAPServerIntegrity&quot;</span> <span class="n">-Value</span> <span class="n">2</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c"># Check channel binding token requirement</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="nb">Get-ItemProperty</span> <span class="s2">&quot;HKLM:\SYSTEM\CurrentControlSet\Services\NTDS\Parameters&quot;</span> <span class="p">|</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>    <span class="nb">Select-Object</span> <span class="n">LdapEnforceChannelBinding</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="c"># 0 = disabled, 1 = supported clients, 2 = always required</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="c"># Set channel binding to always required</span>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="nb">Set-ItemProperty</span> <span class="n">-Path</span> <span class="s2">&quot;HKLM:\SYSTEM\CurrentControlSet\Services\NTDS\Parameters&quot;</span> <span class="p">`</span>
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>                 <span class="n">-Name</span> <span class="s2">&quot;LdapEnforceChannelBinding&quot;</span> <span class="n">-Value</span> <span class="n">2</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Check current LDAP server integrity setting</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Get-ItemProperty</span> <span class="s2">&quot;HKLM:\SYSTEM\CurrentControlSet\Services\NTDS\Parameters&quot;</span> <span class="p">|</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    <span class="nb">Select-Object</span> <span class="n">LDAPServerIntegrity</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c"># Set LDAP signing to Required (2) on the DC</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="nb">Set-ItemProperty</span> <span class="n">-Path</span> <span class="s2">&quot;HKLM:\SYSTEM\CurrentControlSet\Services\NTDS\Parameters&quot;</span> <span class="p">`</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>                 <span class="n">-Name</span> <span class="s2">&quot;LDAPServerIntegrity&quot;</span> <span class="n">-Value</span> <span class="n">2</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c"># Check channel binding token requirement</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="nb">Get-ItemProperty</span> <span class="s2">&quot;HKLM:\SYSTEM\CurrentControlSet\Services\NTDS\Parameters&quot;</span> <span class="p">|</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>    <span class="nb">Select-Object</span> <span class="n">LdapEnforceChannelBinding</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="c"># 0 = disabled, 1 = supported clients, 2 = always required</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="c"># Set channel binding to always required</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="nb">Set-ItemProperty</span> <span class="n">-Path</span> <span class="s2">&quot;HKLM:\SYSTEM\CurrentControlSet\Services\NTDS\Parameters&quot;</span> <span class="p">`</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>                 <span class="n">-Name</span> <span class="s2">&quot;LdapEnforceChannelBinding&quot;</span> <span class="n">-Value</span> <span class="n">2</span>
 </code></pre></div>
 <h2 id="ldapclientintegrity-client-side">LdapClientIntegrity (Client Side)<a class="headerlink" href="#ldapclientintegrity-client-side" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># Check client-side LDAP signing policy</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">Get-ItemProperty</span> <span class="s2">&quot;HKLM:\SYSTEM\CurrentControlSet\Services\ldap&quot;</span> <span class="p">|</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>    <span class="nb">Select-Object</span> <span class="n">LdapClientIntegrity</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c"># 0 = none, 1 = negotiate signing, 2 = require signing</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c"># Set client to negotiate signing</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="nb">Set-ItemProperty</span> <span class="n">-Path</span> <span class="s2">&quot;HKLM:\SYSTEM\CurrentControlSet\Services\ldap&quot;</span> <span class="p">`</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>                 <span class="n">-Name</span> <span class="s2">&quot;LdapClientIntegrity&quot;</span> <span class="n">-Value</span> <span class="n">1</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c"># Via Group Policy: Computer Configuration &gt; Windows Settings &gt; Security Settings &gt;</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="c"># Local Policies &gt; Security Options &gt; &quot;Network security: LDAP client signing requirements&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Check client-side LDAP signing policy</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">Get-ItemProperty</span> <span class="s2">&quot;HKLM:\SYSTEM\CurrentControlSet\Services\ldap&quot;</span> <span class="p">|</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    <span class="nb">Select-Object</span> <span class="n">LdapClientIntegrity</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c"># 0 = none, 1 = negotiate signing, 2 = require signing</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c"># Set client to negotiate signing</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="nb">Set-ItemProperty</span> <span class="n">-Path</span> <span class="s2">&quot;HKLM:\SYSTEM\CurrentControlSet\Services\ldap&quot;</span> <span class="p">`</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>                 <span class="n">-Name</span> <span class="s2">&quot;LdapClientIntegrity&quot;</span> <span class="n">-Value</span> <span class="n">1</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c"># Via Group Policy: Computer Configuration &gt; Windows Settings &gt; Security Settings &gt;</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c"># Local Policies &gt; Security Options &gt; &quot;Network security: LDAP client signing requirements&quot;</span>
 </code></pre></div>
 <h2 id="testing-tls-configuration">Testing TLS Configuration<a class="headerlink" href="#testing-tls-configuration" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Check supported TLS versions on the DC</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>nmap<span class="w"> </span>--script<span class="w"> </span>ssl-enum-ciphers<span class="w"> </span>-p<span class="w"> </span><span class="m">636</span><span class="w"> </span>dc01.corp.example.com
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Verify certificate chain is complete</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>dc01.corp.example.com:636<span class="w"> </span>-CAfile<span class="w"> </span>/etc/ssl/certs/ca-certificates.crt<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">    </span>&lt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Verify return code|certificate&quot;</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># Test StartTLS upgrade (port 389)</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>ldapsearch<span class="w"> </span>-H<span class="w"> </span>ldap://dc01.corp.example.com:389<span class="w"> </span>-ZZ<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="w">           </span>-D<span class="w"> </span><span class="s2">&quot;svc-ldap@corp.example.com&quot;</span><span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;P@ssw0rd!&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="w">           </span>-b<span class="w"> </span><span class="s2">&quot;DC=corp,DC=example,DC=com&quot;</span><span class="w"> </span><span class="s2">&quot;(objectClass=domain)&quot;</span><span class="w"> </span>dn
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Check supported TLS versions on the DC</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>nmap<span class="w"> </span>--script<span class="w"> </span>ssl-enum-ciphers<span class="w"> </span>-p<span class="w"> </span><span class="m">636</span><span class="w"> </span>dc01.corp.example.com
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Verify certificate chain is complete</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>dc01.corp.example.com:636<span class="w"> </span>-CAfile<span class="w"> </span>/etc/ssl/certs/ca-certificates.crt<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">    </span>&lt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Verify return code|certificate&quot;</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># Test StartTLS upgrade (port 389)</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>ldapsearch<span class="w"> </span>-H<span class="w"> </span>ldap://dc01.corp.example.com:389<span class="w"> </span>-ZZ<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">           </span>-D<span class="w"> </span><span class="s2">&quot;svc-ldap@corp.example.com&quot;</span><span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;P@ssw0rd!&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">           </span>-b<span class="w"> </span><span class="s2">&quot;DC=corp,DC=example,DC=com&quot;</span><span class="w"> </span><span class="s2">&quot;(objectClass=domain)&quot;</span><span class="w"> </span>dn
 </code></pre></div>
 
 

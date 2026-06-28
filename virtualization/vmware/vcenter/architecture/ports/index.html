@@ -9260,23 +9260,7 @@ Firewall port reference for vCenter Server Appliance (VCSA). Use this to build f
 *Applies to: vSphere 7.x / 8.x*
 </div>
 <p><img alt="vCenter — Ports and Network Requirements" src="../../../../../assets/virtualization-vmware-vcenter-architecture-ports.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>center: &quot;vCenter Server&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>inbound_client_to_vcenter: &quot;Inbound — Client to vCenter&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>outbound_vcenter_to_infrastructure: &quot;Outbound — vCenter to Infrastructure&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>vcenter_ha_3node_activepassivewitnes: &quot;vCenter HA (3-Node Active/Passive/Witness)&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>backup_agent_to_vcenter: &quot;Backup Agent to vCenter&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>monitoring_and_management_tools: &quot;Monitoring and Management Tools&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>firewall_zone_summary: &quot;Firewall Zone Summary&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>center -&gt; inbound_client_to_vcenter
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>center -&gt; outbound_vcenter_to_infrastructure
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>center -&gt; vcenter_ha_3node_activepassivewitnes
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>center -&gt; backup_agent_to_vcenter
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>center -&gt; monitoring_and_management_tools
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>center -&gt; firewall_zone_summary
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNkktqwzAQhvc-xZBVuwhZZOdFwQ2UZpG2kEKhGzGxFVnUHhk9nD4I9BA9YU9S-RFXpQ7JymLm8yfpH2VS89RKRTFoKXIbRSkny3UMk3rRrmDNdc31BD5MjhWPIeevKBTtI0kb5ShjaSE9yaxi9fDzsuvB9-cXLNo-WAW98tfVbI4kCr6PlLOdrpc0PklbjcZql1qnPT6576HWezigFy__gKP-gzZHNieVcYb-3jWv0Bj_2UlL3AS3vk3gYj698yAkLTh76MjZU4uay9FdNpi-uIqh-JfIdduBRJyRRalIWqUlCYY-kRLJC8tOqYrmmKuBAE_AaiDgsSFGrVs_6x0WBXtXxJlxZYn6zbtu-jo8-zqsu_qooX8cML2Co8MPmNMjDeBz5hPgR4IOiBMhBuRoMNEPmcYq8Q==?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
 <li>Identify source IP ranges for each traffic category (admin workstations, backup proxies, monitoring)</li>
@@ -9544,18 +9528,18 @@ Firewall port reference for vCenter Server Appliance (VCSA). Use this to build f
 </table>
 <hr />
 <h2 id="verify">Verify<a class="headerlink" href="#verify" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># From a client workstation — test vCenter API reachability</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>https://&lt;vcenter-fqdn&gt;/rest/com/vmware/cis/session<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;administrator@vsphere.local:&lt;pass&gt;&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-c<span class="w"> </span><span class="m">100</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># From vCenter VCSA shell — test AD connectivity</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>nc<span class="w"> </span>-zv<span class="w"> </span>dc.corp.local<span class="w"> </span><span class="m">389</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>nc<span class="w"> </span>-zv<span class="w"> </span>dc.corp.local<span class="w"> </span><span class="m">636</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># From vCenter VCSA shell — test ESXi agent port</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>nc<span class="w"> </span>-zv<span class="w"> </span>esxi01.corp.local<span class="w"> </span><span class="m">902</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># From vCenter VCSA shell — test NTP</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>ntpq<span class="w"> </span>-p
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># From a client workstation — test vCenter API reachability</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>https://&lt;vcenter-fqdn&gt;/rest/com/vmware/cis/session<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;administrator@vsphere.local:&lt;pass&gt;&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-c<span class="w"> </span><span class="m">100</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># From vCenter VCSA shell — test AD connectivity</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>nc<span class="w"> </span>-zv<span class="w"> </span>dc.corp.local<span class="w"> </span><span class="m">389</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>nc<span class="w"> </span>-zv<span class="w"> </span>dc.corp.local<span class="w"> </span><span class="m">636</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># From vCenter VCSA shell — test ESXi agent port</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>nc<span class="w"> </span>-zv<span class="w"> </span>esxi01.corp.local<span class="w"> </span><span class="m">902</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># From vCenter VCSA shell — test NTP</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>ntpq<span class="w"> </span>-p
 </code></pre></div>
 <hr />
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>

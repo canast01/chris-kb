@@ -9211,23 +9211,7 @@ Integrations reference covering vCenter Server, NSX-T Integration (Optional), SM
 </div>
 <p><img alt="Aria Suite Lifecycle — Integrations" src="../../../../../assets/virtualization-vmware-aria-suite-lifecycle-architecture-inte.svg" /></p>
 <p>LCM Integration Map</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>center: &quot;Aria Suite Lifecycle&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>nsxt_integration_optional: &quot;NSX-T Integration (Optional)&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>smtp_configuration: &quot;SMTP Configuration&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>nfs_binary_repository: &quot;NFS Binary Repository&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>proxy_offline_depot: &quot;Proxy / Offline Depot&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>active_directory_ldap: &quot;Active Directory / LDAP&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>aria_automation_integration: &quot;Aria Automation Integration&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>center -&gt; nsxt_integration_optional
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>center -&gt; smtp_configuration
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>center -&gt; nfs_binary_repository
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>center -&gt; proxy_offline_depot
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>center -&gt; active_directory_ldap
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>center -&gt; aria_automation_integration
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp1kc1qwzAQhO9-iiWn9BB696Hg1hQKSWPiHHoTqr2WFxxJyHKxKXn3SnZ-BFVOghnNaPVtTQYrS0qmYEi0NkkqlBZNCqvMEIdyIIuwpQarqepwBb99yzWm0OLIhZLnRPajZeQywnBfxJT2B-9cxWf5tTnCx92E9f7iPt2r_ARcig7PSX-ymlVKNiSGJeFayt2xgLdQjGZl07NvktxMzKBWPVllJj_Eewmvsw6Hmx5t0EaNE1NN05FEVrvL1uULr8Iz7Bcdcq9H89yR_HHBmal7hHU1157krEN-1V3ZNs-KeIejzvhg1WmhGZC97iS7uSHaaNtlm7B5gYd7Cu78xx8WxPgGfoRe4EbZhP7jfyd_fSj5yw==?" /></p>
 <h2 id="nsx-t-integration-optional">NSX-T Integration (Optional)<a class="headerlink" href="#nsx-t-integration-optional" title="Permanent link">&para;</a></h2>
 <p>If LCM-deployed products require new overlay segments:
 1. LCM → Settings → NSX-T → Add NSX-T Manager
@@ -9241,13 +9225,13 @@ Integrations reference covering vCenter Server, NSX-T Integration (Optional), SM
 <p>Test SMTP: LCM → Settings → SMTP → Send Test Email.</p>
 <h2 id="nfs-binary-repository">NFS Binary Repository<a class="headerlink" href="#nfs-binary-repository" title="Permanent link">&para;</a></h2>
 <p>LCM stores downloaded product bundles on an NFS share:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Verify NFS mount from LCM appliance</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>df<span class="w"> </span>-h<span class="w"> </span>/data
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>mount<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>/data
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Should show: &lt;nfs-server&gt;:/lcm-repo on /data type nfs</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># Check available space (requires &gt; 50 GB free per product version)</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>du<span class="w"> </span>-sh<span class="w"> </span>/data/*
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Verify NFS mount from LCM appliance</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>df<span class="w"> </span>-h<span class="w"> </span>/data
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>mount<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>/data
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Should show: &lt;nfs-server&gt;:/lcm-repo on /data type nfs</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># Check available space (requires &gt; 50 GB free per product version)</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>du<span class="w"> </span>-sh<span class="w"> </span>/data/*
 </code></pre></div>
 <p>If NFS becomes unavailable: LCM upgrades will fail. Ensure NFS server HA (or VMware datastore-backed NFS).</p>
 <h2 id="proxy-offline-depot">Proxy / Offline Depot<a class="headerlink" href="#proxy-offline-depot" title="Permanent link">&para;</a></h2>

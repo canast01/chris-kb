@@ -7653,25 +7653,7 @@ Nutanix data-at-rest encryption (software and SED-based), key management (native
 </div>
 <p><img alt="Nutanix — Encryption" src="../../../../assets/virtualization-nutanix-security-encryption.svg" /></p>
 <hr />
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: down
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>external: External / Untrusted {shape: rectangle}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>encryption_options: &quot;Encryption Options&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>key_manager_options: &quot;Key Manager Options&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>enable_software_dataatrest_encryptio: &quot;Enable Software Data-at-Rest Encryption&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>enable_sedbased_hardware_encryption: &quot;Enable SED-Based Hardware Encryption&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>external_kms_kmip_integration: &quot;External KMS (KMIP) Integration&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>intransit_encryption_cvm_to_cvm: &quot;In-Transit Encryption (CVM to CVM)&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>core: &quot;Nutanix AHV Core&quot; {shape: hexagon}
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>external -&gt; encryption_options: traffic in
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>encryption_options -&gt; key_manager_options
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>key_manager_options -&gt; enable_software_dataatrest_encryptio
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>enable_software_dataatrest_encryptio -&gt; enable_sedbased_hardware_encryption
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>enable_sedbased_hardware_encryption -&gt; external_kms_kmip_integration
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>external_kms_kmip_integration -&gt; intransit_encryption_cvm_to_cvm
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>intransit_encryption_cvm_to_cvm -&gt; core: secured path
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNUsFugkAUvPMVL570QHrn0KRVkxpD29TW6-YJT9iob8nuWjWN_95dQOFAwAMsmczMe-xMKjUlViqOIFUnDgI6W9KM-wjm9Rc8wQ9bfTSWUvgzORYUgVchZ3u6BsSJvhTeQ6jyMBGM5ncQPipw1KXd0UUckDEj3RIv6QJxhfaqiXGzJ2HU1p5Qk0jRIlpNxor7UuUungarmgYzRwvRhl-OCM2ivSMo3aB7iRx1Ws5q_ro1YT4LXz0N3mraoH19x2J3MO6RhZBsKdN4M75lsIxXMF7Gi88JLBpGp6dz0MhGti6BRfJ7EFb5w7kuOPyuKK39YDxdx2AVuGPSaZwo7YDR-9EB8gwvb2uYOqjh5nTGTPG1aRGEz9DVD7fhdisTkNxRHy_qKEZXWSr_4RY8VJW2WU_ej3SitOrLtj95Lx-IcShmb1EFZig5atfJAm0e_APmlHte?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Licence:</strong> Data-at-rest encryption requires a Nutanix Pro or Ultimate licence</li>
@@ -7734,43 +7716,43 @@ Nutanix data-at-rest encryption (software and SED-based), key management (native
 <p>Once enabled on a container, AOS re-encrypts all objects on that datastore. This is a long-running background operation (hours to days on large clusters) with significant I/O overhead. <strong>It cannot be cancelled once started.</strong> Ensure cluster capacity is below 70%, KMS is redundant, and a maintenance window is scheduled.</p>
 </div>
 <h3 id="step-1-configure-native-key-manager">Step 1 — Configure Native Key Manager<a class="headerlink" href="#step-1-configure-native-key-manager" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Prism Element → Settings → Data Encryption → Key Management
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  Key Management Mode: Native
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  Passphrase: &lt;strong passphrase — record securely&gt;
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  Confirm passphrase
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>  Save
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Prism Element → Settings → Data Encryption → Key Management
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>  Key Management Mode: Native
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>  Passphrase: &lt;strong passphrase — record securely&gt;
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>  Confirm passphrase
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>  Save
 </code></pre></div>
 <p>The passphrase protects the master encryption key. <strong>If lost, encrypted data cannot be recovered.</strong> Store the passphrase in a password vault (CyberArk, HashiCorp Vault, or similar).</p>
 <h3 id="step-2-enable-encryption-on-a-container">Step 2 — Enable Encryption on a Container<a class="headerlink" href="#step-2-enable-encryption-on-a-container" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Prism Element → Storage → Storage Containers → select container
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>  Actions → Enable Encryption
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>  Confirm: Yes, I understand this will re-encrypt existing data
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Prism Element → Storage → Storage Containers → select container
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  Actions → Enable Encryption
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  Confirm: Yes, I understand this will re-encrypt existing data
 </code></pre></div>
 <h3 id="monitor-re-encryption-progress">Monitor Re-Encryption Progress<a class="headerlink" href="#monitor-re-encryption-progress" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Check Curator tasks — re-encryption shows as a Curator scan</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>curator_cli<span class="w"> </span>get_last_successful_scans<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>curator_cli<span class="w"> </span>display_curator_tasks<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>encrypt
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># NCC check for encryption status</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>ncc<span class="w"> </span>--health_checks<span class="w"> </span>data_encryption_check
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check Curator tasks — re-encryption shows as a Curator scan</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>curator_cli<span class="w"> </span>get_last_successful_scans<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>curator_cli<span class="w"> </span>display_curator_tasks<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>encrypt
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># NCC check for encryption status</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>ncc<span class="w"> </span>--health_checks<span class="w"> </span>data_encryption_check
 </code></pre></div>
 <hr />
 <h2 id="enable-sed-based-hardware-encryption">Enable SED-Based Hardware Encryption<a class="headerlink" href="#enable-sed-based-hardware-encryption" title="Permanent link">&para;</a></h2>
 <p>Requires all nodes to have SED disks (verified during Foundation imaging).</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Prism Element → Settings → Data Encryption → Key Management
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>  Key Management Mode: Native (or KMIP external)
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>  Enable Hardware Encryption (SEDs): Yes
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Prism Element → Settings → Data Encryption → Key Management
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  Key Management Mode: Native (or KMIP external)
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  Enable Hardware Encryption (SEDs): Yes
 </code></pre></div>
 <p>SED encryption is performed by the drive itself — no CPU overhead. Data on a failed/removed drive is unreadable without the encryption key, enabling secure drive disposal.</p>
 <hr />
 <h2 id="external-kms-kmip-integration">External KMS (KMIP) Integration<a class="headerlink" href="#external-kms-kmip-integration" title="Permanent link">&para;</a></h2>
 <p>For regulatory compliance (FIPS 140-2), use an external key manager.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Prism Element → Settings → Data Encryption → Key Management
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  Key Management Mode: External (KMIP)
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  KMIP Server: &lt;kmip-server-ip&gt;:&lt;port&gt;   (default port 5696)
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>  TLS Certificate: upload client cert for mTLS
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>  CA Certificate: upload KMS CA cert
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>  Test Connectivity: click Test
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Prism Element → Settings → Data Encryption → Key Management
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>  Key Management Mode: External (KMIP)
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>  KMIP Server: &lt;kmip-server-ip&gt;:&lt;port&gt;   (default port 5696)
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>  TLS Certificate: upload client cert for mTLS
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>  CA Certificate: upload KMS CA cert
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>  Test Connectivity: click Test
 </code></pre></div>
 <p>Supported KMIP servers:
 - Thales CipherTrust (SafeNet KeySecure)
@@ -7780,34 +7762,34 @@ Nutanix data-at-rest encryption (software and SED-based), key management (native
 <hr />
 <h2 id="in-transit-encryption-cvm-to-cvm">In-Transit Encryption (CVM to CVM)<a class="headerlink" href="#in-transit-encryption-cvm-to-cvm" title="Permanent link">&para;</a></h2>
 <p>AOS encrypts replication traffic between remote sites by default for Nutanix DR policies. For Protection Domain replication, enable encryption explicitly:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>ncli<span class="w"> </span>pd<span class="w"> </span>edit<span class="w"> </span><span class="nv">name</span><span class="o">=</span>&lt;pd-name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span>enable-replication-ssl<span class="o">=</span><span class="nb">true</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>ncli<span class="w"> </span>pd<span class="w"> </span>edit<span class="w"> </span><span class="nv">name</span><span class="o">=</span>&lt;pd-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span>enable-replication-ssl<span class="o">=</span><span class="nb">true</span>
 </code></pre></div>
 <p>For CVM-to-CVM within a cluster, inter-node traffic on the internal network is not encrypted by default (relies on network-level isolation). For cross-cluster or WAN replication, SSL is strongly recommended.</p>
 <hr />
 <h2 id="key-rotation-re-key">Key Rotation (Re-Key)<a class="headerlink" href="#key-rotation-re-key" title="Permanent link">&para;</a></h2>
 <p>Periodic key rotation is a compliance requirement (e.g., annually).</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Prism Element → Settings → Data Encryption → Key Management
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>  Rotate Key → confirm passphrase → New Passphrase → Confirm
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Prism Element → Settings → Data Encryption → Key Management
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>  Rotate Key → confirm passphrase → New Passphrase → Confirm
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Monitor re-key (same Curator task monitoring as initial encryption)</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>curator_cli<span class="w"> </span>display_curator_tasks<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>encrypt
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Monitor re-key (same Curator task monitoring as initial encryption)</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>curator_cli<span class="w"> </span>display_curator_tasks<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>encrypt
 </code></pre></div>
 <p>Re-key triggers a background re-encryption of all data with the new key. Same I/O impact as initial encryption — schedule during low-traffic windows.</p>
 <hr />
 <h2 id="verify-encryption-status">Verify Encryption Status<a class="headerlink" href="#verify-encryption-status" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Check if encryption is enabled per container</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>ncli<span class="w"> </span>ctr<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>encrypt
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># NCC encryption health check</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>ncc<span class="w"> </span>--health_checks<span class="w"> </span>data_encryption_check
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1"># Check native KMS status</span>
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>ncli<span class="w"> </span>cluster<span class="w"> </span>get-data-encryption-status
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Check if encryption is enabled per container</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>ncli<span class="w"> </span>ctr<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>encrypt
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># NCC encryption health check</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>ncc<span class="w"> </span>--health_checks<span class="w"> </span>data_encryption_check
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># Check native KMS status</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>ncli<span class="w"> </span>cluster<span class="w"> </span>get-data-encryption-status
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>Prism Element → Settings → Data Encryption
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>  Should show: &quot;Encryption is enabled&quot; for each protected container
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>  Key manager: status &quot;Connected&quot; (for external KMS)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Prism Element → Settings → Data Encryption
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>  Should show: &quot;Encryption is enabled&quot; for each protected container
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>  Key manager: status &quot;Connected&quot; (for external KMS)
 </code></pre></div>
 <hr />
 <h2 id="disable-encryption">Disable Encryption<a class="headerlink" href="#disable-encryption" title="Permanent link">&para;</a></h2>
@@ -7815,8 +7797,8 @@ Nutanix data-at-rest encryption (software and SED-based), key management (native
 <p class="admonition-title">Disabling encryption triggers full re-decryption</p>
 <p>Same I/O impact as enabling. Ensure capacity headroom and a maintenance window.</p>
 </div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Prism Element → Settings → Data Encryption → select container
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>  Actions → Disable Encryption → Confirm
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>Prism Element → Settings → Data Encryption → select container
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>  Actions → Disable Encryption → Confirm
 </code></pre></div>
 <hr />
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>

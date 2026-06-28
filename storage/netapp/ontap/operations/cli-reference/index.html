@@ -8465,23 +8465,7 @@ NetApp ONTAP is the operating system that runs on NetApp storage arrays (AFF, FA
 <p>SSH to the cluster management IP and log in as <code>admin</code>. Use <code>cluster-name::&gt;</code> as your prompt. Commands that affect a specific SVM typically require <code>-vserver &lt;svm&gt;</code>.</p>
 </blockquote>
 <hr />
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>hub: &quot;NetApp ONTAP\nOperations&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>cluster_nodes: &quot;Cluster &amp; Nodes&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>system_health_events: &quot;System Health &amp; Events&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>storage_aggregates_disks: &quot;Storage — Aggregates &amp; Disks&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>volumes: &quot;Volumes&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>snapshots: &quot;Snapshots&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>svms_storage_virtual_machines: &quot;SVMs (Storage Virtual Machines)&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>hub -&gt; cluster_nodes
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>hub -&gt; system_health_events
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>hub -&gt; storage_aggregates_disks
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>hub -&gt; volumes
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>hub -&gt; snapshots
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>hub -&gt; svms_storage_virtual_machines
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp9UcFKxDAQvfcrhj0sevAHehCKCl62K-zSkxDGdkjCpklJ0qLIgh_hF_olNummIkRvk_fevHkz6aSl1kujS7CSC18UYnwpYVOTr4YB9vWxenrW-4EsBpXbwLsTOFAJgl6RG30uWjU6T5Zp05GbW--WN2yhDshPR5iEmis6F-5tlvRMECovGE2kfWg9RBgeIzwbPEQi7-CNRU4MObfE0ZNjnXSn6LJQ8PXxCdVKz3b3QZB1m4wa-5i-War8TI2DE2aJmuq8cuodSxEnaf2IivXYCqnjlEOzc3CVgjaLAHYXwXXWM_wM3NzCr3snMHfQlfvjVIm_LL_K02Yr8N8yxTdw_tJ-?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Access:</strong> Storage admin credentials (cluster admin or equivalent)</li>
@@ -8492,521 +8476,521 @@ NetApp ONTAP is the operating system that runs on NetApp storage arrays (AFF, FA
 <hr />
 <h2 id="cluster-nodes">Cluster &amp; Nodes<a class="headerlink" href="#cluster-nodes" title="Permanent link">&para;</a></h2>
 <p>Cluster-level identity, health status, HA pairs, NTP, and node-level diagnostics. Run these first when connecting to an unfamiliar cluster.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Identity and status</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>cluster<span class="w"> </span>show
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>cluster<span class="w"> </span>identity<span class="w"> </span>show
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>cluster<span class="w"> </span>identity<span class="w"> </span>modify<span class="w"> </span>-name<span class="w"> </span>&lt;new_name&gt;
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>cluster<span class="w"> </span>ring<span class="w"> </span>show
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>cluster<span class="w"> </span>ha<span class="w"> </span>show
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>version
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># NTP (time sync is critical — certificate errors and log correlation break without it)</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>cluster<span class="w"> </span>time-service<span class="w"> </span>ntp<span class="w"> </span>server<span class="w"> </span>show
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>cluster<span class="w"> </span>time-service<span class="w"> </span>ntp<span class="w"> </span>server<span class="w"> </span>create<span class="w"> </span>-server<span class="w"> </span>&lt;ip&gt;
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>cluster<span class="w"> </span>time-service<span class="w"> </span>ntp<span class="w"> </span>server<span class="w"> </span>delete<span class="w"> </span>-server<span class="w"> </span>&lt;ip&gt;
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="c1"># Node status</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>node<span class="w"> </span>show
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>node<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>node,health,uptime,model,serial-number
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="c1"># Node-level diagnostics (drops to node shell)</span>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>node<span class="w"> </span>run<span class="w"> </span>-node<span class="w"> </span>&lt;node&gt;<span class="w"> </span>sysconfig
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>node<span class="w"> </span>run<span class="w"> </span>-node<span class="w"> </span>&lt;node&gt;<span class="w"> </span>sysconfig<span class="w"> </span>-a
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>node<span class="w"> </span>run<span class="w"> </span>-node<span class="w"> </span>&lt;node&gt;<span class="w"> </span>sysconfig<span class="w"> </span>-r
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>node<span class="w"> </span>run<span class="w"> </span>-node<span class="w"> </span>&lt;node&gt;<span class="w"> </span>df<span class="w"> </span>-h
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>node<span class="w"> </span>run<span class="w"> </span>-node<span class="w"> </span>&lt;node&gt;<span class="w"> </span>environment<span class="w"> </span>status
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Identity and status</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>cluster<span class="w"> </span>show
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>cluster<span class="w"> </span>identity<span class="w"> </span>show
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>cluster<span class="w"> </span>identity<span class="w"> </span>modify<span class="w"> </span>-name<span class="w"> </span>&lt;new_name&gt;
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>cluster<span class="w"> </span>ring<span class="w"> </span>show
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>cluster<span class="w"> </span>ha<span class="w"> </span>show
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>version
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1"># NTP (time sync is critical — certificate errors and log correlation break without it)</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>cluster<span class="w"> </span>time-service<span class="w"> </span>ntp<span class="w"> </span>server<span class="w"> </span>show
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>cluster<span class="w"> </span>time-service<span class="w"> </span>ntp<span class="w"> </span>server<span class="w"> </span>create<span class="w"> </span>-server<span class="w"> </span>&lt;ip&gt;
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>cluster<span class="w"> </span>time-service<span class="w"> </span>ntp<span class="w"> </span>server<span class="w"> </span>delete<span class="w"> </span>-server<span class="w"> </span>&lt;ip&gt;
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="c1"># Node status</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>node<span class="w"> </span>show
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>node<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>node,health,uptime,model,serial-number
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="c1"># Node-level diagnostics (drops to node shell)</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>node<span class="w"> </span>run<span class="w"> </span>-node<span class="w"> </span>&lt;node&gt;<span class="w"> </span>sysconfig
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>node<span class="w"> </span>run<span class="w"> </span>-node<span class="w"> </span>&lt;node&gt;<span class="w"> </span>sysconfig<span class="w"> </span>-a
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>node<span class="w"> </span>run<span class="w"> </span>-node<span class="w"> </span>&lt;node&gt;<span class="w"> </span>sysconfig<span class="w"> </span>-r
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>node<span class="w"> </span>run<span class="w"> </span>-node<span class="w"> </span>&lt;node&gt;<span class="w"> </span>df<span class="w"> </span>-h
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>node<span class="w"> </span>run<span class="w"> </span>-node<span class="w"> </span>&lt;node&gt;<span class="w"> </span>environment<span class="w"> </span>status
 </code></pre></div>
 <hr />
 <h2 id="system-health-events">System Health &amp; Events<a class="headerlink" href="#system-health-events" title="Permanent link">&para;</a></h2>
 <p>Overall health status, active alerts, the EMS event log, firmware updates, and AutoSupport. Start here when investigating issues or before maintenance windows.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Overall health</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>system<span class="w"> </span>health<span class="w"> </span>status<span class="w"> </span>show<span class="w">                     </span><span class="c1"># expected: ok</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>system<span class="w"> </span>health<span class="w"> </span>alert<span class="w"> </span>show<span class="w">                      </span><span class="c1"># unresolved alerts</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>system<span class="w"> </span>health<span class="w"> </span>subsystem<span class="w"> </span>show
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>system<span class="w"> </span>health<span class="w"> </span>node-connectivity<span class="w"> </span>show
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># EMS event log</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>event<span class="w"> </span>log<span class="w"> </span>show
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>event<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-severity<span class="w"> </span>emergency
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>event<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-severity<span class="w"> </span>alert
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>event<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-severity<span class="w"> </span>error
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>event<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-node<span class="w"> </span>&lt;node_name&gt;
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>event<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-time<span class="w"> </span><span class="s2">&quot;&gt;1h&quot;</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>event<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-time<span class="w"> </span><span class="s2">&quot;&gt;24h&quot;</span>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>event<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-messagename<span class="w"> </span>wafl.vol.full
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="c1"># EMS notification destinations (email, syslog)</span>
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>event<span class="w"> </span>notification<span class="w"> </span>show
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>event<span class="w"> </span>notification<span class="w"> </span>destination<span class="w"> </span>show
-<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>
-<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="c1"># Software images</span>
-<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>system<span class="w"> </span>node<span class="w"> </span>image<span class="w"> </span>show
-<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>
-<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a><span class="c1"># Firmware updates (disk, shelf, SP)</span>
-<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a>system<span class="w"> </span>node<span class="w"> </span>firmware<span class="w"> </span>update<span class="w"> </span>-node<span class="w"> </span>&lt;node&gt;
-<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a>system<span class="w"> </span>node<span class="w"> </span>upgrade-revert<span class="w"> </span>show
-<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a>
-<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a><span class="c1"># AutoSupport</span>
-<a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a>system<span class="w"> </span>node<span class="w"> </span>autosupport<span class="w"> </span>show
-<a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a>system<span class="w"> </span>node<span class="w"> </span>autosupport<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>state,last-successful-destination
-<a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a>system<span class="w"> </span>node<span class="w"> </span>autosupport<span class="w"> </span>invoke<span class="w"> </span>-node<span class="w"> </span>&lt;node&gt;<span class="w"> </span>-type<span class="w"> </span>all<span class="w"> </span>-message<span class="w"> </span><span class="s2">&quot;Manual test&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Overall health</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>system<span class="w"> </span>health<span class="w"> </span>status<span class="w"> </span>show<span class="w">                     </span><span class="c1"># expected: ok</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>system<span class="w"> </span>health<span class="w"> </span>alert<span class="w"> </span>show<span class="w">                      </span><span class="c1"># unresolved alerts</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>system<span class="w"> </span>health<span class="w"> </span>subsystem<span class="w"> </span>show
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>system<span class="w"> </span>health<span class="w"> </span>node-connectivity<span class="w"> </span>show
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># EMS event log</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>event<span class="w"> </span>log<span class="w"> </span>show
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>event<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-severity<span class="w"> </span>emergency
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>event<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-severity<span class="w"> </span>alert
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>event<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-severity<span class="w"> </span>error
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>event<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-node<span class="w"> </span>&lt;node_name&gt;
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>event<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-time<span class="w"> </span><span class="s2">&quot;&gt;1h&quot;</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>event<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-time<span class="w"> </span><span class="s2">&quot;&gt;24h&quot;</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>event<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-messagename<span class="w"> </span>wafl.vol.full
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="c1"># EMS notification destinations (email, syslog)</span>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>event<span class="w"> </span>notification<span class="w"> </span>show
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>event<span class="w"> </span>notification<span class="w"> </span>destination<span class="w"> </span>show
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="c1"># Software images</span>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>system<span class="w"> </span>node<span class="w"> </span>image<span class="w"> </span>show
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="c1"># Firmware updates (disk, shelf, SP)</span>
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>system<span class="w"> </span>node<span class="w"> </span>firmware<span class="w"> </span>update<span class="w"> </span>-node<span class="w"> </span>&lt;node&gt;
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>system<span class="w"> </span>node<span class="w"> </span>upgrade-revert<span class="w"> </span>show
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a><span class="c1"># AutoSupport</span>
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>system<span class="w"> </span>node<span class="w"> </span>autosupport<span class="w"> </span>show
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>system<span class="w"> </span>node<span class="w"> </span>autosupport<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>state,last-successful-destination
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>system<span class="w"> </span>node<span class="w"> </span>autosupport<span class="w"> </span>invoke<span class="w"> </span>-node<span class="w"> </span>&lt;node&gt;<span class="w"> </span>-type<span class="w"> </span>all<span class="w"> </span>-message<span class="w"> </span><span class="s2">&quot;Manual test&quot;</span>
 </code></pre></div>
 <hr />
 <h2 id="storage-aggregates-disks">Storage — Aggregates &amp; Disks<a class="headerlink" href="#storage-aggregates-disks" title="Permanent link">&para;</a></h2>
 <p>An aggregate is the physical RAID group that holds one or more volumes. Disks are the raw drives. Check aggregate capacity before provisioning new volumes.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Aggregates</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show<span class="w"> </span>-state<span class="w"> </span>online
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>aggr-name,node,size,availsize,usedsize,state
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show-space
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show-space<span class="w"> </span>-aggregate<span class="w"> </span>&lt;aggr&gt;
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># Aggregate operations</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>rename<span class="w"> </span>-aggregate<span class="w"> </span>&lt;old_name&gt;<span class="w"> </span>-newname<span class="w"> </span>&lt;new_name&gt;
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>modify<span class="w"> </span>-aggregate<span class="w"> </span>&lt;aggr&gt;<span class="w"> </span>-maxraidsize<span class="w"> </span><span class="m">24</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>add-disks<span class="w"> </span>-aggregate<span class="w"> </span>&lt;aggr&gt;<span class="w"> </span>-diskcount<span class="w"> </span>&lt;n&gt;
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c1"># Disks</span>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>storage<span class="w"> </span>disk<span class="w"> </span>show
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>storage<span class="w"> </span>disk<span class="w"> </span>show<span class="w"> </span>-broken<span class="w">                           </span><span class="c1"># failed or suspect</span>
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>storage<span class="w"> </span>disk<span class="w"> </span>show<span class="w"> </span>-container-type<span class="w"> </span>spare<span class="w">             </span><span class="c1"># available spares</span>
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>storage<span class="w"> </span>disk<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>disk,bay,node,container-type,disk-type,rpm,size,position
-<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>
-<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="c1"># Disk operations</span>
-<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>storage<span class="w"> </span>disk<span class="w"> </span>unfail<span class="w"> </span>-disk<span class="w"> </span>&lt;disk_name&gt;<span class="w">               </span><span class="c1"># re-add after investigation</span>
-<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>storage<span class="w"> </span>disk<span class="w"> </span>assign<span class="w"> </span>-disk<span class="w"> </span>&lt;disk_name&gt;<span class="w"> </span>-owner<span class="w"> </span>&lt;node_name&gt;
-<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>
-<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a><span class="c1"># RAID groups</span>
-<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show-raidtree<span class="w"> </span>-aggregate<span class="w"> </span>&lt;aggr&gt;
-<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>raidtype
-<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>
-<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a><span class="c1"># Disk shelves</span>
-<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>storage<span class="w"> </span>shelf<span class="w"> </span>show
-<a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a>storage<span class="w"> </span>shelf<span class="w"> </span>show<span class="w"> </span>-detail
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Aggregates</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show<span class="w"> </span>-state<span class="w"> </span>online
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>aggr-name,node,size,availsize,usedsize,state
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show-space
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show-space<span class="w"> </span>-aggregate<span class="w"> </span>&lt;aggr&gt;
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Aggregate operations</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>rename<span class="w"> </span>-aggregate<span class="w"> </span>&lt;old_name&gt;<span class="w"> </span>-newname<span class="w"> </span>&lt;new_name&gt;
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>modify<span class="w"> </span>-aggregate<span class="w"> </span>&lt;aggr&gt;<span class="w"> </span>-maxraidsize<span class="w"> </span><span class="m">24</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>add-disks<span class="w"> </span>-aggregate<span class="w"> </span>&lt;aggr&gt;<span class="w"> </span>-diskcount<span class="w"> </span>&lt;n&gt;
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Disks</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>storage<span class="w"> </span>disk<span class="w"> </span>show
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>storage<span class="w"> </span>disk<span class="w"> </span>show<span class="w"> </span>-broken<span class="w">                           </span><span class="c1"># failed or suspect</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>storage<span class="w"> </span>disk<span class="w"> </span>show<span class="w"> </span>-container-type<span class="w"> </span>spare<span class="w">             </span><span class="c1"># available spares</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>storage<span class="w"> </span>disk<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>disk,bay,node,container-type,disk-type,rpm,size,position
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="c1"># Disk operations</span>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>storage<span class="w"> </span>disk<span class="w"> </span>unfail<span class="w"> </span>-disk<span class="w"> </span>&lt;disk_name&gt;<span class="w">               </span><span class="c1"># re-add after investigation</span>
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>storage<span class="w"> </span>disk<span class="w"> </span>assign<span class="w"> </span>-disk<span class="w"> </span>&lt;disk_name&gt;<span class="w"> </span>-owner<span class="w"> </span>&lt;node_name&gt;
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="c1"># RAID groups</span>
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show-raidtree<span class="w"> </span>-aggregate<span class="w"> </span>&lt;aggr&gt;
+<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>raidtype
+<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a>
+<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a><span class="c1"># Disk shelves</span>
+<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a>storage<span class="w"> </span>shelf<span class="w"> </span>show
+<a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a>storage<span class="w"> </span>shelf<span class="w"> </span>show<span class="w"> </span>-detail
 </code></pre></div>
 <hr />
 <h2 id="volumes">Volumes<a class="headerlink" href="#volumes" title="Permanent link">&para;</a></h2>
 <p>Volumes are the logical containers for data in ONTAP. Each volume lives in an aggregate and can be mounted at a junction path in the SVM namespace. FlexClone creates instant space-efficient copies for test/dev.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># List and status</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>volume<span class="w"> </span>show
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>volume<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>volume<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>volume,vserver,size,used,available,percent-used,state
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>volume<span class="w"> </span>show<span class="w"> </span>-state<span class="w"> </span>offline
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>volume<span class="w"> </span>show<span class="w"> </span>-junction-path<span class="w"> </span>&lt;path&gt;
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Create / modify / delete</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>volume<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;<span class="w"> </span>-aggregate<span class="w"> </span>&lt;aggr&gt;<span class="w"> </span>-size<span class="w"> </span>&lt;size&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">    </span>-junction-path<span class="w"> </span>&lt;path&gt;<span class="w"> </span>-policy<span class="w"> </span>&lt;export-policy&gt;
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>volume<span class="w"> </span>modify<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;<span class="w"> </span>-size<span class="w"> </span>&lt;size&gt;
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>volume<span class="w"> </span>modify<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;<span class="w"> </span>-percent-snapshot-space<span class="w"> </span>&lt;n&gt;
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>volume<span class="w"> </span>rename<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;old&gt;<span class="w"> </span>-newname<span class="w"> </span>&lt;new&gt;
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>volume<span class="w"> </span>delete<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="c1"># Mount / unmount</span>
-<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>volume<span class="w"> </span>mount<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;<span class="w"> </span>-junction-path<span class="w"> </span>&lt;path&gt;
-<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>volume<span class="w"> </span>unmount<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;
-<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>
-<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="c1"># Bring online / offline</span>
-<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>volume<span class="w"> </span>online<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;
-<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>volume<span class="w"> </span>offline<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;
-<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a>
-<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a><span class="c1"># Storage efficiency (dedup / compression)</span>
-<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a>volume<span class="w"> </span>efficiency<span class="w"> </span>show
-<a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a>volume<span class="w"> </span>efficiency<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;
-<a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a>volume<span class="w"> </span>efficiency<span class="w"> </span>start<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;
-<a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a>volume<span class="w"> </span>efficiency<span class="w"> </span>stop<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;
-<a id="__codelineno-4-29" name="__codelineno-4-29" href="#__codelineno-4-29"></a>
-<a id="__codelineno-4-30" name="__codelineno-4-30" href="#__codelineno-4-30"></a><span class="c1"># FlexClone (instant space-efficient copy — great for dev/test)</span>
-<a id="__codelineno-4-31" name="__codelineno-4-31" href="#__codelineno-4-31"></a>volume<span class="w"> </span>clone<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-flexclone<span class="w"> </span>&lt;name&gt;<span class="w"> </span>-parent-volume<span class="w"> </span>&lt;vol&gt;
-<a id="__codelineno-4-32" name="__codelineno-4-32" href="#__codelineno-4-32"></a>volume<span class="w"> </span>clone<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-flexclone<span class="w"> </span>&lt;name&gt;<span class="w"> </span>-parent-volume<span class="w"> </span>&lt;vol&gt;<span class="w"> </span>-parent-snapshot<span class="w"> </span>&lt;snap&gt;
-<a id="__codelineno-4-33" name="__codelineno-4-33" href="#__codelineno-4-33"></a>volume<span class="w"> </span>clone<span class="w"> </span>split<span class="w"> </span>start<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-flexclone<span class="w"> </span>&lt;name&gt;
-<a id="__codelineno-4-34" name="__codelineno-4-34" href="#__codelineno-4-34"></a>volume<span class="w"> </span>clone<span class="w"> </span>split<span class="w"> </span>status<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-flexclone<span class="w"> </span>&lt;name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># List and status</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>volume<span class="w"> </span>show
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>volume<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>volume<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>volume,vserver,size,used,available,percent-used,state
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>volume<span class="w"> </span>show<span class="w"> </span>-state<span class="w"> </span>offline
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>volume<span class="w"> </span>show<span class="w"> </span>-junction-path<span class="w"> </span>&lt;path&gt;
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># Create / modify / delete</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>volume<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;<span class="w"> </span>-aggregate<span class="w"> </span>&lt;aggr&gt;<span class="w"> </span>-size<span class="w"> </span>&lt;size&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">    </span>-junction-path<span class="w"> </span>&lt;path&gt;<span class="w"> </span>-policy<span class="w"> </span>&lt;export-policy&gt;
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>volume<span class="w"> </span>modify<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;<span class="w"> </span>-size<span class="w"> </span>&lt;size&gt;
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>volume<span class="w"> </span>modify<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;<span class="w"> </span>-percent-snapshot-space<span class="w"> </span>&lt;n&gt;
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>volume<span class="w"> </span>rename<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;old&gt;<span class="w"> </span>-newname<span class="w"> </span>&lt;new&gt;
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>volume<span class="w"> </span>delete<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="c1"># Mount / unmount</span>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>volume<span class="w"> </span>mount<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;<span class="w"> </span>-junction-path<span class="w"> </span>&lt;path&gt;
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>volume<span class="w"> </span>unmount<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="c1"># Bring online / offline</span>
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>volume<span class="w"> </span>online<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>volume<span class="w"> </span>offline<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a><span class="c1"># Storage efficiency (dedup / compression)</span>
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>volume<span class="w"> </span>efficiency<span class="w"> </span>show
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>volume<span class="w"> </span>efficiency<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;
+<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>volume<span class="w"> </span>efficiency<span class="w"> </span>start<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;
+<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>volume<span class="w"> </span>efficiency<span class="w"> </span>stop<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;
+<a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a>
+<a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a><span class="c1"># FlexClone (instant space-efficient copy — great for dev/test)</span>
+<a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a>volume<span class="w"> </span>clone<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-flexclone<span class="w"> </span>&lt;name&gt;<span class="w"> </span>-parent-volume<span class="w"> </span>&lt;vol&gt;
+<a id="__codelineno-3-32" name="__codelineno-3-32" href="#__codelineno-3-32"></a>volume<span class="w"> </span>clone<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-flexclone<span class="w"> </span>&lt;name&gt;<span class="w"> </span>-parent-volume<span class="w"> </span>&lt;vol&gt;<span class="w"> </span>-parent-snapshot<span class="w"> </span>&lt;snap&gt;
+<a id="__codelineno-3-33" name="__codelineno-3-33" href="#__codelineno-3-33"></a>volume<span class="w"> </span>clone<span class="w"> </span>split<span class="w"> </span>start<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-flexclone<span class="w"> </span>&lt;name&gt;
+<a id="__codelineno-3-34" name="__codelineno-3-34" href="#__codelineno-3-34"></a>volume<span class="w"> </span>clone<span class="w"> </span>split<span class="w"> </span>status<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-flexclone<span class="w"> </span>&lt;name&gt;
 </code></pre></div>
 <hr />
 <h2 id="snapshots">Snapshots<a class="headerlink" href="#snapshots" title="Permanent link">&para;</a></h2>
 <p>ONTAP snapshots are read-only point-in-time copies stored within the same volume's snapshot reserve. They're near-instant and space-efficient — only changed blocks consume additional space.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># List snapshots</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>volume<span class="w"> </span>snapshot<span class="w"> </span>show
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>volume<span class="w"> </span>snapshot<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>volume<span class="w"> </span>snapshot<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;<span class="w"> </span>-fields<span class="w"> </span>size,create-time,busy
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1"># Create</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>volume<span class="w"> </span>snapshot<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;<span class="w"> </span>-snapshot<span class="w"> </span>&lt;snap_name&gt;
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="c1"># Delete</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>volume<span class="w"> </span>snapshot<span class="w"> </span>delete<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;<span class="w"> </span>-snapshot<span class="w"> </span>&lt;snap_name&gt;
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>volume<span class="w"> </span>snapshot<span class="w"> </span>delete<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;<span class="w"> </span>-snapshot<span class="w"> </span>*<span class="w"> </span>-force<span class="w"> </span><span class="nb">true</span><span class="w">   </span><span class="c1"># all snapshots</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="c1"># Rename</span>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>volume<span class="w"> </span>snapshot<span class="w"> </span>rename<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;<span class="w"> </span>-snapshot<span class="w"> </span>&lt;old_name&gt;<span class="w"> </span>-new-name<span class="w"> </span>&lt;new_name&gt;
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="c1"># Restore (volume must be offline or quiesced)</span>
-<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>volume<span class="w"> </span>snapshot<span class="w"> </span>restore<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;<span class="w"> </span>-snapshot<span class="w"> </span>&lt;snap_name&gt;
-<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>volume<span class="w"> </span>snapshot<span class="w"> </span>restore<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;<span class="w"> </span>-snapshot<span class="w"> </span>&lt;snap_name&gt;<span class="w"> </span>-online<span class="w"> </span><span class="nb">true</span>
-<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>
-<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a><span class="c1"># Snapshot policies</span>
-<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>volume<span class="w"> </span>snapshot<span class="w"> </span>policy<span class="w"> </span>show
-<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>volume<span class="w"> </span>snapshot<span class="w"> </span>policy<span class="w"> </span>create<span class="w"> </span>-policy<span class="w"> </span>&lt;policy_name&gt;<span class="w"> </span>-enabled<span class="w"> </span><span class="nb">true</span>
-<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>volume<span class="w"> </span>snapshot<span class="w"> </span>policy<span class="w"> </span>add-schedule<span class="w"> </span>-policy<span class="w"> </span>&lt;policy_name&gt;<span class="w"> </span>-schedule<span class="w"> </span>hourly<span class="w"> </span>-count<span class="w"> </span><span class="m">24</span>
-<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>volume<span class="w"> </span>modify<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;<span class="w"> </span>-snapshot-policy<span class="w"> </span>&lt;policy_name&gt;
-<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>
-<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a><span class="c1"># Snapshot reserve</span>
-<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a>volume<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;<span class="w"> </span>-fields<span class="w"> </span>snapshot-percent
-<a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a>volume<span class="w"> </span>modify<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;<span class="w"> </span>-percent-snapshot-space<span class="w"> </span><span class="m">15</span>
-<a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a>
-<a id="__codelineno-5-30" name="__codelineno-5-30" href="#__codelineno-5-30"></a><span class="c1"># Accessing snapshots from the client</span>
-<a id="__codelineno-5-31" name="__codelineno-5-31" href="#__codelineno-5-31"></a><span class="c1"># NFS: ls /mnt/data/.snapshot/</span>
-<a id="__codelineno-5-32" name="__codelineno-5-32" href="#__codelineno-5-32"></a><span class="c1"># SMB: \\server\share\~snapshot\</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># List snapshots</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>volume<span class="w"> </span>snapshot<span class="w"> </span>show
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>volume<span class="w"> </span>snapshot<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>volume<span class="w"> </span>snapshot<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;<span class="w"> </span>-fields<span class="w"> </span>size,create-time,busy
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># Create</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>volume<span class="w"> </span>snapshot<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;<span class="w"> </span>-snapshot<span class="w"> </span>&lt;snap_name&gt;
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># Delete</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>volume<span class="w"> </span>snapshot<span class="w"> </span>delete<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;<span class="w"> </span>-snapshot<span class="w"> </span>&lt;snap_name&gt;
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>volume<span class="w"> </span>snapshot<span class="w"> </span>delete<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;<span class="w"> </span>-snapshot<span class="w"> </span>*<span class="w"> </span>-force<span class="w"> </span><span class="nb">true</span><span class="w">   </span><span class="c1"># all snapshots</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c1"># Rename</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>volume<span class="w"> </span>snapshot<span class="w"> </span>rename<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;<span class="w"> </span>-snapshot<span class="w"> </span>&lt;old_name&gt;<span class="w"> </span>-new-name<span class="w"> </span>&lt;new_name&gt;
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="c1"># Restore (volume must be offline or quiesced)</span>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>volume<span class="w"> </span>snapshot<span class="w"> </span>restore<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;<span class="w"> </span>-snapshot<span class="w"> </span>&lt;snap_name&gt;
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>volume<span class="w"> </span>snapshot<span class="w"> </span>restore<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;<span class="w"> </span>-snapshot<span class="w"> </span>&lt;snap_name&gt;<span class="w"> </span>-online<span class="w"> </span><span class="nb">true</span>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="c1"># Snapshot policies</span>
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>volume<span class="w"> </span>snapshot<span class="w"> </span>policy<span class="w"> </span>show
+<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>volume<span class="w"> </span>snapshot<span class="w"> </span>policy<span class="w"> </span>create<span class="w"> </span>-policy<span class="w"> </span>&lt;policy_name&gt;<span class="w"> </span>-enabled<span class="w"> </span><span class="nb">true</span>
+<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a>volume<span class="w"> </span>snapshot<span class="w"> </span>policy<span class="w"> </span>add-schedule<span class="w"> </span>-policy<span class="w"> </span>&lt;policy_name&gt;<span class="w"> </span>-schedule<span class="w"> </span>hourly<span class="w"> </span>-count<span class="w"> </span><span class="m">24</span>
+<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a>volume<span class="w"> </span>modify<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;<span class="w"> </span>-snapshot-policy<span class="w"> </span>&lt;policy_name&gt;
+<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a>
+<a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a><span class="c1"># Snapshot reserve</span>
+<a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a>volume<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;<span class="w"> </span>-fields<span class="w"> </span>snapshot-percent
+<a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a>volume<span class="w"> </span>modify<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;<span class="w"> </span>-percent-snapshot-space<span class="w"> </span><span class="m">15</span>
+<a id="__codelineno-4-29" name="__codelineno-4-29" href="#__codelineno-4-29"></a>
+<a id="__codelineno-4-30" name="__codelineno-4-30" href="#__codelineno-4-30"></a><span class="c1"># Accessing snapshots from the client</span>
+<a id="__codelineno-4-31" name="__codelineno-4-31" href="#__codelineno-4-31"></a><span class="c1"># NFS: ls /mnt/data/.snapshot/</span>
+<a id="__codelineno-4-32" name="__codelineno-4-32" href="#__codelineno-4-32"></a><span class="c1"># SMB: \\server\share\~snapshot\</span>
 </code></pre></div>
 <hr />
 <h2 id="svms-storage-virtual-machines">SVMs (Storage Virtual Machines)<a class="headerlink" href="#svms-storage-virtual-machines" title="Permanent link">&para;</a></h2>
 <p>SVMs (also called Vservers) are the data access layer. Each SVM has its own namespace, protocols, network interfaces, and security configuration — think of each SVM as an isolated virtual storage appliance within the cluster.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># List and view</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>vserver<span class="w"> </span>show
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>vserver<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>vserver,type,state,allowed-protocols
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>vserver<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># Create</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>vserver<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">    </span>-rootvolume<span class="w"> </span>&lt;vol_name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="w">    </span>-aggregate<span class="w"> </span>&lt;aggr_name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="w">    </span>-rootvolume-security-style<span class="w"> </span>unix<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="w">    </span>-language<span class="w"> </span>C.UTF-8
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>vserver<span class="w"> </span>modify<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span>-allowed-protocols<span class="w"> </span>nfs,cifs
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="c1"># Delete</span>
-<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>vserver<span class="w"> </span>stop<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
-<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>vserver<span class="w"> </span>delete<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
-<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>
-<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a><span class="c1"># Protocol management</span>
-<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a>vserver<span class="w"> </span>show-protocols<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
-<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a>vserver<span class="w"> </span>modify<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span>-allowed-protocols<span class="w"> </span>nfs,cifs,iscsi
-<a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a>
-<a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a><span class="c1"># Network interfaces (LIFs)</span>
-<a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a>network<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
-<a id="__codelineno-6-25" name="__codelineno-6-25" href="#__codelineno-6-25"></a>network<span class="w"> </span>interface<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span>-lif<span class="w"> </span>&lt;lif_name&gt;<span class="w"> </span>-role<span class="w"> </span>data<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-26" name="__codelineno-6-26" href="#__codelineno-6-26"></a><span class="w">    </span>-data-protocol<span class="w"> </span>nfs<span class="w"> </span>-home-node<span class="w"> </span>&lt;node_name&gt;<span class="w"> </span>-home-port<span class="w"> </span>&lt;port&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-27" name="__codelineno-6-27" href="#__codelineno-6-27"></a><span class="w">    </span>-address<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-netmask<span class="w"> </span>&lt;mask&gt;
-<a id="__codelineno-6-28" name="__codelineno-6-28" href="#__codelineno-6-28"></a>network<span class="w"> </span>interface<span class="w"> </span>migrate<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span>-lif<span class="w"> </span>&lt;lif_name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-29" name="__codelineno-6-29" href="#__codelineno-6-29"></a><span class="w">    </span>-dest-node<span class="w"> </span>&lt;node_name&gt;<span class="w"> </span>-dest-port<span class="w"> </span>&lt;port&gt;
-<a id="__codelineno-6-30" name="__codelineno-6-30" href="#__codelineno-6-30"></a>
-<a id="__codelineno-6-31" name="__codelineno-6-31" href="#__codelineno-6-31"></a><span class="c1"># Join SVM to Active Directory (CIFS)</span>
-<a id="__codelineno-6-32" name="__codelineno-6-32" href="#__codelineno-6-32"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span>-cifs-server<span class="w"> </span>&lt;netbios_name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-33" name="__codelineno-6-33" href="#__codelineno-6-33"></a><span class="w">    </span>-domain<span class="w"> </span>corp.local<span class="w"> </span>-ou<span class="w"> </span><span class="s2">&quot;OU=StorageServers,DC=corp,DC=local&quot;</span>
-<a id="__codelineno-6-34" name="__codelineno-6-34" href="#__codelineno-6-34"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
-<a id="__codelineno-6-35" name="__codelineno-6-35" href="#__codelineno-6-35"></a>
-<a id="__codelineno-6-36" name="__codelineno-6-36" href="#__codelineno-6-36"></a><span class="c1"># NFS service</span>
-<a id="__codelineno-6-37" name="__codelineno-6-37" href="#__codelineno-6-37"></a>vserver<span class="w"> </span>nfs<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span>-access<span class="w"> </span><span class="nb">true</span><span class="w"> </span>-v3<span class="w"> </span>enabled<span class="w"> </span>-v4.1<span class="w"> </span>enabled
-<a id="__codelineno-6-38" name="__codelineno-6-38" href="#__codelineno-6-38"></a>vserver<span class="w"> </span>nfs<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
-<a id="__codelineno-6-39" name="__codelineno-6-39" href="#__codelineno-6-39"></a>
-<a id="__codelineno-6-40" name="__codelineno-6-40" href="#__codelineno-6-40"></a><span class="c1"># SVM state management</span>
-<a id="__codelineno-6-41" name="__codelineno-6-41" href="#__codelineno-6-41"></a>vserver<span class="w"> </span>stop<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
-<a id="__codelineno-6-42" name="__codelineno-6-42" href="#__codelineno-6-42"></a>vserver<span class="w"> </span>start<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># List and view</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>vserver<span class="w"> </span>show
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>vserver<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>vserver,type,state,allowed-protocols
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>vserver<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1"># Create</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>vserver<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">    </span>-rootvolume<span class="w"> </span>&lt;vol_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">    </span>-aggregate<span class="w"> </span>&lt;aggr_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">    </span>-rootvolume-security-style<span class="w"> </span>unix<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="w">    </span>-language<span class="w"> </span>C.UTF-8
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>vserver<span class="w"> </span>modify<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span>-allowed-protocols<span class="w"> </span>nfs,cifs
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="c1"># Delete</span>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>vserver<span class="w"> </span>stop<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>vserver<span class="w"> </span>delete<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="c1"># Protocol management</span>
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>vserver<span class="w"> </span>show-protocols<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>vserver<span class="w"> </span>modify<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span>-allowed-protocols<span class="w"> </span>nfs,cifs,iscsi
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a><span class="c1"># Network interfaces (LIFs)</span>
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>network<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>network<span class="w"> </span>interface<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span>-lif<span class="w"> </span>&lt;lif_name&gt;<span class="w"> </span>-role<span class="w"> </span>data<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a><span class="w">    </span>-data-protocol<span class="w"> </span>nfs<span class="w"> </span>-home-node<span class="w"> </span>&lt;node_name&gt;<span class="w"> </span>-home-port<span class="w"> </span>&lt;port&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a><span class="w">    </span>-address<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-netmask<span class="w"> </span>&lt;mask&gt;
+<a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a>network<span class="w"> </span>interface<span class="w"> </span>migrate<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span>-lif<span class="w"> </span>&lt;lif_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a><span class="w">    </span>-dest-node<span class="w"> </span>&lt;node_name&gt;<span class="w"> </span>-dest-port<span class="w"> </span>&lt;port&gt;
+<a id="__codelineno-5-30" name="__codelineno-5-30" href="#__codelineno-5-30"></a>
+<a id="__codelineno-5-31" name="__codelineno-5-31" href="#__codelineno-5-31"></a><span class="c1"># Join SVM to Active Directory (CIFS)</span>
+<a id="__codelineno-5-32" name="__codelineno-5-32" href="#__codelineno-5-32"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span>-cifs-server<span class="w"> </span>&lt;netbios_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-33" name="__codelineno-5-33" href="#__codelineno-5-33"></a><span class="w">    </span>-domain<span class="w"> </span>corp.local<span class="w"> </span>-ou<span class="w"> </span><span class="s2">&quot;OU=StorageServers,DC=corp,DC=local&quot;</span>
+<a id="__codelineno-5-34" name="__codelineno-5-34" href="#__codelineno-5-34"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
+<a id="__codelineno-5-35" name="__codelineno-5-35" href="#__codelineno-5-35"></a>
+<a id="__codelineno-5-36" name="__codelineno-5-36" href="#__codelineno-5-36"></a><span class="c1"># NFS service</span>
+<a id="__codelineno-5-37" name="__codelineno-5-37" href="#__codelineno-5-37"></a>vserver<span class="w"> </span>nfs<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span>-access<span class="w"> </span><span class="nb">true</span><span class="w"> </span>-v3<span class="w"> </span>enabled<span class="w"> </span>-v4.1<span class="w"> </span>enabled
+<a id="__codelineno-5-38" name="__codelineno-5-38" href="#__codelineno-5-38"></a>vserver<span class="w"> </span>nfs<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
+<a id="__codelineno-5-39" name="__codelineno-5-39" href="#__codelineno-5-39"></a>
+<a id="__codelineno-5-40" name="__codelineno-5-40" href="#__codelineno-5-40"></a><span class="c1"># SVM state management</span>
+<a id="__codelineno-5-41" name="__codelineno-5-41" href="#__codelineno-5-41"></a>vserver<span class="w"> </span>stop<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
+<a id="__codelineno-5-42" name="__codelineno-5-42" href="#__codelineno-5-42"></a>vserver<span class="w"> </span>start<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
 </code></pre></div>
 <hr />
 <h2 id="network">Network<a class="headerlink" href="#network" title="Permanent link">&para;</a></h2>
 <p>LIFs (Logical Interfaces) are the IP addresses that clients connect to. Each LIF lives on a port and can be migrated between nodes for load balancing or maintenance.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># LIFs</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>network<span class="w"> </span>interface<span class="w"> </span>show
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>network<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>network<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>lif,vserver,address,home-node,home-port,status-oper
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>network<span class="w"> </span>interface<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-lif<span class="w"> </span>&lt;lif&gt;<span class="w"> </span>-role<span class="w"> </span>data<span class="w"> </span>-data-protocol<span class="w"> </span>nfs<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">    </span>-home-node<span class="w"> </span>&lt;node&gt;<span class="w"> </span>-home-port<span class="w"> </span>&lt;port&gt;<span class="w"> </span>-address<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-netmask<span class="w"> </span>&lt;mask&gt;
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>network<span class="w"> </span>interface<span class="w"> </span>modify<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-lif<span class="w"> </span>&lt;lif&gt;<span class="w"> </span>-address<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-netmask<span class="w"> </span>&lt;mask&gt;
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>network<span class="w"> </span>interface<span class="w"> </span>delete<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-lif<span class="w"> </span>&lt;lif&gt;
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>network<span class="w"> </span>interface<span class="w"> </span>migrate<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-lif<span class="w"> </span>&lt;lif&gt;<span class="w"> </span>-dest-node<span class="w"> </span>&lt;node&gt;<span class="w"> </span>-dest-port<span class="w"> </span>&lt;port&gt;
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>network<span class="w"> </span>interface<span class="w"> </span>revert<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-lif<span class="w"> </span>&lt;lif&gt;
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>network<span class="w"> </span>interface<span class="w"> </span>failover-groups<span class="w"> </span>show
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>
-<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="c1"># Ports</span>
-<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>network<span class="w"> </span>port<span class="w"> </span>show
-<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>network<span class="w"> </span>port<span class="w"> </span>show<span class="w"> </span>-role<span class="w"> </span>data
-<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>network<span class="w"> </span>port<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>node,port,speed,health-status,link-status
-<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>network<span class="w"> </span>port<span class="w"> </span>ifgrp<span class="w"> </span>show
-<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>network<span class="w"> </span>port<span class="w"> </span>vlan<span class="w"> </span>show
-<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>
-<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a><span class="c1"># Routes</span>
-<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>network<span class="w"> </span>route<span class="w"> </span>show
-<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>network<span class="w"> </span>route<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-destination<span class="w"> </span><span class="m">0</span>.0.0.0/0<span class="w"> </span>-gateway<span class="w"> </span>&lt;gw&gt;
-<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>network<span class="w"> </span>route<span class="w"> </span>delete<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-destination<span class="w"> </span><span class="m">0</span>.0.0.0/0<span class="w"> </span>-gateway<span class="w"> </span>&lt;gw&gt;
-<a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a>
-<a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a><span class="c1"># Connectivity test</span>
-<a id="__codelineno-7-26" name="__codelineno-7-26" href="#__codelineno-7-26"></a>network<span class="w"> </span>ping<span class="w"> </span>-lif<span class="w"> </span>&lt;lif&gt;<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-destination<span class="w"> </span>&lt;ip&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># LIFs</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>network<span class="w"> </span>interface<span class="w"> </span>show
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>network<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>network<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>lif,vserver,address,home-node,home-port,status-oper
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>network<span class="w"> </span>interface<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-lif<span class="w"> </span>&lt;lif&gt;<span class="w"> </span>-role<span class="w"> </span>data<span class="w"> </span>-data-protocol<span class="w"> </span>nfs<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">    </span>-home-node<span class="w"> </span>&lt;node&gt;<span class="w"> </span>-home-port<span class="w"> </span>&lt;port&gt;<span class="w"> </span>-address<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-netmask<span class="w"> </span>&lt;mask&gt;
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>network<span class="w"> </span>interface<span class="w"> </span>modify<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-lif<span class="w"> </span>&lt;lif&gt;<span class="w"> </span>-address<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-netmask<span class="w"> </span>&lt;mask&gt;
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>network<span class="w"> </span>interface<span class="w"> </span>delete<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-lif<span class="w"> </span>&lt;lif&gt;
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>network<span class="w"> </span>interface<span class="w"> </span>migrate<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-lif<span class="w"> </span>&lt;lif&gt;<span class="w"> </span>-dest-node<span class="w"> </span>&lt;node&gt;<span class="w"> </span>-dest-port<span class="w"> </span>&lt;port&gt;
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>network<span class="w"> </span>interface<span class="w"> </span>revert<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-lif<span class="w"> </span>&lt;lif&gt;
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>network<span class="w"> </span>interface<span class="w"> </span>failover-groups<span class="w"> </span>show
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="c1"># Ports</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>network<span class="w"> </span>port<span class="w"> </span>show
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>network<span class="w"> </span>port<span class="w"> </span>show<span class="w"> </span>-role<span class="w"> </span>data
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>network<span class="w"> </span>port<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>node,port,speed,health-status,link-status
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>network<span class="w"> </span>port<span class="w"> </span>ifgrp<span class="w"> </span>show
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>network<span class="w"> </span>port<span class="w"> </span>vlan<span class="w"> </span>show
+<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>
+<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a><span class="c1"># Routes</span>
+<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a>network<span class="w"> </span>route<span class="w"> </span>show
+<a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a>network<span class="w"> </span>route<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-destination<span class="w"> </span><span class="m">0</span>.0.0.0/0<span class="w"> </span>-gateway<span class="w"> </span>&lt;gw&gt;
+<a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a>network<span class="w"> </span>route<span class="w"> </span>delete<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-destination<span class="w"> </span><span class="m">0</span>.0.0.0/0<span class="w"> </span>-gateway<span class="w"> </span>&lt;gw&gt;
+<a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a>
+<a id="__codelineno-6-25" name="__codelineno-6-25" href="#__codelineno-6-25"></a><span class="c1"># Connectivity test</span>
+<a id="__codelineno-6-26" name="__codelineno-6-26" href="#__codelineno-6-26"></a>network<span class="w"> </span>ping<span class="w"> </span>-lif<span class="w"> </span>&lt;lif&gt;<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-destination<span class="w"> </span>&lt;ip&gt;
 </code></pre></div>
 <hr />
 <h2 id="nfs">NFS<a class="headerlink" href="#nfs" title="Permanent link">&para;</a></h2>
 <p>Configure the NFS service, export policies, and access rules. Export policies control which clients can mount which volumes — every volume references an export policy by name.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># NFS service</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>vserver<span class="w"> </span>nfs<span class="w"> </span>show
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>vserver<span class="w"> </span>nfs<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>vserver<span class="w"> </span>nfs<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-v3<span class="w"> </span>enabled<span class="w"> </span>-v4.0<span class="w"> </span>enabled<span class="w"> </span>-v4.1<span class="w"> </span>enabled
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>vserver<span class="w"> </span>nfs<span class="w"> </span>modify<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-v4.1<span class="w"> </span>enabled
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># Export policies</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>vserver<span class="w"> </span>export-policy<span class="w"> </span>show
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>vserver<span class="w"> </span>export-policy<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>vserver<span class="w"> </span>export-policy<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-policyname<span class="w"> </span>&lt;name&gt;
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>vserver<span class="w"> </span>export-policy<span class="w"> </span>delete<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-policyname<span class="w"> </span>&lt;name&gt;
-<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>
-<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="c1"># Export rules (each rule defines who can access and how)</span>
-<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>vserver<span class="w"> </span>export-policy<span class="w"> </span>rule<span class="w"> </span>show
-<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>vserver<span class="w"> </span>export-policy<span class="w"> </span>rule<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-policyname<span class="w"> </span>&lt;name&gt;
-<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>vserver<span class="w"> </span>export-policy<span class="w"> </span>rule<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a><span class="w">    </span>-policyname<span class="w"> </span>&lt;name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a><span class="w">    </span>-ruleindex<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a><span class="w">    </span>-clientmatch<span class="w"> </span>&lt;cidr_or_ip&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a><span class="w">    </span>-rorule<span class="w"> </span>sys<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a><span class="w">    </span>-rwrule<span class="w"> </span>sys<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a><span class="w">    </span>-superuser<span class="w"> </span>sys
-<a id="__codelineno-8-24" name="__codelineno-8-24" href="#__codelineno-8-24"></a>vserver<span class="w"> </span>export-policy<span class="w"> </span>rule<span class="w"> </span>delete<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-policyname<span class="w"> </span>&lt;name&gt;<span class="w"> </span>-ruleindex<span class="w"> </span>&lt;n&gt;
-<a id="__codelineno-8-25" name="__codelineno-8-25" href="#__codelineno-8-25"></a>
-<a id="__codelineno-8-26" name="__codelineno-8-26" href="#__codelineno-8-26"></a><span class="c1"># Assign policy to volume</span>
-<a id="__codelineno-8-27" name="__codelineno-8-27" href="#__codelineno-8-27"></a>volume<span class="w"> </span>modify<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;<span class="w"> </span>-policy<span class="w"> </span>&lt;export-policy&gt;
-<a id="__codelineno-8-28" name="__codelineno-8-28" href="#__codelineno-8-28"></a>
-<a id="__codelineno-8-29" name="__codelineno-8-29" href="#__codelineno-8-29"></a><span class="c1"># Verify client access</span>
-<a id="__codelineno-8-30" name="__codelineno-8-30" href="#__codelineno-8-30"></a>vserver<span class="w"> </span>nfs<span class="w"> </span>check-client<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-client-ip<span class="w"> </span>&lt;ip&gt;
-<a id="__codelineno-8-31" name="__codelineno-8-31" href="#__codelineno-8-31"></a>
-<a id="__codelineno-8-32" name="__codelineno-8-32" href="#__codelineno-8-32"></a><span class="c1"># Connected NFS clients</span>
-<a id="__codelineno-8-33" name="__codelineno-8-33" href="#__codelineno-8-33"></a>nfs<span class="w"> </span>connected-client<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># NFS service</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>vserver<span class="w"> </span>nfs<span class="w"> </span>show
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>vserver<span class="w"> </span>nfs<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>vserver<span class="w"> </span>nfs<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-v3<span class="w"> </span>enabled<span class="w"> </span>-v4.0<span class="w"> </span>enabled<span class="w"> </span>-v4.1<span class="w"> </span>enabled
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>vserver<span class="w"> </span>nfs<span class="w"> </span>modify<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-v4.1<span class="w"> </span>enabled
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># Export policies</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>vserver<span class="w"> </span>export-policy<span class="w"> </span>show
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>vserver<span class="w"> </span>export-policy<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>vserver<span class="w"> </span>export-policy<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-policyname<span class="w"> </span>&lt;name&gt;
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>vserver<span class="w"> </span>export-policy<span class="w"> </span>delete<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-policyname<span class="w"> </span>&lt;name&gt;
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="c1"># Export rules (each rule defines who can access and how)</span>
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>vserver<span class="w"> </span>export-policy<span class="w"> </span>rule<span class="w"> </span>show
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>vserver<span class="w"> </span>export-policy<span class="w"> </span>rule<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-policyname<span class="w"> </span>&lt;name&gt;
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>vserver<span class="w"> </span>export-policy<span class="w"> </span>rule<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a><span class="w">    </span>-policyname<span class="w"> </span>&lt;name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a><span class="w">    </span>-ruleindex<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a><span class="w">    </span>-clientmatch<span class="w"> </span>&lt;cidr_or_ip&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a><span class="w">    </span>-rorule<span class="w"> </span>sys<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a><span class="w">    </span>-rwrule<span class="w"> </span>sys<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a><span class="w">    </span>-superuser<span class="w"> </span>sys
+<a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a>vserver<span class="w"> </span>export-policy<span class="w"> </span>rule<span class="w"> </span>delete<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-policyname<span class="w"> </span>&lt;name&gt;<span class="w"> </span>-ruleindex<span class="w"> </span>&lt;n&gt;
+<a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a>
+<a id="__codelineno-7-26" name="__codelineno-7-26" href="#__codelineno-7-26"></a><span class="c1"># Assign policy to volume</span>
+<a id="__codelineno-7-27" name="__codelineno-7-27" href="#__codelineno-7-27"></a>volume<span class="w"> </span>modify<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;<span class="w"> </span>-policy<span class="w"> </span>&lt;export-policy&gt;
+<a id="__codelineno-7-28" name="__codelineno-7-28" href="#__codelineno-7-28"></a>
+<a id="__codelineno-7-29" name="__codelineno-7-29" href="#__codelineno-7-29"></a><span class="c1"># Verify client access</span>
+<a id="__codelineno-7-30" name="__codelineno-7-30" href="#__codelineno-7-30"></a>vserver<span class="w"> </span>nfs<span class="w"> </span>check-client<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-client-ip<span class="w"> </span>&lt;ip&gt;
+<a id="__codelineno-7-31" name="__codelineno-7-31" href="#__codelineno-7-31"></a>
+<a id="__codelineno-7-32" name="__codelineno-7-32" href="#__codelineno-7-32"></a><span class="c1"># Connected NFS clients</span>
+<a id="__codelineno-7-33" name="__codelineno-7-33" href="#__codelineno-7-33"></a>nfs<span class="w"> </span>connected-client<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
 </code></pre></div>
 <hr />
 <h2 id="cifs-smb">CIFS / SMB<a class="headerlink" href="#cifs-smb" title="Permanent link">&para;</a></h2>
 <p>Create and manage CIFS (SMB) file shares. The CIFS server is joined to Active Directory. Shares expose volume paths to Windows clients.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># CIFS server</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>show
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-cifs-server<span class="w"> </span>&lt;name&gt;<span class="w"> </span>-domain<span class="w"> </span>&lt;domain&gt;
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>delete<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1"># Shares</span>
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>share<span class="w"> </span>show
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>share<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
-<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>share<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-share-name<span class="w"> </span>&lt;name&gt;<span class="w"> </span>-path<span class="w"> </span>&lt;path&gt;
-<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>share<span class="w"> </span>modify<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-share-name<span class="w"> </span>&lt;name&gt;<span class="w"> </span>-comment<span class="w"> </span>&lt;text&gt;
-<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>share<span class="w"> </span>delete<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-share-name<span class="w"> </span>&lt;name&gt;
-<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>share<span class="w"> </span>access-control<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-share<span class="w"> </span>&lt;name&gt;
-<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>share<span class="w"> </span>access-control<span class="w"> </span>modify<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-share<span class="w"> </span>&lt;name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a><span class="w">    </span>-user-or-group<span class="w"> </span>&lt;group&gt;<span class="w"> </span>-permission<span class="w"> </span>Full_Control
-<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>
-<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a><span class="c1"># Sessions and open files</span>
-<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>session<span class="w"> </span>show
-<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>session<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
-<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>session<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>node,vserver,connection-count
-<a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>session<span class="w"> </span>file<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
-<a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>session<span class="w"> </span>close<span class="w"> </span>-node<span class="w"> </span>&lt;node&gt;<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-session-id<span class="w"> </span>&lt;id&gt;
-<a id="__codelineno-9-24" name="__codelineno-9-24" href="#__codelineno-9-24"></a>
-<a id="__codelineno-9-25" name="__codelineno-9-25" href="#__codelineno-9-25"></a><span class="c1"># SMB version settings (disable SMB1 for security)</span>
-<a id="__codelineno-9-26" name="__codelineno-9-26" href="#__codelineno-9-26"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>options<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
-<a id="__codelineno-9-27" name="__codelineno-9-27" href="#__codelineno-9-27"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>options<span class="w"> </span>modify<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-smb1-enabled<span class="w"> </span><span class="nb">false</span>
-<a id="__codelineno-9-28" name="__codelineno-9-28" href="#__codelineno-9-28"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>options<span class="w"> </span>modify<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-smb2-enabled<span class="w"> </span><span class="nb">true</span>
-<a id="__codelineno-9-29" name="__codelineno-9-29" href="#__codelineno-9-29"></a>
-<a id="__codelineno-9-30" name="__codelineno-9-30" href="#__codelineno-9-30"></a><span class="c1"># AD connectivity check</span>
-<a id="__codelineno-9-31" name="__codelineno-9-31" href="#__codelineno-9-31"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-fields<span class="w"> </span>ad-status
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># CIFS server</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>show
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-cifs-server<span class="w"> </span>&lt;name&gt;<span class="w"> </span>-domain<span class="w"> </span>&lt;domain&gt;
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>delete<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># Shares</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>share<span class="w"> </span>show
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>share<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>share<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-share-name<span class="w"> </span>&lt;name&gt;<span class="w"> </span>-path<span class="w"> </span>&lt;path&gt;
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>share<span class="w"> </span>modify<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-share-name<span class="w"> </span>&lt;name&gt;<span class="w"> </span>-comment<span class="w"> </span>&lt;text&gt;
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>share<span class="w"> </span>delete<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-share-name<span class="w"> </span>&lt;name&gt;
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>share<span class="w"> </span>access-control<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-share<span class="w"> </span>&lt;name&gt;
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>share<span class="w"> </span>access-control<span class="w"> </span>modify<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-share<span class="w"> </span>&lt;name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="w">    </span>-user-or-group<span class="w"> </span>&lt;group&gt;<span class="w"> </span>-permission<span class="w"> </span>Full_Control
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a><span class="c1"># Sessions and open files</span>
+<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>session<span class="w"> </span>show
+<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>session<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
+<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>session<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>node,vserver,connection-count
+<a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>session<span class="w"> </span>file<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
+<a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>session<span class="w"> </span>close<span class="w"> </span>-node<span class="w"> </span>&lt;node&gt;<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-session-id<span class="w"> </span>&lt;id&gt;
+<a id="__codelineno-8-24" name="__codelineno-8-24" href="#__codelineno-8-24"></a>
+<a id="__codelineno-8-25" name="__codelineno-8-25" href="#__codelineno-8-25"></a><span class="c1"># SMB version settings (disable SMB1 for security)</span>
+<a id="__codelineno-8-26" name="__codelineno-8-26" href="#__codelineno-8-26"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>options<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
+<a id="__codelineno-8-27" name="__codelineno-8-27" href="#__codelineno-8-27"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>options<span class="w"> </span>modify<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-smb1-enabled<span class="w"> </span><span class="nb">false</span>
+<a id="__codelineno-8-28" name="__codelineno-8-28" href="#__codelineno-8-28"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>options<span class="w"> </span>modify<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-smb2-enabled<span class="w"> </span><span class="nb">true</span>
+<a id="__codelineno-8-29" name="__codelineno-8-29" href="#__codelineno-8-29"></a>
+<a id="__codelineno-8-30" name="__codelineno-8-30" href="#__codelineno-8-30"></a><span class="c1"># AD connectivity check</span>
+<a id="__codelineno-8-31" name="__codelineno-8-31" href="#__codelineno-8-31"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-fields<span class="w"> </span>ad-status
 </code></pre></div>
 <hr />
 <h2 id="block-protocols-iscsi-fc">Block Protocols (iSCSI / FC)<a class="headerlink" href="#block-protocols-iscsi-fc" title="Permanent link">&para;</a></h2>
 <p>Present LUNs to hosts via iSCSI or Fibre Channel. LUNs are mapped to igroups (initiator groups) — an igroup lists the WWNs or IQNs of hosts that are allowed to see the LUN.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># iSCSI service</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>vserver<span class="w"> </span>iscsi<span class="w"> </span>show
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>vserver<span class="w"> </span>iscsi<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>vserver<span class="w"> </span>iscsi<span class="w"> </span>modify<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-is-admin-enabled<span class="w"> </span><span class="nb">true</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="c1"># LUNs</span>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>lun<span class="w"> </span>show
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>lun<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
-<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>lun<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>path,vserver,size,state,mapped,os-type
-<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>lun<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-path<span class="w"> </span>&lt;path&gt;<span class="w"> </span>-size<span class="w"> </span>&lt;size&gt;<span class="w"> </span>-ostype<span class="w"> </span>vmware
-<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>lun<span class="w"> </span>delete<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-path<span class="w"> </span>&lt;path&gt;
-<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>lun<span class="w"> </span>resize<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-path<span class="w"> </span>&lt;path&gt;<span class="w"> </span>-size<span class="w"> </span>&lt;size&gt;
-<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>lun<span class="w"> </span>online<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-path<span class="w"> </span>&lt;path&gt;
-<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>lun<span class="w"> </span>offline<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-path<span class="w"> </span>&lt;path&gt;
-<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>lun<span class="w"> </span>map<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-path<span class="w"> </span>&lt;path&gt;<span class="w"> </span>-igroup<span class="w"> </span>&lt;igroup&gt;
-<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>lun<span class="w"> </span>unmap<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-path<span class="w"> </span>&lt;path&gt;<span class="w"> </span>-igroup<span class="w"> </span>&lt;igroup&gt;
-<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a>lun<span class="w"> </span>mapping<span class="w"> </span>show
-<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a>lun<span class="w"> </span>mapping<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
-<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a>
-<a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a><span class="c1"># igroups (define which hosts can see which LUNs)</span>
-<a id="__codelineno-10-21" name="__codelineno-10-21" href="#__codelineno-10-21"></a>lun<span class="w"> </span>igroup<span class="w"> </span>show
-<a id="__codelineno-10-22" name="__codelineno-10-22" href="#__codelineno-10-22"></a>lun<span class="w"> </span>igroup<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
-<a id="__codelineno-10-23" name="__codelineno-10-23" href="#__codelineno-10-23"></a>lun<span class="w"> </span>igroup<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-igroup<span class="w"> </span>&lt;name&gt;<span class="w"> </span>-protocol<span class="w"> </span>iscsi<span class="w"> </span>-ostype<span class="w"> </span>vmware
-<a id="__codelineno-10-24" name="__codelineno-10-24" href="#__codelineno-10-24"></a>lun<span class="w"> </span>igroup<span class="w"> </span>add<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-igroup<span class="w"> </span>&lt;name&gt;<span class="w"> </span>-initiator<span class="w"> </span>&lt;iqn&gt;
-<a id="__codelineno-10-25" name="__codelineno-10-25" href="#__codelineno-10-25"></a>lun<span class="w"> </span>igroup<span class="w"> </span>remove<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-igroup<span class="w"> </span>&lt;name&gt;<span class="w"> </span>-initiator<span class="w"> </span>&lt;iqn&gt;
-<a id="__codelineno-10-26" name="__codelineno-10-26" href="#__codelineno-10-26"></a>lun<span class="w"> </span>igroup<span class="w"> </span>delete<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-igroup<span class="w"> </span>&lt;name&gt;
-<a id="__codelineno-10-27" name="__codelineno-10-27" href="#__codelineno-10-27"></a>
-<a id="__codelineno-10-28" name="__codelineno-10-28" href="#__codelineno-10-28"></a><span class="c1"># Fibre Channel</span>
-<a id="__codelineno-10-29" name="__codelineno-10-29" href="#__codelineno-10-29"></a>vserver<span class="w"> </span>fcp<span class="w"> </span>show
-<a id="__codelineno-10-30" name="__codelineno-10-30" href="#__codelineno-10-30"></a>vserver<span class="w"> </span>fcp<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
-<a id="__codelineno-10-31" name="__codelineno-10-31" href="#__codelineno-10-31"></a>fcp<span class="w"> </span>adapter<span class="w"> </span>show
-<a id="__codelineno-10-32" name="__codelineno-10-32" href="#__codelineno-10-32"></a>fcp<span class="w"> </span>adapter<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>node,adapter,state,speed,fabric-established
-<a id="__codelineno-10-33" name="__codelineno-10-33" href="#__codelineno-10-33"></a>fcp<span class="w"> </span>interface<span class="w"> </span>show
-<a id="__codelineno-10-34" name="__codelineno-10-34" href="#__codelineno-10-34"></a>fcp<span class="w"> </span>initiator<span class="w"> </span>show
-<a id="__codelineno-10-35" name="__codelineno-10-35" href="#__codelineno-10-35"></a>lun<span class="w"> </span>igroup<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-igroup<span class="w"> </span>&lt;name&gt;<span class="w"> </span>-protocol<span class="w"> </span>fcp<span class="w"> </span>-ostype<span class="w"> </span>vmware
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># iSCSI service</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>vserver<span class="w"> </span>iscsi<span class="w"> </span>show
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>vserver<span class="w"> </span>iscsi<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>vserver<span class="w"> </span>iscsi<span class="w"> </span>modify<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-is-admin-enabled<span class="w"> </span><span class="nb">true</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="c1"># LUNs</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>lun<span class="w"> </span>show
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>lun<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>lun<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>path,vserver,size,state,mapped,os-type
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>lun<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-path<span class="w"> </span>&lt;path&gt;<span class="w"> </span>-size<span class="w"> </span>&lt;size&gt;<span class="w"> </span>-ostype<span class="w"> </span>vmware
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>lun<span class="w"> </span>delete<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-path<span class="w"> </span>&lt;path&gt;
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>lun<span class="w"> </span>resize<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-path<span class="w"> </span>&lt;path&gt;<span class="w"> </span>-size<span class="w"> </span>&lt;size&gt;
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>lun<span class="w"> </span>online<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-path<span class="w"> </span>&lt;path&gt;
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>lun<span class="w"> </span>offline<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-path<span class="w"> </span>&lt;path&gt;
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>lun<span class="w"> </span>map<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-path<span class="w"> </span>&lt;path&gt;<span class="w"> </span>-igroup<span class="w"> </span>&lt;igroup&gt;
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>lun<span class="w"> </span>unmap<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-path<span class="w"> </span>&lt;path&gt;<span class="w"> </span>-igroup<span class="w"> </span>&lt;igroup&gt;
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>lun<span class="w"> </span>mapping<span class="w"> </span>show
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>lun<span class="w"> </span>mapping<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a><span class="c1"># igroups (define which hosts can see which LUNs)</span>
+<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a>lun<span class="w"> </span>igroup<span class="w"> </span>show
+<a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a>lun<span class="w"> </span>igroup<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
+<a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a>lun<span class="w"> </span>igroup<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-igroup<span class="w"> </span>&lt;name&gt;<span class="w"> </span>-protocol<span class="w"> </span>iscsi<span class="w"> </span>-ostype<span class="w"> </span>vmware
+<a id="__codelineno-9-24" name="__codelineno-9-24" href="#__codelineno-9-24"></a>lun<span class="w"> </span>igroup<span class="w"> </span>add<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-igroup<span class="w"> </span>&lt;name&gt;<span class="w"> </span>-initiator<span class="w"> </span>&lt;iqn&gt;
+<a id="__codelineno-9-25" name="__codelineno-9-25" href="#__codelineno-9-25"></a>lun<span class="w"> </span>igroup<span class="w"> </span>remove<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-igroup<span class="w"> </span>&lt;name&gt;<span class="w"> </span>-initiator<span class="w"> </span>&lt;iqn&gt;
+<a id="__codelineno-9-26" name="__codelineno-9-26" href="#__codelineno-9-26"></a>lun<span class="w"> </span>igroup<span class="w"> </span>delete<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-igroup<span class="w"> </span>&lt;name&gt;
+<a id="__codelineno-9-27" name="__codelineno-9-27" href="#__codelineno-9-27"></a>
+<a id="__codelineno-9-28" name="__codelineno-9-28" href="#__codelineno-9-28"></a><span class="c1"># Fibre Channel</span>
+<a id="__codelineno-9-29" name="__codelineno-9-29" href="#__codelineno-9-29"></a>vserver<span class="w"> </span>fcp<span class="w"> </span>show
+<a id="__codelineno-9-30" name="__codelineno-9-30" href="#__codelineno-9-30"></a>vserver<span class="w"> </span>fcp<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
+<a id="__codelineno-9-31" name="__codelineno-9-31" href="#__codelineno-9-31"></a>fcp<span class="w"> </span>adapter<span class="w"> </span>show
+<a id="__codelineno-9-32" name="__codelineno-9-32" href="#__codelineno-9-32"></a>fcp<span class="w"> </span>adapter<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>node,adapter,state,speed,fabric-established
+<a id="__codelineno-9-33" name="__codelineno-9-33" href="#__codelineno-9-33"></a>fcp<span class="w"> </span>interface<span class="w"> </span>show
+<a id="__codelineno-9-34" name="__codelineno-9-34" href="#__codelineno-9-34"></a>fcp<span class="w"> </span>initiator<span class="w"> </span>show
+<a id="__codelineno-9-35" name="__codelineno-9-35" href="#__codelineno-9-35"></a>lun<span class="w"> </span>igroup<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-igroup<span class="w"> </span>&lt;name&gt;<span class="w"> </span>-protocol<span class="w"> </span>fcp<span class="w"> </span>-ostype<span class="w"> </span>vmware
 </code></pre></div>
 <hr />
 <h2 id="snapmirror">SnapMirror<a class="headerlink" href="#snapmirror" title="Permanent link">&para;</a></h2>
 <p>SnapMirror replicates volumes between SVMs or clusters for disaster recovery. The destination volume is read-only until a failover (break). Monitor lag time to ensure RPO is being met.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># View relationships</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>snapmirror<span class="w"> </span>show
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-destination-path<span class="w"> </span>&lt;svm&gt;:&lt;vol&gt;
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>source-path,destination-path,state,lag-time,health
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-health<span class="w"> </span><span class="nb">false</span><span class="w">                                          </span><span class="c1"># unhealthy only</span>
-<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>
-<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="c1"># Create</span>
-<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>snapmirror<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="w">    </span>-source-path<span class="w"> </span>&lt;src_svm&gt;:&lt;src_vol&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="w">    </span>-destination-path<span class="w"> </span>&lt;dest_svm&gt;:&lt;dest_vol&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a><span class="w">    </span>-type<span class="w"> </span>DP<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a><span class="w">    </span>-policy<span class="w"> </span>MirrorAllSnapshots
-<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>snapmirror<span class="w"> </span>delete<span class="w"> </span>-destination-path<span class="w"> </span>&lt;svm&gt;:&lt;vol&gt;
-<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>snapmirror<span class="w"> </span>release<span class="w"> </span>-source-path<span class="w"> </span>&lt;svm&gt;:&lt;vol&gt;<span class="w"> </span>-destination-path<span class="w"> </span>&lt;svm&gt;:&lt;vol&gt;
-<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>
-<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a><span class="c1"># Operations</span>
-<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>snapmirror<span class="w"> </span>initialize<span class="w"> </span>-destination-path<span class="w"> </span>&lt;svm&gt;:&lt;vol&gt;<span class="w">    </span><span class="c1"># baseline transfer</span>
-<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a>snapmirror<span class="w"> </span>update<span class="w"> </span>-destination-path<span class="w"> </span>&lt;svm&gt;:&lt;vol&gt;<span class="w">        </span><span class="c1"># manual sync</span>
-<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a>snapmirror<span class="w"> </span>quiesce<span class="w"> </span>-destination-path<span class="w"> </span>&lt;svm&gt;:&lt;vol&gt;<span class="w">       </span><span class="c1"># pause</span>
-<a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a>snapmirror<span class="w"> </span><span class="k">break</span><span class="w"> </span>-destination-path<span class="w"> </span>&lt;svm&gt;:&lt;vol&gt;<span class="w">         </span><span class="c1"># make destination writable (failover)</span>
-<a id="__codelineno-11-21" name="__codelineno-11-21" href="#__codelineno-11-21"></a>snapmirror<span class="w"> </span>resync<span class="w"> </span>-destination-path<span class="w"> </span>&lt;svm&gt;:&lt;vol&gt;<span class="w">        </span><span class="c1"># re-establish after break</span>
-<a id="__codelineno-11-22" name="__codelineno-11-22" href="#__codelineno-11-22"></a>snapmirror<span class="w"> </span>abort<span class="w"> </span>-destination-path<span class="w"> </span>&lt;svm&gt;:&lt;vol&gt;
-<a id="__codelineno-11-23" name="__codelineno-11-23" href="#__codelineno-11-23"></a>
-<a id="__codelineno-11-24" name="__codelineno-11-24" href="#__codelineno-11-24"></a><span class="c1"># Monitoring</span>
-<a id="__codelineno-11-25" name="__codelineno-11-25" href="#__codelineno-11-25"></a>snapmirror<span class="w"> </span><span class="nb">history</span><span class="w"> </span>show<span class="w"> </span>-destination-path<span class="w"> </span>&lt;svm&gt;:&lt;vol&gt;
-<a id="__codelineno-11-26" name="__codelineno-11-26" href="#__codelineno-11-26"></a>snapmirror<span class="w"> </span>lag<span class="w"> </span>show
-<a id="__codelineno-11-27" name="__codelineno-11-27" href="#__codelineno-11-27"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-transfer-progress
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># View relationships</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>snapmirror<span class="w"> </span>show
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-destination-path<span class="w"> </span>&lt;svm&gt;:&lt;vol&gt;
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>source-path,destination-path,state,lag-time,health
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-health<span class="w"> </span><span class="nb">false</span><span class="w">                                          </span><span class="c1"># unhealthy only</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># Create</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>snapmirror<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="w">    </span>-source-path<span class="w"> </span>&lt;src_svm&gt;:&lt;src_vol&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="w">    </span>-destination-path<span class="w"> </span>&lt;dest_svm&gt;:&lt;dest_vol&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="w">    </span>-type<span class="w"> </span>DP<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="w">    </span>-policy<span class="w"> </span>MirrorAllSnapshots
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>snapmirror<span class="w"> </span>delete<span class="w"> </span>-destination-path<span class="w"> </span>&lt;svm&gt;:&lt;vol&gt;
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>snapmirror<span class="w"> </span>release<span class="w"> </span>-source-path<span class="w"> </span>&lt;svm&gt;:&lt;vol&gt;<span class="w"> </span>-destination-path<span class="w"> </span>&lt;svm&gt;:&lt;vol&gt;
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a><span class="c1"># Operations</span>
+<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a>snapmirror<span class="w"> </span>initialize<span class="w"> </span>-destination-path<span class="w"> </span>&lt;svm&gt;:&lt;vol&gt;<span class="w">    </span><span class="c1"># baseline transfer</span>
+<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a>snapmirror<span class="w"> </span>update<span class="w"> </span>-destination-path<span class="w"> </span>&lt;svm&gt;:&lt;vol&gt;<span class="w">        </span><span class="c1"># manual sync</span>
+<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a>snapmirror<span class="w"> </span>quiesce<span class="w"> </span>-destination-path<span class="w"> </span>&lt;svm&gt;:&lt;vol&gt;<span class="w">       </span><span class="c1"># pause</span>
+<a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a>snapmirror<span class="w"> </span><span class="k">break</span><span class="w"> </span>-destination-path<span class="w"> </span>&lt;svm&gt;:&lt;vol&gt;<span class="w">         </span><span class="c1"># make destination writable (failover)</span>
+<a id="__codelineno-10-21" name="__codelineno-10-21" href="#__codelineno-10-21"></a>snapmirror<span class="w"> </span>resync<span class="w"> </span>-destination-path<span class="w"> </span>&lt;svm&gt;:&lt;vol&gt;<span class="w">        </span><span class="c1"># re-establish after break</span>
+<a id="__codelineno-10-22" name="__codelineno-10-22" href="#__codelineno-10-22"></a>snapmirror<span class="w"> </span>abort<span class="w"> </span>-destination-path<span class="w"> </span>&lt;svm&gt;:&lt;vol&gt;
+<a id="__codelineno-10-23" name="__codelineno-10-23" href="#__codelineno-10-23"></a>
+<a id="__codelineno-10-24" name="__codelineno-10-24" href="#__codelineno-10-24"></a><span class="c1"># Monitoring</span>
+<a id="__codelineno-10-25" name="__codelineno-10-25" href="#__codelineno-10-25"></a>snapmirror<span class="w"> </span><span class="nb">history</span><span class="w"> </span>show<span class="w"> </span>-destination-path<span class="w"> </span>&lt;svm&gt;:&lt;vol&gt;
+<a id="__codelineno-10-26" name="__codelineno-10-26" href="#__codelineno-10-26"></a>snapmirror<span class="w"> </span>lag<span class="w"> </span>show
+<a id="__codelineno-10-27" name="__codelineno-10-27" href="#__codelineno-10-27"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-transfer-progress
 </code></pre></div>
 <hr />
 <h2 id="quotas">Quotas<a class="headerlink" href="#quotas" title="Permanent link">&para;</a></h2>
 <p>Quotas limit disk space and file counts on volumes, qtrees, or users. Enable quotas on a volume, create rules, then resize to activate them without disrupting access.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># View quota status and usage</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>volume<span class="w"> </span>quota<span class="w"> </span>show
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>volume<span class="w"> </span>quota<span class="w"> </span>report<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>volume<span class="w"> </span>quota<span class="w"> </span>policy<span class="w"> </span>rule<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>
-<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="c1"># Enable / disable / resize</span>
-<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>volume<span class="w"> </span>quota<span class="w"> </span>on<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;
-<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>volume<span class="w"> </span>quota<span class="w"> </span>off<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;
-<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>volume<span class="w"> </span>quota<span class="w"> </span>resize<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;<span class="w">    </span><span class="c1"># pick up new rules without disabling</span>
-<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>
-<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="c1"># Create quota rules</span>
-<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a><span class="c1"># Tree quota — limit a qtree</span>
-<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>volume<span class="w"> </span>quota<span class="w"> </span>policy<span class="w"> </span>rule<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-policy-name<span class="w"> </span>default<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a><span class="w">    </span>-type<span class="w"> </span>tree<span class="w"> </span>-target<span class="w"> </span>/qtree_name<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a><span class="w">    </span>-disk-limit<span class="w"> </span>500g<span class="w"> </span>-soft-disk-limit<span class="w"> </span>400g
-<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a>
-<a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a><span class="c1"># Default user quota (applies to all users)</span>
-<a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a>volume<span class="w"> </span>quota<span class="w"> </span>policy<span class="w"> </span>rule<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-20" name="__codelineno-12-20" href="#__codelineno-12-20"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-policy-name<span class="w"> </span>default<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-21" name="__codelineno-12-21" href="#__codelineno-12-21"></a><span class="w">    </span>-type<span class="w"> </span>user<span class="w"> </span>-target<span class="w"> </span><span class="s2">&quot;&quot;</span><span class="w"> </span>-disk-limit<span class="w"> </span>100g
-<a id="__codelineno-12-22" name="__codelineno-12-22" href="#__codelineno-12-22"></a>
-<a id="__codelineno-12-23" name="__codelineno-12-23" href="#__codelineno-12-23"></a><span class="c1"># Specific user quota</span>
-<a id="__codelineno-12-24" name="__codelineno-12-24" href="#__codelineno-12-24"></a>volume<span class="w"> </span>quota<span class="w"> </span>policy<span class="w"> </span>rule<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-25" name="__codelineno-12-25" href="#__codelineno-12-25"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-policy-name<span class="w"> </span>default<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-26" name="__codelineno-12-26" href="#__codelineno-12-26"></a><span class="w">    </span>-type<span class="w"> </span>user<span class="w"> </span>-target<span class="w"> </span><span class="s2">&quot;DOMAIN\username&quot;</span><span class="w"> </span>-disk-limit<span class="w"> </span>200g
-<a id="__codelineno-12-27" name="__codelineno-12-27" href="#__codelineno-12-27"></a>
-<a id="__codelineno-12-28" name="__codelineno-12-28" href="#__codelineno-12-28"></a><span class="c1"># Modify / delete rules</span>
-<a id="__codelineno-12-29" name="__codelineno-12-29" href="#__codelineno-12-29"></a>volume<span class="w"> </span>quota<span class="w"> </span>policy<span class="w"> </span>rule<span class="w"> </span>modify<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-30" name="__codelineno-12-30" href="#__codelineno-12-30"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-policy-name<span class="w"> </span>default<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-31" name="__codelineno-12-31" href="#__codelineno-12-31"></a><span class="w">    </span>-type<span class="w"> </span>tree<span class="w"> </span>-target<span class="w"> </span>/qtree_name<span class="w"> </span>-disk-limit<span class="w"> </span>1t
-<a id="__codelineno-12-32" name="__codelineno-12-32" href="#__codelineno-12-32"></a>volume<span class="w"> </span>quota<span class="w"> </span>policy<span class="w"> </span>rule<span class="w"> </span>delete<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-33" name="__codelineno-12-33" href="#__codelineno-12-33"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-policy-name<span class="w"> </span>default<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-34" name="__codelineno-12-34" href="#__codelineno-12-34"></a><span class="w">    </span>-type<span class="w"> </span>tree<span class="w"> </span>-target<span class="w"> </span>/qtree_name
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># View quota status and usage</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>volume<span class="w"> </span>quota<span class="w"> </span>show
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>volume<span class="w"> </span>quota<span class="w"> </span>report<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>volume<span class="w"> </span>quota<span class="w"> </span>policy<span class="w"> </span>rule<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="c1"># Enable / disable / resize</span>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>volume<span class="w"> </span>quota<span class="w"> </span>on<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>volume<span class="w"> </span>quota<span class="w"> </span>off<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>volume<span class="w"> </span>quota<span class="w"> </span>resize<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;<span class="w">    </span><span class="c1"># pick up new rules without disabling</span>
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a><span class="c1"># Create quota rules</span>
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a><span class="c1"># Tree quota — limit a qtree</span>
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>volume<span class="w"> </span>quota<span class="w"> </span>policy<span class="w"> </span>rule<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-policy-name<span class="w"> </span>default<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a><span class="w">    </span>-type<span class="w"> </span>tree<span class="w"> </span>-target<span class="w"> </span>/qtree_name<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a><span class="w">    </span>-disk-limit<span class="w"> </span>500g<span class="w"> </span>-soft-disk-limit<span class="w"> </span>400g
+<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>
+<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a><span class="c1"># Default user quota (applies to all users)</span>
+<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a>volume<span class="w"> </span>quota<span class="w"> </span>policy<span class="w"> </span>rule<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-policy-name<span class="w"> </span>default<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-21" name="__codelineno-11-21" href="#__codelineno-11-21"></a><span class="w">    </span>-type<span class="w"> </span>user<span class="w"> </span>-target<span class="w"> </span><span class="s2">&quot;&quot;</span><span class="w"> </span>-disk-limit<span class="w"> </span>100g
+<a id="__codelineno-11-22" name="__codelineno-11-22" href="#__codelineno-11-22"></a>
+<a id="__codelineno-11-23" name="__codelineno-11-23" href="#__codelineno-11-23"></a><span class="c1"># Specific user quota</span>
+<a id="__codelineno-11-24" name="__codelineno-11-24" href="#__codelineno-11-24"></a>volume<span class="w"> </span>quota<span class="w"> </span>policy<span class="w"> </span>rule<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-25" name="__codelineno-11-25" href="#__codelineno-11-25"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-policy-name<span class="w"> </span>default<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-26" name="__codelineno-11-26" href="#__codelineno-11-26"></a><span class="w">    </span>-type<span class="w"> </span>user<span class="w"> </span>-target<span class="w"> </span><span class="s2">&quot;DOMAIN\username&quot;</span><span class="w"> </span>-disk-limit<span class="w"> </span>200g
+<a id="__codelineno-11-27" name="__codelineno-11-27" href="#__codelineno-11-27"></a>
+<a id="__codelineno-11-28" name="__codelineno-11-28" href="#__codelineno-11-28"></a><span class="c1"># Modify / delete rules</span>
+<a id="__codelineno-11-29" name="__codelineno-11-29" href="#__codelineno-11-29"></a>volume<span class="w"> </span>quota<span class="w"> </span>policy<span class="w"> </span>rule<span class="w"> </span>modify<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-30" name="__codelineno-11-30" href="#__codelineno-11-30"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-policy-name<span class="w"> </span>default<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-31" name="__codelineno-11-31" href="#__codelineno-11-31"></a><span class="w">    </span>-type<span class="w"> </span>tree<span class="w"> </span>-target<span class="w"> </span>/qtree_name<span class="w"> </span>-disk-limit<span class="w"> </span>1t
+<a id="__codelineno-11-32" name="__codelineno-11-32" href="#__codelineno-11-32"></a>volume<span class="w"> </span>quota<span class="w"> </span>policy<span class="w"> </span>rule<span class="w"> </span>delete<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-33" name="__codelineno-11-33" href="#__codelineno-11-33"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-policy-name<span class="w"> </span>default<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-34" name="__codelineno-11-34" href="#__codelineno-11-34"></a><span class="w">    </span>-type<span class="w"> </span>tree<span class="w"> </span>-target<span class="w"> </span>/qtree_name
 </code></pre></div>
 <hr />
 <h2 id="performance-qos">Performance &amp; QoS<a class="headerlink" href="#performance-qos" title="Permanent link">&para;</a></h2>
 <p>ONTAP statistics require a sample start/stop cycle before viewing. QoS (Quality of Service) lets you cap or guarantee throughput for specific volumes or LUNs.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Statistics collection</span>
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>statistics<span class="w"> </span>start<span class="w"> </span>-object<span class="w"> </span>volume<span class="w"> </span>-sample-id<span class="w"> </span>perf_check
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="c1"># wait 10–30 seconds</span>
-<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>statistics<span class="w"> </span>stop<span class="w"> </span>-sample-id<span class="w"> </span>perf_check
-<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>statistics<span class="w"> </span>show<span class="w"> </span>-sample-id<span class="w"> </span>perf_check
-<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>
-<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="c1"># Filter statistics output</span>
-<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>statistics<span class="w"> </span>show<span class="w"> </span>-sample-id<span class="w"> </span>perf_check<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;total_latency|read_latency|write_latency&quot;</span>
-<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>statistics<span class="w"> </span>show<span class="w"> </span>-sample-id<span class="w"> </span>perf_check<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;total_ops|read_ops|write_ops&quot;</span>
-<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>
-<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a><span class="c1"># QoS policy groups</span>
-<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>qos<span class="w"> </span>policy-group<span class="w"> </span>show
-<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>qos<span class="w"> </span>policy-group<span class="w"> </span>create<span class="w"> </span>-policy-group<span class="w"> </span>prod-limit<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-max-throughput<span class="w"> </span>5000IOPS
-<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>qos<span class="w"> </span>policy-group<span class="w"> </span>create<span class="w"> </span>-policy-group<span class="w"> </span>db-floor<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-min-throughput<span class="w"> </span>2000IOPS
-<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a>qos<span class="w"> </span>policy-group<span class="w"> </span>modify<span class="w"> </span>-policy-group<span class="w"> </span>prod-limit<span class="w"> </span>-max-throughput<span class="w"> </span>8000IOPS
-<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a>qos<span class="w"> </span>policy-group<span class="w"> </span>delete<span class="w"> </span>-policy-group<span class="w"> </span>prod-limit
-<a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a>
-<a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a><span class="c1"># Apply QoS to a volume</span>
-<a id="__codelineno-13-19" name="__codelineno-13-19" href="#__codelineno-13-19"></a>volume<span class="w"> </span>modify<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;<span class="w"> </span>-qos-policy-group<span class="w"> </span>prod-limit
-<a id="__codelineno-13-20" name="__codelineno-13-20" href="#__codelineno-13-20"></a>volume<span class="w"> </span>modify<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;<span class="w"> </span>-qos-policy-group<span class="w"> </span>none
-<a id="__codelineno-13-21" name="__codelineno-13-21" href="#__codelineno-13-21"></a>
-<a id="__codelineno-13-22" name="__codelineno-13-22" href="#__codelineno-13-22"></a><span class="c1"># QoS workload monitoring</span>
-<a id="__codelineno-13-23" name="__codelineno-13-23" href="#__codelineno-13-23"></a>qos<span class="w"> </span>workload<span class="w"> </span>show
-<a id="__codelineno-13-24" name="__codelineno-13-24" href="#__codelineno-13-24"></a>qos<span class="w"> </span>statistics<span class="w"> </span>performance<span class="w"> </span>show
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Statistics collection</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>statistics<span class="w"> </span>start<span class="w"> </span>-object<span class="w"> </span>volume<span class="w"> </span>-sample-id<span class="w"> </span>perf_check
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="c1"># wait 10–30 seconds</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>statistics<span class="w"> </span>stop<span class="w"> </span>-sample-id<span class="w"> </span>perf_check
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>statistics<span class="w"> </span>show<span class="w"> </span>-sample-id<span class="w"> </span>perf_check
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="c1"># Filter statistics output</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>statistics<span class="w"> </span>show<span class="w"> </span>-sample-id<span class="w"> </span>perf_check<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;total_latency|read_latency|write_latency&quot;</span>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>statistics<span class="w"> </span>show<span class="w"> </span>-sample-id<span class="w"> </span>perf_check<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;total_ops|read_ops|write_ops&quot;</span>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="c1"># QoS policy groups</span>
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>qos<span class="w"> </span>policy-group<span class="w"> </span>show
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>qos<span class="w"> </span>policy-group<span class="w"> </span>create<span class="w"> </span>-policy-group<span class="w"> </span>prod-limit<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-max-throughput<span class="w"> </span>5000IOPS
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>qos<span class="w"> </span>policy-group<span class="w"> </span>create<span class="w"> </span>-policy-group<span class="w"> </span>db-floor<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-min-throughput<span class="w"> </span>2000IOPS
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>qos<span class="w"> </span>policy-group<span class="w"> </span>modify<span class="w"> </span>-policy-group<span class="w"> </span>prod-limit<span class="w"> </span>-max-throughput<span class="w"> </span>8000IOPS
+<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a>qos<span class="w"> </span>policy-group<span class="w"> </span>delete<span class="w"> </span>-policy-group<span class="w"> </span>prod-limit
+<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a>
+<a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a><span class="c1"># Apply QoS to a volume</span>
+<a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a>volume<span class="w"> </span>modify<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;<span class="w"> </span>-qos-policy-group<span class="w"> </span>prod-limit
+<a id="__codelineno-12-20" name="__codelineno-12-20" href="#__codelineno-12-20"></a>volume<span class="w"> </span>modify<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;<span class="w"> </span>-qos-policy-group<span class="w"> </span>none
+<a id="__codelineno-12-21" name="__codelineno-12-21" href="#__codelineno-12-21"></a>
+<a id="__codelineno-12-22" name="__codelineno-12-22" href="#__codelineno-12-22"></a><span class="c1"># QoS workload monitoring</span>
+<a id="__codelineno-12-23" name="__codelineno-12-23" href="#__codelineno-12-23"></a>qos<span class="w"> </span>workload<span class="w"> </span>show
+<a id="__codelineno-12-24" name="__codelineno-12-24" href="#__codelineno-12-24"></a>qos<span class="w"> </span>statistics<span class="w"> </span>performance<span class="w"> </span>show
 </code></pre></div>
 <hr />
 <h2 id="security-users">Security &amp; Users<a class="headerlink" href="#security-users" title="Permanent link">&para;</a></h2>
 <p>User login accounts, role-based access control, certificate management, and CIFS/NFS audit logging.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Login accounts</span>
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>security<span class="w"> </span>login<span class="w"> </span>show
-<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>security<span class="w"> </span>login<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
-<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>security<span class="w"> </span>login<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="w">    </span>-username<span class="w"> </span>&lt;user&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="w">    </span>-application<span class="w"> </span>ssh<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="w">    </span>-authentication-method<span class="w"> </span>password<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="w">    </span>-role<span class="w"> </span>admin<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;svm&gt;
-<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>security<span class="w"> </span>login<span class="w"> </span>delete<span class="w"> </span>-username<span class="w"> </span>&lt;user&gt;<span class="w"> </span>-application<span class="w"> </span>ssh<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
-<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>security<span class="w"> </span>login<span class="w"> </span>password<span class="w"> </span>-username<span class="w"> </span>&lt;user&gt;<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
-<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a>security<span class="w"> </span>login<span class="w"> </span>lock<span class="w"> </span>-username<span class="w"> </span>&lt;user&gt;<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
-<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a>security<span class="w"> </span>login<span class="w"> </span>unlock<span class="w"> </span>-username<span class="w"> </span>&lt;user&gt;<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
-<a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a>
-<a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a><span class="c1"># Roles</span>
-<a id="__codelineno-14-16" name="__codelineno-14-16" href="#__codelineno-14-16"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>show
-<a id="__codelineno-14-17" name="__codelineno-14-17" href="#__codelineno-14-17"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
-<a id="__codelineno-14-18" name="__codelineno-14-18" href="#__codelineno-14-18"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>&lt;role_name&gt;<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-14-19" name="__codelineno-14-19" href="#__codelineno-14-19"></a><span class="w">    </span>-cmddirname<span class="w"> </span>DEFAULT<span class="w"> </span>-access<span class="w"> </span>none
-<a id="__codelineno-14-20" name="__codelineno-14-20" href="#__codelineno-14-20"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>&lt;role_name&gt;<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-14-21" name="__codelineno-14-21" href="#__codelineno-14-21"></a><span class="w">    </span>-cmddirname<span class="w"> </span><span class="s2">&quot;volume show&quot;</span><span class="w"> </span>-access<span class="w"> </span><span class="nb">readonly</span>
-<a id="__codelineno-14-22" name="__codelineno-14-22" href="#__codelineno-14-22"></a>
-<a id="__codelineno-14-23" name="__codelineno-14-23" href="#__codelineno-14-23"></a><span class="c1"># Certificates</span>
-<a id="__codelineno-14-24" name="__codelineno-14-24" href="#__codelineno-14-24"></a>security<span class="w"> </span>certificate<span class="w"> </span>show
-<a id="__codelineno-14-25" name="__codelineno-14-25" href="#__codelineno-14-25"></a>security<span class="w"> </span>certificate<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
-<a id="__codelineno-14-26" name="__codelineno-14-26" href="#__codelineno-14-26"></a>security<span class="w"> </span>certificate<span class="w"> </span>install<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-type<span class="w"> </span>server
-<a id="__codelineno-14-27" name="__codelineno-14-27" href="#__codelineno-14-27"></a>security<span class="w"> </span>certificate<span class="w"> </span>generate-csr<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-14-28" name="__codelineno-14-28" href="#__codelineno-14-28"></a><span class="w">    </span>-common-name<span class="w"> </span>&lt;cn&gt;<span class="w"> </span>-size<span class="w"> </span><span class="m">2048</span><span class="w"> </span>-country<span class="w"> </span>US<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-14-29" name="__codelineno-14-29" href="#__codelineno-14-29"></a><span class="w">    </span>-state<span class="w"> </span>&lt;state&gt;<span class="w"> </span>-locality<span class="w"> </span>&lt;city&gt;<span class="w"> </span>-organization<span class="w"> </span>&lt;org&gt;
-<a id="__codelineno-14-30" name="__codelineno-14-30" href="#__codelineno-14-30"></a>
-<a id="__codelineno-14-31" name="__codelineno-14-31" href="#__codelineno-14-31"></a><span class="c1"># Audit logging (file access events)</span>
-<a id="__codelineno-14-32" name="__codelineno-14-32" href="#__codelineno-14-32"></a>vserver<span class="w"> </span>audit<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
-<a id="__codelineno-14-33" name="__codelineno-14-33" href="#__codelineno-14-33"></a>vserver<span class="w"> </span>audit<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-destination<span class="w"> </span>/audit_logs<span class="w"> </span>-format<span class="w"> </span>xml
-<a id="__codelineno-14-34" name="__codelineno-14-34" href="#__codelineno-14-34"></a>vserver<span class="w"> </span>audit<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Login accounts</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>security<span class="w"> </span>login<span class="w"> </span>show
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>security<span class="w"> </span>login<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>security<span class="w"> </span>login<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="w">    </span>-username<span class="w"> </span>&lt;user&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="w">    </span>-application<span class="w"> </span>ssh<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="w">    </span>-authentication-method<span class="w"> </span>password<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="w">    </span>-role<span class="w"> </span>admin<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;svm&gt;
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>security<span class="w"> </span>login<span class="w"> </span>delete<span class="w"> </span>-username<span class="w"> </span>&lt;user&gt;<span class="w"> </span>-application<span class="w"> </span>ssh<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>security<span class="w"> </span>login<span class="w"> </span>password<span class="w"> </span>-username<span class="w"> </span>&lt;user&gt;<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>security<span class="w"> </span>login<span class="w"> </span>lock<span class="w"> </span>-username<span class="w"> </span>&lt;user&gt;<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>security<span class="w"> </span>login<span class="w"> </span>unlock<span class="w"> </span>-username<span class="w"> </span>&lt;user&gt;<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
+<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>
+<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a><span class="c1"># Roles</span>
+<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>show
+<a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
+<a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>&lt;role_name&gt;<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-13-19" name="__codelineno-13-19" href="#__codelineno-13-19"></a><span class="w">    </span>-cmddirname<span class="w"> </span>DEFAULT<span class="w"> </span>-access<span class="w"> </span>none
+<a id="__codelineno-13-20" name="__codelineno-13-20" href="#__codelineno-13-20"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>&lt;role_name&gt;<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-13-21" name="__codelineno-13-21" href="#__codelineno-13-21"></a><span class="w">    </span>-cmddirname<span class="w"> </span><span class="s2">&quot;volume show&quot;</span><span class="w"> </span>-access<span class="w"> </span><span class="nb">readonly</span>
+<a id="__codelineno-13-22" name="__codelineno-13-22" href="#__codelineno-13-22"></a>
+<a id="__codelineno-13-23" name="__codelineno-13-23" href="#__codelineno-13-23"></a><span class="c1"># Certificates</span>
+<a id="__codelineno-13-24" name="__codelineno-13-24" href="#__codelineno-13-24"></a>security<span class="w"> </span>certificate<span class="w"> </span>show
+<a id="__codelineno-13-25" name="__codelineno-13-25" href="#__codelineno-13-25"></a>security<span class="w"> </span>certificate<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
+<a id="__codelineno-13-26" name="__codelineno-13-26" href="#__codelineno-13-26"></a>security<span class="w"> </span>certificate<span class="w"> </span>install<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-type<span class="w"> </span>server
+<a id="__codelineno-13-27" name="__codelineno-13-27" href="#__codelineno-13-27"></a>security<span class="w"> </span>certificate<span class="w"> </span>generate-csr<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-13-28" name="__codelineno-13-28" href="#__codelineno-13-28"></a><span class="w">    </span>-common-name<span class="w"> </span>&lt;cn&gt;<span class="w"> </span>-size<span class="w"> </span><span class="m">2048</span><span class="w"> </span>-country<span class="w"> </span>US<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-13-29" name="__codelineno-13-29" href="#__codelineno-13-29"></a><span class="w">    </span>-state<span class="w"> </span>&lt;state&gt;<span class="w"> </span>-locality<span class="w"> </span>&lt;city&gt;<span class="w"> </span>-organization<span class="w"> </span>&lt;org&gt;
+<a id="__codelineno-13-30" name="__codelineno-13-30" href="#__codelineno-13-30"></a>
+<a id="__codelineno-13-31" name="__codelineno-13-31" href="#__codelineno-13-31"></a><span class="c1"># Audit logging (file access events)</span>
+<a id="__codelineno-13-32" name="__codelineno-13-32" href="#__codelineno-13-32"></a>vserver<span class="w"> </span>audit<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
+<a id="__codelineno-13-33" name="__codelineno-13-33" href="#__codelineno-13-33"></a>vserver<span class="w"> </span>audit<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-destination<span class="w"> </span>/audit_logs<span class="w"> </span>-format<span class="w"> </span>xml
+<a id="__codelineno-13-34" name="__codelineno-13-34" href="#__codelineno-13-34"></a>vserver<span class="w"> </span>audit<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
 </code></pre></div>
 <hr />
 <h2 id="autosupport">AutoSupport<a class="headerlink" href="#autosupport" title="Permanent link">&para;</a></h2>
 <p>AutoSupport sends telemetry and event data to NetApp support. It enables proactive case creation and feeds into NetApp Active IQ (cloud analytics). Keep it enabled and ensure delivery is working.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># Status</span>
-<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>autosupport<span class="w"> </span>show
-<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>autosupport<span class="w"> </span>show<span class="w"> </span>-node<span class="w"> </span>&lt;node&gt;
-<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>autosupport<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>last-subject-sent,last-successful-destination
-<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>
-<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="c1"># Send messages</span>
-<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>autosupport<span class="w"> </span>invoke<span class="w"> </span>-node<span class="w"> </span>&lt;node&gt;<span class="w"> </span>-type<span class="w"> </span><span class="nb">test</span>
-<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>autosupport<span class="w"> </span>invoke<span class="w"> </span>-node<span class="w"> </span>&lt;node&gt;<span class="w"> </span>-type<span class="w"> </span>all<span class="w"> </span>-message<span class="w"> </span><span class="s2">&quot;Manual upload for case SR-XXXXX&quot;</span>
-<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>
-<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a><span class="c1"># History</span>
-<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>autosupport<span class="w"> </span><span class="nb">history</span><span class="w"> </span>show
-<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>autosupport<span class="w"> </span><span class="nb">history</span><span class="w"> </span>show<span class="w"> </span>-node<span class="w"> </span>&lt;node&gt;
-<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>autosupport<span class="w"> </span><span class="nb">history</span><span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>seq-num,status,triggered-time,destination
-<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>
-<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a><span class="c1"># Configuration</span>
-<a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a>autosupport<span class="w"> </span>modify<span class="w"> </span>-node<span class="w"> </span>&lt;node&gt;<span class="w"> </span>-state<span class="w"> </span><span class="nb">enable</span>
-<a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a>autosupport<span class="w"> </span>modify<span class="w"> </span>-node<span class="w"> </span>&lt;node&gt;<span class="w"> </span>-state<span class="w"> </span>disable
-<a id="__codelineno-15-18" name="__codelineno-15-18" href="#__codelineno-15-18"></a>autosupport<span class="w"> </span>modify<span class="w"> </span>-node<span class="w"> </span>&lt;node&gt;<span class="w"> </span>-mail-hosts<span class="w"> </span>&lt;smtp_server&gt;
-<a id="__codelineno-15-19" name="__codelineno-15-19" href="#__codelineno-15-19"></a>autosupport<span class="w"> </span>modify<span class="w"> </span>-node<span class="w"> </span>&lt;node&gt;<span class="w"> </span>-proxy-url<span class="w"> </span>http://proxy.example.local:8080
-<a id="__codelineno-15-20" name="__codelineno-15-20" href="#__codelineno-15-20"></a>autosupport<span class="w"> </span>modify<span class="w"> </span>-node<span class="w"> </span>&lt;node&gt;<span class="w"> </span>-noteto<span class="w"> </span>ops@corp.local
-<a id="__codelineno-15-21" name="__codelineno-15-21" href="#__codelineno-15-21"></a>autosupport<span class="w"> </span>modify<span class="w"> </span>-node<span class="w"> </span>&lt;node&gt;<span class="w"> </span>-transport<span class="w"> </span>https
-<a id="__codelineno-15-22" name="__codelineno-15-22" href="#__codelineno-15-22"></a>
-<a id="__codelineno-15-23" name="__codelineno-15-23" href="#__codelineno-15-23"></a><span class="c1"># Verify HTTPS connectivity</span>
-<a id="__codelineno-15-24" name="__codelineno-15-24" href="#__codelineno-15-24"></a>autosupport<span class="w"> </span>check<span class="w"> </span>show
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Status</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>autosupport<span class="w"> </span>show
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>autosupport<span class="w"> </span>show<span class="w"> </span>-node<span class="w"> </span>&lt;node&gt;
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>autosupport<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>last-subject-sent,last-successful-destination
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="c1"># Send messages</span>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>autosupport<span class="w"> </span>invoke<span class="w"> </span>-node<span class="w"> </span>&lt;node&gt;<span class="w"> </span>-type<span class="w"> </span><span class="nb">test</span>
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>autosupport<span class="w"> </span>invoke<span class="w"> </span>-node<span class="w"> </span>&lt;node&gt;<span class="w"> </span>-type<span class="w"> </span>all<span class="w"> </span>-message<span class="w"> </span><span class="s2">&quot;Manual upload for case SR-XXXXX&quot;</span>
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a><span class="c1"># History</span>
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>autosupport<span class="w"> </span><span class="nb">history</span><span class="w"> </span>show
+<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a>autosupport<span class="w"> </span><span class="nb">history</span><span class="w"> </span>show<span class="w"> </span>-node<span class="w"> </span>&lt;node&gt;
+<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a>autosupport<span class="w"> </span><span class="nb">history</span><span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>seq-num,status,triggered-time,destination
+<a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a>
+<a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a><span class="c1"># Configuration</span>
+<a id="__codelineno-14-16" name="__codelineno-14-16" href="#__codelineno-14-16"></a>autosupport<span class="w"> </span>modify<span class="w"> </span>-node<span class="w"> </span>&lt;node&gt;<span class="w"> </span>-state<span class="w"> </span><span class="nb">enable</span>
+<a id="__codelineno-14-17" name="__codelineno-14-17" href="#__codelineno-14-17"></a>autosupport<span class="w"> </span>modify<span class="w"> </span>-node<span class="w"> </span>&lt;node&gt;<span class="w"> </span>-state<span class="w"> </span>disable
+<a id="__codelineno-14-18" name="__codelineno-14-18" href="#__codelineno-14-18"></a>autosupport<span class="w"> </span>modify<span class="w"> </span>-node<span class="w"> </span>&lt;node&gt;<span class="w"> </span>-mail-hosts<span class="w"> </span>&lt;smtp_server&gt;
+<a id="__codelineno-14-19" name="__codelineno-14-19" href="#__codelineno-14-19"></a>autosupport<span class="w"> </span>modify<span class="w"> </span>-node<span class="w"> </span>&lt;node&gt;<span class="w"> </span>-proxy-url<span class="w"> </span>http://proxy.example.local:8080
+<a id="__codelineno-14-20" name="__codelineno-14-20" href="#__codelineno-14-20"></a>autosupport<span class="w"> </span>modify<span class="w"> </span>-node<span class="w"> </span>&lt;node&gt;<span class="w"> </span>-noteto<span class="w"> </span>ops@corp.local
+<a id="__codelineno-14-21" name="__codelineno-14-21" href="#__codelineno-14-21"></a>autosupport<span class="w"> </span>modify<span class="w"> </span>-node<span class="w"> </span>&lt;node&gt;<span class="w"> </span>-transport<span class="w"> </span>https
+<a id="__codelineno-14-22" name="__codelineno-14-22" href="#__codelineno-14-22"></a>
+<a id="__codelineno-14-23" name="__codelineno-14-23" href="#__codelineno-14-23"></a><span class="c1"># Verify HTTPS connectivity</span>
+<a id="__codelineno-14-24" name="__codelineno-14-24" href="#__codelineno-14-24"></a>autosupport<span class="w"> </span>check<span class="w"> </span>show
 </code></pre></div>
 <hr />
 <h2 id="verify">Verify<a class="headerlink" href="#verify" title="Permanent link">&para;</a></h2>

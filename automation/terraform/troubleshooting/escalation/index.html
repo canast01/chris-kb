@@ -7526,25 +7526,7 @@ Terraform escalation: when to open a HashiCorp support case, how to file a provi
 *Applies to: Terraform 1.x / Terraform Cloud / HCP Terraform*
 </div>
 <p><img alt="Terraform — Escalation" src="../../../../assets/automation-terraform-troubleshooting-escalation-index.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>@startuml
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>skinparam sequenceArrowThickness 1.5
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>skinparam roundcorner 5
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>actor &quot;On-Call Engineer&quot; as ENG
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>participant &quot;Escalation\nSystem&quot; as SYS
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>participant &quot;Vendor Support&quot; as SUP
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>ENG -&gt; SYS: Severity Levels
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>SYS --&gt; ENG: Output
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>ENG -&gt; SYS: Pre-Escalation Triage Checklist
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>SYS --&gt; ENG: Output
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>ENG -&gt; SYS: Step-by-Step Data Collection
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>SYS --&gt; ENG: Output
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>ENG -&gt; SUP: Escalate with diagnostic bundle
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>SUP --&gt; ENG: Case / resolution path
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>@enduml
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/plantuml/svg/eNqFkTFPAzEMhff8Cqv7gRi6dEBFR8WCaKVrkZBY3NTqRZc6wXao-u_JFaTSBaZYyffec-y5GoqVQ3Q6BM4oeAClj0Ls6UEkHdd98AOTKtzdTH9BkgrvfBImgalz6C0JTJbctBgjLHgfmEgmgAqLlydXRRZ8yMgGk4V6jGgh8Tt3JzU6nLnurbvmXol31bUrOSexb2azcq4aQnM_8jPo6JMk2AmeaxHV1Uto6mNlZrAslotd8Suh5pIPawm4J2h78kMMav_qO6PcbE_NeMIjGkKbYiQ_uv0p3qxm8BNMcAzWw65Gc9L6X9jWYUZyFbroW1SCWxDSFMu52YzWOzevUxkX9gUUVZHE?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Access:</strong> Backend credentials (S3, Azure Blob, GCS) to read and optionally restore the state file; provider credentials</li>
@@ -7636,91 +7618,91 @@ Terraform escalation: when to open a HashiCorp support case, how to file a provi
 <hr />
 <h2 id="step-by-step-data-collection">Step-by-Step Data Collection<a class="headerlink" href="#step-by-step-data-collection" title="Permanent link">&para;</a></h2>
 <h3 id="1-collect-version-and-provider-info">1. Collect version and provider info<a class="headerlink" href="#1-collect-version-and-provider-info" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Core version and all providers</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>terraform<span class="w"> </span>version<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tee<span class="w"> </span>/tmp/tf-versions.txt
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Provider constraints and locked versions</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>cat<span class="w"> </span>.terraform.lock.hcl
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>cat<span class="w"> </span>versions.tf
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Current workspace</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>terraform<span class="w"> </span>workspace<span class="w"> </span>show
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># All providers with their sources</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>terraform<span class="w"> </span>providers<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Core version and all providers</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>terraform<span class="w"> </span>version<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tee<span class="w"> </span>/tmp/tf-versions.txt
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Provider constraints and locked versions</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>cat<span class="w"> </span>.terraform.lock.hcl
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>cat<span class="w"> </span>versions.tf
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># Current workspace</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>terraform<span class="w"> </span>workspace<span class="w"> </span>show
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># All providers with their sources</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>terraform<span class="w"> </span>providers<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span>
 </code></pre></div>
 <h3 id="2-collect-debug-level-logs">2. Collect debug-level logs<a class="headerlink" href="#2-collect-debug-level-logs" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Set trace logging — WARNING: this logs provider credentials in environment variable names</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">TF_LOG</span><span class="o">=</span>TRACE
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nb">export</span><span class="w"> </span><span class="nv">TF_LOG_PATH</span><span class="o">=</span>/tmp/terraform-trace-<span class="k">$(</span>date<span class="w"> </span>+%F-%H%M%S<span class="k">)</span>.log
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Re-run the failing command (plan or apply)</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>terraform<span class="w"> </span>plan<span class="w"> </span>-input<span class="o">=</span><span class="nb">false</span><span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tee<span class="w"> </span>/tmp/terraform-plan.log
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Unset after collection</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="nb">unset</span><span class="w"> </span>TF_LOG<span class="w"> </span>TF_LOG_PATH
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Set trace logging — WARNING: this logs provider credentials in environment variable names</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">TF_LOG</span><span class="o">=</span>TRACE
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nb">export</span><span class="w"> </span><span class="nv">TF_LOG_PATH</span><span class="o">=</span>/tmp/terraform-trace-<span class="k">$(</span>date<span class="w"> </span>+%F-%H%M%S<span class="k">)</span>.log
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Re-run the failing command (plan or apply)</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>terraform<span class="w"> </span>plan<span class="w"> </span>-input<span class="o">=</span><span class="nb">false</span><span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tee<span class="w"> </span>/tmp/terraform-plan.log
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Unset after collection</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="nb">unset</span><span class="w"> </span>TF_LOG<span class="w"> </span>TF_LOG_PATH
 </code></pre></div>
 <h3 id="3-collect-state-file-safely">3. Collect state file safely<a class="headerlink" href="#3-collect-state-file-safely" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Pull current state (always back up before recovery)</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>terraform<span class="w"> </span>state<span class="w"> </span>pull<span class="w"> </span>&gt;<span class="w"> </span>/tmp/state-backup-<span class="k">$(</span>date<span class="w"> </span>+%F-%H%M%S<span class="k">)</span>.tfstate
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Sanitise sensitive values before sharing with HashiCorp support</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># DO NOT share raw state if it contains passwords, private keys, or tokens</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># Instead, share the resource type/name structure:</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>terraform<span class="w"> </span>state<span class="w"> </span>list<span class="w"> </span>&gt;<span class="w"> </span>/tmp/state-resource-list.txt
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>terraform<span class="w"> </span>show<span class="w"> </span>-json<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="s2">import sys, json</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="s2">state = json.load(sys.stdin)</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="s2"># Print only resource types and names, not attribute values</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="s2">for res in state.get(&#39;values&#39;,{}).get(&#39;root_module&#39;,{}).get(&#39;resources&#39;,[]):</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="s2">    print(f&#39;{res[\&quot;type\&quot;]}.{res[\&quot;name\&quot;]}&#39;)</span>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="s2">&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/state-structure.txt
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Pull current state (always back up before recovery)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>terraform<span class="w"> </span>state<span class="w"> </span>pull<span class="w"> </span>&gt;<span class="w"> </span>/tmp/state-backup-<span class="k">$(</span>date<span class="w"> </span>+%F-%H%M%S<span class="k">)</span>.tfstate
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Sanitise sensitive values before sharing with HashiCorp support</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># DO NOT share raw state if it contains passwords, private keys, or tokens</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># Instead, share the resource type/name structure:</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>terraform<span class="w"> </span>state<span class="w"> </span>list<span class="w"> </span>&gt;<span class="w"> </span>/tmp/state-resource-list.txt
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>terraform<span class="w"> </span>show<span class="w"> </span>-json<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="s2">import sys, json</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="s2">state = json.load(sys.stdin)</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="s2"># Print only resource types and names, not attribute values</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="s2">for res in state.get(&#39;values&#39;,{}).get(&#39;root_module&#39;,{}).get(&#39;resources&#39;,[]):</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="s2">    print(f&#39;{res[\&quot;type\&quot;]}.{res[\&quot;name\&quot;]}&#39;)</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="s2">&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/state-structure.txt
 </code></pre></div>
 <h3 id="4-collect-plan-output-in-json-format">4. Collect plan output in JSON format<a class="headerlink" href="#4-collect-plan-output-in-json-format" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Save plan to a file</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>terraform<span class="w"> </span>plan<span class="w"> </span>-out<span class="o">=</span>/tmp/tfplan<span class="w"> </span>-input<span class="o">=</span><span class="nb">false</span><span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tee<span class="w"> </span>/tmp/plan-output.log
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Export plan in JSON format (contains full resource change details)</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>terraform<span class="w"> </span>show<span class="w"> </span>-json<span class="w"> </span>/tmp/tfplan<span class="w"> </span>&gt;<span class="w"> </span>/tmp/tfplan.json
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Summarise: count of resources to add/change/destroy</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="s2">import json</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="s2">with open(&#39;/tmp/tfplan.json&#39;) as f:</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="s2">    plan = json.load(f)</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="s2">changes = plan.get(&#39;resource_changes&#39;, [])</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="s2">from collections import Counter</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="s2">counts = Counter(c[&#39;change&#39;][&#39;actions&#39;][0] for c in changes if c.get(&#39;change&#39;,{}).get(&#39;actions&#39;))</span>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="s2">print(dict(counts))</span>
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="s2">&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Save plan to a file</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>terraform<span class="w"> </span>plan<span class="w"> </span>-out<span class="o">=</span>/tmp/tfplan<span class="w"> </span>-input<span class="o">=</span><span class="nb">false</span><span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tee<span class="w"> </span>/tmp/plan-output.log
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Export plan in JSON format (contains full resource change details)</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>terraform<span class="w"> </span>show<span class="w"> </span>-json<span class="w"> </span>/tmp/tfplan<span class="w"> </span>&gt;<span class="w"> </span>/tmp/tfplan.json
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Summarise: count of resources to add/change/destroy</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="s2">import json</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="s2">with open(&#39;/tmp/tfplan.json&#39;) as f:</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="s2">    plan = json.load(f)</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="s2">changes = plan.get(&#39;resource_changes&#39;, [])</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="s2">from collections import Counter</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="s2">counts = Counter(c[&#39;change&#39;][&#39;actions&#39;][0] for c in changes if c.get(&#39;change&#39;,{}).get(&#39;actions&#39;))</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="s2">print(dict(counts))</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="s2">&quot;</span>
 </code></pre></div>
 <h3 id="5-write-the-timeline">5. Write the timeline<a class="headerlink" href="#5-write-the-timeline" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Terraform version: 1.9.3
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Provider: hashicorp/aws v5.60.0 (or: hashicorp/vsphere v2.8.3)
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Backend: S3 (bucket: tf-state-prod, key: production/terraform.tfstate, region: eu-west-1)
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>Workspace: production
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>Issue first observed: 2026-06-15 14:00 UTC
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>Last successful apply: 2026-06-15 11:30 UTC
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>Error observed (exact):
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>  Error: Provider produced inconsistent final plan
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>  → on main.tf line 45, in resource &quot;aws_instance&quot; &quot;web&quot;:
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>  → 45: ami = var.ami_id
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>  → Provider produced inconsistent result after apply.
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>State status:
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>  Lock: None (or &quot;Lock held by run-123456 since 14:05 UTC&quot;)
-<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>  Partial apply: Yes (3 of 7 resources created before failure)
-<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>
-<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>Changes in 2h before issue:
-<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>  - Provider upgraded from aws v5.58.0 to v5.60.0 via automated lock update
-<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>  - No configuration changes
-<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>
-<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>Blast radius:
-<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>  - 3 EC2 instances created but not fully configured (no security groups attached)
-<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>  - remaining 4 resources not created
-<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>  - No production traffic impact yet
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Terraform version: 1.9.3
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>Provider: hashicorp/aws v5.60.0 (or: hashicorp/vsphere v2.8.3)
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>Backend: S3 (bucket: tf-state-prod, key: production/terraform.tfstate, region: eu-west-1)
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>Workspace: production
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>Issue first observed: 2026-06-15 14:00 UTC
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>Last successful apply: 2026-06-15 11:30 UTC
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>Error observed (exact):
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>  Error: Provider produced inconsistent final plan
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>  → on main.tf line 45, in resource &quot;aws_instance&quot; &quot;web&quot;:
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>  → 45: ami = var.ami_id
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>  → Provider produced inconsistent result after apply.
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>State status:
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>  Lock: None (or &quot;Lock held by run-123456 since 14:05 UTC&quot;)
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>  Partial apply: Yes (3 of 7 resources created before failure)
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>Changes in 2h before issue:
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>  - Provider upgraded from aws v5.58.0 to v5.60.0 via automated lock update
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>  - No configuration changes
+<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>
+<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a>Blast radius:
+<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a>  - 3 EC2 instances created but not fully configured (no security groups attached)
+<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a>  - remaining 4 resources not created
+<a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a>  - No production traffic impact yet
 </code></pre></div>
 <hr />
 <h2 id="how-to-open-a-hashicorp-support-case">How to Open a HashiCorp Support Case<a class="headerlink" href="#how-to-open-a-hashicorp-support-case" title="Permanent link">&para;</a></h2>
@@ -7780,24 +7762,24 @@ Terraform escalation: when to open a HashiCorp support case, how to file a provi
 </ol>
 <hr />
 <h2 id="escalation-path">Escalation Path<a class="headerlink" href="#escalation-path" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Step 1 — Identify the failure layer: Terraform Core, provider, backend, or TF Cloud platform
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>         ↓
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>Step 2 — Provider bug: file GitHub issue on github.com/hashicorp/terraform-provider-&lt;name&gt;
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>         Include: minimal reproduction config, TF version, provider version, trace log
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>         ↓
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>Step 3 — State corruption: open HashiCorp support case at support.hashicorp.com
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>         Attach sanitised state structure, plan log, and timeline
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>         → Do NOT attempt manual state edit — wait for HashiCorp guidance
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>         ↓
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>Step 4 — TF Cloud/Enterprise platform issue: open support case + check status.hashicorp.com
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>         For Enterprise: call the emergency contact number in your contract for S1
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>         ↓
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>Step 5 — If no progress in 4 hours for S1 / 1 business day for S2:
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>         → Add a case update: &quot;Requesting escalation — [n] production environments frozen since [time]&quot;
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>         ↓
-<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>Step 6 — For state corruption with data loss risk:
-<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>         → Restore from backend version history immediately (S3 versioning, GCS object versioning)
-<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>         → Document the restore in the SR before executing
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Step 1 — Identify the failure layer: Terraform Core, provider, backend, or TF Cloud platform
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>         ↓
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Step 2 — Provider bug: file GitHub issue on github.com/hashicorp/terraform-provider-&lt;name&gt;
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>         Include: minimal reproduction config, TF version, provider version, trace log
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>         ↓
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>Step 3 — State corruption: open HashiCorp support case at support.hashicorp.com
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>         Attach sanitised state structure, plan log, and timeline
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>         → Do NOT attempt manual state edit — wait for HashiCorp guidance
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>         ↓
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>Step 4 — TF Cloud/Enterprise platform issue: open support case + check status.hashicorp.com
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>         For Enterprise: call the emergency contact number in your contract for S1
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>         ↓
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>Step 5 — If no progress in 4 hours for S1 / 1 business day for S2:
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>         → Add a case update: &quot;Requesting escalation — [n] production environments frozen since [time]&quot;
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>         ↓
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>Step 6 — For state corruption with data loss risk:
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>         → Restore from backend version history immediately (S3 versioning, GCS object versioning)
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>         → Document the restore in the SR before executing
 </code></pre></div>
 <hr />
 <h2 id="what-not-to-do">What NOT to Do<a class="headerlink" href="#what-not-to-do" title="Permanent link">&para;</a></h2>
@@ -7875,26 +7857,26 @@ Terraform escalation: when to open a HashiCorp support case, how to file a provi
 </table>
 <hr />
 <h2 id="useful-commands-for-case-updates">Useful Commands for Case Updates<a class="headerlink" href="#useful-commands-for-case-updates" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Snapshot current state for every case update</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>terraform<span class="w"> </span>version<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>terraform<span class="w"> </span>workspace<span class="w"> </span>show
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>terraform<span class="w"> </span>state<span class="w"> </span>list<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>wc<span class="w"> </span>-l<span class="w">   </span><span class="c1"># total resource count</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="c1"># Check if lock is current (S3 + DynamoDB backend)</span>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>aws<span class="w"> </span>dynamodb<span class="w"> </span>get-item<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="w">  </span>--table-name<span class="w"> </span>&lt;lock-table-name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="w">  </span>--key<span class="w"> </span><span class="s1">&#39;{&quot;LockID&quot;:{&quot;S&quot;:&quot;&lt;bucket&gt;/&lt;key&gt;&quot;}}&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="w">  </span>--region<span class="w"> </span>&lt;region&gt;
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="c1"># Show what changed in the last successful apply (git diff on config)</span>
-<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>git<span class="w"> </span>log<span class="w"> </span>--oneline<span class="w"> </span>-5
-<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>git<span class="w"> </span>diff<span class="w"> </span>HEAD~1<span class="w"> </span>HEAD<span class="w"> </span>--<span class="w"> </span><span class="s1">&#39;*.tf&#39;</span>
-<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>
-<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a><span class="c1"># Verify backend accessibility</span>
-<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>terraform<span class="w"> </span>init<span class="w"> </span>-backend-only<span class="w"> </span>-reconfigure<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-5
-<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>
-<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a><span class="c1"># List workspace states to confirm which workspace is affected</span>
-<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>terraform<span class="w"> </span>workspace<span class="w"> </span>list
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Snapshot current state for every case update</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>terraform<span class="w"> </span>version<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>terraform<span class="w"> </span>workspace<span class="w"> </span>show
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>terraform<span class="w"> </span>state<span class="w"> </span>list<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>wc<span class="w"> </span>-l<span class="w">   </span><span class="c1"># total resource count</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># Check if lock is current (S3 + DynamoDB backend)</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>aws<span class="w"> </span>dynamodb<span class="w"> </span>get-item<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">  </span>--table-name<span class="w"> </span>&lt;lock-table-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">  </span>--key<span class="w"> </span><span class="s1">&#39;{&quot;LockID&quot;:{&quot;S&quot;:&quot;&lt;bucket&gt;/&lt;key&gt;&quot;}}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="w">  </span>--region<span class="w"> </span>&lt;region&gt;
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="c1"># Show what changed in the last successful apply (git diff on config)</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>git<span class="w"> </span>log<span class="w"> </span>--oneline<span class="w"> </span>-5
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>git<span class="w"> </span>diff<span class="w"> </span>HEAD~1<span class="w"> </span>HEAD<span class="w"> </span>--<span class="w"> </span><span class="s1">&#39;*.tf&#39;</span>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="c1"># Verify backend accessibility</span>
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>terraform<span class="w"> </span>init<span class="w"> </span>-backend-only<span class="w"> </span>-reconfigure<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-5
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>
+<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a><span class="c1"># List workspace states to confirm which workspace is affected</span>
+<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a>terraform<span class="w"> </span>workspace<span class="w"> </span>list
 </code></pre></div>
 <hr />
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>

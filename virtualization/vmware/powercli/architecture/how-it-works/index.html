@@ -9171,45 +9171,8 @@ PowerCLI wraps the vSphere Web Services API (SOAP/REST) in PowerShell cmdlets. E
 <p><img alt="PowerCLI — How It Works" src="../../../../../assets/virtualization-vmware-powercli-architecture-how-it-works.svg" /></p>
 <!-- diagram:powercli-architecture -->
 
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>center: &quot;PowerCLI&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>module_structure: &quot;Module Structure&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>connection_model: &quot;Connection Model&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>session_handling: &quot;Session Handling&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>api_binding_view_vs_vi_objects: &quot;API Binding — View vs. VI Objects&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>credential_handling: &quot;Credential Handling&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>center -&gt; module_structure
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>center -&gt; connection_model
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>center -&gt; session_handling
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>center -&gt; api_binding_view_vs_vi_objects
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>center -&gt; credential_handling
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>@startuml
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>skinparam sequenceArrowThickness 1.5
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>skinparam roundcorner 5
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>actor &quot;Admin&quot; as ADM
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>participant &quot;PowerCLI\n(PowerShell module)&quot; as CLI
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>participant &quot;VMware REST API\n/ SOAP API&quot; as API
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>participant &quot;vCenter Server&quot; as VC
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>participant &quot;ESXi Host&quot; as ESX
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>ADM -&gt; CLI: Connect-VIServer -Server vc01
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>CLI -&gt; API: HTTPS REST / SOAP session
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>API -&gt; VC: Authenticate + return session token
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>VC --&gt; CLI: Session established
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>ADM -&gt; CLI: Get-VM | Start-VM
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>CLI -&gt; API: POST /vcenter/vm/{id}/power/start
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>API -&gt; VC: Dispatch power-on task
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>VC -&gt; ESX: Power on VM
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>ESX --&gt; VC: VM powered on
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>VC --&gt; CLI: Task complete
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>CLI --&gt; ADM: Output object
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>@enduml
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp9kE1qwzAQhfc6xeB9egAvAq03MTQkEMhWKNZgq6ijIMlOIARyiJ6wJ8m4zo9wTVaC7703mnnaeKyicZSDN3UThaiQIvocsrU7oC8-ywxOoVF7zKHBo6odncW3061FGaJvq9h6lrLlH4LNHT1T_QeKaotnUTmi4TvJI9ByrnggWPZoMhcwhD7UKNLWUM25zYBgcUOTObU3cmdIsy47gwfZBX6l232xJ_CU93UJH4MBfi8_sGUTdOENtiWsBtf0IR4192SUTXcqHvT1WreOYTaHcZOJNC4rkcZ9JNLrk9Px_08QVz4KwPw=?" /></p>
+<p><img alt="Kroki" src="https://kroki.io/plantuml/svg/eNpdkjFvgzAQhXf_ilOmVhWlGbJkiIpI1ERqFFQQ6tDFMSfhAja1DRna_veenUQKnTh47919uuPZOm7c0LXMNlL13PAOLH4NqAQmxuhTUUvRKLQW5o-LG5PRg6qENgoNLBjjwmkDs6TqpJoBt5Cs94ycTgrZc-VglukTmvR196HuQpnX2LbQ6Wpo8T5ESJxGyv2JG4S3TV5AklEyhvyQZL4-z8j-BcYUlSOgHM2IJnjKdGrZ5O8Sttq6oNIbY4QK0cqPX0KqlULhonJ37gHR5TmKpzkji3fS3CVsiyLLz2wXLEtbkloxkr2rTJeQDK4mJCm4Q3gAg24w6moEpxtUrEwhuo7PLwrSWY6ttDVWU74XJLY9_EDu70blhCk7eJpRhC3EYxd_y-o37v2643DoW7a1tD13ooagR56H2ybgrPxiqJ0XgAQaQx8Cpk8SQMhgReKEv6AOIHTXt-jwjObZ1vslHAbXDw708ZP2y55RVf6v-wOnfMvL?" /></p>
 <h2 id="module-structure">Module Structure<a class="headerlink" href="#module-structure" title="Permanent link">&para;</a></h2>
 <p>PowerCLI ships as a set of independent PowerShell modules. Each module covers one VMware product family:</p>
 <table>
@@ -9263,22 +9226,22 @@ PowerCLI wraps the vSphere Web Services API (SOAP/REST) in PowerShell cmdlets. E
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># List all installed PowerCLI modules</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">Get-Module</span> <span class="n">-ListAvailable</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Name</span> <span class="o">-like</span> <span class="s1">&#39;VMware*&#39;</span> <span class="p">}</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Version</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">Name</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># List all installed PowerCLI modules</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Get-Module</span> <span class="n">-ListAvailable</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Name</span> <span class="o">-like</span> <span class="s1">&#39;VMware*&#39;</span> <span class="p">}</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Version</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">Name</span>
 </code></pre></div>
 <h2 id="connection-model">Connection Model<a class="headerlink" href="#connection-model" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>PowerShell session
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>       │
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>       │  Connect-VIServer -Server vcenter.example.com -Credential $cred
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>       ▼
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>  $global:DefaultVIServer (session object)
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>       │
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>       │  HTTPS + vSphere SOAP API (port 443)
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>       ▼
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>  vCenter Server
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>       │  delegates API calls to ESXi hosts as needed
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>       ▼
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>  ESXi Host (hostd, vpxa)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>PowerShell session
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>       │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>       │  Connect-VIServer -Server vcenter.example.com -Credential $cred
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>       ▼
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>  $global:DefaultVIServer (session object)
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>       │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>       │  HTTPS + vSphere SOAP API (port 443)
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>       ▼
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>  vCenter Server
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>       │  delegates API calls to ESXi hosts as needed
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>       ▼
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>  ESXi Host (hostd, vpxa)
 </code></pre></div>
 <p>Key behaviors:
 - <code>Connect-VIServer</code> stores the session in <code>$global:DefaultVIServer</code>
@@ -9286,20 +9249,20 @@ PowerCLI wraps the vSphere Web Services API (SOAP/REST) in PowerShell cmdlets. E
 - Multiple simultaneous connections supported: <code>$global:DefaultVIServers</code> (array)
 - Sessions persist for the PowerShell session lifetime (or until <code>Disconnect-VIServer</code>)</p>
 <h2 id="session-handling">Session Handling<a class="headerlink" href="#session-handling" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Connect to a single vCenter</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">Connect-VIServer</span> <span class="n">-Server</span> <span class="n">vcenter</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">com</span> <span class="n">-Credential</span> <span class="p">(</span><span class="nb">Get-Credential</span><span class="p">)</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c"># Connect to multiple vCenters simultaneously</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="nv">$servers</span> <span class="p">=</span> <span class="p">@(</span><span class="s1">&#39;vc1.example.com&#39;</span><span class="p">,</span> <span class="s1">&#39;vc2.example.com&#39;</span><span class="p">)</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="nv">$servers</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span> <span class="nb">Connect-VIServer</span> <span class="n">-Server</span> <span class="nv">$_</span> <span class="n">-Credential</span> <span class="nv">$cred</span> <span class="p">}</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c"># Check active connections</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="nv">$global:DefaultVIServers</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">User</span><span class="p">,</span> <span class="n">IsConnected</span><span class="p">,</span> <span class="n">Version</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c"># Disconnect cleanly (important in scripts to release API sessions)</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="nb">Disconnect-VIServer</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c"># Or disconnect all:</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="nb">Disconnect-VIServer</span> <span class="p">*</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Connect to a single vCenter</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">Connect-VIServer</span> <span class="n">-Server</span> <span class="n">vcenter</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">com</span> <span class="n">-Credential</span> <span class="p">(</span><span class="nb">Get-Credential</span><span class="p">)</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c"># Connect to multiple vCenters simultaneously</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nv">$servers</span> <span class="p">=</span> <span class="p">@(</span><span class="s1">&#39;vc1.example.com&#39;</span><span class="p">,</span> <span class="s1">&#39;vc2.example.com&#39;</span><span class="p">)</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="nv">$servers</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span> <span class="nb">Connect-VIServer</span> <span class="n">-Server</span> <span class="nv">$_</span> <span class="n">-Credential</span> <span class="nv">$cred</span> <span class="p">}</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c"># Check active connections</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="nv">$global:DefaultVIServers</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">User</span><span class="p">,</span> <span class="n">IsConnected</span><span class="p">,</span> <span class="n">Version</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c"># Disconnect cleanly (important in scripts to release API sessions)</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="nb">Disconnect-VIServer</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c"># Or disconnect all:</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="nb">Disconnect-VIServer</span> <span class="p">*</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
 </code></pre></div>
 <h2 id="api-binding-view-vs-vi-objects">API Binding — View vs. VI Objects<a class="headerlink" href="#api-binding-view-vs-vi-objects" title="Permanent link">&para;</a></h2>
 <p>PowerCLI cmdlets return two types of objects:</p>
@@ -9324,37 +9287,37 @@ PowerCLI wraps the vSphere Web Services API (SOAP/REST) in PowerShell cmdlets. E
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># VI object — easy property access</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nv">$vm</span> <span class="p">=</span> <span class="nb">Get-VM</span> <span class="n">-Name</span> <span class="s2">&quot;web01&quot;</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="nv">$vm</span><span class="p">.</span><span class="n">PowerState</span>          <span class="c"># Running</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="nv">$vm</span><span class="p">.</span><span class="n">NumCpu</span>              <span class="c"># 4</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c"># View object — access properties not exposed by VI cmdlets</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="nv">$view</span> <span class="p">=</span> <span class="nb">Get-View</span> <span class="n">-VIObject</span> <span class="nv">$vm</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="nv">$view</span><span class="p">.</span><span class="n">Config</span><span class="p">.</span><span class="n">ExtraConfig</span>    <span class="c"># Advanced VM settings array</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="nv">$view</span><span class="p">.</span><span class="n">Guest</span><span class="p">.</span><span class="n">IpAddress</span>       <span class="c"># Guest OS IP (if VMware Tools running)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># VI object — easy property access</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nv">$vm</span> <span class="p">=</span> <span class="nb">Get-VM</span> <span class="n">-Name</span> <span class="s2">&quot;web01&quot;</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="nv">$vm</span><span class="p">.</span><span class="n">PowerState</span>          <span class="c"># Running</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="nv">$vm</span><span class="p">.</span><span class="n">NumCpu</span>              <span class="c"># 4</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c"># View object — access properties not exposed by VI cmdlets</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="nv">$view</span> <span class="p">=</span> <span class="nb">Get-View</span> <span class="n">-VIObject</span> <span class="nv">$vm</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="nv">$view</span><span class="p">.</span><span class="n">Config</span><span class="p">.</span><span class="n">ExtraConfig</span>    <span class="c"># Advanced VM settings array</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="nv">$view</span><span class="p">.</span><span class="n">Guest</span><span class="p">.</span><span class="n">IpAddress</span>       <span class="c"># Guest OS IP (if VMware Tools running)</span>
 </code></pre></div>
 <p>Use VI objects for most work; use View objects when you need raw API properties not surfaced by the standard cmdlets.</p>
 <h2 id="credential-handling">Credential Handling<a class="headerlink" href="#credential-handling" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># Method 1: Interactive prompt (scripts run by a human)</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nv">$cred</span> <span class="p">=</span> <span class="nb">Get-Credential</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c"># Method 2: Stored credential file (non-interactive scripts)</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c"># Save credentials to encrypted file (only readable by same user on same machine):</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="nb">Get-Credential</span> <span class="p">|</span> <span class="nb">Export-Clixml</span> <span class="n">-Path</span> <span class="n">C</span><span class="p">:\</span><span class="n">SecureStore</span><span class="p">\</span><span class="n">vcenter-cred</span><span class="p">.</span><span class="n">xml</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c"># Load at script start:</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="nv">$cred</span> <span class="p">=</span> <span class="nb">Import-Clixml</span> <span class="n">-Path</span> <span class="n">C</span><span class="p">:\</span><span class="n">SecureStore</span><span class="p">\</span><span class="n">vcenter-cred</span><span class="p">.</span><span class="n">xml</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c"># Method 3: PowerCLI credential store (per-server saved creds)</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="nb">New-VICredentialStoreItem</span> <span class="n">-Host</span> <span class="n">vcenter</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">com</span> <span class="n">-User</span> <span class="n">svc-powercli</span><span class="nv">@vsphere</span><span class="p">.</span><span class="n">local</span> <span class="n">-Password</span> <span class="s1">&#39;Secr3t!&#39;</span>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="c"># Now Connect-VIServer will use stored creds automatically:</span>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="nb">Connect-VIServer</span> <span class="n">-Server</span> <span class="n">vcenter</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">com</span>
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="c"># Method 4: Environment variables (CI/CD pipelines)</span>
-<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="nv">$cred</span> <span class="p">=</span> <span class="nb">New-Object</span> <span class="n">System</span><span class="p">.</span><span class="n">Management</span><span class="p">.</span><span class="n">Automation</span><span class="p">.</span><span class="n">PSCredential</span><span class="p">(</span>
-<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>    <span class="nv">$env:VCENTER_USER</span><span class="p">,</span>
-<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>    <span class="p">(</span><span class="nb">ConvertTo-SecureString</span> <span class="nv">$env:VCENTER_PASS</span> <span class="n">-AsPlainText</span> <span class="n">-Force</span><span class="p">)</span>
-<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Method 1: Interactive prompt (scripts run by a human)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nv">$cred</span> <span class="p">=</span> <span class="nb">Get-Credential</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c"># Method 2: Stored credential file (non-interactive scripts)</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c"># Save credentials to encrypted file (only readable by same user on same machine):</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="nb">Get-Credential</span> <span class="p">|</span> <span class="nb">Export-Clixml</span> <span class="n">-Path</span> <span class="n">C</span><span class="p">:\</span><span class="n">SecureStore</span><span class="p">\</span><span class="n">vcenter-cred</span><span class="p">.</span><span class="n">xml</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c"># Load at script start:</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="nv">$cred</span> <span class="p">=</span> <span class="nb">Import-Clixml</span> <span class="n">-Path</span> <span class="n">C</span><span class="p">:\</span><span class="n">SecureStore</span><span class="p">\</span><span class="n">vcenter-cred</span><span class="p">.</span><span class="n">xml</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c"># Method 3: PowerCLI credential store (per-server saved creds)</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="nb">New-VICredentialStoreItem</span> <span class="n">-Host</span> <span class="n">vcenter</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">com</span> <span class="n">-User</span> <span class="n">svc-powercli</span><span class="nv">@vsphere</span><span class="p">.</span><span class="n">local</span> <span class="n">-Password</span> <span class="s1">&#39;Secr3t!&#39;</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="c"># Now Connect-VIServer will use stored creds automatically:</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="nb">Connect-VIServer</span> <span class="n">-Server</span> <span class="n">vcenter</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">com</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="c"># Method 4: Environment variables (CI/CD pipelines)</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="nv">$cred</span> <span class="p">=</span> <span class="nb">New-Object</span> <span class="n">System</span><span class="p">.</span><span class="n">Management</span><span class="p">.</span><span class="n">Automation</span><span class="p">.</span><span class="n">PSCredential</span><span class="p">(</span>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>    <span class="nv">$env:VCENTER_USER</span><span class="p">,</span>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>    <span class="p">(</span><span class="nb">ConvertTo-SecureString</span> <span class="nv">$env:VCENTER_PASS</span> <span class="n">-AsPlainText</span> <span class="n">-Force</span><span class="p">)</span>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="p">)</span>
 </code></pre></div>
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>

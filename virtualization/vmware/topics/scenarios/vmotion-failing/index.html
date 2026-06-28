@@ -10721,23 +10721,7 @@ the exact CLI commands and vCenter checks to isolate and fix each one.
 *Applies to: vSphere 7.x / 8.x*
 </div>
 <p><img alt="vMotion Failing" src="../../../../../assets/virtualization-vmware-topics-scenarios-vmotion-failing.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>center: &quot;Scenarios&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>products_involved: &quot;Products Involved&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>1_read_the_error_message_first: &quot;1. Read the Error Message First&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>2_evc_mode_check_cpu_incompatibility: &quot;2. EVC Mode Check (CPU Incompatibility Errors)&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>3_vmkernel_mtu_check_most_common_cau: &quot;3. VMkernel MTU Check (Most Common Cause)&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>4_vmkernel_routing_check: &quot;4. VMkernel Routing Check&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>5_nic_and_driver_validation: &quot;5. NIC and Driver Validation&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>center -&gt; products_involved
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>center -&gt; 1_read_the_error_message_first
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>center -&gt; 2_evc_mode_check_cpu_incompatibility
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>center -&gt; 3_vmkernel_mtu_check_most_common_cau
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>center -&gt; 4_vmkernel_routing_check
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>center -&gt; 5_nic_and_driver_validation
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNkj1PwzAQhvf8ilMnGIjUryUDSyhSh6Cq0K4nYx-J1cSObCcCof53nDrQIELVLfL75H2sOwtpiDupVQJG5oWLIk7KkUlg8uy_mJHaTuDTFqymBAp6Z7lWx6g2WjTcWZSq1WVLwvOb_gzW_dn5v87BVF7SMZqiISbQFYRkjDZYkbUsJ3yTxjpfM41h6wnwBKw6ArJAwGNHjJbOkFqOlRaEvCB-QF43_mpcVzVz8lWW0n346lkMq30Kmecg7Ti4STc7f99fYLDa21HTHNvqQEZRiZVrelulrUPfUWmFnDXeNI9hnwUOspfdty3zIKQnEFLWWBqXLM4SoxsnVR5EvngxKN6GLJSPFi1RSY5MCRRGtmSwZaUULOx7sozhaZ2Cj-HhFMP-Jx6t698G3N3DnwcwyC6veABes7YBfs3sB_h_UxwgF-YTfQFnqiBu?" /></p>
 <h2 id="products-involved">Products Involved<a class="headerlink" href="#products-involved" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -10768,36 +10752,36 @@ the exact CLI commands and vCenter checks to isolate and fix each one.
 <hr />
 <h2 id="1-read-the-error-message-first">1. Read the Error Message First<a class="headerlink" href="#1-read-the-error-message-first" title="Permanent link">&para;</a></h2>
 <p>Go to <strong>vCenter → Recent Tasks</strong>, find the failed vMotion, and note the exact error string — it is the fastest path to the root cause.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Common vMotion error messages:
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  &quot;A general system error occurred&quot;
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>      → Usually a network problem: MTU mismatch, firewall blocking port 8000/902, or
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>        no route between vmk1 addresses of source and destination.
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>  &quot;The migration was canceled by the source host&quot;
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>      → Timeout during memory copy. Common on VMs with &gt; 32 GB RAM or with
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>        high memory write rate (database, in-memory cache). Check network bandwidth.
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>  &quot;The virtual machine is incompatible with the destination host&quot;
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>  &quot;CPU instruction set incompatibility&quot;
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>      → CPU feature mismatch. Check EVC mode.
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>  &quot;The host is not licensed for vMotion&quot;
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>      → Licence assignment issue. Check vCenter Administration → Licences.
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>  &quot;No VMkernel adapter with the required tag was found&quot;
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>      → VMkernel port on source or destination has no vMotion tag set.
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Common vMotion error messages:
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>  &quot;A general system error occurred&quot;
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>      → Usually a network problem: MTU mismatch, firewall blocking port 8000/902, or
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>        no route between vmk1 addresses of source and destination.
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>  &quot;The migration was canceled by the source host&quot;
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>      → Timeout during memory copy. Common on VMs with &gt; 32 GB RAM or with
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>        high memory write rate (database, in-memory cache). Check network bandwidth.
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>  &quot;The virtual machine is incompatible with the destination host&quot;
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>  &quot;CPU instruction set incompatibility&quot;
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>      → CPU feature mismatch. Check EVC mode.
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>  &quot;The host is not licensed for vMotion&quot;
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>      → Licence assignment issue. Check vCenter Administration → Licences.
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>  &quot;No VMkernel adapter with the required tag was found&quot;
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>      → VMkernel port on source or destination has no vMotion tag set.
 </code></pre></div>
 <hr />
 <h2 id="2-evc-mode-check-cpu-incompatibility-errors">2. EVC Mode Check (CPU Incompatibility Errors)<a class="headerlink" href="#2-evc-mode-check-cpu-incompatibility-errors" title="Permanent link">&para;</a></h2>
 <p>If the error references CPU compatibility, check and set the cluster EVC baseline so all hosts present an identical CPU feature set.</p>
 <p>Navigate to <strong>Cluster → Configure → VMware EVC</strong>.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>EVC modes (Intel, ascending):
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>  Merom, Penryn, Nehalem, Westmere, Sandy Bridge, Ivy Bridge,
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>  Haswell, Broadwell, Skylake, Cascade Lake, Ice Lake ...
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>A destination host must be at or above the cluster&#39;s EVC baseline.
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>If a new host generation was added without setting EVC, vMotion to
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>that host will fail for any running VM with CPU features exposed.
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>EVC modes (Intel, ascending):
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  Merom, Penryn, Nehalem, Westmere, Sandy Bridge, Ivy Bridge,
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  Haswell, Broadwell, Skylake, Cascade Lake, Ice Lake ...
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>A destination host must be at or above the cluster&#39;s EVC baseline.
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>If a new host generation was added without setting EVC, vMotion to
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>that host will fail for any running VM with CPU features exposed.
 </code></pre></div>
 <p>If EVC is disabled or the destination host is below the baseline:</p>
 <ol>
@@ -10808,99 +10792,99 @@ the exact CLI commands and vCenter checks to isolate and fix each one.
 <hr />
 <h2 id="3-vmkernel-mtu-check-most-common-cause">3. VMkernel MTU Check (Most Common Cause)<a class="headerlink" href="#3-vmkernel-mtu-check-most-common-cause" title="Permanent link">&para;</a></h2>
 <p>MTU mismatch between the vMotion VMkernel and the physical switch causes the generic "system error" — test with a jumbo-frame ping before checking anything else.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># On source host — identify vMotion VMkernel port</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>tag<span class="w"> </span>list
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Output example:</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># vmk0  Management</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># vmk1  VMotion</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># vmk2  vSAN</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># Test path from vmk1 to destination host vmk1 with jumbo frame (no-fragment flag)</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># -d = do not fragment; -s = payload size 8972 (8972 + 28 byte header = 9000 byte frame)</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk1<span class="w"> </span>-d<span class="w"> </span>-s<span class="w"> </span><span class="m">8972</span><span class="w"> </span>&lt;destination-vmk1-ip&gt;
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c1"># If this fails but -s 1472 succeeds: MTU set to 1500 on switch or vSwitch</span>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="c1"># Fix: set vSwitch MTU to 9000 on source AND destination AND physical switch port</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># On source host — identify vMotion VMkernel port</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>tag<span class="w"> </span>list
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Output example:</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># vmk0  Management</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># vmk1  VMotion</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># vmk2  vSAN</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Test path from vmk1 to destination host vmk1 with jumbo frame (no-fragment flag)</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># -d = do not fragment; -s = payload size 8972 (8972 + 28 byte header = 9000 byte frame)</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk1<span class="w"> </span>-d<span class="w"> </span>-s<span class="w"> </span><span class="m">8972</span><span class="w"> </span>&lt;destination-vmk1-ip&gt;
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># If this fails but -s 1472 succeeds: MTU set to 1500 on switch or vSwitch</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="c1"># Fix: set vSwitch MTU to 9000 on source AND destination AND physical switch port</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Verify current MTU on the VMkernel port</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A5<span class="w"> </span>vmk1
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Verify vSwitch MTU</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>esxcli<span class="w"> </span>network<span class="w"> </span>vswitch<span class="w"> </span>standard<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Name|MTU&quot;</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># For VDS — check MTU from vCenter:</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># vCenter → Networking → VDS → Configure → Properties → MTU</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Verify current MTU on the VMkernel port</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A5<span class="w"> </span>vmk1
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Verify vSwitch MTU</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>esxcli<span class="w"> </span>network<span class="w"> </span>vswitch<span class="w"> </span>standard<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Name|MTU&quot;</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># For VDS — check MTU from vCenter:</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># vCenter → Networking → VDS → Configure → Properties → MTU</span>
 </code></pre></div>
 <p>Look for: <code>vmkping -d -s 8972</code> succeeds = MTU is correct end-to-end; failure with large frame but success with 1472-byte frame = switch or vDS MTU set to 1500.</p>
 <hr />
 <h2 id="4-vmkernel-routing-check">4. VMkernel Routing Check<a class="headerlink" href="#4-vmkernel-routing-check" title="Permanent link">&para;</a></h2>
 <p>The vMotion VMkernel must have a route to the destination host's vMotion VMkernel IP — missing routes silently block vMotion on multi-subnet designs.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># List all IPv4 routes on the host</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>route<span class="w"> </span>ipv4<span class="w"> </span>list
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># If the destination vmk1 subnet has no route, add a static route:</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>route<span class="w"> </span>ipv4<span class="w"> </span>add<span class="w"> </span>-n<span class="w"> </span>&lt;destination-subnet&gt;/&lt;prefix&gt;<span class="w"> </span>-g<span class="w"> </span>&lt;gateway-ip&gt;
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Verify the VMkernel firewall allows vMotion traffic (port 8000)</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>esxcli<span class="w"> </span>network<span class="w"> </span>firewall<span class="w"> </span>ruleset<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>vmotion
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="c1"># Status should be &quot;true&quot; (enabled)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># List all IPv4 routes on the host</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>route<span class="w"> </span>ipv4<span class="w"> </span>list
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># If the destination vmk1 subnet has no route, add a static route:</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>route<span class="w"> </span>ipv4<span class="w"> </span>add<span class="w"> </span>-n<span class="w"> </span>&lt;destination-subnet&gt;/&lt;prefix&gt;<span class="w"> </span>-g<span class="w"> </span>&lt;gateway-ip&gt;
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Verify the VMkernel firewall allows vMotion traffic (port 8000)</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>esxcli<span class="w"> </span>network<span class="w"> </span>firewall<span class="w"> </span>ruleset<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>vmotion
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># Status should be &quot;true&quot; (enabled)</span>
 </code></pre></div>
 <hr />
 <h2 id="5-nic-and-driver-validation">5. NIC and Driver Validation<a class="headerlink" href="#5-nic-and-driver-validation" title="Permanent link">&para;</a></h2>
 <p>Check the physical NIC backing the vMotion VMkernel for speed, duplex, and error counters before investigating higher layers.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Check NIC driver, link speed, and duplex on the vMotion uplink</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>esxcli<span class="w"> </span>network<span class="w"> </span>nic<span class="w"> </span>get<span class="w"> </span>-n<span class="w"> </span>vmnic1
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Key fields:</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1">#   Speed           — should be 10000 Mb/s or higher for vMotion</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1">#   Duplex          — Full</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1">#   Driver Version  — compare against VMware HCL if suspect</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1"># Check for NIC errors on the vMotion uplink</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>esxcli<span class="w"> </span>network<span class="w"> </span>nic<span class="w"> </span>stats<span class="w"> </span>get<span class="w"> </span>-n<span class="w"> </span>vmnic1<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Rx|Tx|Drop|Error&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Check NIC driver, link speed, and duplex on the vMotion uplink</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>esxcli<span class="w"> </span>network<span class="w"> </span>nic<span class="w"> </span>get<span class="w"> </span>-n<span class="w"> </span>vmnic1
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Key fields:</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1">#   Speed           — should be 10000 Mb/s or higher for vMotion</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1">#   Duplex          — Full</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1">#   Driver Version  — compare against VMware HCL if suspect</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="c1"># Check for NIC errors on the vMotion uplink</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>esxcli<span class="w"> </span>network<span class="w"> </span>nic<span class="w"> </span>stats<span class="w"> </span>get<span class="w"> </span>-n<span class="w"> </span>vmnic1<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Rx|Tx|Drop|Error&quot;</span>
 </code></pre></div>
 <p>Look for: any non-zero <code>Drop</code> or <code>Error</code> counter on the vMotion uplink vmnic indicates NIC or cable issues that will cause vMotion timeouts.</p>
 <hr />
 <h2 id="6-nsx-segment-check-vm-on-nsx-t-overlay-network">6. NSX Segment Check (VM on NSX-T Overlay Network)<a class="headerlink" href="#6-nsx-segment-check-vm-on-nsx-t-overlay-network" title="Permanent link">&para;</a></h2>
 <p>If the VM is on an NSX segment, confirm the segment is bound to the destination host's transport node — missing binding silently fails vMotion.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># From NSX Manager UI: Networking → Segments → select the segment</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="c1"># Check &quot;Transport Nodes&quot; tab — destination host must appear as bound</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># From NSX Manager CLI or API — list transport nodes for a segment</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/api/v1/logical-switches/&lt;ls-id&gt;/transport-node-status&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;status|transport_node_id&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># From NSX Manager UI: Networking → Segments → select the segment</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># Check &quot;Transport Nodes&quot; tab — destination host must appear as bound</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># From NSX Manager CLI or API — list transport nodes for a segment</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/api/v1/logical-switches/&lt;ls-id&gt;/transport-node-status&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;status|transport_node_id&quot;</span>
 </code></pre></div>
 <p>Also verify the destination host's NSX kernel modules are loaded:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># From destination ESXi host</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>esxcli<span class="w"> </span>software<span class="w"> </span>vib<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>nsx
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Check TEP (tunnel endpoint) connectivity from destination host</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>vmk
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="c1"># vmk10 is typically the TEP VMkernel</span>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk10<span class="w"> </span>&lt;remote-tep-ip&gt;<span class="w"> </span>-d<span class="w"> </span>-s<span class="w"> </span><span class="m">1572</span>
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="c1"># 1572 = 1600 byte GENEVE frame minus headers</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># From destination ESXi host</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>esxcli<span class="w"> </span>software<span class="w"> </span>vib<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>nsx
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Check TEP (tunnel endpoint) connectivity from destination host</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>vmk
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="c1"># vmk10 is typically the TEP VMkernel</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk10<span class="w"> </span>&lt;remote-tep-ip&gt;<span class="w"> </span>-d<span class="w"> </span>-s<span class="w"> </span><span class="m">1572</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="c1"># 1572 = 1600 byte GENEVE frame minus headers</span>
 </code></pre></div>
 <p>Look for: all NSX VIBs at matching versions; <code>vmkping -I vmk10 -d -s 1572</code> succeeds to all remote TEP IPs.</p>
 <hr />
 <h2 id="7-large-vm-memory-bandwidth-timeout">7. Large VM / Memory Bandwidth Timeout<a class="headerlink" href="#7-large-vm-memory-bandwidth-timeout" title="Permanent link">&para;</a></h2>
 <p>For VMs over 32 GB RAM that time out during the memory copy phase, verify the vMotion network can outpace the VM's memory write rate.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>vMotion memory copy phases:
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>  1. Pre-copy: pages copied while VM runs; dirty pages tracked
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>  2. Iterative copy: dirty pages re-copied; repeat until convergence
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>  3. Switchover: VM briefly stunned; final pages copied; VM resumes on destination
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>Timeout occurs when the VM writes memory faster than the network can copy it.
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>Requirement: vMotion network bandwidth &gt; VM memory write rate.
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>vMotion memory copy phases:
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>  1. Pre-copy: pages copied while VM runs; dirty pages tracked
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>  2. Iterative copy: dirty pages re-copied; repeat until convergence
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>  3. Switchover: VM briefly stunned; final pages copied; VM resumes on destination
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>Timeout occurs when the VM writes memory faster than the network can copy it.
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>Requirement: vMotion network bandwidth &gt; VM memory write rate.
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Test actual throughput between hosts using iperf (if available)</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="c1"># On destination host (as server):</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>iperf<span class="w"> </span>-s<span class="w"> </span>-B<span class="w"> </span>&lt;destination-vmk1-ip&gt;<span class="w"> </span>-p<span class="w"> </span><span class="m">5201</span>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="c1"># On source host (as client):</span>
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>iperf<span class="w"> </span>-c<span class="w"> </span>&lt;destination-vmk1-ip&gt;<span class="w"> </span>-B<span class="w"> </span>&lt;source-vmk1-ip&gt;<span class="w"> </span>-p<span class="w"> </span><span class="m">5201</span><span class="w"> </span>-t<span class="w"> </span><span class="m">30</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Test actual throughput between hosts using iperf (if available)</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="c1"># On destination host (as server):</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>iperf<span class="w"> </span>-s<span class="w"> </span>-B<span class="w"> </span>&lt;destination-vmk1-ip&gt;<span class="w"> </span>-p<span class="w"> </span><span class="m">5201</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="c1"># On source host (as client):</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>iperf<span class="w"> </span>-c<span class="w"> </span>&lt;destination-vmk1-ip&gt;<span class="w"> </span>-B<span class="w"> </span>&lt;source-vmk1-ip&gt;<span class="w"> </span>-p<span class="w"> </span><span class="m">5201</span><span class="w"> </span>-t<span class="w"> </span><span class="m">30</span>
 </code></pre></div>
 <p>Look for: throughput well below expected link speed (e.g., 2 Gbps on a 10 Gbps link) indicates a shared uplink with insufficient bandwidth — dedicate a higher-speed uplink to vMotion or increase streams in <strong>Cluster → Configure → vSphere DRS → Advanced Options</strong>.</p>
 <hr />

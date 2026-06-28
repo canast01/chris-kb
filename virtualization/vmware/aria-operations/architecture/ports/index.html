@@ -9347,23 +9347,7 @@ Firewall port reference for VMware Aria Operations (formerly vRealize Operations
 *Applies to: Aria Operations 8.x / 2403+*
 </div>
 <p><img alt="Aria Operations — Ports and Network Requirements" src="../../../../../assets/virtualization-vmware-aria-operations-architecture-ports.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>center: &quot;Aria Operations&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>inbound_client_to_aria_operations_cl: &quot;Inbound — Client to Aria Operations Cluster&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>remote_collector_to_analytics_cluste: &quot;Remote Collector to Analytics Cluster&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>aria_operations_analytics_cluster_ad: &quot;Aria Operations Analytics Cluster — Adapter Connections&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>aria_operations_internal_cluster_por: &quot;Aria Operations — Internal Cluster Ports&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>outbound_external_services: &quot;Outbound — External Services&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>firewall_zone_summary: &quot;Firewall Zone Summary&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>center -&gt; inbound_client_to_aria_operations_cl
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>center -&gt; remote_collector_to_analytics_cluste
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>center -&gt; aria_operations_analytics_cluster_ad
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>center -&gt; aria_operations_internal_cluster_por
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>center -&gt; outbound_external_services
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>center -&gt; firewall_zone_summary
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNkkFOwzAQRfc5xah7LpAFUhWB1FUR3XVjmWRILDmeyHagBVXiEJyQkzB23BKlocoumnnzv_NnKmWx9IpMDlbVjc-yEo1Hm8NqbZWEbYdWhr5bwadrZIc5NHiQNZlTpswL9aYSpVY8JDwJyTOCLjPcYaHNgMHP1zcUEQVPMJHnTu_Y-M8mPEyaWuMps9iSR1GS1lwkG62M1EevymASJtnoOWJQnLFoc8ZuGkzfPRW3QlbXkVyLx39cV7IL3wUZM4TrFpmqEDwrXjw7mtlDtNgk9OL7RNbPu1Dvhy3hIck7tG-qRMfa29SMog8JgF0CZvVe-WLepdbigwwK17ettEeWekx12HMddkN9ViGdGNzdw5ILGuFL7mCEL9nqDXxuHyP8_2BH0Gxa2S-yalGw?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
 <li>Aria Operations analytics cluster runs as 3 nodes (master, replica, data) — all nodes share a cluster VIP; open ports to the VIP and all node IPs</li>
@@ -9734,20 +9718,20 @@ Firewall port reference for VMware Aria Operations (formerly vRealize Operations
 </table>
 <hr />
 <h2 id="verify">Verify<a class="headerlink" href="#verify" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># From admin workstation — test Aria Operations API</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;%{http_code}&quot;</span><span class="w"> </span>https://&lt;aria-ops-fqdn&gt;/suite-api/api/resources
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># From Aria Operations SSH — test vCenter reachability</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;%{http_code}&quot;</span><span class="w"> </span>https://&lt;vcenter-fqdn&gt;/rest/com/vmware/cis/session
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># From Aria Operations SSH — test NSX adapter connectivity</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;%{http_code}&quot;</span><span class="w"> </span>https://&lt;nsx-manager-ip&gt;/api/v1/cluster/status
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># From Aria Operations SSH — test SNMP polling to a device</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>snmpget<span class="w"> </span>-v2c<span class="w"> </span>-c<span class="w"> </span>&lt;community&gt;<span class="w"> </span>&lt;device-ip&gt;<span class="w"> </span><span class="m">1</span>.3.6.1.2.1.1.1.0
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># From Remote Collector — test cluster connectivity</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>nc<span class="w"> </span>-zv<span class="w"> </span>&lt;aria-ops-vip&gt;<span class="w"> </span><span class="m">3331</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># From admin workstation — test Aria Operations API</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;%{http_code}&quot;</span><span class="w"> </span>https://&lt;aria-ops-fqdn&gt;/suite-api/api/resources
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># From Aria Operations SSH — test vCenter reachability</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;%{http_code}&quot;</span><span class="w"> </span>https://&lt;vcenter-fqdn&gt;/rest/com/vmware/cis/session
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># From Aria Operations SSH — test NSX adapter connectivity</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;%{http_code}&quot;</span><span class="w"> </span>https://&lt;nsx-manager-ip&gt;/api/v1/cluster/status
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># From Aria Operations SSH — test SNMP polling to a device</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>snmpget<span class="w"> </span>-v2c<span class="w"> </span>-c<span class="w"> </span>&lt;community&gt;<span class="w"> </span>&lt;device-ip&gt;<span class="w"> </span><span class="m">1</span>.3.6.1.2.1.1.1.0
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># From Remote Collector — test cluster connectivity</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>nc<span class="w"> </span>-zv<span class="w"> </span>&lt;aria-ops-vip&gt;<span class="w"> </span><span class="m">3331</span>
 </code></pre></div>
 <hr />
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>

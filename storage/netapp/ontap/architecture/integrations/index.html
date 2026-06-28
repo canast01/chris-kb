@@ -8206,23 +8206,7 @@ Integrations reference covering VMware, SnapCenter Plugin, Active Directory / CI
 *Applies to: ONTAP 9.x*
 </div>
 <p><img alt="ONTAP — Integrations" src="../../../../../assets/storage-netapp-ontap-architecture-integrations.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>center: &quot;NetApp ONTAP&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>vmware: &quot;VMware&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>snapcenter_plugin: &quot;SnapCenter Plugin&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>active_directory_cifs_authentication: &quot;Active Directory / CIFS Authentication&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>veeam_storage_integration_veeamon_di: &quot;Veeam Storage Integration (VeeamON / Direct Storage Access)&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>ontap_rest_api: &quot;ONTAP REST API&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>cloud_volumes_ontap_integration: &quot;Cloud Volumes ONTAP Integration&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>center -&gt; vmware
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>center -&gt; snapcenter_plugin
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>center -&gt; active_directory_cifs_authentication
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>center -&gt; veeam_storage_integration_veeamon_di
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>center -&gt; ontap_rest_api
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>center -&gt; cloud_volumes_ontap_integration
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNkU1LxDAQhu_9FUNPehDvPQihKvSw3WKXvYaQjmmgHyFJqyL7382HulksuKe2M8-879uZTmrkVs5TAVqK3mYZx8miLiCv0RKlYF8fSJPDp-mZwgJ6fGdink7ZOr4x7Qr5cedfzoQXZJMY8JSZiamoR9WwCOlc8tbVylCDJtQ2J5kLtSLtQrxZf1AuXw1li-3dqOQsRs5JwODxB4N7KKvnFsgFuOmwIrKRGjfFBFLpAgkdaBo67tlJ_3f-A9qIQXXG4Ca09rXzjP6_FOEcjbndtJ0nyxTVaCxlyhuE_cLLU3sA0lSbM3yYl46u87CMaGhUSAI7kdITcIxEPFmadVP1-9Jw9wDxlknhz-GS3jWnSbWv2HOCX-4nafyzhOwLz00Fdg==?" /></p>
 <h2 id="vmware">VMware<a class="headerlink" href="#vmware" title="Permanent link">&para;</a></h2>
 <p>ONTAP integrates with VMware vSphere at multiple layers:</p>
 <ul>
@@ -8235,14 +8219,14 @@ Integrations reference covering VMware, SnapCenter Plugin, Active Directory / CI
 <h2 id="snapcenter-plugin">SnapCenter Plugin<a class="headerlink" href="#snapcenter-plugin" title="Permanent link">&para;</a></h2>
 <p>The SnapCenter Plug-in for VMware vSphere is deployed as a separate OVA and registered in vCenter. It provides VM-consistent and crash-consistent snapshot-based backup of VMs and vSphere datastores using ONTAP snapshots, and supports SnapVault replication for long-term retention. See the <a href="../../../snapcenter/">SnapCenter section</a> for full coverage.</p>
 <h2 id="active-directory-cifs-authentication">Active Directory / CIFS Authentication<a class="headerlink" href="#active-directory-cifs-authentication" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Join an SVM to Active Directory for CIFS/SMB</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-cifs-server<span class="w"> </span>&lt;netbios-name&gt;<span class="w"> </span>-domain<span class="w"> </span>&lt;domain.corp&gt;<span class="w"> </span>-ou<span class="w"> </span><span class="s2">&quot;OU=Servers,DC=domain,DC=corp&quot;</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Verify CIFS domain join and DC connectivity</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>domain<span class="w"> </span>info<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Configure LDAP for NFS Kerberos and user mapping</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>vserver<span class="w"> </span>services<span class="w"> </span>name-service<span class="w"> </span>ldap<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-client-config<span class="w"> </span>&lt;ldap-config&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Join an SVM to Active Directory for CIFS/SMB</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-cifs-server<span class="w"> </span>&lt;netbios-name&gt;<span class="w"> </span>-domain<span class="w"> </span>&lt;domain.corp&gt;<span class="w"> </span>-ou<span class="w"> </span><span class="s2">&quot;OU=Servers,DC=domain,DC=corp&quot;</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Verify CIFS domain join and DC connectivity</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>domain<span class="w"> </span>info<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Configure LDAP for NFS Kerberos and user mapping</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>vserver<span class="w"> </span>services<span class="w"> </span>name-service<span class="w"> </span>ldap<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-client-config<span class="w"> </span>&lt;ldap-config&gt;
 </code></pre></div>
 <h2 id="veeam-storage-integration-veeamon-direct-storage-access">Veeam Storage Integration (VeeamON / Direct Storage Access)<a class="headerlink" href="#veeam-storage-integration-veeamon-direct-storage-access" title="Permanent link">&para;</a></h2>
 <p>Veeam Backup &amp; Replication integrates with ONTAP via the Veeam Backup &amp; Replication storage plugin, enabling:
@@ -8252,18 +8236,18 @@ Integrations reference covering VMware, SnapCenter Plugin, Active Directory / CI
 <p>Register the ONTAP cluster in Veeam under Storage Infrastructure using the cluster-management LIF and a dedicated <code>vsadmin</code>-equivalent account with minimum required permissions.</p>
 <h2 id="ontap-rest-api">ONTAP REST API<a class="headerlink" href="#ontap-rest-api" title="Permanent link">&para;</a></h2>
 <p>ONTAP exposes a full RESTful API available at:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>https://&lt;cluster-mgmt-lif&gt;/api
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>https://&lt;cluster-mgmt-lif&gt;/api
 </code></pre></div>
 <ul>
 <li>Interactive documentation at <code>https://&lt;cluster-mgmt-lif&gt;/docs/api</code></li>
 <li>Authenticate with Basic Auth (over HTTPS) or OAuth2 tokens</li>
 <li>Use service accounts with minimum required RBAC roles for automation</li>
 </ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Example: list SVMs via REST API using curl</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span>https://&lt;cluster&gt;/api/svm/svms<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Example: list volumes</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="s2">&quot;https://&lt;cluster&gt;/api/storage/volumes?fields=name,used,size&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Example: list SVMs via REST API using curl</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span>https://&lt;cluster&gt;/api/svm/svms<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Example: list volumes</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="s2">&quot;https://&lt;cluster&gt;/api/storage/volumes?fields=name,used,size&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
 </code></pre></div>
 <p>Python SDK (<code>netapp-ontap</code> package) and Ansible (<code>netapp.ontap</code> collection) provide higher-level abstractions for automation.</p>
 <h2 id="cloud-volumes-ontap-integration">Cloud Volumes ONTAP Integration<a class="headerlink" href="#cloud-volumes-ontap-integration" title="Permanent link">&para;</a></h2>

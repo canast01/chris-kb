@@ -10221,25 +10221,7 @@ RBAC and access scoping for VxRail in the VMware product context. Covers VxRail 
 </div>
 <p><img alt="VxRail — Access Control" src="../../../../../assets/virtualization-vmware-vxrail-security-access-control.svg" /></p>
 <hr />
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: down
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>external: External / Untrusted {shape: rectangle}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>vxrail_manager_roles: &quot;VxRail Manager Roles&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>vsphere_rbac_for_vxrail_operations: &quot;vSphere RBAC for VxRail Operations&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>lockdown_mode: &quot;Lockdown Mode&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>exception_user_list: &quot;Exception User List&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>omivv_service_account_permissions: &quot;OMIVV Service Account Permissions&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>network_access_control: &quot;Network Access Control&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>core: &quot;VxRail Core&quot; {shape: hexagon}
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>external -&gt; vxrail_manager_roles: traffic in
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>vxrail_manager_roles -&gt; vsphere_rbac_for_vxrail_operations
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>vsphere_rbac_for_vxrail_operations -&gt; lockdown_mode
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>lockdown_mode -&gt; exception_user_list
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>exception_user_list -&gt; omivv_service_account_permissions
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>omivv_service_account_permissions -&gt; network_access_control
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>network_access_control -&gt; core: secured path
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNk0FrwkAQhe_-iiH30nsOBSseClqLotdluxnNYrITZjcxUPzvnTVpg7DF3rJv3nvs5EsKy2iCJZdDQRc3m2EfkJ2ucliOT_AMexe49QEL-PKlbjCHmNLuVOF11vWsbaVq7fQJWTFV6HPIDv1WZFgPMmyjnCXzvimRUfGnNupIrMZCapB1vFps63Y3E2xf5wsQE4z1m19Tsrsic457qZoKmWSr8QxrOScT2BtsYqFqvWxTWR8kt_xRYS8qrERNpqm2XafE0lmDShtDrQtK7lhb78dVNuu3wwF2gwfmgwc-Jk-y2WG4EJ9jJ3qvDAkSEkrZ-zCIRTKAxTBIdhhinMgs5DTZSuz1idx1-gLg6QXSbAPr49EasC4J_xZ8CPUf3GPRHcF7nnGcwJVCGK0P2TymF2vSIP7gEwPDW_doWpYfqNGhnH0DUkdNJA==?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Access:</strong> vCenter Administrator role</li>
@@ -10313,34 +10295,34 @@ RBAC and access scoping for VxRail in the VMware product context. Covers VxRail 
 </table>
 <h3 id="custom-role-storage-operations">Custom Role: Storage Operations<a class="headerlink" href="#custom-role-storage-operations" title="Permanent link">&para;</a></h3>
 <p>Create a custom vCenter role for storage administrators who manage vSAN but should not control VMs or hosts:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Create custom Storage Operations role in vCenter (PowerCLI)</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nv">$storagePrivileges</span> <span class="p">=</span> <span class="p">@(</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="s2">&quot;StorageProfile.Update&quot;</span><span class="p">,</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    <span class="s2">&quot;StorageProfile.View&quot;</span><span class="p">,</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    <span class="s2">&quot;Datastore.Browse&quot;</span><span class="p">,</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    <span class="s2">&quot;Datastore.AllocateSpace&quot;</span><span class="p">,</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>    <span class="s2">&quot;Datastore.Config&quot;</span><span class="p">,</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>    <span class="s2">&quot;Datastore.Move&quot;</span><span class="p">,</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>    <span class="s2">&quot;Host.Config.Storage&quot;</span><span class="p">,</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>    <span class="s2">&quot;Global.CancelTask&quot;</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="p">)</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="nb">New-VIRole</span> <span class="n">-Name</span> <span class="s2">&quot;VxRail-Storage-Ops&quot;</span> <span class="n">-Privilege</span> <span class="p">(</span><span class="nb">Get-VIPrivilege</span> <span class="n">-Id</span> <span class="nv">$storagePrivileges</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Create custom Storage Operations role in vCenter (PowerCLI)</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nv">$storagePrivileges</span> <span class="p">=</span> <span class="p">@(</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="s2">&quot;StorageProfile.Update&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="s2">&quot;StorageProfile.View&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="s2">&quot;Datastore.Browse&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="s2">&quot;Datastore.AllocateSpace&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="s2">&quot;Datastore.Config&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="s2">&quot;Datastore.Move&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    <span class="s2">&quot;Host.Config.Storage&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    <span class="s2">&quot;Global.CancelTask&quot;</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="p">)</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="nb">New-VIRole</span> <span class="n">-Name</span> <span class="s2">&quot;VxRail-Storage-Ops&quot;</span> <span class="n">-Privilege</span> <span class="p">(</span><span class="nb">Get-VIPrivilege</span> <span class="n">-Id</span> <span class="nv">$storagePrivileges</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="custom-role-vm-operator">Custom Role: VM Operator<a class="headerlink" href="#custom-role-vm-operator" title="Permanent link">&para;</a></h3>
 <p>Create a VM Operator role scoped to application team resource pools:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Create custom VM Operator role (PowerCLI)</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nv">$vmPrivileges</span> <span class="p">=</span> <span class="p">@(</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="s2">&quot;VirtualMachine.Interact.PowerOn&quot;</span><span class="p">,</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="s2">&quot;VirtualMachine.Interact.PowerOff&quot;</span><span class="p">,</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>    <span class="s2">&quot;VirtualMachine.Interact.Reset&quot;</span><span class="p">,</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    <span class="s2">&quot;VirtualMachine.Interact.ConsoleInteract&quot;</span><span class="p">,</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>    <span class="s2">&quot;VirtualMachine.State.CreateSnapshot&quot;</span><span class="p">,</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>    <span class="s2">&quot;VirtualMachine.State.RemoveSnapshot&quot;</span><span class="p">,</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>    <span class="s2">&quot;VirtualMachine.State.RevertToSnapshot&quot;</span><span class="p">,</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>    <span class="s2">&quot;VirtualMachine.GuestOperations.Execute&quot;</span><span class="p">,</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>    <span class="s2">&quot;Resource.AssignVMToPool&quot;</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="p">)</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="nb">New-VIRole</span> <span class="n">-Name</span> <span class="s2">&quot;VxRail-VM-Operator&quot;</span> <span class="n">-Privilege</span> <span class="p">(</span><span class="nb">Get-VIPrivilege</span> <span class="n">-Id</span> <span class="nv">$vmPrivileges</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Create custom VM Operator role (PowerCLI)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nv">$vmPrivileges</span> <span class="p">=</span> <span class="p">@(</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="s2">&quot;VirtualMachine.Interact.PowerOn&quot;</span><span class="p">,</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    <span class="s2">&quot;VirtualMachine.Interact.PowerOff&quot;</span><span class="p">,</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    <span class="s2">&quot;VirtualMachine.Interact.Reset&quot;</span><span class="p">,</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    <span class="s2">&quot;VirtualMachine.Interact.ConsoleInteract&quot;</span><span class="p">,</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>    <span class="s2">&quot;VirtualMachine.State.CreateSnapshot&quot;</span><span class="p">,</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>    <span class="s2">&quot;VirtualMachine.State.RemoveSnapshot&quot;</span><span class="p">,</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>    <span class="s2">&quot;VirtualMachine.State.RevertToSnapshot&quot;</span><span class="p">,</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>    <span class="s2">&quot;VirtualMachine.GuestOperations.Execute&quot;</span><span class="p">,</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>    <span class="s2">&quot;Resource.AssignVMToPool&quot;</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="p">)</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="nb">New-VIRole</span> <span class="n">-Name</span> <span class="s2">&quot;VxRail-VM-Operator&quot;</span> <span class="n">-Privilege</span> <span class="p">(</span><span class="nb">Get-VIPrivilege</span> <span class="n">-Id</span> <span class="nv">$vmPrivileges</span><span class="p">)</span>
 </code></pre></div>
 <p>Assign the <code>VxRail-VM-Operator</code> role to AD groups scoped to their resource pool or VM folder — not to the cluster or datacenter level.</p>
 <hr />
@@ -10384,15 +10366,15 @@ RBAC and access scoping for VxRail in the VMware product context. Covers VxRail 
 <p><strong>Why Normal and not Strict for VxRail:</strong></p>
 <p>VxRail Manager communicates with ESXi hosts via the vCenter API path, which is permitted under Normal Lockdown. Some VxRail LCM operations (node prep, firmware staging) require the DCUI to be reachable — Strict Lockdown blocks this and can cause LCM failures. Always use Normal Lockdown on VxRail ESXi hosts. Verify with the VxRail release notes before upgrading.</p>
 <h3 id="enable-normal-lockdown-on-all-vxrail-hosts">Enable Normal Lockdown on All VxRail Hosts<a class="headerlink" href="#enable-normal-lockdown-on-all-vxrail-hosts" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Enable Normal Lockdown on all VxRail hosts (PowerCLI)</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Get-Cluster</span> <span class="s2">&quot;VxRail-Cluster&quot;</span> <span class="p">|</span> <span class="nb">Get-VMHost</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    <span class="nv">$_</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">EnterLockdownMode</span><span class="p">()</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;Lockdown enabled: </span><span class="p">$(</span><span class="nv">$_</span><span class="p">.</span><span class="n">Name</span><span class="p">)</span><span class="s2">&quot;</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Enable Normal Lockdown on all VxRail hosts (PowerCLI)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">Get-Cluster</span> <span class="s2">&quot;VxRail-Cluster&quot;</span> <span class="p">|</span> <span class="nb">Get-VMHost</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="nv">$_</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">EnterLockdownMode</span><span class="p">()</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;Lockdown enabled: </span><span class="p">$(</span><span class="nv">$_</span><span class="p">.</span><span class="n">Name</span><span class="p">)</span><span class="s2">&quot;</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="p">}</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Verify lockdown mode state on all hosts (PowerCLI)</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">Get-Cluster</span> <span class="s2">&quot;VxRail-Cluster&quot;</span> <span class="p">|</span> <span class="nb">Get-VMHost</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;LockdownMode&quot;</span><span class="p">;</span> <span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">Config</span><span class="p">.</span><span class="n">LockdownMode</span><span class="p">}}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Verify lockdown mode state on all hosts (PowerCLI)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Get-Cluster</span> <span class="s2">&quot;VxRail-Cluster&quot;</span> <span class="p">|</span> <span class="nb">Get-VMHost</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;LockdownMode&quot;</span><span class="p">;</span> <span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">Config</span><span class="p">.</span><span class="n">LockdownMode</span><span class="p">}}</span>
 </code></pre></div>
 <hr />
 <h2 id="exception-user-list">Exception User List<a class="headerlink" href="#exception-user-list" title="Permanent link">&para;</a></h2>
@@ -10401,21 +10383,21 @@ RBAC and access scoping for VxRail in the VMware product context. Covers VxRail 
 <p>VxRail Manager requires direct ESXi host access for certain LCM operations. Add the VxRail Manager service account to the exception list on every VxRail ESXi host.</p>
 <p><strong>vCenter → Host → Configure → Security Profile → Lockdown Mode → Exception Users → Edit → Add</strong></p>
 <p>Or via PowerCLI:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># Add VxRail Manager service account to ESXi exception list on all hosts</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nv">$exceptionAccount</span> <span class="p">=</span> <span class="s2">&quot;svc-vxrail@example.local&quot;</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="nb">Get-Cluster</span> <span class="s2">&quot;VxRail-Cluster&quot;</span> <span class="p">|</span> <span class="nb">Get-VMHost</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>    <span class="nv">$host</span> <span class="p">=</span> <span class="nv">$_</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>    <span class="nv">$configMgr</span> <span class="p">=</span> <span class="nb">Get-View</span> <span class="n">-Id</span> <span class="nv">$host</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">ConfigManager</span><span class="p">.</span><span class="n">HostAccessManager</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>    <span class="nv">$currentList</span> <span class="p">=</span> <span class="nv">$configMgr</span><span class="p">.</span><span class="n">QueryLockdownExceptions</span><span class="p">()</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>    <span class="k">if</span> <span class="p">(</span><span class="nv">$exceptionAccount</span> <span class="n">-notin</span> <span class="nv">$currentList</span><span class="p">)</span> <span class="p">{</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>        <span class="nv">$configMgr</span><span class="p">.</span><span class="n">UpdateLockdownExceptions</span><span class="p">(</span><span class="nv">$currentList</span> <span class="p">+</span> <span class="nv">$exceptionAccount</span><span class="p">)</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>        <span class="nb">Write-Host</span> <span class="s2">&quot;Added exception for $exceptionAccount on </span><span class="p">$(</span><span class="nv">$host</span><span class="p">.</span><span class="n">Name</span><span class="p">)</span><span class="s2">&quot;</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>        <span class="nb">Write-Host</span> <span class="s2">&quot;Already in exception list on </span><span class="p">$(</span><span class="nv">$host</span><span class="p">.</span><span class="n">Name</span><span class="p">)</span><span class="s2">&quot;</span>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>    <span class="p">}</span>
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Add VxRail Manager service account to ESXi exception list on all hosts</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nv">$exceptionAccount</span> <span class="p">=</span> <span class="s2">&quot;svc-vxrail@example.local&quot;</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="nb">Get-Cluster</span> <span class="s2">&quot;VxRail-Cluster&quot;</span> <span class="p">|</span> <span class="nb">Get-VMHost</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>    <span class="nv">$host</span> <span class="p">=</span> <span class="nv">$_</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>    <span class="nv">$configMgr</span> <span class="p">=</span> <span class="nb">Get-View</span> <span class="n">-Id</span> <span class="nv">$host</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">ConfigManager</span><span class="p">.</span><span class="n">HostAccessManager</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>    <span class="nv">$currentList</span> <span class="p">=</span> <span class="nv">$configMgr</span><span class="p">.</span><span class="n">QueryLockdownExceptions</span><span class="p">()</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>    <span class="k">if</span> <span class="p">(</span><span class="nv">$exceptionAccount</span> <span class="n">-notin</span> <span class="nv">$currentList</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>        <span class="nv">$configMgr</span><span class="p">.</span><span class="n">UpdateLockdownExceptions</span><span class="p">(</span><span class="nv">$currentList</span> <span class="p">+</span> <span class="nv">$exceptionAccount</span><span class="p">)</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>        <span class="nb">Write-Host</span> <span class="s2">&quot;Added exception for $exceptionAccount on </span><span class="p">$(</span><span class="nv">$host</span><span class="p">.</span><span class="n">Name</span><span class="p">)</span><span class="s2">&quot;</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>        <span class="nb">Write-Host</span> <span class="s2">&quot;Already in exception list on </span><span class="p">$(</span><span class="nv">$host</span><span class="p">.</span><span class="n">Name</span><span class="p">)</span><span class="s2">&quot;</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>    <span class="p">}</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="p">}</span>
 </code></pre></div>
 <h3 id="recommended-exception-list">Recommended Exception List<a class="headerlink" href="#recommended-exception-list" title="Permanent link">&para;</a></h3>
 <table>
@@ -10445,31 +10427,31 @@ RBAC and access scoping for VxRail in the VMware product context. Covers VxRail 
 <p>OpenManage Integration for VMware vCenter (OMIVV) requires a vCenter service account with a specific set of minimum permissions to surface Dell hardware alarms within vCenter and drive firmware updates.</p>
 <h3 id="minimum-omivv-vcenter-permissions">Minimum OMIVV vCenter Permissions<a class="headerlink" href="#minimum-omivv-vcenter-permissions" title="Permanent link">&para;</a></h3>
 <p>Create a dedicated vCenter role for OMIVV:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># Create OMIVV-minimum role in vCenter (PowerCLI)</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nv">$omivvPrivileges</span> <span class="p">=</span> <span class="p">@(</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>    <span class="s2">&quot;Alarm.Acknowledge&quot;</span><span class="p">,</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>    <span class="s2">&quot;Alarm.Create&quot;</span><span class="p">,</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>    <span class="s2">&quot;Alarm.Delete&quot;</span><span class="p">,</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>    <span class="s2">&quot;Alarm.Edit&quot;</span><span class="p">,</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>    <span class="s2">&quot;Alarm.SetStatus&quot;</span><span class="p">,</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>    <span class="s2">&quot;Extension.Register&quot;</span><span class="p">,</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>    <span class="s2">&quot;Extension.Unregister&quot;</span><span class="p">,</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>    <span class="s2">&quot;Extension.Update&quot;</span><span class="p">,</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>    <span class="s2">&quot;Global.ManageCustomFields&quot;</span><span class="p">,</span>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>    <span class="s2">&quot;Global.SetCustomField&quot;</span><span class="p">,</span>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>    <span class="s2">&quot;Host.Config.Settings&quot;</span><span class="p">,</span>
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>    <span class="s2">&quot;Host.Config.Maintenance&quot;</span><span class="p">,</span>
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>    <span class="s2">&quot;Host.Config.Patch&quot;</span><span class="p">,</span>
-<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>    <span class="s2">&quot;Host.Inventory.EditCluster&quot;</span><span class="p">,</span>
-<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>    <span class="s2">&quot;Task.Create&quot;</span><span class="p">,</span>
-<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>    <span class="s2">&quot;Task.Update&quot;</span><span class="p">,</span>
-<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>    <span class="s2">&quot;VirtualMachine.Config.Settings&quot;</span>
-<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a><span class="p">)</span>
-<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a><span class="nb">New-VIRole</span> <span class="n">-Name</span> <span class="s2">&quot;OMIVV-Minimum&quot;</span> <span class="n">-Privilege</span> <span class="p">(</span><span class="nb">Get-VIPrivilege</span> <span class="n">-Id</span> <span class="nv">$omivvPrivileges</span><span class="p">)</span>
-<a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a>
-<a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a><span class="c"># Assign OMIVV role to service account at Datacenter scope</span>
-<a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a><span class="nv">$omivvAccount</span> <span class="p">=</span> <span class="s2">&quot;svc-omivv@example.local&quot;</span>
-<a id="__codelineno-6-25" name="__codelineno-6-25" href="#__codelineno-6-25"></a><span class="nb">New-VIPermission</span> <span class="n">-Entity</span> <span class="p">(</span><span class="nb">Get-Datacenter</span><span class="p">)</span> <span class="n">-Principal</span> <span class="nv">$omivvAccount</span> <span class="n">-Role</span> <span class="s2">&quot;OMIVV-Minimum&quot;</span> <span class="n">-Propagate</span> <span class="nv">$true</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># Create OMIVV-minimum role in vCenter (PowerCLI)</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nv">$omivvPrivileges</span> <span class="p">=</span> <span class="p">@(</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>    <span class="s2">&quot;Alarm.Acknowledge&quot;</span><span class="p">,</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    <span class="s2">&quot;Alarm.Create&quot;</span><span class="p">,</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>    <span class="s2">&quot;Alarm.Delete&quot;</span><span class="p">,</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>    <span class="s2">&quot;Alarm.Edit&quot;</span><span class="p">,</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>    <span class="s2">&quot;Alarm.SetStatus&quot;</span><span class="p">,</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>    <span class="s2">&quot;Extension.Register&quot;</span><span class="p">,</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>    <span class="s2">&quot;Extension.Unregister&quot;</span><span class="p">,</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>    <span class="s2">&quot;Extension.Update&quot;</span><span class="p">,</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>    <span class="s2">&quot;Global.ManageCustomFields&quot;</span><span class="p">,</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>    <span class="s2">&quot;Global.SetCustomField&quot;</span><span class="p">,</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>    <span class="s2">&quot;Host.Config.Settings&quot;</span><span class="p">,</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>    <span class="s2">&quot;Host.Config.Maintenance&quot;</span><span class="p">,</span>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>    <span class="s2">&quot;Host.Config.Patch&quot;</span><span class="p">,</span>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>    <span class="s2">&quot;Host.Inventory.EditCluster&quot;</span><span class="p">,</span>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>    <span class="s2">&quot;Task.Create&quot;</span><span class="p">,</span>
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>    <span class="s2">&quot;Task.Update&quot;</span><span class="p">,</span>
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>    <span class="s2">&quot;VirtualMachine.Config.Settings&quot;</span>
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a><span class="p">)</span>
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a><span class="nb">New-VIRole</span> <span class="n">-Name</span> <span class="s2">&quot;OMIVV-Minimum&quot;</span> <span class="n">-Privilege</span> <span class="p">(</span><span class="nb">Get-VIPrivilege</span> <span class="n">-Id</span> <span class="nv">$omivvPrivileges</span><span class="p">)</span>
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a><span class="c"># Assign OMIVV role to service account at Datacenter scope</span>
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a><span class="nv">$omivvAccount</span> <span class="p">=</span> <span class="s2">&quot;svc-omivv@example.local&quot;</span>
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a><span class="nb">New-VIPermission</span> <span class="n">-Entity</span> <span class="p">(</span><span class="nb">Get-Datacenter</span><span class="p">)</span> <span class="n">-Principal</span> <span class="nv">$omivvAccount</span> <span class="n">-Role</span> <span class="s2">&quot;OMIVV-Minimum&quot;</span> <span class="n">-Propagate</span> <span class="nv">$true</span>
 </code></pre></div>
 <p>Assign at Datacenter scope with propagation enabled so OMIVV can see all hosts under the datacenter. If the VxRail cluster is the only cluster in the datacenter, scope to the cluster object instead.</p>
 <p>Refer to the Dell OMIVV release notes for the current minimum privilege list — required permissions change between OMIVV versions.</p>
@@ -10506,20 +10488,20 @@ RBAC and access scoping for VxRail in the VMware product context. Covers VxRail 
 </table>
 <h3 id="vxrail-manager-api-jump-hosts-only">VxRail Manager API — Jump Hosts Only<a class="headerlink" href="#vxrail-manager-api-jump-hosts-only" title="Permanent link">&para;</a></h3>
 <p>The VxRail Manager REST API (port 443) should only be reachable from admin jump hosts or VPN-connected admin workstations.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Restrict VxRail Manager API access at the network layer</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="c1"># Configure firewall/ACL to permit only jump host subnet:</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="c1"># Source: 10.0.200.0/24 (admin jump host subnet)</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Destination: &lt;vxrail-manager-ip&gt;:443</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1"># Action: PERMIT</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># All other sources to port 443 on VxRail Manager: DENY</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Restrict VxRail Manager API access at the network layer</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># Configure firewall/ACL to permit only jump host subnet:</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1"># Source: 10.0.200.0/24 (admin jump host subnet)</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Destination: &lt;vxrail-manager-ip&gt;:443</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Action: PERMIT</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># All other sources to port 443 on VxRail Manager: DENY</span>
 </code></pre></div>
 <h3 id="vcenter-vami-admin-subnets-only">vCenter VAMI — Admin Subnets Only<a class="headerlink" href="#vcenter-vami-admin-subnets-only" title="Permanent link">&para;</a></h3>
 <p>The vCenter Appliance Management Interface (VAMI) on port 5480 manages vCenter itself (backup, password reset, certificates). Restrict access to admin subnets only.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># vCenter Appliance firewall rule (via vCSA shell)</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="c1"># Permit VAMI port 5480 from admin subnets only</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>iptables<span class="w"> </span>-I<span class="w"> </span>INPUT<span class="w"> </span>-p<span class="w"> </span>tcp<span class="w"> </span>--dport<span class="w"> </span><span class="m">5480</span><span class="w"> </span>-s<span class="w"> </span><span class="m">10</span>.0.200.0/24<span class="w"> </span>-j<span class="w"> </span>ACCEPT
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>iptables<span class="w"> </span>-A<span class="w"> </span>INPUT<span class="w"> </span>-p<span class="w"> </span>tcp<span class="w"> </span>--dport<span class="w"> </span><span class="m">5480</span><span class="w"> </span>-j<span class="w"> </span>DROP
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># vCenter Appliance firewall rule (via vCSA shell)</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="c1"># Permit VAMI port 5480 from admin subnets only</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>iptables<span class="w"> </span>-I<span class="w"> </span>INPUT<span class="w"> </span>-p<span class="w"> </span>tcp<span class="w"> </span>--dport<span class="w"> </span><span class="m">5480</span><span class="w"> </span>-s<span class="w"> </span><span class="m">10</span>.0.200.0/24<span class="w"> </span>-j<span class="w"> </span>ACCEPT
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>iptables<span class="w"> </span>-A<span class="w"> </span>INPUT<span class="w"> </span>-p<span class="w"> </span>tcp<span class="w"> </span>--dport<span class="w"> </span><span class="m">5480</span><span class="w"> </span>-j<span class="w"> </span>DROP
 </code></pre></div>
 <p>Apply equivalent restrictions at the network perimeter firewall — do not rely solely on host-based firewall rules.</p>
 <h3 id="vsan-network-isolation">vSAN Network Isolation<a class="headerlink" href="#vsan-network-isolation" title="Permanent link">&para;</a></h3>

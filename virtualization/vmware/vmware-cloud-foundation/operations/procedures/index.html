@@ -9592,23 +9592,7 @@ Procedures reference covering SDDC Manager Backup, Password Management, Useful L
 <li>Schedule: daily; retain at least 7 restore points</li>
 <li>On-demand: <code>SDDC Manager → Administration → Backup → Backup Now</code></li>
 </ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>hub: &quot;VMware Cloud Foundation\nOperations&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>password_management: &quot;Password Management&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>useful_log_locations: &quot;Useful Log Locations&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>commission_a_host_into_the_free_pool: &quot;Commission a Host into the Free Pool&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>create_a_workload_domain: &quot;Create a Workload Domain&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>expand_a_workload_domain_add_hosts: &quot;Expand a Workload Domain (Add Hosts)&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>delete_a_workload_domain: &quot;Delete a Workload Domain&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>hub -&gt; password_management
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>hub -&gt; useful_log_locations
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>hub -&gt; commission_a_host_into_the_free_pool
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>hub -&gt; create_a_workload_domain
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>hub -&gt; expand_a_workload_domain_add_hosts
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>hub -&gt; delete_a_workload_domain
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNksFOwzAMhu99CmsnOPACPSChjYkDE7sAF6TINF4bkcZVkmqT0N4dJ6wFsVbsECny__uzHUcbT1U07Erwpm5iUTT9ewmLl80ePcHScq9hzb3TmFxv7qkjn69hAZ-hwY5KaOiANbtj0WEIe_ZateiwppZcFNb2FIXNGP3JTeXR1ZaORR9o11tluZZTfReR9Occhkeu5VR_a__Kr7htTQiiK1QNh6iMi6xiQ2rniVTHbIW3HG2A8CA2SDYQG6zFBluxTfM9YSRhyzAfllErzS0al5hZEt7rSYJVliY5dOjQ6XOOQq1z32nq-2w6J8LVnda57XA9SddkaabLVZYu7DJ9BLi5hYmdDtLUwgbtkmWM3pmHHfT_H2xwzg1ffAFjCRKE?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Access:</strong> vCenter read-only minimum; Administrator role for remediation steps</li>
@@ -9665,21 +9649,21 @@ Procedures reference covering SDDC Manager Backup, Password Management, Useful L
 <li>Configure BIOS baseline: enable HT, set boot order to internal disk first, disable legacy boot if using UEFI, set the correct power profile.</li>
 <li>
 <p>Install ESXi from the VCF-certified ISO — use the version specified in the SDDC Manager BOM.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Verify ESXi build number after installation</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>version<span class="w"> </span>get
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Verify ESXi build number after installation</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>version<span class="w"> </span>get
 </code></pre></div>
 </li>
 <li>
 <p>Assign the host a static IP, FQDN, and DNS A/PTR records. Verify forward and reverse resolution from SDDC Manager.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># From SDDC Manager appliance — verify DNS</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>nslookup<span class="w"> </span>esxi-host-01.domain.local
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>nslookup<span class="w"> </span><span class="m">192</span>.168.10.51
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># From SDDC Manager appliance — verify DNS</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>nslookup<span class="w"> </span>esxi-host-01.domain.local
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>nslookup<span class="w"> </span><span class="m">192</span>.168.10.51
 </code></pre></div>
 </li>
 <li>
 <p>Verify NTP synchronisation on the ESXi host.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>esxcli<span class="w"> </span>system<span class="w"> </span>ntp<span class="w"> </span>get
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>ntp<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--server<span class="o">=</span>ntp.domain.local<span class="w"> </span>--enabled<span class="o">=</span><span class="nb">true</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>esxcli<span class="w"> </span>system<span class="w"> </span>ntp<span class="w"> </span>get
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>ntp<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--server<span class="o">=</span>ntp.domain.local<span class="w"> </span>--enabled<span class="o">=</span><span class="nb">true</span>
 </code></pre></div>
 </li>
 <li>
@@ -9696,10 +9680,10 @@ Procedures reference covering SDDC Manager Backup, Password Management, Useful L
 <li>Resolve any <code>WARN</code> or <code>ERROR</code> items reported by the validation before proceeding.</li>
 <li>
 <p>Confirm commissioning. The host moves to <strong>Unassigned</strong> state in the free pool.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Query host status via SDDC Manager API (optional verification)</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>admin@local<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>https://sddc-manager.domain.local/v1/hosts<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">&#39;&quot;status&quot;|&quot;fqdn&quot;&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Query host status via SDDC Manager API (optional verification)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>admin@local<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>https://sddc-manager.domain.local/v1/hosts<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">&#39;&quot;status&quot;|&quot;fqdn&quot;&#39;</span>
 </code></pre></div>
 </li>
 </ol>
@@ -9725,11 +9709,11 @@ Procedures reference covering SDDC Manager Backup, Password Management, Useful L
 <li>Configure vSAN storage policy, failure tolerance method (FTT=1 or FTT=2), and disk group layout.</li>
 <li>
 <p>Review the generated JSON specification. Validate all IP addresses, FQDNs, and VLANs before submitting.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Export the draft spec for offline review (SDDC Mgr API)</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>admin@local<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="s2">&quot;https://sddc-manager.domain.local/v1/domains/validations&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span>-d<span class="w"> </span>@domain-spec.json<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Export the draft spec for offline review (SDDC Mgr API)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>admin@local<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="s2">&quot;https://sddc-manager.domain.local/v1/domains/validations&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span>-d<span class="w"> </span>@domain-spec.json<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
 </code></pre></div>
 </li>
 <li>
@@ -9763,11 +9747,11 @@ Procedures reference covering SDDC Manager Backup, Password Management, Useful L
 <li>Click <strong>Apply</strong>. Monitor progress in <strong>SDDC Manager → Tasks</strong>.</li>
 <li>
 <p>Post-expansion validation:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Verify host count in cluster via ESXi CLI (run from any host in the cluster)</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>esxcli<span class="w"> </span>hardware<span class="w"> </span>platform<span class="w"> </span>get
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1"># Or via vCenter API</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>administrator@vsphere.local<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span><span class="s2">&quot;https://vcenter.domain.local/api/vcenter/cluster&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Verify host count in cluster via ESXi CLI (run from any host in the cluster)</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>esxcli<span class="w"> </span>hardware<span class="w"> </span>platform<span class="w"> </span>get
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># Or via vCenter API</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>administrator@vsphere.local<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span><span class="s2">&quot;https://vcenter.domain.local/api/vcenter/cluster&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
 </code></pre></div>
 <ul>
 <li>Confirm the new host appears as <strong>Connected</strong> in vCenter</li>
@@ -9795,9 +9779,9 @@ Procedures reference covering SDDC Manager Backup, Password Management, Useful L
 </li>
 <li>
 <p>Verify the vSAN datastore is empty:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># SSH to any ESXi host in the cluster</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>vmfs<span class="w"> </span>extent<span class="w"> </span>list
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="c1"># Or check via vCenter: Storage → Datastore → Files</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># SSH to any ESXi host in the cluster</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>vmfs<span class="w"> </span>extent<span class="w"> </span>list
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1"># Or check via vCenter: Storage → Datastore → Files</span>
 </code></pre></div>
 </li>
 <li>
@@ -9833,10 +9817,10 @@ Procedures reference covering SDDC Manager Backup, Password Management, Useful L
 <li>Review the confirmation dialog — note which accounts will be rotated.</li>
 <li>
 <p>Click <strong>Confirm</strong>. SDDC Manager rotates credentials in the correct dependency order.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Monitor rotation task status via API</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>admin@local<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span><span class="s2">&quot;https://sddc-manager.domain.local/v1/tasks?pageSize=5&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">&#39;&quot;status&quot;|&quot;name&quot;&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Monitor rotation task status via API</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>admin@local<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span><span class="s2">&quot;https://sddc-manager.domain.local/v1/tasks?pageSize=5&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">&#39;&quot;status&quot;|&quot;name&quot;&#39;</span>
 </code></pre></div>
 </li>
 <li>
@@ -9864,9 +9848,9 @@ Procedures reference covering SDDC Manager Backup, Password Management, Useful L
 - Select certificate authority
 - Click <strong>Generate CSR and Sign</strong> — SDDC Manager handles the full cycle</p>
 <p><strong>External CA (manual CSR):</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># After generating the CSR in SDDC Manager, download it</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="c1"># Submit to your CA, then import the signed cert + chain:</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="c1"># SDDC Manager → Certificate Management → select component → Import Certificate</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># After generating the CSR in SDDC Manager, download it</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="c1"># Submit to your CA, then import the signed cert + chain:</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="c1"># SDDC Manager → Certificate Management → select component → Import Certificate</span>
 </code></pre></div>
 </li>
 <li>
@@ -9874,13 +9858,13 @@ Procedures reference covering SDDC Manager Backup, Password Management, Useful L
 </li>
 <li>
 <p>Verify the cert chain after rotation:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Verify vCenter certificate from command line</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>vcenter.domain.local:443<span class="w"> </span>-showcerts<span class="w"> </span>&lt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-subject<span class="w"> </span>-issuer<span class="w"> </span>-dates
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="c1"># Verify SDDC Manager certificate</span>
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>sddc-manager.domain.local:443<span class="w"> </span>-showcerts<span class="w"> </span>&lt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-subject<span class="w"> </span>-issuer<span class="w"> </span>-dates
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Verify vCenter certificate from command line</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>vcenter.domain.local:443<span class="w"> </span>-showcerts<span class="w"> </span>&lt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-subject<span class="w"> </span>-issuer<span class="w"> </span>-dates
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="c1"># Verify SDDC Manager certificate</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>sddc-manager.domain.local:443<span class="w"> </span>-showcerts<span class="w"> </span>&lt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-subject<span class="w"> </span>-issuer<span class="w"> </span>-dates
 </code></pre></div>
 </li>
 <li>
@@ -9905,10 +9889,10 @@ Procedures reference covering SDDC Manager Backup, Password Management, Useful L
 <li><strong>WARN</strong> — advisory; resolve before upgrade if possible</li>
 <li><strong>ERROR</strong> — blocking; upgrade cannot proceed until resolved</li>
 </ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Retrieve precheck results via API for export to change ticket</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>admin@local<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">  </span><span class="s2">&quot;https://sddc-manager.domain.local/v1/upgradables/prechecks&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Retrieve precheck results via API for export to change ticket</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>admin@local<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span><span class="s2">&quot;https://sddc-manager.domain.local/v1/upgradables/prechecks&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
 </code></pre></div>
 </li>
 <li>
@@ -9919,8 +9903,8 @@ Procedures reference covering SDDC Manager Backup, Password Management, Useful L
 <li><strong>Insufficient disk space</strong> → free space on SDDC Manager appliance (<code>/var</code> must have &gt;20 GB free)</li>
 <li><strong>DNS/NTP drift</strong> → correct on affected hosts</li>
 </ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Check SDDC Manager appliance disk usage</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>df<span class="w"> </span>-h<span class="w"> </span>/var
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Check SDDC Manager appliance disk usage</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>df<span class="w"> </span>-h<span class="w"> </span>/var
 </code></pre></div>
 </li>
 <li>
@@ -9939,19 +9923,19 @@ Procedures reference covering SDDC Manager Backup, Password Management, Useful L
 <li>Navigate to <strong>SDDC Manager → Lifecycle Management → Check for Updates</strong>.</li>
 <li>
 <p>SDDC Manager contacts the VMware depot and lists available bundles. If the environment is air-gapped, upload the bundle manually:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Copy bundle to SDDC Manager (from a jump host with access)</span>
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>scp<span class="w"> </span>vcf-bundle-4.x.x.x.tar.gz<span class="w"> </span>vcf@sddc-manager.domain.local:/nfs/vmware/vcf/nfs-mount/bundles/
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
-<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c1"># Trigger a local depot rescan</span>
-<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>admin@local<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="w">  </span><span class="s2">&quot;https://sddc-manager.domain.local/v1/bundles/retrigger&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Copy bundle to SDDC Manager (from a jump host with access)</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>scp<span class="w"> </span>vcf-bundle-4.x.x.x.tar.gz<span class="w"> </span>vcf@sddc-manager.domain.local:/nfs/vmware/vcf/nfs-mount/bundles/
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># Trigger a local depot rescan</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>admin@local<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="w">  </span><span class="s2">&quot;https://sddc-manager.domain.local/v1/bundles/retrigger&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span>
 </code></pre></div>
 </li>
 <li>
 <p>Select the target bundle. Verify the SHA-256 checksum matches the VMware KB for that release:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>sha256sum<span class="w"> </span>vcf-bundle-4.x.x.x.tar.gz
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="c1"># Compare output to the checksum published in the VMware release notes</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>sha256sum<span class="w"> </span>vcf-bundle-4.x.x.x.tar.gz
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="c1"># Compare output to the checksum published in the VMware release notes</span>
 </code></pre></div>
 </li>
 <li>
@@ -9969,8 +9953,8 @@ Procedures reference covering SDDC Manager Backup, Password Management, Useful L
 </li>
 <li>
 <p>Monitor progress in <strong>SDDC Manager → Tasks</strong>. Do not interrupt the upgrade once started.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># Tail the LCM log during upgrade for real-time status</span>
-<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>tail<span class="w"> </span>-f<span class="w"> </span>/var/log/vmware/vcf/lcm/lcm.log
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Tail the LCM log during upgrade for real-time status</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>tail<span class="w"> </span>-f<span class="w"> </span>/var/log/vmware/vcf/lcm/lcm.log
 </code></pre></div>
 </li>
 <li>
@@ -10002,10 +9986,10 @@ Procedures reference covering SDDC Manager Backup, Password Management, Useful L
 <li>Verify that IP ranges are sized to accommodate the maximum expected host count in the domain (current + future expansion).</li>
 <li>
 <p>Click <strong>Save</strong>. The pool appears in the network pool inventory.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># List configured network pools via API</span>
-<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>admin@local<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="w">  </span><span class="s2">&quot;https://sddc-manager.domain.local/v1/network-pools&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">&#39;&quot;name&quot;|&quot;id&quot;&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># List configured network pools via API</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>admin@local<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="w">  </span><span class="s2">&quot;https://sddc-manager.domain.local/v1/network-pools&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">&#39;&quot;name&quot;|&quot;id&quot;&#39;</span>
 </code></pre></div>
 </li>
 <li>
@@ -10018,17 +10002,17 @@ Procedures reference covering SDDC Manager Backup, Password Management, Useful L
 <p>SDDC Manager records all administrative actions (login events, task submissions, configuration changes) in its audit log. Audit logs are essential for change control reviews, security investigations, and compliance reporting.</p>
 <p><strong>Retention:</strong> the audit log file rolls over when it reaches 100 MB. For long-term retention, configure a syslog target in <strong>SDDC Manager → Administration → Syslog</strong>.</p>
 <p><strong>Via CLI (SDDC Manager appliance):</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># View the last 100 audit log entries</span>
-<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>tail<span class="w"> </span>-100<span class="w"> </span>/var/log/vmware/vcf/commonsvcs/audit.log
-<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>
-<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="c1"># Search for a specific user&#39;s actions</span>
-<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>grep<span class="w"> </span><span class="s2">&quot;user@domain.local&quot;</span><span class="w"> </span>/var/log/vmware/vcf/commonsvcs/audit.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
-<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>
-<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a><span class="c1"># Filter for login events</span>
-<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;LOGIN\|LOGOUT\|AUTH&quot;</span><span class="w"> </span>/var/log/vmware/vcf/commonsvcs/audit.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
-<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>
-<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a><span class="c1"># Filter for a specific action type (e.g., password rotation, domain creation)</span>
-<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;ROTATE\|COMMISSION\|CREATE_DOMAIN&quot;</span><span class="w"> </span>/var/log/vmware/vcf/commonsvcs/audit.log
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># View the last 100 audit log entries</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>tail<span class="w"> </span>-100<span class="w"> </span>/var/log/vmware/vcf/commonsvcs/audit.log
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="c1"># Search for a specific user&#39;s actions</span>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>grep<span class="w"> </span><span class="s2">&quot;user@domain.local&quot;</span><span class="w"> </span>/var/log/vmware/vcf/commonsvcs/audit.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="c1"># Filter for login events</span>
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;LOGIN\|LOGOUT\|AUTH&quot;</span><span class="w"> </span>/var/log/vmware/vcf/commonsvcs/audit.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
+<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>
+<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a><span class="c1"># Filter for a specific action type (e.g., password rotation, domain creation)</span>
+<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;ROTATE\|COMMISSION\|CREATE_DOMAIN&quot;</span><span class="w"> </span>/var/log/vmware/vcf/commonsvcs/audit.log
 </code></pre></div>
 <p><strong>Via SDDC Manager UI:</strong></p>
 <ol>
@@ -10043,11 +10027,11 @@ Procedures reference covering SDDC Manager Backup, Password Management, Useful L
 <li>Export results to CSV for inclusion in change management records or security reports.</li>
 </ol>
 <p><strong>Syslog forwarding (recommended for compliance):</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># Configure syslog target via SDDC Manager API</span>
-<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>admin@local<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="w">  </span><span class="s2">&quot;https://sddc-manager.domain.local/v1/syslog-configuration&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;host&quot;: &quot;syslog.domain.local&quot;, &quot;port&quot;: 514, &quot;protocol&quot;: &quot;UDP&quot;}&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># Configure syslog target via SDDC Manager API</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>admin@local<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="w">  </span><span class="s2">&quot;https://sddc-manager.domain.local/v1/syslog-configuration&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;host&quot;: &quot;syslog.domain.local&quot;, &quot;port&quot;: 514, &quot;protocol&quot;: &quot;UDP&quot;}&#39;</span>
 </code></pre></div>
 <p><strong>Key audit log fields:</strong></p>
 <table>
@@ -10100,11 +10084,11 @@ Procedures reference covering SDDC Manager Backup, Password Management, Useful L
 <li>Click <strong>Save</strong></li>
 </ol>
 <p>To trigger an immediate backup:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1"># Via SDDC Manager API</span>
-<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin@local:&lt;password&gt;&#39;</span><span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="w">  </span><span class="s2">&quot;https://sddc-manager.example.local/v1/backups&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;elements&quot;: [{&quot;resourceType&quot;: &quot;SDDC_MANAGER&quot;}]}&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># Via SDDC Manager API</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin@local:&lt;password&gt;&#39;</span><span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="w">  </span><span class="s2">&quot;https://sddc-manager.example.local/v1/backups&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;elements&quot;: [{&quot;resourceType&quot;: &quot;SDDC_MANAGER&quot;}]}&#39;</span>
 </code></pre></div></p>
 <hr />
 <h2 id="add-an-esxi-host-to-the-free-pool">Add an ESXi Host to the Free Pool<a class="headerlink" href="#add-an-esxi-host-to-the-free-pool" title="Permanent link">&para;</a></h2>
@@ -10119,10 +10103,10 @@ Procedures reference covering SDDC Manager Backup, Password Management, Useful L
 <li>SDDC Manager runs pre-validation (network, NTP, connectivity)</li>
 <li>Confirm and submit — host moves from <strong>Unassigned</strong> to <strong>Unallocated</strong> (free pool)</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># Verify host is in the free pool via API</span>
-<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin@local:&lt;password&gt;&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="w">  </span><span class="s2">&quot;https://sddc-manager.example.local/v1/hosts?status=UNASSIGNED_USEABLE&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.elements[] | {fqdn: .fqdn, status: .status}&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1"># Verify host is in the free pool via API</span>
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin@local:&lt;password&gt;&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="w">  </span><span class="s2">&quot;https://sddc-manager.example.local/v1/hosts?status=UNASSIGNED_USEABLE&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.elements[] | {fqdn: .fqdn, status: .status}&#39;</span>
 </code></pre></div>
 <hr />
 <h2 id="configure-external-certificates-for-vcf-components">Configure External Certificates for VCF Components<a class="headerlink" href="#configure-external-certificates-for-vcf-components" title="Permanent link">&para;</a></h2>
@@ -10138,10 +10122,10 @@ Procedures reference covering SDDC Manager Backup, Password Management, Useful L
 <li>SDDC Manager → Certificates → <strong>Replace Certificates</strong> → select all components</li>
 <li>SDDC Manager orchestrates the certificate push to each component — monitor via <strong>Tasks</strong></li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="c1"># Check current certificate expiry for all VCF components</span>
-<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin@local:&lt;password&gt;&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a><span class="w">  </span><span class="s2">&quot;https://sddc-manager.example.local/v1/certificate-authorities/certificates&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.elements[] | {resourceFqdn: .resourceFqdn, notAfter: .certificate.notAfter}&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># Check current certificate expiry for all VCF components</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin@local:&lt;password&gt;&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="w">  </span><span class="s2">&quot;https://sddc-manager.example.local/v1/certificate-authorities/certificates&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.elements[] | {resourceFqdn: .resourceFqdn, notAfter: .certificate.notAfter}&#39;</span>
 </code></pre></div>
 <hr />
 <h2 id="review-sddc-manager-health-dashboard">Review SDDC Manager Health Dashboard<a class="headerlink" href="#review-sddc-manager-health-dashboard" title="Permanent link">&para;</a></h2>
@@ -10154,10 +10138,10 @@ Procedures reference covering SDDC Manager Backup, Password Management, Useful L
 <li>For degraded components, review the <strong>Tasks</strong> panel for in-progress or failed tasks</li>
 <li>Run an explicit health check: <strong>SDDC Manager → Workload Domains → select domain → Health Check</strong></li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="c1"># Run SOS health check from SDDC Manager appliance</span>
-<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>ssh<span class="w"> </span>vcf@sddc-manager.example.local
-<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>sudo<span class="w"> </span>/opt/vmware/sddc-support/sos<span class="w"> </span>--health-check<span class="w"> </span>--domain-name<span class="w"> </span>sfo-m01
-<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a><span class="c1"># Output saved to /var/log/vmware/vcf/sddc-support/sos-&lt;timestamp&gt;/</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="c1"># Run SOS health check from SDDC Manager appliance</span>
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>ssh<span class="w"> </span>vcf@sddc-manager.example.local
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>sudo<span class="w"> </span>/opt/vmware/sddc-support/sos<span class="w"> </span>--health-check<span class="w"> </span>--domain-name<span class="w"> </span>sfo-m01
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="c1"># Output saved to /var/log/vmware/vcf/sddc-support/sos-&lt;timestamp&gt;/</span>
 </code></pre></div>
 <hr />
 <h2 id="recover-sddc-manager-from-backup">Recover SDDC Manager from Backup<a class="headerlink" href="#recover-sddc-manager-from-backup" title="Permanent link">&para;</a></h2>
@@ -10176,23 +10160,23 @@ Procedures reference covering SDDC Manager Backup, Password Management, Useful L
 <h3 id="step-2-initiate-restore-from-backup">Step 2 — Initiate Restore from Backup<a class="headerlink" href="#step-2-initiate-restore-from-backup" title="Permanent link">&para;</a></h3>
 <p><img alt="Step 2 — Initiate Restore from Backup" src="../../../../../assets/vmware-cloud-foundation-proc-step-2-initiate-restore-from-backup.svg" /></p>
 <p>SDDC Manager backup restore is performed via the API (no UI restore wizard):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="c1"># 1. Retrieve the list of available backups on the backup target</span>
-<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:VMware1!&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a><span class="w">  </span><span class="s2">&quot;https://&lt;sddc-manager-ip&gt;/v1/backups/tasks&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.elements[] | {id: .id, createdAt: .createdAt}&#39;</span>
-<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a>
-<a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a><span class="c1"># 2. Trigger restore using the backup ID from step 1</span>
-<a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:VMware1!&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a><span class="w">  </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-23-8" name="__codelineno-23-8" href="#__codelineno-23-8"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-23-9" name="__codelineno-23-9" href="#__codelineno-23-9"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;backupFile&quot;: &quot;&lt;path-to-backup-file&gt;&quot;, &quot;encryption&quot;: {&quot;passphrase&quot;: &quot;&lt;backup-passphrase&gt;&quot;}}&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-23-10" name="__codelineno-23-10" href="#__codelineno-23-10"></a><span class="w">  </span><span class="s2">&quot;https://&lt;sddc-manager-ip&gt;/v1/restores/tasks&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="c1"># 1. Retrieve the list of available backups on the backup target</span>
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:VMware1!&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a><span class="w">  </span><span class="s2">&quot;https://&lt;sddc-manager-ip&gt;/v1/backups/tasks&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.elements[] | {id: .id, createdAt: .createdAt}&#39;</span>
+<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a>
+<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a><span class="c1"># 2. Trigger restore using the backup ID from step 1</span>
+<a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:VMware1!&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a><span class="w">  </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-22-9" name="__codelineno-22-9" href="#__codelineno-22-9"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;backupFile&quot;: &quot;&lt;path-to-backup-file&gt;&quot;, &quot;encryption&quot;: {&quot;passphrase&quot;: &quot;&lt;backup-passphrase&gt;&quot;}}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-22-10" name="__codelineno-22-10" href="#__codelineno-22-10"></a><span class="w">  </span><span class="s2">&quot;https://&lt;sddc-manager-ip&gt;/v1/restores/tasks&quot;</span>
 </code></pre></div>
 <p>The restore process may take 20–60 minutes. SDDC Manager restarts multiple times.</p>
 <h3 id="step-3-validate-post-restore-state">Step 3 — Validate Post-Restore State<a class="headerlink" href="#step-3-validate-post-restore-state" title="Permanent link">&para;</a></h3>
 <p><img alt="Step 3 — Validate Post-Restore State" src="../../../../../assets/vmware-cloud-foundation-proc-step-3-validate-post-restore-state.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="c1"># Confirm SDDC Manager service health after restore</span>
-<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:VMware1!&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a><span class="w">  </span><span class="s2">&quot;https://&lt;sddc-manager-ip&gt;/v1/system/health-summary&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.elements[] | {service: .type, status: .status}&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="c1"># Confirm SDDC Manager service health after restore</span>
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:VMware1!&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a><span class="w">  </span><span class="s2">&quot;https://&lt;sddc-manager-ip&gt;/v1/system/health-summary&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.elements[] | {service: .type, status: .status}&#39;</span>
 </code></pre></div>
 <p>In the SDDC Manager UI:
 - <strong>Workload Domains</strong> → all domains should be visible and show their current state
@@ -10221,9 +10205,9 @@ Procedures reference covering SDDC Manager Backup, Password Management, Useful L
 2. vMotion all VMs off the host
 3. Remove host from the vSphere cluster
 4. Return host to the VCF Free Pool</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="c1"># Monitor via SDDC Manager API</span>
-<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:VMware1!&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a><span class="w">  </span><span class="s2">&quot;https://&lt;sddc-manager&gt;/v1/tasks/&lt;task-id&gt;&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;{status: .status, subTasks: .subTasks[].status}&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="c1"># Monitor via SDDC Manager API</span>
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:VMware1!&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a><span class="w">  </span><span class="s2">&quot;https://&lt;sddc-manager&gt;/v1/tasks/&lt;task-id&gt;&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;{status: .status, subTasks: .subTasks[].status}&#39;</span>
 </code></pre></div>
 <h3 id="step-3-decommission-from-vcf-remove-from-free-pool">Step 3 — Decommission from VCF (Remove from Free Pool)<a class="headerlink" href="#step-3-decommission-from-vcf-remove-from-free-pool" title="Permanent link">&para;</a></h3>
 <p><img alt="Step 3 — Decommission from VCF (Remove from Free Pool)" src="../../../../../assets/vmware-cloud-foundation-proc-step-3-decommission-from-vcf-remove-from-free-p.svg" /></p>
@@ -10262,11 +10246,11 @@ Procedures reference covering SDDC Manager Backup, Password Management, Useful L
 <p>SDDC Manager configures vSAN stretched cluster mode, sets up fault domains, and configures the witness VM automatically.</p>
 <h3 id="step-3-validate-stretched-cluster-health">Step 3 — Validate Stretched Cluster Health<a class="headerlink" href="#step-3-validate-stretched-cluster-health" title="Permanent link">&para;</a></h3>
 <p><img alt="Step 3 — Validate Stretched Cluster Health" src="../../../../../assets/vmware-cloud-foundation-proc-step-3-validate-stretched-cluster-health.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="c1"># From any host in the cluster — check stretched cluster status</span>
-<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>cluster<span class="w"> </span>get<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Sub-Cluster Type|Witness|Preferred&quot;</span>
-<a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a>
-<a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a><span class="c1"># Check both sites are equally represented in vSAN</span>
-<a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>health<span class="w"> </span>cluster<span class="w"> </span>get<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Stretched|Fault Domain|Witness&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="c1"># From any host in the cluster — check stretched cluster status</span>
+<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>cluster<span class="w"> </span>get<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Sub-Cluster Type|Witness|Preferred&quot;</span>
+<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>
+<a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a><span class="c1"># Check both sites are equally represented in vSAN</span>
+<a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>health<span class="w"> </span>cluster<span class="w"> </span>get<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Stretched|Fault Domain|Witness&quot;</span>
 </code></pre></div>
 <p>In SDDC Manager: <strong>Inventory → Workload Domains → cluster</strong> — stretched cluster topology should show two fault domains and the witness.</p>
 <hr />

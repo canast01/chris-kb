@@ -8579,23 +8579,7 @@ Conditional Access (CA) policies are the enforcement engine of Zero Trust in Mic
 *Applies to: Azure*
 </div>
 <p><img alt="Conditional Access" src="../../../../assets/cloud-azure-identity-conditional-access-index.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>center: &quot;Azure&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>conditional_access_evaluation_flow: &quot;Conditional Access Evaluation Flow&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>ca_policy_creation: &quot;CA Policy Creation&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>conditions: &quot;Conditions&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>grant_controls: &quot;Grant Controls&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>named_locations: &quot;Named Locations&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>reportonly_mode: &quot;Report-Only Mode&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>center -&gt; conditional_access_evaluation_flow
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>center -&gt; ca_policy_creation
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>center -&gt; conditions
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>center -&gt; grant_controls
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>center -&gt; named_locations
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>center -&gt; reportonly_mode
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqFkc9OwzAMh-99Cqv3vUAPSFUFu_Bn4gUiK_XaSFlcORkwEO9O0rVbGJG4fv59duz0RkgHw64BMcMYqkqTCyQN1O3nUaiGLz_iRA2M9IEDu-9Ks-tNUtAq1Jq8V_SG9oiJqb3l9yh31xC0cwjuLyF4iKFr5_QCdIOl2BvVxNbok9JCeH5X3bWwmyF0Cyy760ifz_fF7CDogopGELYpv00AugUUHYcH6pVljeuQ50TgcSVFS2hiCezsSR24j7X6dSabl4jgKaKitnwDbO7g_3vn4T8HLHXyGfx9iqxws29Wudmp-gG_WtVN?" /></p>
 <h2 id="conditional-access-evaluation-flow">Conditional Access Evaluation Flow<a class="headerlink" href="#conditional-access-evaluation-flow" title="Permanent link">&para;</a></h2>
 <pre class="mermaid"><code>flowchart TD
     signIn["Sign-in Attempt"]
@@ -8621,45 +8605,45 @@ Conditional Access (CA) policies are the enforcement engine of Zero Trust in Mic
     compliantReq -- No requirement --&gt; granted</code></pre>
 <h2 id="ca-policy-creation">CA Policy Creation<a class="headerlink" href="#ca-policy-creation" title="Permanent link">&para;</a></h2>
 <p>Conditional Access policies are primarily managed through the Entra ID portal or Microsoft Graph API. The <code>az</code> CLI covers some operations via the <code>az ad</code> extension and <code>az rest</code>.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># List all Conditional Access policies via Microsoft Graph</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>az<span class="w"> </span>rest<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>--method<span class="w"> </span>GET<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>--url<span class="w"> </span><span class="s2">&quot;https://graph.microsoft.com/v1.0/identity/conditionalAccess/policies&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;value[].{Name:displayName, State:state, ID:id}&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span>--output<span class="w"> </span>table
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Get details of a specific CA policy</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>az<span class="w"> </span>rest<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">  </span>--method<span class="w"> </span>GET<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">  </span>--url<span class="w"> </span><span class="s2">&quot;https://graph.microsoft.com/v1.0/identity/conditionalAccess/policies/&lt;policy-id&gt;&quot;</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Create a CA policy (require MFA for all users)</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>az<span class="w"> </span>rest<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">  </span>--method<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w">  </span>--url<span class="w"> </span><span class="s2">&quot;https://graph.microsoft.com/v1.0/identity/conditionalAccess/policies&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="w">  </span>--body<span class="w"> </span><span class="s1">&#39;{</span>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="s1">    &quot;displayName&quot;: &quot;Require MFA for all users&quot;,</span>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="s1">    &quot;state&quot;: &quot;enabledForReportingButNotEnforced&quot;,</span>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="s1">    &quot;conditions&quot;: {</span>
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="s1">      &quot;users&quot;: {&quot;includeUsers&quot;: [&quot;All&quot;]},</span>
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="s1">      &quot;applications&quot;: {&quot;includeApplications&quot;: [&quot;All&quot;]}</span>
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="s1">    },</span>
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="s1">    &quot;grantControls&quot;: {</span>
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="s1">      &quot;operator&quot;: &quot;OR&quot;,</span>
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="s1">      &quot;builtInControls&quot;: [&quot;mfa&quot;]</span>
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a><span class="s1">    }</span>
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a><span class="s1">  }&#39;</span>
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a><span class="c1"># Enable a CA policy (change state to enabled)</span>
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>az<span class="w"> </span>rest<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a><span class="w">  </span>--method<span class="w"> </span>PATCH<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a><span class="w">  </span>--url<span class="w"> </span><span class="s2">&quot;https://graph.microsoft.com/v1.0/identity/conditionalAccess/policies/&lt;policy-id&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a><span class="w">  </span>--body<span class="w"> </span><span class="s1">&#39;{&quot;state&quot;: &quot;enabled&quot;}&#39;</span>
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>
-<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a><span class="c1"># Delete a CA policy</span>
-<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>az<span class="w"> </span>rest<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a><span class="w">  </span>--method<span class="w"> </span>DELETE<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a><span class="w">  </span>--url<span class="w"> </span><span class="s2">&quot;https://graph.microsoft.com/v1.0/identity/conditionalAccess/policies/&lt;policy-id&gt;&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># List all Conditional Access policies via Microsoft Graph</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>az<span class="w"> </span>rest<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>--method<span class="w"> </span>GET<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span>--url<span class="w"> </span><span class="s2">&quot;https://graph.microsoft.com/v1.0/identity/conditionalAccess/policies&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;value[].{Name:displayName, State:state, ID:id}&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">  </span>--output<span class="w"> </span>table
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># Get details of a specific CA policy</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>az<span class="w"> </span>rest<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">  </span>--method<span class="w"> </span>GET<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">  </span>--url<span class="w"> </span><span class="s2">&quot;https://graph.microsoft.com/v1.0/identity/conditionalAccess/policies/&lt;policy-id&gt;&quot;</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Create a CA policy (require MFA for all users)</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>az<span class="w"> </span>rest<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">  </span>--method<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="w">  </span>--url<span class="w"> </span><span class="s2">&quot;https://graph.microsoft.com/v1.0/identity/conditionalAccess/policies&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="w">  </span>--body<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="s1">    &quot;displayName&quot;: &quot;Require MFA for all users&quot;,</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="s1">    &quot;state&quot;: &quot;enabledForReportingButNotEnforced&quot;,</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="s1">    &quot;conditions&quot;: {</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="s1">      &quot;users&quot;: {&quot;includeUsers&quot;: [&quot;All&quot;]},</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="s1">      &quot;applications&quot;: {&quot;includeApplications&quot;: [&quot;All&quot;]}</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="s1">    },</span>
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="s1">    &quot;grantControls&quot;: {</span>
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="s1">      &quot;operator&quot;: &quot;OR&quot;,</span>
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="s1">      &quot;builtInControls&quot;: [&quot;mfa&quot;]</span>
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a><span class="s1">    }</span>
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a><span class="s1">  }&#39;</span>
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a><span class="c1"># Enable a CA policy (change state to enabled)</span>
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>az<span class="w"> </span>rest<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a><span class="w">  </span>--method<span class="w"> </span>PATCH<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a><span class="w">  </span>--url<span class="w"> </span><span class="s2">&quot;https://graph.microsoft.com/v1.0/identity/conditionalAccess/policies/&lt;policy-id&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a><span class="w">  </span>--body<span class="w"> </span><span class="s1">&#39;{&quot;state&quot;: &quot;enabled&quot;}&#39;</span>
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a><span class="c1"># Delete a CA policy</span>
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>az<span class="w"> </span>rest<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a><span class="w">  </span>--method<span class="w"> </span>DELETE<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a><span class="w">  </span>--url<span class="w"> </span><span class="s2">&quot;https://graph.microsoft.com/v1.0/identity/conditionalAccess/policies/&lt;policy-id&gt;&quot;</span>
 </code></pre></div>
 <h2 id="conditions">Conditions<a class="headerlink" href="#conditions" title="Permanent link">&para;</a></h2>
 <p>Conditions define the context in which a policy applies. Multiple conditions can be combined with AND logic.</p>
@@ -8745,45 +8729,45 @@ Conditional Access (CA) policies are the enforcement engine of Zero Trust in Mic
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Create a policy to block legacy authentication</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>az<span class="w"> </span>rest<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>--method<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>--url<span class="w"> </span><span class="s2">&quot;https://graph.microsoft.com/v1.0/identity/conditionalAccess/policies&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>--body<span class="w"> </span><span class="s1">&#39;{</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="s1">    &quot;displayName&quot;: &quot;Block legacy authentication&quot;,</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="s1">    &quot;state&quot;: &quot;enabled&quot;,</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="s1">    &quot;conditions&quot;: {</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="s1">      &quot;users&quot;: {&quot;includeUsers&quot;: [&quot;All&quot;]},</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="s1">      &quot;applications&quot;: {&quot;includeApplications&quot;: [&quot;All&quot;]},</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="s1">      &quot;clientAppTypes&quot;: [&quot;exchangeActiveSync&quot;, &quot;other&quot;]</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="s1">    },</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="s1">    &quot;grantControls&quot;: {</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="s1">      &quot;operator&quot;: &quot;OR&quot;,</span>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="s1">      &quot;builtInControls&quot;: [&quot;block&quot;]</span>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="s1">    }</span>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="s1">  }&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Create a policy to block legacy authentication</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>az<span class="w"> </span>rest<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>--method<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>--url<span class="w"> </span><span class="s2">&quot;https://graph.microsoft.com/v1.0/identity/conditionalAccess/policies&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>--body<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="s1">    &quot;displayName&quot;: &quot;Block legacy authentication&quot;,</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="s1">    &quot;state&quot;: &quot;enabled&quot;,</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="s1">    &quot;conditions&quot;: {</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="s1">      &quot;users&quot;: {&quot;includeUsers&quot;: [&quot;All&quot;]},</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="s1">      &quot;applications&quot;: {&quot;includeApplications&quot;: [&quot;All&quot;]},</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="s1">      &quot;clientAppTypes&quot;: [&quot;exchangeActiveSync&quot;, &quot;other&quot;]</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="s1">    },</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="s1">    &quot;grantControls&quot;: {</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="s1">      &quot;operator&quot;: &quot;OR&quot;,</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="s1">      &quot;builtInControls&quot;: [&quot;block&quot;]</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="s1">    }</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="s1">  }&#39;</span>
 </code></pre></div>
 <h2 id="named-locations">Named Locations<a class="headerlink" href="#named-locations" title="Permanent link">&para;</a></h2>
 <p>Named locations represent trusted IP ranges or countries/regions used in Conditional Access conditions.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Create a named location (IP range)</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>az<span class="w"> </span>rest<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>--method<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>--url<span class="w"> </span><span class="s2">&quot;https://graph.microsoft.com/v1.0/identity/conditionalAccess/namedLocations&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span>--body<span class="w"> </span><span class="s1">&#39;{</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="s1">    &quot;@odata.type&quot;: &quot;#microsoft.graph.ipNamedLocation&quot;,</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="s1">    &quot;displayName&quot;: &quot;Office Network&quot;,</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="s1">    &quot;isTrusted&quot;: true,</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="s1">    &quot;ipRanges&quot;: [</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="s1">      {&quot;@odata.type&quot;: &quot;#microsoft.graph.iPv4CidrRange&quot;, &quot;cidrAddress&quot;: &quot;203.0.113.0/24&quot;}</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="s1">    ]</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="s1">  }&#39;</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="c1"># List named locations</span>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>az<span class="w"> </span>rest<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="w">  </span>--method<span class="w"> </span>GET<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="w">  </span>--url<span class="w"> </span><span class="s2">&quot;https://graph.microsoft.com/v1.0/identity/conditionalAccess/namedLocations&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;value[].{Name:displayName, Type:\&quot;@odata.type\&quot;, ID:id}&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="w">  </span>--output<span class="w"> </span>table
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Create a named location (IP range)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>az<span class="w"> </span>rest<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>--method<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>--url<span class="w"> </span><span class="s2">&quot;https://graph.microsoft.com/v1.0/identity/conditionalAccess/namedLocations&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>--body<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="s1">    &quot;@odata.type&quot;: &quot;#microsoft.graph.ipNamedLocation&quot;,</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="s1">    &quot;displayName&quot;: &quot;Office Network&quot;,</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="s1">    &quot;isTrusted&quot;: true,</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="s1">    &quot;ipRanges&quot;: [</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="s1">      {&quot;@odata.type&quot;: &quot;#microsoft.graph.iPv4CidrRange&quot;, &quot;cidrAddress&quot;: &quot;203.0.113.0/24&quot;}</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="s1">    ]</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="s1">  }&#39;</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="c1"># List named locations</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>az<span class="w"> </span>rest<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="w">  </span>--method<span class="w"> </span>GET<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="w">  </span>--url<span class="w"> </span><span class="s2">&quot;https://graph.microsoft.com/v1.0/identity/conditionalAccess/namedLocations&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;value[].{Name:displayName, Type:\&quot;@odata.type\&quot;, ID:id}&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="w">  </span>--output<span class="w"> </span>table
 </code></pre></div>
 <h2 id="report-only-mode">Report-Only Mode<a class="headerlink" href="#report-only-mode" title="Permanent link">&para;</a></h2>
 <p>Always deploy new policies in <code>enabledForReportingButNotEnforced</code> (report-only) state first. This allows you to see sign-in impact in logs before enforcing.</p>
@@ -8810,11 +8794,11 @@ Conditional Access (CA) policies are the enforcement engine of Zero Trust in Mic
 </tbody>
 </table>
 <h3 id="sign-in-log-review">Sign-in Log Review<a class="headerlink" href="#sign-in-log-review" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check CA policy impact in sign-in logs via Graph</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>az<span class="w"> </span>rest<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>--method<span class="w"> </span>GET<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>--url<span class="w"> </span><span class="s2">&quot;https://graph.microsoft.com/v1.0/auditLogs/signIns?\$filter=createdDateTime ge 2026-05-01T00:00:00Z&amp;\$select=userPrincipalName,appDisplayName,conditionalAccessStatus,appliedConditionalAccessPolicies&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;value[?conditionalAccessStatus != &#39;notApplied&#39;][].{User:userPrincipalName, App:appDisplayName, Status:conditionalAccessStatus}&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Check CA policy impact in sign-in logs via Graph</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>az<span class="w"> </span>rest<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>--method<span class="w"> </span>GET<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>--url<span class="w"> </span><span class="s2">&quot;https://graph.microsoft.com/v1.0/auditLogs/signIns?\$filter=createdDateTime ge 2026-05-01T00:00:00Z&amp;\$select=userPrincipalName,appDisplayName,conditionalAccessStatus,appliedConditionalAccessPolicies&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;value[?conditionalAccessStatus != &#39;notApplied&#39;][].{User:userPrincipalName, App:appDisplayName, Status:conditionalAccessStatus}&quot;</span>
 </code></pre></div>
 <h2 id="ca-policy-deployment-checklist">CA Policy Deployment Checklist<a class="headerlink" href="#ca-policy-deployment-checklist" title="Permanent link">&para;</a></h2>
 <table>

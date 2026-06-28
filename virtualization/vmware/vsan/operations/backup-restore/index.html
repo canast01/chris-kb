@@ -9405,36 +9405,20 @@ Backup & Restore reference covering Supported Backup Methods, vSAN Configuration
 *Applies to: vSAN 7.x / 8.x*
 </div>
 <p><img alt="vSAN — Backup &amp; Restore" src="../../../../../assets/virtualization-vmware-vsan-operations-backup-restore.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>hub: &quot;vSAN\nOperations&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>backup_tool_integration: &quot;Backup Tool Integration&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>vsan_configuration_backup: &quot;vSAN Configuration Backup&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>restore_procedures: &quot;Restore Procedures&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>backup_validation_and_testing: &quot;Backup Validation and Testing&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>recovery_point_and_recovery_time_obj: &quot;Recovery Point and Recovery Time Objectives&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>verify: &quot;Verify&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>hub -&gt; backup_tool_integration
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>hub -&gt; vsan_configuration_backup
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>hub -&gt; restore_procedures
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>hub -&gt; backup_validation_and_testing
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>hub -&gt; recovery_point_and_recovery_time_obj
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>hub -&gt; verify
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqFUctOwzAQvOcrVr3zAzkgAScutIKoJyTLcbaOS-q1HMeiQv13_GgdBIm4JTOz49nZTlkUTpGuwSrZu6rqp7aGjX97eHnXW4OWR3bcwNfYc4M19PjJJelL1XLxMRnmiAamtEOZpWH4MTHQBAaeZ2b2iG9yLQe8VH7kmgnSByWnLGPZ-BoCnn5ykK0XnSyOjiwyY0lgN4XfYPGaQdgVcHH2uovng-pyCK475sKw0nLeaF94CDw0mV9JI8ijPTNDoZxkVyCnTsioPaZ8GYNdlCXXAjVBBtv2GA_kV4IHoTqcg9E-fSxq4knh7h5WDnajVy9xE_wt-Jfzcn3z-P-NlCxpm-oby9b4oQ==?" /></p>
 <h2 id="backup-tool-integration">Backup Tool Integration<a class="headerlink" href="#backup-tool-integration" title="Permanent link">&para;</a></h2>
 <p><strong>Reset CBT if incremental backups are failing:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># From PowerCLI — disable, snapshot, delete snapshot, re-enable</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nv">$vm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>Get-VM<span class="w"> </span>&lt;vmname&gt;
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nv">$spec</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>New-Object<span class="w"> </span>VMware.Vim.VirtualMachineConfigSpec
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="nv">$spec</span>.changeTrackingEnabled<span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$false</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nv">$vm</span>.ExtensionData.ReconfigVM<span class="o">(</span><span class="nv">$spec</span><span class="o">)</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="nv">$snap</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>New-Snapshot<span class="w"> </span>-VM<span class="w"> </span><span class="nv">$vm</span><span class="w"> </span>-Name<span class="w"> </span><span class="s2">&quot;CBT-Reset&quot;</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>Remove-Snapshot<span class="w"> </span>-Snapshot<span class="w"> </span><span class="nv">$snap</span><span class="w"> </span>-Confirm:<span class="nv">$false</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="nv">$spec</span>.changeTrackingEnabled<span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$true</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="nv">$vm</span>.ExtensionData.ReconfigVM<span class="o">(</span><span class="nv">$spec</span><span class="o">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># From PowerCLI — disable, snapshot, delete snapshot, re-enable</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nv">$vm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>Get-VM<span class="w"> </span>&lt;vmname&gt;
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nv">$spec</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>New-Object<span class="w"> </span>VMware.Vim.VirtualMachineConfigSpec
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="nv">$spec</span>.changeTrackingEnabled<span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$false</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nv">$vm</span>.ExtensionData.ReconfigVM<span class="o">(</span><span class="nv">$spec</span><span class="o">)</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="nv">$snap</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>New-Snapshot<span class="w"> </span>-VM<span class="w"> </span><span class="nv">$vm</span><span class="w"> </span>-Name<span class="w"> </span><span class="s2">&quot;CBT-Reset&quot;</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>Remove-Snapshot<span class="w"> </span>-Snapshot<span class="w"> </span><span class="nv">$snap</span><span class="w"> </span>-Confirm:<span class="nv">$false</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="nv">$spec</span>.changeTrackingEnabled<span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$true</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="nv">$vm</span>.ExtensionData.ReconfigVM<span class="o">(</span><span class="nv">$spec</span><span class="o">)</span>
 </code></pre></div>
 <h3 id="veeam-backup-replication">Veeam Backup &amp; Replication<a class="headerlink" href="#veeam-backup-replication" title="Permanent link">&para;</a></h3>
 <p>Veeam is the most widely deployed backup tool for vSAN environments. It uses VADP and supports vSAN-specific transport modes.</p>
@@ -9507,21 +9491,21 @@ Backup & Restore reference covering Supported Backup Methods, vSAN Configuration
 </tbody>
 </table>
 <p><strong>Export storage policies via PowerCLI:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nb">Connect-VIServer</span> <span class="p">&lt;</span><span class="n">vcenter</span><span class="p">&gt;</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c"># Export all storage policies to a text report</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="nb">Get-SpbmStoragePolicy</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">Name</span><span class="p">,</span> <span class="n">Description</span><span class="p">,</span> <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s1">&#39;Rules&#39;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>    <span class="nv">$_</span><span class="p">.</span><span class="n">AnyOfRuleSets</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">AllOfRules</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">Name</span><span class="p">,</span> <span class="n">Value</span> <span class="p">}</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="p">}}</span> <span class="p">|</span> <span class="nb">ConvertTo-Json</span> <span class="p">|</span> <span class="nb">Out-File</span> <span class="s2">&quot;vsan_policies_</span><span class="p">$(</span><span class="nb">Get-Date</span> <span class="n">-Format</span> <span class="n">yyyyMMdd</span><span class="p">)</span><span class="s2">.json&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nb">Connect-VIServer</span> <span class="p">&lt;</span><span class="n">vcenter</span><span class="p">&gt;</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c"># Export all storage policies to a text report</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="nb">Get-SpbmStoragePolicy</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">Name</span><span class="p">,</span> <span class="n">Description</span><span class="p">,</span> <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s1">&#39;Rules&#39;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    <span class="nv">$_</span><span class="p">.</span><span class="n">AnyOfRuleSets</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">AllOfRules</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">Name</span><span class="p">,</span> <span class="n">Value</span> <span class="p">}</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="p">}}</span> <span class="p">|</span> <span class="nb">ConvertTo-Json</span> <span class="p">|</span> <span class="nb">Out-File</span> <span class="s2">&quot;vsan_policies_</span><span class="p">$(</span><span class="nb">Get-Date</span> <span class="n">-Format</span> <span class="n">yyyyMMdd</span><span class="p">)</span><span class="s2">.json&quot;</span>
 </code></pre></div>
 <p><strong>VCSA File-Based Backup (recommended — schedule daily):</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># From VCSA shell — backup to SFTP target</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>/usr/lib/applmgmt/backup_restore/py/vmwareappliance/backup.py<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>--location<span class="w"> </span>sftp://backup-server/vcsa-backups<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>--username<span class="w"> </span>backupuser<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span>--password<span class="w"> </span>&lt;password&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span>--backuptype<span class="w"> </span>SEAT<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span>--comment<span class="w"> </span><span class="s2">&quot;daily-backup&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># From VCSA shell — backup to SFTP target</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>/usr/lib/applmgmt/backup_restore/py/vmwareappliance/backup.py<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>--location<span class="w"> </span>sftp://backup-server/vcsa-backups<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>--username<span class="w"> </span>backupuser<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>--password<span class="w"> </span>&lt;password&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span>--backuptype<span class="w"> </span>SEAT<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span>--comment<span class="w"> </span><span class="s2">&quot;daily-backup&quot;</span>
 </code></pre></div>
 <p>Or configure the backup schedule via vSphere Client: <strong>vCenter → Administration → Backup → Schedule</strong></p>
 <hr />
@@ -9544,13 +9528,13 @@ Backup & Restore reference covering Supported Backup Methods, vSAN Configuration
 </ol>
 <h3 id="restore-individual-vm-powercli-snapshot-rollback">Restore Individual VM (PowerCLI + Snapshot Rollback)<a class="headerlink" href="#restore-individual-vm-powercli-snapshot-rollback" title="Permanent link">&para;</a></h3>
 <p>Snapshot rollback is a short-term rollback mechanism, not a restore from backup. Only use this within hours of creating the snapshot.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Roll back to a snapshot</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nv">$vm</span> <span class="p">=</span> <span class="nb">Get-VM</span> <span class="p">&lt;</span><span class="n">vmname</span><span class="p">&gt;</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="nv">$snap</span> <span class="p">=</span> <span class="nb">Get-Snapshot</span> <span class="n">-VM</span> <span class="nv">$vm</span> <span class="n">-Name</span> <span class="s2">&quot;pre-change-snapshot&quot;</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="nb">Set-VM</span> <span class="n">-VM</span> <span class="nv">$vm</span> <span class="n">-Snapshot</span> <span class="nv">$snap</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Roll back to a snapshot</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nv">$vm</span> <span class="p">=</span> <span class="nb">Get-VM</span> <span class="p">&lt;</span><span class="n">vmname</span><span class="p">&gt;</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="nv">$snap</span> <span class="p">=</span> <span class="nb">Get-Snapshot</span> <span class="n">-VM</span> <span class="nv">$vm</span> <span class="n">-Name</span> <span class="s2">&quot;pre-change-snapshot&quot;</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="nb">Set-VM</span> <span class="n">-VM</span> <span class="nv">$vm</span> <span class="n">-Snapshot</span> <span class="nv">$snap</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
 </code></pre></div>
 <p>Remove all snapshots after rollback to avoid delta disk growth:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nb">Remove-Snapshot</span> <span class="n">-VM</span> <span class="nv">$vm</span> <span class="n">-RemoveChildren</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nb">Remove-Snapshot</span> <span class="n">-VM</span> <span class="nv">$vm</span> <span class="n">-RemoveChildren</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
 </code></pre></div>
 <h3 id="recover-vcenter-from-vcsa-backup">Recover vCenter from VCSA Backup<a class="headerlink" href="#recover-vcenter-from-vcsa-backup" title="Permanent link">&para;</a></h3>
 <p>If vCenter is lost (and therefore vSAN health monitoring is lost), existing VMs continue running — vSAN data plane is independent of vCenter. Recovering vCenter restores management plane access.</p>
@@ -9564,23 +9548,23 @@ Backup & Restore reference covering Supported Backup Methods, vSAN Configuration
 </ol>
 <h3 id="rebuild-disk-group-after-drive-failure">Rebuild Disk Group After Drive Failure<a class="headerlink" href="#rebuild-disk-group-after-drive-failure" title="Permanent link">&para;</a></h3>
 <p>If a disk group has been lost due to cache SSD failure:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># 1. Verify which disk group is affected</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;naa\.|Is SSD|Disk Group UUID|Is Capacity Tier&quot;</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># 2. Check object health — expect degraded components</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>object<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>healthy
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>!!!<span class="w"> </span>warning<span class="w"> </span><span class="s2">&quot;Run only after hardware is replaced and visible to ESXi&quot;</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">    </span>Do<span class="w"> </span>not<span class="w"> </span>remove<span class="w"> </span>the<span class="w"> </span>failed<span class="w"> </span>disk<span class="w"> </span>group<span class="w"> </span><span class="k">until</span><span class="w"> </span>the<span class="w"> </span>replacement<span class="w"> </span>hardware<span class="w"> </span>is<span class="w"> </span>physically<span class="w"> </span>installed<span class="w"> </span>and<span class="w"> </span>confirmed<span class="w"> </span>visible<span class="w"> </span>to<span class="w"> </span>the<span class="w"> </span>ESXi<span class="w"> </span>host.<span class="w"> </span>Removing<span class="w"> </span>before<span class="w"> </span>the<span class="w"> </span>new<span class="w"> </span>hardware<span class="w"> </span>is<span class="w"> </span>ready<span class="w"> </span>leaves<span class="w"> </span>the<span class="w"> </span>host<span class="w"> </span>with<span class="w"> </span>no<span class="w"> </span>disk<span class="w"> </span>group,<span class="w"> </span>which<span class="w"> </span>may<span class="w"> </span>trigger<span class="w"> </span>vSAN<span class="w"> </span>object<span class="w"> </span>degradation<span class="w"> </span><span class="k">if</span><span class="w"> </span>FTT<span class="w"> </span>is<span class="w"> </span>already<span class="w"> </span>reduced.
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># 3. Remove the failed disk group (after hardware replacement)</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>remove<span class="w"> </span>-s<span class="w"> </span>&lt;new_ssd_naa&gt;
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="c1"># 4. Rebuild the disk group with new hardware</span>
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>add<span class="w"> </span>-s<span class="w"> </span>&lt;new_ssd_naa&gt;<span class="w"> </span>-d<span class="w"> </span>&lt;capacity_naa1&gt;<span class="w"> </span>-d<span class="w"> </span>&lt;capacity_naa2&gt;
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>
-<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="c1"># 5. Monitor resync</span>
-<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>resync<span class="w"> </span>summary<span class="w"> </span>get
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># 1. Verify which disk group is affected</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;naa\.|Is SSD|Disk Group UUID|Is Capacity Tier&quot;</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># 2. Check object health — expect degraded components</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>object<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>healthy
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>!!!<span class="w"> </span>warning<span class="w"> </span><span class="s2">&quot;Run only after hardware is replaced and visible to ESXi&quot;</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">    </span>Do<span class="w"> </span>not<span class="w"> </span>remove<span class="w"> </span>the<span class="w"> </span>failed<span class="w"> </span>disk<span class="w"> </span>group<span class="w"> </span><span class="k">until</span><span class="w"> </span>the<span class="w"> </span>replacement<span class="w"> </span>hardware<span class="w"> </span>is<span class="w"> </span>physically<span class="w"> </span>installed<span class="w"> </span>and<span class="w"> </span>confirmed<span class="w"> </span>visible<span class="w"> </span>to<span class="w"> </span>the<span class="w"> </span>ESXi<span class="w"> </span>host.<span class="w"> </span>Removing<span class="w"> </span>before<span class="w"> </span>the<span class="w"> </span>new<span class="w"> </span>hardware<span class="w"> </span>is<span class="w"> </span>ready<span class="w"> </span>leaves<span class="w"> </span>the<span class="w"> </span>host<span class="w"> </span>with<span class="w"> </span>no<span class="w"> </span>disk<span class="w"> </span>group,<span class="w"> </span>which<span class="w"> </span>may<span class="w"> </span>trigger<span class="w"> </span>vSAN<span class="w"> </span>object<span class="w"> </span>degradation<span class="w"> </span><span class="k">if</span><span class="w"> </span>FTT<span class="w"> </span>is<span class="w"> </span>already<span class="w"> </span>reduced.
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># 3. Remove the failed disk group (after hardware replacement)</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>remove<span class="w"> </span>-s<span class="w"> </span>&lt;new_ssd_naa&gt;
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="c1"># 4. Rebuild the disk group with new hardware</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>add<span class="w"> </span>-s<span class="w"> </span>&lt;new_ssd_naa&gt;<span class="w"> </span>-d<span class="w"> </span>&lt;capacity_naa1&gt;<span class="w"> </span>-d<span class="w"> </span>&lt;capacity_naa2&gt;
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="c1"># 5. Monitor resync</span>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>resync<span class="w"> </span>summary<span class="w"> </span>get
 </code></pre></div>
 <hr />
 <h2 id="backup-validation-and-testing">Backup Validation and Testing<a class="headerlink" href="#backup-validation-and-testing" title="Permanent link">&para;</a></h2>

@@ -8711,44 +8711,8 @@ How It Works reference covering Overview, Capacity Model, Object Storage Data Mo
 *Applies to: Cloud for Desktop (COD)*
 </div>
 <p><img alt="Capacity on Demand — How It Works" src="../../../../../assets/storage-dell-cod-architecture-how-it-works.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>center: &quot;Cloud On Demand&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>capacity_model: &quot;Capacity Model&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>object_storage_data_model: &quot;Object Storage Data Model&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>data_protection_architecture: &quot;Data Protection Architecture&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>multisite_and_geo_replication: &quot;Multi-Site and Geo Replication&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>access_control_and_authentication: &quot;Access Control and Authentication&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>namespace_and_metadata_service: &quot;Namespace and Metadata Service&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>center -&gt; capacity_model
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>center -&gt; object_storage_data_model
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>center -&gt; data_protection_architecture
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>center -&gt; multisite_and_geo_replication
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>center -&gt; access_control_and_authentication
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>center -&gt; namespace_and_metadata_service
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>@startuml
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>skinparam sequenceArrowThickness 1.5
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>skinparam roundcorner 5
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>actor &quot;Customer Admin&quot; as ADM
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>participant &quot;Dell Licensing\nPortal&quot; as LIC
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>participant &quot;PowerMax /\nPowerStore Array&quot; as ARR
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>participant &quot;Unisphere\n(local management)&quot; as UI
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>participant &quot;Dell SRE\nTeam&quot; as SRE
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>ADM -&gt; LIC: Request capacity burst
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>LIC -&gt; SRE: Generate license file
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>SRE -&gt; ADM: Deliver license
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>ADM -&gt; UI: Apply license key
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>UI -&gt; ARR: Unlock reserved capacity
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>ARR --&gt; UI: Capacity now available
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>UI --&gt; ADM: Burst active (30 / 90 day term)
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>note over ARR,LIC: Physical hardware pre-installed\nbut license-gated — activates on demand.
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>@enduml
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqFkU1ugzAQhfecYsQ-F2BRCSVSVjRVOYA1NSNwZWxkm6hVlbvHPzQ4EqVL-33v2fOmE4a4E1pVYEQ_uKLgpByZCsqj1HMHFwUnGlF1JfzYASeqYKAv7LW6FRwn5MJ9s1F3JINluYAmXKyO8AaqXtKt0B-f_sCs0wZ7Yh06fNgvUYM2aXDy2k5StE5GuzQAQ8MHEQ6z8WAZ3W8PGepM3swbZ-mE9Qjz07KeNDM0ScEx1VM2QT-0HgAPwJk0vK_AZiRyTtYyrpUzWsZcnN3gG15j68jAMTExun5iNpMVjmR92emzIzmMdVgyV8HD-K-_QExsFgDaBGxmLquHwws8bzYT_lxfxuwtJsN2-864f0vM2P1aijur9BYb?" /></p>
+<p><img alt="Kroki" src="https://kroki.io/plantuml/svg/eNptks9u2zAMxu96CiKnFmj6B0MP86Fomg5DgBYI3PqWCyOxiRCZcik5mW99iD3hnmSU2xQrsJtlfh-_HyndpoyS-zaYtPPcoWALiV57YkszkXh43nq7Y0oJrs6v_xFJ7NnZKEwC18agzVFgMu9Tjq3-mrnW8wQwwez-0agle-s75AyTewoBHrwlTp43K15GyRhG7cNi_lW7jAeSR_wFF0Wn308aQ6BkOLx3r-uvjoZ96rYktOKTEC0GaJFxQy1xPh0tzeI_PE_1jxU_E7ajRE_GKDhMbwpTBXVZScpgsUPr8wDrXlI2WisSlVfwk3QVmAnCOBrBiw9ktFQU2qsCDfJ73c2H4BjQLCqYdV0YPp07GkyzGH11XUHDOsgOhBLJntwnhNEqTD86zI9kHA-Ae_QB15pf2hzz7woz6E0pBZx8u4QL-H4JDgfIJO2pMRwVPxZE7Xw2Dr7cDsmXLW5R3AF1953Q1LM-mxDIrXjd5yP3dKPjO_jz9vs9RE8JIoMjvQJ3bm6JXXlpfwGakNPG?" /></p>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>Capacity on Demand (COD) is a software-defined capacity licensing model for Dell PowerMax and VMAX arrays. Physical drives are installed in the array chassis at the factory but the capacity is logically locked at the array controller level until a COD license is applied. No truck roll or hardware change is required — activation is entirely software-driven through SYMCLI or Unisphere.</p>
 <h2 id="capacity-model">Capacity Model<a class="headerlink" href="#capacity-model" title="Permanent link">&para;</a></h2>

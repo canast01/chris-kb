@@ -7472,52 +7472,36 @@ Bedrock Knowledge Bases provide retrieval-augmented generation (RAG) by connecti
 *Applies to: AWS Bedrock*
 </div>
 <p><img alt="Bedrock Knowledge Bases" src="../../../../assets/cloud-ai-aws-bedrock-knowledge-bases-index.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>center: &quot;AWS Bedrock&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>s3_data_sources: &quot;S3 Data Sources&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>embeddings_and_chunking: &quot;Embeddings and Chunking&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>retrieval_configuration: &quot;Retrieval Configuration&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>syncing_data_sources: &quot;Syncing Data Sources&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>associating_with_an_agent: &quot;Associating with an Agent&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>troubleshooting: &quot;Troubleshooting&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>center -&gt; s3_data_sources
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>center -&gt; embeddings_and_chunking
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>center -&gt; retrieval_configuration
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>center -&gt; syncing_data_sources
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>center -&gt; associating_with_an_agent
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>center -&gt; troubleshooting
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqFkc1OAzEMhO95CmvvnHrbA1IpvACLxDFyE5NEXRLkZPkR6rvj1RYaSlYcM5890YxtYDIlpNgDB-eLUoZiIe6h2z4OcEOWkzl08Jk9vlAPnt7RpXhUeaMtFtQ5TWwoy_ywgVtRYFiU8878A0Y30lHR856sDdFljdFq46d4kJds3_0QEAK7E2m6MBUO9IqjNik-BTcxLhG6-28Cu5o0XfJHNPLDnxiL_H8WzDmZIP7i8RaKl0QanbQ3d3dmMDPJBNuZNZ0Kp2k_UvYplaWNh99Kc-t0Kbi6hotjVGSl8GpipczavVFUhVd7qGYuEqovnMvoRQ==?" /></p>
 <h2 id="s3-data-sources">S3 Data Sources<a class="headerlink" href="#s3-data-sources" title="Permanent link">&para;</a></h2>
 <p>Data sources point to S3 prefixes. Supported formats include PDF, DOCX, TXT, HTML, CSV, and Markdown.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Create a knowledge base (requires an existing vector store, e.g. OpenSearch Serverless)</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>aws<span class="w"> </span>bedrock-agent<span class="w"> </span>create-knowledge-base<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;product-docs-kb&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>--role-arn<span class="w"> </span><span class="s2">&quot;arn:aws:iam::123456789012:role/AmazonBedrockExecutionRoleForKnowledgeBase&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>--knowledge-base-configuration<span class="w"> </span><span class="s1">&#39;{</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="s1">    &quot;type&quot;: &quot;VECTOR&quot;,</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="s1">    &quot;vectorKnowledgeBaseConfiguration&quot;: {</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="s1">      &quot;embeddingModelArn&quot;: &quot;arn:aws:bedrock:us-east-1::foundation-model/amazon.titan-embed-text-v1&quot;</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="s1">    }</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="s1">  }&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">  </span>--storage-configuration<span class="w"> </span><span class="s1">&#39;{</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="s1">    &quot;type&quot;: &quot;OPENSEARCH_SERVERLESS&quot;,</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="s1">    &quot;opensearchServerlessConfiguration&quot;: {</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="s1">      &quot;collectionArn&quot;: &quot;arn:aws:aoss:us-east-1:123456789012:collection/abc123&quot;,</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="s1">      &quot;vectorIndexName&quot;: &quot;product-docs-index&quot;,</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="s1">      &quot;fieldMapping&quot;: {&quot;vectorField&quot;:&quot;embedding&quot;,&quot;textField&quot;:&quot;text&quot;,&quot;metadataField&quot;:&quot;metadata&quot;}</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="s1">    }</span>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="s1">  }&#39;</span>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="c1"># Add an S3 data source</span>
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>aws<span class="w"> </span>bedrock-agent<span class="w"> </span>create-data-source<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="w">  </span>--knowledge-base-id<span class="w"> </span><span class="s2">&quot;KB123456&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;product-docs-s3&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="w">  </span>--data-source-configuration<span class="w"> </span><span class="s1">&#39;{</span>
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="s1">    &quot;type&quot;: &quot;S3&quot;,</span>
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="s1">    &quot;s3Configuration&quot;: {&quot;bucketArn&quot;:&quot;arn:aws:s3:::my-product-docs&quot;}</span>
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a><span class="s1">  }&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Create a knowledge base (requires an existing vector store, e.g. OpenSearch Serverless)</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>aws<span class="w"> </span>bedrock-agent<span class="w"> </span>create-knowledge-base<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;product-docs-kb&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span>--role-arn<span class="w"> </span><span class="s2">&quot;arn:aws:iam::123456789012:role/AmazonBedrockExecutionRoleForKnowledgeBase&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span>--knowledge-base-configuration<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="s1">    &quot;type&quot;: &quot;VECTOR&quot;,</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="s1">    &quot;vectorKnowledgeBaseConfiguration&quot;: {</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="s1">      &quot;embeddingModelArn&quot;: &quot;arn:aws:bedrock:us-east-1::foundation-model/amazon.titan-embed-text-v1&quot;</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="s1">    }</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="s1">  }&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">  </span>--storage-configuration<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="s1">    &quot;type&quot;: &quot;OPENSEARCH_SERVERLESS&quot;,</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="s1">    &quot;opensearchServerlessConfiguration&quot;: {</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="s1">      &quot;collectionArn&quot;: &quot;arn:aws:aoss:us-east-1:123456789012:collection/abc123&quot;,</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="s1">      &quot;vectorIndexName&quot;: &quot;product-docs-index&quot;,</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="s1">      &quot;fieldMapping&quot;: {&quot;vectorField&quot;:&quot;embedding&quot;,&quot;textField&quot;:&quot;text&quot;,&quot;metadataField&quot;:&quot;metadata&quot;}</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="s1">    }</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="s1">  }&#39;</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="c1"># Add an S3 data source</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>aws<span class="w"> </span>bedrock-agent<span class="w"> </span>create-data-source<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="w">  </span>--knowledge-base-id<span class="w"> </span><span class="s2">&quot;KB123456&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;product-docs-s3&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="w">  </span>--data-source-configuration<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="s1">    &quot;type&quot;: &quot;S3&quot;,</span>
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="s1">    &quot;s3Configuration&quot;: {&quot;bucketArn&quot;:&quot;arn:aws:s3:::my-product-docs&quot;}</span>
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a><span class="s1">  }&#39;</span>
 </code></pre></div>
 <h2 id="embeddings-and-chunking">Embeddings and Chunking<a class="headerlink" href="#embeddings-and-chunking" title="Permanent link">&para;</a></h2>
 <p>Bedrock supports several embedding models. Chunking strategy affects retrieval quality significantly.</p>
@@ -7560,47 +7544,47 @@ Bedrock Knowledge Bases provide retrieval-augmented generation (RAG) by connecti
 <p>Chunking options: <code>FIXED_SIZE</code> (default 300 tokens, 20% overlap), <code>HIERARCHICAL</code>, <code>SEMANTIC</code>, or <code>NONE</code> (one chunk per file).</p>
 <h2 id="retrieval-configuration">Retrieval Configuration<a class="headerlink" href="#retrieval-configuration" title="Permanent link">&para;</a></h2>
 <p>Control how many chunks are retrieved and whether a reranking model is applied.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">boto3</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="n">bedrock_runtime</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s2">&quot;bedrock-agent-runtime&quot;</span><span class="p">,</span> <span class="n">region_name</span><span class="o">=</span><span class="s2">&quot;us-east-1&quot;</span><span class="p">)</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="n">response</span> <span class="o">=</span> <span class="n">bedrock_runtime</span><span class="o">.</span><span class="n">retrieve</span><span class="p">(</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    <span class="n">knowledgeBaseId</span><span class="o">=</span><span class="s2">&quot;KB123456&quot;</span><span class="p">,</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>    <span class="n">retrievalQuery</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;What is the return policy for electronics?&quot;</span><span class="p">},</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>    <span class="n">retrievalConfiguration</span><span class="o">=</span><span class="p">{</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>        <span class="s2">&quot;vectorSearchConfiguration&quot;</span><span class="p">:</span> <span class="p">{</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>            <span class="s2">&quot;numberOfResults&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>            <span class="s2">&quot;overrideSearchType&quot;</span><span class="p">:</span> <span class="s2">&quot;HYBRID&quot;</span>   <span class="c1"># SEMANTIC | HYBRID</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>        <span class="p">}</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>    <span class="p">}</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="p">)</span>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">response</span><span class="p">[</span><span class="s2">&quot;retrievalResults&quot;</span><span class="p">]:</span>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s2">&quot;score&quot;</span><span class="p">],</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;content&quot;</span><span class="p">][</span><span class="s2">&quot;text&quot;</span><span class="p">][:</span><span class="mi">200</span><span class="p">])</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">boto3</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="n">bedrock_runtime</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s2">&quot;bedrock-agent-runtime&quot;</span><span class="p">,</span> <span class="n">region_name</span><span class="o">=</span><span class="s2">&quot;us-east-1&quot;</span><span class="p">)</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="n">response</span> <span class="o">=</span> <span class="n">bedrock_runtime</span><span class="o">.</span><span class="n">retrieve</span><span class="p">(</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    <span class="n">knowledgeBaseId</span><span class="o">=</span><span class="s2">&quot;KB123456&quot;</span><span class="p">,</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>    <span class="n">retrievalQuery</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;What is the return policy for electronics?&quot;</span><span class="p">},</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>    <span class="n">retrievalConfiguration</span><span class="o">=</span><span class="p">{</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>        <span class="s2">&quot;vectorSearchConfiguration&quot;</span><span class="p">:</span> <span class="p">{</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>            <span class="s2">&quot;numberOfResults&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>            <span class="s2">&quot;overrideSearchType&quot;</span><span class="p">:</span> <span class="s2">&quot;HYBRID&quot;</span>   <span class="c1"># SEMANTIC | HYBRID</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>        <span class="p">}</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>    <span class="p">}</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="p">)</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">response</span><span class="p">[</span><span class="s2">&quot;retrievalResults&quot;</span><span class="p">]:</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s2">&quot;score&quot;</span><span class="p">],</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;content&quot;</span><span class="p">][</span><span class="s2">&quot;text&quot;</span><span class="p">][:</span><span class="mi">200</span><span class="p">])</span>
 </code></pre></div>
 <h2 id="syncing-data-sources">Syncing Data Sources<a class="headerlink" href="#syncing-data-sources" title="Permanent link">&para;</a></h2>
 <p>After uploading new documents to S3, trigger an ingestion job to re-embed and index content.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Start a sync job</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>aws<span class="w"> </span>bedrock-agent<span class="w"> </span>start-ingestion-job<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>--knowledge-base-id<span class="w"> </span><span class="s2">&quot;KB123456&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>--data-source-id<span class="w"> </span><span class="s2">&quot;DS789&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span>--region<span class="w"> </span>us-east-1
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Poll until complete</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>aws<span class="w"> </span>bedrock-agent<span class="w"> </span>get-ingestion-job<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">  </span>--knowledge-base-id<span class="w"> </span><span class="s2">&quot;KB123456&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">  </span>--data-source-id<span class="w"> </span><span class="s2">&quot;DS789&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">  </span>--ingestion-job-id<span class="w"> </span><span class="s2">&quot;JOB_ID&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;ingestionJob.status&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Start a sync job</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>aws<span class="w"> </span>bedrock-agent<span class="w"> </span>start-ingestion-job<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>--knowledge-base-id<span class="w"> </span><span class="s2">&quot;KB123456&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>--data-source-id<span class="w"> </span><span class="s2">&quot;DS789&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>--region<span class="w"> </span>us-east-1
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Poll until complete</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>aws<span class="w"> </span>bedrock-agent<span class="w"> </span>get-ingestion-job<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span>--knowledge-base-id<span class="w"> </span><span class="s2">&quot;KB123456&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">  </span>--data-source-id<span class="w"> </span><span class="s2">&quot;DS789&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">  </span>--ingestion-job-id<span class="w"> </span><span class="s2">&quot;JOB_ID&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;ingestionJob.status&#39;</span>
 </code></pre></div>
 <p>Ingestion jobs process documents in parallel. Large buckets (10k+ files) can take 30+ minutes. Check <code>statistics.numberOfDocumentsFailed</code> in the job response for partial failures.</p>
 <h2 id="associating-with-an-agent">Associating with an Agent<a class="headerlink" href="#associating-with-an-agent" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>aws<span class="w"> </span>bedrock-agent<span class="w"> </span>associate-agent-knowledge-base<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span>--agent-id<span class="w"> </span><span class="s2">&quot;AGENTID123&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>--agent-version<span class="w"> </span><span class="s2">&quot;DRAFT&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>--knowledge-base-id<span class="w"> </span><span class="s2">&quot;KB123456&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span>--description<span class="w"> </span><span class="s2">&quot;Product documentation for support queries&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span>--knowledge-base-state<span class="w"> </span><span class="s2">&quot;ENABLED&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>aws<span class="w"> </span>bedrock-agent<span class="w"> </span>associate-agent-knowledge-base<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span>--agent-id<span class="w"> </span><span class="s2">&quot;AGENTID123&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>--agent-version<span class="w"> </span><span class="s2">&quot;DRAFT&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>--knowledge-base-id<span class="w"> </span><span class="s2">&quot;KB123456&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span>--description<span class="w"> </span><span class="s2">&quot;Product documentation for support queries&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span>--knowledge-base-state<span class="w"> </span><span class="s2">&quot;ENABLED&quot;</span>
 </code></pre></div>
 <h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
 <table>

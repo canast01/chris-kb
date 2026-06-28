@@ -9232,25 +9232,7 @@ Authentication reference covering Authentication Methods, Active Directory / LDA
 *Applies to: Aria Logs 8.x*
 </div>
 <p><img alt="Aria Ops for Logs — Authentication" src="../../../../../assets/virtualization-vmware-aria-operations-for-logs-security-auth.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: down
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>external: External / Untrusted {shape: rectangle}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>authentication_methods: &quot;Authentication Methods&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>active_directory_ldap_configuration: &quot;Active Directory / LDAP Configuration&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>verify_ldap_authentication_from_cli: &quot;Verify LDAP Authentication from CLI&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>session_policies: &quot;Session Policies&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>forcing_https: &quot;Forcing HTTPS&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>related_reference: &quot;Related Reference&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>core: &quot;Aria Operations for Logs Core&quot; {shape: hexagon}
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>external -&gt; authentication_methods: traffic in
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>authentication_methods -&gt; active_directory_ldap_configuration
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>active_directory_ldap_configuration -&gt; verify_ldap_authentication_from_cli
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>verify_ldap_authentication_from_cli -&gt; session_policies
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>session_policies -&gt; forcing_https
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>forcing_https -&gt; related_reference
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>related_reference -&gt; core: secured path
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNksFqwzAQRO_-isX30rsPBZO0tODQkKS9CiGvbIEjmZWcppT8eyXLoXHs0Nzs3ZlhpKdSEQqnjM6gNF86SfDokDRvMngevuARPrSjzjos4cfWvMUMgovrqsFTwjtXo3ZK8JDD9uhqU9oM0ny0gFVcpLMZvsMBWdm3MfTNmpK3TBgtVdURjwXTvFfB8qzyzYplvobFpW42_4Ck5JB61VeS2TPRKJ__2ati5lX5oIJF8TabbtHaENWaRgmF4ezbOIL1MJr1SUNC6YrVzrXB9BL_4XW3W29nHYQN9xgYoURCLfw23cQZbM6zWacwFMQ5KQ7vLca7suArQGEq6--QLow1Hnll9OnvPcDDE9wi7YhLqQQofeMx9Ob_Ed_zDELUHTTvIR6irtFNWAbRiNOYWlhPoEwxBVkkYFF05Gm13NXJL7D3Tc8=?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Access:</strong> vCenter Administrator role</li>
@@ -9302,18 +9284,18 @@ Authentication reference covering Authentication Methods, Active Directory / LDA
 <li><a href="hardening/">Aria Ops for Logs — Hardening</a></li>
 </ul>
 <h2 id="verify-ldap-authentication-from-cli">Verify LDAP Authentication from CLI<a class="headerlink" href="#verify-ldap-authentication-from-cli" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Test LDAP bind from the Aria Ops for Logs appliance</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ldapsearch<span class="w"> </span>-H<span class="w"> </span>ldaps://dc01.example.local:636<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>-D<span class="w"> </span><span class="s2">&quot;CN=svc-vrli-ldap,OU=Service Accounts,DC=corp,DC=local&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>-w<span class="w"> </span><span class="s1">&#39;&lt;password&gt;&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>-b<span class="w"> </span><span class="s2">&quot;DC=corp,DC=local&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span><span class="s2">&quot;(sAMAccountName=testuser)&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span>sAMAccountName<span class="w"> </span>mail<span class="w"> </span>memberOf
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># Test SSL connection to domain controller</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>dc01.example.local:636<span class="w"> </span>-CAfile<span class="w"> </span>/tmp/corp-ca.pem<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">  </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Verify return code|subject=&quot;</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c1"># Expected: Verify return code: 0 (ok)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Test LDAP bind from the Aria Ops for Logs appliance</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ldapsearch<span class="w"> </span>-H<span class="w"> </span>ldaps://dc01.example.local:636<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>-D<span class="w"> </span><span class="s2">&quot;CN=svc-vrli-ldap,OU=Service Accounts,DC=corp,DC=local&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span>-w<span class="w"> </span><span class="s1">&#39;&lt;password&gt;&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span>-b<span class="w"> </span><span class="s2">&quot;DC=corp,DC=local&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">  </span><span class="s2">&quot;(sAMAccountName=testuser)&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">  </span>sAMAccountName<span class="w"> </span>mail<span class="w"> </span>memberOf
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1"># Test SSL connection to domain controller</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>dc01.example.local:636<span class="w"> </span>-CAfile<span class="w"> </span>/tmp/corp-ca.pem<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">  </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Verify return code|subject=&quot;</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="c1"># Expected: Verify return code: 0 (ok)</span>
 </code></pre></div>
 <hr />
 <h2 id="session-policies">Session Policies<a class="headerlink" href="#session-policies" title="Permanent link">&para;</a></h2>
@@ -9351,8 +9333,8 @@ Authentication reference covering Authentication Methods, Active Directory / LDA
 <hr />
 <h2 id="forcing-https">Forcing HTTPS<a class="headerlink" href="#forcing-https" title="Permanent link">&para;</a></h2>
 <p>Aria Ops for Logs listens on port 80 (HTTP) and 443 (HTTPS). HTTP automatically redirects to HTTPS — this is the default behaviour and should not be changed. Verify:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>curl<span class="w"> </span>-sI<span class="w"> </span>http://vrli-prod-01.example.local/<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Location:&quot;</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># Expected: Location: https://vrli-prod-01.example.local/</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>curl<span class="w"> </span>-sI<span class="w"> </span>http://vrli-prod-01.example.local/<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Location:&quot;</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># Expected: Location: https://vrli-prod-01.example.local/</span>
 </code></pre></div>
 <h2 id="ensure-the-firewall-permits-inbound-tcp-443-and-tcp-80-from-admin-workstations-block-all-other-inbound-ports-except-those-required-for-log-ingestion-514-1514-9543">Ensure the firewall permits inbound TCP 443 and TCP 80 from admin workstations. Block all other inbound ports except those required for log ingestion (514, 1514, 9543).<a class="headerlink" href="#ensure-the-firewall-permits-inbound-tcp-443-and-tcp-80-from-admin-workstations-block-all-other-inbound-ports-except-those-required-for-log-ingestion-514-1514-9543" title="Permanent link">&para;</a></h2>
 <h2 id="related-reference">Related Reference<a class="headerlink" href="#related-reference" title="Permanent link">&para;</a></h2>

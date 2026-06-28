@@ -8639,23 +8639,7 @@ Azure Disk Snapshots reference covering Overview, Snapshot Lifecycle, Creating S
 *Applies to: Azure*
 </div>
 <p><img alt="Azure Disk Snapshots" src="../../../../assets/cloud-azure-storage-disk-snapshots-index.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>center: &quot;Azure&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>snapshot_lifecycle: &quot;Snapshot Lifecycle&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>creating_snapshots: &quot;Creating Snapshots&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>snapshot_vs_full_backup_comparison: &quot;Snapshot vs Full Backup Comparison&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>restoring_from_snapshot: &quot;Restoring from Snapshot&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>crossregion_snapshot_copy: &quot;Cross-Region Snapshot Copy&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>snapshot_retention_and_cleanup: &quot;Snapshot Retention and Cleanup&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>center -&gt; snapshot_lifecycle
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>center -&gt; creating_snapshots
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>center -&gt; snapshot_vs_full_backup_comparison
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>center -&gt; restoring_from_snapshot
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>center -&gt; crossregion_snapshot_copy
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>center -&gt; snapshot_retention_and_cleanup
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp9UUFugzAQvPOKVe75AIdKLVJPPdEHWI6zgFViW7smKq3y9y4UHKqYXndmZ2dmz5bQROtdCWTbLhaFQReRSjg8fw2EB_jmTgcsocNP3Xp3K9jpwJ2PqrcNmtH0Ah7elyG8rcP75nRBu7bHW2EIdbSuVasIy261DGEV4exuuntl1Qx9r07afAxBGX8JmixPGe4-rgyvQoKXmQRVImW1CTl6mow15C_JnQjWKwITkizupPPMhK3UmSTEXhjnkIId6xlMKmIrjP-HJYzykElRu7OSXrUbwjZovRJACFD9ErKay2vh-ASPP9yAj0_Kbe5-YUPeqfXPrZ3KciezXRQ_c80JuQ==?" /></p>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>Azure managed disk snapshots capture the full state of a managed disk at a point in time. Incremental snapshots store only changed blocks since the last snapshot, significantly reducing storage costs and copy time. Snapshots are stored as page blobs in Azure Storage and can be used to restore disks or copy across regions.</p>
 <h2 id="snapshot-lifecycle">Snapshot Lifecycle<a class="headerlink" href="#snapshot-lifecycle" title="Permanent link">&para;</a></h2>
@@ -8672,31 +8656,31 @@ Azure Disk Snapshots reference covering Overview, Snapshot Lifecycle, Creating S
     sourceDisk --&gt;|"az snapshot create"| snapshot
     snapshot --&gt; restoreDisk &amp; newDisk &amp; crossRegion &amp; exportVHD</code></pre>
 <h2 id="creating-snapshots">Creating Snapshots<a class="headerlink" href="#creating-snapshots" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Full snapshot of a managed disk</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>az<span class="w"> </span>snapshot<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>--resource-group<span class="w"> </span>rg-compute-prod<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;snap-vm01-osdisk-20260507&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>--source<span class="w"> </span><span class="s2">&quot;/subscriptions/&lt;sub-id&gt;/resourceGroups/rg-compute-prod/providers/Microsoft.Compute/disks/vm01-osdisk&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span>--sku<span class="w"> </span>Standard_LRS<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span>--location<span class="w"> </span>eastus
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># Incremental snapshot (recommended — much lower cost)</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>az<span class="w"> </span>snapshot<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">  </span>--resource-group<span class="w"> </span>rg-compute-prod<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;snap-vm01-osdisk-20260507-incr&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">  </span>--source<span class="w"> </span><span class="s2">&quot;/subscriptions/&lt;sub-id&gt;/resourceGroups/rg-compute-prod/providers/Microsoft.Compute/disks/vm01-osdisk&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">  </span>--incremental<span class="w"> </span><span class="nb">true</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">  </span>--sku<span class="w"> </span>Standard_LRS
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="c1"># List all snapshots in a resource group</span>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>az<span class="w"> </span>snapshot<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="w">  </span>--resource-group<span class="w"> </span>rg-compute-prod<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="w">  </span>--output<span class="w"> </span>table
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="c1"># Show snapshot details including size and incremental chain</span>
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>az<span class="w"> </span>snapshot<span class="w"> </span>show<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="w">  </span>--resource-group<span class="w"> </span>rg-compute-prod<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;snap-vm01-osdisk-20260507-incr&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Full snapshot of a managed disk</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>az<span class="w"> </span>snapshot<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>--resource-group<span class="w"> </span>rg-compute-prod<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;snap-vm01-osdisk-20260507&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span>--source<span class="w"> </span><span class="s2">&quot;/subscriptions/&lt;sub-id&gt;/resourceGroups/rg-compute-prod/providers/Microsoft.Compute/disks/vm01-osdisk&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">  </span>--sku<span class="w"> </span>Standard_LRS<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">  </span>--location<span class="w"> </span>eastus
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1"># Incremental snapshot (recommended — much lower cost)</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>az<span class="w"> </span>snapshot<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">  </span>--resource-group<span class="w"> </span>rg-compute-prod<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;snap-vm01-osdisk-20260507-incr&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">  </span>--source<span class="w"> </span><span class="s2">&quot;/subscriptions/&lt;sub-id&gt;/resourceGroups/rg-compute-prod/providers/Microsoft.Compute/disks/vm01-osdisk&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">  </span>--incremental<span class="w"> </span><span class="nb">true</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">  </span>--sku<span class="w"> </span>Standard_LRS
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="c1"># List all snapshots in a resource group</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>az<span class="w"> </span>snapshot<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="w">  </span>--resource-group<span class="w"> </span>rg-compute-prod<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="w">  </span>--output<span class="w"> </span>table
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="c1"># Show snapshot details including size and incremental chain</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>az<span class="w"> </span>snapshot<span class="w"> </span>show<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="w">  </span>--resource-group<span class="w"> </span>rg-compute-prod<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;snap-vm01-osdisk-20260507-incr&quot;</span>
 </code></pre></div>
 <h2 id="snapshot-vs-full-backup-comparison">Snapshot vs Full Backup Comparison<a class="headerlink" href="#snapshot-vs-full-backup-comparison" title="Permanent link">&para;</a></h2>
 <table>
@@ -8741,66 +8725,66 @@ Azure Disk Snapshots reference covering Overview, Snapshot Lifecycle, Creating S
 </tbody>
 </table>
 <h2 id="restoring-from-snapshot">Restoring from Snapshot<a class="headerlink" href="#restoring-from-snapshot" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Create a new managed disk from a snapshot</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>az<span class="w"> </span>disk<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>--resource-group<span class="w"> </span>rg-compute-prod<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;vm01-osdisk-restored&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>--source<span class="w"> </span><span class="s2">&quot;/subscriptions/&lt;sub-id&gt;/resourceGroups/rg-compute-prod/providers/Microsoft.Compute/snapshots/snap-vm01-osdisk-20260507&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span>--sku<span class="w"> </span>Premium_LRS<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span>--location<span class="w"> </span>eastus
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Swap the OS disk of a stopped VM to the restored disk</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>az<span class="w"> </span>vm<span class="w"> </span>stop<span class="w"> </span>--resource-group<span class="w"> </span>rg-compute-prod<span class="w"> </span>--name<span class="w"> </span>vm01
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>az<span class="w"> </span>vm<span class="w"> </span>update<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">  </span>--resource-group<span class="w"> </span>rg-compute-prod<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">  </span>--name<span class="w"> </span>vm01<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">  </span>--os-disk<span class="w"> </span><span class="s2">&quot;/subscriptions/&lt;sub-id&gt;/resourceGroups/rg-compute-prod/providers/Microsoft.Compute/disks/vm01-osdisk-restored&quot;</span>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>az<span class="w"> </span>vm<span class="w"> </span>start<span class="w"> </span>--resource-group<span class="w"> </span>rg-compute-prod<span class="w"> </span>--name<span class="w"> </span>vm01
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Create a new managed disk from a snapshot</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>az<span class="w"> </span>disk<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>--resource-group<span class="w"> </span>rg-compute-prod<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;vm01-osdisk-restored&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>--source<span class="w"> </span><span class="s2">&quot;/subscriptions/&lt;sub-id&gt;/resourceGroups/rg-compute-prod/providers/Microsoft.Compute/snapshots/snap-vm01-osdisk-20260507&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span>--sku<span class="w"> </span>Premium_LRS<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span>--location<span class="w"> </span>eastus
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># Swap the OS disk of a stopped VM to the restored disk</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>az<span class="w"> </span>vm<span class="w"> </span>stop<span class="w"> </span>--resource-group<span class="w"> </span>rg-compute-prod<span class="w"> </span>--name<span class="w"> </span>vm01
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>az<span class="w"> </span>vm<span class="w"> </span>update<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">  </span>--resource-group<span class="w"> </span>rg-compute-prod<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">  </span>--name<span class="w"> </span>vm01<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">  </span>--os-disk<span class="w"> </span><span class="s2">&quot;/subscriptions/&lt;sub-id&gt;/resourceGroups/rg-compute-prod/providers/Microsoft.Compute/disks/vm01-osdisk-restored&quot;</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>az<span class="w"> </span>vm<span class="w"> </span>start<span class="w"> </span>--resource-group<span class="w"> </span>rg-compute-prod<span class="w"> </span>--name<span class="w"> </span>vm01
 </code></pre></div>
 <h2 id="cross-region-snapshot-copy">Cross-Region Snapshot Copy<a class="headerlink" href="#cross-region-snapshot-copy" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Copy a snapshot to another region</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>az<span class="w"> </span>snapshot<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>--resource-group<span class="w"> </span>rg-compute-dr<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;snap-vm01-osdisk-20260507-westus&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span>--source<span class="w"> </span><span class="s2">&quot;/subscriptions/&lt;sub-id&gt;/resourceGroups/rg-compute-prod/providers/Microsoft.Compute/snapshots/snap-vm01-osdisk-20260507&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span>--location<span class="w"> </span>westus2<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span>--sku<span class="w"> </span>Standard_LRS<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">  </span>--copy-start<span class="w"> </span><span class="nb">true</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Check copy status</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>az<span class="w"> </span>snapshot<span class="w"> </span>show<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">  </span>--resource-group<span class="w"> </span>rg-compute-dr<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;snap-vm01-osdisk-20260507-westus&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;completionPercent&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Copy a snapshot to another region</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>az<span class="w"> </span>snapshot<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>--resource-group<span class="w"> </span>rg-compute-dr<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;snap-vm01-osdisk-20260507-westus&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>--source<span class="w"> </span><span class="s2">&quot;/subscriptions/&lt;sub-id&gt;/resourceGroups/rg-compute-prod/providers/Microsoft.Compute/snapshots/snap-vm01-osdisk-20260507&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span>--location<span class="w"> </span>westus2<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span>--sku<span class="w"> </span>Standard_LRS<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span>--copy-start<span class="w"> </span><span class="nb">true</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Check copy status</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>az<span class="w"> </span>snapshot<span class="w"> </span>show<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">  </span>--resource-group<span class="w"> </span>rg-compute-dr<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;snap-vm01-osdisk-20260507-westus&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;completionPercent&quot;</span>
 </code></pre></div>
 <h2 id="snapshot-retention-and-cleanup">Snapshot Retention and Cleanup<a class="headerlink" href="#snapshot-retention-and-cleanup" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># List snapshots older than 30 days</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>az<span class="w"> </span>snapshot<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>--resource-group<span class="w"> </span>rg-compute-prod<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;[?timeCreated &lt; &#39;</span><span class="k">$(</span>date<span class="w"> </span>-u<span class="w"> </span>-d<span class="w"> </span><span class="s1">&#39;30 days ago&#39;</span><span class="w"> </span>+%Y-%m-%dT%H:%MZ<span class="k">)</span><span class="s2">&#39;].{name:name, created:timeCreated, size:diskSizeGB}&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span>--output<span class="w"> </span>table
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Delete a specific snapshot</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>az<span class="w"> </span>snapshot<span class="w"> </span>delete<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">  </span>--resource-group<span class="w"> </span>rg-compute-prod<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;snap-vm01-osdisk-20260407&quot;</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="c1"># Delete multiple old snapshots matching a pattern</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="k">for</span><span class="w"> </span>snap<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="k">$(</span>az<span class="w"> </span>snapshot<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="w">  </span>--resource-group<span class="w"> </span>rg-compute-prod<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;[?timeCreated &lt; &#39;2026-04-01T00:00Z&#39;].name&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="w">  </span>--output<span class="w"> </span>tsv<span class="k">)</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
-<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Deleting </span><span class="nv">$snap</span><span class="s2">&quot;</span>
-<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="w">  </span>az<span class="w"> </span>snapshot<span class="w"> </span>delete<span class="w"> </span>--resource-group<span class="w"> </span>rg-compute-prod<span class="w"> </span>--name<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$snap</span><span class="s2">&quot;</span><span class="w"> </span>--yes
-<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="k">done</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># List snapshots older than 30 days</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>az<span class="w"> </span>snapshot<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>--resource-group<span class="w"> </span>rg-compute-prod<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;[?timeCreated &lt; &#39;</span><span class="k">$(</span>date<span class="w"> </span>-u<span class="w"> </span>-d<span class="w"> </span><span class="s1">&#39;30 days ago&#39;</span><span class="w"> </span>+%Y-%m-%dT%H:%MZ<span class="k">)</span><span class="s2">&#39;].{name:name, created:timeCreated, size:diskSizeGB}&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span>--output<span class="w"> </span>table
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Delete a specific snapshot</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>az<span class="w"> </span>snapshot<span class="w"> </span>delete<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">  </span>--resource-group<span class="w"> </span>rg-compute-prod<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;snap-vm01-osdisk-20260407&quot;</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="c1"># Delete multiple old snapshots matching a pattern</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="k">for</span><span class="w"> </span>snap<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="k">$(</span>az<span class="w"> </span>snapshot<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="w">  </span>--resource-group<span class="w"> </span>rg-compute-prod<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;[?timeCreated &lt; &#39;2026-04-01T00:00Z&#39;].name&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="w">  </span>--output<span class="w"> </span>tsv<span class="k">)</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Deleting </span><span class="nv">$snap</span><span class="s2">&quot;</span>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="w">  </span>az<span class="w"> </span>snapshot<span class="w"> </span>delete<span class="w"> </span>--resource-group<span class="w"> </span>rg-compute-prod<span class="w"> </span>--name<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$snap</span><span class="s2">&quot;</span><span class="w"> </span>--yes
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="k">done</span>
 </code></pre></div>
 <h2 id="snapshot-costs">Snapshot Costs<a class="headerlink" href="#snapshot-costs" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Get snapshot storage used (bytes)</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>az<span class="w"> </span>snapshot<span class="w"> </span>show<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>--resource-group<span class="w"> </span>rg-compute-prod<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;snap-vm01-osdisk-20260507-incr&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;{name:name, diskSize:diskSizeGB, incrementalSizeGB:incrementalSnapshotFamilyId}&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">  </span>--output<span class="w"> </span>json
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Get snapshot storage used (bytes)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>az<span class="w"> </span>snapshot<span class="w"> </span>show<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>--resource-group<span class="w"> </span>rg-compute-prod<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;snap-vm01-osdisk-20260507-incr&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;{name:name, diskSize:diskSizeGB, incrementalSizeGB:incrementalSnapshotFamilyId}&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span>--output<span class="w"> </span>json
 </code></pre></div>
 <p>Snapshot storage pricing reference:</p>
 <table>

@@ -8489,23 +8489,7 @@ Firewall and NSG port reference for Microsoft Azure infrastructure. Covers manag
 *Applies to: Azure IaaS/PaaS — ARM, VMs, VNet, AKS, SQL Database, Entra ID*
 </div>
 <p><img alt="Microsoft Azure — Ports and Network Requirements" src="../../../../assets/cloud-azure-architecture-ports.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>center: &quot;Azure&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>network_zones: &quot;Network Zones&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>outbound_onpremises_to_azure_apis: &quot;Outbound — On-Premises to Azure APIs&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>vm_management: &quot;VM Management&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>azure_load_balancer_application_gate: &quot;Azure Load Balancer / Application Gateway&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>azure_sql_azure_database: &quot;Azure SQL / Azure Database&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>aks_azure_kubernetes_service: &quot;AKS (Azure Kubernetes Service)&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>center -&gt; network_zones
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>center -&gt; outbound_onpremises_to_azure_apis
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>center -&gt; vm_management
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>center -&gt; azure_load_balancer_application_gate
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>center -&gt; azure_sql_azure_database
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>center -&gt; aks_azure_kubernetes_service
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNkbFOwzAQhvc8xakTDBV7BqQgJITa0qJIDCzWJTklVhI72E4LRZV4CJ6QJ8FOTJuqUcsW-758d_4v44pSw6UIQfG8MEGQkjCkQphE21bRBD51gQ2FUNA75lLsAkFmI1XJtlKQttxTf4ZXdz7wzosir2gXyNYkshUZk6JRVHNNmhnJ0DVg2HBnWXoGfr6-YSmmKw-CkdBNAtHqcVy_rlmNAnOq7ehW9bKAxf48-kffuZKYsQQrFCkpO0dT8RRdFixHQ38JwNxicOcxuIHoAMKDBTf4caaJfqv8QzM0mKA-iOPnudN13_e-OG4qtXeUbULKLsAGqEmtedrZZjFc9ZrZvg5xX78eNfotw_QWjtY5uL-4tAF7tIHB_X9yPsFPExsiZ6IIfgFWAAj8?" /></p>
 <h2 id="network-zones">Network Zones<a class="headerlink" href="#network-zones" title="Permanent link">&para;</a></h2>
 <p><img alt="Microsoft Azure — Ports and Network Requirements — Diagram" src="../../../../assets/cloud-azure-architecture-ports-diagram.svg" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
@@ -8805,23 +8789,23 @@ Firewall and NSG port reference for Microsoft Azure infrastructure. Covers manag
 </tbody>
 </table>
 <h2 id="verify">Verify<a class="headerlink" href="#verify" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># From on-premises — test Azure API endpoint</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;%{http_code}&quot;</span><span class="w"> </span>https://management.azure.com/
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Azure CLI connectivity test</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>az<span class="w"> </span>account<span class="w"> </span>show
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Test Entra ID authentication endpoint</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;%{http_code}&quot;</span><span class="w"> </span>https://login.microsoftonline.com/
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># From Azure VM — test Log Analytics connectivity</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;%{http_code}&quot;</span><span class="w"> </span>https://ods.opinsights.azure.com/
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># List NSG rules for a resource group</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>az<span class="w"> </span>network<span class="w"> </span>nsg<span class="w"> </span>list<span class="w"> </span>--resource-group<span class="w"> </span>&lt;rg-name&gt;<span class="w"> </span>--output<span class="w"> </span>table
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="c1"># Show effective NSG rules on a VM NIC</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>az<span class="w"> </span>network<span class="w"> </span>nic<span class="w"> </span>show-effective-nsg<span class="w"> </span>--name<span class="w"> </span>&lt;nic-name&gt;<span class="w"> </span>--resource-group<span class="w"> </span>&lt;rg-name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># From on-premises — test Azure API endpoint</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;%{http_code}&quot;</span><span class="w"> </span>https://management.azure.com/
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Azure CLI connectivity test</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>az<span class="w"> </span>account<span class="w"> </span>show
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Test Entra ID authentication endpoint</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;%{http_code}&quot;</span><span class="w"> </span>https://login.microsoftonline.com/
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># From Azure VM — test Log Analytics connectivity</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;%{http_code}&quot;</span><span class="w"> </span>https://ods.opinsights.azure.com/
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># List NSG rules for a resource group</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>az<span class="w"> </span>network<span class="w"> </span>nsg<span class="w"> </span>list<span class="w"> </span>--resource-group<span class="w"> </span>&lt;rg-name&gt;<span class="w"> </span>--output<span class="w"> </span>table
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># Show effective NSG rules on a VM NIC</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>az<span class="w"> </span>network<span class="w"> </span>nic<span class="w"> </span>show-effective-nsg<span class="w"> </span>--name<span class="w"> </span>&lt;nic-name&gt;<span class="w"> </span>--resource-group<span class="w"> </span>&lt;rg-name&gt;
 </code></pre></div>
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>

@@ -10215,25 +10215,7 @@ Authentication reference for VxRail components. Covers VxRail Manager local and 
 </div>
 <p><img alt="VxRail — Authentication" src="../../../../../assets/virtualization-vmware-vxrail-security-authentication.svg" /></p>
 <hr />
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: down
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>external: External / Untrusted {shape: rectangle}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>vxrail_manager_local_account_mystic: &quot;VxRail Manager Local Account (mystic)&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>vxrail_manager_ldapad_integration: &quot;VxRail Manager LDAP/AD Integration&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>idrac_authentication: &quot;iDRAC Authentication&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>vcenter_sso_configuration: &quot;vCenter SSO Configuration&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>esxi_host_accounts: &quot;ESXi Host Accounts&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>service_account_policy: &quot;Service Account Policy&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>core: &quot;VxRail Core&quot; {shape: hexagon}
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>external -&gt; vxrail_manager_local_account_mystic: traffic in
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>vxrail_manager_local_account_mystic -&gt; vxrail_manager_ldapad_integration
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>vxrail_manager_ldapad_integration -&gt; idrac_authentication
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>idrac_authentication -&gt; vcenter_sso_configuration
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>vcenter_sso_configuration -&gt; esxi_host_accounts
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>esxi_host_accounts -&gt; service_account_policy
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>service_account_policy -&gt; core: secured path
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNk0FrwzAMhe_5FWKn7TB6z2EQ0sIGGysNG7sZoaiJILWD7XQpo_99TrM2G3VZb7H19Czep5RimbwYnUJpPnWScO_ZamxSWPx8wQzetLed81zCl6ux5RSGLtRVw_tk21uURm1QY8VWNYawUUhkOu3VZue8UAo37_0qqOBlVMHzoIJsVMHtKLu7uca_xBZLJdpzZXEc_cx9ni1n2RyeJlHUWkqLpLDzNevw_tFN5qssh-zPdXw0CoIwk3NGkdFrqbrTSNv8UIOieIX8dy3qxK4XVRvnj8m5YLEoPgQew-UxKBftdWy3QnzKvDWN0C70F2PhFPPyUIh6kLE85ZiH0ySrucfK6P20HHD_AFdh9xbXayEQfc2axGzPaP-_D4NNjGwU9-HNSxgvAx7azplFMA7COKAL3IaGkYZj6mz451r0dfINJvdfGA==?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Access:</strong> vCenter Administrator role</li>
@@ -10250,13 +10232,13 @@ Authentication reference for VxRail components. Covers VxRail Manager local and 
 <li>Store the new credential in a secrets vault (HashiCorp Vault, CyberArk, or equivalent). Do not store in plain text or shared documents.</li>
 <li>After LDAP/AD integration is configured, disable or restrict the <code>mystic</code> account for emergency break-glass use only.</li>
 </ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Change mystic password via VxRail Manager API</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>-X<span class="w"> </span>PUT<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Basic </span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span>-n<span class="w"> </span><span class="s1">&#39;mystic:OldPassword1!&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;password&quot;: &quot;NewPassword1!&quot;}&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span><span class="s2">&quot;https://&lt;vxrail-manager-ip&gt;/rest/vxm/v1/system/user/password&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Change mystic password via VxRail Manager API</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>-X<span class="w"> </span>PUT<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Basic </span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span>-n<span class="w"> </span><span class="s1">&#39;mystic:OldPassword1!&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;password&quot;: &quot;NewPassword1!&quot;}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">  </span><span class="s2">&quot;https://&lt;vxrail-manager-ip&gt;/rest/vxm/v1/system/user/password&quot;</span>
 </code></pre></div>
 <p>The <code>mystic</code> account has full administrative access including LCM trigger, cluster configuration changes, and support uploads. Treat it as a privileged account with corresponding vault and audit controls.</p>
 <hr />
@@ -10326,27 +10308,27 @@ Authentication reference for VxRail components. Covers VxRail Manager local and 
 <h3 id="default-credentials">Default Credentials<a class="headerlink" href="#default-credentials" title="Permanent link">&para;</a></h3>
 <p>Every VxRail node ships with an iDRAC using default credentials (<code>root</code> / <code>Calvin</code>). These must be changed on every node before the cluster is placed in production or connected to any network.</p>
 <p><strong>Change via RACADM:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Change iDRAC root password via RACADM (run from node OS or iDRAC SSH)</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.Users.2.Password<span class="w"> </span><span class="s2">&quot;NewStrongPassword1!&quot;</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Verify the change took effect</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>racadm<span class="w"> </span>get<span class="w"> </span>iDRAC.Users.2.UserName
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Change iDRAC root password via RACADM (run from node OS or iDRAC SSH)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.Users.2.Password<span class="w"> </span><span class="s2">&quot;NewStrongPassword1!&quot;</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Verify the change took effect</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>racadm<span class="w"> </span>get<span class="w"> </span>iDRAC.Users.2.UserName
 </code></pre></div>
 <p><strong>Change via iDRAC web UI:</strong> iDRAC UI → iDRAC Settings → Users → root → Edit</p>
 <h3 id="idrac-ldap-for-centralised-authentication">iDRAC LDAP for Centralised Authentication<a class="headerlink" href="#idrac-ldap-for-centralised-authentication" title="Permanent link">&para;</a></h3>
 <p>Configure each iDRAC to authenticate against Active Directory. This eliminates local iDRAC user proliferation and enables centralised revocation when staff leave.</p>
 <p><strong>Configure via RACADM:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Enable LDAP authentication on iDRAC</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.LDAP.Enable<span class="w"> </span><span class="m">1</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.LDAP.Server<span class="w"> </span><span class="s2">&quot;ldap://dc01.example.local&quot;</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.LDAP.BaseDN<span class="w"> </span><span class="s2">&quot;DC=example,DC=local&quot;</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.LDAP.BindDN<span class="w"> </span><span class="s2">&quot;CN=svc-idrac,OU=ServiceAccounts,DC=example,DC=local&quot;</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.LDAP.BindPassword<span class="w"> </span><span class="s2">&quot;BindPassword1!&quot;</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.LDAP.GroupAttributeIsDN<span class="w"> </span><span class="m">1</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># Map AD group to iDRAC Administrator role</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.LDAPRoleGroup.1.DN<span class="w"> </span><span class="s2">&quot;CN=GRP-iDRAC-Admins,OU=VxRailGroups,DC=example,DC=local&quot;</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.LDAPRoleGroup.1.Privilege<span class="w"> </span>0x1FF
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Enable LDAP authentication on iDRAC</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.LDAP.Enable<span class="w"> </span><span class="m">1</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.LDAP.Server<span class="w"> </span><span class="s2">&quot;ldap://dc01.example.local&quot;</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.LDAP.BaseDN<span class="w"> </span><span class="s2">&quot;DC=example,DC=local&quot;</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.LDAP.BindDN<span class="w"> </span><span class="s2">&quot;CN=svc-idrac,OU=ServiceAccounts,DC=example,DC=local&quot;</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.LDAP.BindPassword<span class="w"> </span><span class="s2">&quot;BindPassword1!&quot;</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.LDAP.GroupAttributeIsDN<span class="w"> </span><span class="m">1</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Map AD group to iDRAC Administrator role</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.LDAPRoleGroup.1.DN<span class="w"> </span><span class="s2">&quot;CN=GRP-iDRAC-Admins,OU=VxRailGroups,DC=example,DC=local&quot;</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.LDAPRoleGroup.1.Privilege<span class="w"> </span>0x1FF
 </code></pre></div>
 <p><strong>iDRAC privilege values:</strong></p>
 <table>

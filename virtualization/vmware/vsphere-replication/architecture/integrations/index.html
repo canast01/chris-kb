@@ -9400,34 +9400,18 @@ Integrations reference covering vCenter Integration, SRM Integration, Network Re
 *Applies to: vSphere Replication 8.x*
 </div>
 <p><img alt="vSphere Replication — Integrations" src="../../../../../assets/virtualization-vmware-vsphere-replication-architecture-integ.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>center: &quot;vSphere Replication&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>vcenter_integration: &quot;vCenter Integration&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>srm_integration: &quot;SRM Integration&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>network_requirements: &quot;Network Requirements&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>crossvcenter_replication: &quot;Cross-vCenter Replication&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>multitarget_replication_fanout: &quot;Multi-Target Replication (Fan-Out)&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>storage_compatibility: &quot;Storage Compatibility&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>center -&gt; vcenter_integration
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>center -&gt; srm_integration
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>center -&gt; network_requirements
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>center -&gt; crossvcenter_replication
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>center -&gt; multitarget_replication_fanout
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>center -&gt; storage_compatibility
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqFUTFOxDAQ7P2KVSoo8oEUNJGQKA6kO_rImMWxSOyw3gQQur9jXzhldTLQuJidGc_OPjtCwy74BsjZnpUy6BmpgWo5TD0Swh6nwRmdSRV8xV5P2ECPH9oGf1TLyu9cei3p1apa2hMKdxu6afOP2tsBjyrSeKE87Hf_qjzye6DXjvBtTvnH9FdM0vsVToE3uKg3FGI8B6dtveTR5lF9jl9cXRiN88CONVlk6dO9aB9mTna7TKgfTwzpBle32tcPM1-Xa-FA2mJnwjgl_pMbHH_mclYcWokXHX7OCPUNFC4kphcXEJNSy2L8W4mC8nc9MkRpX_UNcPb52Q==?" /></p>
 <h2 id="vcenter-integration">vCenter Integration<a class="headerlink" href="#vcenter-integration" title="Permanent link">&para;</a></h2>
 <p>The VRA registers itself as a vCenter extension (plugin) during initial setup. This registration installs the vSphere Replication plugin in the vCenter UI (Site Recovery section) and grants the VRA API access to vCenter objects (VMs, datastores, hosts, clusters).</p>
 <p>Both the source-site VRA and the target-site VRA must register with their respective vCenter instances. After registration, the two VRAs are paired via TCP 44046 to establish the management channel between sites.</p>
 <h3 id="registration-architecture">Registration Architecture<a class="headerlink" href="#registration-architecture" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Source Site                          Target Site
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>-----------                          -----------
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Source vCenter ◄──── VRA-src         Target vCenter ◄──── VRA-tgt
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  (plugin installed)   (registered)    (plugin installed)   (registered)
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>                          |                                      |
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>                          └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>                                (VRA pairing / management)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Source Site                          Target Site
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>-----------                          -----------
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>Source vCenter ◄──── VRA-src         Target vCenter ◄──── VRA-tgt
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>  (plugin installed)   (registered)    (plugin installed)   (registered)
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>                          |                                      |
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>                          └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>                                (VRA pairing / management)
 </code></pre></div>
 <p>Replication configuration is stored in the vCenter database on the source side. The target vCenter holds the target-side registration and manages target datastore access.</p>
 <h3 id="vcenter-extension-details">vCenter Extension Details<a class="headerlink" href="#vcenter-extension-details" title="Permanent link">&para;</a></h3>
@@ -9437,16 +9421,16 @@ Integrations reference covering vCenter Integration, SRM Integration, Network Re
 <li>The Site Recovery UI in vCenter (<code>Menu → Site Recovery</code>) is the primary management interface for VR</li>
 <li>VR does not require vCenter Enhanced Linked Mode — cross-vCenter replication works with any pairing</li>
 </ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Verify VRA extension registration via vCenter API</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>curl<span class="w"> </span>-k<span class="w"> </span>-u<span class="w"> </span>administrator@vsphere.local:&lt;pass&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>https://&lt;vCenter-FQDN&gt;/sdk/vimService<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: text/xml&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>--data<span class="w"> </span><span class="s1">&#39;&lt;Envelope&gt;...&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s1">&#39;HmsMain\|vcDr&#39;</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Check extension registration from VRA side</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>curl<span class="w"> </span>-k<span class="w"> </span>-u<span class="w"> </span>admin:&lt;pass&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span>https://&lt;VRA-FQDN&gt;:8043/api/config/site<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Verify VRA extension registration via vCenter API</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>curl<span class="w"> </span>-k<span class="w"> </span>-u<span class="w"> </span>administrator@vsphere.local:&lt;pass&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>https://&lt;vCenter-FQDN&gt;/sdk/vimService<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: text/xml&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>--data<span class="w"> </span><span class="s1">&#39;&lt;Envelope&gt;...&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s1">&#39;HmsMain\|vcDr&#39;</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Check extension registration from VRA side</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>curl<span class="w"> </span>-k<span class="w"> </span>-u<span class="w"> </span>admin:&lt;pass&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">  </span>https://&lt;VRA-FQDN&gt;:8043/api/config/site<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
 </code></pre></div>
 <hr />
 <h2 id="srm-integration">SRM Integration<a class="headerlink" href="#srm-integration" title="Permanent link">&para;</a></h2>
@@ -9469,20 +9453,20 @@ Integrations reference covering vCenter Integration, SRM Integration, Network Re
 <li>SRM service account needs "vSphere Replication → Manage Replication" privilege on all VMs</li>
 </ul>
 <h3 id="recovery-flow-srm-orchestrated">Recovery Flow (SRM-Orchestrated)<a class="headerlink" href="#recovery-flow-srm-orchestrated" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>SRM triggers recovery plan
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>         |
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>SRM calls VR API: promote recovery point for each VM
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>         |
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>VRA promotes replica VMDK at target site
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>  (unmounts snapshot chain, makes disk R/W)
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>         |
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>SRM registers promoted VM in target vCenter
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>         |
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>SRM applies IP customization (if configured)
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>         |
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>SRM powers on VM according to boot order/dependencies
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>         |
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>SRM monitors VM startup (heartbeat/VMware Tools)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>SRM triggers recovery plan
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>         |
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>SRM calls VR API: promote recovery point for each VM
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>         |
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>VRA promotes replica VMDK at target site
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>  (unmounts snapshot chain, makes disk R/W)
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>         |
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>SRM registers promoted VM in target vCenter
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>         |
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>SRM applies IP customization (if configured)
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>         |
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>SRM powers on VM according to boot order/dependencies
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>         |
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>SRM monitors VM startup (heartbeat/VMware Tools)
 </code></pre></div>
 <hr />
 <h2 id="network-requirements">Network Requirements<a class="headerlink" href="#network-requirements" title="Permanent link">&para;</a></h2>
@@ -9563,19 +9547,19 @@ Integrations reference covering vCenter Integration, SRM Integration, Network Re
 - VRS FQDNs resolve at both sites if deployed</p>
 <p>Replication traffic uses the IP address configured on the VRA network interface — ensure the FQDN resolves to the correct replication-path IP if VRA has multiple NICs.</p>
 <h3 id="network-design-recommendations">Network Design Recommendations<a class="headerlink" href="#network-design-recommendations" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Site A                                 Site B
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>------                                 ------
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>Management Network (VLAN 10)           Management Network (VLAN 10)
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>  └─ vCenter-A                           └─ vCenter-B
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>  └─ VRA-A mgmt NIC                      └─ VRA-B mgmt NIC
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>Replication Network (VLAN 20)          Replication Network (VLAN 20)
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>  └─ ESXi vmk (replication vmk)          └─ VRA-B replication NIC
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>  └─ VRA-A replication NIC (opt.)
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>WAN/DCI Link
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>  └─ VLAN 20 extended or routed
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>     between sites
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Site A                                 Site B
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>------                                 ------
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>Management Network (VLAN 10)           Management Network (VLAN 10)
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>  └─ vCenter-A                           └─ vCenter-B
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>  └─ VRA-A mgmt NIC                      └─ VRA-B mgmt NIC
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>Replication Network (VLAN 20)          Replication Network (VLAN 20)
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>  └─ ESXi vmk (replication vmk)          └─ VRA-B replication NIC
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>  └─ VRA-A replication NIC (opt.)
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>WAN/DCI Link
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>  └─ VLAN 20 extended or routed
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>     between sites
 </code></pre></div>
 <p>If VRA has only one NIC, all traffic (management, data, VAMI) shares that interface. Dual-NIC VRA deployment allows separation of management (443/8043/5480) from replication data (31031/44046).</p>
 <hr />
@@ -9602,11 +9586,11 @@ Integrations reference covering vCenter Integration, SRM Integration, Network Re
 <li>RPO compliance is tracked per-target independently</li>
 <li>Bandwidth requirement is multiplied by the number of targets</li>
 </ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Source VM
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>    |
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>    ├──[TCP 31031]──► VRA at DR Site A (RPO 15 min, 3 instances)
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    |
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>    └──[TCP 31031]──► VRA at DR Site B (RPO 1 hour, 5 instances)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Source VM
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>    |
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    ├──[TCP 31031]──► VRA at DR Site A (RPO 15 min, 3 instances)
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    |
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>    └──[TCP 31031]──► VRA at DR Site B (RPO 1 hour, 5 instances)
 </code></pre></div>
 <p>Maximum fan-out targets: 3 (VMware supported limit for VR fan-out)</p>
 <hr />

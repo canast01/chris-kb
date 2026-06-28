@@ -8188,43 +8188,8 @@ MySQL architecture — InnoDB storage engine, buffer pool, query execution pipel
 *Applies to: MySQL 8.x · MariaDB 10.x*
 </div>
 <p><img alt="MySQL / MariaDB — How It Works" src="../../../../../assets/compute-linux-mysql-architecture-how-it-works.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>center: &quot;Linux&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>storage_engine_innodb: &quot;Storage Engine: InnoDB&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>query_execution_pipeline: &quot;Query Execution Pipeline&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>replication_architecture: &quot;Replication Architecture&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>key_configuration_parameters: &quot;Key Configuration Parameters&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>transaction_isolation: &quot;Transaction Isolation&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>center -&gt; storage_engine_innodb
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>center -&gt; query_execution_pipeline
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>center -&gt; replication_architecture
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>center -&gt; key_configuration_parameters
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>center -&gt; transaction_isolation
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>@startuml
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>skinparam sequenceArrowThickness 1.5
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>skinparam roundcorner 5
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>participant &quot;MySQL Primary&quot; as PRI
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>participant &quot;Binary Log\n(binlog)&quot; as BLOG
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>participant &quot;MySQL Replica\n(async)&quot; as REP
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>participant &quot;Relay Log&quot; as RLOG
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>participant &quot;SQL Thread&quot; as SQL
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>PRI -&gt; BLOG: Write DML/DDL event
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>BLOG --&gt; PRI: Flush to disk
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>REP -&gt; PRI: COM_REGISTER_SLAVE
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>PRI --&gt; REP: Binlog stream starts
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>REP -&gt; RLOG: Write relay log
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>RLOG -&gt; SQL: SQL thread reads events
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>SQL -&gt; REP: Apply to replica storage
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>SQL --&gt; RLOG: Relay log position updated
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>note over PRI,REP: GTID mode — each transaction has\nglobal unique ID for safe failover
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>@enduml
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp9kctOwzAQRff5ilH2_EAWSDy6qGBRaPfW4A7OiHQcJraUCPXfyaMlXrhs77k-lq-PrGQDe6lA2dWhKCxJIK2gfGWJfQk_XY0tVVBTj87LueiCV3RkSBwLGRbxx4-xv19y2Mx5BdsRPD-ugukiFNfQufiOpIOhnmyc7jYtt9TMh8q3CcHmimB3QVmPUtuwxdmBamsOI4s6ed5XBA8Jynq-aDDWyye7qIutRcUTjUN0o-uFBnhKMez-cNYXFKXDeVfDnW9wWbg8rDlsr3nWcPkGuLuH7N4JvzVmUrm1U1L5b4Kkln1Z8QtAI9mj?" /></p>
+<p><img alt="Kroki" src="https://kroki.io/plantuml/svg/eNptksFOIzEMhu95CovTIi274sClB0RLu1WlqShptVyQkJlx26ipM8QZVr3xEDwhT7JORkUguERK_OX_fzu5koQxdXtvZOe4xYh7EHrqiGsaxhj-rbau3jGJwPmviw9QDB03dYhMES6M0cPkatciJziZH5a3FSyi22M8nAAKLOzsMzJyrDWowuaefzw69mFzWshRdTP9Ts1S612NSqMcuO5hO1l8Zi15LKp9-YtWVlptI2FTAN0ao9ng7LIYD-AuukQwnle_x-MK6Jk4mVyBM0WUHMAf38kWUoDGyc5oAjhWrm_mD3YynS1XE_uwrIZ_J7221hUbwKi0CZLUX6ecBy9HAfvBPZYmFDW2OF_mnIO8QCrZIS_SpxOTz48Ww7b1hxwu9uNSlxBxQz307mOPDtAGcckFhq5tMFFjDAeNEJ71WTX8z6I6Xc3GsA8NwdvLKxDW2n9EFqzL1S3KPW98eEQPHTv9PKD8OkQQXBOs0fmsZ66Im_zT_gNOOc49?" /></p>
 <h2 id="storage-engine-innodb">Storage Engine: InnoDB<a class="headerlink" href="#storage-engine-innodb" title="Permanent link">&para;</a></h2>
 <p>InnoDB is the default storage engine. Key components:</p>
 <table>
@@ -8258,8 +8223,8 @@ MySQL architecture — InnoDB storage engine, buffer pool, query execution pipel
 </tbody>
 </table>
 <h2 id="query-execution-pipeline">Query Execution Pipeline<a class="headerlink" href="#query-execution-pipeline" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Client → Connection thread → Parser → Optimizer → Storage engine
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>         (thread cache)       (SQL)    (query plan)  (InnoDB/MyISAM)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Client → Connection thread → Parser → Optimizer → Storage engine
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>         (thread cache)       (SQL)    (query plan)  (InnoDB/MyISAM)
 </code></pre></div>
 <ol>
 <li><strong>Parse</strong> — SQL tokenised, syntax validated</li>
@@ -8269,8 +8234,8 @@ MySQL architecture — InnoDB storage engine, buffer pool, query execution pipel
 </ol>
 <h2 id="replication-architecture">Replication Architecture<a class="headerlink" href="#replication-architecture" title="Permanent link">&para;</a></h2>
 <p>MySQL replication is asynchronous by default:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Primary: writes → binary log (binlog) → replica I/O thread reads binlog
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Replica: relay log → SQL thread applies → committed to replica data files
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Primary: writes → binary log (binlog) → replica I/O thread reads binlog
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Replica: relay log → SQL thread applies → committed to replica data files
 </code></pre></div>
 <ul>
 <li><strong>GTID mode</strong> (<code>gtid_mode=ON</code>) identifies transactions globally; simplifies failover</li>

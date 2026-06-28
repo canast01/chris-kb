@@ -9389,23 +9389,7 @@ Health Checks reference covering Daily Checks, Weekly Checks, Pre-Maintenance Ch
 *Applies to: Aria Automation 8.x*
 </div>
 
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>hub: &quot;Aria Automation\nOperations&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>daily_checks: &quot;Daily Checks&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>run_this_routine: &quot;Run This Routine&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>weekly_checks: &quot;Weekly Checks&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>premaintenance_checks: &quot;Pre-Maintenance Checks&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>platform_service_health_commands: &quot;Platform Service Health Commands&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>verify: &quot;Verify&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>hub -&gt; daily_checks
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>hub -&gt; run_this_routine
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>hub -&gt; weekly_checks
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>hub -&gt; premaintenance_checks
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>hub -&gt; platform_service_health_commands
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>hub -&gt; verify
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqFUc1OwzAMvvcprN73Aj0gTePABYEGggtSZVKvsdY6lZMMJrR3p01XOlA1bvH35-RLxUomsJMClGsbsszG9wLytTLCOgbX4sC-yUNHmo4-hy9vsaMCLH1i7eSUVcjNsTSWzN735tthhE0aZ_WwCKVu6JRplDJY9qW6GFh6Mt9Ggecegu0ILfo-iPaXi17TfG1Tp9QiSyBBMTQ7H5VW9zNxNaLBsHPalp70wH2IJWyCLY1rW5QqpZ0l8DRK4C5JYHOWLOYeSHl37N0v6bCoGX4DVjdwWfCE_S1xwn-VNIGLPfyQ_7xw0o03zr4B5OrNIg==?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Access:</strong> vCenter read-only minimum; Administrator role for remediation steps</li>
@@ -9434,13 +9418,13 @@ Health Checks reference covering Daily Checks, Weekly Checks, Pre-Maintenance Ch
 <hr />
 <h3 id="review-deployment-event-log">Review Deployment Event Log<a class="headerlink" href="#review-deployment-event-log" title="Permanent link">&para;</a></h3>
 <p><img alt="Review Deployment Event Log" src="../../../../../assets/virtualization-vmware-aria-automation-hc-review-deployment-event-log.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Deployments → All Deployments → filter by &quot;Failed&quot; status
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Deployments → All Deployments → filter by &quot;Failed&quot; status
 </code></pre></div>
 <p>Failed deployments should be investigated, even if they are not actively blocking users. Persistent failures in a specific cloud zone may indicate a resource, network, or credential issue.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># API — list recent failed deployments</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="s2">&quot;https://vra-prod-01.example.local/deployment/api/deployments?status=FAILED&amp;size=20&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.content[] | {name: .name, status: .status, reason: .reason}&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># API — list recent failed deployments</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="s2">&quot;https://vra-prod-01.example.local/deployment/api/deployments?status=FAILED&amp;size=20&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.content[] | {name: .name, status: .status, reason: .reason}&#39;</span>
 </code></pre></div>
 <hr />
 <h2 id="weekly-checks">Weekly Checks<a class="headerlink" href="#weekly-checks" title="Permanent link">&para;</a></h2>
@@ -9448,32 +9432,32 @@ Health Checks reference covering Daily Checks, Weekly Checks, Pre-Maintenance Ch
 <h3 id="pending-approval-requests">Pending Approval Requests<a class="headerlink" href="#pending-approval-requests" title="Permanent link">&para;</a></h3>
 <p><img alt="Pending Approval Requests" src="../../../../../assets/virtualization-vmware-aria-automation-hc-pending-approval-requests.svg" /></p>
 <p>Review and action approval requests older than 5 business days:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Catalog → Deployments → Pending Approvals
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Catalog → Deployments → Pending Approvals
 </code></pre></div>
 <p>Escalate stale requests (user not responding) or reject if the requester has left the organisation.</p>
 <hr />
 <h3 id="quota-utilisation">Quota Utilisation<a class="headerlink" href="#quota-utilisation" title="Permanent link">&para;</a></h3>
 <p><img alt="Quota Utilisation" src="../../../../../assets/virtualization-vmware-aria-automation-hc-quota-utilisation.svg" /></p>
 <p>Check whether any projects are approaching their VM or CPU/memory quota limits:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Infrastructure → Administration → Projects → select project → Quota
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Infrastructure → Administration → Projects → select project → Quota
 </code></pre></div>
 <p>Projects at &gt;80% quota will start failing new deployments without a clear error to end users. Review and extend quotas proactively.</p>
 <hr />
 <h3 id="deployment-lease-expiry">Deployment Lease Expiry<a class="headerlink" href="#deployment-lease-expiry" title="Permanent link">&para;</a></h3>
 <p><img alt="Deployment Lease Expiry" src="../../../../../assets/virtualization-vmware-aria-automation-hc-deployment-lease-expiry.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Deployments → All Deployments → filter by lease expiry in next 7 days
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Deployments → All Deployments → filter by lease expiry in next 7 days
 </code></pre></div>
 <p>Contact deployment owners for renewals or confirm expiry is intended. Expired deployments are automatically deleted according to the lease policy — ensure owners have been warned.</p>
 <hr />
 <h3 id="service-certificate-expiry">Service Certificate Expiry<a class="headerlink" href="#service-certificate-expiry" title="Permanent link">&para;</a></h3>
 <p><img alt="Service Certificate Expiry" src="../../../../../assets/virtualization-vmware-aria-automation-hc-service-certificate-expiry.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Check Aria Automation UI certificate expiry</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>vra-prod-01.example.local:443<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-dates
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Check VAMI certificate expiry</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>vra-prod-01.example.local:5480<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">  </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-dates
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Check Aria Automation UI certificate expiry</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>vra-prod-01.example.local:443<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-dates
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># Check VAMI certificate expiry</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>vra-prod-01.example.local:5480<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">  </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-dates
 </code></pre></div>
 <hr />
 <h2 id="pre-maintenance-checks">Pre-Maintenance Checks<a class="headerlink" href="#pre-maintenance-checks" title="Permanent link">&para;</a></h2>
@@ -9490,22 +9474,22 @@ Health Checks reference covering Daily Checks, Weekly Checks, Pre-Maintenance Ch
 <hr />
 <h2 id="platform-service-health-commands">Platform Service Health Commands<a class="headerlink" href="#platform-service-health-commands" title="Permanent link">&para;</a></h2>
 <p><img alt="Platform Service Health Commands" src="../../../../../assets/virtualization-vmware-aria-automation-hc-platform-service-health-commands.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>ssh<span class="w"> </span>root@vra-prod-01.example.local
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="c1"># Overall appliance and service health</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>vracli<span class="w"> </span>status
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="c1"># Show cluster member status (for 3-node deployments)</span>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>vracli<span class="w"> </span>cluster<span class="w"> </span>health
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="c1"># Show current Aria Automation version</span>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>vracli<span class="w"> </span>version
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="c1"># Restart a specific Kubernetes deployment (use as last resort — pods self-heal)</span>
-<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>kubectl<span class="w"> </span>rollout<span class="w"> </span>restart<span class="w"> </span>deployment/&lt;deployment-name&gt;<span class="w"> </span>-n<span class="w"> </span>prelude
-<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>
-<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="c1"># View recent events in the prelude namespace (useful for deployment failures)</span>
-<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>kubectl<span class="w"> </span>get<span class="w"> </span>events<span class="w"> </span>-n<span class="w"> </span>prelude<span class="w"> </span>--sort-by<span class="o">=</span><span class="s1">&#39;.metadata.creationTimestamp&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-30
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>ssh<span class="w"> </span>root@vra-prod-01.example.local
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1"># Overall appliance and service health</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>vracli<span class="w"> </span>status
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># Show cluster member status (for 3-node deployments)</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>vracli<span class="w"> </span>cluster<span class="w"> </span>health
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1"># Show current Aria Automation version</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>vracli<span class="w"> </span>version
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="c1"># Restart a specific Kubernetes deployment (use as last resort — pods self-heal)</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>kubectl<span class="w"> </span>rollout<span class="w"> </span>restart<span class="w"> </span>deployment/&lt;deployment-name&gt;<span class="w"> </span>-n<span class="w"> </span>prelude
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="c1"># View recent events in the prelude namespace (useful for deployment failures)</span>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>kubectl<span class="w"> </span>get<span class="w"> </span>events<span class="w"> </span>-n<span class="w"> </span>prelude<span class="w"> </span>--sort-by<span class="o">=</span><span class="s1">&#39;.metadata.creationTimestamp&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-30
 </code></pre></div>
 <hr />
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>

@@ -7748,44 +7748,8 @@ How It Works reference covering Overview, Deployment Topology, Supported Hardwar
 *Applies to: Brocade FOS 9.x*
 </div>
 <p><img alt="SANnav — How It Works" src="../../../../../assets/san-brocade-sannav-architecture-how-it-works.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>center: &quot;SANnav&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>deployment_topology: &quot;Deployment Topology&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>supported_hardware: &quot;Supported Hardware&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>network_requirements: &quot;Network Requirements&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>vm_sizing: &quot;VM Sizing&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>internal_services: &quot;Internal Services&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>integrations: &quot;Integrations&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>center -&gt; deployment_topology
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>center -&gt; supported_hardware
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>center -&gt; network_requirements
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>center -&gt; vm_sizing
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>center -&gt; internal_services
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>center -&gt; integrations
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>@startuml
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>skinparam sequenceArrowThickness 1.5
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>skinparam roundcorner 5
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>participant &quot;Brocade\nFabric Switch&quot; as SW
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>participant &quot;SANnav\nManagement Portal&quot; as SNV
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>participant &quot;Analytics\nEngine&quot; as ANA
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>participant &quot;Alert\nService&quot; as ALT
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>actor &quot;SAN Admin&quot; as ADM
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>SW -&gt; SNV: SNMP traps + REST telemetry
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>SNV -&gt; ANA: Ingest metrics (IOPS / latency / errors)
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>ANA -&gt; ANA: Baseline + anomaly detection
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>ANA -&gt; ALT: Threshold breach
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>ALT -&gt; ADM: Email / SNMP alert
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>ADM -&gt; SNV: View topology map
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>SNV -&gt; SW: REST config push (zoning / QoS)
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>SW --&gt; SNV: Config applied
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>@enduml
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp1kMFuwyAQRO98xSr3_oAPkSr10B6SQ1zlipC9wqg2kIU4dSv_eyHBCarJDd7MaHenVYSNV0ZXQEp2nrEGtUeqYFO_7rUYN_DrOmGxgg6_hTR6Zi3a3kxD8HFvrOmNnIL97U7hM9FHNg4RWvY4M3e21pDHlneC2osgjLMWCO8JFrMa_cXQFyc8ncPicZgL6f0NwyHDxfw4cKd-lJYhdNxBfX0XnSqWoEXPHdKoGoxjPhKDOrGnSUkidrqElm_RnwqHly0Uis3UdXGZWGomk--HZ2x14j9t2Zr9Aa-2yrw=?" /></p>
+<p><img alt="Kroki" src="https://kroki.io/plantuml/svg/eNpdkkFPwzAMhe_5FRYnEALEgUsPiAJDQmJjkIpddjGpaSNSpzgZ0_j1uB2bgEuV-n3xe7ZylTJKXnXBpHfPPQp2kOhjReyoFInrqvXunSklOD-9-AVJXHHtojAJXBijxeyd75EzHFxLdFjTku_wVbwDu_bZtQeACeziL2rLGePnkqfI2FBHWptHyRi29OzlL14yho3-piVPuPFMI1bOyn9YIMlLtiSf3v0wD5VBl6OMnlDWneetcDs1xi7g5HKwK_QznUMW7BMcw_PEVpApaLIsG6PAwKlfAffcUMowCJoHDu8f5xbOIGDW3W30RLo-SUdG6f2la0wUNLa2Ro6dDgM1ZXLZR96DD1UBVSuU2hhqeBVC1xqtjuLttIBJhz6owxgVh1mNUWE_wounNeTYxxCbDXTY74LbRbEdyUV-8w30q9TC4Vdkz432e4r2aFzFrtHNFsO-D55qc0VcD0_lG-2ZuB4=?" /></p>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>Brocade SANnav is a SAN management platform delivered in two variants:</p>
 <ul>

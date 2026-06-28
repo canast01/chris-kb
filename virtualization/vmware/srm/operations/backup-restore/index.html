@@ -9451,23 +9451,7 @@ Backup and Restore reference covering Backup Schedule Recommendation, SRM Config
 </div>
 <p><img alt="SRM — Backup and Restore" src="../../../../../assets/virtualization-vmware-srm-operations-backup-restore.svg" /></p>
 <p>SRM Backup Sources</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>hub: &quot;Site Recovery Manager\nOperations&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>srm_configuration_export: &quot;SRM Configuration Export&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>vsphere_replication_appliance_backup: &quot;vSphere Replication Appliance Backup&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>recovery_plan_pdf_export: &quot;Recovery Plan PDF Export&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>srm_database_considerations: &quot;SRM Database Considerations&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>protection_group_inventory_backup: &quot;Protection Group Inventory Backup&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>restore_srm_after_vcenter_restore: &quot;Restore SRM After vCenter Restore&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>hub -&gt; srm_configuration_export
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>hub -&gt; vsphere_replication_appliance_backup
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>hub -&gt; recovery_plan_pdf_export
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>hub -&gt; srm_database_considerations
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>hub -&gt; protection_group_inventory_backup
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>hub -&gt; restore_srm_after_vcenter_restore
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNks1uwjAQhO95ihX3vgCHShTaqgdUBNdK1uJsEqvBttaORVXx7rXzyyFAT7E0n8czu8kVk_TK6CWwKiufZVVzXMLioDzBnqQJxD-wRY0l8Zf-tMSYcLeAX1ehpSVUdMbS6Evm-CSk0YUqmw4SdLaGfbLbb2F9LcFrK00uKQbqsqZLFpytiEkw2VrJzgltPKOWJI4ovxsbPcOhxWLKEYPVgMFLi836c19L2Bq1sHkx5Rwb76IEu83bvZypb44ej-goFXcqH6bTV970aup-pc66WTa-W4Uo2TRWKB1IexNzjpV3IwPviYGPgbnf10WERMqLhScWQcZb8dsrbfH2BCn1KjEQ1i0DvTLrnH4WeHqGW5sf9P9sdGBvbef6rRtTH5CHo5zeejCZ7A8GySyn?" /></p>
 <h2 id="srm-configuration-export">SRM Configuration Export<a class="headerlink" href="#srm-configuration-export" title="Permanent link">&para;</a></h2>
 <p>The exported XML contains:
 - Site pairing information.
@@ -9475,18 +9459,18 @@ Backup and Restore reference covering Backup Schedule Recommendation, SRM Config
 - General SRM settings.</p>
 <p>Recovery Plans and Protection Groups are <strong>not</strong> in this export — they live in vCenter DB and are recovered with vCenter.</p>
 <h3 id="export-via-srm-rest-api">Export via SRM REST API<a class="headerlink" href="#export-via-srm-rest-api" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Authenticate to get session token</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nv">SRM_TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="s2">&quot;https://srm-appliance.example.com/api/session&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;username&quot;:&quot;administrator@vsphere.local&quot;,&quot;password&quot;:&quot;VMware1!&quot;}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import sys,json; print(json.load(sys.stdin)[&#39;token&#39;])&quot;</span><span class="k">)</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># List Recovery Plans (for documentation)</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">  </span><span class="s2">&quot;https://srm-appliance.example.com/api/recovery-plans&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$SRM_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span>&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">  </span>/backup/srm/recovery-plans-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.json
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Authenticate to get session token</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nv">SRM_TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="s2">&quot;https://srm-appliance.example.com/api/session&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;username&quot;:&quot;administrator@vsphere.local&quot;,&quot;password&quot;:&quot;VMware1!&quot;}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">  </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import sys,json; print(json.load(sys.stdin)[&#39;token&#39;])&quot;</span><span class="k">)</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># List Recovery Plans (for documentation)</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">  </span><span class="s2">&quot;https://srm-appliance.example.com/api/recovery-plans&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$SRM_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span>&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">  </span>/backup/srm/recovery-plans-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.json
 </code></pre></div>
 <hr />
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
@@ -9499,33 +9483,33 @@ Backup and Restore reference covering Backup Schedule Recommendation, SRM Config
 <hr />
 <h2 id="vsphere-replication-appliance-backup">vSphere Replication Appliance Backup<a class="headerlink" href="#vsphere-replication-appliance-backup" title="Permanent link">&para;</a></h2>
 <h3 id="snapshot-based-backup">Snapshot-Based Backup<a class="headerlink" href="#snapshot-based-backup" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Take a snapshot of the VR appliance via govc (do during low-change-rate window)</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>govc<span class="w"> </span>snapshot.create<span class="w"> </span>-vm<span class="w"> </span><span class="s2">&quot;vr-appliance-01&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="s2">&quot;VR-Backup-</span><span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;Scheduled VR appliance backup&quot;</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># List existing snapshots</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>govc<span class="w"> </span>snapshot.tree<span class="w"> </span>-vm<span class="w"> </span><span class="s2">&quot;vr-appliance-01&quot;</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Remove old snapshots (keep only last 2)</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>govc<span class="w"> </span>snapshot.remove<span class="w"> </span>-vm<span class="w"> </span><span class="s2">&quot;vr-appliance-01&quot;</span><span class="w"> </span><span class="s2">&quot;VR-Backup-20260401&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Take a snapshot of the VR appliance via govc (do during low-change-rate window)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>govc<span class="w"> </span>snapshot.create<span class="w"> </span>-vm<span class="w"> </span><span class="s2">&quot;vr-appliance-01&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="s2">&quot;VR-Backup-</span><span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;Scheduled VR appliance backup&quot;</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># List existing snapshots</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>govc<span class="w"> </span>snapshot.tree<span class="w"> </span>-vm<span class="w"> </span><span class="s2">&quot;vr-appliance-01&quot;</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># Remove old snapshots (keep only last 2)</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>govc<span class="w"> </span>snapshot.remove<span class="w"> </span>-vm<span class="w"> </span><span class="s2">&quot;vr-appliance-01&quot;</span><span class="w"> </span><span class="s2">&quot;VR-Backup-20260401&quot;</span>
 </code></pre></div>
 <p><strong>Note:</strong> Do not leave snapshots on the VR Appliance indefinitely. The VR Appliance receives replication data continuously — snapshot growth can fill the datastore.</p>
 <h3 id="ovf-export-for-cold-backups-or-migration">OVF Export (for cold backups or migration)<a class="headerlink" href="#ovf-export-for-cold-backups-or-migration" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Power off the VR Appliance (during maintenance window)</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>govc<span class="w"> </span>vm.power<span class="w"> </span>-off<span class="w"> </span>vr-appliance-01
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Export to OVF</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>govc<span class="w"> </span>export.ovf<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span>-vm<span class="w"> </span><span class="s2">&quot;vr-appliance-01&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span>-o<span class="w"> </span>/backup/vrm/vr-appliance-01-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.ovf
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># Power on</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>govc<span class="w"> </span>vm.power<span class="w"> </span>-on<span class="w"> </span>vr-appliance-01
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Power off the VR Appliance (during maintenance window)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>govc<span class="w"> </span>vm.power<span class="w"> </span>-off<span class="w"> </span>vr-appliance-01
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Export to OVF</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>govc<span class="w"> </span>export.ovf<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span>-vm<span class="w"> </span><span class="s2">&quot;vr-appliance-01&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span>-o<span class="w"> </span>/backup/vrm/vr-appliance-01-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.ovf
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Power on</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>govc<span class="w"> </span>vm.power<span class="w"> </span>-on<span class="w"> </span>vr-appliance-01
 </code></pre></div>
 <h3 id="vr-vami-config-backup">VR VAMI Config Backup<a class="headerlink" href="#vr-vami-config-backup" title="Permanent link">&para;</a></h3>
 <p>The VAMI provides a configuration export that captures network settings, registration info, and certificates:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>https://&lt;vr-appliance&gt;:5480 → Administration → Backup
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>https://&lt;vr-appliance&gt;:5480 → Administration → Backup
 </code></pre></div>
 <p>Download the backup tar file and store with the OVF export.</p>
 <hr />
@@ -9551,10 +9535,10 @@ Backup and Restore reference covering Backup Schedule Recommendation, SRM Config
 <li>Location: <code>C:\Program Files\VMware\VMware vCenter Site Recovery Manager\db\</code></li>
 </ul>
 <p>Backup:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># Backup SRM embedded database (Windows)</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nv">$backupPath</span> <span class="p">=</span> <span class="s2">&quot;C:\SRMBackup\srm-db-</span><span class="p">$(</span><span class="nb">Get-Date</span> <span class="n">-Format</span> <span class="n">yyyyMMdd</span><span class="p">)</span><span class="s2">.bak&quot;</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="nb">Invoke-Sqlcmd</span> <span class="n">-Query</span> <span class="s2">&quot;BACKUP DATABASE [VMware DR] TO DISK = &#39;$backupPath&#39;&quot;</span> <span class="p">`</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>  <span class="n">-ServerInstance</span> <span class="s2">&quot;localhost\VIMSERVICESRM&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Backup SRM embedded database (Windows)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nv">$backupPath</span> <span class="p">=</span> <span class="s2">&quot;C:\SRMBackup\srm-db-</span><span class="p">$(</span><span class="nb">Get-Date</span> <span class="n">-Format</span> <span class="n">yyyyMMdd</span><span class="p">)</span><span class="s2">.bak&quot;</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="nb">Invoke-Sqlcmd</span> <span class="n">-Query</span> <span class="s2">&quot;BACKUP DATABASE [VMware DR] TO DISK = &#39;$backupPath&#39;&quot;</span> <span class="p">`</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>  <span class="n">-ServerInstance</span> <span class="s2">&quot;localhost\VIMSERVICESRM&quot;</span>
 </code></pre></div>
 <h3 id="external-database-enterprise-deployments">External Database (Enterprise deployments)<a class="headerlink" href="#external-database-enterprise-deployments" title="Permanent link">&para;</a></h3>
 <p>For &gt; 250 VMs, use an external SQL Server or Oracle database. Configure during SRM Server installation.</p>
@@ -9564,31 +9548,31 @@ Backup and Restore reference covering Backup Schedule Recommendation, SRM Config
 <hr />
 <h2 id="protection-group-inventory-backup">Protection Group Inventory Backup<a class="headerlink" href="#protection-group-inventory-backup" title="Permanent link">&para;</a></h2>
 <p>Protection Group definitions live in vCenter, but the list of protected VMs and their configuration should also be documented externally for use during recovery when vCenter may be unavailable.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># PowerCLI: Export all Protection Groups and their protected VMs</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">Import-Module</span> <span class="n">VMware</span><span class="p">.</span><span class="n">VimAutomation</span><span class="p">.</span><span class="n">Srm</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="nb">Connect-VIServer</span> <span class="n">-Server</span> <span class="n">vcenter-protected</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">com</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="nv">$srm</span> <span class="p">=</span> <span class="nb">Connect-SrmServer</span> <span class="n">-SrmServerAddress</span> <span class="n">srm-protected</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">com</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="nv">$srmApi</span> <span class="p">=</span> <span class="nv">$srm</span><span class="p">.</span><span class="n">ExtensionData</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="nv">$output</span> <span class="p">=</span> <span class="p">@()</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="nv">$pgs</span> <span class="p">=</span> <span class="nv">$srmApi</span><span class="p">.</span><span class="n">Protection</span><span class="p">.</span><span class="n">ListProtectionGroups</span><span class="p">()</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="k">foreach</span> <span class="p">(</span><span class="nv">$pgRef</span> <span class="k">in</span> <span class="nv">$pgs</span><span class="p">)</span> <span class="p">{</span>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>    <span class="nv">$pg</span> <span class="p">=</span> <span class="nv">$pgRef</span><span class="p">.</span><span class="n">GetInfo</span><span class="p">()</span>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>    <span class="nv">$vms</span> <span class="p">=</span> <span class="nv">$pgRef</span><span class="p">.</span><span class="n">ListProtectedVms</span><span class="p">()</span>
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>    <span class="k">foreach</span> <span class="p">(</span><span class="nv">$vm</span> <span class="k">in</span> <span class="nv">$vms</span><span class="p">)</span> <span class="p">{</span>
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>        <span class="nv">$output</span> <span class="p">+=</span> <span class="no">[PSCustomObject]</span><span class="p">@{</span>
-<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>            <span class="n">ProtectionGroup</span> <span class="p">=</span> <span class="nv">$pg</span><span class="p">.</span><span class="n">Name</span>
-<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>            <span class="n">VMName</span>          <span class="p">=</span> <span class="nv">$vm</span><span class="p">.</span><span class="n">Vm</span><span class="p">.</span><span class="n">MoRef</span><span class="p">.</span><span class="n">Value</span>
-<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>            <span class="n">State</span>           <span class="p">=</span> <span class="nv">$vm</span><span class="p">.</span><span class="n">State</span>
-<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>            <span class="n">PeerState</span>       <span class="p">=</span> <span class="nv">$vm</span><span class="p">.</span><span class="n">PeerState</span>
-<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a>        <span class="p">}</span>
-<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a>    <span class="p">}</span>
-<a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a><span class="p">}</span>
-<a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a>
-<a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a><span class="nv">$output</span> <span class="p">|</span> <span class="nb">Export-Csv</span> <span class="n">-Path</span> <span class="s2">&quot;C:\Backup\srm-protection-groups-</span><span class="p">$(</span><span class="nb">Get-Date</span> <span class="n">-Format</span> <span class="n">yyyyMMdd</span><span class="p">)</span><span class="s2">.csv&quot;</span> <span class="n">-NoTypeInformation</span>
-<a id="__codelineno-6-25" name="__codelineno-6-25" href="#__codelineno-6-25"></a><span class="nb">Write-Host</span> <span class="s2">&quot;Exported </span><span class="p">$(</span><span class="nv">$output</span><span class="p">.</span><span class="n">Count</span><span class="p">)</span><span class="s2"> protected VM entries&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># PowerCLI: Export all Protection Groups and their protected VMs</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">Import-Module</span> <span class="n">VMware</span><span class="p">.</span><span class="n">VimAutomation</span><span class="p">.</span><span class="n">Srm</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="nb">Connect-VIServer</span> <span class="n">-Server</span> <span class="n">vcenter-protected</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">com</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="nv">$srm</span> <span class="p">=</span> <span class="nb">Connect-SrmServer</span> <span class="n">-SrmServerAddress</span> <span class="n">srm-protected</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">com</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="nv">$srmApi</span> <span class="p">=</span> <span class="nv">$srm</span><span class="p">.</span><span class="n">ExtensionData</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="nv">$output</span> <span class="p">=</span> <span class="p">@()</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="nv">$pgs</span> <span class="p">=</span> <span class="nv">$srmApi</span><span class="p">.</span><span class="n">Protection</span><span class="p">.</span><span class="n">ListProtectionGroups</span><span class="p">()</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="k">foreach</span> <span class="p">(</span><span class="nv">$pgRef</span> <span class="k">in</span> <span class="nv">$pgs</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>    <span class="nv">$pg</span> <span class="p">=</span> <span class="nv">$pgRef</span><span class="p">.</span><span class="n">GetInfo</span><span class="p">()</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>    <span class="nv">$vms</span> <span class="p">=</span> <span class="nv">$pgRef</span><span class="p">.</span><span class="n">ListProtectedVms</span><span class="p">()</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>    <span class="k">foreach</span> <span class="p">(</span><span class="nv">$vm</span> <span class="k">in</span> <span class="nv">$vms</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>        <span class="nv">$output</span> <span class="p">+=</span> <span class="no">[PSCustomObject]</span><span class="p">@{</span>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>            <span class="n">ProtectionGroup</span> <span class="p">=</span> <span class="nv">$pg</span><span class="p">.</span><span class="n">Name</span>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>            <span class="n">VMName</span>          <span class="p">=</span> <span class="nv">$vm</span><span class="p">.</span><span class="n">Vm</span><span class="p">.</span><span class="n">MoRef</span><span class="p">.</span><span class="n">Value</span>
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>            <span class="n">State</span>           <span class="p">=</span> <span class="nv">$vm</span><span class="p">.</span><span class="n">State</span>
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>            <span class="n">PeerState</span>       <span class="p">=</span> <span class="nv">$vm</span><span class="p">.</span><span class="n">PeerState</span>
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>        <span class="p">}</span>
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>    <span class="p">}</span>
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a><span class="p">}</span>
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a><span class="nv">$output</span> <span class="p">|</span> <span class="nb">Export-Csv</span> <span class="n">-Path</span> <span class="s2">&quot;C:\Backup\srm-protection-groups-</span><span class="p">$(</span><span class="nb">Get-Date</span> <span class="n">-Format</span> <span class="n">yyyyMMdd</span><span class="p">)</span><span class="s2">.csv&quot;</span> <span class="n">-NoTypeInformation</span>
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a><span class="nb">Write-Host</span> <span class="s2">&quot;Exported </span><span class="p">$(</span><span class="nv">$output</span><span class="p">.</span><span class="n">Count</span><span class="p">)</span><span class="s2"> protected VM entries&quot;</span>
 </code></pre></div>
 <hr />
 <h2 id="restore-srm-after-vcenter-restore">Restore SRM After vCenter Restore<a class="headerlink" href="#restore-srm-after-vcenter-restore" title="Permanent link">&para;</a></h2>
@@ -9603,37 +9587,37 @@ Backup and Restore reference covering Backup Schedule Recommendation, SRM Config
 </ol>
 <h3 id="srm-appliance-re-deploy-and-re-register">SRM Appliance Re-Deploy and Re-Register<a class="headerlink" href="#srm-appliance-re-deploy-and-re-register" title="Permanent link">&para;</a></h3>
 <p>If the SRM appliance itself must be re-deployed (not just restored):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># 1. Deploy new SRM OVA</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="c1"># 2. During setup wizard, register with vCenter</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="c1"># 3. If vCenter still has SRM extension from old appliance, unregister first:</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1">#    vCenter → Administration → Solutions → Client Plugins</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1">#    Remove old SRM plugin entries</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># 4. After new registration, re-pair sites:</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="c1">#    SRM UI → Site Recovery → New Site Pair</span>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="c1"># 5. SRM reads Protection Groups and Recovery Plans from vCenter DB automatically</span>
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="c1">#    after pairing is established</span>
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>
-<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="c1"># 6. Re-add Array Managers (SRA credentials not recovered from vCenter backup)</span>
-<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="c1"># 7. Scan arrays to re-discover replicated devices</span>
-<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="c1"># 8. Run Configure All on all Protection Groups</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># 1. Deploy new SRM OVA</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># 2. During setup wizard, register with vCenter</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1"># 3. If vCenter still has SRM extension from old appliance, unregister first:</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1">#    vCenter → Administration → Solutions → Client Plugins</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1">#    Remove old SRM plugin entries</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># 4. After new registration, re-pair sites:</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1">#    SRM UI → Site Recovery → New Site Pair</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># 5. SRM reads Protection Groups and Recovery Plans from vCenter DB automatically</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="c1">#    after pairing is established</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="c1"># 6. Re-add Array Managers (SRA credentials not recovered from vCenter backup)</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="c1"># 7. Scan arrays to re-discover replicated devices</span>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="c1"># 8. Run Configure All on all Protection Groups</span>
 </code></pre></div>
 <h3 id="verify-recovery-after-restore">Verify Recovery After Restore<a class="headerlink" href="#verify-recovery-after-restore" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c"># PowerCLI: Check Protection Group health post-restore</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nv">$pgs</span> <span class="p">=</span> <span class="nv">$srmApi</span><span class="p">.</span><span class="n">Protection</span><span class="p">.</span><span class="n">ListProtectionGroups</span><span class="p">()</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="k">foreach</span> <span class="p">(</span><span class="nv">$pgRef</span> <span class="k">in</span> <span class="nv">$pgs</span><span class="p">)</span> <span class="p">{</span>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>    <span class="nv">$pg</span> <span class="p">=</span> <span class="nv">$pgRef</span><span class="p">.</span><span class="n">GetInfo</span><span class="p">()</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;PG: </span><span class="p">$(</span><span class="nv">$pg</span><span class="p">.</span><span class="n">Name</span><span class="p">)</span><span class="s2"> | State: </span><span class="p">$(</span><span class="nv">$pg</span><span class="p">.</span><span class="n">State</span><span class="p">)</span><span class="s2">&quot;</span>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="p">}</span>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c"># Check placeholder VMs exist</span>
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="nv">$vms</span> <span class="p">=</span> <span class="nv">$pgRef</span><span class="p">.</span><span class="n">ListProtectedVms</span><span class="p">()</span>
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="k">foreach</span> <span class="p">(</span><span class="nv">$vm</span> <span class="k">in</span> <span class="nv">$vms</span><span class="p">)</span> <span class="p">{</span>
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>    <span class="k">if</span> <span class="p">(</span><span class="nv">$vm</span><span class="p">.</span><span class="n">PeerState</span> <span class="o">-ne</span> <span class="s2">&quot;OK&quot;</span><span class="p">)</span> <span class="p">{</span>
-<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>        <span class="nb">Write-Warning</span> <span class="s2">&quot;Placeholder issue for VM: </span><span class="p">$(</span><span class="nv">$vm</span><span class="p">.</span><span class="n">Vm</span><span class="p">.</span><span class="n">MoRef</span><span class="p">.</span><span class="n">Value</span><span class="p">)</span><span class="s2"> — PeerState: </span><span class="p">$(</span><span class="nv">$vm</span><span class="p">.</span><span class="n">PeerState</span><span class="p">)</span><span class="s2">&quot;</span>
-<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>    <span class="p">}</span>
-<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c"># PowerCLI: Check Protection Group health post-restore</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nv">$pgs</span> <span class="p">=</span> <span class="nv">$srmApi</span><span class="p">.</span><span class="n">Protection</span><span class="p">.</span><span class="n">ListProtectionGroups</span><span class="p">()</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="k">foreach</span> <span class="p">(</span><span class="nv">$pgRef</span> <span class="k">in</span> <span class="nv">$pgs</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>    <span class="nv">$pg</span> <span class="p">=</span> <span class="nv">$pgRef</span><span class="p">.</span><span class="n">GetInfo</span><span class="p">()</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;PG: </span><span class="p">$(</span><span class="nv">$pg</span><span class="p">.</span><span class="n">Name</span><span class="p">)</span><span class="s2"> | State: </span><span class="p">$(</span><span class="nv">$pg</span><span class="p">.</span><span class="n">State</span><span class="p">)</span><span class="s2">&quot;</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="p">}</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="c"># Check placeholder VMs exist</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="nv">$vms</span> <span class="p">=</span> <span class="nv">$pgRef</span><span class="p">.</span><span class="n">ListProtectedVms</span><span class="p">()</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="k">foreach</span> <span class="p">(</span><span class="nv">$vm</span> <span class="k">in</span> <span class="nv">$vms</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>    <span class="k">if</span> <span class="p">(</span><span class="nv">$vm</span><span class="p">.</span><span class="n">PeerState</span> <span class="o">-ne</span> <span class="s2">&quot;OK&quot;</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>        <span class="nb">Write-Warning</span> <span class="s2">&quot;Placeholder issue for VM: </span><span class="p">$(</span><span class="nv">$vm</span><span class="p">.</span><span class="n">Vm</span><span class="p">.</span><span class="n">MoRef</span><span class="p">.</span><span class="n">Value</span><span class="p">)</span><span class="s2"> — PeerState: </span><span class="p">$(</span><span class="nv">$vm</span><span class="p">.</span><span class="n">PeerState</span><span class="p">)</span><span class="s2">&quot;</span>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>    <span class="p">}</span>
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="p">}</span>
 </code></pre></div>
 <hr />
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>

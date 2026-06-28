@@ -7768,23 +7768,7 @@ CLI Reference reference covering Backup Infrastructure Topology, Sessions & Hist
 *Applies to: Veeam 12.x*
 </div>
 <p><img alt="Veeam — CLI Reference" src="../../../../assets/backup-veeam-operations-cli-reference-index.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>center: &quot;Veeam&quot; {shape: rectangle}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>backup_infrastructure_topology: &quot;Backup Infrastructure Topology&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>restore_points: &quot;Restore Points&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>vm_restore: &quot;VM Restore&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>infrastructure: &quot;Infrastructure&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>configuration_backup: &quot;Configuration Backup&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>verify: &quot;Verify&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>center -&gt; backup_infrastructure_topology
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>center -&gt; restore_points
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>center -&gt; vm_restore
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>center -&gt; infrastructure
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>center -&gt; configuration_backup
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>center -&gt; verify
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp9kMEKwjAQRO_5isW7P9CDBz15EETEa4hx2wbbJGy3QhH_3TQtmEDwtuy-GWbnYQg1G2crINO0LIRGy0gVbG6Iqt_Ae2iVx3AOnLJNhx9xV_o5emlsTWpgGjWPhJKdd51rpiDdRwCOGQDXFSh6Eg7sgot3xvIQPC7LAs5xUdS8ernK5rgnWCVFNg8b-DxcUaOdrU0zkpoLksvXQXlI17D8Ws6HZOopVjkPRWbtG7Y7-F9rAuZdJYdfIcky90sOpfdSsxhafAGxq8oB?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Access:</strong> Backup admin role on backup server; target system credentials</li>
@@ -7833,47 +7817,47 @@ CLI Reference reference covering Backup Infrastructure Topology, Sessions & Hist
     class obj cloud</code></pre>
 <hr />
 <h2 id="restore-points">Restore Points<a class="headerlink" href="#restore-points" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># List restore points for a VM</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Get-VBRRestorePoint</span> <span class="n">-Name</span> <span class="s2">&quot;vm01&quot;</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">Name</span><span class="p">,</span> <span class="n">CreationTime</span><span class="p">,</span> <span class="n">IsCorrupted</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c"># Find latest restore point for a VM</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nb">Get-VBRRestorePoint</span> <span class="n">-Name</span> <span class="s2">&quot;vm01&quot;</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">CreationTime</span> <span class="n">-Descending</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">-First</span> <span class="n">1</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c"># Find restore points for all VMs in a job</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="nb">Get-VBRBackup</span> <span class="n">-Name</span> <span class="s2">&quot;prod-vm-daily&quot;</span> <span class="p">|</span> <span class="nb">Get-VBRRestorePoint</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># List restore points for a VM</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Get-VBRRestorePoint</span> <span class="n">-Name</span> <span class="s2">&quot;vm01&quot;</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">Name</span><span class="p">,</span> <span class="n">CreationTime</span><span class="p">,</span> <span class="n">IsCorrupted</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c"># Find latest restore point for a VM</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nb">Get-VBRRestorePoint</span> <span class="n">-Name</span> <span class="s2">&quot;vm01&quot;</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">CreationTime</span> <span class="n">-Descending</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">-First</span> <span class="n">1</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c"># Find restore points for all VMs in a job</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="nb">Get-VBRBackup</span> <span class="n">-Name</span> <span class="s2">&quot;prod-vm-daily&quot;</span> <span class="p">|</span> <span class="nb">Get-VBRRestorePoint</span>
 </code></pre></div>
 <hr />
 <h2 id="vm-restore">VM Restore<a class="headerlink" href="#vm-restore" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Instant VM recovery to original location</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nv">$rp</span> <span class="p">=</span> <span class="nb">Get-VBRRestorePoint</span> <span class="n">-Name</span> <span class="s2">&quot;vm01&quot;</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">CreationTime</span> <span class="n">-Descending</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">-First</span> <span class="n">1</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nb">Start-VBRRestoreVM</span> <span class="n">-RestorePoint</span> <span class="nv">$rp</span> <span class="n">-Reason</span> <span class="s2">&quot;DR test&quot;</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c"># Full VM restore</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="nb">Start-VBRVMFLRRestore</span> <span class="n">-RestorePoint</span> <span class="nv">$rp</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c"># File-level restore (Windows)</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="nb">Start-VBRWindowsFileRestore</span> <span class="n">-RestorePoint</span> <span class="nv">$rp</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Instant VM recovery to original location</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nv">$rp</span> <span class="p">=</span> <span class="nb">Get-VBRRestorePoint</span> <span class="n">-Name</span> <span class="s2">&quot;vm01&quot;</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">CreationTime</span> <span class="n">-Descending</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">-First</span> <span class="n">1</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nb">Start-VBRRestoreVM</span> <span class="n">-RestorePoint</span> <span class="nv">$rp</span> <span class="n">-Reason</span> <span class="s2">&quot;DR test&quot;</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c"># Full VM restore</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="nb">Start-VBRVMFLRRestore</span> <span class="n">-RestorePoint</span> <span class="nv">$rp</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c"># File-level restore (Windows)</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="nb">Start-VBRWindowsFileRestore</span> <span class="n">-RestorePoint</span> <span class="nv">$rp</span>
 </code></pre></div>
 <hr />
 <h2 id="infrastructure">Infrastructure<a class="headerlink" href="#infrastructure" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># List repositories with free/total space</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Get-VBRRepository</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">Name</span><span class="p">,</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;FreeTB&quot;</span><span class="p">;</span> <span class="n">E</span><span class="p">={</span><span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">FreeSpace</span><span class="p">/</span><span class="n">1TB</span><span class="p">,</span><span class="n">2</span><span class="p">)}},</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>  <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;TotalTB&quot;</span><span class="p">;</span> <span class="n">E</span><span class="p">={</span><span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">TotalSpace</span><span class="p">/</span><span class="n">1TB</span><span class="p">,</span><span class="n">2</span><span class="p">)}}</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c"># List proxies</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="nb">Get-VBRViProxy</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c"># List protected VMs</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="nb">Get-VBRProtectedVM</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># List repositories with free/total space</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">Get-VBRRepository</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">Name</span><span class="p">,</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>  <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;FreeTB&quot;</span><span class="p">;</span> <span class="n">E</span><span class="p">={</span><span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">FreeSpace</span><span class="p">/</span><span class="n">1TB</span><span class="p">,</span><span class="n">2</span><span class="p">)}},</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>  <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;TotalTB&quot;</span><span class="p">;</span> <span class="n">E</span><span class="p">={</span><span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">TotalSpace</span><span class="p">/</span><span class="n">1TB</span><span class="p">,</span><span class="n">2</span><span class="p">)}}</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c"># List proxies</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="nb">Get-VBRViProxy</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c"># List protected VMs</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="nb">Get-VBRProtectedVM</span>
 </code></pre></div>
 <hr />
 <h2 id="configuration-backup">Configuration Backup<a class="headerlink" href="#configuration-backup" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Export configuration backup</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">Export-VBRConfiguration</span> <span class="n">-Path</span> <span class="s2">&quot;C:\vbr-config-backup.xml&quot;</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c"># Check last config backup</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="nb">Get-VBRConfigurationDatabaseBackup</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Export configuration backup</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Export-VBRConfiguration</span> <span class="n">-Path</span> <span class="s2">&quot;C:\vbr-config-backup.xml&quot;</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c"># Check last config backup</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="nb">Get-VBRConfigurationDatabaseBackup</span>
 </code></pre></div>
 <hr />
 <h2 id="verify">Verify<a class="headerlink" href="#verify" title="Permanent link">&para;</a></h2>

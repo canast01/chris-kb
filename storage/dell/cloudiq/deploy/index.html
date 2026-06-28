@@ -8596,25 +8596,7 @@ Step-by-step guide to connecting Dell storage systems to CloudIQ via the Secure 
     s0 --&gt; s1 --&gt; s2 --&gt; s3 --&gt; s4 --&gt; s5 --&gt; s6 --&gt; s7
     style s4 fill:#2e7d32,color:#fff,stroke:#1b5e20
     style s7 fill:#2e7d32,color:#fff,stroke:#1b5e20</code></pre>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>plan: &quot;Plan&quot; {shape: oval}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>prerequisites: &quot;Prerequisites&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>install_secure_connect_gateway_scg: &quot;Install Secure Connect Gateway (SCG)&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>register_storage_systems_with_scg: &quot;Register Storage Systems with SCG&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>verify_telemetry_in_cloudiq_portal: &quot;Verify Telemetry in CloudIQ Portal&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>configure_alert_notifications: &quot;Configure Alert Notifications&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>add_additional_storage_systems: &quot;Add Additional Storage Systems&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>validate: &quot;Validate&quot; {shape: oval}
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>plan -&gt; prerequisites
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>prerequisites -&gt; install_secure_connect_gateway_scg
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>install_secure_connect_gateway_scg -&gt; register_storage_systems_with_scg
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>register_storage_systems_with_scg -&gt; verify_telemetry_in_cloudiq_portal
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>verify_telemetry_in_cloudiq_portal -&gt; configure_alert_notifications
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>configure_alert_notifications -&gt; add_additional_storage_systems
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>add_additional_storage_systems -&gt; validate
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNkrFuwjAQhvc8xalTO_QFGCqhDIilok3V9WTFhznJ2ME2oKji3etLQgsoIgxRYt2XT8n9v-ZAdWLvZhDYbFJRNFblw9Mq357gJ25UQzPwB2VPRRMo0G7PkRNFYS7P_7AYlTOWTgW7mJS1GKneB8LaO5eHaFSio2ox1iZrlj0EVQdB2UOw6CF4rsrFy6g9kOGYKGBMPihDGNt83EY8ctoM8s-BgapnoOoZEAayetR8oMDrFhNZ2lIKLbLD2vq95h02PuTPzervDoKvMwTsoBRo-QGrDhp15yWs2cg6lKWQ0PnEa66VpCBbLc9zmMsc3i_no0alNeaLhVD2dhtZOdca5n_A7SrGN6As65yA_OfweFuHrirw-gZXvbhuiYynS_BAT0Q0mfd0I0QzHe4D-YvobpL3c5bX78c2kWr3I0MwxS-ijG8B?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Access:</strong> admin credentials for the target system and any upstream dependencies (DNS, NTP, vCenter, directory services)</li>
@@ -8727,14 +8709,14 @@ Step-by-step guide to connecting Dell storage systems to CloudIQ via the Secure 
 <li>If adding a new array type not previously registered, confirm the SCG software version supports that array model — update SCG from <strong>Settings → Software Update</strong> if required.</li>
 </ol>
 <p><strong>SCG update process:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># SSH to SCG appliance</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ssh<span class="w"> </span>admin@&lt;scg-ip&gt;
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Check current version</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>sudo<span class="w"> </span>/opt/dell/scg/bin/scg-version.sh
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Apply available update from the SCG UI:</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Settings → Software Update → Check for Updates → Install</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># SSH to SCG appliance</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ssh<span class="w"> </span>admin@&lt;scg-ip&gt;
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Check current version</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>sudo<span class="w"> </span>/opt/dell/scg/bin/scg-version.sh
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Apply available update from the SCG UI:</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># Settings → Software Update → Check for Updates → Install</span>
 </code></pre></div>
 <hr />
 <h2 id="validate-data-collection">Validate Data Collection<a class="headerlink" href="#validate-data-collection" title="Permanent link">&para;</a></h2>

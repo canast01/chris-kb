@@ -9406,23 +9406,7 @@ Why vSAN resyncs happen, how CLOM decides when and where to rebuild, what drives
 </div>
 <p><img alt="vSAN — Resync Mechanics" src="../../../../../assets/virtualization-vmware-vsan-architecture-resync-mechanics.svg" /></p>
 <hr />
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>center: &quot;vSAN&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>why_resync_happens: &quot;Why Resync Happens&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>how_clom_decides_where_to_rebuild: &quot;How CLOM Decides Where to Rebuild&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>capacity_headroom_why_30_matters: &quot;Capacity Headroom: Why 30% Matters&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>resync_duration_and_throughput: &quot;Resync Duration and Throughput&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>the_throttle_trading_speed_for_vm_st: &quot;The Throttle: Trading Speed for VM Stability&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>deltasync_vs_full_rebuild: &quot;Delta-Sync vs Full Rebuild&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>center -&gt; why_resync_happens
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>center -&gt; how_clom_decides_where_to_rebuild
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>center -&gt; capacity_headroom_why_30_matters
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>center -&gt; resync_duration_and_throughput
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>center -&gt; the_throttle_trading_speed_for_vm_st
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>center -&gt; deltasync_vs_full_rebuild
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNkjFrwzAQhXf_iiPQMRDI5qFQEkqGpoU6NOOhSFdLoEhGku2akv9eyTatoW7STeg-vXv3TkI54kFZk4NTpQxZxskEcjksmuLheQGfXrKKcpD0wUprLlkrO3TkO8MxVioyPrJH2cFrfwm74fLnZWrATKnpkknbItf2jIK4EuSxleQIg42Kp1ppEaV2toXN08setgMDx8RAsLFBz8wqc1YxrkKHkphwNrZIPtcrPLMQx0keNyMCuxHJIdler-5gP0CzyuOsonYs5YTMCAzS2bqUVR2i7jj3dgQgAnD4BmY1g6ReIwQdD44JZUr0FZHAd-uwOaNPygdJvVLCcjgMHBSJg8jB2x6KwE5Kx6lm-wjSgfX2G4_vtdaTnLeptiyS9cbDYyxeDXj8F7C8h98_YFK8ueIJe2tpE_T6Fibgf6Kd4H8mlH0BeJ4mPg==?" /></p>
 <h2 id="why-resync-happens">Why Resync Happens<a class="headerlink" href="#why-resync-happens" title="Permanent link">&para;</a></h2>
 <p>Resync is vSAN's mechanism for maintaining the data protection promises defined in storage policies. It runs whenever the current state of an object does not match its policy.</p>
 <h3 id="trigger-1-component-lost-failure-driven">Trigger 1 — Component Lost (Failure-Driven)<a class="headerlink" href="#trigger-1-component-lost-failure-driven" title="Permanent link">&para;</a></h3>
@@ -9436,7 +9420,7 @@ Why vSAN resyncs happen, how CLOM decides when and where to rebuild, what drives
 <h3 id="trigger-3-rebalance">Trigger 3 — Rebalance<a class="headerlink" href="#trigger-3-rebalance" title="Permanent link">&para;</a></h3>
 <p>When a new host is added to the cluster or the distribution of components across hosts becomes uneven, vSAN rebalances by migrating components to equalise utilisation. This is proactive and non-urgent — it runs in the background with lower priority than failure-driven rebuilds.</p>
 <p>Rebalance can also be triggered manually:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>cluster<span class="w"> </span>rebalance<span class="w"> </span>start
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>cluster<span class="w"> </span>rebalance<span class="w"> </span>start
 </code></pre></div>
 <h3 id="trigger-4-configuration-changes">Trigger 4 — Configuration Changes<a class="headerlink" href="#trigger-4-configuration-changes" title="Permanent link">&para;</a></h3>
 <p>Certain cluster-wide changes force a full or partial resync of all objects:</p>
@@ -9538,12 +9522,12 @@ Why vSAN resyncs happen, how CLOM decides when and where to rebuild, what drives
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check cluster-wide capacity</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Used Capacity|Total Capacity&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Check cluster-wide capacity</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Used Capacity|Total Capacity&quot;</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># PowerCLI capacity check with percentage</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nv">$u</span> <span class="p">=</span> <span class="nb">Get-VsanSpaceUsage</span> <span class="n">-Cluster</span> <span class="p">(</span><span class="nb">Get-Cluster</span> <span class="s2">&quot;VSAN-LON-01&quot;</span><span class="p">)</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="no">[Math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$u</span><span class="p">.</span><span class="n">UsedCapacityGB</span> <span class="p">/</span> <span class="nv">$u</span><span class="p">.</span><span class="n">TotalCapacityGB</span> <span class="p">*</span> <span class="n">100</span><span class="p">,</span> <span class="n">1</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># PowerCLI capacity check with percentage</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nv">$u</span> <span class="p">=</span> <span class="nb">Get-VsanSpaceUsage</span> <span class="n">-Cluster</span> <span class="p">(</span><span class="nb">Get-Cluster</span> <span class="s2">&quot;VSAN-LON-01&quot;</span><span class="p">)</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="no">[Math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$u</span><span class="p">.</span><span class="n">UsedCapacityGB</span> <span class="p">/</span> <span class="nv">$u</span><span class="p">.</span><span class="n">TotalCapacityGB</span> <span class="p">*</span> <span class="n">100</span><span class="p">,</span> <span class="n">1</span><span class="p">)</span>
 </code></pre></div>
 <hr />
 <h2 id="resync-duration-and-throughput">Resync Duration and Throughput<a class="headerlink" href="#resync-duration-and-throughput" title="Permanent link">&para;</a></h2>
@@ -9556,21 +9540,21 @@ Why vSAN resyncs happen, how CLOM decides when and where to rebuild, what drives
 <h3 id="disk-write-throughput">Disk write throughput<a class="headerlink" href="#disk-write-throughput" title="Permanent link">&para;</a></h3>
 <p>The destination disk's sequential write throughput limits rebuild speed. NVMe SSDs (ESA or OSA all-flash) are rarely the bottleneck. Hybrid clusters (HDD capacity disks) can limit rebuild to 100–200 MB/s per disk.</p>
 <h3 id="estimating-rebuild-time">Estimating rebuild time<a class="headerlink" href="#estimating-rebuild-time" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Get current resync queue</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>resync<span class="w"> </span>summary<span class="w"> </span>get
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># Shows: bytes remaining + current throughput → estimate ETA</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Get current resync queue</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>resync<span class="w"> </span>summary<span class="w"> </span>get
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># Shows: bytes remaining + current throughput → estimate ETA</span>
 </code></pre></div>
 <hr />
 <h2 id="the-throttle-trading-speed-for-vm-stability">The Throttle: Trading Speed for VM Stability<a class="headerlink" href="#the-throttle-trading-speed-for-vm-stability" title="Permanent link">&para;</a></h2>
 <p>The resync throttle limits the IOPS consumed by rebuild operations per host. It protects VM performance during production hours at the cost of slower recovery.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Check current throttle</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>resync<span class="w"> </span>throttle<span class="w"> </span>get
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Set to 500 IOPS per host (business-hours safe)</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>resync<span class="w"> </span>throttle<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--throttle<span class="w"> </span><span class="m">500</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Remove throttle — run at full speed (maintenance windows)</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>resync<span class="w"> </span>throttle<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--throttle<span class="w"> </span><span class="m">0</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check current throttle</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>resync<span class="w"> </span>throttle<span class="w"> </span>get
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Set to 500 IOPS per host (business-hours safe)</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>resync<span class="w"> </span>throttle<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--throttle<span class="w"> </span><span class="m">500</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Remove throttle — run at full speed (maintenance windows)</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>resync<span class="w"> </span>throttle<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--throttle<span class="w"> </span><span class="m">0</span>
 </code></pre></div>
 <p><strong>Recommended schedule:</strong></p>
 <table>
@@ -9609,9 +9593,9 @@ Why vSAN resyncs happen, how CLOM decides when and where to rebuild, what drives
 <h3 id="delta-sync-stale-component">Delta-sync (STALE component)<a class="headerlink" href="#delta-sync-stale-component" title="Permanent link">&para;</a></h3>
 <p>The component still exists on its original disk (host was offline temporarily), but it missed some writes. Only the changed blocks need to be copied — this is significantly faster.</p>
 <p><strong>How vSAN tracks what changed:</strong> When a write is committed to a RAID-1 object, a per-block dirty bitmap is maintained for each component. When a host reconnects, CLOM uses the dirty bitmap to send only the changed blocks.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Resync list shows operation type</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>resync<span class="w"> </span>list
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1"># Look for &quot;type&quot; field: DELTA vs FULL</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Resync list shows operation type</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>resync<span class="w"> </span>list
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># Look for &quot;type&quot; field: DELTA vs FULL</span>
 </code></pre></div>
 <p>Delta-sync is why a host that returns from a short reboot syncs in minutes, while a replacement disk might take hours — even if the object sizes are identical.</p>
 <hr />
@@ -9623,8 +9607,8 @@ Why vSAN resyncs happen, how CLOM decides when and where to rebuild, what drives
 - After <code>clomRepairDelay</code>, CLOM rebuilds those components on the preferred site
 - When the partition resolves, CLOM must re-synchronise the isolated site back</p>
 <p>This can trigger large resync volumes after a site partition event. Monitor inter-site bandwidth carefully — the vSAN stretched cluster replication link carries both VM write traffic and resync traffic.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Check inter-site resync specifically (stretched cluster)</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>resync<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;remote\|site&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Check inter-site resync specifically (stretched cluster)</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>resync<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;remote\|site&quot;</span>
 </code></pre></div>
 
 

@@ -9478,25 +9478,7 @@
 *Applies to: vSphere 7.x / 8.x*
 </div>
 <p><img alt="ESXi Host Maintenance Mode Runbook" src="../../../../../assets/virtualization-vmware-operations-runbooks-esxi-host-maintena.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>@startuml
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>skinparam sequenceArrowThickness 1.5
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>skinparam roundcorner 5
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>actor &quot;Responder&quot; as A
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>participant &quot;Runbooks System&quot; as B
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>participant &quot;Dependent System&quot; as C
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>A -&gt; B: Run This Routine
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>B --&gt; A: OK
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>A -&gt; B: vLCM Remediation Path
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>B --&gt; A: OK
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>A -&gt; B: Troubleshooting
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>B --&gt; A: OK
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>A -&gt; B: Verify
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>B --&gt; A: OK
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>@enduml
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/plantuml/svg/eNpt0LFuwkAMBuD9nsJiB6kDCwNKQre2Kkoj9uPiNqcQO7V9Rbw9bocKJDZL_2fLdqUWxcp0CjpmmqPECRS_C1LCWoTP3ZDTSKgKT6v1DRIu1CcWQoF1CDEZCyxa1JmpR1lAVKiDW8spz5HMw0JH5lHh46KG0x9p7skzzujtXt6YXQg1LLfQbMBHgG-k0HKxTBgaWHpSb-D95R_9vO7eoMUJ-xwtM8E-2vBQdn7F8YQ6MPu0r4fmgJI_L3dRqHzJ359dARbdY9M=?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Access:</strong> Admin credentials on all affected systems</li>
@@ -9513,8 +9495,8 @@
 <ol>
 <li>
 <p><strong>Check cluster capacity</strong> — confirm the remaining hosts can absorb the host's workload:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nb">Connect-VIServer</span> <span class="n">-Server</span> <span class="n">vcenter</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">local</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Get-Cluster</span> <span class="s2">&quot;Production&quot;</span> <span class="p">|</span> <span class="nb">Get-VMHost</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">Name</span><span class="p">,</span> <span class="n">CpuUsageMhz</span><span class="p">,</span> <span class="n">MemoryUsageMB</span><span class="p">,</span> <span class="n">ConnectionState</span>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nb">Connect-VIServer</span> <span class="n">-Server</span> <span class="n">vcenter</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">local</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Get-Cluster</span> <span class="s2">&quot;Production&quot;</span> <span class="p">|</span> <span class="nb">Get-VMHost</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">Name</span><span class="p">,</span> <span class="n">CpuUsageMhz</span><span class="p">,</span> <span class="n">MemoryUsageMB</span><span class="p">,</span> <span class="n">ConnectionState</span>
 </code></pre></div>
    Rule of thumb: cluster CPU and RAM usage must be below 70% before removing a host.</p>
 </li>
@@ -9523,14 +9505,14 @@
 </li>
 <li>
 <p><strong>Check vSAN health</strong> (if vSAN cluster):
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>cluster<span class="w"> </span>get
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>health<span class="w"> </span>cluster<span class="w"> </span>list
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>cluster<span class="w"> </span>get
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>health<span class="w"> </span>cluster<span class="w"> </span>list
 </code></pre></div>
    All health checks must be green before entering maintenance mode.</p>
 </li>
 <li>
 <p><strong>Check for VMs with DRS override set to Manual or Disabled</strong> — these will not auto-migrate:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">DrsAutomationLevel</span> <span class="o">-ne</span> <span class="s2">&quot;FullyAutomated&quot;</span> <span class="p">}</span>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">DrsAutomationLevel</span> <span class="o">-ne</span> <span class="s2">&quot;FullyAutomated&quot;</span> <span class="p">}</span>
 </code></pre></div>
    Manually vMotion any VMs that DRS will not migrate.</p>
 </li>
@@ -9539,18 +9521,18 @@
 </li>
 </ol>
 <p>Or via PowerCLI:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nb">Get-VMHost</span> <span class="s2">&quot;esxi-01.example.local&quot;</span> <span class="p">|</span> <span class="nb">Set-VMHost</span> <span class="n">-State</span> <span class="n">Maintenance</span>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nb">Get-VMHost</span> <span class="s2">&quot;esxi-01.example.local&quot;</span> <span class="p">|</span> <span class="nb">Set-VMHost</span> <span class="n">-State</span> <span class="n">Maintenance</span>
 </code></pre></div></p>
 <ol>
 <li>
 <p><strong>Monitor DRS migration</strong> — vCenter Events tab or:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nb">Get-VMHost</span> <span class="s2">&quot;esxi-01.example.local&quot;</span> <span class="p">|</span> <span class="nb">Get-VM</span>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nb">Get-VMHost</span> <span class="s2">&quot;esxi-01.example.local&quot;</span> <span class="p">|</span> <span class="nb">Get-VM</span>
 </code></pre></div>
    Wait until no VMs remain on the host. Duration depends on VM count and network bandwidth.</p>
 </li>
 <li>
 <p><strong>Confirm maintenance mode state</strong>:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nb">Get-VMHost</span> <span class="s2">&quot;esxi-01.example.local&quot;</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">Name</span><span class="p">,</span> <span class="n">ConnectionState</span><span class="p">,</span> <span class="n">PowerState</span>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nb">Get-VMHost</span> <span class="s2">&quot;esxi-01.example.local&quot;</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">Name</span><span class="p">,</span> <span class="n">ConnectionState</span><span class="p">,</span> <span class="n">PowerState</span>
 </code></pre></div>
    Expected: <code>ConnectionState = Connected</code>, <code>PowerState = PoweredOn</code>, state = Maintenance.</p>
 </li>
@@ -9562,7 +9544,7 @@
 </li>
 </ol>
 <p>Or via PowerCLI:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nb">Get-VMHost</span> <span class="s2">&quot;esxi-01.example.local&quot;</span> <span class="p">|</span> <span class="nb">Set-VMHost</span> <span class="n">-State</span> <span class="n">Connected</span>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nb">Get-VMHost</span> <span class="s2">&quot;esxi-01.example.local&quot;</span> <span class="p">|</span> <span class="nb">Set-VMHost</span> <span class="n">-State</span> <span class="n">Connected</span>
 </code></pre></div></p>
 <ol>
 <li><strong>Verify host rejoins cluster</strong> — confirm host shows Connected and DRS re-balances VMs within a few minutes.</li>
@@ -9570,10 +9552,10 @@
 <hr />
 <h2 id="vlcm-remediation-path">vLCM Remediation Path<a class="headerlink" href="#vlcm-remediation-path" title="Permanent link">&para;</a></h2>
 <p>When using vLCM (Lifecycle Manager) to patch a host, the remediation workflow handles maintenance mode automatically:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Cluster → Updates → Hosts → check host compliance
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>  Non-compliant hosts → Remediate
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>  vLCM enters maintenance mode → applies patch → exits maintenance mode
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>  Each host remediated sequentially by default (parallel optional)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Cluster → Updates → Hosts → check host compliance
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>  Non-compliant hosts → Remediate
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>  vLCM enters maintenance mode → applies patch → exits maintenance mode
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>  Each host remediated sequentially by default (parallel optional)
 </code></pre></div>
 <p>Monitor progress: Cluster → Monitor → Tasks.</p>
 <hr />

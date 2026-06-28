@@ -7185,29 +7185,7 @@ P0 incident response for ransomware or crypto-locker activity detected on infras
 <blockquote>
 <p><strong>Severity: P0</strong> — Engage security team and management immediately. Contact cyber insurance before taking any recovery actions.</p>
 </blockquote>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>@startuml
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>skinparam sequenceArrowThickness 1.5
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>skinparam roundcorner 5
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>actor &quot;Responder&quot; as A
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>participant &quot;Incident Response System&quot; as B
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>participant &quot;Dependent System&quot; as C
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>A -&gt; B: Symptoms
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>B --&gt; A: OK
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>A -&gt; B: Immediate Response (First 15 Minutes)
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>B --&gt; A: OK
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>A -&gt; B: Isolate  Determine Scope
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>B --&gt; A: OK
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>A -&gt; B: Preserve Evidence
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>B --&gt; A: OK
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>A -&gt; B: Assess Clean Backups
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>B --&gt; A: OK
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>A -&gt; B: Recovery Options
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>B --&gt; A: OK
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>@enduml
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/plantuml/svg/eNpt0c9qwzAMBvC7n0LktB066CGXHkaTdoMyRke3FzDOBzOJ_0xSMvr2czrYWsjNyD_hT_JW1LKOYTDS-5gt20CCrxHRoWFO3x-f3vURIrR-qK8QpzF2LnEEU22MdZqYqhMkp9iBK7JCjSlWvfPZRqXqEJ3vUE6_SkDvZ1GEi21v7R4Z8YKvzM6YhlaP1G5KNWRNQUxLq1JpNnR8-bs8hIDOW8X_S3fPnkVpXdOrj6NC7pc7JQ1zH-2h4OBjyehSxiJ-Ywh4Aj1N81xuWTUi8_Z2A2yk1rp-zMupT3BpAp_pmNWX0DfIbMs65m_6ARIhhjE=?" /></p>
 <h2 id="symptoms">Symptoms<a class="headerlink" href="#symptoms" title="Permanent link">&para;</a></h2>
 <ul>
 <li>Mass file rename or encryption across shared datastores</li>
@@ -7238,13 +7216,13 @@ NSX Manager → Security → Distributed Firewall → Add rule: Block ALL from a
 <li>May violate sanctions regulations depending on threat actor</li>
 </ul>
 <h2 id="isolate-determine-scope">Isolate — Determine Scope<a class="headerlink" href="#isolate-determine-scope" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># List all VMs and datastore usage</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">Name</span><span class="p">,</span><span class="n">PowerState</span><span class="p">,@{</span><span class="n">n</span><span class="p">=</span><span class="s1">&#39;Datastore&#39;</span><span class="p">;</span><span class="n">e</span><span class="p">={(</span><span class="nb">Get-Datastore</span> <span class="n">-VM</span> <span class="nv">$_</span><span class="p">).</span><span class="n">Name</span><span class="p">}}</span> <span class="p">|</span> <span class="nb">Sort </span><span class="n">Datastore</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c"># Check if backup repos are reachable</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nb">Get-VBRBackupRepository</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">Name</span><span class="p">,</span><span class="n">FriendlyPath</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    <span class="no">[PSCustomObject]</span><span class="p">@{</span> <span class="n">Name</span><span class="p">=</span><span class="nv">$_</span><span class="p">.</span><span class="n">Name</span><span class="p">;</span> <span class="n">Reachable</span><span class="p">=(</span><span class="nb">Test-Path</span> <span class="nv">$_</span><span class="p">.</span><span class="n">FriendlyPath</span><span class="p">)</span> <span class="p">}</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># List all VMs and datastore usage</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">Name</span><span class="p">,</span><span class="n">PowerState</span><span class="p">,@{</span><span class="n">n</span><span class="p">=</span><span class="s1">&#39;Datastore&#39;</span><span class="p">;</span><span class="n">e</span><span class="p">={(</span><span class="nb">Get-Datastore</span> <span class="n">-VM</span> <span class="nv">$_</span><span class="p">).</span><span class="n">Name</span><span class="p">}}</span> <span class="p">|</span> <span class="nb">Sort </span><span class="n">Datastore</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c"># Check if backup repos are reachable</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nb">Get-VBRBackupRepository</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">Name</span><span class="p">,</span><span class="n">FriendlyPath</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="no">[PSCustomObject]</span><span class="p">@{</span> <span class="n">Name</span><span class="p">=</span><span class="nv">$_</span><span class="p">.</span><span class="n">Name</span><span class="p">;</span> <span class="n">Reachable</span><span class="p">=(</span><span class="nb">Test-Path</span> <span class="nv">$_</span><span class="p">.</span><span class="n">FriendlyPath</span><span class="p">)</span> <span class="p">}</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="p">}</span>
 </code></pre></div>
 <p>Questions to answer:
 - Which VMs are actively encrypting? (check write IOPS per VM in vCenter)
@@ -7252,8 +7230,8 @@ NSX Manager → Security → Distributed Firewall → Add rule: Block ALL from a
 - Has the encryption reached backup repositories?</p>
 <h2 id="preserve-evidence">Preserve Evidence<a class="headerlink" href="#preserve-evidence" title="Permanent link">&para;</a></h2>
 <p>Before any recovery action:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Snapshot affected VMs with memory capture</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">Get-VM</span> <span class="n">-Name</span> <span class="s2">&quot;AffectedVM&quot;</span> <span class="p">|</span> <span class="nb">New-Snapshot</span> <span class="n">-Name</span> <span class="s2">&quot;Forensic-</span><span class="p">$(</span><span class="nb">Get-Date</span> <span class="n">-Format</span> <span class="n">yyyyMMdd-HHmm</span><span class="p">)</span><span class="s2">&quot;</span> <span class="n">-Memory</span><span class="p">:</span><span class="nv">$true</span> <span class="n">-Quiesce</span><span class="p">:</span><span class="nv">$false</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Snapshot affected VMs with memory capture</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Get-VM</span> <span class="n">-Name</span> <span class="s2">&quot;AffectedVM&quot;</span> <span class="p">|</span> <span class="nb">New-Snapshot</span> <span class="n">-Name</span> <span class="s2">&quot;Forensic-</span><span class="p">$(</span><span class="nb">Get-Date</span> <span class="n">-Format</span> <span class="n">yyyyMMdd-HHmm</span><span class="p">)</span><span class="s2">&quot;</span> <span class="n">-Memory</span><span class="p">:</span><span class="nv">$true</span> <span class="n">-Quiesce</span><span class="p">:</span><span class="nv">$false</span>
 </code></pre></div>
 <ul>
 <li>Export NSX flow logs: NSX Manager → Operations → Flow Monitoring → Export last 24h</li>
@@ -7261,15 +7239,15 @@ NSX Manager → Security → Distributed Firewall → Add rule: Block ALL from a
 <li>Record the exact time of first observed symptoms</li>
 </ul>
 <h2 id="assess-clean-backups">Assess Clean Backups<a class="headerlink" href="#assess-clean-backups" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Find restore points before suspected infection time</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nv">$infectionTime</span> <span class="p">=</span> <span class="nb">Get-Date</span> <span class="s2">&quot;2026-06-21 08:00&quot;</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="nb">Get-VBRRestorePoint</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">CreationTime</span> <span class="o">-lt</span> <span class="nv">$infectionTime</span> <span class="p">}</span> <span class="p">|</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span><span class="n">CreationTime</span><span class="p">,@{</span><span class="n">n</span><span class="p">=</span><span class="s1">&#39;SizeGB&#39;</span><span class="p">;</span><span class="n">e</span><span class="p">={</span><span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">ApproxSize</span><span class="p">/</span><span class="n">1GB</span><span class="p">,</span><span class="n">1</span><span class="p">)}}</span> <span class="p">|</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>    <span class="nb">Sort-Object</span> <span class="n">CreationTime</span> <span class="n">-Descending</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">10</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Find restore points before suspected infection time</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nv">$infectionTime</span> <span class="p">=</span> <span class="nb">Get-Date</span> <span class="s2">&quot;2026-06-21 08:00&quot;</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nb">Get-VBRRestorePoint</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">CreationTime</span> <span class="o">-lt</span> <span class="nv">$infectionTime</span> <span class="p">}</span> <span class="p">|</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span><span class="n">CreationTime</span><span class="p">,@{</span><span class="n">n</span><span class="p">=</span><span class="s1">&#39;SizeGB&#39;</span><span class="p">;</span><span class="n">e</span><span class="p">={</span><span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">ApproxSize</span><span class="p">/</span><span class="n">1GB</span><span class="p">,</span><span class="n">1</span><span class="p">)}}</span> <span class="p">|</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>    <span class="nb">Sort-Object</span> <span class="n">CreationTime</span> <span class="n">-Descending</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">10</span>
 </code></pre></div>
 <p>Check Pure SafeMode snapshots (immutable — cannot be deleted by ransomware):
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>puresnapshot<span class="w"> </span>list<span class="w"> </span>--pgrouplist<span class="w"> </span>&lt;pgroup&gt;<span class="w"> </span>--sort<span class="w"> </span>created<span class="w"> </span>--reverse
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># Verify eradication period (default 24h) has not expired</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>puresnapshot<span class="w"> </span>list<span class="w"> </span>--pgrouplist<span class="w"> </span>&lt;pgroup&gt;<span class="w"> </span>--sort<span class="w"> </span>created<span class="w"> </span>--reverse
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># Verify eradication period (default 24h) has not expired</span>
 </code></pre></div></p>
 <p>Check Veeam Hardened Repository: confirm immutability lock is active and unexpired.</p>
 <h2 id="recovery-options">Recovery Options<a class="headerlink" href="#recovery-options" title="Permanent link">&para;</a></h2>
@@ -7310,11 +7288,11 @@ NSX Manager → Security → Distributed Firewall → Add rule: Block ALL from a
 </tbody>
 </table>
 <h3 id="option-a-pure-safemode-restore">Option A — Pure SafeMode Restore<a class="headerlink" href="#option-a-pure-safemode-restore" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># List available immutable snapshots</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>puresnapshot<span class="w"> </span>list<span class="w"> </span>--pgrouplist<span class="w"> </span>&lt;pgroup&gt;
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Restore volume from clean snapshot</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>purevol<span class="w"> </span>copy<span class="w"> </span>&lt;pgroup&gt;.&lt;snapshot&gt;.&lt;vol&gt;<span class="w"> </span>&lt;restore-vol-name&gt;<span class="w"> </span>--overwrite
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># List available immutable snapshots</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>puresnapshot<span class="w"> </span>list<span class="w"> </span>--pgrouplist<span class="w"> </span>&lt;pgroup&gt;
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Restore volume from clean snapshot</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>purevol<span class="w"> </span>copy<span class="w"> </span>&lt;pgroup&gt;.&lt;snapshot&gt;.&lt;vol&gt;<span class="w"> </span>&lt;restore-vol-name&gt;<span class="w"> </span>--overwrite
 </code></pre></div>
 <h3 id="option-b-veeam-restore-from-hardened-repository">Option B — Veeam Restore from Hardened Repository<a class="headerlink" href="#option-b-veeam-restore-from-hardened-repository" title="Permanent link">&para;</a></h3>
 <ol>
@@ -7324,14 +7302,14 @@ NSX Manager → Security → Distributed Firewall → Add rule: Block ALL from a
 <li>Restore to isolated network first, validate, then reconnect</li>
 </ol>
 <h2 id="communication-template">Communication Template<a class="headerlink" href="#communication-template" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Subject: [P0 INCIDENT] Ransomware Activity Detected — [Date/Time]
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>Status: Contained / Investigating / Recovering
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>Affected systems: [list]
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>Impact: [describe user/service impact]
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>Actions taken: [isolation steps, backup assessment, recovery plan]
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>Next update: [time]
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>Incident commander: [name/channel]
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Subject: [P0 INCIDENT] Ransomware Activity Detected — [Date/Time]
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Status: Contained / Investigating / Recovering
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>Affected systems: [list]
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>Impact: [describe user/service impact]
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>Actions taken: [isolation steps, backup assessment, recovery plan]
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>Next update: [time]
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>Incident commander: [name/channel]
 </code></pre></div>
 <h2 id="post-incident">Post-Incident<a class="headerlink" href="#post-incident" title="Permanent link">&para;</a></h2>
 <p>After recovery is confirmed and validated:</p>

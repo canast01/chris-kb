@@ -8579,23 +8579,7 @@ Azure Policy compliance reviews evaluate the current state of resources against 
 *Applies to: Azure*
 </div>
 <p><img alt="Compliance Review" src="../../../../assets/cloud-azure-governance-compliance-review-index.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>center: &quot;Azure&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>compliance_review_cycle: &quot;Compliance Review Cycle&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>compliance_dashboard: &quot;Compliance Dashboard&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>noncompliant_resources: &quot;Non-Compliant Resources&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>remediation_tasks: &quot;Remediation Tasks&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>compliance_review_cadence: &quot;Compliance Review Cadence&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>exporting_compliance_data: &quot;Exporting Compliance Data&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>center -&gt; compliance_review_cycle
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>center -&gt; compliance_dashboard
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>center -&gt; noncompliant_resources
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>center -&gt; remediation_tasks
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>center -&gt; compliance_review_cadence
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>center -&gt; exporting_compliance_data
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqFkcFuwjAMhu99Cqt3XqCHSRPjugPavfISq41WnMoxjA3x7kuAQCsCO8b_7y_2b-uEjDrPDYjreq0qQ6wkDdSvv1uhGg6hx5Ea6GmPnedjZfxmHByyoVZo5-i7NT9miI56eVVgfVJgmZQbI_2F3A00o1gM_adHsXPEWy4X-9lzRmicI_itGAqR8O55kSka57goRYjQhqzDtH-rGL5S__pWg49U-2_8HAJais9yDGetSKL96EUdd-0sEsVIWmUNZrkoFkmX08HiBR7cqOy45j-Ry_FODHfRPf_9HMDE83Dt6g-7v_Pv?" /></p>
 <h2 id="compliance-review-cycle">Compliance Review Cycle<a class="headerlink" href="#compliance-review-cycle" title="Permanent link">&para;</a></h2>
 <pre class="mermaid"><code>flowchart LR
     trigger["Compliance Scan\nscheduled daily or on-demand"]
@@ -8612,21 +8596,21 @@ Azure Policy compliance reviews evaluate the current state of resources against 
     remediate --&gt; trigger</code></pre>
 <h2 id="compliance-dashboard">Compliance Dashboard<a class="headerlink" href="#compliance-dashboard" title="Permanent link">&para;</a></h2>
 <p>The compliance dashboard in the portal shows an overall compliance percentage and breaks it down by policy assignment. Use the CLI for scripted reporting.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Get overall compliance summary for a subscription</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>az<span class="w"> </span>policy<span class="w"> </span>state<span class="w"> </span>summarize<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>--subscription<span class="w"> </span>&lt;subscription-id&gt;
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Get compliance summary at management group scope</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>az<span class="w"> </span>policy<span class="w"> </span>state<span class="w"> </span>summarize<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span>--management-group<span class="w"> </span>&lt;mg-id&gt;
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># Trigger an on-demand compliance scan</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>az<span class="w"> </span>policy<span class="w"> </span>state<span class="w"> </span>trigger-scan<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">  </span>--subscription<span class="w"> </span>&lt;subscription-id&gt;
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Trigger scan for a specific resource group</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>az<span class="w"> </span>policy<span class="w"> </span>state<span class="w"> </span>trigger-scan<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">  </span>--resource-group<span class="w"> </span>rg-production
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Get overall compliance summary for a subscription</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>az<span class="w"> </span>policy<span class="w"> </span>state<span class="w"> </span>summarize<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>--subscription<span class="w"> </span>&lt;subscription-id&gt;
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Get compliance summary at management group scope</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>az<span class="w"> </span>policy<span class="w"> </span>state<span class="w"> </span>summarize<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">  </span>--management-group<span class="w"> </span>&lt;mg-id&gt;
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1"># Trigger an on-demand compliance scan</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>az<span class="w"> </span>policy<span class="w"> </span>state<span class="w"> </span>trigger-scan<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">  </span>--subscription<span class="w"> </span>&lt;subscription-id&gt;
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Trigger scan for a specific resource group</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>az<span class="w"> </span>policy<span class="w"> </span>state<span class="w"> </span>trigger-scan<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">  </span>--resource-group<span class="w"> </span>rg-production
 </code></pre></div>
 <h3 id="compliance-state-values">Compliance State Values<a class="headerlink" href="#compliance-state-values" title="Permanent link">&para;</a></h3>
 <table>
@@ -8660,58 +8644,58 @@ Azure Policy compliance reviews evaluate the current state of resources against 
 </tbody>
 </table>
 <h2 id="non-compliant-resources">Non-Compliant Resources<a class="headerlink" href="#non-compliant-resources" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># List all non-compliant resources in a subscription</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>az<span class="w"> </span>policy<span class="w"> </span>state<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>--subscription<span class="w"> </span>&lt;subscription-id&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>--filter<span class="w"> </span><span class="s2">&quot;complianceState eq &#39;NonCompliant&#39;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>--output<span class="w"> </span>table
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Non-compliant resources for a specific policy assignment</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>az<span class="w"> </span>policy<span class="w"> </span>state<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span>--filter<span class="w"> </span><span class="s2">&quot;policyAssignmentName eq &#39;deny-public-ip&#39; and complianceState eq &#39;NonCompliant&#39;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">  </span>--output<span class="w"> </span>table
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># Non-compliant resources with reason</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>az<span class="w"> </span>policy<span class="w"> </span>state<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">  </span>--subscription<span class="w"> </span>&lt;subscription-id&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">  </span>--filter<span class="w"> </span><span class="s2">&quot;complianceState eq &#39;NonCompliant&#39;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;[].{Resource:resourceId, Policy:policyDefinitionName, Reason:policyDefinitionReferenceId}&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="w">  </span>--output<span class="w"> </span>table
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="c1"># Count of non-compliant resources per policy</span>
-<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>az<span class="w"> </span>policy<span class="w"> </span>state<span class="w"> </span>summarize<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="w">  </span>--subscription<span class="w"> </span>&lt;subscription-id&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;value[0].policyAssignments[].{Policy:policyAssignmentName, NonCompliant:results.nonCompliantResources}&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="w">  </span>--output<span class="w"> </span>table
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># List all non-compliant resources in a subscription</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>az<span class="w"> </span>policy<span class="w"> </span>state<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>--subscription<span class="w"> </span>&lt;subscription-id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>--filter<span class="w"> </span><span class="s2">&quot;complianceState eq &#39;NonCompliant&#39;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>--output<span class="w"> </span>table
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Non-compliant resources for a specific policy assignment</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>az<span class="w"> </span>policy<span class="w"> </span>state<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">  </span>--filter<span class="w"> </span><span class="s2">&quot;policyAssignmentName eq &#39;deny-public-ip&#39; and complianceState eq &#39;NonCompliant&#39;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">  </span>--output<span class="w"> </span>table
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c1"># Non-compliant resources with reason</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>az<span class="w"> </span>policy<span class="w"> </span>state<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">  </span>--subscription<span class="w"> </span>&lt;subscription-id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">  </span>--filter<span class="w"> </span><span class="s2">&quot;complianceState eq &#39;NonCompliant&#39;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;[].{Resource:resourceId, Policy:policyDefinitionName, Reason:policyDefinitionReferenceId}&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="w">  </span>--output<span class="w"> </span>table
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="c1"># Count of non-compliant resources per policy</span>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>az<span class="w"> </span>policy<span class="w"> </span>state<span class="w"> </span>summarize<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="w">  </span>--subscription<span class="w"> </span>&lt;subscription-id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;value[0].policyAssignments[].{Policy:policyAssignmentName, NonCompliant:results.nonCompliantResources}&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="w">  </span>--output<span class="w"> </span>table
 </code></pre></div>
 <h2 id="remediation-tasks">Remediation Tasks<a class="headerlink" href="#remediation-tasks" title="Permanent link">&para;</a></h2>
 <p>Policies with <code>deployIfNotExists</code> or <code>modify</code> effects can create remediation tasks to bring non-compliant resources into compliance automatically.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Create a remediation task for a policy assignment</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>az<span class="w"> </span>policy<span class="w"> </span>remediation<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;remediate-diag-settings&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>--policy-assignment<span class="w"> </span><span class="s2">&quot;/subscriptions/&lt;sub-id&gt;/providers/Microsoft.Authorization/policyAssignments/deploy-diag-settings&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span>--resource-discovery-mode<span class="w"> </span>ReEvaluateCompliance
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Create a remediation task for a specific resource group</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>az<span class="w"> </span>policy<span class="w"> </span>remediation<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;remediate-tags-rg&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">  </span>--policy-assignment<span class="w"> </span><span class="s2">&quot;/subscriptions/&lt;sub-id&gt;/providers/Microsoft.Authorization/policyAssignments/inherit-env-tag&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">  </span>--resource-group<span class="w"> </span>rg-production
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c1"># List remediation tasks</span>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>az<span class="w"> </span>policy<span class="w"> </span>remediation<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="w">  </span>--subscription<span class="w"> </span>&lt;subscription-id&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="w">  </span>--output<span class="w"> </span>table
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>
-<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="c1"># Show status of a remediation task</span>
-<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>az<span class="w"> </span>policy<span class="w"> </span>remediation<span class="w"> </span>show<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;remediate-diag-settings&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a><span class="w">  </span>--subscription<span class="w"> </span>&lt;subscription-id&gt;
-<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>
-<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a><span class="c1"># Cancel a running remediation task</span>
-<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>az<span class="w"> </span>policy<span class="w"> </span>remediation<span class="w"> </span>cancel<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;remediate-diag-settings&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a><span class="w">  </span>--subscription<span class="w"> </span>&lt;subscription-id&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Create a remediation task for a policy assignment</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>az<span class="w"> </span>policy<span class="w"> </span>remediation<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;remediate-diag-settings&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>--policy-assignment<span class="w"> </span><span class="s2">&quot;/subscriptions/&lt;sub-id&gt;/providers/Microsoft.Authorization/policyAssignments/deploy-diag-settings&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>--resource-discovery-mode<span class="w"> </span>ReEvaluateCompliance
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Create a remediation task for a specific resource group</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>az<span class="w"> </span>policy<span class="w"> </span>remediation<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;remediate-tags-rg&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">  </span>--policy-assignment<span class="w"> </span><span class="s2">&quot;/subscriptions/&lt;sub-id&gt;/providers/Microsoft.Authorization/policyAssignments/inherit-env-tag&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">  </span>--resource-group<span class="w"> </span>rg-production
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># List remediation tasks</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>az<span class="w"> </span>policy<span class="w"> </span>remediation<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">  </span>--subscription<span class="w"> </span>&lt;subscription-id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="w">  </span>--output<span class="w"> </span>table
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="c1"># Show status of a remediation task</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>az<span class="w"> </span>policy<span class="w"> </span>remediation<span class="w"> </span>show<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;remediate-diag-settings&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="w">  </span>--subscription<span class="w"> </span>&lt;subscription-id&gt;
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="c1"># Cancel a running remediation task</span>
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>az<span class="w"> </span>policy<span class="w"> </span>remediation<span class="w"> </span>cancel<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;remediate-diag-settings&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a><span class="w">  </span>--subscription<span class="w"> </span>&lt;subscription-id&gt;
 </code></pre></div>
 <h3 id="remediation-task-states">Remediation Task States<a class="headerlink" href="#remediation-task-states" title="Permanent link">&para;</a></h3>
 <table>
@@ -8782,16 +8766,16 @@ Azure Policy compliance reviews evaluate the current state of resources against 
 </tbody>
 </table>
 <h2 id="exporting-compliance-data">Exporting Compliance Data<a class="headerlink" href="#exporting-compliance-data" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Export all compliance states to JSON for audit reporting</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>az<span class="w"> </span>policy<span class="w"> </span>state<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>--subscription<span class="w"> </span>&lt;subscription-id&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>--output<span class="w"> </span>json<span class="w"> </span>&gt;<span class="w"> </span>compliance-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.json
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># Export non-compliant only</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>az<span class="w"> </span>policy<span class="w"> </span>state<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">  </span>--subscription<span class="w"> </span>&lt;subscription-id&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">  </span>--filter<span class="w"> </span><span class="s2">&quot;complianceState eq &#39;NonCompliant&#39;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">  </span>--output<span class="w"> </span>json<span class="w"> </span>&gt;<span class="w"> </span>non-compliant-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.json
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Export all compliance states to JSON for audit reporting</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>az<span class="w"> </span>policy<span class="w"> </span>state<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>--subscription<span class="w"> </span>&lt;subscription-id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>--output<span class="w"> </span>json<span class="w"> </span>&gt;<span class="w"> </span>compliance-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.json
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># Export non-compliant only</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>az<span class="w"> </span>policy<span class="w"> </span>state<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">  </span>--subscription<span class="w"> </span>&lt;subscription-id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">  </span>--filter<span class="w"> </span><span class="s2">&quot;complianceState eq &#39;NonCompliant&#39;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">  </span>--output<span class="w"> </span>json<span class="w"> </span>&gt;<span class="w"> </span>non-compliant-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.json
 </code></pre></div>
 
 

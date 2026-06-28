@@ -8579,26 +8579,10 @@ PIM provides just-in-time (JIT) privileged access to Azure resources and Entra I
 *Applies to: Azure*
 </div>
 <p><img alt="Azure — Privileged Identity Management (PIM)" src="../../../../assets/cloud-azure-identity-privileged-identity-management-index.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>center: &quot;Azure&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>access_model: &quot;Access Model&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>pim_scope: &quot;PIM Scope&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>activation_workflow: &quot;Activation Workflow&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>managing_eligible_assignments: &quot;Managing Eligible Assignments&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>pim_role_settings_per_role: &quot;PIM Role Settings (per role)&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>pim_for_groups: &quot;PIM for Groups&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>center -&gt; access_model
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>center -&gt; pim_scope
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>center -&gt; activation_workflow
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>center -&gt; managing_eligible_assignments
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>center -&gt; pim_role_settings_per_role
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>center -&gt; pim_for_groups
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp9UbFOxDAM3fMVVicY-IEOSDcgxFAJcQNjZHK-NCKNqzjHIdD9O0kVaDl6bPZ7zy_2y85FMslxaCE62yelDIVEsYVm83GI1MCn9DhSCz29o-VwUmgMieiBd-SLbGqhK-2sLq4YrKeTGt2gxXBBm8eHDralXlVi3uQNyzb6yPF17_k4PfCNwnNFV6cHDGhdsJq8s-7Fk0YRZ8OQD5Ls01Ue7ioPm5m_uHnkbCSUUp4UPVKckHrKUy5hW0m4yiwU9vqi256jtpEPo1SHDMD9BKzO1N-Am1tYxr6Af9L9Jf2T44L9N6cz5_Xrz0TzUeoLOWfXsg==?" /></p>
 <h2 id="access-model">Access Model<a class="headerlink" href="#access-model" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Without PIM:  Principal → [Permanent assignment] → Role → Resource
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>With PIM:     Principal → [Eligible assignment] → Activate (JIT, time-limited) → Role → Resource
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Without PIM:  Principal → [Permanent assignment] → Role → Resource
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>With PIM:     Principal → [Eligible assignment] → Activate (JIT, time-limited) → Role → Resource
 </code></pre></div>
 <p><strong>Eligible</strong> — user can request the role but must activate it (MFA + justification + optional approval).<br />
 <strong>Active</strong> — user currently holds the role. Can be permanent or time-limited.</p>
@@ -8642,28 +8626,28 @@ PIM provides just-in-time (JIT) privileged access to Azure resources and Entra I
 <h3 id="portal">Portal<a class="headerlink" href="#portal" title="Permanent link">&para;</a></h3>
 <p><img alt="Azure — Privileged Identity Management (PIM) — Diagram" src="../../../../assets/cloud-azure-identity-privileged-identity-management-diagram.svg" /></p>
 <h3 id="powershell">PowerShell<a class="headerlink" href="#powershell" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nb">Connect-AzAccount</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c"># List eligible assignments at a subscription</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="nb">Get-AzRoleEligibilitySchedule</span> <span class="n">-Scope</span> <span class="p">/</span><span class="n">subscriptions</span><span class="p">/&lt;</span><span class="n">sub-id</span><span class="p">&gt;</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c"># Activate an eligible role (self-activation)</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="nv">$expiration</span> <span class="p">=</span> <span class="nb">New-Object</span> <span class="n">Microsoft</span><span class="p">.</span><span class="n">Azure</span><span class="p">.</span><span class="n">Commands</span><span class="p">.</span><span class="n">Resources</span><span class="p">.</span><span class="n">Models</span><span class="p">.</span><span class="n">Authorization</span><span class="p">.</span><span class="n">ExpirationInfo</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="nv">$expiration</span><span class="p">.</span><span class="nb">Type </span><span class="p">=</span> <span class="s2">&quot;AfterDuration&quot;</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="nv">$expiration</span><span class="p">.</span><span class="n">Duration</span> <span class="p">=</span> <span class="s2">&quot;PT4H&quot;</span>   <span class="c"># 4 hours</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="nv">$schedule</span> <span class="p">=</span> <span class="nb">New-Object</span> <span class="n">Microsoft</span><span class="p">.</span><span class="n">Azure</span><span class="p">.</span><span class="n">Commands</span><span class="p">.</span><span class="n">Resources</span><span class="p">.</span><span class="n">Models</span><span class="p">.</span><span class="n">Authorization</span><span class="p">.</span><span class="n">ScheduleInfo</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="nv">$schedule</span><span class="p">.</span><span class="n">StartDateTime</span> <span class="p">=</span> <span class="nb">Get-Date</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="nv">$schedule</span><span class="p">.</span><span class="n">Expiration</span> <span class="p">=</span> <span class="nv">$expiration</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="nb">New-AzRoleAssignmentScheduleRequest</span> <span class="p">`</span>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>  <span class="n">-Name</span> <span class="p">(</span><span class="nb">New-Guid</span><span class="p">)</span> <span class="p">`</span>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>  <span class="n">-Scope</span> <span class="p">/</span><span class="n">subscriptions</span><span class="p">/&lt;</span><span class="n">sub-id</span><span class="p">&gt;</span> <span class="p">`</span>
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>  <span class="n">-PrincipalId</span> <span class="p">&lt;</span><span class="n">your-object-id</span><span class="p">&gt;</span> <span class="p">`</span>
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>  <span class="n">-RoleDefinitionId</span> <span class="p">/</span><span class="n">subscriptions</span><span class="p">/&lt;</span><span class="n">sub-id</span><span class="p">&gt;/</span><span class="n">providers</span><span class="p">/</span><span class="n">Microsoft</span><span class="p">.</span><span class="n">Authorization</span><span class="p">/</span><span class="n">roleDefinitions</span><span class="p">/&lt;</span><span class="n">role-id</span><span class="p">&gt;</span> <span class="p">`</span>
-<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>  <span class="n">-RequestType</span> <span class="n">SelfActivate</span> <span class="p">`</span>
-<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>  <span class="n">-ScheduleInfo</span> <span class="nv">$schedule</span> <span class="p">`</span>
-<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>  <span class="n">-Justification</span> <span class="s2">&quot;Maintenance window — patching prod servers&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nb">Connect-AzAccount</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c"># List eligible assignments at a subscription</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="nb">Get-AzRoleEligibilitySchedule</span> <span class="n">-Scope</span> <span class="p">/</span><span class="n">subscriptions</span><span class="p">/&lt;</span><span class="n">sub-id</span><span class="p">&gt;</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c"># Activate an eligible role (self-activation)</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="nv">$expiration</span> <span class="p">=</span> <span class="nb">New-Object</span> <span class="n">Microsoft</span><span class="p">.</span><span class="n">Azure</span><span class="p">.</span><span class="n">Commands</span><span class="p">.</span><span class="n">Resources</span><span class="p">.</span><span class="n">Models</span><span class="p">.</span><span class="n">Authorization</span><span class="p">.</span><span class="n">ExpirationInfo</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="nv">$expiration</span><span class="p">.</span><span class="nb">Type </span><span class="p">=</span> <span class="s2">&quot;AfterDuration&quot;</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="nv">$expiration</span><span class="p">.</span><span class="n">Duration</span> <span class="p">=</span> <span class="s2">&quot;PT4H&quot;</span>   <span class="c"># 4 hours</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="nv">$schedule</span> <span class="p">=</span> <span class="nb">New-Object</span> <span class="n">Microsoft</span><span class="p">.</span><span class="n">Azure</span><span class="p">.</span><span class="n">Commands</span><span class="p">.</span><span class="n">Resources</span><span class="p">.</span><span class="n">Models</span><span class="p">.</span><span class="n">Authorization</span><span class="p">.</span><span class="n">ScheduleInfo</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="nv">$schedule</span><span class="p">.</span><span class="n">StartDateTime</span> <span class="p">=</span> <span class="nb">Get-Date</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="nv">$schedule</span><span class="p">.</span><span class="n">Expiration</span> <span class="p">=</span> <span class="nv">$expiration</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="nb">New-AzRoleAssignmentScheduleRequest</span> <span class="p">`</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>  <span class="n">-Name</span> <span class="p">(</span><span class="nb">New-Guid</span><span class="p">)</span> <span class="p">`</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>  <span class="n">-Scope</span> <span class="p">/</span><span class="n">subscriptions</span><span class="p">/&lt;</span><span class="n">sub-id</span><span class="p">&gt;</span> <span class="p">`</span>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>  <span class="n">-PrincipalId</span> <span class="p">&lt;</span><span class="n">your-object-id</span><span class="p">&gt;</span> <span class="p">`</span>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>  <span class="n">-RoleDefinitionId</span> <span class="p">/</span><span class="n">subscriptions</span><span class="p">/&lt;</span><span class="n">sub-id</span><span class="p">&gt;/</span><span class="n">providers</span><span class="p">/</span><span class="n">Microsoft</span><span class="p">.</span><span class="n">Authorization</span><span class="p">/</span><span class="n">roleDefinitions</span><span class="p">/&lt;</span><span class="n">role-id</span><span class="p">&gt;</span> <span class="p">`</span>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>  <span class="n">-RequestType</span> <span class="n">SelfActivate</span> <span class="p">`</span>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>  <span class="n">-ScheduleInfo</span> <span class="nv">$schedule</span> <span class="p">`</span>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>  <span class="n">-Justification</span> <span class="s2">&quot;Maintenance window — patching prod servers&quot;</span>
 </code></pre></div>
 <h2 id="pim-role-settings-per-role">PIM Role Settings (per role)<a class="headerlink" href="#pim-role-settings-per-role" title="Permanent link">&para;</a></h2>
 <p>Configure via: <strong>PIM → Azure resources → scope → Settings → select role → Edit</strong></p>
@@ -8707,12 +8691,12 @@ PIM provides just-in-time (JIT) privileged access to Azure resources and Entra I
 </table>
 <h2 id="pim-for-groups">PIM for Groups<a class="headerlink" href="#pim-for-groups" title="Permanent link">&para;</a></h2>
 <p>PIM can manage group membership using the same JIT model. Assign users as eligible for group membership — useful when group membership controls access to non-Azure systems.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>PIM → Groups → select group → Manage → Assignments → Add assignments → Eligible member
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>PIM → Groups → select group → Manage → Assignments → Add assignments → Eligible member
 </code></pre></div>
 <h2 id="audit-and-access-reviews">Audit and Access Reviews<a class="headerlink" href="#audit-and-access-reviews" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>PIM → Audit history — all activations, approvals, and denials with timestamps and IP addresses
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>PIM → Access reviews → New access review → scope eligible/active assignments for periodic review
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>PIM → Audit history — all activations, approvals, and denials with timestamps and IP addresses
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>PIM → Access reviews → New access review → scope eligible/active assignments for periodic review
 </code></pre></div>
 <h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
 <table>

@@ -8195,23 +8195,7 @@ Access Control reference covering RBAC Scope Model, RBAC, Custom Roles, User Log
 *Applies to: ONTAP 9.x*
 </div>
 <p><img alt="ONTAP — Access Control" src="../../../../../assets/storage-netapp-ontap-security-access-control.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: down
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>external: External / Untrusted {shape: rectangle}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>rbac_scope_model: &quot;RBAC Scope Model&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>rbac: &quot;RBAC&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>custom_roles: &quot;Custom Roles&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>user_login_management: &quot;User Login Management&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>audit_logging: &quot;Audit Logging&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>core: &quot;NetApp ONTAP Core&quot; {shape: hexagon}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>external -&gt; rbac_scope_model: traffic in
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>rbac_scope_model -&gt; rbac
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>rbac -&gt; custom_roles
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>custom_roles -&gt; user_login_management
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>user_login_management -&gt; audit_logging
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>audit_logging -&gt; core: secured path
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp1kc1OwzAQhO95ilXuiHsOSGnEjRZU2rNl7G1iKVlbtiMqob47u1GhRDU3z-yMfz5bF9Fk56kB6z-pqvCcMZIeG3i-ruARjpTjnDJa-EqDDtiAtDT1I16q-KGNSsYHVJO3yM16v2k7eBcLtmLV__Wu2eLc8Il-UtGPmDjXLRL2Iov5OWFUo-8dqUmT7nFCylw8sg8v4sP21y_uoGfrsmzB2Z6brWipii7f0Uc26h3mNgR43R3aN-jYu4UHPOve0-VGFh6e4J5Zjvp0cgYc3QH9KSwDEX_JrDDJsIihDEfiqzevCSxHLQ9MaObIvx90HqpvGcnKNA==?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Access:</strong> Storage admin credentials (cluster admin or equivalent)</li>
@@ -8284,54 +8268,54 @@ Access Control reference covering RBAC Scope Model, RBAC, Custom Roles, User Log
 </table>
 <h2 id="custom-roles">Custom Roles<a class="headerlink" href="#custom-roles" title="Permanent link">&para;</a></h2>
 <p>Create custom roles with minimum required permissions for automation service accounts:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Create a custom read-only monitoring role</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>monitor-role<span class="w"> </span>-cmddirname<span class="w"> </span><span class="s2">&quot;DEFAULT&quot;</span><span class="w"> </span>-access<span class="w"> </span>none
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>monitor-role<span class="w"> </span>-cmddirname<span class="w"> </span><span class="s2">&quot;version&quot;</span><span class="w"> </span>-access<span class="w"> </span><span class="nb">readonly</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>monitor-role<span class="w"> </span>-cmddirname<span class="w"> </span><span class="s2">&quot;volume show&quot;</span><span class="w"> </span>-access<span class="w"> </span><span class="nb">readonly</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>monitor-role<span class="w"> </span>-cmddirname<span class="w"> </span><span class="s2">&quot;snapmirror show&quot;</span><span class="w"> </span>-access<span class="w"> </span><span class="nb">readonly</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Create a service account using the custom role</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>security<span class="w"> </span>login<span class="w"> </span>create<span class="w"> </span>-username<span class="w"> </span>svc-monitor<span class="w"> </span>-application<span class="w"> </span>ssh<span class="w"> </span>-authmethod<span class="w"> </span>publickey<span class="w"> </span>-role<span class="w"> </span>monitor-role
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Create a custom read-only monitoring role</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>monitor-role<span class="w"> </span>-cmddirname<span class="w"> </span><span class="s2">&quot;DEFAULT&quot;</span><span class="w"> </span>-access<span class="w"> </span>none
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>monitor-role<span class="w"> </span>-cmddirname<span class="w"> </span><span class="s2">&quot;version&quot;</span><span class="w"> </span>-access<span class="w"> </span><span class="nb">readonly</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>monitor-role<span class="w"> </span>-cmddirname<span class="w"> </span><span class="s2">&quot;volume show&quot;</span><span class="w"> </span>-access<span class="w"> </span><span class="nb">readonly</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>monitor-role<span class="w"> </span>-cmddirname<span class="w"> </span><span class="s2">&quot;snapmirror show&quot;</span><span class="w"> </span>-access<span class="w"> </span><span class="nb">readonly</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Create a service account using the custom role</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>security<span class="w"> </span>login<span class="w"> </span>create<span class="w"> </span>-username<span class="w"> </span>svc-monitor<span class="w"> </span>-application<span class="w"> </span>ssh<span class="w"> </span>-authmethod<span class="w"> </span>publickey<span class="w"> </span>-role<span class="w"> </span>monitor-role
 </code></pre></div>
 <h2 id="user-login-management">User Login Management<a class="headerlink" href="#user-login-management" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># List all login accounts</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>security<span class="w"> </span>login<span class="w"> </span>show
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>security<span class="w"> </span>login<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Create a user (SSH + password auth)</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>security<span class="w"> </span>login<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">    </span>-username<span class="w"> </span>&lt;user&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">    </span>-application<span class="w"> </span>ssh<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">    </span>-authentication-method<span class="w"> </span>password<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">    </span>-role<span class="w"> </span>admin<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;svm&gt;
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Delete a user</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>security<span class="w"> </span>login<span class="w"> </span>delete<span class="w"> </span>-username<span class="w"> </span>&lt;user&gt;<span class="w"> </span>-application<span class="w"> </span>ssh<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="c1"># Change password</span>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>security<span class="w"> </span>login<span class="w"> </span>password<span class="w"> </span>-username<span class="w"> </span>&lt;user&gt;<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="c1"># Lock / unlock an account</span>
-<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>security<span class="w"> </span>login<span class="w"> </span>lock<span class="w"> </span>-username<span class="w"> </span>&lt;user&gt;<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
-<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>security<span class="w"> </span>login<span class="w"> </span>unlock<span class="w"> </span>-username<span class="w"> </span>&lt;user&gt;<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># List all login accounts</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>security<span class="w"> </span>login<span class="w"> </span>show
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>security<span class="w"> </span>login<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Create a user (SSH + password auth)</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>security<span class="w"> </span>login<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">    </span>-username<span class="w"> </span>&lt;user&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">    </span>-application<span class="w"> </span>ssh<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">    </span>-authentication-method<span class="w"> </span>password<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">    </span>-role<span class="w"> </span>admin<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;svm&gt;
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Delete a user</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>security<span class="w"> </span>login<span class="w"> </span>delete<span class="w"> </span>-username<span class="w"> </span>&lt;user&gt;<span class="w"> </span>-application<span class="w"> </span>ssh<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="c1"># Change password</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>security<span class="w"> </span>login<span class="w"> </span>password<span class="w"> </span>-username<span class="w"> </span>&lt;user&gt;<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="c1"># Lock / unlock an account</span>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>security<span class="w"> </span>login<span class="w"> </span>lock<span class="w"> </span>-username<span class="w"> </span>&lt;user&gt;<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>security<span class="w"> </span>login<span class="w"> </span>unlock<span class="w"> </span>-username<span class="w"> </span>&lt;user&gt;<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
 </code></pre></div>
 <h2 id="audit-logging">Audit Logging<a class="headerlink" href="#audit-logging" title="Permanent link">&para;</a></h2>
 <p><strong>Admin action auditing</strong>: All CLI, API, and System Manager operations by authenticated users are captured in the ONTAP audit log:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># View recent administrative audit events</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>security<span class="w"> </span>audit<span class="w"> </span>log<span class="w"> </span>show
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>security<span class="w"> </span>audit<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-user<span class="w"> </span>admin<span class="w"> </span>-time-range<span class="w"> </span>24h
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># View recent administrative audit events</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>security<span class="w"> </span>audit<span class="w"> </span>log<span class="w"> </span>show
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>security<span class="w"> </span>audit<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-user<span class="w"> </span>admin<span class="w"> </span>-time-range<span class="w"> </span>24h
 </code></pre></div>
 <p><strong>File access auditing via ONTAP Audit Framework</strong>: Captures NFS and SMB file access events to an EVTX audit log on a designated NAS volume:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Configure SVM-level file access auditing</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>vserver<span class="w"> </span>audit<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-destination<span class="w"> </span>/audit_logs<span class="w"> </span>-events<span class="w"> </span>file-ops,cifs-logon-logoff
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>vserver<span class="w"> </span>audit<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Configure SVM-level file access auditing</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>vserver<span class="w"> </span>audit<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-destination<span class="w"> </span>/audit_logs<span class="w"> </span>-events<span class="w"> </span>file-ops,cifs-logon-logoff
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>vserver<span class="w"> </span>audit<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
 </code></pre></div>
 <p><strong>FPolicy for file access control and monitoring</strong>: FPolicy intercepts file operations and can send them to an external FPolicy server (DLP, ransomware detection, archiving):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Show FPolicy configuration</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>fpolicy<span class="w"> </span>show
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>fpolicy<span class="w"> </span>policy<span class="w"> </span>show
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>fpolicy<span class="w"> </span>policy<span class="w"> </span>scope<span class="w"> </span>show
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Show FPolicy configuration</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>fpolicy<span class="w"> </span>show
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>fpolicy<span class="w"> </span>policy<span class="w"> </span>show
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>fpolicy<span class="w"> </span>policy<span class="w"> </span>scope<span class="w"> </span>show
 </code></pre></div>
 <hr />
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>

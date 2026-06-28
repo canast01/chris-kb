@@ -8579,23 +8579,7 @@ Policy exemptions allow specific resources, resource groups, or subscriptions to
 *Applies to: Azure*
 </div>
 <p><img alt="Policy Exemptions" src="../../../../assets/cloud-azure-governance-exemptions-index.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>center: &quot;Azure&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>exemption_decision_flow: &quot;Exemption Decision Flow&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>creating_exemptions: &quot;Creating Exemptions&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>waiver_vs_mitigated: &quot;Waiver vs Mitigated&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>expiry: &quot;Expiry&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>audit_trail: &quot;Audit Trail&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>exemption_best_practices: &quot;Exemption Best Practices&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>center -&gt; exemption_decision_flow
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>center -&gt; creating_exemptions
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>center -&gt; waiver_vs_mitigated
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>center -&gt; expiry
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>center -&gt; audit_trail
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>center -&gt; exemption_best_practices
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp1kMFqwzAMhu9-CtH7XiCHwbput8EOgx6N5qiOIHWCrKbpRt99dkm6BNybpV__b-mrWcgpd6ECYd-oMY6CklSwefk5CW3gNzbYUwUNjei7cDU00rHPFluT45gfh7Y7J8fbrMBuUuA9Kf8Z-S8MvqWrcUKoHLy9x8WU8Dp14R4Vi-4z8kBih2iPrOxRqU7u_a0LQ4SPuVt009izXG4L50dxBk81q1VBbjOLXMFXrh4kzky-KartBRNUR3EFZZsk-JylYs5EH56e4QHmxUQB4UItIFql58sXjcW9xSXWd5k_fbjRCQ==?" /></p>
 <h2 id="exemption-decision-flow">Exemption Decision Flow<a class="headerlink" href="#exemption-decision-flow" title="Permanent link">&para;</a></h2>
 <pre class="mermaid"><code>flowchart TD
     nonCompliant["Non-compliant Resource\nidentified by policy"]
@@ -8614,39 +8598,39 @@ Policy exemptions allow specific resources, resource groups, or subscriptions to
     justification -- Yes --&gt; waiver &amp; mitigated --&gt; exempt
     justification -- No --&gt; noAction</code></pre>
 <h2 id="creating-exemptions">Creating Exemptions<a class="headerlink" href="#creating-exemptions" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Create an exemption for a specific resource</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>az<span class="w"> </span>policy<span class="w"> </span>exemption<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;legacy-vm-public-ip-exemption&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>--policy-assignment<span class="w"> </span><span class="s2">&quot;/subscriptions/&lt;sub-id&gt;/providers/Microsoft.Authorization/policyAssignments/deny-public-ip&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>--scope<span class="w"> </span><span class="s2">&quot;/subscriptions/&lt;sub-id&gt;/resourceGroups/rg-legacy/providers/Microsoft.Compute/virtualMachines/vm-legacy-01&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span>--exemption-category<span class="w"> </span>Waiver<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span>--display-name<span class="w"> </span><span class="s2">&quot;Legacy VM - public IP required until migration&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">  </span>--description<span class="w"> </span><span class="s2">&quot;This VM requires a public IP until the migration to private endpoint is complete in Q3 2026&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">  </span>--expires-on<span class="w"> </span><span class="m">2026</span>-09-30T00:00:00Z
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># Create an exemption for an entire resource group</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>az<span class="w"> </span>policy<span class="w"> </span>exemption<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;sandbox-rg-exemption&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">  </span>--policy-assignment<span class="w"> </span><span class="s2">&quot;/subscriptions/&lt;sub-id&gt;/providers/Microsoft.Authorization/policyAssignments/require-cost-centre-tag&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">  </span>--scope<span class="w"> </span><span class="s2">&quot;/subscriptions/&lt;sub-id&gt;/resourceGroups/rg-sandbox&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w">  </span>--exemption-category<span class="w"> </span>Mitigated<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="w">  </span>--display-name<span class="w"> </span><span class="s2">&quot;Sandbox RG - tagging not required&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="w">  </span>--expires-on<span class="w"> </span><span class="m">2026</span>-12-31T00:00:00Z
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="c1"># List all exemptions on a subscription</span>
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>az<span class="w"> </span>policy<span class="w"> </span>exemption<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="w">  </span>--scope<span class="w"> </span><span class="s2">&quot;/subscriptions/&lt;subscription-id&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="w">  </span>--output<span class="w"> </span>table
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="c1"># Show a specific exemption</span>
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>az<span class="w"> </span>policy<span class="w"> </span>exemption<span class="w"> </span>show<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;legacy-vm-public-ip-exemption&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a><span class="w">  </span>--scope<span class="w"> </span><span class="s2">&quot;/subscriptions/&lt;sub-id&gt;/resourceGroups/rg-legacy/providers/Microsoft.Compute/virtualMachines/vm-legacy-01&quot;</span>
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a><span class="c1"># Delete an exemption</span>
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>az<span class="w"> </span>policy<span class="w"> </span>exemption<span class="w"> </span>delete<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;legacy-vm-public-ip-exemption&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a><span class="w">  </span>--scope<span class="w"> </span><span class="s2">&quot;/subscriptions/&lt;sub-id&gt;/resourceGroups/rg-legacy/providers/Microsoft.Compute/virtualMachines/vm-legacy-01&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Create an exemption for a specific resource</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>az<span class="w"> </span>policy<span class="w"> </span>exemption<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;legacy-vm-public-ip-exemption&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span>--policy-assignment<span class="w"> </span><span class="s2">&quot;/subscriptions/&lt;sub-id&gt;/providers/Microsoft.Authorization/policyAssignments/deny-public-ip&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span>--scope<span class="w"> </span><span class="s2">&quot;/subscriptions/&lt;sub-id&gt;/resourceGroups/rg-legacy/providers/Microsoft.Compute/virtualMachines/vm-legacy-01&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">  </span>--exemption-category<span class="w"> </span>Waiver<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">  </span>--display-name<span class="w"> </span><span class="s2">&quot;Legacy VM - public IP required until migration&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">  </span>--description<span class="w"> </span><span class="s2">&quot;This VM requires a public IP until the migration to private endpoint is complete in Q3 2026&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">  </span>--expires-on<span class="w"> </span><span class="m">2026</span>-09-30T00:00:00Z
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># Create an exemption for an entire resource group</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>az<span class="w"> </span>policy<span class="w"> </span>exemption<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;sandbox-rg-exemption&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">  </span>--policy-assignment<span class="w"> </span><span class="s2">&quot;/subscriptions/&lt;sub-id&gt;/providers/Microsoft.Authorization/policyAssignments/require-cost-centre-tag&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">  </span>--scope<span class="w"> </span><span class="s2">&quot;/subscriptions/&lt;sub-id&gt;/resourceGroups/rg-sandbox&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="w">  </span>--exemption-category<span class="w"> </span>Mitigated<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="w">  </span>--display-name<span class="w"> </span><span class="s2">&quot;Sandbox RG - tagging not required&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="w">  </span>--expires-on<span class="w"> </span><span class="m">2026</span>-12-31T00:00:00Z
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="c1"># List all exemptions on a subscription</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>az<span class="w"> </span>policy<span class="w"> </span>exemption<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="w">  </span>--scope<span class="w"> </span><span class="s2">&quot;/subscriptions/&lt;subscription-id&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="w">  </span>--output<span class="w"> </span>table
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="c1"># Show a specific exemption</span>
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>az<span class="w"> </span>policy<span class="w"> </span>exemption<span class="w"> </span>show<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;legacy-vm-public-ip-exemption&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a><span class="w">  </span>--scope<span class="w"> </span><span class="s2">&quot;/subscriptions/&lt;sub-id&gt;/resourceGroups/rg-legacy/providers/Microsoft.Compute/virtualMachines/vm-legacy-01&quot;</span>
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a><span class="c1"># Delete an exemption</span>
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>az<span class="w"> </span>policy<span class="w"> </span>exemption<span class="w"> </span>delete<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;legacy-vm-public-ip-exemption&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a><span class="w">  </span>--scope<span class="w"> </span><span class="s2">&quot;/subscriptions/&lt;sub-id&gt;/resourceGroups/rg-legacy/providers/Microsoft.Compute/virtualMachines/vm-legacy-01&quot;</span>
 </code></pre></div>
 <h2 id="waiver-vs-mitigated">Waiver vs Mitigated<a class="headerlink" href="#waiver-vs-mitigated" title="Permanent link">&para;</a></h2>
 <p>The exemption category communicates the rationale for the exemption and is important for audit purposes.</p>
@@ -8674,17 +8658,17 @@ Policy exemptions allow specific resources, resource groups, or subscriptions to
 <p>Always choose the correct category — auditors use this field to assess the validity of exemptions.</p>
 <h2 id="expiry">Expiry<a class="headerlink" href="#expiry" title="Permanent link">&para;</a></h2>
 <p>All exemptions should have an expiry date. Azure evaluates the <code>expiresOn</code> field and automatically re-applies policy evaluation when the exemption expires.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Update an exemption to extend its expiry</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>az<span class="w"> </span>policy<span class="w"> </span>exemption<span class="w"> </span>update<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;legacy-vm-public-ip-exemption&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>--scope<span class="w"> </span><span class="s2">&quot;/subscriptions/&lt;sub-id&gt;/resourceGroups/rg-legacy/providers/Microsoft.Compute/virtualMachines/vm-legacy-01&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>--expires-on<span class="w"> </span><span class="m">2026</span>-12-31T00:00:00Z
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># List exemptions expiring within 30 days (manual filter using query)</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>az<span class="w"> </span>policy<span class="w"> </span>exemption<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span>--scope<span class="w"> </span><span class="s2">&quot;/subscriptions/&lt;subscription-id&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;[?expiresOn != null].{Name:name, Scope:id, Expiry:expiresOn, Category:exemptionCategory}&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">  </span>--output<span class="w"> </span>table
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Update an exemption to extend its expiry</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>az<span class="w"> </span>policy<span class="w"> </span>exemption<span class="w"> </span>update<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;legacy-vm-public-ip-exemption&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>--scope<span class="w"> </span><span class="s2">&quot;/subscriptions/&lt;sub-id&gt;/resourceGroups/rg-legacy/providers/Microsoft.Compute/virtualMachines/vm-legacy-01&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>--expires-on<span class="w"> </span><span class="m">2026</span>-12-31T00:00:00Z
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># List exemptions expiring within 30 days (manual filter using query)</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>az<span class="w"> </span>policy<span class="w"> </span>exemption<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">  </span>--scope<span class="w"> </span><span class="s2">&quot;/subscriptions/&lt;subscription-id&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;[?expiresOn != null].{Name:name, Scope:id, Expiry:expiresOn, Category:exemptionCategory}&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">  </span>--output<span class="w"> </span>table
 </code></pre></div>
 <h3 id="exemption-lifecycle">Exemption Lifecycle<a class="headerlink" href="#exemption-lifecycle" title="Permanent link">&para;</a></h3>
 <table>
@@ -8719,13 +8703,13 @@ Policy exemptions allow specific resources, resource groups, or subscriptions to
 </table>
 <h2 id="audit-trail">Audit Trail<a class="headerlink" href="#audit-trail" title="Permanent link">&para;</a></h2>
 <p>Exemption creation, updates, and deletions are recorded in the Azure Activity Log. Use this for audit evidence.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Query Activity Log for exemption operations</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>az<span class="w"> </span>monitor<span class="w"> </span>activity-log<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>--subscription<span class="w"> </span>&lt;subscription-id&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>--resource-provider<span class="w"> </span><span class="s2">&quot;Microsoft.Authorization&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;[?contains(operationName.value, &#39;policyExemptions&#39;)].{Time:eventTimestamp, Operation:operationName.value, Caller:caller, Status:status.value}&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span>--output<span class="w"> </span>table<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span>--start-time<span class="w"> </span><span class="m">2026</span>-05-01T00:00:00Z
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Query Activity Log for exemption operations</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>az<span class="w"> </span>monitor<span class="w"> </span>activity-log<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>--subscription<span class="w"> </span>&lt;subscription-id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>--resource-provider<span class="w"> </span><span class="s2">&quot;Microsoft.Authorization&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;[?contains(operationName.value, &#39;policyExemptions&#39;)].{Time:eventTimestamp, Operation:operationName.value, Caller:caller, Status:status.value}&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span>--output<span class="w"> </span>table<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span>--start-time<span class="w"> </span><span class="m">2026</span>-05-01T00:00:00Z
 </code></pre></div>
 <h2 id="exemption-best-practices">Exemption Best Practices<a class="headerlink" href="#exemption-best-practices" title="Permanent link">&para;</a></h2>
 <table>

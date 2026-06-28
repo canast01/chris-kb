@@ -8146,23 +8146,7 @@ Authentication reference covering Privileged Access and Kerberos Security Flow, 
 *Applies to: Windows Server 2019 / 2022*
 </div>
 <p><img alt="Active Directory — Authentication" src="../../../../../assets/compute-windows-server-active-directory-security-authenticat.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: down
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>external: External / Untrusted {shape: rectangle}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>privileged_access_and_kerberos_secur: &quot;Privileged Access and Kerberos Security Flow&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>privileged_access_workstations_paws: &quot;Privileged Access Workstations (PAWs)&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>protected_users_group: &quot;Protected Users Group&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>kerberos_encryption_policy: &quot;Kerberos Encryption Policy&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>related_reference: &quot;Related Reference&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>core: &quot;Active Directory Core&quot; {shape: hexagon}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>external -&gt; privileged_access_and_kerberos_secur: traffic in
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>privileged_access_and_kerberos_secur -&gt; privileged_access_workstations_paws
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>privileged_access_workstations_paws -&gt; protected_users_group
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>protected_users_group -&gt; kerberos_encryption_policy
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>kerberos_encryption_policy -&gt; related_reference
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>related_reference -&gt; core: secured path
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNkTFvgzAQhXd-xSlTO1TdGSqhNu2QBaWKMlquOcAKsq2zCUFV_nttoKQSTsVmv3v3zuevkITCSa1SKHSnkgQvDknxJoXtdIJnOChHrXVYwLetucEUQhdXVYPXxJA8ywYrLBgXAq1lXBXshPSFpC2zKFpKYZPPNsgGG3gb7CYbfAabdD28N7rbrJvTaTpZx8PzLTO8s9Exxz8ueMizo328k6-dv_n41iJZVpFuzZA46XAIOnwEPZow74xKUG_CRGZ0I0XvY-ZNt3MR8qEYzSJseHgLYYnk83x1sx812P9q0U6hKZgzj_WM8DYA1tTDq9dvDTVeeKXV9UYcnl5gHUtHvCylAKlWwY8HL-CtATxGRTjF6QX7fSj_8AqNCwJLJsE2fvewqEdjuKuTHxSwQj8=?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Access:</strong> Local Administrator or Domain Admin on target hosts</li>
@@ -8187,34 +8171,34 @@ Authentication reference covering Privileged Access and Kerberos Security Flow, 
 - AppLocker / WDAC policy allows only admin tools
 - BitLocker + TPM + Secure Boot enforced
 - Joined to separate PAW OU with restricted GPO</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Verify PAW OU GPO — confirm internet-facing apps are blocked</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Get-GPInheritance</span> <span class="n">-Target</span> <span class="s2">&quot;OU=PAW,OU=Tier0,DC=corp,DC=local&quot;</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c"># Check logon restriction policy on DC</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nb">Get-GPOReport</span> <span class="n">-Name</span> <span class="s2">&quot;Tier0-Logon-Restrictions&quot;</span> <span class="n">-ReportType</span> <span class="n">Html</span> <span class="n">-Path</span> <span class="n">C</span><span class="p">:\</span><span class="n">Reports</span><span class="p">\</span><span class="n">tier0-gpo</span><span class="p">.</span><span class="n">html</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Verify PAW OU GPO — confirm internet-facing apps are blocked</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Get-GPInheritance</span> <span class="n">-Target</span> <span class="s2">&quot;OU=PAW,OU=Tier0,DC=corp,DC=local&quot;</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c"># Check logon restriction policy on DC</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nb">Get-GPOReport</span> <span class="n">-Name</span> <span class="s2">&quot;Tier0-Logon-Restrictions&quot;</span> <span class="n">-ReportType</span> <span class="n">Html</span> <span class="n">-Path</span> <span class="n">C</span><span class="p">:\</span><span class="n">Reports</span><span class="p">\</span><span class="n">tier0-gpo</span><span class="p">.</span><span class="n">html</span>
 </code></pre></div>
 <h2 id="protected-users-group">Protected Users Group<a class="headerlink" href="#protected-users-group" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Add privileged accounts to Protected Users</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">Add-ADGroupMember</span> <span class="n">-Identity</span> <span class="s2">&quot;Protected Users&quot;</span> <span class="n">-Members</span> <span class="s2">&quot;admin-tier0-01&quot;</span><span class="p">,</span><span class="s2">&quot;admin-tier0-02&quot;</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c"># Verify current membership</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nb">Get-ADGroupMember</span> <span class="n">-Identity</span> <span class="s2">&quot;Protected Users&quot;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">SamAccountName</span><span class="p">,</span> <span class="n">DistinguishedName</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Add privileged accounts to Protected Users</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Add-ADGroupMember</span> <span class="n">-Identity</span> <span class="s2">&quot;Protected Users&quot;</span> <span class="n">-Members</span> <span class="s2">&quot;admin-tier0-01&quot;</span><span class="p">,</span><span class="s2">&quot;admin-tier0-02&quot;</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c"># Verify current membership</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nb">Get-ADGroupMember</span> <span class="n">-Identity</span> <span class="s2">&quot;Protected Users&quot;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">SamAccountName</span><span class="p">,</span> <span class="n">DistinguishedName</span>
 </code></pre></div>
 <p>Protected Users group members cannot:
 - Authenticate with NTLM, DES, or RC4
 - Use unconstrained delegation
 - Have their credentials cached on non-DCs</p>
 <h2 id="kerberos-encryption-policy">Kerberos Encryption Policy<a class="headerlink" href="#kerberos-encryption-policy" title="Permanent link">&para;</a></h2>
-<h2 id="verify-kerberos-encryption-gpo-is-applied-to-dcs-gpo-setting-computer-windows-settings-security-settings-local-policies-security-options-network-security-configure-encryption-types-allowed-for-kerberos-desired-aes128_hmac_sha1-aes256_hmac_sha1-only-des-and-rc4-unchecked-check-if-rc4-is-still-in-use-legacy-clients-will-fail-after-disabling-event-id-4769-with-ticket-encryption-type-0x17-rc4-in-use-get-winevent-computername-dc1-filterhashtable-lognamesecurity-id4769-maxevents-500-where-object-_message-match-0x17-select-object-first-10-timecreated-message"><div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Verify Kerberos encryption GPO is applied to DCs</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c"># GPO setting: Computer → Windows Settings → Security Settings →</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c"># Local Policies → Security Options → &quot;Network security: Configure encryption types allowed for Kerberos&quot;</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c"># Desired: AES128_HMAC_SHA1, AES256_HMAC_SHA1 only (DES and RC4 unchecked)</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c"># Check if RC4 is still in use (legacy clients will fail after disabling)</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c"># Event ID 4769 with &quot;Ticket Encryption Type: 0x17&quot; = RC4 in use</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="nb">Get-WinEvent</span> <span class="n">-ComputerName</span> <span class="n">dc1</span> <span class="n">-FilterHashtable</span> <span class="p">@{</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>    <span class="n">LogName</span><span class="p">=</span><span class="s1">&#39;Security&#39;</span><span class="p">;</span> <span class="n">Id</span><span class="p">=</span><span class="n">4769</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="p">}</span> <span class="n">-MaxEvents</span> <span class="n">500</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Message</span> <span class="o">-match</span> <span class="s2">&quot;0x17&quot;</span> <span class="p">}</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">10</span> <span class="n">TimeCreated</span><span class="p">,</span> <span class="n">Message</span>
+<h2 id="verify-kerberos-encryption-gpo-is-applied-to-dcs-gpo-setting-computer-windows-settings-security-settings-local-policies-security-options-network-security-configure-encryption-types-allowed-for-kerberos-desired-aes128_hmac_sha1-aes256_hmac_sha1-only-des-and-rc4-unchecked-check-if-rc4-is-still-in-use-legacy-clients-will-fail-after-disabling-event-id-4769-with-ticket-encryption-type-0x17-rc4-in-use-get-winevent-computername-dc1-filterhashtable-lognamesecurity-id4769-maxevents-500-where-object-_message-match-0x17-select-object-first-10-timecreated-message"><div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Verify Kerberos encryption GPO is applied to DCs</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c"># GPO setting: Computer → Windows Settings → Security Settings →</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c"># Local Policies → Security Options → &quot;Network security: Configure encryption types allowed for Kerberos&quot;</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c"># Desired: AES128_HMAC_SHA1, AES256_HMAC_SHA1 only (DES and RC4 unchecked)</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c"># Check if RC4 is still in use (legacy clients will fail after disabling)</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c"># Event ID 4769 with &quot;Ticket Encryption Type: 0x17&quot; = RC4 in use</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="nb">Get-WinEvent</span> <span class="n">-ComputerName</span> <span class="n">dc1</span> <span class="n">-FilterHashtable</span> <span class="p">@{</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>    <span class="n">LogName</span><span class="p">=</span><span class="s1">&#39;Security&#39;</span><span class="p">;</span> <span class="n">Id</span><span class="p">=</span><span class="n">4769</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="p">}</span> <span class="n">-MaxEvents</span> <span class="n">500</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Message</span> <span class="o">-match</span> <span class="s2">&quot;0x17&quot;</span> <span class="p">}</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">10</span> <span class="n">TimeCreated</span><span class="p">,</span> <span class="n">Message</span>
 </code></pre></div><a class="headerlink" href="#verify-kerberos-encryption-gpo-is-applied-to-dcs-gpo-setting-computer-windows-settings-security-settings-local-policies-security-options-network-security-configure-encryption-types-allowed-for-kerberos-desired-aes128_hmac_sha1-aes256_hmac_sha1-only-des-and-rc4-unchecked-check-if-rc4-is-still-in-use-legacy-clients-will-fail-after-disabling-event-id-4769-with-ticket-encryption-type-0x17-rc4-in-use-get-winevent-computername-dc1-filterhashtable-lognamesecurity-id4769-maxevents-500-where-object-_message-match-0x17-select-object-first-10-timecreated-message" title="Permanent link">&para;</a></h2>
 <h2 id="related-reference">Related Reference<a class="headerlink" href="#related-reference" title="Permanent link">&para;</a></h2>
 <ul>

@@ -7526,27 +7526,7 @@ Common Issues reference covering Terraform Troubleshooting Decision Flow, Refres
 *Applies to: Terraform 1.x*
 </div>
 <p><img alt="Terraform — Common Issues" src="../../../../assets/automation-terraform-troubleshooting-common-issues-index.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: down
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>symptom: Identify Symptom {shape: diamond}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>diagnostic_flow: &quot;Diagnostic Flow&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>terraform_troubleshooting_decision_f: &quot;Terraform Troubleshooting Decision Flow&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>workspace_issues: &quot;Workspace Issues&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>common_error_reference: &quot;Common Error Reference&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>verify_resolution: &quot;Verify resolution&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>resolution: Resolve or Escalate {shape: oval}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>symptom -&gt; diagnostic_flow: investigate
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>symptom -&gt; terraform_troubleshooting_decision_f: investigate
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>symptom -&gt; workspace_issues: investigate
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>symptom -&gt; common_error_reference: investigate
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>symptom -&gt; verify_resolution: investigate
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>diagnostic_flow -&gt; resolution
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>terraform_troubleshooting_decision_f -&gt; resolution
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>workspace_issues -&gt; resolution
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>common_error_reference -&gt; resolution
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>verify_resolution -&gt; resolution
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNksFugzAMhu88hcV9L8Bhl7WTeu2q9RhlwdBoIUZJAFUT7z5DB-0CSL2F398f23_ItUMVNNkMcupskvhrVQeqMjjkaIMurvBxU-DHX2SNzGlZkc37hA-lJR-0EoWhLoN0Nyvwzko6e4Ym0pYG-ySgc7IgV4ngqPky6C9EQdtS5Ki051FEwVedJgxO_zHY_WHbLTpy376WCoX2vkHP150nCQ6jtOpTVPFmgjuTEw4LdGgVI-nbWID9UIDjVFi9o0XHobHbk2luwaafowZ3bdX5aDkO5xaB2-29kkYGnC3UStPPDwUvr7B4CG1b5M-SbY_cc9FvmJehboBbKW7gK4E9ktFug-OOPvUzRZZ4j6i8Pn0ELWaO6r-MIEOE?" /></p>
 <h2 id="diagnostic-flow">Diagnostic Flow<a class="headerlink" href="#diagnostic-flow" title="Permanent link">&para;</a></h2>
 <pre class="mermaid"><code>graph TD
     S([What is the symptom?]) --&gt; B1{Provider auth\nerror?}
@@ -7596,27 +7576,27 @@ Common Issues reference covering Terraform Troubleshooting Decision Flow, Refres
     errType --&gt;|Unknown| enableDebug["TF_LOG=DEBUG\nTF_LOG_PATH=debug.log"]
     enableDebug --&gt; reviewLog["Review provider\nAPI call trace"]</code></pre>
 <h2 id="workspace-issues">Workspace Issues<a class="headerlink" href="#workspace-issues" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Check current workspace</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>terraform<span class="w"> </span>workspace<span class="w"> </span>show
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># List all workspaces</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>terraform<span class="w"> </span>workspace<span class="w"> </span>list
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Switch workspace</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>terraform<span class="w"> </span>workspace<span class="w"> </span><span class="k">select</span><span class="w"> </span>staging
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Delete a workspace (must not be current; state must be empty)</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>terraform<span class="w"> </span>workspace<span class="w"> </span><span class="k">select</span><span class="w"> </span>default
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>terraform<span class="w"> </span>workspace<span class="w"> </span>delete<span class="w"> </span>old-workspace
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="c1"># Workspace-conditional logic in configuration</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>locals<span class="w"> </span><span class="o">{</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w">  </span><span class="nv">is_production</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>terraform.workspace<span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;production&quot;</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="o">}</span>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>resource<span class="w"> </span><span class="s2">&quot;aws_instance&quot;</span><span class="w"> </span><span class="s2">&quot;web&quot;</span><span class="w"> </span><span class="o">{</span>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="w">  </span><span class="nv">instance_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>local.is_production<span class="w"> </span>?<span class="w"> </span><span class="s2">&quot;t3.large&quot;</span><span class="w"> </span>:<span class="w"> </span><span class="s2">&quot;t3.micro&quot;</span>
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="o">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Check current workspace</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>terraform<span class="w"> </span>workspace<span class="w"> </span>show
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># List all workspaces</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>terraform<span class="w"> </span>workspace<span class="w"> </span>list
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Switch workspace</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>terraform<span class="w"> </span>workspace<span class="w"> </span><span class="k">select</span><span class="w"> </span>staging
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Delete a workspace (must not be current; state must be empty)</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>terraform<span class="w"> </span>workspace<span class="w"> </span><span class="k">select</span><span class="w"> </span>default
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>terraform<span class="w"> </span>workspace<span class="w"> </span>delete<span class="w"> </span>old-workspace
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="c1"># Workspace-conditional logic in configuration</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>locals<span class="w"> </span><span class="o">{</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="w">  </span><span class="nv">is_production</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>terraform.workspace<span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;production&quot;</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="o">}</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>resource<span class="w"> </span><span class="s2">&quot;aws_instance&quot;</span><span class="w"> </span><span class="s2">&quot;web&quot;</span><span class="w"> </span><span class="o">{</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="w">  </span><span class="nv">instance_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>local.is_production<span class="w"> </span>?<span class="w"> </span><span class="s2">&quot;t3.large&quot;</span><span class="w"> </span>:<span class="w"> </span><span class="s2">&quot;t3.micro&quot;</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="o">}</span>
 </code></pre></div>
 <h2 id="common-error-reference">Common Error Reference<a class="headerlink" href="#common-error-reference" title="Permanent link">&para;</a></h2>
 <table>

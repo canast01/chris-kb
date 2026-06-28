@@ -8130,21 +8130,7 @@ A World Wide Name (WWN) is a 64-bit globally unique identifier assigned to every
 <div class="highlight"><pre><span></span><code>    WWNN vs WWPN STRUCTURE
 </code></pre></div>
 <p>WWNs are used for zoning, host masking, and fabric registration.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>center: &quot;Fibre Channel&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>wwn_types: &quot;WWN Types&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>wwn_format: &quot;WWN Format&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>finding_wwpns: &quot;Finding WWPNs&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>wwn_standards: &quot;WWN Standards&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>common_issues: &quot;Common Issues&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>center -&gt; wwn_types
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>center -&gt; wwn_format
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>center -&gt; finding_wwpns
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>center -&gt; wwn_standards
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>center -&gt; common_issues
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp1kMsKgzAQRff5isF9f8BFNwWhGym0kKWkZowBnUiSYkvpv1fjoyp2lzOcGe6N1BZzrw3FYLUqPWM5kkcbQ5Tou0U4lYIIqwjerhQNxlDiUyhDH9a2lPlXg65zOU_h1r9_Xn9XkKpwMAtja-FHNQmw6xaapCaVtW1DLqQIDJxf0v_XXQdSWDlluU68u5GbujaUaeceIf0pMJwD726MvwKHI8y1N7Oh4GK4arKR57yL-SoV-wL5-ZKe?" /></p>
 <h2 id="wwn-types">WWN Types<a class="headerlink" href="#wwn-types" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -8169,42 +8155,42 @@ A World Wide Name (WWN) is a 64-bit globally unique identifier assigned to every
 </table>
 <p>WWPNs are what matter operationally. Always zone and mask by WWPN, not WWNN.</p>
 <h2 id="wwn-format">WWN Format<a class="headerlink" href="#wwn-format" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>50:00:d3:10:00:5e:c8:a1
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│   │                                                                                                   │
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│   OUI       Vendor-assigned portion
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>└── NAA identifier (5 = IEEE registered)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>50:00:d3:10:00:5e:c8:a1
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│   │                                                                                                   │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   OUI       Vendor-assigned portion
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>└── NAA identifier (5 = IEEE registered)
 </code></pre></div>
 <p>Standard notation is 8 colon-separated hex byte pairs. Some tools display without colons (<code>5000d310005ec8a1</code>) — both refer to the same port.</p>
 <h2 id="finding-wwpns">Finding WWPNs<a class="headerlink" href="#finding-wwpns" title="Permanent link">&para;</a></h2>
 <h3 id="linux-hba">Linux (HBA)<a class="headerlink" href="#linux-hba" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># QLogic</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>cat<span class="w"> </span>/sys/class/fc_host/host*/port_name
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Emulex / Broadcom</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>systool<span class="w"> </span>-c<span class="w"> </span>fc_host<span class="w"> </span>-v<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>port_name
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># General</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>ls<span class="w"> </span>/sys/class/fc_host/
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>cat<span class="w"> </span>/sys/class/fc_host/host0/port_name
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>cat<span class="w"> </span>/sys/class/fc_host/host1/port_name
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># QLogic</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>cat<span class="w"> </span>/sys/class/fc_host/host*/port_name
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Emulex / Broadcom</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>systool<span class="w"> </span>-c<span class="w"> </span>fc_host<span class="w"> </span>-v<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>port_name
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># General</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>ls<span class="w"> </span>/sys/class/fc_host/
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>cat<span class="w"> </span>/sys/class/fc_host/host0/port_name
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>cat<span class="w"> </span>/sys/class/fc_host/host1/port_name
 </code></pre></div>
 <h3 id="windows-hba">Windows (HBA)<a class="headerlink" href="#windows-hba" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Via Get-InitiatorPort</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Get-InitiatorPort</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">NodeAddress</span><span class="p">,</span> <span class="n">PortAddress</span><span class="p">,</span> <span class="n">ConnectionType</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c"># QLogic SANsurfer / Emulex OneCommand Manager GUI also display WWPNs</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Via Get-InitiatorPort</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">Get-InitiatorPort</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">NodeAddress</span><span class="p">,</span> <span class="n">PortAddress</span><span class="p">,</span> <span class="n">ConnectionType</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c"># QLogic SANsurfer / Emulex OneCommand Manager GUI also display WWPNs</span>
 </code></pre></div>
 <h3 id="esxi-vmkernel">ESXi (vmkernel)<a class="headerlink" href="#esxi-vmkernel" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>san<span class="w"> </span><span class="nb">fc</span><span class="w"> </span>list
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># Shows WWPN, WWNN, speed, and port state for each HBA</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>san<span class="w"> </span><span class="nb">fc</span><span class="w"> </span>list
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># Shows WWPN, WWNN, speed, and port state for each HBA</span>
 </code></pre></div>
 <h3 id="brocade-switch-nameserver">Brocade switch (nameserver)<a class="headerlink" href="#brocade-switch-nameserver" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>nsshow<span class="w">          </span><span class="c1"># all logged-in ports on this switch</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>nsallshow<span class="w">       </span><span class="c1"># nameserver entries across entire fabric</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>nsshow<span class="w">          </span><span class="c1"># all logged-in ports on this switch</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>nsallshow<span class="w">       </span><span class="c1"># nameserver entries across entire fabric</span>
 </code></pre></div>
 <h3 id="cisco-mds">Cisco MDS<a class="headerlink" href="#cisco-mds" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>show<span class="w"> </span>flogi<span class="w"> </span>database<span class="w">          </span><span class="c1"># fabric login table</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>show<span class="w"> </span>fcns<span class="w"> </span>database<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span><span class="w">   </span><span class="c1"># name server for VSAN 10</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>show<span class="w"> </span>flogi<span class="w"> </span>database<span class="w">          </span><span class="c1"># fabric login table</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>show<span class="w"> </span>fcns<span class="w"> </span>database<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span><span class="w">   </span><span class="c1"># name server for VSAN 10</span>
 </code></pre></div>
 <h2 id="wwn-standards">WWN Standards<a class="headerlink" href="#wwn-standards" title="Permanent link">&para;</a></h2>
 <ul>

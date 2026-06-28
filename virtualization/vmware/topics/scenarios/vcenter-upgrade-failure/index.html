@@ -10737,23 +10737,7 @@ ESXi hosts and running VMs are unaffected during a vCenter upgrade — only mana
 *Applies to: vSphere 7.x / 8.x*
 </div>
 <p><img alt="vCenter Upgrade Failure / Rollback" src="../../../../../assets/virtualization-vmware-topics-scenarios-vcenter-upgrade-failu.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>center: &quot;Scenarios&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>products_involved: &quot;Products Involved&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>1_understand_the_vcsa_upgrade_stages: &quot;1. Understand the VCSA Upgrade Stages&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>2_preupgrade_checklist_failures_prev: &quot;2. Pre-Upgrade Checklist — Failures Prevented Here&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>3_stage_1_failure_source_vcsa_still_: &quot;3. Stage 1 Failure — Source VCSA Still Running&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>4_stage_2_failure_rollback_the_new_v: &quot;4. Stage 2 Failure — Rollback the New VCSA&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>5_stage_2_failure_read_the_upgrade_l: &quot;5. Stage 2 Failure — Read the Upgrade Logs&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>center -&gt; products_involved
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>center -&gt; 1_understand_the_vcsa_upgrade_stages
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>center -&gt; 2_preupgrade_checklist_failures_prev
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>center -&gt; 3_stage_1_failure_source_vcsa_still_
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>center -&gt; 4_stage_2_failure_rollback_the_new_v
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>center -&gt; 5_stage_2_failure_read_the_upgrade_l
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNkktqwzAQQPc-xZB9AnaSTRaFEigtlBJi0q1QpaksIiQjyU6hBHqInrAnqfxR6hIHvLNGz_M0Hy4tMi-N3oCVovBJwlB7tBuY5eGLWmncDD5dQUvcQIEfVBh9TkpreMW8I1LXRtXIA7_rY_DUx_7-axxUC4XnJCWV5mhdOHPiCyQ1c5RUpbCUIwlhgS4kSxdwuHAQOHjd5vdw6DjIW25UkJHSYszHCmRHJZ0n71SqyqJrbusgyBawsziPCbcRhJ-vb3jo4Qapm35weESLo75l92iSRgVxprKsL8x5qRQJvuWiezSkMXtrylu2Ky5vWNhXWkstRl2r3pVdXNYo9UbZsW2lxhNpaltFV_bPte_Ztp0veGqto571tQdpN67YWRU86xuewLaO2NxnI8Zn1S8bzO_gaqMGd1N2ZoBP2YABPmWAA3zKDAb4lFYmv8F9Srs=?" /></p>
 <h2 id="products-involved">Products Involved<a class="headerlink" href="#products-involved" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -10788,130 +10772,130 @@ ESXi hosts and running VMs are unaffected during a vCenter upgrade — only mana
 <hr />
 <h2 id="1-understand-the-vcsa-upgrade-stages">1. Understand the VCSA Upgrade Stages<a class="headerlink" href="#1-understand-the-vcsa-upgrade-stages" title="Permanent link">&para;</a></h2>
 <p>The VCSA upgrade uses a two-stage process from the installer ISO. Understanding which stage failed determines the recovery path.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Stage 1 — Deploy new appliance
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  A new VCSA VM is deployed alongside the source VCSA.
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  The source VCSA continues running — management is fully available throughout Stage 1.
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  Stage 1 can fail and be re-run any number of times without impact.
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>Stage 2 — Migrate data and cutover
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>  Source VCSA is shut down.
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>  All inventory, permissions, certificates, and configuration are copied to the new appliance.
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>  The new VCSA takes over the same IP/hostname as the source.
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>  Management is DOWN for 15–90 minutes during this stage.
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>  A snapshot is taken of the new VCSA at the start of Stage 2 to enable rollback.
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Stage 1 — Deploy new appliance
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>  A new VCSA VM is deployed alongside the source VCSA.
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>  The source VCSA continues running — management is fully available throughout Stage 1.
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>  Stage 1 can fail and be re-run any number of times without impact.
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>Stage 2 — Migrate data and cutover
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>  Source VCSA is shut down.
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>  All inventory, permissions, certificates, and configuration are copied to the new appliance.
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>  The new VCSA takes over the same IP/hostname as the source.
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>  Management is DOWN for 15–90 minutes during this stage.
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>  A snapshot is taken of the new VCSA at the start of Stage 2 to enable rollback.
 </code></pre></div>
 <p>Look for: always confirm Stage 1 completed successfully before beginning Stage 2. Do not start Stage 2 without a verified backup of the source VCSA from VAMI.</p>
 <hr />
 <h2 id="2-pre-upgrade-checklist-failures-prevented-here">2. Pre-Upgrade Checklist — Failures Prevented Here<a class="headerlink" href="#2-pre-upgrade-checklist-failures-prevented-here" title="Permanent link">&para;</a></h2>
 <p>Most upgrade failures are caused by conditions that could be caught before starting. Review these before retry.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>[ ] vCenter version supports direct upgrade path to target version
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    (check VMware Product Interoperability Matrix — some versions require an intermediate hop)
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>[ ] Source VCSA disk space: all partitions below 70% (especially /storage/log, /storage/db)
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>[ ] NTP is synchronised on source VCSA (check: timedatectl status)
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>[ ] SSO password policy is met — default SSO admin password expiry causes Stage 2 auth failures
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>[ ] DNS forward and reverse resolution working for both source and new VCSA FQDN
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>[ ] All ESXi hosts in the inventory are connected and not in maintenance mode
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>[ ] vSAN health is green — any degraded components may cause Stage 2 data migration to fail
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>[ ] NSX and other products checked against the vCenter compatibility matrix for the target version
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>[ ] Backup of source VCSA via VAMI is complete and tested within the last 24 hours
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>[ ] Snapshot of source VCSA VM taken on the ESXi host (additional rollback option)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>[ ] vCenter version supports direct upgrade path to target version
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    (check VMware Product Interoperability Matrix — some versions require an intermediate hop)
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>[ ] Source VCSA disk space: all partitions below 70% (especially /storage/log, /storage/db)
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>[ ] NTP is synchronised on source VCSA (check: timedatectl status)
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>[ ] SSO password policy is met — default SSO admin password expiry causes Stage 2 auth failures
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>[ ] DNS forward and reverse resolution working for both source and new VCSA FQDN
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>[ ] All ESXi hosts in the inventory are connected and not in maintenance mode
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>[ ] vSAN health is green — any degraded components may cause Stage 2 data migration to fail
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>[ ] NSX and other products checked against the vCenter compatibility matrix for the target version
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>[ ] Backup of source VCSA via VAMI is complete and tested within the last 24 hours
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>[ ] Snapshot of source VCSA VM taken on the ESXi host (additional rollback option)
 </code></pre></div>
 <hr />
 <h2 id="3-stage-1-failure-source-vcsa-still-running">3. Stage 1 Failure — Source VCSA Still Running<a class="headerlink" href="#3-stage-1-failure-source-vcsa-still-running" title="Permanent link">&para;</a></h2>
 <p>If Stage 1 (deploy new appliance) fails, the source VCSA is unaffected. Read the installer log to find the exact error.</p>
 <p>Installer log location on the machine running the installer:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Windows: %TEMP%\vcsaInstallXXXXX\
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>macOS / Linux: /tmp/vcsaInstallXXXXX/
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Windows: %TEMP%\vcsaInstallXXXXX\
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>macOS / Linux: /tmp/vcsaInstallXXXXX/
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Common Stage 1 failures:
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>  &quot;No space left on datastore&quot;           → target datastore has insufficient free space
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>  &quot;Failed to connect to host&quot;            → installer cannot reach the target ESXi host; check credentials, firewall
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>  &quot;Certificate verification failed&quot;      → ESXi thumbprint changed; re-enter the correct thumbprint
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>  &quot;Timeout waiting for appliance start&quot;  → new VCSA VM deployed but didn&#39;t boot; check ESXi host resources
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>  &quot;Network configuration failed&quot;         → IP/hostname conflict; DNS not resolving new VCSA FQDN
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Common Stage 1 failures:
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  &quot;No space left on datastore&quot;           → target datastore has insufficient free space
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  &quot;Failed to connect to host&quot;            → installer cannot reach the target ESXi host; check credentials, firewall
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>  &quot;Certificate verification failed&quot;      → ESXi thumbprint changed; re-enter the correct thumbprint
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>  &quot;Timeout waiting for appliance start&quot;  → new VCSA VM deployed but didn&#39;t boot; check ESXi host resources
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>  &quot;Network configuration failed&quot;         → IP/hostname conflict; DNS not resolving new VCSA FQDN
 </code></pre></div>
 <p>After fixing the root cause, simply re-run the installer — Stage 1 can be repeated as many times as needed.</p>
 <hr />
 <h2 id="4-stage-2-failure-rollback-the-new-vcsa">4. Stage 2 Failure — Rollback the New VCSA<a class="headerlink" href="#4-stage-2-failure-rollback-the-new-vcsa" title="Permanent link">&para;</a></h2>
 <p>If Stage 2 fails, the installer automatically prompts to roll back via the snapshot taken at Stage 2 start. This restores the source VCSA to its pre-upgrade state.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Rollback options the installer presents:
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  1. Roll back source VCSA from snapshot (restore original appliance)
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  2. Keep the failed new VCSA (not recommended unless data migration completed)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Rollback options the installer presents:
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>  1. Roll back source VCSA from snapshot (restore original appliance)
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>  2. Keep the failed new VCSA (not recommended unless data migration completed)
 </code></pre></div>
 <p>If the installer rollback prompt is not available (installer was closed, network failure), roll back manually:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># SSH to the ESXi host running the VCSA VMs</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>vim-cmd<span class="w"> </span>vmsvc/getallvms<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>vcenter
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># List snapshots for the source VCSA VM ID (replace &lt;vmid&gt;)</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>vim-cmd<span class="w"> </span>vmsvc/snapshot.get<span class="w"> </span>&lt;vmid&gt;
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Revert to the pre-Stage-2 snapshot</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>vim-cmd<span class="w"> </span>vmsvc/snapshot.revert<span class="w"> </span>&lt;vmid&gt;<span class="w"> </span>&lt;snapshot-id&gt;<span class="w"> </span><span class="m">0</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># Power on the source VCSA</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>vim-cmd<span class="w"> </span>vmsvc/power.on<span class="w"> </span>&lt;vmid&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># SSH to the ESXi host running the VCSA VMs</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>vim-cmd<span class="w"> </span>vmsvc/getallvms<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>vcenter
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># List snapshots for the source VCSA VM ID (replace &lt;vmid&gt;)</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>vim-cmd<span class="w"> </span>vmsvc/snapshot.get<span class="w"> </span>&lt;vmid&gt;
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Revert to the pre-Stage-2 snapshot</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>vim-cmd<span class="w"> </span>vmsvc/snapshot.revert<span class="w"> </span>&lt;vmid&gt;<span class="w"> </span>&lt;snapshot-id&gt;<span class="w"> </span><span class="m">0</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># Power on the source VCSA</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>vim-cmd<span class="w"> </span>vmsvc/power.on<span class="w"> </span>&lt;vmid&gt;
 </code></pre></div>
 <p>After rollback, SSH to the source VCSA and confirm all services are running:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>service-control<span class="w"> </span>--status<span class="w"> </span>--all<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>stopped
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>service-control<span class="w"> </span>--status<span class="w"> </span>--all<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>stopped
 </code></pre></div>
 <hr />
 <h2 id="5-stage-2-failure-read-the-upgrade-logs">5. Stage 2 Failure — Read the Upgrade Logs<a class="headerlink" href="#5-stage-2-failure-read-the-upgrade-logs" title="Permanent link">&para;</a></h2>
 <p>If rollback succeeds but you need to understand the failure before retrying, read the upgrade logs on the new VCSA before rolling it back.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># SSH to the new (failed) VCSA</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="c1"># Upgrade logs are in:</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>ls<span class="w"> </span>/var/log/vmware/upgrade/
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># Main upgrade orchestration log</span>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>tail<span class="w"> </span>-100<span class="w"> </span>/var/log/vmware/upgrade/vcsa-upgrade.log
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c1"># Stage 2 data migration log</span>
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>tail<span class="w"> </span>-100<span class="w"> </span>/var/log/vmware/upgrade/dbmigration.log
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="c1"># Certificate migration log</span>
-<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>tail<span class="w"> </span>-100<span class="w"> </span>/var/log/vmware/upgrade/certmigration.log
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># SSH to the new (failed) VCSA</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="c1"># Upgrade logs are in:</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>ls<span class="w"> </span>/var/log/vmware/upgrade/
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1"># Main upgrade orchestration log</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>tail<span class="w"> </span>-100<span class="w"> </span>/var/log/vmware/upgrade/vcsa-upgrade.log
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="c1"># Stage 2 data migration log</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>tail<span class="w"> </span>-100<span class="w"> </span>/var/log/vmware/upgrade/dbmigration.log
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="c1"># Certificate migration log</span>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>tail<span class="w"> </span>-100<span class="w"> </span>/var/log/vmware/upgrade/certmigration.log
 </code></pre></div>
 <p>Common Stage 2 failure patterns:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>&quot;Database migration failed: out of disk space&quot;
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>  → /storage/db partition on new VCSA too small; re-deploy with larger storage profile
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>&quot;SSO authentication failed during migration&quot;
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>  → SSO administrator@vsphere.local password expired on source VCSA before migration
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>  → Fix: unlock SSO admin account on source VCSA before retrying
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>&quot;Failed to configure network: IP already in use&quot;
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>  → Source VCSA did not shut down cleanly; old IP still responding
-<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>  → Fix: force power off source VCSA, wait 60 seconds, retry cutover
-<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>
-<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>&quot;Certificate migration failed: chain validation error&quot;
-<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>  → Expired certificates on source VCSA; renew with certificate-manager before retrying
-<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>
-<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>&quot;Services failed to start: address already in use&quot;
-<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>  → Port conflict; another appliance (PSC, old VCSA) still active on same IP
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>&quot;Database migration failed: out of disk space&quot;
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>  → /storage/db partition on new VCSA too small; re-deploy with larger storage profile
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>&quot;SSO authentication failed during migration&quot;
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>  → SSO administrator@vsphere.local password expired on source VCSA before migration
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>  → Fix: unlock SSO admin account on source VCSA before retrying
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>&quot;Failed to configure network: IP already in use&quot;
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>  → Source VCSA did not shut down cleanly; old IP still responding
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>  → Fix: force power off source VCSA, wait 60 seconds, retry cutover
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>&quot;Certificate migration failed: chain validation error&quot;
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>  → Expired certificates on source VCSA; renew with certificate-manager before retrying
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>&quot;Services failed to start: address already in use&quot;
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>  → Port conflict; another appliance (PSC, old VCSA) still active on same IP
 </code></pre></div>
 <hr />
 <h2 id="6-post-upgrade-validation-new-vcsa-accessible-but-issues-remain">6. Post-Upgrade Validation — New VCSA Accessible But Issues Remain<a class="headerlink" href="#6-post-upgrade-validation-new-vcsa-accessible-but-issues-remain" title="Permanent link">&para;</a></h2>
 <p>If Stage 2 completed but the new VCSA has service or connectivity issues, use the standard VCSA diagnostic tools before rolling back.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># On the new VCSA — check services</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>service-control<span class="w"> </span>--status<span class="w"> </span>--all<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>stopped
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Check disk space</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>df<span class="w"> </span>-h
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># Check NTP synchronisation</span>
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>timedatectl<span class="w"> </span>status
-<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>
-<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="c1"># Check SSO health</span>
-<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>/usr/lib/vmware-vmafd/bin/vmafd-cli<span class="w"> </span>get-domain-state<span class="w"> </span>--server-name<span class="w"> </span>localhost
-<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>
-<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="c1"># Check certificate validity</span>
-<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="k">for</span><span class="w"> </span>svc<span class="w"> </span><span class="k">in</span><span class="w"> </span>vpxd-extension<span class="w"> </span>machine<span class="w"> </span>vsphere-webclient<span class="p">;</span><span class="w"> </span><span class="k">do</span>
-<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a><span class="w">    </span>/usr/lib/vmware-vmafd/bin/vecs-cli<span class="w"> </span>entry<span class="w"> </span>list<span class="w"> </span>--store<span class="w"> </span><span class="nv">$svc</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Alias|Not After&quot;</span>
-<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a><span class="k">done</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># On the new VCSA — check services</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>service-control<span class="w"> </span>--status<span class="w"> </span>--all<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>stopped
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Check disk space</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>df<span class="w"> </span>-h
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1"># Check NTP synchronisation</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>timedatectl<span class="w"> </span>status
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="c1"># Check SSO health</span>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>/usr/lib/vmware-vmafd/bin/vmafd-cli<span class="w"> </span>get-domain-state<span class="w"> </span>--server-name<span class="w"> </span>localhost
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="c1"># Check certificate validity</span>
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a><span class="k">for</span><span class="w"> </span>svc<span class="w"> </span><span class="k">in</span><span class="w"> </span>vpxd-extension<span class="w"> </span>machine<span class="w"> </span>vsphere-webclient<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a><span class="w">    </span>/usr/lib/vmware-vmafd/bin/vecs-cli<span class="w"> </span>entry<span class="w"> </span>list<span class="w"> </span>--store<span class="w"> </span><span class="nv">$svc</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Alias|Not After&quot;</span>
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a><span class="k">done</span>
 </code></pre></div>
 <p>If the new VCSA boots but hosts are not reconnecting within 15 minutes:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Re-trigger reconnect for all hosts via PowerCLI on the new vCenter</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>Get-VMHost<span class="w"> </span><span class="p">|</span><span class="w"> </span>Where-Object<span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="nv">$_</span>.ConnectionState<span class="w"> </span>-eq<span class="w"> </span><span class="s2">&quot;Disconnected&quot;</span><span class="w"> </span><span class="o">}</span><span class="w"> </span><span class="sb">`</span>
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>ForEach-Object<span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="nv">$_</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Set-VMHost<span class="w"> </span>-State<span class="w"> </span>Connected<span class="w"> </span><span class="o">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Re-trigger reconnect for all hosts via PowerCLI on the new vCenter</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>Get-VMHost<span class="w"> </span><span class="p">|</span><span class="w"> </span>Where-Object<span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="nv">$_</span>.ConnectionState<span class="w"> </span>-eq<span class="w"> </span><span class="s2">&quot;Disconnected&quot;</span><span class="w"> </span><span class="o">}</span><span class="w"> </span><span class="sb">`</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>ForEach-Object<span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="nv">$_</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Set-VMHost<span class="w"> </span>-State<span class="w"> </span>Connected<span class="w"> </span><span class="o">}</span>
 </code></pre></div>
 <hr />
 <h2 id="7-aria-suitelc-upgrade-path">7. Aria SuiteLC Upgrade Path<a class="headerlink" href="#7-aria-suitelc-upgrade-path" title="Permanent link">&para;</a></h2>
@@ -10922,11 +10906,11 @@ ESXi hosts and running VMs are unaffected during a vCenter upgrade — only mana
 - Sequential upgrade orchestration (upgrade order matters: vCenter → NSX → Aria Operations)
 - Snapshot and backup coordination before upgrade
 - Post-upgrade health validation</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>Upgrade order for Aria Suite environments:
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>  1. vCenter (VCSA)
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>  2. NSX Manager (after vCenter upgrade completes)
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>  3. Aria Operations, Aria Logs, Aria Networks (after NSX)
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>  4. VxRail Manager (if present — must be last)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Upgrade order for Aria Suite environments:
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>  1. vCenter (VCSA)
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>  2. NSX Manager (after vCenter upgrade completes)
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>  3. Aria Operations, Aria Logs, Aria Networks (after NSX)
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>  4. VxRail Manager (if present — must be last)
 </code></pre></div>
 <p>Look for: never upgrade NSX before vCenter — NSX compatibility is validated against the running vCenter version. Always check the Aria Suite Compatibility Matrix before starting any product upgrade.</p>
 <hr />

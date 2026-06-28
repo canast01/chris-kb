@@ -7526,25 +7526,7 @@ GitHub Actions escalation: when to escalate to GitHub Enterprise Support, how to
 *Applies to: GitHub Actions (cloud + self-hosted runners)*
 </div>
 <p><img alt="GitHub Actions — Escalation" src="../../../../assets/automation-github-actions-troubleshooting-escalation-index.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>@startuml
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>skinparam sequenceArrowThickness 1.5
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>skinparam roundcorner 5
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>actor &quot;On-Call Engineer&quot; as ENG
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>participant &quot;GitHub Actions\nSystem&quot; as SYS
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>participant &quot;Vendor Support&quot; as SUP
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>ENG -&gt; SYS: Severity Levels
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>SYS --&gt; ENG: Output
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>ENG -&gt; SYS: Pre-Escalation Triage Checklist
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>SYS --&gt; ENG: Output
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>ENG -&gt; SYS: Step-by-Step Data Collection
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>SYS --&gt; ENG: Output
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>ENG -&gt; SUP: Escalate with diagnostic bundle
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>SUP --&gt; ENG: Case / resolution path
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>@enduml
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/plantuml/svg/eNqFkU1PAkEMhu_zKxruq_HAhYOBrAQPRkgWTEy8lKFhJwydse1I-PfOooly0VOb9nn7OVVDsXKMTg-BMwoeQem9EHuaiaTTug_-wKQKdzfjX5CkwjufhElg7Bx6SwKjJTctxghz3gcmkhGgwvx54arIgg8Z2WC0CPZYtjDzFhLrG3dnNTpe2O61u2ZfiHe1cldyTmJfzGblXC0Kzf3AT6CjD5JgZ3iqTlRXg9DUZGUmsCyWi13xK6Fmrh4jDgPAWgLuCdqe_CEGtX_1nVFutudmsPCAhtCmGOmyzp_izWoC340JTsF62NXWnLTuC9t60EiuQj_6FpXgFoQ0xXIZNqP1zk3rVYanfQJDH5L1?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Access:</strong> Repository admin or org owner access; for Enterprise support, account admin access to the GitHub Enterprise contract</li>
@@ -7638,77 +7620,77 @@ GitHub Actions escalation: when to escalate to GitHub Enterprise Support, how to
 <h2 id="step-by-step-data-collection">Step-by-Step Data Collection<a class="headerlink" href="#step-by-step-data-collection" title="Permanent link">&para;</a></h2>
 <p>Collect all of the following before opening a support case.</p>
 <h3 id="1-get-the-failing-run-details">1. Get the failing run details<a class="headerlink" href="#1-get-the-failing-run-details" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Install GitHub CLI if not present: https://cli.github.com/</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>gh<span class="w"> </span>auth<span class="w"> </span>login
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># View run details and logs for a specific run ID</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>gh<span class="w"> </span>run<span class="w"> </span>view<span class="w"> </span>&lt;run-id&gt;<span class="w"> </span>--log
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Download all logs for a run (saves to ./run-&lt;id&gt;/)</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>gh<span class="w"> </span>run<span class="w"> </span>download<span class="w"> </span>&lt;run-id&gt;<span class="w"> </span>--dir<span class="w"> </span>./run-logs-<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># List recent failed runs for a repository</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>gh<span class="w"> </span>run<span class="w"> </span>list<span class="w"> </span>--status<span class="w"> </span>failure<span class="w"> </span>--limit<span class="w"> </span><span class="m">20</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Install GitHub CLI if not present: https://cli.github.com/</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>gh<span class="w"> </span>auth<span class="w"> </span>login
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># View run details and logs for a specific run ID</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>gh<span class="w"> </span>run<span class="w"> </span>view<span class="w"> </span>&lt;run-id&gt;<span class="w"> </span>--log
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Download all logs for a run (saves to ./run-&lt;id&gt;/)</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>gh<span class="w"> </span>run<span class="w"> </span>download<span class="w"> </span>&lt;run-id&gt;<span class="w"> </span>--dir<span class="w"> </span>./run-logs-<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># List recent failed runs for a repository</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>gh<span class="w"> </span>run<span class="w"> </span>list<span class="w"> </span>--status<span class="w"> </span>failure<span class="w"> </span>--limit<span class="w"> </span><span class="m">20</span>
 </code></pre></div>
 <h3 id="2-collect-self-hosted-runner-diagnostics">2. Collect self-hosted runner diagnostics<a class="headerlink" href="#2-collect-self-hosted-runner-diagnostics" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Runner diagnostics are in _diag/ under the runner install directory</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ls<span class="w"> </span>-la<span class="w"> </span>/opt/actions-runner/_diag/
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Collect the most recent runner log files</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>ls<span class="w"> </span>-lt<span class="w"> </span>/opt/actions-runner/_diag/<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-10
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>cp<span class="w"> </span>/opt/actions-runner/_diag/*.log<span class="w"> </span>/tmp/runner-diag-<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>/
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Get runner registration info (includes runner ID and org)</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>cat<span class="w"> </span>/opt/actions-runner/.runner
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># Check runner service status (Linux)</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>status<span class="w"> </span>actions.runner.*.service
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="c1"># Check runner service status (macOS)</span>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>launchctl<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>actions.runner
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="c1"># Get runner application version</span>
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>cat<span class="w"> </span>/opt/actions-runner/package.json<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import sys,json; d=json.load(sys.stdin); print(d.get(&#39;version&#39;,&#39;unknown&#39;))&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Runner diagnostics are in _diag/ under the runner install directory</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ls<span class="w"> </span>-la<span class="w"> </span>/opt/actions-runner/_diag/
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Collect the most recent runner log files</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>ls<span class="w"> </span>-lt<span class="w"> </span>/opt/actions-runner/_diag/<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-10
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>cp<span class="w"> </span>/opt/actions-runner/_diag/*.log<span class="w"> </span>/tmp/runner-diag-<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>/
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Get runner registration info (includes runner ID and org)</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>cat<span class="w"> </span>/opt/actions-runner/.runner
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># Check runner service status (Linux)</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>status<span class="w"> </span>actions.runner.*.service
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="c1"># Check runner service status (macOS)</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>launchctl<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>actions.runner
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="c1"># Get runner application version</span>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>cat<span class="w"> </span>/opt/actions-runner/package.json<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import sys,json; d=json.load(sys.stdin); print(d.get(&#39;version&#39;,&#39;unknown&#39;))&quot;</span>
 </code></pre></div>
 <h3 id="3-collect-oidc-configuration-for-oidccloud-auth-issues">3. Collect OIDC configuration (for OIDC/cloud auth issues)<a class="headerlink" href="#3-collect-oidc-configuration-for-oidccloud-auth-issues" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Check OIDC subject customization for the repo</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>gh<span class="w"> </span>api<span class="w"> </span>/repos/<span class="o">{</span>owner<span class="o">}</span>/<span class="o">{</span>repo<span class="o">}</span>/actions/oidc/customization/sub
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Check org-level OIDC policy</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>gh<span class="w"> </span>api<span class="w"> </span>/orgs/<span class="o">{</span>org<span class="o">}</span>/actions/oidc/customization/issuer
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Verify the workflow has correct permissions</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>grep<span class="w"> </span>-A5<span class="w"> </span><span class="s1">&#39;permissions:&#39;</span><span class="w"> </span>.github/workflows/failing-workflow.yml
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check OIDC subject customization for the repo</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>gh<span class="w"> </span>api<span class="w"> </span>/repos/<span class="o">{</span>owner<span class="o">}</span>/<span class="o">{</span>repo<span class="o">}</span>/actions/oidc/customization/sub
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Check org-level OIDC policy</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>gh<span class="w"> </span>api<span class="w"> </span>/orgs/<span class="o">{</span>org<span class="o">}</span>/actions/oidc/customization/issuer
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Verify the workflow has correct permissions</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>grep<span class="w"> </span>-A5<span class="w"> </span><span class="s1">&#39;permissions:&#39;</span><span class="w"> </span>.github/workflows/failing-workflow.yml
 </code></pre></div>
 <h3 id="4-export-audit-log-enterprise-only">4. Export audit log (Enterprise only)<a class="headerlink" href="#4-export-audit-log-enterprise-only" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Export last 100 audit log entries (requires org admin or enterprise admin)</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>gh<span class="w"> </span>api<span class="w"> </span><span class="s2">&quot;/orgs/{org}/audit-log?phrase=action:workflows&amp;per_page=100&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>--paginate<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import sys,json; [print(json.dumps(e)) for e in json.load(sys.stdin)]&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>&gt;<span class="w"> </span>audit-log-<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>.jsonl
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Export last 100 audit log entries (requires org admin or enterprise admin)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>gh<span class="w"> </span>api<span class="w"> </span><span class="s2">&quot;/orgs/{org}/audit-log?phrase=action:workflows&amp;per_page=100&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>--paginate<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import sys,json; [print(json.dumps(e)) for e in json.load(sys.stdin)]&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>&gt;<span class="w"> </span>audit-log-<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>.jsonl
 </code></pre></div>
 <h3 id="5-write-the-timeline">5. Write the timeline<a class="headerlink" href="#5-write-the-timeline" title="Permanent link">&para;</a></h3>
 <p>Create a plain text file:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>GitHub org / repo: myorg/myrepo
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Runner label: self-hosted, linux, x64
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Runner hostname: runner-001.example.com
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>Runner version: 2.314.1
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>Issue first observed: 2026-06-15 10:30 UTC
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>Last known good run: 2026-06-15 09:00 UTC
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>Workflow: deploy-production.yml (Job: build)
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>Run ID: 9876543210
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>Error message:
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>  Error: Process completed with exit code 1
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>  ##[error]Runner received signal: SIGTERM
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>Changes in 24h before issue:
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>  - Runner host OS updated (Ubuntu 22.04 kernel update applied)
-<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>  - No workflow changes
-<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>
-<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>Blast radius:
-<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>  - All jobs on self-hosted runners are failing
-<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>  - GitHub-hosted runner jobs are not affected
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>GitHub org / repo: myorg/myrepo
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>Runner label: self-hosted, linux, x64
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>Runner hostname: runner-001.example.com
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>Runner version: 2.314.1
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>Issue first observed: 2026-06-15 10:30 UTC
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>Last known good run: 2026-06-15 09:00 UTC
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>Workflow: deploy-production.yml (Job: build)
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>Run ID: 9876543210
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>Error message:
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>  Error: Process completed with exit code 1
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>  ##[error]Runner received signal: SIGTERM
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>Changes in 24h before issue:
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>  - Runner host OS updated (Ubuntu 22.04 kernel update applied)
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>  - No workflow changes
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>Blast radius:
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>  - All jobs on self-hosted runners are failing
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>  - GitHub-hosted runner jobs are not affected
 </code></pre></div>
 <hr />
 <h2 id="how-to-open-a-github-enterprise-support-case">How to Open a GitHub Enterprise Support Case<a class="headerlink" href="#how-to-open-a-github-enterprise-support-case" title="Permanent link">&para;</a></h2>
@@ -7801,25 +7783,25 @@ GitHub Actions escalation: when to escalate to GitHub Enterprise Support, how to
 </table>
 <hr />
 <h2 id="useful-commands-for-case-updates">Useful Commands for Case Updates<a class="headerlink" href="#useful-commands-for-case-updates" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Confirm current GitHub platform status (include in every case update)</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>https://www.githubstatus.com/api/v2/components.json<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import sys,json; [print(f&#39;{c[\&quot;name\&quot;]}: {c[\&quot;status\&quot;]}&#39;) for c in json.load(sys.stdin)[&#39;components&#39;]]&quot;</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Get all failed runs in the last 24 hours across a repository</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>gh<span class="w"> </span>run<span class="w"> </span>list<span class="w"> </span>--status<span class="w"> </span>failure<span class="w"> </span>--created<span class="w"> </span><span class="s2">&quot;&gt;=2026-06-14&quot;</span><span class="w"> </span>--json<span class="w"> </span>databaseId,displayTitle,conclusion,createdAt<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">  </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1"># Check if runner is receiving dispatched jobs</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>gh<span class="w"> </span>api<span class="w"> </span>/orgs/<span class="o">{</span>org<span class="o">}</span>/actions/runners<span class="w"> </span>--jq<span class="w"> </span><span class="s1">&#39;.runners[] | {id, name, status, busy}&#39;</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="c1"># View specific step failure in a run</span>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>gh<span class="w"> </span>run<span class="w"> </span>view<span class="w"> </span>&lt;run-id&gt;<span class="w"> </span>--job<span class="w"> </span>&lt;job-id&gt;<span class="w"> </span>--log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A10<span class="w"> </span><span class="s2">&quot;Error\|##\[error\]&quot;</span>
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="c1"># Check workflow permissions</span>
-<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>gh<span class="w"> </span>api<span class="w"> </span>/repos/<span class="o">{</span>owner<span class="o">}</span>/<span class="o">{</span>repo<span class="o">}</span>/actions/permissions/workflow
-<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>
-<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a><span class="c1"># List org-level secrets (names only, not values)</span>
-<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>gh<span class="w"> </span>secret<span class="w"> </span>list<span class="w"> </span>--org<span class="w"> </span><span class="o">{</span>org<span class="o">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Confirm current GitHub platform status (include in every case update)</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>https://www.githubstatus.com/api/v2/components.json<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import sys,json; [print(f&#39;{c[\&quot;name\&quot;]}: {c[\&quot;status\&quot;]}&#39;) for c in json.load(sys.stdin)[&#39;components&#39;]]&quot;</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># Get all failed runs in the last 24 hours across a repository</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>gh<span class="w"> </span>run<span class="w"> </span>list<span class="w"> </span>--status<span class="w"> </span>failure<span class="w"> </span>--created<span class="w"> </span><span class="s2">&quot;&gt;=2026-06-14&quot;</span><span class="w"> </span>--json<span class="w"> </span>databaseId,displayTitle,conclusion,createdAt<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">  </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="c1"># Check if runner is receiving dispatched jobs</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>gh<span class="w"> </span>api<span class="w"> </span>/orgs/<span class="o">{</span>org<span class="o">}</span>/actions/runners<span class="w"> </span>--jq<span class="w"> </span><span class="s1">&#39;.runners[] | {id, name, status, busy}&#39;</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="c1"># View specific step failure in a run</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>gh<span class="w"> </span>run<span class="w"> </span>view<span class="w"> </span>&lt;run-id&gt;<span class="w"> </span>--job<span class="w"> </span>&lt;job-id&gt;<span class="w"> </span>--log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A10<span class="w"> </span><span class="s2">&quot;Error\|##\[error\]&quot;</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="c1"># Check workflow permissions</span>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>gh<span class="w"> </span>api<span class="w"> </span>/repos/<span class="o">{</span>owner<span class="o">}</span>/<span class="o">{</span>repo<span class="o">}</span>/actions/permissions/workflow
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="c1"># List org-level secrets (names only, not values)</span>
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>gh<span class="w"> </span>secret<span class="w"> </span>list<span class="w"> </span>--org<span class="w"> </span><span class="o">{</span>org<span class="o">}</span>
 </code></pre></div>
 <hr />
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>

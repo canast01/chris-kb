@@ -7512,25 +7512,7 @@ Linux Server initial deployment: OS install, NTP, syslog forwarding, hardening b
     s0 --&gt; s1 --&gt; s2 --&gt; s3 --&gt; s4 --&gt; s5 --&gt; s6 --&gt; s7 --&gt; s8 --&gt; s9 --&gt; s10
     style s9 fill:#2e7d32,color:#fff,stroke:#1b5e20
     style s10 fill:#2e7d32,color:#fff,stroke:#1b5e20</code></pre>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>plan: &quot;Plan&quot; {shape: oval}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>install_the_os: &quot;Install the OS&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>configure_network_static_ip: &quot;Configure Network (Static IP)&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>configure_ntp: &quot;Configure NTP&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>register_with_subscription_manager_r: &quot;Register with Subscription Manager (RHEL)&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>apply_security_baseline: &quot;Apply Security Baseline&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>configure_ssh_hardening: &quot;Configure SSH Hardening&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>validate: &quot;Validate&quot; {shape: oval}
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>plan -&gt; install_the_os
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>install_the_os -&gt; configure_network_static_ip
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>configure_network_static_ip -&gt; configure_ntp
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>configure_ntp -&gt; register_with_subscription_manager_r
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>register_with_subscription_manager_r -&gt; apply_security_baseline
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>apply_security_baseline -&gt; configure_ssh_hardening
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>configure_ssh_hardening -&gt; validate
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNkU1OwzAQhfc5xSirsuACXSABQkolClGN2FpuYuwRxrHsCVWFenfsNhEkStqu_PPePHvmq9HLirCxS_CoNGWZMyIe8jIuOfwELZxcQvMtzCFDG0gYw0lL3oRoWp0uIF7AK_uzp0xhlZGHrGrsB6rWS24l7Rr_yWMJYcXRxYDHXoWXkwoLdpRhVd5cyqNRwls5WeGlwkDS8x2S5qHdhsqjSz3zL2GFioqPQZvOBskG7J8N1icbLDbF0_P0t4RzZs-DrFqPtOdbEaRBGz35fVKAdQo8dMqF5kLQXAtfS4tWDdpkrICiVyZTIiusBaXH37vtmOSRMtzewRDpiHAynOF3ju2olNwQXJKv4XIVvBQ2M_85LsPvDYY9ByGV9JPNfgHunTMA?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Access:</strong> root or sudo-capable account on target hosts</li>
@@ -7594,196 +7576,196 @@ Linux Server initial deployment: OS install, NTP, syslog forwarding, hardening b
 <h2 id="configure-network-static-ip">Configure Network (Static IP)<a class="headerlink" href="#configure-network-static-ip" title="Permanent link">&para;</a></h2>
 <p>Use <code>nmcli</code> on RHEL/Rocky. On Ubuntu, edit <code>/etc/netplan/</code>.</p>
 <p><strong>RHEL / Rocky:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>nmcli<span class="w"> </span>con<span class="w"> </span>mod<span class="w"> </span>&lt;interface&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">    </span>ipv4.addresses<span class="w"> </span>&lt;IP&gt;/&lt;prefix&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span>ipv4.gateway<span class="w"> </span>&lt;GW&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">    </span>ipv4.dns<span class="w"> </span><span class="s2">&quot;&lt;DNS1&gt; &lt;DNS2&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">    </span>ipv4.method<span class="w"> </span>manual
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>nmcli<span class="w"> </span>con<span class="w"> </span>up<span class="w"> </span>&lt;interface&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>nmcli<span class="w"> </span>con<span class="w"> </span>mod<span class="w"> </span>&lt;interface&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">    </span>ipv4.addresses<span class="w"> </span>&lt;IP&gt;/&lt;prefix&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span>ipv4.gateway<span class="w"> </span>&lt;GW&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">    </span>ipv4.dns<span class="w"> </span><span class="s2">&quot;&lt;DNS1&gt; &lt;DNS2&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">    </span>ipv4.method<span class="w"> </span>manual
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>nmcli<span class="w"> </span>con<span class="w"> </span>up<span class="w"> </span>&lt;interface&gt;
 </code></pre></div>
 <p>Verify:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ip<span class="w"> </span>addr<span class="w"> </span>show<span class="w"> </span>&lt;interface&gt;
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ip<span class="w"> </span>route
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>ping<span class="w"> </span>-c<span class="w"> </span><span class="m">3</span><span class="w"> </span>&lt;GW&gt;
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>ping<span class="w"> </span>-c<span class="w"> </span><span class="m">3</span><span class="w"> </span><span class="m">8</span>.8.8.8
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>ip<span class="w"> </span>addr<span class="w"> </span>show<span class="w"> </span>&lt;interface&gt;
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ip<span class="w"> </span>route
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>ping<span class="w"> </span>-c<span class="w"> </span><span class="m">3</span><span class="w"> </span>&lt;GW&gt;
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>ping<span class="w"> </span>-c<span class="w"> </span><span class="m">3</span><span class="w"> </span><span class="m">8</span>.8.8.8
 </code></pre></div>
 <p><strong>Ubuntu (Netplan):</strong></p>
 <p>Edit <code>/etc/netplan/00-installer-config.yaml</code>:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nt">network</span><span class="p">:</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="nt">ethernets</span><span class="p">:</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">    </span><span class="nt">ens3</span><span class="p">:</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">      </span><span class="nt">addresses</span><span class="p">:</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;IP&gt;/&lt;prefix&gt;</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">      </span><span class="nt">routes</span><span class="p">:</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">to</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">          </span><span class="nt">via</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;GW&gt;</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">      </span><span class="nt">nameservers</span><span class="p">:</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">        </span><span class="nt">addresses</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">&lt;DNS1&gt;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">&lt;DNS2&gt;</span><span class="p p-Indicator">]</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">      </span><span class="nt">dhcp4</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nt">network</span><span class="p">:</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="nt">ethernets</span><span class="p">:</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">    </span><span class="nt">ens3</span><span class="p">:</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">      </span><span class="nt">addresses</span><span class="p">:</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;IP&gt;/&lt;prefix&gt;</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">      </span><span class="nt">routes</span><span class="p">:</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">to</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">          </span><span class="nt">via</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;GW&gt;</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">      </span><span class="nt">nameservers</span><span class="p">:</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">        </span><span class="nt">addresses</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">&lt;DNS1&gt;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">&lt;DNS2&gt;</span><span class="p p-Indicator">]</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">      </span><span class="nt">dhcp4</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
 </code></pre></div>
 <p>Apply:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>netplan<span class="w"> </span>apply
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>netplan<span class="w"> </span>apply
 </code></pre></div>
 <hr />
 <h2 id="configure-ntp">Configure NTP<a class="headerlink" href="#configure-ntp" title="Permanent link">&para;</a></h2>
 <p>Accurate time is required for Kerberos (domain join), log correlation, and certificate validity.</p>
 <p><strong>RHEL / Rocky:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>dnf<span class="w"> </span>install<span class="w"> </span>chrony<span class="w"> </span>-y
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>--now<span class="w"> </span>chronyd
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>dnf<span class="w"> </span>install<span class="w"> </span>chrony<span class="w"> </span>-y
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>--now<span class="w"> </span>chronyd
 </code></pre></div>
 <p>Edit <code>/etc/chrony.conf</code> — replace the default pool with your NTP server:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>server &lt;NTP-server&gt; iburst
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>server &lt;NTP-server&gt; iburst
 </code></pre></div>
 <p>Restart and verify:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>chronyd
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>chronyc<span class="w"> </span>sources<span class="w"> </span>-v
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>chronyc<span class="w"> </span>tracking
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>chronyd
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>chronyc<span class="w"> </span>sources<span class="w"> </span>-v
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>chronyc<span class="w"> </span>tracking
 </code></pre></div>
 <p><code>Reference ID</code> should show your NTP server, and <code>System time</code> offset should be under 100ms.</p>
 <p><strong>Ubuntu:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>timedatectl<span class="w"> </span>set-ntp<span class="w"> </span><span class="nb">true</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>timedatectl<span class="w"> </span>show-timesync
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>timedatectl<span class="w"> </span>set-ntp<span class="w"> </span><span class="nb">true</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>timedatectl<span class="w"> </span>show-timesync
 </code></pre></div>
 <hr />
 <h2 id="register-with-subscription-manager-rhel">Register with Subscription Manager (RHEL)<a class="headerlink" href="#register-with-subscription-manager-rhel" title="Permanent link">&para;</a></h2>
 <p>If deploying RHEL (not Rocky/AlmaLinux), register with Red Hat Subscription Manager to enable package repos.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>subscription-manager<span class="w"> </span>register<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="w">    </span>--username<span class="w"> </span>&lt;redhat-user&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">    </span>--password<span class="w"> </span>&lt;redhat-password&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">    </span>--auto-attach
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>subscription-manager<span class="w"> </span>register<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">    </span>--username<span class="w"> </span>&lt;redhat-user&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">    </span>--password<span class="w"> </span>&lt;redhat-password&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">    </span>--auto-attach
 </code></pre></div>
 <p>Verify attached subscriptions:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>subscription-manager<span class="w"> </span>status
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>subscription-manager<span class="w"> </span>list<span class="w"> </span>--consumed
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>subscription-manager<span class="w"> </span>status
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>subscription-manager<span class="w"> </span>list<span class="w"> </span>--consumed
 </code></pre></div>
 <p>For Rocky or AlmaLinux, repos are enabled by default — skip this step.</p>
 <hr />
 <h2 id="apply-security-baseline">Apply Security Baseline<a class="headerlink" href="#apply-security-baseline" title="Permanent link">&para;</a></h2>
 <p>Update all packages and install baseline security tooling.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Full system update</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>dnf<span class="w"> </span>update<span class="w"> </span>-y
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># Core security packages</span>
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>dnf<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>aide<span class="w"> </span>firewalld
-<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>
-<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="c1"># Enable firewall</span>
-<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>--now<span class="w"> </span>firewalld
-<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>
-<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="c1"># Verify SELinux is enforcing</span>
-<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>sestatus
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Full system update</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>dnf<span class="w"> </span>update<span class="w"> </span>-y
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Core security packages</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>dnf<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>aide<span class="w"> </span>firewalld
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># Enable firewall</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>--now<span class="w"> </span>firewalld
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="c1"># Verify SELinux is enforcing</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>sestatus
 </code></pre></div>
 <p>If SELinux is in permissive mode, set it to enforcing:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>setenforce<span class="w"> </span><span class="m">1</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>sed<span class="w"> </span>-i<span class="w"> </span><span class="s1">&#39;s/^SELINUX=permissive/SELINUX=enforcing/&#39;</span><span class="w"> </span>/etc/selinux/config
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>setenforce<span class="w"> </span><span class="m">1</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>sed<span class="w"> </span>-i<span class="w"> </span><span class="s1">&#39;s/^SELINUX=permissive/SELINUX=enforcing/&#39;</span><span class="w"> </span>/etc/selinux/config
 </code></pre></div>
 <p>Initialise AIDE (file integrity baseline) — this takes several minutes:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>aide<span class="w"> </span>--init
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>mv<span class="w"> </span>/var/lib/aide/aide.db.new.gz<span class="w"> </span>/var/lib/aide/aide.db.gz
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>aide<span class="w"> </span>--init
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>mv<span class="w"> </span>/var/lib/aide/aide.db.new.gz<span class="w"> </span>/var/lib/aide/aide.db.gz
 </code></pre></div>
 <p>Schedule a daily integrity check:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;0 3 * * * root /usr/sbin/aide --check&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>/etc/cron.d/aide
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;0 3 * * * root /usr/sbin/aide --check&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>/etc/cron.d/aide
 </code></pre></div>
 <hr />
 <h2 id="configure-ssh-hardening">Configure SSH Hardening<a class="headerlink" href="#configure-ssh-hardening" title="Permanent link">&para;</a></h2>
 <p>Edit <code>/etc/ssh/sshd_config</code> to restrict SSH access:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># Disable root login</span>
-<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>PermitRootLogin<span class="w"> </span>no
-<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>
-<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="c1"># Disable password authentication (key-based only)</span>
-<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>PasswordAuthentication<span class="w"> </span>no
-<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>
-<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="c1"># Restrict to specific users or groups</span>
-<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>AllowGroups<span class="w"> </span>sshusers<span class="w"> </span>wheel
-<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>
-<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a><span class="c1"># Use only strong ciphers</span>
-<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>Ciphers<span class="w"> </span>aes256-gcm@openssh.com,aes128-gcm@openssh.com,aes256-ctr
-<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>MACs<span class="w"> </span>hmac-sha2-512,hmac-sha2-256
-<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>
-<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a><span class="c1"># Reduce idle timeout</span>
-<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a>ClientAliveInterval<span class="w"> </span><span class="m">300</span>
-<a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a>ClientAliveCountMax<span class="w"> </span><span class="m">2</span>
-<a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a>
-<a id="__codelineno-15-18" name="__codelineno-15-18" href="#__codelineno-15-18"></a><span class="c1"># Disable X11 forwarding</span>
-<a id="__codelineno-15-19" name="__codelineno-15-19" href="#__codelineno-15-19"></a>X11Forwarding<span class="w"> </span>no
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Disable root login</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>PermitRootLogin<span class="w"> </span>no
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c1"># Disable password authentication (key-based only)</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>PasswordAuthentication<span class="w"> </span>no
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="c1"># Restrict to specific users or groups</span>
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>AllowGroups<span class="w"> </span>sshusers<span class="w"> </span>wheel
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a><span class="c1"># Use only strong ciphers</span>
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>Ciphers<span class="w"> </span>aes256-gcm@openssh.com,aes128-gcm@openssh.com,aes256-ctr
+<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a>MACs<span class="w"> </span>hmac-sha2-512,hmac-sha2-256
+<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a>
+<a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a><span class="c1"># Reduce idle timeout</span>
+<a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a>ClientAliveInterval<span class="w"> </span><span class="m">300</span>
+<a id="__codelineno-14-16" name="__codelineno-14-16" href="#__codelineno-14-16"></a>ClientAliveCountMax<span class="w"> </span><span class="m">2</span>
+<a id="__codelineno-14-17" name="__codelineno-14-17" href="#__codelineno-14-17"></a>
+<a id="__codelineno-14-18" name="__codelineno-14-18" href="#__codelineno-14-18"></a><span class="c1"># Disable X11 forwarding</span>
+<a id="__codelineno-14-19" name="__codelineno-14-19" href="#__codelineno-14-19"></a>X11Forwarding<span class="w"> </span>no
 </code></pre></div>
 <p>Validate the configuration and restart:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>sshd<span class="w"> </span>-t
-<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>sshd
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>sshd<span class="w"> </span>-t
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>sshd
 </code></pre></div>
 <p>Open the SSH port in the firewall:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>firewall-cmd<span class="w"> </span>--permanent<span class="w"> </span>--add-service<span class="o">=</span>ssh
-<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>firewall-cmd<span class="w"> </span>--reload
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>firewall-cmd<span class="w"> </span>--permanent<span class="w"> </span>--add-service<span class="o">=</span>ssh
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>firewall-cmd<span class="w"> </span>--reload
 </code></pre></div>
 <hr />
 <h2 id="configure-syslog-forwarding">Configure Syslog Forwarding<a class="headerlink" href="#configure-syslog-forwarding" title="Permanent link">&para;</a></h2>
 <p>Forward logs to a central syslog server (e.g., a SIEM or syslog aggregator).</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>dnf<span class="w"> </span>install<span class="w"> </span>rsyslog<span class="w"> </span>-y
-<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>--now<span class="w"> </span>rsyslog
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>dnf<span class="w"> </span>install<span class="w"> </span>rsyslog<span class="w"> </span>-y
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>--now<span class="w"> </span>rsyslog
 </code></pre></div>
 <p>Add a remote target to <code>/etc/rsyslog.conf</code>:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a># Forward all logs to central syslog server (TCP)
-<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>*.* @@&lt;syslog-server&gt;:514
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a># Forward all logs to central syslog server (TCP)
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>*.* @@&lt;syslog-server&gt;:514
 </code></pre></div>
 <p>Restart and verify forwarding:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>rsyslog
-<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>logger<span class="w"> </span>-p<span class="w"> </span>local0.info<span class="w"> </span><span class="s2">&quot;Test message from </span><span class="k">$(</span>hostname<span class="k">)</span><span class="s2">&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>rsyslog
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>logger<span class="w"> </span>-p<span class="w"> </span>local0.info<span class="w"> </span><span class="s2">&quot;Test message from </span><span class="k">$(</span>hostname<span class="k">)</span><span class="s2">&quot;</span>
 </code></pre></div>
 <p>Confirm the test message appears on the syslog server.</p>
 <hr />
 <h2 id="domain-join-if-required">Domain Join (if required)<a class="headerlink" href="#domain-join-if-required" title="Permanent link">&para;</a></h2>
 <p>Join the server to Active Directory using <code>realmd</code> and <code>sssd</code>.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>dnf<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>sssd<span class="w"> </span>realmd<span class="w"> </span>oddjob<span class="w"> </span>oddjob-mkhomedir<span class="w"> </span>adcli<span class="w"> </span>samba-common-tools
-<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>
-<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a><span class="c1"># Discover the domain</span>
-<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>realm<span class="w"> </span>discover<span class="w"> </span>corp.local
-<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>
-<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a><span class="c1"># Join the domain</span>
-<a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a>realm<span class="w"> </span>join<span class="w"> </span>--user<span class="o">=</span>&lt;domain-admin&gt;<span class="w"> </span>corp.local
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>dnf<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>sssd<span class="w"> </span>realmd<span class="w"> </span>oddjob<span class="w"> </span>oddjob-mkhomedir<span class="w"> </span>adcli<span class="w"> </span>samba-common-tools
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="c1"># Discover the domain</span>
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a>realm<span class="w"> </span>discover<span class="w"> </span>corp.local
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>
+<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a><span class="c1"># Join the domain</span>
+<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a>realm<span class="w"> </span>join<span class="w"> </span>--user<span class="o">=</span>&lt;domain-admin&gt;<span class="w"> </span>corp.local
 </code></pre></div>
 <p>Verify join status:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>realm<span class="w"> </span>list
-<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>id<span class="w"> </span>&lt;domain-user&gt;@corp.local
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>realm<span class="w"> </span>list
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>id<span class="w"> </span>&lt;domain-user&gt;@corp.local
 </code></pre></div>
 <p>Configure home directory creation on first login:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>authselect<span class="w"> </span><span class="k">select</span><span class="w"> </span>sssd<span class="w"> </span>with-mkhomedir<span class="w"> </span>--force
-<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>--now<span class="w"> </span>oddjobd
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>authselect<span class="w"> </span><span class="k">select</span><span class="w"> </span>sssd<span class="w"> </span>with-mkhomedir<span class="w"> </span>--force
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>--now<span class="w"> </span>oddjobd
 </code></pre></div>
 <p>Restrict SSH access to specific AD groups:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>realm<span class="w"> </span>permit<span class="w"> </span>-g<span class="w"> </span><span class="s2">&quot;Linux Admins&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>realm<span class="w"> </span>permit<span class="w"> </span>-g<span class="w"> </span><span class="s2">&quot;Linux Admins&quot;</span>
 </code></pre></div>
 <hr />
 <h2 id="validate-the-deployment">Validate the Deployment<a class="headerlink" href="#validate-the-deployment" title="Permanent link">&para;</a></h2>
 <p>Run the following checks and confirm all pass before handing off the server.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="c1"># No failed services</span>
-<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>systemctl<span class="w"> </span>--failed
-<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>
-<a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a><span class="c1"># Network connectivity</span>
-<a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a>ping<span class="w"> </span>-c<span class="w"> </span><span class="m">3</span><span class="w"> </span>&lt;gateway&gt;
-<a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a>ping<span class="w"> </span>-c<span class="w"> </span><span class="m">3</span><span class="w"> </span>&lt;DNS-server&gt;
-<a id="__codelineno-25-7" name="__codelineno-25-7" href="#__codelineno-25-7"></a>nslookup<span class="w"> </span>corp.local
-<a id="__codelineno-25-8" name="__codelineno-25-8" href="#__codelineno-25-8"></a>
-<a id="__codelineno-25-9" name="__codelineno-25-9" href="#__codelineno-25-9"></a><span class="c1"># NTP sync status</span>
-<a id="__codelineno-25-10" name="__codelineno-25-10" href="#__codelineno-25-10"></a>timedatectl<span class="w"> </span>status
-<a id="__codelineno-25-11" name="__codelineno-25-11" href="#__codelineno-25-11"></a>chronyc<span class="w"> </span>tracking
-<a id="__codelineno-25-12" name="__codelineno-25-12" href="#__codelineno-25-12"></a>
-<a id="__codelineno-25-13" name="__codelineno-25-13" href="#__codelineno-25-13"></a><span class="c1"># SELinux enforcing</span>
-<a id="__codelineno-25-14" name="__codelineno-25-14" href="#__codelineno-25-14"></a>sestatus
-<a id="__codelineno-25-15" name="__codelineno-25-15" href="#__codelineno-25-15"></a>
-<a id="__codelineno-25-16" name="__codelineno-25-16" href="#__codelineno-25-16"></a><span class="c1"># Firewall active</span>
-<a id="__codelineno-25-17" name="__codelineno-25-17" href="#__codelineno-25-17"></a>firewall-cmd<span class="w"> </span>--state
-<a id="__codelineno-25-18" name="__codelineno-25-18" href="#__codelineno-25-18"></a>firewall-cmd<span class="w"> </span>--list-all
-<a id="__codelineno-25-19" name="__codelineno-25-19" href="#__codelineno-25-19"></a>
-<a id="__codelineno-25-20" name="__codelineno-25-20" href="#__codelineno-25-20"></a><span class="c1"># SSH hardening confirmed</span>
-<a id="__codelineno-25-21" name="__codelineno-25-21" href="#__codelineno-25-21"></a>sshd<span class="w"> </span>-T<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">&#39;permitrootlogin|passwordauthentication&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="c1"># No failed services</span>
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>systemctl<span class="w"> </span>--failed
+<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>
+<a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a><span class="c1"># Network connectivity</span>
+<a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a>ping<span class="w"> </span>-c<span class="w"> </span><span class="m">3</span><span class="w"> </span>&lt;gateway&gt;
+<a id="__codelineno-24-6" name="__codelineno-24-6" href="#__codelineno-24-6"></a>ping<span class="w"> </span>-c<span class="w"> </span><span class="m">3</span><span class="w"> </span>&lt;DNS-server&gt;
+<a id="__codelineno-24-7" name="__codelineno-24-7" href="#__codelineno-24-7"></a>nslookup<span class="w"> </span>corp.local
+<a id="__codelineno-24-8" name="__codelineno-24-8" href="#__codelineno-24-8"></a>
+<a id="__codelineno-24-9" name="__codelineno-24-9" href="#__codelineno-24-9"></a><span class="c1"># NTP sync status</span>
+<a id="__codelineno-24-10" name="__codelineno-24-10" href="#__codelineno-24-10"></a>timedatectl<span class="w"> </span>status
+<a id="__codelineno-24-11" name="__codelineno-24-11" href="#__codelineno-24-11"></a>chronyc<span class="w"> </span>tracking
+<a id="__codelineno-24-12" name="__codelineno-24-12" href="#__codelineno-24-12"></a>
+<a id="__codelineno-24-13" name="__codelineno-24-13" href="#__codelineno-24-13"></a><span class="c1"># SELinux enforcing</span>
+<a id="__codelineno-24-14" name="__codelineno-24-14" href="#__codelineno-24-14"></a>sestatus
+<a id="__codelineno-24-15" name="__codelineno-24-15" href="#__codelineno-24-15"></a>
+<a id="__codelineno-24-16" name="__codelineno-24-16" href="#__codelineno-24-16"></a><span class="c1"># Firewall active</span>
+<a id="__codelineno-24-17" name="__codelineno-24-17" href="#__codelineno-24-17"></a>firewall-cmd<span class="w"> </span>--state
+<a id="__codelineno-24-18" name="__codelineno-24-18" href="#__codelineno-24-18"></a>firewall-cmd<span class="w"> </span>--list-all
+<a id="__codelineno-24-19" name="__codelineno-24-19" href="#__codelineno-24-19"></a>
+<a id="__codelineno-24-20" name="__codelineno-24-20" href="#__codelineno-24-20"></a><span class="c1"># SSH hardening confirmed</span>
+<a id="__codelineno-24-21" name="__codelineno-24-21" href="#__codelineno-24-21"></a>sshd<span class="w"> </span>-T<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">&#39;permitrootlogin|passwordauthentication&#39;</span>
 </code></pre></div>
 <p>Expected results: <code>systemctl --failed</code> returns empty, <code>sestatus</code> shows <code>SELinux status: enabled</code> and <code>Current mode: enforcing</code>, and SSH hardening settings match what was configured.</p>
 <hr />
 <h2 id="verify">Verify<a class="headerlink" href="#verify" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>systemctl<span class="w"> </span>status<span class="w"> </span>&lt;service-name&gt;<span class="w">   </span><span class="c1"># Active: running</span>
-<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>&lt;service-name&gt;<span class="w"> </span>-n<span class="w"> </span><span class="m">20</span><span class="w"> </span>--no-pager<span class="w">  </span><span class="c1"># no ERROR lines</span>
-<a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a>ss<span class="w"> </span>-tlnp<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;port&gt;<span class="w">            </span><span class="c1"># service listening on expected port</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>systemctl<span class="w"> </span>status<span class="w"> </span>&lt;service-name&gt;<span class="w">   </span><span class="c1"># Active: running</span>
+<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>&lt;service-name&gt;<span class="w"> </span>-n<span class="w"> </span><span class="m">20</span><span class="w"> </span>--no-pager<span class="w">  </span><span class="c1"># no ERROR lines</span>
+<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>ss<span class="w"> </span>-tlnp<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;port&gt;<span class="w">            </span><span class="c1"># service listening on expected port</span>
 </code></pre></div>
 <hr />
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>

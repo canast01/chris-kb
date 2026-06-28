@@ -9264,23 +9264,7 @@ Firewall port reference for VMware Site Recovery Manager (SRM) and vSphere Repli
 *Applies to: SRM 8.x / vSphere Replication 8.x*
 </div>
 <p><img alt="SRM — Ports and Network Requirements" src="../../../../../assets/virtualization-vmware-srm-architecture-ports.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>center: &quot;Site Recovery Manager&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>inbound_client_to_srm_server_both_si: &quot;Inbound — Client to SRM Server (Both Sites)&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>srm_server_within_site: &quot;SRM Server Within Site&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>srm_server_intersite_cross_the_wan_f: &quot;SRM Server — Inter-Site (Cross the WAN Firewall)&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>vsphere_replication_appliance_vr_wit: &quot;vSphere Replication Appliance (VR) — Within Site&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>vsphere_replication_appliance_vr_int: &quot;vSphere Replication Appliance (VR) — Inter-Site (Cross the W&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>vsphere_replication_data_traffic_esx: &quot;vSphere Replication Data Traffic (ESXi to ESXi — Cross the W&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>center -&gt; inbound_client_to_srm_server_both_si
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>center -&gt; srm_server_within_site
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>center -&gt; srm_server_intersite_cross_the_wan_f
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>center -&gt; vsphere_replication_appliance_vr_wit
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>center -&gt; vsphere_replication_appliance_vr_int
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>center -&gt; vsphere_replication_data_traffic_esx
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqVkkFOwzAQRfc5xairdNELdIFUCkhdlEWDKLuR605jS8GObJMWoUocghNyEsYu0IIaJV05kp___zP5a-1IBm3NGJwuVcgySSaQG8Og0IFgQdI25F5hLowoyQ3gzStR0xgU7URpzT7TZmVfzBplpfkpBovePaMnx-9wZYNCr1ludsDg8_0DpgmFYKFYzKFIKOTXzEJ09cOjTYwnTFnRPjuR3eqgtGHhQDHpUWSZLpJKl4aOc0YFlM56j0ERboXBzV_FmHcW0VFaSD6NMDAMy8k93PH-tqKqzidufK3IETqqKy1F3DOKmr-FkYRNmoPdmiJhvOxfDCY_GOSPi2FK0TVbpxtP3N-tZebezmsRBAYnNhstkfyuxfmGMXg4YJDfFk861iKdqSkdzt91hdEV9OnhCX6-TeeB1qqc4H3-9SU4e3bg_zecfQFr12uR?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
 <li>SRM requires firewall rules at two layers: within each site (SRM to vCenter) and across the inter-site link</li>
@@ -9535,23 +9519,23 @@ Firewall port reference for VMware Site Recovery Manager (SRM) and vSphere Repli
 </table>
 <hr />
 <h2 id="verify">Verify<a class="headerlink" href="#verify" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># From admin workstation — test SRM API</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;%{http_code}&quot;</span><span class="w"> </span>https://&lt;srm-server-ip&gt;/api/rest/vr/v1/info
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># From SRM server — test inter-site SRM connectivity</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>nc<span class="w"> </span>-zv<span class="w"> </span>&lt;remote-srm-ip&gt;<span class="w"> </span><span class="m">9086</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># From SRM server — test remote vCenter API</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>nc<span class="w"> </span>-zv<span class="w"> </span>&lt;remote-vcenter-ip&gt;<span class="w"> </span><span class="m">443</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># From protected site ESXi — test replication data port to recovery ESXi</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>nc<span class="w"> </span>-zv<span class="w"> </span>&lt;recovery-esxi-ip&gt;<span class="w"> </span><span class="m">31031</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># From VR Appliance — test inter-site VR pair</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>nc<span class="w"> </span>-zv<span class="w"> </span>&lt;remote-vr-appliance-ip&gt;<span class="w"> </span><span class="m">10443</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="c1"># From vSphere Client — Validate SRM site pair</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="c1"># SRM → Configure → Site Pair — status should show &quot;Connected&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># From admin workstation — test SRM API</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;%{http_code}&quot;</span><span class="w"> </span>https://&lt;srm-server-ip&gt;/api/rest/vr/v1/info
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># From SRM server — test inter-site SRM connectivity</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>nc<span class="w"> </span>-zv<span class="w"> </span>&lt;remote-srm-ip&gt;<span class="w"> </span><span class="m">9086</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># From SRM server — test remote vCenter API</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>nc<span class="w"> </span>-zv<span class="w"> </span>&lt;remote-vcenter-ip&gt;<span class="w"> </span><span class="m">443</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># From protected site ESXi — test replication data port to recovery ESXi</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>nc<span class="w"> </span>-zv<span class="w"> </span>&lt;recovery-esxi-ip&gt;<span class="w"> </span><span class="m">31031</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># From VR Appliance — test inter-site VR pair</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>nc<span class="w"> </span>-zv<span class="w"> </span>&lt;remote-vr-appliance-ip&gt;<span class="w"> </span><span class="m">10443</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># From vSphere Client — Validate SRM site pair</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="c1"># SRM → Configure → Site Pair — status should show &quot;Connected&quot;</span>
 </code></pre></div>
 <hr />
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>

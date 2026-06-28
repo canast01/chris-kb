@@ -8260,15 +8260,7 @@ Daily ONTAP cluster health-check sequence — takes ~10 minutes. Run this every 
 </div>
 
 <p><img alt="ONTAP Morning Health-Check Runbook" src="../../../../../assets/storage-netapp-ontap-operations-morning-health-check-index.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>center: &quot;NetApp ONTAP&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>run_this_routine: &quot;Run This Routine&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>health_thresholds: &quot;Health Thresholds&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>center -&gt; run_this_routine
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>center -&gt; health_thresholds
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNptjs0KwjAQhO95iqV3XyAHoTdPVUrvJbRLNhA2YbMBQfruxj8U9foN38ysQXDRkNiCBE9qzIKsKBa6AbXPGY7D1J86uBRyGS0Qnp1PvBmpPCuFMkuqGrhF3VgZpoZgfKC3dRtx7CNuhtBFpaYKFkpxLU083FlzX-yv-bwGuz18j39EP_3mCn0qUlk=?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <p><strong>Prerequisites:</strong></p>
 <ul>
@@ -8282,57 +8274,57 @@ Daily ONTAP cluster health-check sequence — takes ~10 minutes. Run this every 
 <h2 id="run-this-routine">Run This Routine<a class="headerlink" href="#run-this-routine" title="Permanent link">&para;</a></h2>
 <p>Work through steps 1–11 in order. Each command takes seconds. Flag any output that does not match the expected result before moving to the next step.</p>
 <p><strong>Step 1 — Verify all nodes are healthy</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>cluster<span class="w"> </span>show
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>cluster<span class="w"> </span>show
 </code></pre></div>
 <p>Expected output: every node shows <code>true</code> in the Health column and <code>false</code> in the Epsilon column (one node may hold Epsilon — that is normal). Any node showing <code>false</code> for Health blocks the rest of the routine.</p>
 <hr />
 <p><strong>Step 2 — Overall health subsystem status</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>system<span class="w"> </span>health<span class="w"> </span>status<span class="w"> </span>show
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>system<span class="w"> </span>health<span class="w"> </span>status<span class="w"> </span>show
 </code></pre></div>
 <p>Expected output: <code>Status: ok</code>. Any other status (<code>degraded</code>, <code>warning</code>) means a subsystem has an active alert — proceed to step 3 immediately.</p>
 <hr />
 <p><strong>Step 3 — Active health alerts</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>system<span class="w"> </span>health<span class="w"> </span>alert<span class="w"> </span>show
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>system<span class="w"> </span>health<span class="w"> </span>alert<span class="w"> </span>show
 </code></pre></div>
 <p>Expected output: no rows. Any alert row must be acknowledged or resolved. Note the <code>Probable Cause</code> and <code>Corrective Action</code> columns — these are actionable.</p>
 <hr />
 <p><strong>Step 4 — Aggregate health and usage</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>state,used-percent
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>state,used-percent
 </code></pre></div>
 <p>Expected output: all aggregates in <code>online</code> state. Flag any aggregate with <code>used-percent</code> exceeding 80%. At 85% or above treat as critical — see threshold table below.</p>
 <hr />
 <p><strong>Step 5 — Offline volumes</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>volume<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>state,percent-used<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>online
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>volume<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>state,percent-used<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>online
 </code></pre></div>
 <p>Expected output: no rows (or only the header line). Any volume not in <code>online</code> state requires investigation before starting operational work.</p>
 <hr />
 <p><strong>Step 6 — Volumes approaching capacity</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>volume<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>percent-used<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;NR==1 || $NF+0 &gt; 80&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>volume<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>percent-used<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;NR==1 || $NF+0 &gt; 80&#39;</span>
 </code></pre></div>
 <p>Expected output: header line only. Any volume above 80% must be noted. Above 90% is critical — expand the volume or move data before proceeding with other work.</p>
 <hr />
 <p><strong>Step 7 — SnapMirror replication lag</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>lag-time,health
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>lag-time,health
 </code></pre></div>
 <p>Expected output: all relationships show <code>true</code> for Health. For <code>lag-time</code>, compare against each relationship's schedule — lag exceeding 2× the schedule interval indicates a transfer problem. Any <code>false</code> Health value requires immediate investigation.</p>
 <hr />
 <p><strong>Step 8 — LIF status</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>network<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>status-oper
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>network<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>status-oper
 </code></pre></div>
 <p>Expected output: all LIFs show <code>up</code> for <code>status-oper</code>. Any <code>down</code> LIF blocks storage access for the associated protocol — resolve before starting other work.</p>
 <hr />
 <p><strong>Step 9 — Broken or failed disks</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>storage<span class="w"> </span>disk<span class="w"> </span>show<span class="w"> </span>-broken
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>storage<span class="w"> </span>disk<span class="w"> </span>show<span class="w"> </span>-broken
 </code></pre></div>
 <p>Expected output: no rows. Any broken disk must be replaced immediately. Open a case with NetApp if the disk is under support contract. Do not start any workload migrations until broken disks are replaced.</p>
 <hr />
 <p><strong>Step 10 — Recent error events (last hour)</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>event<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-severity<span class="w"> </span>error<span class="w"> </span>-time-range<span class="w"> </span><span class="s2">&quot;1h&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>event<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-severity<span class="w"> </span>error<span class="w"> </span>-time-range<span class="w"> </span><span class="s2">&quot;1h&quot;</span>
 </code></pre></div>
 <p>Expected output: no rows, or only informational entries. Review any <code>error</code>-severity events. Cross-reference with steps 3–9 to determine if they are already captured by an alert. Events not tied to an existing alert need investigation.</p>
 <hr />
 <p><strong>Step 11 — AutoSupport delivery</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>autosupport<span class="w"> </span><span class="nb">history</span><span class="w"> </span>show
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>autosupport<span class="w"> </span><span class="nb">history</span><span class="w"> </span>show
 </code></pre></div>
 <p>Expected output: the most recent entry shows <code>sent-successful</code> or <code>ignore</code>. A <code>failed</code> status means AutoSupport is not reaching NetApp — check proxy configuration and network connectivity. This does not block operations but must be resolved today.</p>
 <hr />

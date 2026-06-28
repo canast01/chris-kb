@@ -8779,47 +8779,8 @@ How It Works reference covering Overview, Scale-Out Object Storage Topology, Era
 *Applies to: ECS 3.x*
 </div>
 <p><img alt="Dell ECS — How It Works" src="../../../../../assets/storage-dell-ecs-architecture-how-it-works.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>center: &quot;ECS&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>scaleout_object_storage_topology: &quot;Scale-Out Object Storage Topology&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>erasure_coding: &quot;Erasure Coding&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>virtual_data_centers_vdc: &quot;Virtual Data Centers (VDC)&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>replication_groups_and_geodistributi: &quot;Replication Groups and Geo-Distribution&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>namespace_and_bucket_hierarchy: &quot;Namespace and Bucket Hierarchy&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>supported_api_protocols: &quot;Supported API Protocols&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>center -&gt; scaleout_object_storage_topology
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>center -&gt; erasure_coding
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>center -&gt; virtual_data_centers_vdc
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>center -&gt; replication_groups_and_geodistributi
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>center -&gt; namespace_and_bucket_hierarchy
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>center -&gt; supported_api_protocols
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>@startuml
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>skinparam sequenceArrowThickness 1.5
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>skinparam roundcorner 5
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>actor &quot;S3 / Swift Client&quot; as CLT
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>participant &quot;ECS Data Node\n(object API)&quot; as DN
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>participant &quot;Chunk Manager\n(erasure coding)&quot; as CM
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>participant &quot;Disk\n(local storage)&quot; as DISK
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>participant &quot;Remote ECS Site\n(geo-replication)&quot; as REMOTE
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>participant &quot;ECS Portal\n(management)&quot; as MGR
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>CLT -&gt; DN: PUT object (S3 / Swift)
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>DN -&gt; CM: Chunk + erasure-code (12+4)
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>CM -&gt; DISK: Write coded chunks across nodes
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>DISK --&gt; CM: Confirmed
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>CM --&gt; DN: Object stored
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>DN --&gt; CLT: 200 OK + ETag
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>DN -&gt; REMOTE: Async geo-replication
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>REMOTE --&gt; DN: Replicated
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>MGR -&gt; DN: Policy + quota management
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>@enduml
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNkc1OwzAQhO95ilVPcOgL9IAEKSpcaEVRr9bWWTmG4LXsdQVCfXecpKFBCj_XnW9n7ZnKBtJi2S0gWFNLUWhyQmEBs9tyO4OPWKOnBdT0hobdsYgaG-IkivfPeVNF4YCGlLDnhs17Xty2yHydBNYdA9uegacTc7Ztj6MzDR0LChhTIKW5ss609_sBlN1gcudggyRsVIWCqn94VIdK5-1dL8EyS1D2ElzsluXlpFMg31iNbRLKBE4-KnSVMpSPRwl2n8Rm18czBqsOg4zBini-_OLYTZ5w-ErRo6bOeZ_0C4mqbf530HWb28MAdJ43HQB3AzDpGZP3HIQqhd4qH1hYcxPbEgYFrjf3sBmUSZdT5zC_gr_qHaHfCxsJP7UyQv4T9wj_Pbrx86fzKD4Bk1EUfw==?" /></p>
+<p><img alt="Kroki" src="https://kroki.io/plantuml/svg/eNplksFuwjAQRO_-ihUnEKIFWi45VKAQVQgCiKTqpRfXWcBNYoPtCPH3XZMUSnv1zozm7XpsHTeuKgtmc6kO3PASLB4rVAInxuhTupciV2gtDB5Gv0RGVyoT2ig0MGKMC6cNtJIneITkJLcOwkKici3gFsJFysjlpJAHrhy0ojCBKXccljrDD9XWn18oHEzWs87FMF3e68N9pXKIueI7NKRHw21lEITOpNrVnjC-90ylzUlaaMELsNSOvE36LJnfazdYaofgayXS-UY71D2Dh0IK7qRWtXETxas0-o-y1sbxglzlpWFJ3LUhft0wRvTQeyGmANZvKTSs7duqOmy69IowDqAm7UJD2CNChPZg2H3usDC-5FD7AN4N9fT8mIHwHgtcGE1nUvRmmVdB7ydUq600JWaXiKbLqu7hN0MD38CrF2kAw34fVnMqEaV8x5pyNXsAE3tWAv6sh9XTa_amGVEwox1c8TW9nin4WGk6_m1bbIwq85_wG9Ii0Qw=?" /></p>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>Dell ECS (Enterprise Content Storage) is a scale-out, software-defined object storage platform built on commodity x86 nodes. It exposes S3, Swift, Atmos, and CAS APIs over HTTPS. The software stack runs entirely on commodity hardware and provides geo-distribution across sites via Virtual Data Centers (VDCs) linked into replication groups.</p>
 <h2 id="scale-out-object-storage-topology">Scale-Out Object Storage Topology<a class="headerlink" href="#scale-out-object-storage-topology" title="Permanent link">&para;</a></h2>

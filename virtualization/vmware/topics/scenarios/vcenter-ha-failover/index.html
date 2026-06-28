@@ -10797,23 +10797,7 @@ edge cases where VCHA gets stuck in Isolated state.
     P--&gt;&gt;C: vCenter API available on promoted node
     C-&gt;&gt;P: Client reconnects (~4 min total outage)
     Note over P,W: Old active becomes new passive candidate</code></pre>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>center: &quot;Scenarios&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>symptoms: &quot;Symptoms&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>1_confirm_vcha_state_after_failover: &quot;1. Confirm VCHA State After Failover&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>2_check_vchalog_for_promotion_entry: &quot;2. Check vcha.log for Promotion Entry&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>3_verify_db_sync_lag_was_acceptable: &quot;3. Verify DB Sync Lag Was Acceptable&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>4_verify_witness_connectivity: &quot;4. Verify Witness Connectivity&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>5_resolution_paths: &quot;5. Resolution Paths&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>center -&gt; symptoms
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>center -&gt; 1_confirm_vcha_state_after_failover
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>center -&gt; 2_check_vchalog_for_promotion_entry
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>center -&gt; 3_verify_db_sync_lag_was_acceptable
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>center -&gt; 4_verify_witness_connectivity
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>center -&gt; 5_resolution_paths
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqN0T1rwzAQBuDdv-LIXkO-lgwFN23p0CHUkIzHRZFtUVsykprUlPz36pzENdQEb-J4_Mp676CsFF4ZvQKr8sJHkZDaS7uCSRpOZJVxE_hxBdVyBYX8ptzoc-Saqvamcsyuxz_FiaTzUp6jKQqjM2UrPIqC0HnyEikLF2BGqjTH9qZpDOsLg-36LYGUGSTM4PXKBuNnKAopPtvw0uSYGYu1NZXhF2F4iG1C_CzEMwNmcXAQHGxuDl7YDebPMdyssgYPe3SNFlhSjidySELI2tO-DH4yj2HbMnh-gjQweKccduQg6dhg_OIWf1JeS-e4LM3rOCrPP77ogncXwDV1YDByiVY6U361BdTkC17RMoaPbgobng5-fN09PDzCbcG90Yhd9vSI1fT0iKJ7-m5vPfe_jOgXbCQTmg==?" /></p>
 <h2 id="symptoms">Symptoms<a class="headerlink" href="#symptoms" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -10848,38 +10832,38 @@ edge cases where VCHA gets stuck in Isolated state.
 <hr />
 <h2 id="1-confirm-vcha-state-after-failover">1. Confirm VCHA State After Failover<a class="headerlink" href="#1-confirm-vcha-state-after-failover" title="Permanent link">&para;</a></h2>
 <h3 id="powercli">PowerCLI<a class="headerlink" href="#powercli" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nb">Connect-VIServer</span> <span class="n">-Server</span> <span class="p">&lt;</span><span class="n">vcenter-fqdn</span><span class="p">&gt;</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Get-VchaState</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nb">Connect-VIServer</span> <span class="n">-Server</span> <span class="p">&lt;</span><span class="n">vcenter-fqdn</span><span class="p">&gt;</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Get-VchaState</span>
 </code></pre></div>
 <p>Expected output after successful failover:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ClusterState : HEALTHY
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ActiveNode   : &lt;former-passive-ip&gt;
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>PassiveNode  : &lt;former-active-ip&gt;   # may show as &quot;not connected&quot; initially
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>WitnessNode  : &lt;witness-ip&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>ClusterState : HEALTHY
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ActiveNode   : &lt;former-passive-ip&gt;
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>PassiveNode  : &lt;former-active-ip&gt;   # may show as &quot;not connected&quot; initially
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>WitnessNode  : &lt;witness-ip&gt;
 </code></pre></div>
 <h3 id="rest-api">REST API<a class="headerlink" href="#rest-api" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>administrator@vsphere.local:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span>https://&lt;vcenter-fqdn&gt;/api/vcenter/vcha/cluster/active<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;vmware-api-session-id: </span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>administrator@vsphere.local:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">    </span>-X<span class="w"> </span>POST<span class="w"> </span>https://&lt;vcenter-fqdn&gt;/api/session<span class="w"> </span><span class="p">|</span><span class="w"> </span>tr<span class="w"> </span>-d<span class="w"> </span><span class="s1">&#39;&quot;&#39;</span><span class="k">)</span><span class="s2">&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>administrator@vsphere.local:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span>https://&lt;vcenter-fqdn&gt;/api/vcenter/vcha/cluster/active<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;vmware-api-session-id: </span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>administrator@vsphere.local:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">    </span>-X<span class="w"> </span>POST<span class="w"> </span>https://&lt;vcenter-fqdn&gt;/api/session<span class="w"> </span><span class="p">|</span><span class="w"> </span>tr<span class="w"> </span>-d<span class="w"> </span><span class="s1">&#39;&quot;&#39;</span><span class="k">)</span><span class="s2">&quot;</span>
 </code></pre></div>
 <p>Response field <code>state</code> must be <code>HEALTHY</code>; <code>active_node.ha_ip.ipv4.address</code> must show the promoted node IP.</p>
 <hr />
 <h2 id="2-check-vchalog-for-promotion-entry">2. Check vcha.log for Promotion Entry<a class="headerlink" href="#2-check-vchalog-for-promotion-entry" title="Permanent link">&para;</a></h2>
 <p>SSH to the currently active (promoted) node:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>ssh<span class="w"> </span>root@&lt;promoted-vcenter-ip&gt;
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;Promotion complete&quot;</span><span class="w"> </span>/var/log/vcha/vcha.log
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;sync lag&quot;</span><span class="w"> </span>/var/log/vcha/vcha.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ssh<span class="w"> </span>root@&lt;promoted-vcenter-ip&gt;
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;Promotion complete&quot;</span><span class="w"> </span>/var/log/vcha/vcha.log
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;sync lag&quot;</span><span class="w"> </span>/var/log/vcha/vcha.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
 </code></pre></div>
 <p>Confirm the <code>Promotion complete</code> entry is present. The sync lag lines before failover must show lag was
 below 60 seconds — if lag exceeded 60 s, inspect whether any DB transactions were lost.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>2026-06-11T03:42:17.123Z INFO vcha: Heartbeat timeout from active node (3 consecutive misses)
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>2026-06-11T03:42:17.124Z INFO vcha: Quorum reached — witness voted PASSIVE
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>2026-06-11T03:42:18.001Z INFO vcha: Promotion complete. Node role: ACTIVE
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>2026-06-11T03:42:17.123Z INFO vcha: Heartbeat timeout from active node (3 consecutive misses)
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>2026-06-11T03:42:17.124Z INFO vcha: Quorum reached — witness voted PASSIVE
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>2026-06-11T03:42:18.001Z INFO vcha: Promotion complete. Node role: ACTIVE
 </code></pre></div>
 <hr />
 <h2 id="3-verify-db-sync-lag-was-acceptable">3. Verify DB Sync Lag Was Acceptable<a class="headerlink" href="#3-verify-db-sync-lag-was-acceptable" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;replication lag&quot;</span><span class="w"> </span>/var/log/vcha/vcha.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-30
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;replication lag&quot;</span><span class="w"> </span>/var/log/vcha/vcha.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-30
 </code></pre></div>
 <p>Lag values below 30 s indicate a clean failover. Values between 30–60 s are acceptable but warrant
 investigation. Values above 60 s indicate the passive may have missed recent transactions; check whether
@@ -10887,7 +10871,7 @@ any tasks or events appear missing from the vCenter inventory after reconnect.</
 <hr />
 <h2 id="4-verify-witness-connectivity">4. Verify Witness Connectivity<a class="headerlink" href="#4-verify-witness-connectivity" title="Permanent link">&para;</a></h2>
 <p>From the promoted active node, ping the witness over the HA network:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>ping<span class="w"> </span>-I<span class="w"> </span>vmk1<span class="w"> </span>&lt;witness-ha-ip&gt;<span class="w"> </span>-c<span class="w"> </span><span class="m">5</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>ping<span class="w"> </span>-I<span class="w"> </span>vmk1<span class="w"> </span>&lt;witness-ha-ip&gt;<span class="w"> </span>-c<span class="w"> </span><span class="m">5</span>
 </code></pre></div>
 <p>Confirm packet loss = 0%. If the witness is unreachable, VCHA cannot perform automatic failover for
 future failures — restore witness connectivity immediately.</p>
@@ -10903,36 +10887,36 @@ future failures — restore witness connectivity immediately.</p>
 </ol>
 <h3 id="vcha-stuck-in-isolated-state">VCHA Stuck in "Isolated" State<a class="headerlink" href="#vcha-stuck-in-isolated-state" title="Permanent link">&para;</a></h3>
 <p>If the VCHA cluster is stuck and neither node can determine quorum:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>administrator@vsphere.local:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">  </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://&lt;vcenter-fqdn&gt;/api/vcenter/vcha/cluster?action=failover&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;planned&quot;: false}&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>administrator@vsphere.local:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://&lt;vcenter-fqdn&gt;/api/vcenter/vcha/cluster?action=failover&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;planned&quot;: false}&#39;</span>
 </code></pre></div>
 <p>If <code>force</code> failover is required (witness unreachable, split-brain):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>-d<span class="w"> </span><span class="s1">&#39;{&quot;planned&quot;: false, &quot;force&quot;: true}&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>-d<span class="w"> </span><span class="s1">&#39;{&quot;planned&quot;: false, &quot;force&quot;: true}&#39;</span>
 </code></pre></div>
 <p>The <code>force: true</code> flag bypasses witness quorum — use only when both nodes are healthy and witness
 connectivity cannot be restored within the maintenance window.</p>
 <h3 id="db-sync-lag-disk-space-on-passive">DB Sync Lag — Disk Space on Passive<a class="headerlink" href="#db-sync-lag-disk-space-on-passive" title="Permanent link">&para;</a></h3>
 <p>If sync lag was high, check <code>/storage/db/</code> utilisation on the passive (now active) node:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>df<span class="w"> </span>-h<span class="w"> </span>/storage/db
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>du<span class="w"> </span>-sh<span class="w"> </span>/storage/db/vpostgres/*
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>df<span class="w"> </span>-h<span class="w"> </span>/storage/db
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>du<span class="w"> </span>-sh<span class="w"> </span>/storage/db/vpostgres/*
 </code></pre></div>
 <p>If near capacity, clear rotated logs:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>find<span class="w"> </span>/storage/log<span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;*.gz&quot;</span><span class="w"> </span>-mtime<span class="w"> </span>+7<span class="w"> </span>-delete
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>find<span class="w"> </span>/storage/log<span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;*.gz&quot;</span><span class="w"> </span>-mtime<span class="w"> </span>+7<span class="w"> </span>-delete
 </code></pre></div>
 <hr />
 <h2 id="6-verification">6. Verification<a class="headerlink" href="#6-verification" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c"># PowerCLI — confirm HEALTHY state</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="nb">Get-VchaState</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">ClusterState</span><span class="p">,</span> <span class="n">ActiveNode</span><span class="p">,</span> <span class="n">PassiveNode</span><span class="p">,</span> <span class="n">WitnessNode</span>
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c"># Confirm both data nodes and witness are green</span>
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="p">(</span><span class="nb">Get-VchaState</span><span class="p">).</span><span class="n">ClusterState</span> <span class="o">-eq</span> <span class="s2">&quot;HEALTHY&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c"># PowerCLI — confirm HEALTHY state</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="nb">Get-VchaState</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">ClusterState</span><span class="p">,</span> <span class="n">ActiveNode</span><span class="p">,</span> <span class="n">PassiveNode</span><span class="p">,</span> <span class="n">WitnessNode</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c"># Confirm both data nodes and witness are green</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="p">(</span><span class="nb">Get-VchaState</span><span class="p">).</span><span class="n">ClusterState</span> <span class="o">-eq</span> <span class="s2">&quot;HEALTHY&quot;</span>
 </code></pre></div>
 <p>Optionally run a controlled test failover to confirm VCHA is fully operational:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c"># UI: vCenter HA → Actions → Initiate Failover</span>
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="c"># This returns to the original active node after a brief outage</span>
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="nb">Test-VchaFailover</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c"># UI: vCenter HA → Actions → Initiate Failover</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="c"># This returns to the original active node after a brief outage</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="nb">Test-VchaFailover</span>
 </code></pre></div>
 <p>Clear the vCenter alarm after confirming HEALTHY:
 vSphere Client → <strong>Alarms → vCenter High Availability state changed → Reset to Green</strong>.</p>

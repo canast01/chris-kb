@@ -7462,29 +7462,7 @@ Cross-product runbook integrating Pure Storage FlashArray, Veeam Backup and Repl
 </div>
 
 <p><img alt="Pure Storage FlashArray with Veeam and Pure Protection — Diagram" src="../../../assets/storage-runbooks-flasharray-veeam-pure-protection-diagram.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>@startuml
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>skinparam sequenceArrowThickness 1.5
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>skinparam roundcorner 5
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>actor &quot;Responder&quot; as A
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>participant &quot;Runbooks System&quot; as B
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>participant &quot;Dependent System&quot; as C
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>A -&gt; B: Architecture Overview
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>B --&gt; A: OK
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>A -&gt; B: Phase 1 FlashArray Preparation
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>B --&gt; A: OK
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>A -&gt; B: Phase 2 Veeam Integration
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>B --&gt; A: OK
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>A -&gt; B: Phase 3 SafeMode Verification
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>B --&gt; A: OK
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>A -&gt; B: Phase 4 Restore Testing
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>B --&gt; A: OK
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>A -&gt; B: Rollback
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>B --&gt; A: OK
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>@enduml
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/plantuml/svg/eNqFkUFrwkAQhe_7KwbvFmzrxUMxaSmUUhSV3sfN0yxJZtPZjeK_79hDUSj1NAPvezDvzTxl1jx0rUtNkJ6VO0r4GiAehWo8burgG0FKNLmbXkAaB6l8VIHS1Dn2OSqNVkh9lAo6Ik5UOGNz8KFnySYOso2xSbQ-pYzuBymvkRf0MLutF8yzcwWNn6icUaG-Dhk-DwpaHKCHgKMraWxyMaPF-y-5rDmBJvTacqotCZ9oqTjfnkOUfyz39AlYwDfJ2N-kH2jNO3zECmbTsAv-luORrCQrC7SxGWT_J7uKbbtl31yJbm7lnH_1DQE3h4g=?" /></p>
 <h2 id="before-you-begin">Before You Begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <p><strong>Prerequisites:</strong></p>
 <table>
@@ -7522,9 +7500,9 @@ Cross-product runbook integrating Pure Storage FlashArray, Veeam Backup and Repl
 </tbody>
 </table>
 <p><strong>Accounts needed:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>pureuser (FlashArray) — array admin role
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>veeam_svc@corp.local  — Veeam service account, local admin on Veeam server
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>vcenter_backup@corp.local — vCenter read/backup role for Veeam
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>pureuser (FlashArray) — array admin role
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>veeam_svc@corp.local  — Veeam service account, local admin on Veeam server
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>vcenter_backup@corp.local — vCenter read/backup role for Veeam
 </code></pre></div>
 <hr />
 <h2 id="architecture-overview">Architecture Overview<a class="headerlink" href="#architecture-overview" title="Permanent link">&para;</a></h2>
@@ -7532,76 +7510,76 @@ Cross-product runbook integrating Pure Storage FlashArray, Veeam Backup and Repl
 <hr />
 <h2 id="phase-1-flasharray-preparation">Phase 1: FlashArray Preparation<a class="headerlink" href="#phase-1-flasharray-preparation" title="Permanent link">&para;</a></h2>
 <h3 id="11-create-volumes-and-host-group">1.1 Create Volumes and Host Group<a class="headerlink" href="#11-create-volumes-and-host-group" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Connect to FlashArray CLI</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ssh<span class="w"> </span>pureuser@flasharray01.corp.local
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Create volumes (one per VM datastore or per application)</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>purevol<span class="w"> </span>create<span class="w"> </span>--size<span class="w"> </span>2T<span class="w"> </span>vol_vmdata01
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>purevol<span class="w"> </span>create<span class="w"> </span>--size<span class="w"> </span>2T<span class="w"> </span>vol_vmdata02
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>purevol<span class="w"> </span>create<span class="w"> </span>--size<span class="w"> </span>500G<span class="w"> </span>vol_veeam_proxy
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Create host entries for ESXi hosts</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>purehost<span class="w"> </span>create<span class="w"> </span>--iqn<span class="w"> </span>iqn.1998-01.com.vmware:esxi01<span class="w"> </span>esxi01
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>purehost<span class="w"> </span>create<span class="w"> </span>--iqn<span class="w"> </span>iqn.1998-01.com.vmware:esxi02<span class="w"> </span>esxi02
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Group ESXi hosts</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>purehgroup<span class="w"> </span>create<span class="w"> </span>--hostlist<span class="w"> </span>esxi01,esxi02<span class="w"> </span>hg-esxi-cluster
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="c1"># Connect volumes to host group</span>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>purevol<span class="w"> </span>connect<span class="w"> </span>--hgroup<span class="w"> </span>hg-esxi-cluster<span class="w"> </span>vol_vmdata01
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>purevol<span class="w"> </span>connect<span class="w"> </span>--hgroup<span class="w"> </span>hg-esxi-cluster<span class="w"> </span>vol_vmdata02
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>
-<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="c1"># Verify</span>
-<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>purevol<span class="w"> </span>list<span class="w"> </span>--connection
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Connect to FlashArray CLI</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ssh<span class="w"> </span>pureuser@flasharray01.corp.local
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Create volumes (one per VM datastore or per application)</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>purevol<span class="w"> </span>create<span class="w"> </span>--size<span class="w"> </span>2T<span class="w"> </span>vol_vmdata01
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>purevol<span class="w"> </span>create<span class="w"> </span>--size<span class="w"> </span>2T<span class="w"> </span>vol_vmdata02
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>purevol<span class="w"> </span>create<span class="w"> </span>--size<span class="w"> </span>500G<span class="w"> </span>vol_veeam_proxy
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># Create host entries for ESXi hosts</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>purehost<span class="w"> </span>create<span class="w"> </span>--iqn<span class="w"> </span>iqn.1998-01.com.vmware:esxi01<span class="w"> </span>esxi01
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>purehost<span class="w"> </span>create<span class="w"> </span>--iqn<span class="w"> </span>iqn.1998-01.com.vmware:esxi02<span class="w"> </span>esxi02
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Group ESXi hosts</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>purehgroup<span class="w"> </span>create<span class="w"> </span>--hostlist<span class="w"> </span>esxi01,esxi02<span class="w"> </span>hg-esxi-cluster
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="c1"># Connect volumes to host group</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>purevol<span class="w"> </span>connect<span class="w"> </span>--hgroup<span class="w"> </span>hg-esxi-cluster<span class="w"> </span>vol_vmdata01
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>purevol<span class="w"> </span>connect<span class="w"> </span>--hgroup<span class="w"> </span>hg-esxi-cluster<span class="w"> </span>vol_vmdata02
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="c1"># Verify</span>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>purevol<span class="w"> </span>list<span class="w"> </span>--connection
 </code></pre></div>
 <h3 id="12-create-pure-protection-group">1.2 Create Pure Protection Group<a class="headerlink" href="#12-create-pure-protection-group" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Create protection group for production VMs</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>pureprotection<span class="w"> </span>create<span class="w"> </span>--vollist<span class="w"> </span>vol_vmdata01,vol_vmdata02<span class="w"> </span>pg_prod
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Set snapshot schedule:</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Hourly snapshots retained for 24 hours</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># Daily snapshots retained for 30 days</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>pureprotection<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">  </span>--snap-frequency<span class="w"> </span><span class="m">3600</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">  </span>--snap-retention<span class="w"> </span><span class="m">86400</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">  </span>pg_prod
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="c1"># Set daily schedule (runs at midnight)</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>pureprotection<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="w">  </span>--replfreq<span class="w"> </span><span class="m">86400</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="w">  </span>--repl-retention<span class="w"> </span><span class="m">2592000</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="w">  </span>pg_prod
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>
-<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="c1"># Enable the schedule</span>
-<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>pureprotection<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>pg_prod
-<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>
-<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a><span class="c1"># Verify schedule</span>
-<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>pureprotection<span class="w"> </span>list<span class="w"> </span>--schedule<span class="w"> </span>pg_prod
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Create protection group for production VMs</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>pureprotection<span class="w"> </span>create<span class="w"> </span>--vollist<span class="w"> </span>vol_vmdata01,vol_vmdata02<span class="w"> </span>pg_prod
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Set snapshot schedule:</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Hourly snapshots retained for 24 hours</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># Daily snapshots retained for 30 days</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>pureprotection<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span>--snap-frequency<span class="w"> </span><span class="m">3600</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span>--snap-retention<span class="w"> </span><span class="m">86400</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">  </span>pg_prod
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># Set daily schedule (runs at midnight)</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>pureprotection<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">  </span>--replfreq<span class="w"> </span><span class="m">86400</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">  </span>--repl-retention<span class="w"> </span><span class="m">2592000</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="w">  </span>pg_prod
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="c1"># Enable the schedule</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>pureprotection<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>pg_prod
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="c1"># Verify schedule</span>
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>pureprotection<span class="w"> </span>list<span class="w"> </span>--schedule<span class="w"> </span>pg_prod
 </code></pre></div>
 <h3 id="13-enable-safemode-on-protection-group">1.3 Enable SafeMode on Protection Group<a class="headerlink" href="#13-enable-safemode-on-protection-group" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># NOTE: SafeMode must first be activated on the array by Pure Support</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># Once enabled, set eradication delay (minimum 24h, default 24h)</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>pureprotection<span class="w"> </span>safemode<span class="w"> </span>--enable<span class="w"> </span>--eradication-delay<span class="w"> </span><span class="m">1440</span><span class="w"> </span>pg_prod
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># eradication-delay is in minutes: 1440 = 24h</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Verify SafeMode status</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>pureprotection<span class="w"> </span>list<span class="w"> </span>pg_prod
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># Look for: safemode = enabled, eradication_delay = 1440</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># Take an immediate snapshot to verify SafeMode applies</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>pureprotection<span class="w"> </span>snap<span class="w"> </span>--suffix<span class="w"> </span>manual-test<span class="w"> </span>pg_prod
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="c1"># List snapshots</span>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>pureprotection<span class="w"> </span>list<span class="w"> </span>--snap<span class="w"> </span>pg_prod
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># NOTE: SafeMode must first be activated on the array by Pure Support</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># Once enabled, set eradication delay (minimum 24h, default 24h)</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>pureprotection<span class="w"> </span>safemode<span class="w"> </span>--enable<span class="w"> </span>--eradication-delay<span class="w"> </span><span class="m">1440</span><span class="w"> </span>pg_prod
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># eradication-delay is in minutes: 1440 = 24h</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Verify SafeMode status</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>pureprotection<span class="w"> </span>list<span class="w"> </span>pg_prod
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># Look for: safemode = enabled, eradication_delay = 1440</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="c1"># Take an immediate snapshot to verify SafeMode applies</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>pureprotection<span class="w"> </span>snap<span class="w"> </span>--suffix<span class="w"> </span>manual-test<span class="w"> </span>pg_prod
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="c1"># List snapshots</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>pureprotection<span class="w"> </span>list<span class="w"> </span>--snap<span class="w"> </span>pg_prod
 </code></pre></div>
 <h3 id="14-verify-initial-snapshot">1.4 Verify Initial Snapshot<a class="headerlink" href="#14-verify-initial-snapshot" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># List all snapshots in protection group</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>pureprotection<span class="w"> </span>list<span class="w"> </span>--snap<span class="w"> </span>--name<span class="w"> </span>pg_prod
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Attempt to eradicate a snapshot (will be denied during lock period)</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>pureprotection<span class="w"> </span>eradicate<span class="w"> </span>--name<span class="w"> </span><span class="s2">&quot;pg_prod.manual-test&quot;</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1"># Expected: Error — SafeMode prevents eradication before delay expires</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># List all snapshots in protection group</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>pureprotection<span class="w"> </span>list<span class="w"> </span>--snap<span class="w"> </span>--name<span class="w"> </span>pg_prod
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Attempt to eradicate a snapshot (will be denied during lock period)</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>pureprotection<span class="w"> </span>eradicate<span class="w"> </span>--name<span class="w"> </span><span class="s2">&quot;pg_prod.manual-test&quot;</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># Expected: Error — SafeMode prevents eradication before delay expires</span>
 </code></pre></div>
 <hr />
 <h2 id="phase-2-veeam-integration">Phase 2: Veeam Integration<a class="headerlink" href="#phase-2-veeam-integration" title="Permanent link">&para;</a></h2>
@@ -7630,57 +7608,57 @@ Cross-product runbook integrating Pure Storage FlashArray, Veeam Backup and Repl
 <li>Click <strong>Finish</strong></li>
 </ol>
 <h3 id="23-veeam-powershell-verify-job-configuration">2.3 Veeam PowerShell — Verify Job Configuration<a class="headerlink" href="#23-veeam-powershell-verify-job-configuration" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># On Veeam server</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">Add-PSSnapin</span> <span class="n">VeeamPSSnapIn</span> <span class="n">-ErrorAction</span> <span class="n">SilentlyContinue</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c"># Get job details</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="nv">$job</span> <span class="p">=</span> <span class="nb">Get-VBRJob</span> <span class="n">-Name</span> <span class="s2">&quot;PROD-VMs-FlashArray&quot;</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="nv">$job</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">JobType</span><span class="p">,</span> <span class="n">ScheduleOptions</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c"># Check storage integration is enabled</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="nv">$job</span><span class="p">.</span><span class="n">GetStorageIntegrationOptions</span><span class="p">()</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="c"># Trigger an immediate backup run</span>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="nb">Start-VBRJob</span> <span class="n">-Job</span> <span class="nv">$job</span>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="c"># Monitor job progress</span>
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="nb">Get-VBRBackupSession</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">JobName</span> <span class="o">-eq</span> <span class="s2">&quot;PROD-VMs-FlashArray&quot;</span><span class="p">}</span> <span class="p">|</span> 
-<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>  <span class="nb">Select-Object</span> <span class="n">JobName</span><span class="p">,</span> <span class="n">State</span><span class="p">,</span> <span class="n">Progress</span><span class="p">,</span> <span class="n">EndTime</span> <span class="p">|</span> <span class="nb">Format-Table</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># On Veeam server</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">Add-PSSnapin</span> <span class="n">VeeamPSSnapIn</span> <span class="n">-ErrorAction</span> <span class="n">SilentlyContinue</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c"># Get job details</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="nv">$job</span> <span class="p">=</span> <span class="nb">Get-VBRJob</span> <span class="n">-Name</span> <span class="s2">&quot;PROD-VMs-FlashArray&quot;</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="nv">$job</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">JobType</span><span class="p">,</span> <span class="n">ScheduleOptions</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c"># Check storage integration is enabled</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="nv">$job</span><span class="p">.</span><span class="n">GetStorageIntegrationOptions</span><span class="p">()</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="c"># Trigger an immediate backup run</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="nb">Start-VBRJob</span> <span class="n">-Job</span> <span class="nv">$job</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="c"># Monitor job progress</span>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="nb">Get-VBRBackupSession</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">JobName</span> <span class="o">-eq</span> <span class="s2">&quot;PROD-VMs-FlashArray&quot;</span><span class="p">}</span> <span class="p">|</span> 
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>  <span class="nb">Select-Object</span> <span class="n">JobName</span><span class="p">,</span> <span class="n">State</span><span class="p">,</span> <span class="n">Progress</span><span class="p">,</span> <span class="n">EndTime</span> <span class="p">|</span> <span class="nb">Format-Table</span>
 </code></pre></div>
 <h3 id="24-configure-backup-copy-to-object-storage">2.4 Configure Backup Copy to Object Storage<a class="headerlink" href="#24-configure-backup-copy-to-object-storage" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c"># Create S3 object storage repository (if not already done)</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nv">$account</span> <span class="p">=</span> <span class="nb">New-VBRCredentials</span> <span class="n">-User</span> <span class="s2">&quot;s3-access-key&quot;</span> <span class="n">-Password</span> <span class="s2">&quot;s3-secret-key&quot;</span> <span class="n">-Description</span> <span class="s2">&quot;S3 Immutable&quot;</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="nv">$s3repo</span> <span class="p">=</span> <span class="nb">Add-VBRObjectStorageRepository</span> <span class="p">`</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>  <span class="n">-Name</span> <span class="s2">&quot;S3-Immutable-Archive&quot;</span> <span class="p">`</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>  <span class="n">-AmazonS3Compatible</span> <span class="p">`</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>  <span class="n">-ServicePoint</span> <span class="s2">&quot;https://s3.corp.local&quot;</span> <span class="p">`</span>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>  <span class="n">-Bucket</span> <span class="s2">&quot;veeam-immutable&quot;</span> <span class="p">`</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>  <span class="n">-Credentials</span> <span class="nv">$account</span> <span class="p">`</span>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>  <span class="n">-EnableSizeLimitGB</span> <span class="n">10240</span> <span class="p">`</span>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>  <span class="n">-MakeImmutableForDays</span> <span class="n">30</span>
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="c"># Create backup copy job</span>
-<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="nb">Add-VBRBackupCopyJob</span> <span class="p">`</span>
-<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>  <span class="n">-Name</span> <span class="s2">&quot;PROD-VMs-BackupCopy-S3&quot;</span> <span class="p">`</span>
-<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>  <span class="n">-SourceJob</span> <span class="nv">$job</span> <span class="p">`</span>
-<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>  <span class="n">-TargetRepository</span> <span class="nv">$s3repo</span> <span class="p">`</span>
-<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>  <span class="n">-RestorePoints</span> <span class="n">30</span> <span class="p">`</span>
-<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>  <span class="n">-GFSMonthlyBackups</span> <span class="n">12</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># Create S3 object storage repository (if not already done)</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nv">$account</span> <span class="p">=</span> <span class="nb">New-VBRCredentials</span> <span class="n">-User</span> <span class="s2">&quot;s3-access-key&quot;</span> <span class="n">-Password</span> <span class="s2">&quot;s3-secret-key&quot;</span> <span class="n">-Description</span> <span class="s2">&quot;S3 Immutable&quot;</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="nv">$s3repo</span> <span class="p">=</span> <span class="nb">Add-VBRObjectStorageRepository</span> <span class="p">`</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>  <span class="n">-Name</span> <span class="s2">&quot;S3-Immutable-Archive&quot;</span> <span class="p">`</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>  <span class="n">-AmazonS3Compatible</span> <span class="p">`</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>  <span class="n">-ServicePoint</span> <span class="s2">&quot;https://s3.corp.local&quot;</span> <span class="p">`</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>  <span class="n">-Bucket</span> <span class="s2">&quot;veeam-immutable&quot;</span> <span class="p">`</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>  <span class="n">-Credentials</span> <span class="nv">$account</span> <span class="p">`</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>  <span class="n">-EnableSizeLimitGB</span> <span class="n">10240</span> <span class="p">`</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>  <span class="n">-MakeImmutableForDays</span> <span class="n">30</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="c"># Create backup copy job</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="nb">Add-VBRBackupCopyJob</span> <span class="p">`</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>  <span class="n">-Name</span> <span class="s2">&quot;PROD-VMs-BackupCopy-S3&quot;</span> <span class="p">`</span>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>  <span class="n">-SourceJob</span> <span class="nv">$job</span> <span class="p">`</span>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>  <span class="n">-TargetRepository</span> <span class="nv">$s3repo</span> <span class="p">`</span>
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>  <span class="n">-RestorePoints</span> <span class="n">30</span> <span class="p">`</span>
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>  <span class="n">-GFSMonthlyBackups</span> <span class="n">12</span>
 </code></pre></div>
 <hr />
 <h2 id="phase-3-safemode-verification">Phase 3: SafeMode Verification<a class="headerlink" href="#phase-3-safemode-verification" title="Permanent link">&para;</a></h2>
 <h3 id="31-verify-immutability-from-cli">3.1 Verify Immutability from CLI<a class="headerlink" href="#31-verify-immutability-from-cli" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Connect to FlashArray</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>ssh<span class="w"> </span>pureuser@flasharray01.corp.local
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># List current SafeMode snapshots</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>pureprotection<span class="w"> </span>list<span class="w"> </span>--snap<span class="w"> </span>pg_prod<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># Attempt to manually delete a SafeMode-protected snapshot</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>pureprotection<span class="w"> </span>delete<span class="w"> </span>--name<span class="w"> </span><span class="s2">&quot;pg_prod.3600&quot;</span>
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="c1"># Expected output:</span>
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># Error: Snapshot pg_prod.3600 cannot be eradicated — SafeMode lock active</span>
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="c1"># Remaining lock time: 23h 45m</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Connect to FlashArray</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>ssh<span class="w"> </span>pureuser@flasharray01.corp.local
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># List current SafeMode snapshots</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>pureprotection<span class="w"> </span>list<span class="w"> </span>--snap<span class="w"> </span>pg_prod<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># Attempt to manually delete a SafeMode-protected snapshot</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>pureprotection<span class="w"> </span>delete<span class="w"> </span>--name<span class="w"> </span><span class="s2">&quot;pg_prod.3600&quot;</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="c1"># Expected output:</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="c1"># Error: Snapshot pg_prod.3600 cannot be eradicated — SafeMode lock active</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="c1"># Remaining lock time: 23h 45m</span>
 </code></pre></div>
 <h3 id="32-verify-safemode-status-in-pure1">3.2 Verify SafeMode Status in Pure1<a class="headerlink" href="#32-verify-safemode-status-in-pure1" title="Permanent link">&para;</a></h3>
 <ol>
@@ -7691,59 +7669,59 @@ Cross-product runbook integrating Pure Storage FlashArray, Veeam Backup and Repl
 <li>Review snapshot count and oldest/newest timestamps</li>
 </ol>
 <h3 id="33-deletion-test-controlled">3.3 Deletion Test (Controlled)<a class="headerlink" href="#33-deletion-test-controlled" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Take a test snapshot with no-retention intent</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>pureprotection<span class="w"> </span>snap<span class="w"> </span>--suffix<span class="w"> </span>safemode-test<span class="w"> </span>pg_prod
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Immediately attempt eradication</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>pureprotection<span class="w"> </span>eradicate<span class="w"> </span>--name<span class="w"> </span><span class="s2">&quot;pg_prod.safemode-test&quot;</span>
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="c1"># Expected: Denied — eradication delay not yet expired</span>
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="c1"># After 24h+ delay, eradication would succeed</span>
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="c1"># This confirms SafeMode is active and functioning</span>
-<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;SafeMode verification: PASS — deletion denied as expected&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Take a test snapshot with no-retention intent</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>pureprotection<span class="w"> </span>snap<span class="w"> </span>--suffix<span class="w"> </span>safemode-test<span class="w"> </span>pg_prod
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Immediately attempt eradication</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>pureprotection<span class="w"> </span>eradicate<span class="w"> </span>--name<span class="w"> </span><span class="s2">&quot;pg_prod.safemode-test&quot;</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="c1"># Expected: Denied — eradication delay not yet expired</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c1"># After 24h+ delay, eradication would succeed</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="c1"># This confirms SafeMode is active and functioning</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;SafeMode verification: PASS — deletion denied as expected&quot;</span>
 </code></pre></div>
 <hr />
 <h2 id="phase-4-restore-testing">Phase 4: Restore Testing<a class="headerlink" href="#phase-4-restore-testing" title="Permanent link">&para;</a></h2>
 <h3 id="41-veeam-instant-vm-recovery-from-flasharray-snapshot">4.1 Veeam Instant VM Recovery from FlashArray Snapshot<a class="headerlink" href="#41-veeam-instant-vm-recovery-from-flasharray-snapshot" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c"># On Veeam server — restore VM from latest FlashArray-integrated backup</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="nv">$restorePoint</span> <span class="p">=</span> <span class="nb">Get-VBRRestorePoint</span> <span class="n">-Name</span> <span class="s2">&quot;webvm01&quot;</span> <span class="p">|</span> 
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>  <span class="nb">Sort-Object</span> <span class="n">CreationTime</span> <span class="n">-Descending</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">1</span>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="c"># Start Instant VM Recovery (VM runs directly from backup storage)</span>
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="nv">$session</span> <span class="p">=</span> <span class="nb">Start-VBRRestoreSession</span> <span class="p">`</span>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>  <span class="n">-RestorePoint</span> <span class="nv">$restorePoint</span> <span class="p">`</span>
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>  <span class="n">-Reason</span> <span class="s2">&quot;DR Test - Phase 4 Restore Validation&quot;</span>
-<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>
-<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="c"># Get the recovered VM details</span>
-<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="nb">Get-VBRInstantRecoveryMount</span> <span class="p">|</span> <span class="nb">Format-List</span> <span class="n">VMName</span><span class="p">,</span> <span class="n">DatastoreName</span><span class="p">,</span> <span class="n">MountedAt</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c"># On Veeam server — restore VM from latest FlashArray-integrated backup</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="nv">$restorePoint</span> <span class="p">=</span> <span class="nb">Get-VBRRestorePoint</span> <span class="n">-Name</span> <span class="s2">&quot;webvm01&quot;</span> <span class="p">|</span> 
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>  <span class="nb">Sort-Object</span> <span class="n">CreationTime</span> <span class="n">-Descending</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">1</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="c"># Start Instant VM Recovery (VM runs directly from backup storage)</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="nv">$session</span> <span class="p">=</span> <span class="nb">Start-VBRRestoreSession</span> <span class="p">`</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>  <span class="n">-RestorePoint</span> <span class="nv">$restorePoint</span> <span class="p">`</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>  <span class="n">-Reason</span> <span class="s2">&quot;DR Test - Phase 4 Restore Validation&quot;</span>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="c"># Get the recovered VM details</span>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="nb">Get-VBRInstantRecoveryMount</span> <span class="p">|</span> <span class="nb">Format-List</span> <span class="n">VMName</span><span class="p">,</span> <span class="n">DatastoreName</span><span class="p">,</span> <span class="n">MountedAt</span>
 </code></pre></div>
 <h3 id="42-granular-item-recovery-file-level">4.2 Granular Item Recovery (File-Level)<a class="headerlink" href="#42-granular-item-recovery-file-level" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c"># Mount backup for file-level restore</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="nv">$restorePoint</span> <span class="p">=</span> <span class="nb">Get-VBRRestorePoint</span> <span class="n">-Name</span> <span class="s2">&quot;fileserver01&quot;</span> <span class="p">|</span> 
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>  <span class="nb">Sort-Object</span> <span class="n">CreationTime</span> <span class="n">-Descending</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">1</span>
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="c"># Start file-level restore session</span>
-<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="nb">Start-VBRWindowsFileRestore</span> <span class="n">-RestorePoint</span> <span class="nv">$restorePoint</span>
-<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>
-<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="c"># For Linux guests:</span>
-<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="nb">Start-VBRLinuxFileRestore</span> <span class="n">-RestorePoint</span> <span class="nv">$restorePoint</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c"># Mount backup for file-level restore</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="nv">$restorePoint</span> <span class="p">=</span> <span class="nb">Get-VBRRestorePoint</span> <span class="n">-Name</span> <span class="s2">&quot;fileserver01&quot;</span> <span class="p">|</span> 
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>  <span class="nb">Sort-Object</span> <span class="n">CreationTime</span> <span class="n">-Descending</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">1</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="c"># Start file-level restore session</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="nb">Start-VBRWindowsFileRestore</span> <span class="n">-RestorePoint</span> <span class="nv">$restorePoint</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="c"># For Linux guests:</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="nb">Start-VBRLinuxFileRestore</span> <span class="n">-RestorePoint</span> <span class="nv">$restorePoint</span>
 </code></pre></div>
 <h3 id="43-flasharray-volume-restore-from-pure-protection-snapshot">4.3 FlashArray Volume Restore from Pure Protection Snapshot<a class="headerlink" href="#43-flasharray-volume-restore-from-pure-protection-snapshot" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># SSH to FlashArray</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>ssh<span class="w"> </span>pureuser@flasharray01.corp.local
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># List available snapshots</span>
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>pureprotection<span class="w"> </span>list<span class="w"> </span>--snap<span class="w"> </span>pg_prod
-<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>
-<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="c1"># Copy volume from snapshot to a restore target volume</span>
-<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>purevol<span class="w"> </span>copy<span class="w"> </span>pg_prod.86400.vol_vmdata01<span class="w"> </span>vol_vmdata01_restore
-<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>
-<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="c1"># Connect restore volume to a test host</span>
-<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>purevol<span class="w"> </span>connect<span class="w"> </span>--host<span class="w"> </span>esxi-test<span class="w"> </span>vol_vmdata01_restore
-<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>
-<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a><span class="c1"># On ESXi host — rescan and mount the restored datastore</span>
-<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a><span class="c1"># Then power on the VM from restored volume to validate data</span>
-<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>adapter<span class="w"> </span>rescan<span class="w"> </span>--all
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># SSH to FlashArray</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>ssh<span class="w"> </span>pureuser@flasharray01.corp.local
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># List available snapshots</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>pureprotection<span class="w"> </span>list<span class="w"> </span>--snap<span class="w"> </span>pg_prod
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="c1"># Copy volume from snapshot to a restore target volume</span>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>purevol<span class="w"> </span>copy<span class="w"> </span>pg_prod.86400.vol_vmdata01<span class="w"> </span>vol_vmdata01_restore
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="c1"># Connect restore volume to a test host</span>
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>purevol<span class="w"> </span>connect<span class="w"> </span>--host<span class="w"> </span>esxi-test<span class="w"> </span>vol_vmdata01_restore
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a><span class="c1"># On ESXi host — rescan and mount the restored datastore</span>
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a><span class="c1"># Then power on the VM from restored volume to validate data</span>
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>adapter<span class="w"> </span>rescan<span class="w"> </span>--all
 </code></pre></div>
 <h3 id="44-rporto-summary">4.4 RPO/RTO Summary<a class="headerlink" href="#44-rporto-summary" title="Permanent link">&para;</a></h3>
 <table>
@@ -7798,12 +7776,12 @@ Cross-product runbook integrating Pure Storage FlashArray, Veeam Backup and Repl
 <h2 id="rollback">Rollback<a class="headerlink" href="#rollback" title="Permanent link">&para;</a></h2>
 <p>If Veeam integration with FlashArray storage snapshots causes backup failures:</p>
 <h3 id="disable-storage-snapshot-integration">Disable Storage Snapshot Integration<a class="headerlink" href="#disable-storage-snapshot-integration" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c"># Revert to standard VADP backup (no FlashArray integration)</span>
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="nv">$job</span> <span class="p">=</span> <span class="nb">Get-VBRJob</span> <span class="n">-Name</span> <span class="s2">&quot;PROD-VMs-FlashArray&quot;</span>
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="nv">$options</span> <span class="p">=</span> <span class="nv">$job</span><span class="p">.</span><span class="n">GetStorageIntegrationOptions</span><span class="p">()</span>
-<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="nv">$options</span><span class="p">.</span><span class="n">UseStorageSnapshots</span> <span class="p">=</span> <span class="nv">$false</span>
-<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="nv">$job</span><span class="p">.</span><span class="n">SetStorageIntegrationOptions</span><span class="p">(</span><span class="nv">$options</span><span class="p">)</span>
-<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="nv">$job</span><span class="p">.</span><span class="n">SaveOptions</span><span class="p">()</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c"># Revert to standard VADP backup (no FlashArray integration)</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="nv">$job</span> <span class="p">=</span> <span class="nb">Get-VBRJob</span> <span class="n">-Name</span> <span class="s2">&quot;PROD-VMs-FlashArray&quot;</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="nv">$options</span> <span class="p">=</span> <span class="nv">$job</span><span class="p">.</span><span class="n">GetStorageIntegrationOptions</span><span class="p">()</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="nv">$options</span><span class="p">.</span><span class="n">UseStorageSnapshots</span> <span class="p">=</span> <span class="nv">$false</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="nv">$job</span><span class="p">.</span><span class="n">SetStorageIntegrationOptions</span><span class="p">(</span><span class="nv">$options</span><span class="p">)</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="nv">$job</span><span class="p">.</span><span class="n">SaveOptions</span><span class="p">()</span>
 </code></pre></div>
 <h3 id="disconnect-flasharray-from-veeam-emergency">Disconnect FlashArray from Veeam (Emergency)<a class="headerlink" href="#disconnect-flasharray-from-veeam-emergency" title="Permanent link">&para;</a></h3>
 <ol>
@@ -7812,12 +7790,12 @@ Cross-product runbook integrating Pure Storage FlashArray, Veeam Backup and Repl
 <li>Existing restore points remain valid — jobs revert to VADP mode</li>
 </ol>
 <h3 id="revert-to-previous-protection-group-schedule">Revert to Previous Protection Group Schedule<a class="headerlink" href="#revert-to-previous-protection-group-schedule" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Disable protection group schedule if causing issues</span>
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>pureprotection<span class="w"> </span>disable<span class="w"> </span>pg_prod
-<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
-<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c1"># Re-enable with modified settings</span>
-<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>pureprotection<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--snap-frequency<span class="w"> </span><span class="m">7200</span><span class="w"> </span>pg_prod
-<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>pureprotection<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>pg_prod
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Disable protection group schedule if causing issues</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>pureprotection<span class="w"> </span>disable<span class="w"> </span>pg_prod
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c1"># Re-enable with modified settings</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>pureprotection<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--snap-frequency<span class="w"> </span><span class="m">7200</span><span class="w"> </span>pg_prod
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>pureprotection<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>pg_prod
 </code></pre></div>
 <hr />
 <h2 id="see-also">See Also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>

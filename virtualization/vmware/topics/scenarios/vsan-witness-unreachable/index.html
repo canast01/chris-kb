@@ -10784,23 +10784,7 @@ unnecessary data rebuilds while the witness is being restored.
     LOST --&gt; RISK[Risk window: if one data node fails&lt;br/&gt;quorum lost — objects inaccessible]:::degraded
     LOST --&gt; ACTION[Restore witness connectivity&lt;br/&gt;or restart witness VM/host]:::action
     ACTION --&gt; HEAL[vSAN self-heals on reconnect&lt;br/&gt;no manual rebuild needed]:::healthy</code></pre>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>center: &quot;Scenarios&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>symptoms: &quot;Symptoms&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>1_confirm_witness_is_disconnected: &quot;1. Confirm Witness Is Disconnected&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>2_check_network_connectivity_to_witn: &quot;2. Check Network Connectivity to Witness&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>3_audit_affected_objects: &quot;3. Audit Affected Objects&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>4_review_witness_logs: &quot;4. Review Witness Logs&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>5_resolution: &quot;5. Resolution&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>center -&gt; symptoms
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>center -&gt; 1_confirm_witness_is_disconnected
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>center -&gt; 2_check_network_connectivity_to_witn
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>center -&gt; 3_audit_affected_objects
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>center -&gt; 4_review_witness_logs
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>center -&gt; 5_resolution
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNkT1PxDAMhvf-Cqs7le5r6YB0ggUJgQQDoxVatzXXJqckd-WE7r-T9IsMQbA5fh-_ju2SNRWWlcxBc93YJClIWtI5pK8uEpqVSeHLNOJIOTT0KWolr4m5dEerOuOxKfyhvKOQdUvXZIWFkhXrDnu2koxBNliycVnpKCqdwSqDuxGCtxGCBwP3ARS1XmPRUHFASbZX-oATzWe2F7RqaOjc187dc_A0cr7XwoFVc89ojw2KU8kWRVUNH0H1_uECP_Ymg73XYD9p8DxqUaMtajoz9csaWlV7l20GL4OwjP7ohKjFzlkY1Z7GY6U7Xzm_owXTJeHmFuZzBak_LxOw_1l1gP-2tQCJ7iPQw2GTb6ET9x4=?" /></p>
 <h2 id="symptoms">Symptoms<a class="headerlink" href="#symptoms" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -10835,53 +10819,53 @@ unnecessary data rebuilds while the witness is being restored.
 <hr />
 <h2 id="1-confirm-witness-is-disconnected">1. Confirm Witness Is Disconnected<a class="headerlink" href="#1-confirm-witness-is-disconnected" title="Permanent link">&para;</a></h2>
 <p>Run on either data node:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>cluster<span class="w"> </span>list
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>cluster<span class="w"> </span>list
 </code></pre></div>
 <p>Output shows 3 members when healthy. With witness unreachable, the witness UUID appears as disconnected
 or absent from the member list:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Cluster Information
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>   Enabled: true
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>   Current master UUID: &lt;data-node-uuid&gt;
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>   Local node UUID: &lt;data-node-uuid&gt;
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>   Local node type: NORMAL
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>   Local node state: MASTER
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>   Local node health state: HEALTHY
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>   Sub-Cluster Master UUID: &lt;data-node-uuid&gt;
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>   Sub-Cluster Backup UUID: &lt;data-node-uuid&gt;
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>   Sub-Cluster UUID: &lt;cluster-uuid&gt;
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>   Sub-Cluster Membership Entry Revision: 5
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>   Sub-Cluster Member Count: 2       &lt;-- only 2 when witness is gone
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>   Sub-Cluster Member UUIDs: &lt;node-a-uuid&gt; &lt;node-b-uuid&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Cluster Information
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>   Enabled: true
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>   Current master UUID: &lt;data-node-uuid&gt;
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>   Local node UUID: &lt;data-node-uuid&gt;
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>   Local node type: NORMAL
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>   Local node state: MASTER
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>   Local node health state: HEALTHY
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>   Sub-Cluster Master UUID: &lt;data-node-uuid&gt;
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>   Sub-Cluster Backup UUID: &lt;data-node-uuid&gt;
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>   Sub-Cluster UUID: &lt;cluster-uuid&gt;
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>   Sub-Cluster Membership Entry Revision: 5
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>   Sub-Cluster Member Count: 2       &lt;-- only 2 when witness is gone
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>   Sub-Cluster Member UUIDs: &lt;node-a-uuid&gt; &lt;node-b-uuid&gt;
 </code></pre></div>
 <hr />
 <h2 id="2-check-network-connectivity-to-witness">2. Check Network Connectivity to Witness<a class="headerlink" href="#2-check-network-connectivity-to-witness" title="Permanent link">&para;</a></h2>
 <p>From a data node, ping the witness TEP and management IPs:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Ping witness management IP from data node management VMkernel</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk0<span class="w"> </span>&lt;witness-mgmt-ip&gt;
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Ping witness TEP from data node vSAN VMkernel</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk1<span class="w"> </span>&lt;witness-tep-ip&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Ping witness management IP from data node management VMkernel</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk0<span class="w"> </span>&lt;witness-mgmt-ip&gt;
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Ping witness TEP from data node vSAN VMkernel</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk1<span class="w"> </span>&lt;witness-tep-ip&gt;
 </code></pre></div>
 <p>If pings fail to the TEP (vmk1) but succeed to management (vmk0), the vSAN witness traffic VLAN or
 routing is broken. If both fail, the witness host or VM is down.</p>
 <hr />
 <h2 id="3-audit-affected-objects">3. Audit Affected Objects<a class="headerlink" href="#3-audit-affected-objects" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>object<span class="w"> </span>list<span class="w"> </span>--cluster-uuid<span class="w"> </span>&lt;cluster-uuid&gt;<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;ABSENT|DEGRADED&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>object<span class="w"> </span>list<span class="w"> </span>--cluster-uuid<span class="w"> </span>&lt;cluster-uuid&gt;<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;ABSENT|DEGRADED&quot;</span>
 </code></pre></div>
 <p>Objects with only witness components ABSENT are tolerable (VMs still running). Objects with a data
 component ABSENT are at risk — a second failure causes immediate inaccessibility.</p>
 <p>To get the cluster UUID:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>cluster<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Sub-Cluster UUID&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>cluster<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Sub-Cluster UUID&quot;</span>
 </code></pre></div>
 <hr />
 <h2 id="4-review-witness-logs">4. Review Witness Logs<a class="headerlink" href="#4-review-witness-logs" title="Permanent link">&para;</a></h2>
 <p>SSH to the witness host (if reachable via management network):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;heartbeat&quot;</span><span class="w"> </span>/var/log/hostd.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-30
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;vsan&quot;</span><span class="w"> </span>/var/log/vmkernel.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;partition\|disconnect\|timeout&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-30
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;heartbeat&quot;</span><span class="w"> </span>/var/log/hostd.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-30
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;vsan&quot;</span><span class="w"> </span>/var/log/vmkernel.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;partition\|disconnect\|timeout&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-30
 </code></pre></div>
 <p>Look for repeated entries:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>WARNING: Heartbeat to cluster master lost (attempt 3 of 3)
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>ERROR: vSAN witness partition: unable to reach data nodes on vmk_witness
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>WARNING: Heartbeat to cluster master lost (attempt 3 of 3)
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>ERROR: vSAN witness partition: unable to reach data nodes on vmk_witness
 </code></pre></div>
 <hr />
 <h2 id="5-resolution">5. Resolution<a class="headerlink" href="#5-resolution" title="Permanent link">&para;</a></h2>
@@ -10896,43 +10880,43 @@ component ABSENT are at risk — a second failure causes immediate inaccessibili
 </ol>
 <h3 id="witness-vm-or-host-down-power-on">Witness VM or Host Down — Power On<a class="headerlink" href="#witness-vm-or-host-down-power-on" title="Permanent link">&para;</a></h3>
 <p>If using the VMware vSAN Witness Appliance (OVA-deployed VM):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Via vCenter or directly on the vSphere cluster hosting the witness VM</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>Get-VM<span class="w"> </span>-Name<span class="w"> </span><span class="s2">&quot;vSAN-Witness-*&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Start-VM
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Via vCenter or directly on the vSphere cluster hosting the witness VM</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>Get-VM<span class="w"> </span>-Name<span class="w"> </span><span class="s2">&quot;vSAN-Witness-*&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Start-VM
 </code></pre></div>
 <p>After power-on, allow 2–3 minutes for ESXi services and vSAN witness participation to initialise
 before checking cluster membership.</p>
 <h3 id="witness-disk-full-expand-datastore">Witness Disk Full — Expand Datastore<a class="headerlink" href="#witness-disk-full-expand-datastore" title="Permanent link">&para;</a></h3>
 <p>Witness appliance needs ~10 GB minimum for component metadata. Check:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>df<span class="w"> </span>-h<span class="w">   </span><span class="c1"># run on witness ESXi via SSH</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>df<span class="w"> </span>-h<span class="w">   </span><span class="c1"># run on witness ESXi via SSH</span>
 </code></pre></div>
 <p>If the witness datastore is full, expand the witness VM disk via vSphere Client and extend the
 filesystem inside the witness appliance:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># On witness ESXi — rescan storage</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>adapter<span class="w"> </span>rescan<span class="w"> </span>--all
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># On witness ESXi — rescan storage</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>adapter<span class="w"> </span>rescan<span class="w"> </span>--all
 </code></pre></div>
 <h3 id="temporary-workaround-defer-rebuild-timer">Temporary Workaround — Defer Rebuild Timer<a class="headerlink" href="#temporary-workaround-defer-rebuild-timer" title="Permanent link">&para;</a></h3>
 <p>If restoring the witness will take more than 60 minutes and both data nodes are healthy, prevent
 unnecessary data moves during the outage window:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Run on each data node ESXi</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>settings<span class="w"> </span>advanced<span class="w"> </span><span class="nb">set</span><span class="w"> </span>-o<span class="w"> </span>/VSAN/ClomRepairDelay<span class="w"> </span>-i<span class="w"> </span><span class="m">480</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Run on each data node ESXi</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>settings<span class="w"> </span>advanced<span class="w"> </span><span class="nb">set</span><span class="w"> </span>-o<span class="w"> </span>/VSAN/ClomRepairDelay<span class="w"> </span>-i<span class="w"> </span><span class="m">480</span>
 </code></pre></div>
 <p>This sets the rebuild delay to 480 minutes. Reset to default (60) once the witness is restored:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>esxcli<span class="w"> </span>system<span class="w"> </span>settings<span class="w"> </span>advanced<span class="w"> </span><span class="nb">set</span><span class="w"> </span>-o<span class="w"> </span>/VSAN/ClomRepairDelay<span class="w"> </span>-i<span class="w"> </span><span class="m">60</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>esxcli<span class="w"> </span>system<span class="w"> </span>settings<span class="w"> </span>advanced<span class="w"> </span><span class="nb">set</span><span class="w"> </span>-o<span class="w"> </span>/VSAN/ClomRepairDelay<span class="w"> </span>-i<span class="w"> </span><span class="m">60</span>
 </code></pre></div>
 <hr />
 <h2 id="6-verification">6. Verification<a class="headerlink" href="#6-verification" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c"># PowerCLI — check vSAN health summary</span>
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="nb">Get-VsanHealthSummary</span> <span class="n">-Cluster</span> <span class="p">(</span><span class="nb">Get-Cluster</span> <span class="s2">&quot;&lt;cluster-name&gt;&quot;</span><span class="p">)</span> <span class="p">|</span>
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>  <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">OverallHealth</span> <span class="o">-ne</span> <span class="s1">&#39;green&#39;</span> <span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c"># PowerCLI — check vSAN health summary</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="nb">Get-VsanHealthSummary</span> <span class="n">-Cluster</span> <span class="p">(</span><span class="nb">Get-Cluster</span> <span class="s2">&quot;&lt;cluster-name&gt;&quot;</span><span class="p">)</span> <span class="p">|</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>  <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">OverallHealth</span> <span class="o">-ne</span> <span class="s1">&#39;green&#39;</span> <span class="p">}</span>
 </code></pre></div>
 <p>Expected: no results (all checks green).</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># ESXi — confirm 3-member cluster</span>
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>cluster<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Sub-Cluster Member Count&quot;</span>
-<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="c1"># Expected: Sub-Cluster Member Count: 3</span>
-<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>
-<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="c1"># ESXi — confirm no ABSENT witness components</span>
-<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>object<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;ABSENT&quot;</span>
-<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="c1"># Expected: 0</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># ESXi — confirm 3-member cluster</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>cluster<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Sub-Cluster Member Count&quot;</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="c1"># Expected: Sub-Cluster Member Count: 3</span>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="c1"># ESXi — confirm no ABSENT witness components</span>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>object<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;ABSENT&quot;</span>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="c1"># Expected: 0</span>
 </code></pre></div>
 <hr />
 <h2 id="7-prevention">7. Prevention<a class="headerlink" href="#7-prevention" title="Permanent link">&para;</a></h2>

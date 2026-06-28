@@ -9157,23 +9157,7 @@ Run this check weekly or after any significant workload addition.
 <p>Alert thresholds:
 - &gt; 75% used: review and plan expansion
 - &gt; 85% used: immediate action — thin provisioned disks may fail to inflate</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>begin_checks: &quot;Begin Checks&quot; {shape: oval}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>vsan_capacity: &quot;vSAN Capacity&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>snapshot_growth: &quot;Snapshot Growth&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>thin_provisioning_risk: &quot;Thin Provisioning Risk&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>backup_repository_usage: &quot;Backup Repository Usage&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>verify: &quot;Verify&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>generate_report: &quot;Generate Report&quot; {shape: oval}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>begin_checks -&gt; vsan_capacity
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>vsan_capacity -&gt; snapshot_growth
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>snapshot_growth -&gt; thin_provisioning_risk
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>thin_provisioning_risk -&gt; backup_repository_usage
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>backup_repository_usage -&gt; verify
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>verify -&gt; generate_report
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp1kEFuAyEMRfecwsq-F5hFpTaL7KoqabpFhLpgTQTIEKooyt0DaNR2RswO-_-P7fdFjDqRdwMwGZuEOKEhJ7VFPcYBNq-1hG0rN3CLVgUcwGd1voscVXGqoDSla_Hmw8sbbKf6z1wnKGfOeBfRqRCtT9Kw_0m2ZA5TB3at000lWzYK7DPFsik5I5niWMIfRYD3fwLsi9D946T0eAmSMfhIyfNVXqIyWC9sCux_FThWpftLRqbveupne3Q9Bh2ySthmcSrm3dRpMzgtMc6Qw9MzzLjOKVd5AXEJtVr6xFZA1sAKnjVsbcuGYEJSG4vDxQN6oeBh?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Access:</strong> Admin credentials on all affected systems</li>
@@ -9183,35 +9167,35 @@ Run this check weekly or after any significant workload addition.
 </ul>
 <hr />
 <h2 id="vsan-capacity">vSAN Capacity<a class="headerlink" href="#vsan-capacity" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># On any cluster ESXi host</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>capacity<span class="w"> </span>get
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># Review: total capacity, used, free, and &quot;slack&quot; (reserved for rebuild)</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Via vCenter UI: vSAN cluster → Monitor → Capacity</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># Check &quot;Used Capacity&quot; — keep below 70% to allow object rebuild headroom</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># On any cluster ESXi host</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>capacity<span class="w"> </span>get
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c1"># Review: total capacity, used, free, and &quot;slack&quot; (reserved for rebuild)</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Via vCenter UI: vSAN cluster → Monitor → Capacity</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># Check &quot;Used Capacity&quot; — keep below 70% to allow object rebuild headroom</span>
 </code></pre></div>
 <p>vSAN capacity thresholds:
 - &gt; 60% used: plan capacity expansion
 - &gt; 70% used: critical — rebuild operations may fail if a disk fails</p>
 <h2 id="snapshot-growth">Snapshot Growth<a class="headerlink" href="#snapshot-growth" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Find VMs with large or old snapshots</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Get-Snapshot</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">SizeMB</span> <span class="o">-gt</span> <span class="n">10240</span> <span class="o">-or</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Created</span> <span class="o">-lt</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddDays</span><span class="p">(-</span><span class="n">7</span><span class="p">)}</span> <span class="p">|</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="nb">Select-Object</span> <span class="n">VM</span><span class="p">,</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Created</span><span class="p">,</span> <span class="n">SizeMB</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">SizeMB</span> <span class="n">-Descending</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Find VMs with large or old snapshots</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Get-Snapshot</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">SizeMB</span> <span class="o">-gt</span> <span class="n">10240</span> <span class="o">-or</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Created</span> <span class="o">-lt</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddDays</span><span class="p">(-</span><span class="n">7</span><span class="p">)}</span> <span class="p">|</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="nb">Select-Object</span> <span class="n">VM</span><span class="p">,</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Created</span><span class="p">,</span> <span class="n">SizeMB</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">SizeMB</span> <span class="n">-Descending</span>
 </code></pre></div>
 <p>Action: snapshots older than 7 days should be reviewed with the VM owner; snapshots &gt; 50 GB should be removed if not actively in use.</p>
 <h2 id="thin-provisioning-risk">Thin Provisioning Risk<a class="headerlink" href="#thin-provisioning-risk" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Compare provisioned vs. actual used space per datastore</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Get-Datastore</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="nb">Type </span><span class="o">-eq</span> <span class="s2">&quot;VMFS&quot;</span><span class="p">}</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    <span class="nv">$ds</span> <span class="p">=</span> <span class="nv">$_</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    <span class="nv">$vms</span> <span class="p">=</span> <span class="nb">Get-VM</span> <span class="n">-Datastore</span> <span class="nv">$ds</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>    <span class="nv">$provGB</span> <span class="p">=</span> <span class="p">(</span><span class="nv">$vms</span> <span class="p">|</span> <span class="nb">Get-HardDisk</span> <span class="p">|</span> <span class="nb">Measure-Object</span> <span class="n">-Property</span> <span class="n">CapacityGB</span> <span class="n">-Sum</span><span class="p">).</span><span class="n">Sum</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>    <span class="no">[PSCustomObject]</span><span class="p">@{</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>        <span class="n">Datastore</span> <span class="p">=</span> <span class="nv">$ds</span><span class="p">.</span><span class="n">Name</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>        <span class="n">CapacityGB</span> <span class="p">=</span> <span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$ds</span><span class="p">.</span><span class="n">CapacityGB</span><span class="p">,</span> <span class="n">1</span><span class="p">)</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>        <span class="n">ProvisionedGB</span> <span class="p">=</span> <span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$provGB</span><span class="p">,</span> <span class="n">1</span><span class="p">)</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>        <span class="n">OvercommitRatio</span> <span class="p">=</span> <span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$provGB</span> <span class="p">/</span> <span class="nv">$ds</span><span class="p">.</span><span class="n">CapacityGB</span><span class="p">,</span> <span class="n">2</span><span class="p">)</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>    <span class="p">}</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="p">}</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">OvercommitRatio</span> <span class="n">-Descending</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Compare provisioned vs. actual used space per datastore</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">Get-Datastore</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="nb">Type </span><span class="o">-eq</span> <span class="s2">&quot;VMFS&quot;</span><span class="p">}</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="nv">$ds</span> <span class="p">=</span> <span class="nv">$_</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="nv">$vms</span> <span class="p">=</span> <span class="nb">Get-VM</span> <span class="n">-Datastore</span> <span class="nv">$ds</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>    <span class="nv">$provGB</span> <span class="p">=</span> <span class="p">(</span><span class="nv">$vms</span> <span class="p">|</span> <span class="nb">Get-HardDisk</span> <span class="p">|</span> <span class="nb">Measure-Object</span> <span class="n">-Property</span> <span class="n">CapacityGB</span> <span class="n">-Sum</span><span class="p">).</span><span class="n">Sum</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    <span class="no">[PSCustomObject]</span><span class="p">@{</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>        <span class="n">Datastore</span> <span class="p">=</span> <span class="nv">$ds</span><span class="p">.</span><span class="n">Name</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>        <span class="n">CapacityGB</span> <span class="p">=</span> <span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$ds</span><span class="p">.</span><span class="n">CapacityGB</span><span class="p">,</span> <span class="n">1</span><span class="p">)</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>        <span class="n">ProvisionedGB</span> <span class="p">=</span> <span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$provGB</span><span class="p">,</span> <span class="n">1</span><span class="p">)</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>        <span class="n">OvercommitRatio</span> <span class="p">=</span> <span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$provGB</span> <span class="p">/</span> <span class="nv">$ds</span><span class="p">.</span><span class="n">CapacityGB</span><span class="p">,</span> <span class="n">2</span><span class="p">)</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>    <span class="p">}</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="p">}</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">OvercommitRatio</span> <span class="n">-Descending</span>
 </code></pre></div>
 <p>Alert if overcommit ratio &gt; 2.0 on a datastore approaching 70% usage.</p>
 <h2 id="backup-repository-usage">Backup Repository Usage<a class="headerlink" href="#backup-repository-usage" title="Permanent link">&para;</a></h2>

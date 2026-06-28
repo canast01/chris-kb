@@ -7705,23 +7705,7 @@ Firewall port reference for Veritas NetBackup. Covers the Primary Server (former
 *Applies to: NetBackup 10.x / NetBackup IT Analytics 10.x*
 </div>
 <p><img alt="NetBackup — Ports and Network Requirements" src="../../../../assets/backup-netbackup-architecture-ports.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>center: &quot;NetBackup&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>inbound_admin_to_netbackup_primary_s: &quot;Inbound — Admin to NetBackup Primary Server&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>primary_server_to_media_servers: &quot;Primary Server to Media Servers&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>primary_server_to_clients: &quot;Primary Server to Clients&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>client_to_primary_server_and_media_s: &quot;Client to Primary Server and Media Servers&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>media_server_to_netbackup_storage_di: &quot;Media Server to NetBackup Storage (Disk Pools, OST, Tape)&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>vmware_backup_vsa_vadp_proxy: &quot;VMware Backup — VSA (VADP Proxy)&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>center -&gt; inbound_admin_to_netbackup_primary_s
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>center -&gt; primary_server_to_media_servers
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>center -&gt; primary_server_to_clients
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>center -&gt; client_to_primary_server_and_media_s
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>center -&gt; media_server_to_netbackup_storage_di
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>center -&gt; vmware_backup_vsa_vadp_proxy
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNkk1qwzAQRvc-xZBVCukFvCi4zaaLtAYHb4ViDbaILRlJcRNKoIfoCXuSSpFI5WBSL4We3qf5YVxhZbgUKSheNyZJKhQGVQqLNzTPtNof-gV86ob2mEKDR1pLcU642MmDYISyjgtiJBFodheY9Ip3VJ2ItopXj8HP1zdkDgUj4eqF3KNQoBpQ_cW4L1FRt3hOrrYL4pI6ZJyGs8sYS1zAxhHhrGdaq5bbuqd9L_5u0uTfOcONk9ruhK9aqVc42Y3eYjP-G9c87rY2UtEaCeM2JRaNO114DJZrrveQS9nqFbwX2xVsbdbDZOjQfVCFJAQNmpKBMjdfeTzZsHLjriEEuAmXRQbLMlvntkjLTFvDfsHjE8xZogj_ZxXukmG8ETNncBE-ZwIRfq93yS9M5kpa?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
 <li>All inter-component communication in modern NetBackup (10.x) flows through port 1556 (VNETD / PBX — Process Bus eXchange)</li>
@@ -8073,26 +8057,26 @@ Firewall port reference for Veritas NetBackup. Covers the Primary Server (former
 </table>
 <hr />
 <h2 id="verify">Verify<a class="headerlink" href="#verify" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># From admin workstation — test REST API</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;%{http_code}&quot;</span><span class="w"> </span>https://&lt;primary-server&gt;/netbackup/ping
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># From client — test VNETD port to Primary Server</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>nc<span class="w"> </span>-zv<span class="w"> </span>&lt;primary-server&gt;<span class="w"> </span><span class="m">1556</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># From client — test VNETD port to Media Server</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>nc<span class="w"> </span>-zv<span class="w"> </span>&lt;media-server&gt;<span class="w"> </span><span class="m">1556</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># From Media Server — test vCenter VADP port</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>nc<span class="w"> </span>-zv<span class="w"> </span>&lt;vcenter-fqdn&gt;<span class="w"> </span><span class="m">443</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># From Media Server — test ESXi agent port</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>nc<span class="w"> </span>-zv<span class="w"> </span>&lt;esxi-ip&gt;<span class="w"> </span><span class="m">902</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="c1"># From Media Server — test DD Boost port</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>nc<span class="w"> </span>-zv<span class="w"> </span>&lt;data-domain-ip&gt;<span class="w"> </span><span class="m">2052</span>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="c1"># From Primary Server CLI — check client status</span>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>bpclntcmd<span class="w"> </span>-pn<span class="w"> </span>-client<span class="w"> </span>&lt;client-hostname&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># From admin workstation — test REST API</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;%{http_code}&quot;</span><span class="w"> </span>https://&lt;primary-server&gt;/netbackup/ping
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># From client — test VNETD port to Primary Server</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>nc<span class="w"> </span>-zv<span class="w"> </span>&lt;primary-server&gt;<span class="w"> </span><span class="m">1556</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># From client — test VNETD port to Media Server</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>nc<span class="w"> </span>-zv<span class="w"> </span>&lt;media-server&gt;<span class="w"> </span><span class="m">1556</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># From Media Server — test vCenter VADP port</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>nc<span class="w"> </span>-zv<span class="w"> </span>&lt;vcenter-fqdn&gt;<span class="w"> </span><span class="m">443</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># From Media Server — test ESXi agent port</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>nc<span class="w"> </span>-zv<span class="w"> </span>&lt;esxi-ip&gt;<span class="w"> </span><span class="m">902</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># From Media Server — test DD Boost port</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>nc<span class="w"> </span>-zv<span class="w"> </span>&lt;data-domain-ip&gt;<span class="w"> </span><span class="m">2052</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="c1"># From Primary Server CLI — check client status</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>bpclntcmd<span class="w"> </span>-pn<span class="w"> </span>-client<span class="w"> </span>&lt;client-hostname&gt;
 </code></pre></div>
 <hr />
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>

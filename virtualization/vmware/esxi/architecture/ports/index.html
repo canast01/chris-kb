@@ -9293,23 +9293,7 @@ Firewall port reference for VMware ESXi hosts. Covers management, VM console, vM
 *Applies to: ESXi 7.x / 8.x*
 </div>
 <p><img alt="ESXi — Ports and Network Requirements" src="../../../../../assets/virtualization-vmware-esxi-architecture-ports.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>center: &quot;ESXi&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>inbound_management_traffic_to_esxi: &quot;Inbound — Management Traffic to ESXi&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>outbound_esxi_to_infrastructure: &quot;Outbound — ESXi to Infrastructure&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>vmotion_esxi_to_esxi: &quot;vMotion (ESXi to ESXi)&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>fault_tolerance_esxi_to_esxi: &quot;Fault Tolerance (ESXi to ESXi)&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>vsan_traffic_esxi_to_esxi: &quot;vSAN Traffic (ESXi to ESXi)&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>nsx_overlay_esxi_as_transport_node: &quot;NSX Overlay (ESXi as Transport Node)&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>center -&gt; inbound_management_traffic_to_esxi
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>center -&gt; outbound_esxi_to_infrastructure
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>center -&gt; vmotion_esxi_to_esxi
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>center -&gt; fault_tolerance_esxi_to_esxi
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>center -&gt; vsan_traffic_esxi_to_esxi
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>center -&gt; nsx_overlay_esxi_as_transport_node
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNkrFugzAQhnc_xYmpHfoCDJU6tFKGkIEM2awrHGAJzpFtEFUVqQ_RJ-yTFMcEkYiWTJZ8nz_f_XauDGVOaY7BqLJyQmTEjkwM0Wt6UBF82gqPFENFPZaaT0Lxu245lw0yltQMtHQGi0Jl0mlJtlfD2U2A4OfrG7YTCPsAgtNwbfdNIJc1nYRuXbjAq7xScWHQOtNmrjUDG-1G4mz3Hu_bXFGL5q7RftJJPPbabc_b8HBR-fVx0VBgWw_j6poMcka3pjdfhv2lfI-xs8hTfreNpS_JFNkdLra91B2ZGj-CCq1Xsz1q4yTr3IeXpAfYBWh0ovWXBAqSgVq2jx8Dnp5h_QvM4JX3nJFL7zMr_xf-3PJXojNmPSnxC-wLJjo=?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
 <li>ESXi has a built-in stateful firewall managed by <code>esxcli network firewall</code>; port table below reflects permitted directions from ESXi's perspective</li>
@@ -9658,24 +9642,24 @@ Firewall port reference for VMware ESXi hosts. Covers management, VM console, vM
 </table>
 <hr />
 <h2 id="verify">Verify<a class="headerlink" href="#verify" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># From vCenter or jump host — test management ports on ESXi host</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>nc<span class="w"> </span>-zv<span class="w"> </span>esxi01.corp.local<span class="w"> </span><span class="m">443</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>nc<span class="w"> </span>-zv<span class="w"> </span>esxi01.corp.local<span class="w"> </span><span class="m">902</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># From ESXi SSH — test NTP</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>connection<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="m">123</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>ntpq<span class="w"> </span>-p
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># From ESXi SSH — view ESXi firewall rules</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>esxcli<span class="w"> </span>network<span class="w"> </span>firewall<span class="w"> </span>get
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>esxcli<span class="w"> </span>network<span class="w"> </span>firewall<span class="w"> </span>ruleset<span class="w"> </span>list
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># From ESXi SSH — test iSCSI target reachability</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>esxcli<span class="w"> </span>iscsi<span class="w"> </span>networkportal<span class="w"> </span>list
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>nc<span class="w"> </span>-zv<span class="w"> </span>&lt;iscsi-target-ip&gt;<span class="w"> </span><span class="m">3260</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="c1"># From ESXi SSH — test vMotion connectivity</span>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk1<span class="w"> </span>&lt;destination-esxi-vmk1-ip&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># From vCenter or jump host — test management ports on ESXi host</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>nc<span class="w"> </span>-zv<span class="w"> </span>esxi01.corp.local<span class="w"> </span><span class="m">443</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>nc<span class="w"> </span>-zv<span class="w"> </span>esxi01.corp.local<span class="w"> </span><span class="m">902</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># From ESXi SSH — test NTP</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>connection<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="m">123</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>ntpq<span class="w"> </span>-p
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1"># From ESXi SSH — view ESXi firewall rules</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>esxcli<span class="w"> </span>network<span class="w"> </span>firewall<span class="w"> </span>get
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>esxcli<span class="w"> </span>network<span class="w"> </span>firewall<span class="w"> </span>ruleset<span class="w"> </span>list
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># From ESXi SSH — test iSCSI target reachability</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>esxcli<span class="w"> </span>iscsi<span class="w"> </span>networkportal<span class="w"> </span>list
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>nc<span class="w"> </span>-zv<span class="w"> </span>&lt;iscsi-target-ip&gt;<span class="w"> </span><span class="m">3260</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="c1"># From ESXi SSH — test vMotion connectivity</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk1<span class="w"> </span>&lt;destination-esxi-vmk1-ip&gt;
 </code></pre></div>
 <hr />
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>

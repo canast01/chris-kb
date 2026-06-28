@@ -8934,23 +8934,7 @@ Health Checks reference covering Daily Checks, Health Check, Cluster Status, Dir
 *Applies to: VPLEX*
 </div>
 
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>hub: &quot;VPLEX\nOperations&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>run_this_routine: &quot;Run This Routine&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>daily_checks: &quot;Daily Checks&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>health_check: &quot;Health Check&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>cluster_status: &quot;Cluster Status&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>director_health: &quot;Director Health&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>prechange_checklist: &quot;Pre-Change Checklist&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>hub -&gt; run_this_routine
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>hub -&gt; daily_checks
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>hub -&gt; health_check
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>hub -&gt; cluster_status
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>hub -&gt; director_health
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>hub -&gt; prechange_checklist
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNptkM-KAjEMxu99ijB3X2AOexkFDwsrKuJBKN0xTIqlM7QpKOK72z87u7r0lvySj3z5ztphz3q0LTg9EAtB4buF5rD5XB1P9mtCp9LYN3D3pCZsgfCqhtE-hAtWMmkv3RhY2zhqtsHCPiLYFvSnSmeUHQw-xFlpc5M9YX_xUbNMLXS5re4TKsNUBHF_ndsiqO73JnhGJz0rDulCVwDsMqh7yjmMTpZjydYPgXKvqppiTbHGYs5oz1G5cbjoMi4mE67KU9aw-ID_Qc78NaiZvYYxs_eHf9XvL8244lk8AXMpul4=?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Access:</strong> Storage admin credentials (cluster admin or equivalent)</li>
@@ -9057,41 +9041,41 @@ Health Checks reference covering Daily Checks, Health Check, Cluster Status, Dir
 <li>[ ] <code>health-check --full</code> — system-level health check returns no warnings or errors</li>
 <li>[ ] ICL (inter-cluster link) latency between Metro sites is within the expected sub-10ms threshold</li>
 </ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Check cluster-level health indications</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ll<span class="w"> </span>/clusters/*/health-indications/
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Check all distributed device health states</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>ll<span class="w"> </span>/distributed-storage/distributed-devices/*/health-indications/
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Check director hardware health across all engines</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>ll<span class="w"> </span>/engines/*/directors/*/hardware/
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Check Witness connectivity (Metro deployments)</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>ll<span class="w"> </span>/metro-node/*/witness/
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Check consistency group operational status</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>ll<span class="w"> </span>/distributed-storage/consistency-groups/
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="c1"># List all storage views and their initiator-to-port bindings</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>ll<span class="w"> </span>/clusters/*/exports/storage-views/
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="c1"># Run a full system health check</span>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>health-check<span class="w"> </span>--full
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="c1"># Show cluster hardware inventory</span>
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>ll<span class="w"> </span>/clusters/*/hardware/
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Check cluster-level health indications</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ll<span class="w"> </span>/clusters/*/health-indications/
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Check all distributed device health states</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>ll<span class="w"> </span>/distributed-storage/distributed-devices/*/health-indications/
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Check director hardware health across all engines</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>ll<span class="w"> </span>/engines/*/directors/*/hardware/
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Check Witness connectivity (Metro deployments)</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>ll<span class="w"> </span>/metro-node/*/witness/
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Check consistency group operational status</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>ll<span class="w"> </span>/distributed-storage/consistency-groups/
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># List all storage views and their initiator-to-port bindings</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>ll<span class="w"> </span>/clusters/*/exports/storage-views/
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="c1"># Run a full system health check</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>health-check<span class="w"> </span>--full
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="c1"># Show cluster hardware inventory</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>ll<span class="w"> </span>/clusters/*/hardware/
 </code></pre></div>
 <h2 id="cluster-status">Cluster Status<a class="headerlink" href="#cluster-status" title="Permanent link">&para;</a></h2>
 <p><img alt="Cluster Status" src="../../../../../assets/storage-dell-vplex-hc-cluster-status.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>VPlexcli:/&gt;<span class="w"> </span>ll<span class="w"> </span>/clusters/
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>VPlexcli:/&gt;<span class="w"> </span>ll<span class="w"> </span>/clusters/cluster-1/
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>VPlexcli:/&gt;<span class="w"> </span>ll<span class="w"> </span>/clusters/cluster-2/
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>VPlexcli:/&gt;<span class="w"> </span>ll<span class="w"> </span>/clusters/
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>VPlexcli:/&gt;<span class="w"> </span>ll<span class="w"> </span>/clusters/cluster-1/
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>VPlexcli:/&gt;<span class="w"> </span>ll<span class="w"> </span>/clusters/cluster-2/
 </code></pre></div>
 <p>All clusters should show <code>operational-status: ok</code>.</p>
 <h2 id="director-health">Director Health<a class="headerlink" href="#director-health" title="Permanent link">&para;</a></h2>
 <p><img alt="Director Health" src="../../../../../assets/storage-dell-vplex-hc-director-health.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>VPlexcli:/&gt;<span class="w"> </span>ll<span class="w"> </span>/engines/*/directors/
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>VPlexcli:/&gt;<span class="w"> </span>ll<span class="w"> </span>/engines/engine-1-1/directors/
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>VPlexcli:/&gt;<span class="w"> </span>ll<span class="w"> </span>/engines/*/directors/
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>VPlexcli:/&gt;<span class="w"> </span>ll<span class="w"> </span>/engines/engine-1-1/directors/
 </code></pre></div>
 <p>All directors should be <code>operational-status: ok</code> and <code>health-state: ok</code>.</p>
 <h2 id="pre-change-checklist">Pre-Change Checklist<a class="headerlink" href="#pre-change-checklist" title="Permanent link">&para;</a></h2>

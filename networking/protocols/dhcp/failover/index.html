@@ -8125,58 +8125,42 @@
 DHCP Failover reference covering Overview, Configuring Failover, Checking Failover State, Failover States Reference, Split Scope (Pre-2012 Fallback) and 2 more sections.
 </div>
 <p><img alt="DHCP Failover" src="../../../../assets/networking-protocols-dhcp-failover-index.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>center: &quot;DHCP&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>configuring_failover: &quot;Configuring Failover&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>checking_failover_state: &quot;Checking Failover State&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>failover_states_reference: &quot;Failover States Reference&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>split_scope_pre2012_fallback: &quot;Split Scope (Pre-2012 Fallback)&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>removing_and_modifying_failover: &quot;Removing and Modifying Failover&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>known_issues: &quot;Known Issues&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>center -&gt; configuring_failover
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>center -&gt; checking_failover_state
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>center -&gt; failover_states_reference
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>center -&gt; split_scope_pre2012_fallback
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>center -&gt; removing_and_modifying_failover
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>center -&gt; known_issues
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqFkcFOwzAQRO_5ilVPcKgEPebApQhRIaSq-QDLOBvHiruOvG4BIf4du6TURaYc7XkzXs-2xqMKxlEN3ug-VJVCCuhrmN0_Ltcz-OBejlhDj29SO_qslKPO6J03pEUnjXX7A708XcPDdH1yp0ckaYvR36MacrPgIAOmiEn58UOTlGLKuZmFxw49kko553aGzVErJvFoTRCs3Ihi9Li4uV3E0ax9kWqIYU2SoUkyXK09zhMQJ_wGrouRHrdun74oqRVb15ru_Vdbm4mASMDzkbhc3EDulYRh3iHHiKd0hNXhWOSnTcL8Dko7y-XySjLiz7oz5lKRGfZPORmZf7j6Aswx-Sk=?" /></p>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>DHCP failover on Windows Server allows two DHCP servers to share responsibility for a scope, providing redundancy. The two modes are <strong>Hot Standby</strong> (one active, one passive) and <strong>Load Balance</strong> (both serve leases simultaneously, split by percentage).</p>
 <h2 id="configuring-failover">Configuring Failover<a class="headerlink" href="#configuring-failover" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Create a failover relationship (load balance, 50/50)</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Add-DhcpServerv4Failover</span> <span class="p">`</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  <span class="n">-Name</span> <span class="s2">&quot;DHCP-Failover-LAN&quot;</span> <span class="p">`</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  <span class="n">-PartnerServer</span> <span class="s2">&quot;dhcp02.example.local&quot;</span> <span class="p">`</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>  <span class="n">-ScopeId</span> <span class="n">192</span><span class="p">.</span><span class="n">168</span><span class="p">.</span><span class="n">10</span><span class="p">.</span><span class="n">0</span> <span class="p">`</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>  <span class="n">-LoadBalancePercent</span> <span class="n">50</span> <span class="p">`</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>  <span class="n">-SharedSecret</span> <span class="s2">&quot;S3cur3Sh@red&quot;</span> <span class="p">`</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>  <span class="n">-AutoStateTransition</span> <span class="nv">$true</span> <span class="p">`</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>  <span class="n">-MaxClientLeadTime</span> <span class="n">01</span><span class="p">:</span><span class="n">00</span><span class="p">:</span><span class="n">00</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c"># Create hot standby failover</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="nb">Add-DhcpServerv4Failover</span> <span class="p">`</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>  <span class="n">-Name</span> <span class="s2">&quot;DHCP-Failover-HS&quot;</span> <span class="p">`</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>  <span class="n">-PartnerServer</span> <span class="s2">&quot;dhcp02.example.local&quot;</span> <span class="p">`</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>  <span class="n">-ScopeId</span> <span class="n">192</span><span class="p">.</span><span class="n">168</span><span class="p">.</span><span class="n">20</span><span class="p">.</span><span class="n">0</span> <span class="p">`</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>  <span class="n">-Mode</span> <span class="n">HotStandby</span> <span class="p">`</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>  <span class="n">-ServerRole</span> <span class="n">Active</span> <span class="p">`</span>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>  <span class="n">-ReservePercent</span> <span class="n">5</span> <span class="p">`</span>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>  <span class="n">-SharedSecret</span> <span class="s2">&quot;S3cur3Sh@red&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Create a failover relationship (load balance, 50/50)</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Add-DhcpServerv4Failover</span> <span class="p">`</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>  <span class="n">-Name</span> <span class="s2">&quot;DHCP-Failover-LAN&quot;</span> <span class="p">`</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>  <span class="n">-PartnerServer</span> <span class="s2">&quot;dhcp02.example.local&quot;</span> <span class="p">`</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>  <span class="n">-ScopeId</span> <span class="n">192</span><span class="p">.</span><span class="n">168</span><span class="p">.</span><span class="n">10</span><span class="p">.</span><span class="n">0</span> <span class="p">`</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>  <span class="n">-LoadBalancePercent</span> <span class="n">50</span> <span class="p">`</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>  <span class="n">-SharedSecret</span> <span class="s2">&quot;S3cur3Sh@red&quot;</span> <span class="p">`</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>  <span class="n">-AutoStateTransition</span> <span class="nv">$true</span> <span class="p">`</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>  <span class="n">-MaxClientLeadTime</span> <span class="n">01</span><span class="p">:</span><span class="n">00</span><span class="p">:</span><span class="n">00</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c"># Create hot standby failover</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="nb">Add-DhcpServerv4Failover</span> <span class="p">`</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>  <span class="n">-Name</span> <span class="s2">&quot;DHCP-Failover-HS&quot;</span> <span class="p">`</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>  <span class="n">-PartnerServer</span> <span class="s2">&quot;dhcp02.example.local&quot;</span> <span class="p">`</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>  <span class="n">-ScopeId</span> <span class="n">192</span><span class="p">.</span><span class="n">168</span><span class="p">.</span><span class="n">20</span><span class="p">.</span><span class="n">0</span> <span class="p">`</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>  <span class="n">-Mode</span> <span class="n">HotStandby</span> <span class="p">`</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>  <span class="n">-ServerRole</span> <span class="n">Active</span> <span class="p">`</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>  <span class="n">-ReservePercent</span> <span class="n">5</span> <span class="p">`</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>  <span class="n">-SharedSecret</span> <span class="s2">&quot;S3cur3Sh@red&quot;</span>
 </code></pre></div>
 <h2 id="checking-failover-state">Checking Failover State<a class="headerlink" href="#checking-failover-state" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># View all failover relationships on this server</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">Get-DhcpServerv4Failover</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c"># Check state for a specific relationship</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nb">Get-DhcpServerv4Failover</span> <span class="n">-Name</span> <span class="s2">&quot;DHCP-Failover-LAN&quot;</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c"># Sync the failover database with partner</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="nb">Invoke-DhcpServerv4FailoverReplication</span> <span class="n">-Name</span> <span class="s2">&quot;DHCP-Failover-LAN&quot;</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c"># Force sync all scopes</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="nb">Invoke-DhcpServerv4FailoverReplication</span> <span class="n">-Force</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># View all failover relationships on this server</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Get-DhcpServerv4Failover</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c"># Check state for a specific relationship</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nb">Get-DhcpServerv4Failover</span> <span class="n">-Name</span> <span class="s2">&quot;DHCP-Failover-LAN&quot;</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c"># Sync the failover database with partner</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="nb">Invoke-DhcpServerv4FailoverReplication</span> <span class="n">-Name</span> <span class="s2">&quot;DHCP-Failover-LAN&quot;</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c"># Force sync all scopes</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="nb">Invoke-DhcpServerv4FailoverReplication</span> <span class="n">-Force</span>
 </code></pre></div>
 <h2 id="failover-states-reference">Failover States Reference<a class="headerlink" href="#failover-states-reference" title="Permanent link">&para;</a></h2>
 <table>
@@ -8215,27 +8199,27 @@ DHCP Failover reference covering Overview, Configuring Failover, Checking Failov
 </table>
 <h2 id="split-scope-pre-2012-fallback">Split Scope (Pre-2012 Fallback)<a class="headerlink" href="#split-scope-pre-2012-fallback" title="Permanent link">&para;</a></h2>
 <p>On Server 2008 R2 without native failover, split the pool manually:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Primary: serve 192.168.10.1-192.168.10.150</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c"># Secondary: serve 192.168.10.151-192.168.10.250</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c"># Each excludes the other&#39;s range</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="nb">Add-DhcpServerv4ExclusionRange</span> <span class="p">`</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>  <span class="n">-ScopeId</span> <span class="n">192</span><span class="p">.</span><span class="n">168</span><span class="p">.</span><span class="n">10</span><span class="p">.</span><span class="n">0</span> <span class="p">`</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>  <span class="n">-StartRange</span> <span class="n">192</span><span class="p">.</span><span class="n">168</span><span class="p">.</span><span class="n">10</span><span class="p">.</span><span class="n">151</span> <span class="p">`</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>  <span class="n">-EndRange</span> <span class="n">192</span><span class="p">.</span><span class="n">168</span><span class="p">.</span><span class="n">10</span><span class="p">.</span><span class="n">250</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Primary: serve 192.168.10.1-192.168.10.150</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c"># Secondary: serve 192.168.10.151-192.168.10.250</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c"># Each excludes the other&#39;s range</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nb">Add-DhcpServerv4ExclusionRange</span> <span class="p">`</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>  <span class="n">-ScopeId</span> <span class="n">192</span><span class="p">.</span><span class="n">168</span><span class="p">.</span><span class="n">10</span><span class="p">.</span><span class="n">0</span> <span class="p">`</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>  <span class="n">-StartRange</span> <span class="n">192</span><span class="p">.</span><span class="n">168</span><span class="p">.</span><span class="n">10</span><span class="p">.</span><span class="n">151</span> <span class="p">`</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>  <span class="n">-EndRange</span> <span class="n">192</span><span class="p">.</span><span class="n">168</span><span class="p">.</span><span class="n">10</span><span class="p">.</span><span class="n">250</span>
 </code></pre></div>
 <h2 id="removing-and-modifying-failover">Removing and Modifying Failover<a class="headerlink" href="#removing-and-modifying-failover" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Remove a failover relationship</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">Remove-DhcpServerv4Failover</span> <span class="n">-Name</span> <span class="s2">&quot;DHCP-Failover-LAN&quot;</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c"># Update load balance percentage</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="nb">Set-DhcpServerv4Failover</span> <span class="n">-Name</span> <span class="s2">&quot;DHCP-Failover-LAN&quot;</span> <span class="n">-LoadBalancePercent</span> <span class="n">60</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c"># Declare partner down (enables serving full scope)</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="nb">Set-DhcpServerv4FailoverScope</span> <span class="p">`</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>  <span class="n">-Name</span> <span class="s2">&quot;DHCP-Failover-LAN&quot;</span> <span class="p">`</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>  <span class="n">-ScopeId</span> <span class="n">192</span><span class="p">.</span><span class="n">168</span><span class="p">.</span><span class="n">10</span><span class="p">.</span><span class="n">0</span> <span class="p">`</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>  <span class="n">-State</span> <span class="n">PartnerDown</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Remove a failover relationship</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Remove-DhcpServerv4Failover</span> <span class="n">-Name</span> <span class="s2">&quot;DHCP-Failover-LAN&quot;</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c"># Update load balance percentage</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="nb">Set-DhcpServerv4Failover</span> <span class="n">-Name</span> <span class="s2">&quot;DHCP-Failover-LAN&quot;</span> <span class="n">-LoadBalancePercent</span> <span class="n">60</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c"># Declare partner down (enables serving full scope)</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="nb">Set-DhcpServerv4FailoverScope</span> <span class="p">`</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>  <span class="n">-Name</span> <span class="s2">&quot;DHCP-Failover-LAN&quot;</span> <span class="p">`</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>  <span class="n">-ScopeId</span> <span class="n">192</span><span class="p">.</span><span class="n">168</span><span class="p">.</span><span class="n">10</span><span class="p">.</span><span class="n">0</span> <span class="p">`</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>  <span class="n">-State</span> <span class="n">PartnerDown</span>
 </code></pre></div>
 <h2 id="known-issues">Known Issues<a class="headerlink" href="#known-issues" title="Permanent link">&para;</a></h2>
 <ul>

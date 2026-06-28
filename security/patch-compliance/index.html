@@ -6912,23 +6912,7 @@ Patch Compliance Monitoring reference covering Patch Classification, Windows Pat
   </a>
 </div>
 
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>center: &quot;Patch Compliance&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>patch_classification: &quot;Patch Classification&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>windows_patch_compliance: &quot;Windows Patch Compliance&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>linux_patch_compliance: &quot;Linux Patch Compliance&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>sccm_endpoint_manager_windows_fleet: &quot;SCCM / Endpoint Manager (Windows fleet)&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>patch_reporting: &quot;Patch Reporting&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>compliance_checks_by_tool: &quot;Compliance Checks by Tool&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>center -&gt; patch_classification
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>center -&gt; windows_patch_compliance
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>center -&gt; linux_patch_compliance
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>center -&gt; sccm_endpoint_manager_windows_fleet
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>center -&gt; patch_reporting
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>center -&gt; compliance_checks_by_tool
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNUT1rwzAQ3fUrjkzpULp7yGK6NVDaQkehyBdJVD4JSSUJJf-9dvylUhmy3vu4d-8aE1Am46iCYJROjEmkhKGCzatIUkPtWm-NIIkb-IlaeKxA41koR1fmewqXVsRojkaKwWhS_hkv6n6hIGXxyk6GGneKfPSZV3UenwME6ykyH2vo-1xyeemB-zyilC1HarwzlHgrSCgMfEp4tIipM3yv6z08wfPIg_3Ag-2U90Z8KG4Y8gX0LiRDai7qbZoUVcs9XGqUX5EfLjw5Zzv9chLUNwwOF_josKLT-Fp43EHpcRm89peMUq48I9zR579AczcZsno_-wWRJwJd?" /></p>
 <h2 id="patch-classification">Patch Classification<a class="headerlink" href="#patch-classification" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -6962,45 +6946,45 @@ Patch Compliance Monitoring reference covering Patch Classification, Windows Pat
 </tbody>
 </table>
 <h2 id="windows-patch-compliance">Windows Patch Compliance<a class="headerlink" href="#windows-patch-compliance" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># List installed hotfixes sorted by date</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Get-HotFix</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">InstalledOn</span> <span class="n">-Descending</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">20</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c"># List missing updates (requires Windows Update module)</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nv">$session</span> <span class="p">=</span> <span class="nb">New-Object</span> <span class="n">-ComObject</span> <span class="n">Microsoft</span><span class="p">.</span><span class="n">Update</span><span class="p">.</span><span class="n">Session</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="nv">$searcher</span> <span class="p">=</span> <span class="nv">$session</span><span class="p">.</span><span class="n">CreateUpdateSearcher</span><span class="p">()</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="nv">$missing</span> <span class="p">=</span> <span class="nv">$searcher</span><span class="p">.</span><span class="n">Search</span><span class="p">(</span><span class="s2">&quot;IsInstalled=0 and Type=&#39;Software&#39;&quot;</span><span class="p">)</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="nv">$missing</span><span class="p">.</span><span class="n">Updates</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Title</span><span class="p">,</span> <span class="n">MsrcSeverity</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">MsrcSeverity</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c"># WSUS — get patch compliance per computer</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c"># Run on WSUS server (requires UpdateServices module)</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="nv">$wsus</span> <span class="p">=</span> <span class="nb">Get-WsusServer</span> <span class="n">-Name</span> <span class="n">wsus01</span> <span class="n">-PortNumber</span> <span class="n">8530</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="nv">$computers</span> <span class="p">=</span> <span class="nb">Get-WsusComputer</span> <span class="n">-UpdateServer</span> <span class="nv">$wsus</span> <span class="n">-All</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="nv">$computers</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">FullDomainName</span><span class="p">,</span> <span class="n">LastSyncTime</span><span class="p">,</span> <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s1">&#39;NotInstalled&#39;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">GetUpdateInstallationSummary</span><span class="p">().</span><span class="n">NotInstalled</span><span class="p">}}</span> <span class="p">|</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>  <span class="nb">Sort-Object</span> <span class="n">NotInstalled</span> <span class="n">-Descending</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">20</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># List installed hotfixes sorted by date</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Get-HotFix</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">InstalledOn</span> <span class="n">-Descending</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">20</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c"># List missing updates (requires Windows Update module)</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nv">$session</span> <span class="p">=</span> <span class="nb">New-Object</span> <span class="n">-ComObject</span> <span class="n">Microsoft</span><span class="p">.</span><span class="n">Update</span><span class="p">.</span><span class="n">Session</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="nv">$searcher</span> <span class="p">=</span> <span class="nv">$session</span><span class="p">.</span><span class="n">CreateUpdateSearcher</span><span class="p">()</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="nv">$missing</span> <span class="p">=</span> <span class="nv">$searcher</span><span class="p">.</span><span class="n">Search</span><span class="p">(</span><span class="s2">&quot;IsInstalled=0 and Type=&#39;Software&#39;&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="nv">$missing</span><span class="p">.</span><span class="n">Updates</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Title</span><span class="p">,</span> <span class="n">MsrcSeverity</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">MsrcSeverity</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c"># WSUS — get patch compliance per computer</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c"># Run on WSUS server (requires UpdateServices module)</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="nv">$wsus</span> <span class="p">=</span> <span class="nb">Get-WsusServer</span> <span class="n">-Name</span> <span class="n">wsus01</span> <span class="n">-PortNumber</span> <span class="n">8530</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="nv">$computers</span> <span class="p">=</span> <span class="nb">Get-WsusComputer</span> <span class="n">-UpdateServer</span> <span class="nv">$wsus</span> <span class="n">-All</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="nv">$computers</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">FullDomainName</span><span class="p">,</span> <span class="n">LastSyncTime</span><span class="p">,</span> <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s1">&#39;NotInstalled&#39;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">GetUpdateInstallationSummary</span><span class="p">().</span><span class="n">NotInstalled</span><span class="p">}}</span> <span class="p">|</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>  <span class="nb">Sort-Object</span> <span class="n">NotInstalled</span> <span class="n">-Descending</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">20</span>
 </code></pre></div>
 <h2 id="linux-patch-compliance">Linux Patch Compliance<a class="headerlink" href="#linux-patch-compliance" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># RHEL/CentOS — list available security updates</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>yum<span class="w"> </span>updateinfo<span class="w"> </span>list<span class="w"> </span>security<span class="w"> </span>available<span class="w"> </span><span class="m">2</span>&gt;/dev/null
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Count critical updates</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>yum<span class="w"> </span>updateinfo<span class="w"> </span>summary<span class="w"> </span>security<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Critical&quot;</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Ubuntu/Debian — list upgradable security packages</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>apt<span class="w"> </span>list<span class="w"> </span>--upgradable<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>security
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Confirm last update date</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>rpm<span class="w"> </span>-qa<span class="w"> </span>--last<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-10<span class="w">          </span><span class="c1"># RHEL</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>grep<span class="w"> </span><span class="s2">&quot;install&quot;</span><span class="w"> </span>/var/log/dpkg.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-10<span class="w">  </span><span class="c1"># Debian</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="c1"># Check kernel version vs latest available</span>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>uname<span class="w"> </span>-r
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>rpm<span class="w"> </span>-q<span class="w"> </span>kernel<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-V<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w">    </span><span class="c1"># RHEL — latest installed kernel</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># RHEL/CentOS — list available security updates</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>yum<span class="w"> </span>updateinfo<span class="w"> </span>list<span class="w"> </span>security<span class="w"> </span>available<span class="w"> </span><span class="m">2</span>&gt;/dev/null
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Count critical updates</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>yum<span class="w"> </span>updateinfo<span class="w"> </span>summary<span class="w"> </span>security<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Critical&quot;</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Ubuntu/Debian — list upgradable security packages</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>apt<span class="w"> </span>list<span class="w"> </span>--upgradable<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>security
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Confirm last update date</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>rpm<span class="w"> </span>-qa<span class="w"> </span>--last<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-10<span class="w">          </span><span class="c1"># RHEL</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>grep<span class="w"> </span><span class="s2">&quot;install&quot;</span><span class="w"> </span>/var/log/dpkg.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-10<span class="w">  </span><span class="c1"># Debian</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="c1"># Check kernel version vs latest available</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>uname<span class="w"> </span>-r
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>rpm<span class="w"> </span>-q<span class="w"> </span>kernel<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-V<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w">    </span><span class="c1"># RHEL — latest installed kernel</span>
 </code></pre></div>
 <h2 id="sccm-endpoint-manager-windows-fleet">SCCM / Endpoint Manager (Windows fleet)<a class="headerlink" href="#sccm-endpoint-manager-windows-fleet" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Query SCCM database for patch compliance (run on SCCM server)</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nv">$query</span> <span class="p">=</span> <span class="s2">&quot;SELECT SMS_R_System.Name, SMS_UpdateComplianceStatus.Status FROM SMS_R_System</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="s2">          INNER JOIN SMS_UpdateComplianceStatus ON SMS_R_System.ResourceID = SMS_UpdateComplianceStatus.MachineID</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="s2">          WHERE SMS_UpdateComplianceStatus.ArticleID = &#39;&lt;KB-number&gt;&#39;&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Query SCCM database for patch compliance (run on SCCM server)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nv">$query</span> <span class="p">=</span> <span class="s2">&quot;SELECT SMS_R_System.Name, SMS_UpdateComplianceStatus.Status FROM SMS_R_System</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="s2">          INNER JOIN SMS_UpdateComplianceStatus ON SMS_R_System.ResourceID = SMS_UpdateComplianceStatus.MachineID</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="s2">          WHERE SMS_UpdateComplianceStatus.ArticleID = &#39;&lt;KB-number&gt;&#39;&quot;</span>
 </code></pre></div>
 <h2 id="patch-reporting">Patch Reporting<a class="headerlink" href="#patch-reporting" title="Permanent link">&para;</a></h2>
 <table>
@@ -7031,19 +7015,19 @@ Patch Compliance Monitoring reference covering Patch Classification, Windows Pat
 </table>
 <h2 id="compliance-checks-by-tool">Compliance Checks by Tool<a class="headerlink" href="#compliance-checks-by-tool" title="Permanent link">&para;</a></h2>
 <p><strong>Qualys / Tenable patch compliance:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Query Tenable.io for patch compliance data</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;X-ApiKey: accessKey=&lt;ak&gt;;secretKey=&lt;sk&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="s2">&quot;https://cloud.tenable.com/workbenches/assets/vulnerabilities&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.vulnerabilities[] | select(.plugin_family==&quot;Windows : Microsoft Bulletins&quot;) | {name,severity,count}&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Query Tenable.io for patch compliance data</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;X-ApiKey: accessKey=&lt;ak&gt;;secretKey=&lt;sk&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="s2">&quot;https://cloud.tenable.com/workbenches/assets/vulnerabilities&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.vulnerabilities[] | select(.plugin_family==&quot;Windows : Microsoft Bulletins&quot;) | {name,severity,count}&#39;</span>
 </code></pre></div></p>
 <p><strong>Azure Update Manager:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># List VMs with missing critical updates</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>az<span class="w"> </span>maintenance<span class="w"> </span>configuration<span class="w"> </span>list<span class="w"> </span>-o<span class="w"> </span>table
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Check update status for a VM</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>az<span class="w"> </span>maintenance<span class="w"> </span>update<span class="w"> </span>list<span class="w"> </span>-g<span class="w"> </span>&lt;rg&gt;<span class="w"> </span>--resource-name<span class="w"> </span>&lt;vm-name&gt;<span class="w"> </span>--resource-type<span class="w"> </span>VirtualMachines<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">  </span>--provider-name<span class="w"> </span>Microsoft.Compute<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;[?properties.maintenanceScope==`InGuestPatch`]&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># List VMs with missing critical updates</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>az<span class="w"> </span>maintenance<span class="w"> </span>configuration<span class="w"> </span>list<span class="w"> </span>-o<span class="w"> </span>table
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Check update status for a VM</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>az<span class="w"> </span>maintenance<span class="w"> </span>update<span class="w"> </span>list<span class="w"> </span>-g<span class="w"> </span>&lt;rg&gt;<span class="w"> </span>--resource-name<span class="w"> </span>&lt;vm-name&gt;<span class="w"> </span>--resource-type<span class="w"> </span>VirtualMachines<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span>--provider-name<span class="w"> </span>Microsoft.Compute<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;[?properties.maintenanceScope==`InGuestPatch`]&#39;</span>
 </code></pre></div></p>
 <h2 id="exception-handling">Exception Handling<a class="headerlink" href="#exception-handling" title="Permanent link">&para;</a></h2>
 <p>When a patch cannot be applied within the SLA:

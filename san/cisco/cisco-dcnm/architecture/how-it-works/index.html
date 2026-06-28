@@ -7822,43 +7822,8 @@ How It Works reference covering Overview, Deployment Models, Management Flow, Ne
 *Applies to: Cisco MDS · Nexus*
 </div>
 <p><img alt="Cisco DCNM — How It Works" src="../../../../../assets/san-cisco-cisco-dcnm-architecture-how-it-works.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>center: &quot;Cisco DCNM&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>deployment_models: &quot;Deployment Models&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>management_flow: &quot;Management Flow&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>network_requirements: &quot;Network Requirements&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>vm_sizing_standalone_11x: &quot;VM Sizing (Standalone, 11.x)&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>dcnm_11x_vs_ndfc_12x: &quot;DCNM 11.x vs. NDFC 12.x&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>center -&gt; deployment_models
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>center -&gt; management_flow
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>center -&gt; network_requirements
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>center -&gt; vm_sizing_standalone_11x
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>center -&gt; dcnm_11x_vs_ndfc_12x
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>@startuml
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>skinparam sequenceArrowThickness 1.5
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>skinparam roundcorner 5
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>actor &quot;SAN Admin&quot; as ADM
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>participant &quot;DCNM\n(Data Center Network Manager)&quot; as DCNM
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>participant &quot;MDS Switch\n(NX-OS)&quot; as MDS
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>participant &quot;Nexus Switch\n(Ethernet fabric)&quot; as NEX
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>participant &quot;Endpoint\n(host / storage)&quot; as EP
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>ADM -&gt; DCNM: Define zoning policy / VSAN
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>DCNM -&gt; MDS: Push NX-OS config (SSH / SNMP)
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>MDS --&gt; DCNM: Config applied
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>ADM -&gt; DCNM: Deploy LAN template
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>DCNM -&gt; NEX: Push VLANs / vPC config
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>NEX --&gt; DCNM: Applied
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>EP -&gt; MDS: FC login (FLOGI)
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>MDS -&gt; DCNM: SNMP notification
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>DCNM -&gt; ADM: Zone membership update
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>@enduml
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp1kDFPwzAQhXf_ilMnkCCSO2ZgSdQtGajEaln21bGI7WKHNID637EDChaY9b373t09qT2KSTtbg9dqmAgRaCf0NewaHYSDtum7HXyEgZ-xhgEXrpy9Eonn0b2ZOMuMkziGCLSbBt2q_XBpCbdqxCsx3HKFK3ka3SVy3abAISpFyuJ0cf6ZeXx5jSen4bSy_5LhMZOL_GxY0O_aKhaiJPnoLDJKl5jx1MFxteDmuHl3QGm13BazpLAmsWwOzMqTYHSfclJTKwVzqKBvDw3QfbUUI75bhvsH-NNk5v3qKnNKfWT2f-_mewtfkE_KLLuH?" /></p>
+<p><img alt="Kroki" src="https://kroki.io/plantuml/svg/eNpdksFu2zAMhu96CiKn9JANO_SSw1DDdrcBtWvARVEMu6gyExOxKU2il7ZPXzrJsmZX6fv5fxR0k8RGmcbBpB1xsNGOkPD3hOwwi9HvH3pyO8aU4Mun6w9Q9BN3zkfGCNfGWCc-wqLNasi6kXgBNkFWVEZpIUfBssCiyOvqFy8LKxZyZNFsjbL3cQeVZbvFeHUIztxlsipaaPckrtd8_bS6b4-knl-CNb5M6R9aSo_qKLCxz5HcMVSXT5ehkrvgiUUDvU8CnyHpOupz5MvGGN0FVl8PZmsocEOM8OaZeAvBD-ReNfSo65uZmEk1W0MzpR4OuuA8b2gLy7b9rmhbV82VmbdanafmR8KGMBB2_zeGwb_Cnb6v4BgGK3hu0nVOTY96n3T6nyY_9Rm9_FCRnWabsjk73uYw-C0xLG_v7r_9OFn9TcyiwF5oQ84KeT7Xqt8afnp9hxHHZ4yppwBT6Ga1G-Ru_lTvaty_dQ==?" /></p>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>Cisco Data Center Network Manager (DCNM) is Cisco's SAN and LAN management platform for Cisco MDS 9000 Fibre Channel switches. DCNM 11.x is the last standalone appliance release. Starting with version 12.0 (2022), DCNM was renamed <strong>Nexus Dashboard Fabric Controller (NDFC)</strong> and runs as an application on the Cisco Nexus Dashboard platform.</p>
 <h2 id="deployment-models">Deployment Models<a class="headerlink" href="#deployment-models" title="Permanent link">&para;</a></h2>

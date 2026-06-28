@@ -7677,25 +7677,7 @@ How to escalate Windows Server issues to Microsoft support: what data to collect
 </div>
 <p><img alt="Windows Server — Escalation" src="../../../../assets/compute-windows-server-troubleshooting-escalation-index.svg" /></p>
 <hr />
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>@startuml
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>skinparam sequenceArrowThickness 1.5
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>skinparam roundcorner 5
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>actor &quot;On-Call Engineer&quot; as ENG
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>participant &quot;Windows Server\nSystem&quot; as SYS
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>participant &quot;Vendor Support&quot; as SUP
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>ENG -&gt; SYS: Pre-Escalation Self-Check
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>SYS --&gt; ENG: Output
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>ENG -&gt; SYS: Step-by-Step Data Collection
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>SYS --&gt; ENG: Output
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>ENG -&gt; SYS: How to Open the SR on support.microsoft.com
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>SYS --&gt; ENG: Output
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>ENG -&gt; SUP: Escalate with diagnostic bundle
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>SUP --&gt; ENG: Case / resolution path
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>@enduml
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/plantuml/svg/eNqFkTFPAzEMhff8Cqt7ihi6dEBFRwUTrQgFIbGkObcXNRcHx-HUf0-uRYIuMHnw957t50UWy1L6oPLBx2TZ9pDxo2B0eMtMw3Pn3SFiznA9nf2CmEpsHXFEhplS1gkxTFZRNzYEWMa9j4g8AZth-Xivqki888lGgcmrjy0NGQzyJ_J7NMcs2J9Y82Yu2ResLIMpKRHLmdmslaqmoG9Gfg5rRr3MzgYrnmK1DTvddOgOqrZBV6zSc1gVSUUulEYw6e1RjxXurFhoKAR0o8-_4gcaQAhWCSNIh2CeoE7P502nvXdMmXYyddT_6bVZz-F7fYTBSwett_tIuaYA2xpzQFWhH31jM8IVMGYK5XRystIptahZja_8AqZTmpA=?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Access required:</strong> Local Administrator or Domain Admin on the affected server; Microsoft 365 admin account or Premier contract access on support.microsoft.com</li>
@@ -7766,82 +7748,82 @@ How to escalate Windows Server issues to Microsoft support: what data to collect
 <h2 id="step-by-step-data-collection">Step-by-Step Data Collection<a class="headerlink" href="#step-by-step-data-collection" title="Permanent link">&para;</a></h2>
 <p>Run on the affected server as Administrator.</p>
 <h3 id="1-get-the-windows-version-and-installed-hotfixes">1. Get the Windows version and installed hotfixes<a class="headerlink" href="#1-get-the-windows-version-and-installed-hotfixes" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Windows version and build number — include in case description</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="no">[System.Environment]</span><span class="p">::</span><span class="n">OSVersion</span><span class="p">.</span><span class="n">VersionString</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="p">(</span><span class="nb">Get-ComputerInfo</span><span class="p">).</span><span class="n">WindowsBuildLabEx</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c"># Full system info (generates the text output)</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="n">systeminfo</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c"># Last 10 installed hotfixes (for correlation with issue start)</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="nb">Get-HotFix</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">InstalledOn</span> <span class="n">-Descending</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">10</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Windows version and build number — include in case description</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="no">[System.Environment]</span><span class="p">::</span><span class="n">OSVersion</span><span class="p">.</span><span class="n">VersionString</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="p">(</span><span class="nb">Get-ComputerInfo</span><span class="p">).</span><span class="n">WindowsBuildLabEx</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c"># Full system info (generates the text output)</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="n">systeminfo</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c"># Last 10 installed hotfixes (for correlation with issue start)</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="nb">Get-HotFix</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">InstalledOn</span> <span class="n">-Descending</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">10</span>
 </code></pre></div>
 <h3 id="2-export-windows-event-logs">2. Export Windows Event Logs<a class="headerlink" href="#2-export-windows-event-logs" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Export the System log to a file — covers BSODs, driver faults, disk errors</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="n">wevtutil</span> <span class="n">epl</span> <span class="n">System</span> <span class="n">C</span><span class="p">:\</span><span class="n">Temp</span><span class="p">\</span><span class="n">System</span><span class="p">-$(</span><span class="nb">Get-Date</span> <span class="n">-Format</span> <span class="s1">&#39;yyyyMMdd&#39;</span><span class="p">).</span><span class="n">evtx</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c"># Export the Application log</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="n">wevtutil</span> <span class="n">epl</span> <span class="n">Application</span> <span class="n">C</span><span class="p">:\</span><span class="n">Temp</span><span class="p">\</span><span class="n">Application</span><span class="p">-$(</span><span class="nb">Get-Date</span> <span class="n">-Format</span> <span class="s1">&#39;yyyyMMdd&#39;</span><span class="p">).</span><span class="n">evtx</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c"># If IIS / DNS / AD is involved, export the relevant Admin log too</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c"># Example for DNS:</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="n">wevtutil</span> <span class="n">epl</span> <span class="s2">&quot;DNS Server&quot;</span> <span class="n">C</span><span class="p">:\</span><span class="n">Temp</span><span class="p">\</span><span class="n">DNS</span><span class="p">-$(</span><span class="nb">Get-Date</span> <span class="n">-Format</span> <span class="s1">&#39;yyyyMMdd&#39;</span><span class="p">).</span><span class="n">evtx</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c"># Get the last 50 System log errors as plain text (for pasting into the case description)</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="nb">Get-EventLog</span> <span class="n">-LogName</span> <span class="n">System</span> <span class="n">-EntryType</span> <span class="n">Error</span><span class="p">,</span><span class="n">FailureAudit</span> <span class="n">-Newest</span> <span class="n">50</span> <span class="p">|</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>  <span class="nb">Format-List</span> <span class="n">TimeGenerated</span><span class="p">,</span> <span class="n">EntryType</span><span class="p">,</span> <span class="n">Source</span><span class="p">,</span> <span class="n">EventID</span><span class="p">,</span> <span class="n">Message</span> <span class="p">|</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>  <span class="nb">Out-File</span> <span class="n">C</span><span class="p">:\</span><span class="n">Temp</span><span class="p">\</span><span class="n">system-errors</span><span class="p">-$(</span><span class="nb">Get-Date</span> <span class="n">-Format</span> <span class="s1">&#39;yyyyMMdd&#39;</span><span class="p">).</span><span class="n">txt</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Export the System log to a file — covers BSODs, driver faults, disk errors</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="n">wevtutil</span> <span class="n">epl</span> <span class="n">System</span> <span class="n">C</span><span class="p">:\</span><span class="n">Temp</span><span class="p">\</span><span class="n">System</span><span class="p">-$(</span><span class="nb">Get-Date</span> <span class="n">-Format</span> <span class="s1">&#39;yyyyMMdd&#39;</span><span class="p">).</span><span class="n">evtx</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c"># Export the Application log</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="n">wevtutil</span> <span class="n">epl</span> <span class="n">Application</span> <span class="n">C</span><span class="p">:\</span><span class="n">Temp</span><span class="p">\</span><span class="n">Application</span><span class="p">-$(</span><span class="nb">Get-Date</span> <span class="n">-Format</span> <span class="s1">&#39;yyyyMMdd&#39;</span><span class="p">).</span><span class="n">evtx</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c"># If IIS / DNS / AD is involved, export the relevant Admin log too</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c"># Example for DNS:</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="n">wevtutil</span> <span class="n">epl</span> <span class="s2">&quot;DNS Server&quot;</span> <span class="n">C</span><span class="p">:\</span><span class="n">Temp</span><span class="p">\</span><span class="n">DNS</span><span class="p">-$(</span><span class="nb">Get-Date</span> <span class="n">-Format</span> <span class="s1">&#39;yyyyMMdd&#39;</span><span class="p">).</span><span class="n">evtx</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c"># Get the last 50 System log errors as plain text (for pasting into the case description)</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="nb">Get-EventLog</span> <span class="n">-LogName</span> <span class="n">System</span> <span class="n">-EntryType</span> <span class="n">Error</span><span class="p">,</span><span class="n">FailureAudit</span> <span class="n">-Newest</span> <span class="n">50</span> <span class="p">|</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>  <span class="nb">Format-List</span> <span class="n">TimeGenerated</span><span class="p">,</span> <span class="n">EntryType</span><span class="p">,</span> <span class="n">Source</span><span class="p">,</span> <span class="n">EventID</span><span class="p">,</span> <span class="n">Message</span> <span class="p">|</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>  <span class="nb">Out-File</span> <span class="n">C</span><span class="p">:\</span><span class="n">Temp</span><span class="p">\</span><span class="n">system-errors</span><span class="p">-$(</span><span class="nb">Get-Date</span> <span class="n">-Format</span> <span class="s1">&#39;yyyyMMdd&#39;</span><span class="p">).</span><span class="n">txt</span>
 </code></pre></div>
 <h3 id="3-collect-crash-dump-if-bsod-occurred">3. Collect crash dump (if BSOD occurred)<a class="headerlink" href="#3-collect-crash-dump-if-bsod-occurred" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>rem Check for mini dumps (small; always check first)
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>dir %SystemRoot%\Minidump\
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>rem Check for full memory dump
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>dir %SystemRoot%\memory.dmp
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>rem Verify crash dump is configured for future crashes
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>reg query &quot;HKLM\System\CurrentControlSet\Control\CrashControl&quot; /v CrashDumpEnabled
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>rem Value 7 = automatic; Value 2 = kernel; Value 1 = full
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>rem Check for mini dumps (small; always check first)
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>dir %SystemRoot%\Minidump\
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>rem Check for full memory dump
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>dir %SystemRoot%\memory.dmp
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>rem Verify crash dump is configured for future crashes
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>reg query &quot;HKLM\System\CurrentControlSet\Control\CrashControl&quot; /v CrashDumpEnabled
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>rem Value 7 = automatic; Value 2 = kernel; Value 1 = full
 </code></pre></div>
 <p>If a dump file exists, note the path. For full dumps (memory.dmp), Microsoft will provide upload instructions — files can be several GB.</p>
 <h3 id="4-run-msinfo32-system-snapshot">4. Run msinfo32 (system snapshot)<a class="headerlink" href="#4-run-msinfo32-system-snapshot" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>rem Export full system information to a file — required for all Microsoft cases
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>msinfo32 /nfo C:\Temp\sysinfo-%COMPUTERNAME%.nfo
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>rem This takes 30–60 seconds. The .nfo file includes:
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>rem - Hardware resources (IRQ, I/O, DMA)
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>rem - Components (disk drives, display, network)
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>rem - Software environment (drivers, services, startup items)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>rem Export full system information to a file — required for all Microsoft cases
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>msinfo32 /nfo C:\Temp\sysinfo-%COMPUTERNAME%.nfo
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>rem This takes 30–60 seconds. The .nfo file includes:
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>rem - Hardware resources (IRQ, I/O, DMA)
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>rem - Components (disk drives, display, network)
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>rem - Software environment (drivers, services, startup items)
 </code></pre></div>
 <h3 id="5-capture-performance-data-for-cpumemorydisk-issues">5. Capture performance data (for CPU/memory/disk issues)<a class="headerlink" href="#5-capture-performance-data-for-cpumemorydisk-issues" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># Start a 5-minute Performance Monitor capture</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nv">$logfile</span> <span class="p">=</span> <span class="s2">&quot;C:\Temp\perfmon-</span><span class="p">$(</span><span class="nb">Get-Date</span> <span class="n">-Format</span> <span class="s1">&#39;yyyyMMdd-HHmm&#39;</span><span class="p">)</span><span class="s2">.blg&quot;</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="n">logman</span> <span class="n">create</span> <span class="n">counter</span> <span class="s2">&quot;escalation-capture&quot;</span> <span class="o">-f</span> <span class="n">bincirc</span> <span class="n">-max</span> <span class="n">100</span> <span class="p">`</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>  <span class="n">-c</span> <span class="s2">&quot;\Processor(_Total)\% Processor Time&quot;</span> <span class="p">`</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>     <span class="s2">&quot;\Memory\Available MBytes&quot;</span> <span class="p">`</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>     <span class="s2">&quot;\LogicalDisk(_Total)\% Disk Time&quot;</span> <span class="p">`</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>     <span class="s2">&quot;\LogicalDisk(_Total)\Avg. Disk Queue Length&quot;</span> <span class="p">`</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>     <span class="s2">&quot;\Network Interface(*)\Bytes Total/sec&quot;</span> <span class="p">`</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>  <span class="n">-o</span> <span class="nv">$logfile</span> <span class="n">-si</span> <span class="n">5</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="n">logman</span> <span class="nb">start </span><span class="s2">&quot;escalation-capture&quot;</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="nb">Start-Sleep</span> <span class="n">300</span>   <span class="c"># 5 minutes</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="n">logman</span> <span class="n">stop</span> <span class="s2">&quot;escalation-capture&quot;</span>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="n">logman</span> <span class="n">delete</span> <span class="s2">&quot;escalation-capture&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Start a 5-minute Performance Monitor capture</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nv">$logfile</span> <span class="p">=</span> <span class="s2">&quot;C:\Temp\perfmon-</span><span class="p">$(</span><span class="nb">Get-Date</span> <span class="n">-Format</span> <span class="s1">&#39;yyyyMMdd-HHmm&#39;</span><span class="p">)</span><span class="s2">.blg&quot;</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="n">logman</span> <span class="n">create</span> <span class="n">counter</span> <span class="s2">&quot;escalation-capture&quot;</span> <span class="o">-f</span> <span class="n">bincirc</span> <span class="n">-max</span> <span class="n">100</span> <span class="p">`</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>  <span class="n">-c</span> <span class="s2">&quot;\Processor(_Total)\% Processor Time&quot;</span> <span class="p">`</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>     <span class="s2">&quot;\Memory\Available MBytes&quot;</span> <span class="p">`</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>     <span class="s2">&quot;\LogicalDisk(_Total)\% Disk Time&quot;</span> <span class="p">`</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>     <span class="s2">&quot;\LogicalDisk(_Total)\Avg. Disk Queue Length&quot;</span> <span class="p">`</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>     <span class="s2">&quot;\Network Interface(*)\Bytes Total/sec&quot;</span> <span class="p">`</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>  <span class="n">-o</span> <span class="nv">$logfile</span> <span class="n">-si</span> <span class="n">5</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="n">logman</span> <span class="nb">start </span><span class="s2">&quot;escalation-capture&quot;</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="nb">Start-Sleep</span> <span class="n">300</span>   <span class="c"># 5 minutes</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="n">logman</span> <span class="n">stop</span> <span class="s2">&quot;escalation-capture&quot;</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="n">logman</span> <span class="n">delete</span> <span class="s2">&quot;escalation-capture&quot;</span>
 </code></pre></div>
 <h3 id="6-write-the-timeline">6. Write the timeline<a class="headerlink" href="#6-write-the-timeline" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Windows version: Windows Server 2022 Datacenter (Build 20348.2400)
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>Server: prod-srv-01.corp.local
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>Issue first observed: 2026-06-14 14:30 UTC
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>Last known good state: 2026-06-14 10:00 UTC
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>Changes in 24h before the issue:
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>  - 10:00: Windows Update applied (KB5034765)
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>  - 14:25: Server logged BSOD DRIVER_IRQL_NOT_LESS_OR_EQUAL; auto-restarted
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>  - 14:30: BSOD recurred after restart
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>Steps already taken:
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>  - Checked Minidump\: 2 dump files present for today&#39;s crashes
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>  - Event Viewer shows Event ID 41 (unexpected restart) + Event ID 1001 (BugCheck)
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>  - Did NOT clear logs or apply additional patches
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>Blast radius: Application service unavailable; 50 users affected
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Windows version: Windows Server 2022 Datacenter (Build 20348.2400)
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Server: prod-srv-01.corp.local
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Issue first observed: 2026-06-14 14:30 UTC
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>Last known good state: 2026-06-14 10:00 UTC
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>Changes in 24h before the issue:
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>  - 10:00: Windows Update applied (KB5034765)
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>  - 14:25: Server logged BSOD DRIVER_IRQL_NOT_LESS_OR_EQUAL; auto-restarted
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>  - 14:30: BSOD recurred after restart
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>Steps already taken:
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>  - Checked Minidump\: 2 dump files present for today&#39;s crashes
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>  - Event Viewer shows Event ID 41 (unexpected restart) + Event ID 1001 (BugCheck)
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>  - Did NOT clear logs or apply additional patches
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>Blast radius: Application service unavailable; 50 users affected
 </code></pre></div>
 <hr />
 <h2 id="how-to-open-the-sr-on-supportmicrosoftcom">How to Open the SR on support.microsoft.com<a class="headerlink" href="#how-to-open-the-sr-on-supportmicrosoftcom" title="Permanent link">&para;</a></h2>
@@ -7943,23 +7925,23 @@ How to escalate Windows Server issues to Microsoft support: what data to collect
 </table>
 <hr />
 <h2 id="useful-commands-for-case-updates">Useful Commands for Case Updates<a class="headerlink" href="#useful-commands-for-case-updates" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c"># Current server state — paste into every case update</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nb">Get-ComputerInfo</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">WindowsBuildLabEx</span><span class="p">,</span> <span class="n">OsInstallDate</span><span class="p">,</span> <span class="n">CsUptime</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="nb">Get-EventLog</span> <span class="n">-LogName</span> <span class="n">System</span> <span class="n">-EntryType</span> <span class="n">Error</span><span class="p">,</span><span class="n">FailureAudit</span> <span class="n">-Newest</span> <span class="n">20</span> <span class="p">|</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>  <span class="nb">Select-Object</span> <span class="n">TimeGenerated</span><span class="p">,</span> <span class="n">EntryType</span><span class="p">,</span> <span class="n">Source</span><span class="p">,</span> <span class="n">EventID</span><span class="p">,</span> <span class="n">Message</span> <span class="p">|</span> <span class="nb">Format-List</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="c"># Crash dump summary (copy output to paste into case)</span>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="nb">Get-ChildItem</span> <span class="n">-Path</span> <span class="s2">&quot;$env:SystemRoot\Minidump\&quot;</span> <span class="n">-ErrorAction</span> <span class="n">SilentlyContinue</span> <span class="p">|</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>  <span class="nb">Sort-Object</span> <span class="n">LastWriteTime</span> <span class="n">-Descending</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Length</span><span class="p">,</span> <span class="n">LastWriteTime</span>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="c"># Service status (check for stopped services)</span>
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="nb">Get-Service</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="n">Status</span> <span class="o">-ne</span> <span class="n">Running</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">DisplayName</span><span class="p">,</span> <span class="n">Status</span>
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>
-<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="c"># Disk space</span>
-<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="nb">Get-PSDrive</span> <span class="n">-PSProvider</span> <span class="n">FileSystem</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Used</span><span class="p">,</span> <span class="n">Free</span>
-<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>
-<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a><span class="c"># Running processes with CPU</span>
-<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a><span class="nb">Get-Process</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">CPU</span> <span class="n">-Descending</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">20</span> <span class="n">Name</span><span class="p">,</span> <span class="n">CPU</span><span class="p">,</span> <span class="n">WorkingSet</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># Current server state — paste into every case update</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">Get-ComputerInfo</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">WindowsBuildLabEx</span><span class="p">,</span> <span class="n">OsInstallDate</span><span class="p">,</span> <span class="n">CsUptime</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="nb">Get-EventLog</span> <span class="n">-LogName</span> <span class="n">System</span> <span class="n">-EntryType</span> <span class="n">Error</span><span class="p">,</span><span class="n">FailureAudit</span> <span class="n">-Newest</span> <span class="n">20</span> <span class="p">|</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>  <span class="nb">Select-Object</span> <span class="n">TimeGenerated</span><span class="p">,</span> <span class="n">EntryType</span><span class="p">,</span> <span class="n">Source</span><span class="p">,</span> <span class="n">EventID</span><span class="p">,</span> <span class="n">Message</span> <span class="p">|</span> <span class="nb">Format-List</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c"># Crash dump summary (copy output to paste into case)</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="nb">Get-ChildItem</span> <span class="n">-Path</span> <span class="s2">&quot;$env:SystemRoot\Minidump\&quot;</span> <span class="n">-ErrorAction</span> <span class="n">SilentlyContinue</span> <span class="p">|</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>  <span class="nb">Sort-Object</span> <span class="n">LastWriteTime</span> <span class="n">-Descending</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Length</span><span class="p">,</span> <span class="n">LastWriteTime</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c"># Service status (check for stopped services)</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="nb">Get-Service</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="n">Status</span> <span class="o">-ne</span> <span class="n">Running</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">DisplayName</span><span class="p">,</span> <span class="n">Status</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="c"># Disk space</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="nb">Get-PSDrive</span> <span class="n">-PSProvider</span> <span class="n">FileSystem</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Used</span><span class="p">,</span> <span class="n">Free</span>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="c"># Running processes with CPU</span>
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="nb">Get-Process</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">CPU</span> <span class="n">-Descending</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">20</span> <span class="n">Name</span><span class="p">,</span> <span class="n">CPU</span><span class="p">,</span> <span class="n">WorkingSet</span>
 </code></pre></div>
 <hr />
 <h2 id="common-issue-reference">Common Issue Reference<a class="headerlink" href="#common-issue-reference" title="Permanent link">&para;</a></h2>

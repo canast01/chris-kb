@@ -9245,25 +9245,7 @@ Hardening reference covering Post-Deployment Checklist, Restrict SSH Access, Res
 <p><img alt="vSphere Replication — Hardening" src="../../../../../assets/virtualization-vmware-vsphere-replication-security-hardening.svg" /></p>
 <p>VR Hardening Controls</p>
 <hr />
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: down
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>external: External / Untrusted {shape: rectangle}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>postdeployment_checklist: &quot;Post-Deployment Checklist&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>restrict_ssh_access: &quot;Restrict SSH Access&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>restrict_vra_management_access: &quot;Restrict VRA Management Access&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>leastprivilege_vr_service_account: &quot;Least-Privilege VR Service Account&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>enable_encryption_for_wan_replicatio: &quot;Enable Encryption for WAN Replications&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>regular_test_recovery: &quot;Regular Test Recovery&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>core: &quot;vSphere Replication Core&quot; {shape: hexagon}
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>external -&gt; postdeployment_checklist: traffic in
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>postdeployment_checklist -&gt; restrict_ssh_access
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>restrict_ssh_access -&gt; restrict_vra_management_access
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>restrict_vra_management_access -&gt; leastprivilege_vr_service_account
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>leastprivilege_vr_service_account -&gt; enable_encryption_for_wan_replicatio
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>enable_encryption_for_wan_replicatio -&gt; regular_test_recovery
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>regular_test_recovery -&gt; core: secured path
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNk0tvwjAQhO_5FSvuqPccKiGK1ENbIdLH0dqaJbFq7GjtBFDFf6-dQGhV87hFs-MvWc9kqZikV9bksLQbk2W09cQGdQ6zwxPcwZvx3DhPS_h2FdaUQzyFptS0z2rr_JJqbXdrMl7IiuSXVs7nMJqH0fhhmMH0OBulQEzOs5JeOFcJlJKcC4zFQYWieIRJp14-3TKKNRosqfue_6D3xQSeB8MlpiZ0vmbVKk0lBbJwxK2SFKm2MXHHp-gZz4-mQIeiN0VyNCXRZPBTkyAjeVfHAMTKstigERzuS0kMWqDPOhvMBhsEG3xMXmAx2My5CykbjSx82DtApW2Jd909dDq8Bj1Qej1JkJaDMGqLuiKm32-EaRidzlS0xdKa_ak-ML6H88XwjKuVkqDM2fZEQKIQqZL8sSbTv1KOCLga9fUyRMwtsd6Ufb9UIsF0rtHex-VINhz-1Bp9lf0AC5R2uQ==?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Access:</strong> vCenter Administrator role</li>
@@ -9326,86 +9308,86 @@ Hardening reference covering Post-Deployment Checklist, Restrict SSH Access, Res
 </table>
 <hr />
 <h2 id="restrict-ssh-access">Restrict SSH Access<a class="headerlink" href="#restrict-ssh-access" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># SSH to VRA</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ssh<span class="w"> </span>admin@vra-london.example.local
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>sudo<span class="w"> </span>vim<span class="w"> </span>/etc/ssh/sshd_config
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Set:</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>PermitRootLogin<span class="w"> </span>no
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>PasswordAuthentication<span class="w"> </span>no
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>PubkeyAuthentication<span class="w"> </span>yes
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>MaxAuthTries<span class="w"> </span><span class="m">3</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>AllowUsers<span class="w"> </span>admin
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>sshd
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># SSH to VRA</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ssh<span class="w"> </span>admin@vra-london.example.local
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>sudo<span class="w"> </span>vim<span class="w"> </span>/etc/ssh/sshd_config
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Set:</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>PermitRootLogin<span class="w"> </span>no
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>PasswordAuthentication<span class="w"> </span>no
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>PubkeyAuthentication<span class="w"> </span>yes
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>MaxAuthTries<span class="w"> </span><span class="m">3</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>AllowUsers<span class="w"> </span>admin
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>sshd
 </code></pre></div>
 <p>Firewall rule: allow SSH (TCP 22) to VRA only from jump host IPs.</p>
 <hr />
 <h2 id="restrict-vra-management-access">Restrict VRA Management Access<a class="headerlink" href="#restrict-vra-management-access" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Limit who can reach VRA VAMI (port 5480) and REST API (port 443)</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>sudo<span class="w"> </span>iptables<span class="w"> </span>-A<span class="w"> </span>INPUT<span class="w"> </span>-p<span class="w"> </span>tcp<span class="w"> </span>--dport<span class="w"> </span><span class="m">5480</span><span class="w"> </span>-s<span class="w"> </span><span class="m">10</span>.10.10.0/24<span class="w"> </span>-j<span class="w"> </span>ACCEPT
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>sudo<span class="w"> </span>iptables<span class="w"> </span>-A<span class="w"> </span>INPUT<span class="w"> </span>-p<span class="w"> </span>tcp<span class="w"> </span>--dport<span class="w"> </span><span class="m">5480</span><span class="w"> </span>-j<span class="w"> </span>DROP
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>sudo<span class="w"> </span>iptables<span class="w"> </span>-A<span class="w"> </span>INPUT<span class="w"> </span>-p<span class="w"> </span>tcp<span class="w"> </span>--dport<span class="w"> </span><span class="m">443</span><span class="w"> </span>-s<span class="w"> </span><span class="m">10</span>.10.10.0/24<span class="w"> </span>-j<span class="w"> </span>ACCEPT
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>sudo<span class="w"> </span>iptables<span class="w"> </span>-A<span class="w"> </span>INPUT<span class="w"> </span>-p<span class="w"> </span>tcp<span class="w"> </span>--dport<span class="w"> </span><span class="m">443</span><span class="w"> </span>-j<span class="w"> </span>DROP
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>sudo<span class="w"> </span>iptables-save<span class="w"> </span>&gt;<span class="w"> </span>/etc/iptables/rules.v4
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Limit who can reach VRA VAMI (port 5480) and REST API (port 443)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>sudo<span class="w"> </span>iptables<span class="w"> </span>-A<span class="w"> </span>INPUT<span class="w"> </span>-p<span class="w"> </span>tcp<span class="w"> </span>--dport<span class="w"> </span><span class="m">5480</span><span class="w"> </span>-s<span class="w"> </span><span class="m">10</span>.10.10.0/24<span class="w"> </span>-j<span class="w"> </span>ACCEPT
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>sudo<span class="w"> </span>iptables<span class="w"> </span>-A<span class="w"> </span>INPUT<span class="w"> </span>-p<span class="w"> </span>tcp<span class="w"> </span>--dport<span class="w"> </span><span class="m">5480</span><span class="w"> </span>-j<span class="w"> </span>DROP
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>sudo<span class="w"> </span>iptables<span class="w"> </span>-A<span class="w"> </span>INPUT<span class="w"> </span>-p<span class="w"> </span>tcp<span class="w"> </span>--dport<span class="w"> </span><span class="m">443</span><span class="w"> </span>-s<span class="w"> </span><span class="m">10</span>.10.10.0/24<span class="w"> </span>-j<span class="w"> </span>ACCEPT
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>sudo<span class="w"> </span>iptables<span class="w"> </span>-A<span class="w"> </span>INPUT<span class="w"> </span>-p<span class="w"> </span>tcp<span class="w"> </span>--dport<span class="w"> </span><span class="m">443</span><span class="w"> </span>-j<span class="w"> </span>DROP
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>sudo<span class="w"> </span>iptables-save<span class="w"> </span>&gt;<span class="w"> </span>/etc/iptables/rules.v4
 </code></pre></div>
 <p>Port 31031 (replication data receiver) should only accept connections from source site ESXi management IPs:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Allow replication traffic from source ESXi subnet only:</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>sudo<span class="w"> </span>iptables<span class="w"> </span>-A<span class="w"> </span>INPUT<span class="w"> </span>-p<span class="w"> </span>tcp<span class="w"> </span>--dport<span class="w"> </span><span class="m">31031</span><span class="w"> </span>-s<span class="w"> </span><span class="m">10</span>.10.10.0/24<span class="w"> </span>-j<span class="w"> </span>ACCEPT
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>sudo<span class="w"> </span>iptables<span class="w"> </span>-A<span class="w"> </span>INPUT<span class="w"> </span>-p<span class="w"> </span>tcp<span class="w"> </span>--dport<span class="w"> </span><span class="m">31031</span><span class="w"> </span>-j<span class="w"> </span>DROP
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Allow replication traffic from source ESXi subnet only:</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>sudo<span class="w"> </span>iptables<span class="w"> </span>-A<span class="w"> </span>INPUT<span class="w"> </span>-p<span class="w"> </span>tcp<span class="w"> </span>--dport<span class="w"> </span><span class="m">31031</span><span class="w"> </span>-s<span class="w"> </span><span class="m">10</span>.10.10.0/24<span class="w"> </span>-j<span class="w"> </span>ACCEPT
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>sudo<span class="w"> </span>iptables<span class="w"> </span>-A<span class="w"> </span>INPUT<span class="w"> </span>-p<span class="w"> </span>tcp<span class="w"> </span>--dport<span class="w"> </span><span class="m">31031</span><span class="w"> </span>-j<span class="w"> </span>DROP
 </code></pre></div></p>
 <hr />
 <h2 id="least-privilege-vr-service-account">Least-Privilege VR Service Account<a class="headerlink" href="#least-privilege-vr-service-account" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="l l-Scalar l-Scalar-Plain">vCenter → Administration → Roles → Create Custom Role</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">Name</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">VR-ServiceAccount</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">Privileges</span><span class="p p-Indicator">:</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">vSphere Replication → Monitor</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">vSphere Replication → Manage</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">Virtual machine → Inventory (view)</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">Datastore → Browse</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">(Do NOT include vSphere Replication → Recover for the service account)</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="l l-Scalar l-Scalar-Plain">vCenter → Administration → Global Permissions → Add</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">User</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">svc-vsphere-replication@corp.local</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">Role</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">VR-ServiceAccount</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">Propagate</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Yes</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="l l-Scalar l-Scalar-Plain">vCenter → Administration → Roles → Create Custom Role</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">Name</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">VR-ServiceAccount</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">Privileges</span><span class="p p-Indicator">:</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">vSphere Replication → Monitor</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">vSphere Replication → Manage</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">Virtual machine → Inventory (view)</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">Datastore → Browse</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">(Do NOT include vSphere Replication → Recover for the service account)</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="l l-Scalar l-Scalar-Plain">vCenter → Administration → Global Permissions → Add</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">User</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">svc-vsphere-replication@corp.local</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">Role</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">VR-ServiceAccount</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">Propagate</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Yes</span>
 </code></pre></div>
 <p>Keep the Recovery privilege in a separate role assigned only to the DR team.</p>
 <hr />
 <h2 id="enable-encryption-for-wan-replications">Enable Encryption for WAN Replications<a class="headerlink" href="#enable-encryption-for-wan-replications" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>vCenter → Site Recovery → Replications → [VM] → Edit
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  Encryption: Enable
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>vCenter → Site Recovery → Replications → [VM] → Edit
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>  Encryption: Enable
 </code></pre></div>
 <p>Enable for all VMs replicating over untrusted WAN links. For same-datacenter replications (internal LAN), encryption is optional — rely on network security instead.</p>
 <hr />
 <h2 id="regular-test-recovery">Regular Test Recovery<a class="headerlink" href="#regular-test-recovery" title="Permanent link">&para;</a></h2>
 <p>Monthly test is the most important operational security measure — an untested DR capability is not a capability:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>vCenter → Site Recovery → Replications → [VM]
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>  → Recover → Test mode
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>  Use isolated network (no access to production)
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>  After test: delete recovered test VM, do NOT remove replication
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>vCenter → Site Recovery → Replications → [VM]
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  → Recover → Test mode
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  Use isolated network (no access to production)
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>  After test: delete recovered test VM, do NOT remove replication
 </code></pre></div>
 <p>Document: test date, VMs tested, RPO at time of recovery, pass/fail.</p>
 <hr />
 <h2 id="certificate-rotation">Certificate Rotation<a class="headerlink" href="#certificate-rotation" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Check VRA cert expiry</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>vra-london.example.local:443<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-enddate
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1"># Renew 30 days before expiry:</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="c1"># VRA VAMI → SSL → Upload Certificate</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Check VRA cert expiry</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>vra-london.example.local:443<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-enddate
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Renew 30 days before expiry:</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># VRA VAMI → SSL → Upload Certificate</span>
 </code></pre></div>
 <p>After rotating VRA certificate at either site:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Site Recovery → Sites → [pair] → Edit → Refresh Thumbprints
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Site Recovery → Sites → [pair] → Edit → Refresh Thumbprints
 </code></pre></div></p>
 <hr />
 <h2 id="monitoring-and-alerting">Monitoring and Alerting<a class="headerlink" href="#monitoring-and-alerting" title="Permanent link">&para;</a></h2>
 <p>Configure alerting for RPO violations — do not rely solely on manual dashboard checks:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c"># Script to run as a scheduled task — alert on non-OK replication states</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="c"># (see Scripts page for full implementation)</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c"># Or use vRealize Operations: create alert rule for metric &quot;vsphere.replication.rpm_status&quot;</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="c"># Alert when value != 0 (0=OK, 1=Warning, 2=Error)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c"># Script to run as a scheduled task — alert on non-OK replication states</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="c"># (see Scripts page for full implementation)</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c"># Or use vRealize Operations: create alert rule for metric &quot;vsphere.replication.rpm_status&quot;</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c"># Alert when value != 0 (0=OK, 1=Warning, 2=Error)</span>
 </code></pre></div>
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>

@@ -9030,28 +9030,18 @@ Virtualization health checks: ESXi host connectivity, cluster HA/DRS status, dat
 *Applies to: vSphere 7.x / 8.x*
 </div>
 <p><img alt="Virtualization Health Checks" src="../../../../assets/virtualization-vmware-operations-health-checks-index.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>begin_checks: &quot;Begin Checks&quot; {shape: oval}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>run_this_routine: &quot;Run This Routine&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>verify: &quot;Verify&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>generate_report: &quot;Generate Report&quot; {shape: oval}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>begin_checks -&gt; run_this_routine
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>run_this_routine -&gt; verify
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>verify -&gt; generate_report
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNptjkEKwjAQRfc5xdC9F8jChS7cF3EbYhyTwTIp07Qg0rubpAWxupv_-MN_NxJ0iSJrEPIhKXVFT2xcQPcYNDSHEuFYYwOvIdgeNcTJdrOSkU0KNBiJYyLOvGlHhnNG0C7o81J2LPsOZzWh0P2Z25d6_O14ZBSb0Aj2UVIun1YCbSVbmS9x2O1ha_ejW0qLympUwGZXvQERuGje?" /></p>
 <h2 id="run-this-routine">Run This Routine<a class="headerlink" href="#run-this-routine" title="Permanent link">&para;</a></h2>
 <p>Run these steps at the start of any virtualization operations shift or before a planned change window. These are cross-product checks — for product-specific detail, see each product's own health-checks page.</p>
 <ol>
 <li><strong>vCenter connectivity</strong> — confirm the UI is reachable and returning HTTP 200:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;%{http_code}&quot;</span><span class="w"> </span>https://&lt;vcenter&gt;/ui
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;%{http_code}&quot;</span><span class="w"> </span>https://&lt;vcenter&gt;/ui
 </code></pre></div>
    <strong>Expected output:</strong> <code>200</code> — any other code (401, 5xx, or no response) indicates a vCenter problem.</li>
 <li><strong>ESXi host count</strong> — vCenter → <strong>Hosts and Clusters</strong> → verify expected host count; investigate any hosts showing as disconnected or not responding.</li>
 <li><strong>vSAN health</strong> — vCenter → <strong>Cluster → Monitor → vSAN Health</strong> → all checks should show green; flag any WARN or ERROR status and check the detail pane for the affected component.</li>
 <li><strong>NSX Manager cluster</strong> — confirm all NSX Manager nodes report as Up:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:pw&#39;</span><span class="w"> </span>https://&lt;nsx&gt;/api/v1/cluster/status
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:pw&#39;</span><span class="w"> </span>https://&lt;nsx&gt;/api/v1/cluster/status
 </code></pre></div>
    <strong>Expected output:</strong> JSON with <code>"mgmt_cluster_status": {"status": "STABLE"}</code> and all member nodes showing <code>"status": "UP"</code>.</li>
 <li><strong>VM alarm count</strong> — vCenter → <strong>Alarms → Active Alarms</strong> → review count by severity; investigate any P1 (red) or P2 (yellow) alarms before proceeding with any change work.</li>
@@ -9060,7 +9050,7 @@ Virtualization health checks: ESXi host connectivity, cluster HA/DRS status, dat
 <li><strong>Storage alarm</strong> — vCenter → <strong>Datastores</strong> → check that no datastore exceeds 85% used capacity; flag any datastore in maintenance mode that is not expected to be there.</li>
 <li><strong>Backup job status</strong> — cross-check with Veeam or Commvault: all jobs from the last 24 hours should show <strong>Completed</strong> or <strong>Completed with Warnings</strong> (investigate warnings); any <strong>Failed</strong> job requires immediate follow-up before changes proceed.</li>
 <li><strong>Certificate expiry</strong> — check the vCenter certificate expiry and flag if fewer than 60 days remain:
-    <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;vcenter&gt;:443<span class="w"> </span>&lt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-dates
+    <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;vcenter&gt;:443<span class="w"> </span>&lt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-dates
 </code></pre></div>
     <strong>Expected output:</strong> <code>notAfter</code> date ≥ 60 days from today. If fewer than 60 days remain, raise a certificate renewal ticket immediately.</li>
 </ol>

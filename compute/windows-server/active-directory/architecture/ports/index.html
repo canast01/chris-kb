@@ -8196,23 +8196,7 @@ Firewall port reference for Microsoft Active Directory Domain Services. Covers c
 *Applies to: Windows Server 2019 / 2022 Active Directory*
 </div>
 <p><img alt="Active Directory — Ports and Network Requirements" src="../../../../../assets/compute-windows-server-active-directory-architecture-ports.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>center: &quot;Active Directory&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>client_authentication_all_domainjoin: &quot;Client Authentication — All Domain-Joined Systems&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>application_integration_ldapldaps: &quot;Application Integration (LDAP/LDAPS)&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>dns_domain_controller_as_dns_server: &quot;DNS (Domain Controller as DNS Server)&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>dctodc_replication_intrasite: &quot;DC-to-DC Replication (Intra-Site)&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>dctodc_replication_intersite_across_: &quot;DC-to-DC Replication (Inter-Site — Across Firewall)&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>remote_administration: &quot;Remote Administration&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>center -&gt; client_authentication_all_domainjoin
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>center -&gt; application_integration_ldapldaps
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>center -&gt; dns_domain_controller_as_dns_server
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>center -&gt; dctodc_replication_intrasite
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>center -&gt; dctodc_replication_intersite_across_
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>center -&gt; remote_administration
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqVks9KxDAQh-99imFP66F434NQWoQVEdk-QAjJ0EbSpEzi6iILPoRP6JOYpKttoe7qoX-YfHwznV-lIhReWbMBUk3rs0yg8UgbWBWhvkeoEmHpsII31_IeN9DiK2-sOWZCq0Az_uzb8FSCRxPjWjNpO67Mk1VBvCoTBsUMg8_3Dyi0hiqh-V1gUUJ9cB47NzaL3blpNB4z3vf6u4kKUzY0vGvJ-3i5OPXIwHZkYH1fFY_X8VZfLcqlcaepmbDGk9UaifFQDAcOaZ-WUj3UsB4mhvIHA-4gntQJ-8UfligFI5x9A3GnPEZxmXubVyXsRgDW20jkdUD-I0WKUsYFWefYOTlSkg9ZJBxuQ94vIcLlhoSdjWrZKaOcH5YbOuxSHYpZfdFw-sEgv4G__D4T_GL8E_YPaU7pM9lcxObbnuCLu8q-AMLySHI=?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
 <li>Active Directory uses a large dynamic RPC port range (49152–65535) for replication and some admin operations — this is difficult to firewall without restricting the range via GPO</li>
@@ -8554,26 +8538,26 @@ Firewall port reference for Microsoft Active Directory Domain Services. Covers c
 </table>
 <hr />
 <h2 id="verify">Verify<a class="headerlink" href="#verify" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># From a domain-joined client — test core AD ports</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Test-NetConnection</span> <span class="n">-ComputerName</span> <span class="n">dc01</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">local</span> <span class="n">-Port</span> <span class="n">389</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nb">Test-NetConnection</span> <span class="n">-ComputerName</span> <span class="n">dc01</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">local</span> <span class="n">-Port</span> <span class="n">636</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="nb">Test-NetConnection</span> <span class="n">-ComputerName</span> <span class="n">dc01</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">local</span> <span class="n">-Port</span> <span class="n">88</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nb">Test-NetConnection</span> <span class="n">-ComputerName</span> <span class="n">dc01</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">local</span> <span class="n">-Port</span> <span class="n">445</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c"># From a Linux client — test Kerberos and LDAP</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="n">nc</span> <span class="n">-zv</span> <span class="n">dc01</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">local</span> <span class="n">88</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="n">nc</span> <span class="n">-zv</span> <span class="n">dc01</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">local</span> <span class="n">636</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c"># Test DNS resolution of the domain</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="n">nslookup</span> <span class="n">corp</span><span class="p">.</span><span class="n">local</span> <span class="p">&lt;</span><span class="n">dc-ip</span><span class="p">&gt;</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="n">nslookup</span> <span class="n">-type</span><span class="p">=</span><span class="n">SRV</span> <span class="n">_kerberos</span><span class="p">.</span><span class="n">_tcp</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">local</span> <span class="p">&lt;</span><span class="n">dc-ip</span><span class="p">&gt;</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="c"># From a DC — check replication health</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="n">repadmin</span> <span class="p">/</span><span class="n">replsummary</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="n">repadmin</span> <span class="p">/</span><span class="n">showrepl</span>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="c"># From a DC — check DNS zone transfer</span>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="n">dnscmd</span> <span class="n">dc01</span> <span class="p">/</span><span class="n">zoneprint</span> <span class="n">corp</span><span class="p">.</span><span class="n">local</span> <span class="p">|</span> <span class="n">head</span> <span class="p">-</span><span class="n">30</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># From a domain-joined client — test core AD ports</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Test-NetConnection</span> <span class="n">-ComputerName</span> <span class="n">dc01</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">local</span> <span class="n">-Port</span> <span class="n">389</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nb">Test-NetConnection</span> <span class="n">-ComputerName</span> <span class="n">dc01</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">local</span> <span class="n">-Port</span> <span class="n">636</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="nb">Test-NetConnection</span> <span class="n">-ComputerName</span> <span class="n">dc01</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">local</span> <span class="n">-Port</span> <span class="n">88</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nb">Test-NetConnection</span> <span class="n">-ComputerName</span> <span class="n">dc01</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">local</span> <span class="n">-Port</span> <span class="n">445</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c"># From a Linux client — test Kerberos and LDAP</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="n">nc</span> <span class="n">-zv</span> <span class="n">dc01</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">local</span> <span class="n">88</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="n">nc</span> <span class="n">-zv</span> <span class="n">dc01</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">local</span> <span class="n">636</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c"># Test DNS resolution of the domain</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="n">nslookup</span> <span class="n">corp</span><span class="p">.</span><span class="n">local</span> <span class="p">&lt;</span><span class="n">dc-ip</span><span class="p">&gt;</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="n">nslookup</span> <span class="n">-type</span><span class="p">=</span><span class="n">SRV</span> <span class="n">_kerberos</span><span class="p">.</span><span class="n">_tcp</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">local</span> <span class="p">&lt;</span><span class="n">dc-ip</span><span class="p">&gt;</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="c"># From a DC — check replication health</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="n">repadmin</span> <span class="p">/</span><span class="n">replsummary</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="n">repadmin</span> <span class="p">/</span><span class="n">showrepl</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="c"># From a DC — check DNS zone transfer</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="n">dnscmd</span> <span class="n">dc01</span> <span class="p">/</span><span class="n">zoneprint</span> <span class="n">corp</span><span class="p">.</span><span class="n">local</span> <span class="p">|</span> <span class="n">head</span> <span class="p">-</span><span class="n">30</span>
 </code></pre></div>
 <hr />
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>

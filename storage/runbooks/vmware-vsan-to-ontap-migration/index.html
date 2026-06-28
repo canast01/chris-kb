@@ -7376,27 +7376,7 @@ Cross-product runbook for migrating virtual machine workloads from VMware vSAN t
 </div>
 <p><img alt="Migrate VM Workloads from vSAN to ONTAP NFS" src="../../../assets/storage-runbooks-vmware-vsan-to-ontap-migration.svg" /></p>
 <p><img alt="Migrate VM Workloads from vSAN to ONTAP NFS — Diagram" src="../../../assets/storage-runbooks-vmware-vsan-to-ontap-migration-diagram.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>@startuml
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>skinparam sequenceArrowThickness 1.5
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>skinparam roundcorner 5
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>actor &quot;Responder&quot; as A
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>participant &quot;Runbooks System&quot; as B
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>participant &quot;Dependent System&quot; as C
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>A -&gt; B: Phase 1 ONTAP Preparation
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>B --&gt; A: OK
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>A -&gt; B: Phase 2 VM Migration
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>B --&gt; A: OK
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>A -&gt; B: Phase 3 Validation
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>B --&gt; A: OK
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>A -&gt; B: Phase 4 Cutover
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>B --&gt; A: OK
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>A -&gt; B: Rollback
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>B --&gt; A: OK
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>@enduml
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/plantuml/svg/eNqF0EFrAjEQBeB7fsXDu4JWLx6KWXsr1sWK95gdatjdzDqTVPrvG3vSIngbeN-DmVlpcpJy3xltQxycuB5K50zRkxXhy_4UfBtJFdPJ4gYJ59h4lkiChTHOJxaMdqQDx4ZkBKewptgUfBhcTCXM8cjcKj5_NFH_R6p78kYDlXoZb8zaGIvxK6ol6pNTwhTbj72tUQtdl0mBo6kwLsQusX3_p2c4bLAJX0_hCw6uC80zNsc6J_4meWh23HVH59u70KzKVdcn_wIRhG-9?" /></p>
 <h2 id="before-you-begin">Before You Begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <p><strong>Prerequisites:</strong></p>
 <table>
@@ -7434,240 +7414,240 @@ Cross-product runbook for migrating virtual machine workloads from VMware vSAN t
 </tbody>
 </table>
 <p><strong>Preflight checks:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Verify vSAN health before starting</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>health<span class="w"> </span>cluster<span class="w"> </span>list<span class="w"> </span>--cluster-name<span class="w"> </span>&lt;cluster&gt;
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Confirm vCenter version</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Get-PowerCLIVersion<span class="w">   </span><span class="c1"># PowerCLI</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>Connect-VIServer<span class="w"> </span>-Server<span class="w"> </span>vcenter.corp.local
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="o">(</span>Get-View<span class="w"> </span>ServiceInstance<span class="o">)</span>.Content.About.Version
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># Ping ONTAP mgmt from jump host</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>ping<span class="w"> </span>&lt;ontap-mgmt-ip&gt;
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>ssh<span class="w"> </span>admin@&lt;ontap-mgmt-ip&gt;<span class="w"> </span><span class="s2">&quot;cluster show&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Verify vSAN health before starting</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>health<span class="w"> </span>cluster<span class="w"> </span>list<span class="w"> </span>--cluster-name<span class="w"> </span>&lt;cluster&gt;
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Confirm vCenter version</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>Get-PowerCLIVersion<span class="w">   </span><span class="c1"># PowerCLI</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>Connect-VIServer<span class="w"> </span>-Server<span class="w"> </span>vcenter.corp.local
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="o">(</span>Get-View<span class="w"> </span>ServiceInstance<span class="o">)</span>.Content.About.Version
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1"># Ping ONTAP mgmt from jump host</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>ping<span class="w"> </span>&lt;ontap-mgmt-ip&gt;
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>ssh<span class="w"> </span>admin@&lt;ontap-mgmt-ip&gt;<span class="w"> </span><span class="s2">&quot;cluster show&quot;</span>
 </code></pre></div>
 <hr />
 <h2 id="phase-1-ontap-preparation">Phase 1: ONTAP Preparation<a class="headerlink" href="#phase-1-ontap-preparation" title="Permanent link">&para;</a></h2>
 <h3 id="11-create-a-storage-virtual-machine-svm">1.1 Create a Storage Virtual Machine (SVM)<a class="headerlink" href="#11-create-a-storage-virtual-machine-svm" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Connect to ONTAP CLI</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ssh<span class="w"> </span>admin@&lt;ontap-mgmt-ip&gt;
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Create SVM for NFS</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>vserver<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>svm_vmware<span class="w"> </span>-rootvolume<span class="w"> </span>svm_vmware_root<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span>-rootvolume-security-style<span class="w"> </span>unix<span class="w"> </span>-language<span class="w"> </span>C.UTF-8<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span>-snapshot-policy<span class="w"> </span>default
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Assign aggregate to SVM</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>vserver<span class="w"> </span>modify<span class="w"> </span>-vserver<span class="w"> </span>svm_vmware<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">  </span>-aggr-list<span class="w"> </span>aggr1_node01,aggr1_node02
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Create NFS LIF (one per node for multipath)</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>network<span class="w"> </span>interface<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>svm_vmware<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">  </span>-lif<span class="w"> </span>nfs_lif_01<span class="w"> </span>-role<span class="w"> </span>data<span class="w"> </span>-data-protocol<span class="w"> </span>nfs<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="w">  </span>-home-node<span class="w"> </span>&lt;node01&gt;<span class="w"> </span>-home-port<span class="w"> </span>e0c<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="w">  </span>-address<span class="w"> </span>&lt;nfs-lif-ip-1&gt;<span class="w"> </span>-netmask<span class="w"> </span>&lt;mask&gt;
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>network<span class="w"> </span>interface<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>svm_vmware<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="w">  </span>-lif<span class="w"> </span>nfs_lif_02<span class="w"> </span>-role<span class="w"> </span>data<span class="w"> </span>-data-protocol<span class="w"> </span>nfs<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="w">  </span>-home-node<span class="w"> </span>&lt;node02&gt;<span class="w"> </span>-home-port<span class="w"> </span>e0c<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="w">  </span>-address<span class="w"> </span>&lt;nfs-lif-ip-2&gt;<span class="w"> </span>-netmask<span class="w"> </span>&lt;mask&gt;
-<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>
-<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a><span class="c1"># Enable NFS on SVM</span>
-<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a>vserver<span class="w"> </span>nfs<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>svm_vmware<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a><span class="w">  </span>-v3<span class="w"> </span>enabled<span class="w"> </span>-v4.1<span class="w"> </span>enabled<span class="w"> </span>-tcp<span class="w"> </span>enabled
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Connect to ONTAP CLI</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ssh<span class="w"> </span>admin@&lt;ontap-mgmt-ip&gt;
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Create SVM for NFS</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>vserver<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>svm_vmware<span class="w"> </span>-rootvolume<span class="w"> </span>svm_vmware_root<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span>-rootvolume-security-style<span class="w"> </span>unix<span class="w"> </span>-language<span class="w"> </span>C.UTF-8<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span>-snapshot-policy<span class="w"> </span>default
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># Assign aggregate to SVM</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>vserver<span class="w"> </span>modify<span class="w"> </span>-vserver<span class="w"> </span>svm_vmware<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">  </span>-aggr-list<span class="w"> </span>aggr1_node01,aggr1_node02
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Create NFS LIF (one per node for multipath)</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>network<span class="w"> </span>interface<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>svm_vmware<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">  </span>-lif<span class="w"> </span>nfs_lif_01<span class="w"> </span>-role<span class="w"> </span>data<span class="w"> </span>-data-protocol<span class="w"> </span>nfs<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w">  </span>-home-node<span class="w"> </span>&lt;node01&gt;<span class="w"> </span>-home-port<span class="w"> </span>e0c<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="w">  </span>-address<span class="w"> </span>&lt;nfs-lif-ip-1&gt;<span class="w"> </span>-netmask<span class="w"> </span>&lt;mask&gt;
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>network<span class="w"> </span>interface<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>svm_vmware<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="w">  </span>-lif<span class="w"> </span>nfs_lif_02<span class="w"> </span>-role<span class="w"> </span>data<span class="w"> </span>-data-protocol<span class="w"> </span>nfs<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="w">  </span>-home-node<span class="w"> </span>&lt;node02&gt;<span class="w"> </span>-home-port<span class="w"> </span>e0c<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="w">  </span>-address<span class="w"> </span>&lt;nfs-lif-ip-2&gt;<span class="w"> </span>-netmask<span class="w"> </span>&lt;mask&gt;
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="c1"># Enable NFS on SVM</span>
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>vserver<span class="w"> </span>nfs<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>svm_vmware<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="w">  </span>-v3<span class="w"> </span>enabled<span class="w"> </span>-v4.1<span class="w"> </span>enabled<span class="w"> </span>-tcp<span class="w"> </span>enabled
 </code></pre></div>
 <h3 id="12-create-nfs-export-policy">1.2 Create NFS Export Policy<a class="headerlink" href="#12-create-nfs-export-policy" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Create export policy for ESXi hosts</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>vserver<span class="w"> </span>export-policy<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>svm_vmware<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>-policyname<span class="w"> </span>esxi_nfs_policy
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Add rules — one per ESXi host subnet or per-host</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>vserver<span class="w"> </span>export-policy<span class="w"> </span>rule<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>svm_vmware<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span>-policyname<span class="w"> </span>esxi_nfs_policy<span class="w"> </span>-clientmatch<span class="w"> </span>&lt;esxi-subnet/mask&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">  </span>-rorule<span class="w"> </span>sys<span class="w"> </span>-rwrule<span class="w"> </span>sys<span class="w"> </span>-superuser<span class="w"> </span>sys<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">  </span>-protocol<span class="w"> </span>nfs3,nfs4
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="c1"># Verify</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>vserver<span class="w"> </span>export-policy<span class="w"> </span>rule<span class="w"> </span>show<span class="w"> </span>-policyname<span class="w"> </span>esxi_nfs_policy
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Create export policy for ESXi hosts</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>vserver<span class="w"> </span>export-policy<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>svm_vmware<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>-policyname<span class="w"> </span>esxi_nfs_policy
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Add rules — one per ESXi host subnet or per-host</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>vserver<span class="w"> </span>export-policy<span class="w"> </span>rule<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>svm_vmware<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span>-policyname<span class="w"> </span>esxi_nfs_policy<span class="w"> </span>-clientmatch<span class="w"> </span>&lt;esxi-subnet/mask&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span>-rorule<span class="w"> </span>sys<span class="w"> </span>-rwrule<span class="w"> </span>sys<span class="w"> </span>-superuser<span class="w"> </span>sys<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span>-protocol<span class="w"> </span>nfs3,nfs4
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># Verify</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>vserver<span class="w"> </span>export-policy<span class="w"> </span>rule<span class="w"> </span>show<span class="w"> </span>-policyname<span class="w"> </span>esxi_nfs_policy
 </code></pre></div>
 <h3 id="13-create-the-nfs-datastore-volume">1.3 Create the NFS Datastore Volume<a class="headerlink" href="#13-create-the-nfs-datastore-volume" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Create volume sized for migration target</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>volume<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>svm_vmware<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>-volume<span class="w"> </span>vol_nfs_ds01<span class="w"> </span>-aggregate<span class="w"> </span>aggr1_node01<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>-size<span class="w"> </span>10T<span class="w"> </span>-space-guarantee<span class="w"> </span>none<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span>-snapshot-policy<span class="w"> </span>default<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span>-export-policy<span class="w"> </span>esxi_nfs_policy<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">  </span>-junction-path<span class="w"> </span>/vol_nfs_ds01
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># Enable deduplication and compression</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>volume<span class="w"> </span>efficiency<span class="w"> </span>on<span class="w"> </span>-vserver<span class="w"> </span>svm_vmware<span class="w"> </span>-volume<span class="w"> </span>vol_nfs_ds01
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>volume<span class="w"> </span>efficiency<span class="w"> </span>modify<span class="w"> </span>-vserver<span class="w"> </span>svm_vmware<span class="w"> </span>-volume<span class="w"> </span>vol_nfs_ds01<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">  </span>-policy<span class="w"> </span>auto<span class="w"> </span>-compression<span class="w"> </span><span class="nb">true</span><span class="w"> </span>-inline-compression<span class="w"> </span><span class="nb">true</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="c1"># Confirm volume is online and exported</span>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>volume<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>svm_vmware<span class="w"> </span>-volume<span class="w"> </span>vol_nfs_ds01<span class="w"> </span>-fields<span class="w"> </span>state,junction-path
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Create volume sized for migration target</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>volume<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>svm_vmware<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>-volume<span class="w"> </span>vol_nfs_ds01<span class="w"> </span>-aggregate<span class="w"> </span>aggr1_node01<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>-size<span class="w"> </span>10T<span class="w"> </span>-space-guarantee<span class="w"> </span>none<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span>-snapshot-policy<span class="w"> </span>default<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span>-export-policy<span class="w"> </span>esxi_nfs_policy<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span>-junction-path<span class="w"> </span>/vol_nfs_ds01
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># Enable deduplication and compression</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>volume<span class="w"> </span>efficiency<span class="w"> </span>on<span class="w"> </span>-vserver<span class="w"> </span>svm_vmware<span class="w"> </span>-volume<span class="w"> </span>vol_nfs_ds01
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>volume<span class="w"> </span>efficiency<span class="w"> </span>modify<span class="w"> </span>-vserver<span class="w"> </span>svm_vmware<span class="w"> </span>-volume<span class="w"> </span>vol_nfs_ds01<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">  </span>-policy<span class="w"> </span>auto<span class="w"> </span>-compression<span class="w"> </span><span class="nb">true</span><span class="w"> </span>-inline-compression<span class="w"> </span><span class="nb">true</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="c1"># Confirm volume is online and exported</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>volume<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>svm_vmware<span class="w"> </span>-volume<span class="w"> </span>vol_nfs_ds01<span class="w"> </span>-fields<span class="w"> </span>state,junction-path
 </code></pre></div>
 <h3 id="14-mount-nfs-datastore-on-esxi-hosts-via-vcenter">1.4 Mount NFS Datastore on ESXi Hosts via vCenter<a class="headerlink" href="#14-mount-nfs-datastore-on-esxi-hosts-via-vcenter" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># PowerCLI — add NFS datastore to all hosts in cluster</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">Connect-VIServer</span> <span class="n">-Server</span> <span class="n">vcenter</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">local</span> <span class="n">-Credential</span> <span class="p">(</span><span class="nb">Get-Credential</span><span class="p">)</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="nv">$cluster</span> <span class="p">=</span> <span class="nb">Get-Cluster</span> <span class="s2">&quot;Production-Cluster&quot;</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="nv">$hosts</span>   <span class="p">=</span> <span class="nb">Get-VMHost</span> <span class="n">-Location</span> <span class="nv">$cluster</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="k">foreach</span> <span class="p">(</span><span class="nv">$vmhost</span> <span class="k">in</span> <span class="nv">$hosts</span><span class="p">)</span> <span class="p">{</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>    <span class="nb">New-Datastore</span> <span class="n">-VMHost</span> <span class="nv">$vmhost</span> <span class="p">`</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>      <span class="n">-Name</span> <span class="s2">&quot;ONTAP-NFS-DS01&quot;</span> <span class="p">`</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>      <span class="n">-NfsHost</span> <span class="s2">&quot;&lt;nfs-lif-ip-1&gt;&quot;</span> <span class="p">`</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>      <span class="n">-Path</span> <span class="s2">&quot;/vol_nfs_ds01&quot;</span> <span class="p">`</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>      <span class="n">-Nfs</span>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;Mounted on </span><span class="p">$(</span><span class="nv">$vmhost</span><span class="p">.</span><span class="n">Name</span><span class="p">)</span><span class="s2">&quot;</span>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="p">}</span>
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="c"># Verify all hosts see the datastore</span>
-<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="nb">Get-Datastore</span> <span class="s2">&quot;ONTAP-NFS-DS01&quot;</span> <span class="p">|</span> <span class="nb">Get-VMHost</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># PowerCLI — add NFS datastore to all hosts in cluster</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">Connect-VIServer</span> <span class="n">-Server</span> <span class="n">vcenter</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">local</span> <span class="n">-Credential</span> <span class="p">(</span><span class="nb">Get-Credential</span><span class="p">)</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="nv">$cluster</span> <span class="p">=</span> <span class="nb">Get-Cluster</span> <span class="s2">&quot;Production-Cluster&quot;</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="nv">$hosts</span>   <span class="p">=</span> <span class="nb">Get-VMHost</span> <span class="n">-Location</span> <span class="nv">$cluster</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="k">foreach</span> <span class="p">(</span><span class="nv">$vmhost</span> <span class="k">in</span> <span class="nv">$hosts</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>    <span class="nb">New-Datastore</span> <span class="n">-VMHost</span> <span class="nv">$vmhost</span> <span class="p">`</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>      <span class="n">-Name</span> <span class="s2">&quot;ONTAP-NFS-DS01&quot;</span> <span class="p">`</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>      <span class="n">-NfsHost</span> <span class="s2">&quot;&lt;nfs-lif-ip-1&gt;&quot;</span> <span class="p">`</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>      <span class="n">-Path</span> <span class="s2">&quot;/vol_nfs_ds01&quot;</span> <span class="p">`</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>      <span class="n">-Nfs</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;Mounted on </span><span class="p">$(</span><span class="nv">$vmhost</span><span class="p">.</span><span class="n">Name</span><span class="p">)</span><span class="s2">&quot;</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="p">}</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="c"># Verify all hosts see the datastore</span>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="nb">Get-Datastore</span> <span class="s2">&quot;ONTAP-NFS-DS01&quot;</span> <span class="p">|</span> <span class="nb">Get-VMHost</span>
 </code></pre></div>
 <hr />
 <h2 id="phase-2-vm-migration">Phase 2: VM Migration<a class="headerlink" href="#phase-2-vm-migration" title="Permanent link">&para;</a></h2>
 <h3 id="21-storage-vmotion-per-vm-live-online">2.1 Storage vMotion — Per VM (Live, Online)<a class="headerlink" href="#21-storage-vmotion-per-vm-live-online" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># Migrate a single running VM to ONTAP NFS datastore</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nv">$vm</span>        <span class="p">=</span> <span class="nb">Get-VM</span> <span class="s2">&quot;app-server-01&quot;</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="nv">$targetDS</span>  <span class="p">=</span> <span class="nb">Get-Datastore</span> <span class="s2">&quot;ONTAP-NFS-DS01&quot;</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="nb">Move-VM</span> <span class="n">-VM</span> <span class="nv">$vm</span> <span class="n">-Datastore</span> <span class="nv">$targetDS</span> <span class="n">-DiskStorageFormat</span> <span class="n">Thin</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c"># Watch task progress</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="nb">Get-Task</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Name</span> <span class="o">-eq</span> <span class="s2">&quot;RelocateVM_Task&quot;</span> <span class="p">}</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span><span class="n">State</span><span class="p">,</span><span class="n">PercentComplete</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># Migrate a single running VM to ONTAP NFS datastore</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nv">$vm</span>        <span class="p">=</span> <span class="nb">Get-VM</span> <span class="s2">&quot;app-server-01&quot;</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="nv">$targetDS</span>  <span class="p">=</span> <span class="nb">Get-Datastore</span> <span class="s2">&quot;ONTAP-NFS-DS01&quot;</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="nb">Move-VM</span> <span class="n">-VM</span> <span class="nv">$vm</span> <span class="n">-Datastore</span> <span class="nv">$targetDS</span> <span class="n">-DiskStorageFormat</span> <span class="n">Thin</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c"># Watch task progress</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="nb">Get-Task</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Name</span> <span class="o">-eq</span> <span class="s2">&quot;RelocateVM_Task&quot;</span> <span class="p">}</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span><span class="n">State</span><span class="p">,</span><span class="n">PercentComplete</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># ESXi CLI alternative — svmotion (run from jump host with PowerCLI or via vmkfstools)</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="c1"># Using vmware-cmd (deprecated but useful for scripting):</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>vmware-cmd<span class="w"> </span>/vmfs/volumes/&lt;vsan-uuid&gt;/&lt;vm&gt;/&lt;vm&gt;.vmx<span class="w"> </span>migrate<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span><span class="s2">&quot;[ONTAP-NFS-DS01]&quot;</span><span class="w"> </span>thin
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="c1"># Via esxcli (for cold migration when VM is off):</span>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>vmkfstools<span class="w"> </span>-i<span class="w"> </span>/vmfs/volumes/&lt;vsan-uuid&gt;/&lt;vm&gt;/&lt;vm&gt;.vmdk<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="w">           </span>/vmfs/volumes/&lt;ontap-ds-uuid&gt;/&lt;vm&gt;/&lt;vm&gt;.vmdk<span class="w"> </span>-d<span class="w"> </span>thin
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># ESXi CLI alternative — svmotion (run from jump host with PowerCLI or via vmkfstools)</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># Using vmware-cmd (deprecated but useful for scripting):</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>vmware-cmd<span class="w"> </span>/vmfs/volumes/&lt;vsan-uuid&gt;/&lt;vm&gt;/&lt;vm&gt;.vmx<span class="w"> </span>migrate<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span><span class="s2">&quot;[ONTAP-NFS-DS01]&quot;</span><span class="w"> </span>thin
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># Via esxcli (for cold migration when VM is off):</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>vmkfstools<span class="w"> </span>-i<span class="w"> </span>/vmfs/volumes/&lt;vsan-uuid&gt;/&lt;vm&gt;/&lt;vm&gt;.vmdk<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">           </span>/vmfs/volumes/&lt;ontap-ds-uuid&gt;/&lt;vm&gt;/&lt;vm&gt;.vmdk<span class="w"> </span>-d<span class="w"> </span>thin
 </code></pre></div>
 <h3 id="22-bulk-storage-vmotion-entire-datastore">2.2 Bulk Storage vMotion — Entire Datastore<a class="headerlink" href="#22-bulk-storage-vmotion-entire-datastore" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c"># Migrate all VMs from a vSAN datastore to ONTAP</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nv">$sourceDS</span>  <span class="p">=</span> <span class="nb">Get-Datastore</span> <span class="s2">&quot;vsanDatastore&quot;</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="nv">$targetDS</span>  <span class="p">=</span> <span class="nb">Get-Datastore</span> <span class="s2">&quot;ONTAP-NFS-DS01&quot;</span>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="nv">$vms</span>       <span class="p">=</span> <span class="nb">Get-VM</span> <span class="n">-Datastore</span> <span class="nv">$sourceDS</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="k">foreach</span> <span class="p">(</span><span class="nv">$vm</span> <span class="k">in</span> <span class="nv">$vms</span><span class="p">)</span> <span class="p">{</span>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;Migrating </span><span class="p">$(</span><span class="nv">$vm</span><span class="p">.</span><span class="n">Name</span><span class="p">)</span><span class="s2"> ...&quot;</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>    <span class="nb">Move-VM</span> <span class="n">-VM</span> <span class="nv">$vm</span> <span class="n">-Datastore</span> <span class="nv">$targetDS</span> <span class="n">-DiskStorageFormat</span> <span class="n">Thin</span> <span class="n">-RunAsync</span>
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>    <span class="nb">Start-Sleep</span> <span class="n">-Seconds</span> <span class="n">10</span>   <span class="c"># stagger to avoid saturating network</span>
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="p">}</span>
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>
-<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="c"># Monitor all in-progress tasks</span>
-<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="k">do</span> <span class="p">{</span>
-<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>    <span class="nv">$tasks</span> <span class="p">=</span> <span class="nb">Get-Task</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Name</span> <span class="o">-eq</span> <span class="s2">&quot;RelocateVM_Task&quot;</span> <span class="o">-and</span> <span class="nv">$_</span><span class="p">.</span><span class="n">State</span> <span class="o">-eq</span> <span class="s2">&quot;Running&quot;</span> <span class="p">}</span>
-<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;Running migrations: </span><span class="p">$(</span><span class="nv">$tasks</span><span class="p">.</span><span class="n">Count</span><span class="p">)</span><span class="s2">&quot;</span>
-<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>    <span class="nb">Start-Sleep</span> <span class="n">-Seconds</span> <span class="n">30</span>
-<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a><span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="nv">$tasks</span><span class="p">.</span><span class="n">Count</span> <span class="o">-gt</span> <span class="n">0</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c"># Migrate all VMs from a vSAN datastore to ONTAP</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nv">$sourceDS</span>  <span class="p">=</span> <span class="nb">Get-Datastore</span> <span class="s2">&quot;vsanDatastore&quot;</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="nv">$targetDS</span>  <span class="p">=</span> <span class="nb">Get-Datastore</span> <span class="s2">&quot;ONTAP-NFS-DS01&quot;</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="nv">$vms</span>       <span class="p">=</span> <span class="nb">Get-VM</span> <span class="n">-Datastore</span> <span class="nv">$sourceDS</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="k">foreach</span> <span class="p">(</span><span class="nv">$vm</span> <span class="k">in</span> <span class="nv">$vms</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;Migrating </span><span class="p">$(</span><span class="nv">$vm</span><span class="p">.</span><span class="n">Name</span><span class="p">)</span><span class="s2"> ...&quot;</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>    <span class="nb">Move-VM</span> <span class="n">-VM</span> <span class="nv">$vm</span> <span class="n">-Datastore</span> <span class="nv">$targetDS</span> <span class="n">-DiskStorageFormat</span> <span class="n">Thin</span> <span class="n">-RunAsync</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>    <span class="nb">Start-Sleep</span> <span class="n">-Seconds</span> <span class="n">10</span>   <span class="c"># stagger to avoid saturating network</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="p">}</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="c"># Monitor all in-progress tasks</span>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="k">do</span> <span class="p">{</span>
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>    <span class="nv">$tasks</span> <span class="p">=</span> <span class="nb">Get-Task</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Name</span> <span class="o">-eq</span> <span class="s2">&quot;RelocateVM_Task&quot;</span> <span class="o">-and</span> <span class="nv">$_</span><span class="p">.</span><span class="n">State</span> <span class="o">-eq</span> <span class="s2">&quot;Running&quot;</span> <span class="p">}</span>
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;Running migrations: </span><span class="p">$(</span><span class="nv">$tasks</span><span class="p">.</span><span class="n">Count</span><span class="p">)</span><span class="s2">&quot;</span>
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>    <span class="nb">Start-Sleep</span> <span class="n">-Seconds</span> <span class="n">30</span>
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a><span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="nv">$tasks</span><span class="p">.</span><span class="n">Count</span> <span class="o">-gt</span> <span class="n">0</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="23-cold-migration-option-vm-powered-off">2.3 Cold Migration Option (VM Powered Off)<a class="headerlink" href="#23-cold-migration-option-vm-powered-off" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c"># For VMs that cannot tolerate vMotion overhead</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="nv">$vm</span> <span class="p">=</span> <span class="nb">Get-VM</span> <span class="s2">&quot;legacy-app-01&quot;</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="nb">Stop-VM</span> <span class="n">-VM</span> <span class="nv">$vm</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="nb">Move-VM</span> <span class="n">-VM</span> <span class="nv">$vm</span> <span class="n">-Datastore</span> <span class="p">(</span><span class="nb">Get-Datastore</span> <span class="s2">&quot;ONTAP-NFS-DS01&quot;</span><span class="p">)</span> <span class="p">`</span>
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>  <span class="n">-DiskStorageFormat</span> <span class="n">Thin</span>
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="nb">Start-VM</span> <span class="n">-VM</span> <span class="nv">$vm</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c"># For VMs that cannot tolerate vMotion overhead</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nv">$vm</span> <span class="p">=</span> <span class="nb">Get-VM</span> <span class="s2">&quot;legacy-app-01&quot;</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="nb">Stop-VM</span> <span class="n">-VM</span> <span class="nv">$vm</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="nb">Move-VM</span> <span class="n">-VM</span> <span class="nv">$vm</span> <span class="n">-Datastore</span> <span class="p">(</span><span class="nb">Get-Datastore</span> <span class="s2">&quot;ONTAP-NFS-DS01&quot;</span><span class="p">)</span> <span class="p">`</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>  <span class="n">-DiskStorageFormat</span> <span class="n">Thin</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="nb">Start-VM</span> <span class="n">-VM</span> <span class="nv">$vm</span>
 </code></pre></div>
 <hr />
 <h2 id="phase-3-validation">Phase 3: Validation<a class="headerlink" href="#phase-3-validation" title="Permanent link">&para;</a></h2>
 <h3 id="31-verify-io-latency-on-ontap">3.1 Verify I/O Latency on ONTAP<a class="headerlink" href="#31-verify-io-latency-on-ontap" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Check NFS volume latency and IOPS (ONTAP CLI)</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>statistics<span class="w"> </span>show<span class="w"> </span>-object<span class="w"> </span>nfsv3<span class="w"> </span>-instance<span class="w"> </span>svm_vmware<span class="w"> </span>-counter<span class="w"> </span>avg_latency,total_ops
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="c1"># Or use qos statistics workload performance show for per-volume breakdown</span>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="c1"># Volume utilisation</span>
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>volume<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>svm_vmware<span class="w"> </span>-volume<span class="w"> </span>vol_nfs_ds01<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="w">  </span>-fields<span class="w"> </span>used,available,percent-used
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>
-<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="c1"># Check NFS connections from ESXi hosts</span>
-<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>nfs<span class="w"> </span>connections<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>svm_vmware
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Check NFS volume latency and IOPS (ONTAP CLI)</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>statistics<span class="w"> </span>show<span class="w"> </span>-object<span class="w"> </span>nfsv3<span class="w"> </span>-instance<span class="w"> </span>svm_vmware<span class="w"> </span>-counter<span class="w"> </span>avg_latency,total_ops
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="c1"># Or use qos statistics workload performance show for per-volume breakdown</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="c1"># Volume utilisation</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>volume<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>svm_vmware<span class="w"> </span>-volume<span class="w"> </span>vol_nfs_ds01<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="w">  </span>-fields<span class="w"> </span>used,available,percent-used
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="c1"># Check NFS connections from ESXi hosts</span>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>nfs<span class="w"> </span>connections<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>svm_vmware
 </code></pre></div>
 <h3 id="32-verify-datastore-usage-in-vcenter">3.2 Verify Datastore Usage in vCenter<a class="headerlink" href="#32-verify-datastore-usage-in-vcenter" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c"># PowerCLI — check datastore capacity and provisioned space</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="nb">Get-Datastore</span> <span class="s2">&quot;ONTAP-NFS-DS01&quot;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span><span class="n">FreeSpaceGB</span><span class="p">,</span><span class="n">CapacityGB</span><span class="p">,@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;UsedGB&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">CapacityGB</span> <span class="p">-</span> <span class="nv">$_</span><span class="p">.</span><span class="n">FreeSpaceGB</span><span class="p">,</span><span class="n">2</span><span class="p">)}}</span>
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c"># Confirm all VMs are now on the ONTAP datastore</span>
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="p">(</span><span class="nb">Get-HardDisk</span> <span class="n">-VM</span> <span class="nv">$_</span><span class="p">).</span><span class="n">Filename</span> <span class="o">-like</span> <span class="s2">&quot;*vsanDatastore*&quot;</span> <span class="p">}</span>
-<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="c"># Above should return empty when migration is complete</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c"># PowerCLI — check datastore capacity and provisioned space</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="nb">Get-Datastore</span> <span class="s2">&quot;ONTAP-NFS-DS01&quot;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span><span class="n">FreeSpaceGB</span><span class="p">,</span><span class="n">CapacityGB</span><span class="p">,@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;UsedGB&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">CapacityGB</span> <span class="p">-</span> <span class="nv">$_</span><span class="p">.</span><span class="n">FreeSpaceGB</span><span class="p">,</span><span class="n">2</span><span class="p">)}}</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c"># Confirm all VMs are now on the ONTAP datastore</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="p">(</span><span class="nb">Get-HardDisk</span> <span class="n">-VM</span> <span class="nv">$_</span><span class="p">).</span><span class="n">Filename</span> <span class="o">-like</span> <span class="s2">&quot;*vsanDatastore*&quot;</span> <span class="p">}</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="c"># Above should return empty when migration is complete</span>
 </code></pre></div>
 <h3 id="33-application-level-validation">3.3 Application-Level Validation<a class="headerlink" href="#33-application-level-validation" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># On each migrated VM — confirm disk I/O is healthy</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>iostat<span class="w"> </span>-x<span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="m">3</span><span class="w">          </span><span class="c1"># Linux</span>
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="c1"># Windows: Get-Counter &quot;\PhysicalDisk(*)\Avg. Disk sec/Transfer&quot;</span>
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="c1"># Run a quick fio test inside a migrated VM</span>
-<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>fio<span class="w"> </span>--name<span class="o">=</span>post-migration-check<span class="w"> </span>--rw<span class="o">=</span>randrw<span class="w"> </span>--bs<span class="o">=</span>4k<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="w">  </span>--ioengine<span class="o">=</span>libaio<span class="w"> </span>--iodepth<span class="o">=</span><span class="m">16</span><span class="w"> </span>--size<span class="o">=</span>512m<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="w">  </span>--runtime<span class="o">=</span><span class="m">60</span><span class="w"> </span>--filename<span class="o">=</span>/var/tmp/fio.tmp<span class="w"> </span>--output-format<span class="o">=</span>normal
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># On each migrated VM — confirm disk I/O is healthy</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>iostat<span class="w"> </span>-x<span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="m">3</span><span class="w">          </span><span class="c1"># Linux</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="c1"># Windows: Get-Counter &quot;\PhysicalDisk(*)\Avg. Disk sec/Transfer&quot;</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="c1"># Run a quick fio test inside a migrated VM</span>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>fio<span class="w"> </span>--name<span class="o">=</span>post-migration-check<span class="w"> </span>--rw<span class="o">=</span>randrw<span class="w"> </span>--bs<span class="o">=</span>4k<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="w">  </span>--ioengine<span class="o">=</span>libaio<span class="w"> </span>--iodepth<span class="o">=</span><span class="m">16</span><span class="w"> </span>--size<span class="o">=</span>512m<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="w">  </span>--runtime<span class="o">=</span><span class="m">60</span><span class="w"> </span>--filename<span class="o">=</span>/var/tmp/fio.tmp<span class="w"> </span>--output-format<span class="o">=</span>normal
 </code></pre></div>
 <hr />
 <h2 id="phase-4-cutover">Phase 4: Cutover<a class="headerlink" href="#phase-4-cutover" title="Permanent link">&para;</a></h2>
 <h3 id="41-run-vsan-health-check-before-decommission">4.1 Run vSAN Health Check Before Decommission<a class="headerlink" href="#41-run-vsan-health-check-before-decommission" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># From any ESXi host in the cluster</span>
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>health<span class="w"> </span>cluster<span class="w"> </span>list
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
-<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c1"># Verify no objects remain on vSAN</span>
-<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;object&quot;</span>
-<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>
-<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="c1"># ONTAP — confirm no remaining mounts from vSAN-side</span>
-<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="c1"># (There should be none at this point)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># From any ESXi host in the cluster</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>health<span class="w"> </span>cluster<span class="w"> </span>list
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># Verify no objects remain on vSAN</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;object&quot;</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="c1"># ONTAP — confirm no remaining mounts from vSAN-side</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="c1"># (There should be none at this point)</span>
 </code></pre></div>
 <h3 id="42-remove-vsan-datastore-from-cluster">4.2 Remove vSAN Datastore from Cluster<a class="headerlink" href="#42-remove-vsan-datastore-from-cluster" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c"># Confirm no VMs are still on vSAN</span>
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="nv">$vsanDS</span> <span class="p">=</span> <span class="nb">Get-Datastore</span> <span class="s2">&quot;vsanDatastore&quot;</span>
-<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="nv">$vmsOnVsan</span> <span class="p">=</span> <span class="nb">Get-VM</span> <span class="n">-Datastore</span> <span class="nv">$vsanDS</span>
-<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="k">if</span> <span class="p">(</span><span class="nv">$vmsOnVsan</span><span class="p">.</span><span class="n">Count</span> <span class="o">-gt</span> <span class="n">0</span><span class="p">)</span> <span class="p">{</span>
-<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>    <span class="nb">Write-Warning</span> <span class="s2">&quot;STOP: </span><span class="p">$(</span><span class="nv">$vmsOnVsan</span><span class="p">.</span><span class="n">Count</span><span class="p">)</span><span class="s2"> VMs still on vSAN: </span><span class="p">$(</span><span class="nv">$vmsOnVsan</span><span class="p">.</span><span class="n">Name</span> <span class="n">-join</span> <span class="s1">&#39;, &#39;</span><span class="p">)</span><span class="s2">&quot;</span>
-<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;Safe to remove vSAN datastore — no VMs present.&quot;</span>
-<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>    <span class="c"># Unmount via vCenter UI: Storage &gt; vsanDatastore &gt; Unmount</span>
-<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>    <span class="c"># Or via PowerCLI:</span>
-<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>    <span class="nb">Remove-Datastore</span> <span class="n">-Datastore</span> <span class="nv">$vsanDS</span> <span class="n">-VMHost</span> <span class="p">(</span><span class="nb">Get-VMHost</span><span class="p">)</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
-<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c"># Confirm no VMs are still on vSAN</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="nv">$vsanDS</span> <span class="p">=</span> <span class="nb">Get-Datastore</span> <span class="s2">&quot;vsanDatastore&quot;</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="nv">$vmsOnVsan</span> <span class="p">=</span> <span class="nb">Get-VM</span> <span class="n">-Datastore</span> <span class="nv">$vsanDS</span>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="k">if</span> <span class="p">(</span><span class="nv">$vmsOnVsan</span><span class="p">.</span><span class="n">Count</span> <span class="o">-gt</span> <span class="n">0</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>    <span class="nb">Write-Warning</span> <span class="s2">&quot;STOP: </span><span class="p">$(</span><span class="nv">$vmsOnVsan</span><span class="p">.</span><span class="n">Count</span><span class="p">)</span><span class="s2"> VMs still on vSAN: </span><span class="p">$(</span><span class="nv">$vmsOnVsan</span><span class="p">.</span><span class="n">Name</span> <span class="n">-join</span> <span class="s1">&#39;, &#39;</span><span class="p">)</span><span class="s2">&quot;</span>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;Safe to remove vSAN datastore — no VMs present.&quot;</span>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>    <span class="c"># Unmount via vCenter UI: Storage &gt; vsanDatastore &gt; Unmount</span>
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>    <span class="c"># Or via PowerCLI:</span>
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>    <span class="nb">Remove-Datastore</span> <span class="n">-Datastore</span> <span class="nv">$vsanDS</span> <span class="n">-VMHost</span> <span class="p">(</span><span class="nb">Get-VMHost</span><span class="p">)</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a><span class="p">}</span>
 </code></pre></div>
 <h3 id="43-disable-vsan-on-cluster-optional">4.3 Disable vSAN on Cluster (Optional)<a class="headerlink" href="#43-disable-vsan-on-cluster-optional" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c"># Only if fully decommissioning vSAN</span>
-<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="nv">$cluster</span> <span class="p">=</span> <span class="nb">Get-Cluster</span> <span class="s2">&quot;Production-Cluster&quot;</span>
-<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="nv">$spec</span> <span class="p">=</span> <span class="nb">New-Object</span> <span class="n">VMware</span><span class="p">.</span><span class="n">Vim</span><span class="p">.</span><span class="n">ClusterConfigSpecEx</span>
-<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="nv">$spec</span><span class="p">.</span><span class="n">vsanConfig</span> <span class="p">=</span> <span class="nb">New-Object</span> <span class="n">VMware</span><span class="p">.</span><span class="n">Vim</span><span class="p">.</span><span class="n">VsanClusterConfigInfo</span>
-<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="nv">$spec</span><span class="p">.</span><span class="n">vsanConfig</span><span class="p">.</span><span class="n">Enabled</span> <span class="p">=</span> <span class="nv">$false</span>
-<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="p">(</span><span class="nv">$cluster</span> <span class="p">|</span> <span class="nb">Get-View</span><span class="p">).</span><span class="n">ReconfigureComputeResource_Task</span><span class="p">(</span><span class="nv">$spec</span><span class="p">,</span> <span class="nv">$true</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c"># Only if fully decommissioning vSAN</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="nv">$cluster</span> <span class="p">=</span> <span class="nb">Get-Cluster</span> <span class="s2">&quot;Production-Cluster&quot;</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="nv">$spec</span> <span class="p">=</span> <span class="nb">New-Object</span> <span class="n">VMware</span><span class="p">.</span><span class="n">Vim</span><span class="p">.</span><span class="n">ClusterConfigSpecEx</span>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="nv">$spec</span><span class="p">.</span><span class="n">vsanConfig</span> <span class="p">=</span> <span class="nb">New-Object</span> <span class="n">VMware</span><span class="p">.</span><span class="n">Vim</span><span class="p">.</span><span class="n">VsanClusterConfigInfo</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="nv">$spec</span><span class="p">.</span><span class="n">vsanConfig</span><span class="p">.</span><span class="n">Enabled</span> <span class="p">=</span> <span class="nv">$false</span>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="p">(</span><span class="nv">$cluster</span> <span class="p">|</span> <span class="nb">Get-View</span><span class="p">).</span><span class="n">ReconfigureComputeResource_Task</span><span class="p">(</span><span class="nv">$spec</span><span class="p">,</span> <span class="nv">$true</span><span class="p">)</span>
 </code></pre></div>
 <hr />
 <h2 id="rollback">Rollback<a class="headerlink" href="#rollback" title="Permanent link">&para;</a></h2>
 <p>If migration fails mid-way or post-migration validation fails:</p>
 <p><strong>1. Stop any in-progress svmotion tasks:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c"># Cancel running Storage vMotion tasks</span>
-<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="nb">Get-Task</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Name</span> <span class="o">-eq</span> <span class="s2">&quot;RelocateVM_Task&quot;</span> <span class="o">-and</span> <span class="nv">$_</span><span class="p">.</span><span class="n">State</span> <span class="o">-eq</span> <span class="s2">&quot;Running&quot;</span> <span class="p">}</span> <span class="p">|</span>
-<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>  <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Cancel</span><span class="p">()</span> <span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c"># Cancel running Storage vMotion tasks</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="nb">Get-Task</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Name</span> <span class="o">-eq</span> <span class="s2">&quot;RelocateVM_Task&quot;</span> <span class="o">-and</span> <span class="nv">$_</span><span class="p">.</span><span class="n">State</span> <span class="o">-eq</span> <span class="s2">&quot;Running&quot;</span> <span class="p">}</span> <span class="p">|</span>
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>  <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Cancel</span><span class="p">()</span> <span class="p">}</span>
 </code></pre></div>
 <p><strong>2. Move VMs back to vSAN:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="nv">$targetDS</span> <span class="p">=</span> <span class="nb">Get-Datastore</span> <span class="s2">&quot;vsanDatastore&quot;</span>
-<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="nv">$vmsOnOntap</span> <span class="p">=</span> <span class="nb">Get-VM</span> <span class="n">-Datastore</span> <span class="p">(</span><span class="nb">Get-Datastore</span> <span class="s2">&quot;ONTAP-NFS-DS01&quot;</span><span class="p">)</span>
-<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>
-<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="k">foreach</span> <span class="p">(</span><span class="nv">$vm</span> <span class="k">in</span> <span class="nv">$vmsOnOntap</span><span class="p">)</span> <span class="p">{</span>
-<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>    <span class="nb">Move-VM</span> <span class="n">-VM</span> <span class="nv">$vm</span> <span class="n">-Datastore</span> <span class="nv">$targetDS</span> <span class="n">-DiskStorageFormat</span> <span class="n">EagerZeroedThick</span> <span class="n">-RunAsync</span>
-<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="nv">$targetDS</span> <span class="p">=</span> <span class="nb">Get-Datastore</span> <span class="s2">&quot;vsanDatastore&quot;</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="nv">$vmsOnOntap</span> <span class="p">=</span> <span class="nb">Get-VM</span> <span class="n">-Datastore</span> <span class="p">(</span><span class="nb">Get-Datastore</span> <span class="s2">&quot;ONTAP-NFS-DS01&quot;</span><span class="p">)</span>
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="k">foreach</span> <span class="p">(</span><span class="nv">$vm</span> <span class="k">in</span> <span class="nv">$vmsOnOntap</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>    <span class="nb">Move-VM</span> <span class="n">-VM</span> <span class="nv">$vm</span> <span class="n">-Datastore</span> <span class="nv">$targetDS</span> <span class="n">-DiskStorageFormat</span> <span class="n">EagerZeroedThick</span> <span class="n">-RunAsync</span>
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="p">}</span>
 </code></pre></div>
 <p><strong>3. Verify vSAN is still healthy before relying on it:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>health<span class="w"> </span>cluster<span class="w"> </span>list
-<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>list
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>health<span class="w"> </span>cluster<span class="w"> </span>list
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>list
 </code></pre></div>
 <p><strong>4. If ONTAP volume is corrupt, restore from snapshot:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1"># List available snapshots</span>
-<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>snapshot<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>svm_vmware<span class="w"> </span>-volume<span class="w"> </span>vol_nfs_ds01
-<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>
-<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="c1"># Restore from snapshot (unmount datastore first)</span>
-<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>volume<span class="w"> </span>snapshot<span class="w"> </span>restore<span class="w"> </span>-vserver<span class="w"> </span>svm_vmware<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a><span class="w">  </span>-volume<span class="w"> </span>vol_nfs_ds01<span class="w"> </span>-snapshot<span class="w"> </span>&lt;snapshot-name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># List available snapshots</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>snapshot<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>svm_vmware<span class="w"> </span>-volume<span class="w"> </span>vol_nfs_ds01
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="c1"># Restore from snapshot (unmount datastore first)</span>
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>volume<span class="w"> </span>snapshot<span class="w"> </span>restore<span class="w"> </span>-vserver<span class="w"> </span>svm_vmware<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a><span class="w">  </span>-volume<span class="w"> </span>vol_nfs_ds01<span class="w"> </span>-snapshot<span class="w"> </span>&lt;snapshot-name&gt;
 </code></pre></div>
 <hr />
 <h2 id="see-also">See Also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>

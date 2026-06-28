@@ -7168,29 +7168,7 @@ Response procedure for an ESXi host showing "Not Responding" or "Disconnected" i
 <blockquote>
 <p><strong>Severity: P1</strong> if VMs are running on the host and unreachable. <strong>P2</strong> if host is empty or HA has already restarted VMs elsewhere.</p>
 </blockquote>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>@startuml
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>skinparam sequenceArrowThickness 1.5
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>skinparam roundcorner 5
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>actor &quot;Responder&quot; as A
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>participant &quot;Incident Response System&quot; as B
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>participant &quot;Dependent System&quot; as C
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>A -&gt; B: Symptoms
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>B --&gt; A: OK
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>A -&gt; B: Immediate Triage
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>B --&gt; A: OK
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>A -&gt; B: Diagnose
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>B --&gt; A: OK
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>A -&gt; B: Fix  Option A Reconnect from vCenter UI
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>B --&gt; A: OK
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>A -&gt; B: Fix  Option B Restart Management Agents via SSH
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>B --&gt; A: OK
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>A -&gt; B: Fix  Option C Reconnect via PowerCLI
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>B --&gt; A: OK
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>@enduml
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/plantuml/svg/eNqFkcFqwzAMhu9-CpF7Bzv00kOpkzIW1tGxdA9gHK0znSVPctrt7ed0MFIo9GKM_k_W_8srzU7yED-NHgIlJy6C4teA5NGK8Gn3EfyBUBXu7-YTSHig3rMQCsyNcT6zQPWKmph6lAqcgjWFzcGH5ChD1ZIPPZbbH6UI3Y9mjGe2vmTXmJDO8IRpjLEwW0K9KNWYMkc1NcxKxS5g-_QvtjFiH1xG2Elwe7wKrYtCrNfFh_ANsE05MIEtfj0Toc_wLhzh2BRfJfZbe7O3HrOOG4ZnR8VJHBPZfTkVjsFB1z3efKOZzB97XviE0mwuh5tVWdf4jb-Wc4-c?" /></p>
 <h2 id="symptoms">Symptoms<a class="headerlink" href="#symptoms" title="Permanent link">&para;</a></h2>
 <ul>
 <li>Host shows "Not Responding" or "Disconnected" in vCenter inventory</li>
@@ -7200,14 +7178,14 @@ Response procedure for an ESXi host showing "Not Responding" or "Disconnected" i
 </ul>
 <h2 id="immediate-triage">Immediate Triage<a class="headerlink" href="#immediate-triage" title="Permanent link">&para;</a></h2>
 <p><strong>First: are the VMs still reachable?</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>ping<span class="w"> </span>&lt;vm-ip&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ping<span class="w"> </span>&lt;vm-ip&gt;
 </code></pre></div>
 <p>If VMs respond to ping, the host is up but vCenter lost the management agent — lower urgency.</p>
 <p><strong>Check HA events</strong> — did HA already handle it?
 vCenter → Host → Monitor → Events → filter "HA restarted VM"</p>
 <h2 id="diagnose">Diagnose<a class="headerlink" href="#diagnose" title="Permanent link">&para;</a></h2>
 <h3 id="step-1-ping-the-host-management-ip">Step 1 — Ping the host management IP<a class="headerlink" href="#step-1-ping-the-host-management-ip" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ping<span class="w"> </span>&lt;esxi-management-ip&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>ping<span class="w"> </span>&lt;esxi-management-ip&gt;
 </code></pre></div>
 <table>
 <thead>
@@ -7228,17 +7206,17 @@ vCenter → Host → Monitor → Events → filter "HA restarted VM"</p>
 </tbody>
 </table>
 <h3 id="step-2-ssh-directly-to-the-host">Step 2 — SSH directly to the host<a class="headerlink" href="#step-2-ssh-directly-to-the-host" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ssh<span class="w"> </span>root@&lt;esxi-management-ip&gt;
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># Check management agent status</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>/etc/init.d/hostd<span class="w"> </span>status
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>/etc/init.d/vpxa<span class="w"> </span>status
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Check uptime</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>uptime
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Scan for hardware errors</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|fault\|fail&quot;</span><span class="w"> </span>/var/log/vmkernel.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ssh<span class="w"> </span>root@&lt;esxi-management-ip&gt;
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Check management agent status</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>/etc/init.d/hostd<span class="w"> </span>status
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>/etc/init.d/vpxa<span class="w"> </span>status
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Check uptime</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>uptime
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Scan for hardware errors</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|fault\|fail&quot;</span><span class="w"> </span>/var/log/vmkernel.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
 </code></pre></div>
 <h3 id="step-3-try-vsphere-host-client-directly">Step 3 — Try vSphere Host Client directly<a class="headerlink" href="#step-3-try-vsphere-host-client-directly" title="Permanent link">&para;</a></h3>
 <p>Browse to <code>https://&lt;esxi-ip&gt;/ui</code> — if this loads, the host is healthy but the vCenter agent has crashed.</p>
@@ -7250,16 +7228,16 @@ vCenter → Host → Monitor → Events → filter "HA restarted VM"</p>
 <li>If a credential error appears: re-enter the ESXi root credentials</li>
 </ol>
 <h2 id="fix-option-b-restart-management-agents-via-ssh">Fix — Option B: Restart Management Agents via SSH<a class="headerlink" href="#fix-option-b-restart-management-agents-via-ssh" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Restart hostd and vpxa individually</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>/etc/init.d/hostd<span class="w"> </span>restart
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>/etc/init.d/vpxa<span class="w"> </span>restart
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Or restart all management agents at once</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>services.sh<span class="w"> </span>restart
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Restart hostd and vpxa individually</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>/etc/init.d/hostd<span class="w"> </span>restart
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>/etc/init.d/vpxa<span class="w"> </span>restart
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Or restart all management agents at once</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>services.sh<span class="w"> </span>restart
 </code></pre></div>
 <p>Wait 60–90 seconds — the host should reconnect to vCenter automatically.</p>
 <h2 id="fix-option-c-reconnect-via-powercli">Fix — Option C: Reconnect via PowerCLI<a class="headerlink" href="#fix-option-c-reconnect-via-powercli" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nb">Get-VMHost</span> <span class="s2">&quot;esxi-host.domain&quot;</span> <span class="p">|</span> <span class="nb">Set-VMHost</span> <span class="n">-State</span> <span class="n">Connected</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nb">Get-VMHost</span> <span class="s2">&quot;esxi-host.domain&quot;</span> <span class="p">|</span> <span class="nb">Set-VMHost</span> <span class="n">-State</span> <span class="n">Connected</span>
 </code></pre></div>
 <h2 id="fix-option-d-evacuate-vms-via-host-client">Fix — Option D: Evacuate VMs via Host Client<a class="headerlink" href="#fix-option-d-evacuate-vms-via-host-client" title="Permanent link">&para;</a></h2>
 <p>Use when the host has a hardware fault but VMs are still running:</p>
@@ -7268,8 +7246,8 @@ vCenter → Host → Monitor → Events → filter "HA restarted VM"</p>
 <li>Manually initiate vMotion for each VM to another host</li>
 <li>Or put host in maintenance mode to trigger DRS evacuation:</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># From ESXi SSH shell</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>maintenanceMode<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--enable<span class="w"> </span><span class="nb">true</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># From ESXi SSH shell</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>maintenanceMode<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--enable<span class="w"> </span><span class="nb">true</span>
 </code></pre></div>
 <h2 id="if-vms-are-inaccessible-and-host-is-down">If VMs Are Inaccessible and Host Is Down<a class="headerlink" href="#if-vms-are-inaccessible-and-host-is-down" title="Permanent link">&para;</a></h2>
 <ol>

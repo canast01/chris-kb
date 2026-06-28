@@ -9328,23 +9328,7 @@ Health Checks reference covering VRA and Site Pairing Status, Check All Replicat
 </div>
 
 <p>Health Check Chain</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>hub: &quot;vSphere Replication\nOperations&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>run_this_routine: &quot;Run This Routine&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>vra_and_site_pairing_status: &quot;VRA and Site Pairing Status&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>check_all_replications_for_rpo_viola: &quot;Check All Replications for RPO Violations&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>verify_vra_disk_space: &quot;Verify VRA Disk Space&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>vrs_health_if_deployed: &quot;VRS Health (if deployed)&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>verify_replication_files_on_target_d: &quot;Verify Replication Files on Target Datastore&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>hub -&gt; run_this_routine
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>hub -&gt; vra_and_site_pairing_status
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>hub -&gt; check_all_replications_for_rpo_viola
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>hub -&gt; verify_vra_disk_space
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>hub -&gt; vrs_health_if_deployed
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>hub -&gt; verify_replication_files_on_target_d
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNUsFqwzAMvecrRE_bYT_QQ6GsjN1aktLTQGiJEosa29hOWRn999kpXULJym7ivSf5PcmNeK6jWLMEL52KRaH6zyUsTpVT7BlKdlpqyooPs3XshzIs4DsocrwExV_UWXMpfG8wKgnobR_FJGpR9gb2CYLyCo1d-VEyneZLcfKEZBoMEhkdiRfTYYgU-5BGHMo1JBaqxMLuykI1sLPTasX1EUlr9KPzgK316J3Fk1hNaexrlsFa62nAAEkG5W4Lhyy7Czq1zF7aM2bnjYQjBkd1znsYcMieNwmHKuN_hA6omHRUKC02yYM9czPkreB9IOBJWrgxz498TJJiK5oDpiKS7zhiM9qaJIW3LINU7AcZbChSiNbPu81_Al5WcH_iG_7ghDfJf-7yO25uveNbc5u7a324keIHg2kXRw==?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Access:</strong> vCenter read-only minimum; Administrator role for remediation steps</li>
@@ -9361,10 +9345,10 @@ Health Checks reference covering VRA and Site Pairing Status, Check All Replicat
 <li><strong>RPO violations</strong> — vSR UI → Monitor → Replication → filter by "RPO Violated" → investigate any flagged VMs; each violation needs a root-cause note before close of check.</li>
 <li><strong>Disk space on target datastores</strong> — verify all target datastores holding replica VMDKs have &gt;20% free headroom; use vCenter → Datastore → Summary for each target.</li>
 <li><strong>Network connectivity between VRAs</strong> — from the source VRA appliance shell, confirm round-trip reachability to the target VRA:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>ping<span class="w"> </span>&lt;target-VRA-IP&gt;
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ping<span class="w"> </span>&lt;target-VRA-IP&gt;
 </code></pre></div></li>
 <li><strong>VRA-to-VRA data port reachability</strong> — verify TCP 31031 is open between source and target VRA appliances (this is the vSphere Replication data channel):
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>nc<span class="w"> </span>-zv<span class="w"> </span>&lt;target-VRA-IP&gt;<span class="w"> </span><span class="m">31031</span>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>nc<span class="w"> </span>-zv<span class="w"> </span>&lt;target-VRA-IP&gt;<span class="w"> </span><span class="m">31031</span>
 </code></pre></div></li>
 <li><strong>VRA registration with vCenter</strong> — vCenter → Site Recovery → vSphere Replication → Replication Appliances → confirm VRA shows Registered and Connected for both sites.</li>
 <li><strong>SRM integration check</strong> — if SRM is in use: SRM → Protection Groups → confirm no groups display "Replication Error"; expand any amber groups for detail.</li>
@@ -9373,45 +9357,45 @@ Health Checks reference covering VRA and Site Pairing Status, Check All Replicat
 <hr />
 <h2 id="vra-and-site-pairing-status">VRA and Site Pairing Status<a class="headerlink" href="#vra-and-site-pairing-status" title="Permanent link">&para;</a></h2>
 <p><img alt="VRA and Site Pairing Status" src="../../../../../assets/virtualization-vmware-vsphere-replicatio-hc-vra-and-site-pairing-status.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>vCenter → Site Recovery → Sites
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  Both sites should show: Connected
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  VRA status: Healthy (green)
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>vCenter → Site Recovery → vSphere Replication
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>  Replication Appliances tab: VRA status = OK, Connected
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>vCenter → Site Recovery → Sites
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>  Both sites should show: Connected
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>  VRA status: Healthy (green)
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>vCenter → Site Recovery → vSphere Replication
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>  Replication Appliances tab: VRA status = OK, Connected
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># VRA health via API</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>https://vra-london.example.local/api/rest/vr/health<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># Status should be &quot;OK&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># VRA health via API</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>https://vra-london.example.local/api/rest/vr/health<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># Status should be &quot;OK&quot;</span>
 </code></pre></div>
 <hr />
 <h2 id="check-all-replications-for-rpo-violations">Check All Replications for RPO Violations<a class="headerlink" href="#check-all-replications-for-rpo-violations" title="Permanent link">&para;</a></h2>
 <p><img alt="Check All Replications for RPO Violations" src="../../../../../assets/virtualization-vmware-vsphere-replicatio-hc-check-all-replications-for-rpo-v.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>vCenter → Site Recovery → Replications
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  Status column: Green = within RPO
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  Amber = approaching RPO limit (&gt;75% of RPO elapsed)
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>  Red = RPO violation (replication lag &gt; configured RPO)
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>Any red VM: investigate immediately
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>vCenter → Site Recovery → Replications
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>  Status column: Green = within RPO
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>  Amber = approaching RPO limit (&gt;75% of RPO elapsed)
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>  Red = RPO violation (replication lag &gt; configured RPO)
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>Any red VM: investigate immediately
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Via REST API — list replications with lag</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span><span class="s2">&quot;https://vra-london.example.local/api/rest/vr/authentication/token&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;username&quot;:&quot;admin&quot;,&quot;password&quot;:&quot;&lt;password&gt;&quot;}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">  </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import json,sys; print(json.load(sys.stdin)[&#39;token&#39;])&quot;</span><span class="k">)</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">  </span><span class="s2">&quot;https://vra-london.example.local/api/rest/vr/replications&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="w">  </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="s2">import json, sys</span>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="s2">reps = json.load(sys.stdin)</span>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="s2">for r in reps.get(&#39;list&#39;, []):</span>
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="s2">    state = r.get(&#39;overallStatus&#39;, &#39;&#39;)</span>
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="s2">    name = r.get(&#39;name&#39;, &#39;?&#39;)</span>
-<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="s2">    if state != &#39;OK&#39;:</span>
-<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="s2">        print(f&#39;[{state}] {name}&#39;)</span>
-<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a><span class="s2">&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Via REST API — list replications with lag</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="s2">&quot;https://vra-london.example.local/api/rest/vr/authentication/token&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;username&quot;:&quot;admin&quot;,&quot;password&quot;:&quot;&lt;password&gt;&quot;}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">  </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import json,sys; print(json.load(sys.stdin)[&#39;token&#39;])&quot;</span><span class="k">)</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">  </span><span class="s2">&quot;https://vra-london.example.local/api/rest/vr/replications&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">  </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="s2">import json, sys</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="s2">reps = json.load(sys.stdin)</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="s2">for r in reps.get(&#39;list&#39;, []):</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="s2">    state = r.get(&#39;overallStatus&#39;, &#39;&#39;)</span>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="s2">    name = r.get(&#39;name&#39;, &#39;?&#39;)</span>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="s2">    if state != &#39;OK&#39;:</span>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="s2">        print(f&#39;[{state}] {name}&#39;)</span>
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="s2">&quot;</span>
 </code></pre></div>
 <hr />
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
@@ -9422,58 +9406,58 @@ Health Checks reference covering VRA and Site Pairing Status, Check All Replicat
 </ul>
 <h2 id="verify-vra-disk-space">Verify VRA Disk Space<a class="headerlink" href="#verify-vra-disk-space" title="Permanent link">&para;</a></h2>
 <p><img alt="Verify VRA Disk Space" src="../../../../../assets/virtualization-vmware-vsphere-replicatio-hc-verify-vra-disk-space.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>ssh<span class="w"> </span>admin@vra-london.example.local
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>df<span class="w"> </span>-h
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="c1"># Monitor /opt and /var partitions</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># VRA appliance disk: should have &gt;20% free</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>ssh<span class="w"> </span>admin@vra-london.example.local
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>df<span class="w"> </span>-h
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1"># Monitor /opt and /var partitions</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># VRA appliance disk: should have &gt;20% free</span>
 </code></pre></div>
 <p>Target-site datastore containing replica VMDKs:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>vCenter<span class="w"> </span><span class="o">(</span>Target<span class="w"> </span>Site<span class="o">)</span><span class="w"> </span>→<span class="w"> </span>Datastore<span class="w"> </span>→<span class="w"> </span>check<span class="w"> </span>%<span class="w"> </span>used
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="c1"># Keep below 80% — VRA stops writing when datastore fills up</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>vCenter<span class="w"> </span><span class="o">(</span>Target<span class="w"> </span>Site<span class="o">)</span><span class="w"> </span>→<span class="w"> </span>Datastore<span class="w"> </span>→<span class="w"> </span>check<span class="w"> </span>%<span class="w"> </span>used
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="c1"># Keep below 80% — VRA stops writing when datastore fills up</span>
 </code></pre></div></p>
 <hr />
 <h2 id="vrs-health-if-deployed">VRS Health (if deployed)<a class="headerlink" href="#vrs-health-if-deployed" title="Permanent link">&para;</a></h2>
 <p><img alt="VRS Health (if deployed)" src="../../../../../assets/virtualization-vmware-vsphere-replicatio-hc-vrs-health-if-deployed.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>vCenter → Site Recovery → vSphere Replication → Replication Servers
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>  Each VRS should show: Connected, Healthy
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>  VMs assigned to each VRS: should be balanced
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>vCenter → Site Recovery → vSphere Replication → Replication Servers
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>  Each VRS should show: Connected, Healthy
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>  VMs assigned to each VRS: should be balanced
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>ssh<span class="w"> </span>admin@vrs-london-01.example.local
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>systemctl<span class="w"> </span>status<span class="w"> </span>hms
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>ssh<span class="w"> </span>admin@vrs-london-01.example.local
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>systemctl<span class="w"> </span>status<span class="w"> </span>hms
 </code></pre></div>
 <hr />
 <h2 id="verify-replication-files-on-target-datastore">Verify Replication Files on Target Datastore<a class="headerlink" href="#verify-replication-files-on-target-datastore" title="Permanent link">&para;</a></h2>
 <p><img alt="Verify Replication Files on Target Datastore" src="../../../../../assets/virtualization-vmware-vsphere-replicatio-hc-verify-replication-files-on-targ.svg" /></p>
 <p>Replication data is stored as <code>.vrepl</code> and <code>.hbr</code> files:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># SSH to ESXi host on target site</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>ls<span class="w"> </span>/vmfs/volumes/&lt;target-datastore&gt;/&lt;VM-folder&gt;/
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="c1"># You should see: *.vmdk, *.vmx, *.vrepl, *.hbr files</span>
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># .vrepl = replica disk</span>
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="c1"># .hbr = replication control file</span>
-<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>
-<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="c1"># No .vrepl files = replication not established or recovery was completed</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># SSH to ESXi host on target site</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>ls<span class="w"> </span>/vmfs/volumes/&lt;target-datastore&gt;/&lt;VM-folder&gt;/
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="c1"># You should see: *.vmdk, *.vmx, *.vrepl, *.hbr files</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># .vrepl = replica disk</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="c1"># .hbr = replication control file</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># No .vrepl files = replication not established or recovery was completed</span>
 </code></pre></div>
 <hr />
 <h2 id="certificate-expiry">Certificate Expiry<a class="headerlink" href="#certificate-expiry" title="Permanent link">&para;</a></h2>
 <p><img alt="Certificate Expiry" src="../../../../../assets/virtualization-vmware-vsphere-replicatio-hc-certificate-expiry.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Check VRA management certificate</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>vra-london.example.local:443<span class="w"> </span>-servername<span class="w"> </span>vra-london.example.local<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-dates
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="c1"># Check VRA-to-VRA port (44046)</span>
-<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>vra-amsterdam.example.local:44046<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-dates
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Check VRA management certificate</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>vra-london.example.local:443<span class="w"> </span>-servername<span class="w"> </span>vra-london.example.local<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-dates
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="c1"># Check VRA-to-VRA port (44046)</span>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>vra-amsterdam.example.local:44046<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-dates
 </code></pre></div>
 <hr />
 <h2 id="monthly-dr-test-trigger">Monthly DR Test Trigger<a class="headerlink" href="#monthly-dr-test-trigger" title="Permanent link">&para;</a></h2>
 <p><img alt="Monthly DR Test Trigger" src="../../../../../assets/virtualization-vmware-vsphere-replicatio-hc-monthly-dr-test-trigger.svg" /></p>
 <p>Run a test recovery on at least one VR-protected VM monthly. For VMs managed by SRM:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>SRM → Recovery Plans → [plan] → Test
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>SRM → Recovery Plans → [plan] → Test
 </code></pre></div></p>
 <p>For standalone VR (without SRM):
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>vCenter → Site Recovery → Replications → [VM] → Recover
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>  Mode: Test (isolated network)
-<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>  After test: Delete the recovered test VM (do not clean up the replication)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>vCenter → Site Recovery → Replications → [VM] → Recover
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>  Mode: Test (isolated network)
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>  After test: Delete the recovered test VM (do not clean up the replication)
 </code></pre></div></p>
 <p>Document test results — record which VMs were tested, the RPO at time of recovery, and any issues found.</p>
 

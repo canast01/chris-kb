@@ -7553,30 +7553,7 @@
 Authentication reference covering Root CA Lifecycle — Offline Operation Flow, Root CA Offline Procedure, Certificate Transparency (CT).
 </div>
 <p><img alt="Certificates — Authentication" src="../../../../assets/security-certificates-security-authentication-index.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>@startuml
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>skinparam sequenceArrowThickness 1.5
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>skinparam roundcorner 5
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>actor &quot;User / Service&quot; as USR
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>participant &quot;Authentication&quot; as SVC
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>participant &quot;Identity Provider\n(LDAP / OIDC / AD)&quot; as IDP
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>participant &quot;Token / Session Store&quot; as TOKEN
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>USR -&gt; SVC: Authentication request
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>SVC -&gt; IDP: Validate credentials
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>IDP --&gt; SVC: Identity confirmed
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>SVC -&gt; TOKEN: Issue session token
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>TOKEN --&gt; SVC: Token granted
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>SVC --&gt; USR: Access allowed
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>note over SVC
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>  Root CA Lifecycle  Offline Operation Flow
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>  Root CA Offline Procedure
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>  Certificate Transparency (CT)
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>end note
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>@enduml
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/plantuml/svg/eNpVkjFvwjAQhXf_ihMTDLTqwMJQESWthIoaRAJTF8u-FCvGpmcHxL_vOVFamBLrvXv3-cmrECXF7mRFaI07S5InCPjToVOYEflrfTSqdRgCvDwt7kzkO6eVJ4cECyGkip5gsg98fIYK6WIUTkAG2Fc7wSPRKHOWLsIk6-IRHZ9lNN71nuqQP3rWOjniDbbkL0Yjfbnppsi2nF2ui5w_WTHrR9fF9nG09i26niEEzoeKwQaSuvx4-xSCgWD-mnYu4ZEFKN08RMFasnD2Eg7SGi0jgiLsqaQNghWYjyF_sMq7xtAJ9RjQb2RDCB1yrQNQTICil_4zBupv4iuM4ywxKjMqleqX1vora8J5hvEXLjrVBrDzPkKewcY0qG7KIkDZNNY4hPKMNNzsnYfvvKOB61WoO0LWcuQWm1QFQs0ggWvlZ3CDaV7PBDoNabMQK_5ND-YXLAC8oA==?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Access:</strong> Admin credentials on all affected systems</li>
@@ -7602,21 +7579,21 @@ Authentication reference covering Root CA Lifecycle — Offline Operation Flow, 
 1. Issuing a new Subordinate/Issuing CA certificate
 2. Renewing the Root CA certificate itself
 3. Updating the CRL (if Root CA issues CRL directly)</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># On Root CA — issue a subordinate CA certificate from a PKCS#10 CSR</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="n">certreq</span> <span class="n">-submit</span> <span class="n">-attrib</span> <span class="s2">&quot;CertificateTemplate:SubCA&quot;</span> <span class="n">SubCA-Request</span><span class="p">.</span><span class="n">req</span> <span class="n">SubCA-Certificate</span><span class="p">.</span><span class="n">cer</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c"># After signing, power down Root CA immediately</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nb">Stop-Computer</span> <span class="n">-Force</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># On Root CA — issue a subordinate CA certificate from a PKCS#10 CSR</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="n">certreq</span> <span class="n">-submit</span> <span class="n">-attrib</span> <span class="s2">&quot;CertificateTemplate:SubCA&quot;</span> <span class="n">SubCA-Request</span><span class="p">.</span><span class="n">req</span> <span class="n">SubCA-Certificate</span><span class="p">.</span><span class="n">cer</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c"># After signing, power down Root CA immediately</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nb">Stop-Computer</span> <span class="n">-Force</span>
 </code></pre></div>
 <h2 id="certificate-transparency-ct">Certificate Transparency (CT)<a class="headerlink" href="#certificate-transparency-ct" title="Permanent link">&para;</a></h2>
 <p>All publicly trusted certificates must be submitted to CT logs (required by CA/Browser Forum Baseline Requirements).</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Verify a certificate has SCT (Signed Certificate Timestamps) embedded</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>openssl<span class="w"> </span>x509<span class="w"> </span>-in<span class="w"> </span>cert.pem<span class="w"> </span>-noout<span class="w"> </span>-text<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A<span class="w"> </span><span class="m">10</span><span class="w"> </span><span class="s2">&quot;CT Precertificate SCTs&quot;</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Check certificate in public CT logs</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># https://crt.sh/?q=&lt;hostname&gt; — search by domain</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># curl example:</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>curl<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;https://crt.sh/?q=corp.example.com&amp;output=json&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.[0:5] | .[] | {id, issuer_name, not_before, not_after}&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Verify a certificate has SCT (Signed Certificate Timestamps) embedded</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>openssl<span class="w"> </span>x509<span class="w"> </span>-in<span class="w"> </span>cert.pem<span class="w"> </span>-noout<span class="w"> </span>-text<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A<span class="w"> </span><span class="m">10</span><span class="w"> </span><span class="s2">&quot;CT Precertificate SCTs&quot;</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Check certificate in public CT logs</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># https://crt.sh/?q=&lt;hostname&gt; — search by domain</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># curl example:</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>curl<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;https://crt.sh/?q=corp.example.com&amp;output=json&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.[0:5] | .[] | {id, issuer_name, not_before, not_after}&#39;</span>
 </code></pre></div>
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>

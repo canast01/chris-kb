@@ -8573,45 +8573,8 @@ How It Works reference covering Overview, Controller Refresh Model, HA Topology,
 </div>
 <p><img alt="Evergreen — How It Works" src="../../../../../assets/storage-pure-evergreen-architecture-how-it-works.svg" /></p>
 <p>Evergreen — What's Included vs. Customer-Managed</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>center: &quot;Evergreen&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>controller_refresh_model: &quot;Controller Refresh Model&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>ha_topology: &quot;HA Topology&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>controllers_ct0_ct1: &quot;Controllers (CT0 / CT1)&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>directflash_modules_dfm: &quot;DirectFlash Modules (DFM)&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>nvram_write_cache: &quot;NVRAM (Write Cache)&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>host_connectivity: &quot;Host Connectivity&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>center -&gt; controller_refresh_model
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>center -&gt; ha_topology
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>center -&gt; controllers_ct0_ct1
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>center -&gt; directflash_modules_dfm
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>center -&gt; nvram_write_cache
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>center -&gt; host_connectivity
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>@startuml
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>skinparam sequenceArrowThickness 1.5
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>skinparam roundcorner 5
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>actor &quot;Customer&quot; as CUS
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>participant &quot;Pure1\n(cloud management)&quot; as P1
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>participant &quot;FlashArray\n(on-prem)&quot; as FA
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>participant &quot;Pure Field\nEngineer&quot; as FE
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>participant &quot;New Controller /\nShelves&quot; as HW
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>CUS -&gt; P1: Evergreen subscription active
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>P1 -&gt; FA: Telemetry + health monitoring
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>P1 -&gt; FE: Schedule non-disruptive upgrade
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>FE -&gt; HW: Bring new controller / shelf
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>FE -&gt; FA: Online controller swap (NDU)
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>FA -&gt; HW: Migrate data in background
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>HW --&gt; FA: Data migration complete
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>FE -&gt; FA: Remove old controller
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>FA --&gt; P1: Upgrade confirmed
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>P1 --&gt; CUS: Notification — no downtime taken
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>@enduml
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp1UbFOwzAQ3fMVp0xhQLRrBqQqpWIJQxXBaFnOJbbk2NXZBBDqv2OnVWvAHTz4vXvv7t31ilB4ZU0NpEbpi0Kg8Ug1lE8z0kiIpoRvJ_kBa5D4yUdrjoWwxpPVGokRDoROssn2qIOsuVCwP1HQRurqEjtyM2o8FpIzbw9W2_ErSJ830J1_2eprV8eEX4W3_tXQQdV0K3iAplvfZR36Je6g-Wngd42O9cMUXLYLs4tMnDcyUG13bd7HzMQn9kHKIxNcyMCWL6_7TQvVWwShiWBeK63zLEQxcfGz8kvygEGTYFnl-TZw_wi3DpCUJLvNCi87TNgb-0kq_iVPO_5NVvwAssvbPg==?" /></p>
+<p><img alt="Kroki" src="https://kroki.io/plantuml/svg/eNplkjFu4zAQRXueYuAqwcK7cJFGRRCvI8FNvMY6hhs3DDmWCJNDZUjaSJdD7AlzkpCyAyjYeh7_vD_SQ4iSY3JWhKOhXrJ0EPA1ISmcM_vzc2fUkTAEmP28G0HsE2nlmZDhTgipomeYLFKI3iFPQAZYbDciw9Eo00uKMFknxtmebpT1SYOTJFt0SPF2wNez73RjZeiyg3zLTzxNe0Z3IZv5_7nQGLR6TzW1hvBq0NTfwRWeYeEpsrc2e__a06ZDe8Iw0MudENkZpvfZpYL6hNwyIkFIL0Gx6aPxBLmpOaFYzwrXzCt4RptbRH6DH9ChtLED58nkexhqv7i6go3qUCeLQLmMNoFTX5Ig9S1LjaKpC7ncVfC7vATKsmokCyG7Hq5YWfyHbK46ZsJZ9nCzetzeimb-lfZkcn5E0DJKMAQvUh3b4fOJ5Q6m17DHMnUDWloq73qLEUfr_qLzWddbPVo57LkebHspUqYHww71UD4P81ErWPloDkZd4j_e_-UzgPZnisYhRHlEEg9IuvyKn9Fa3oE=?" /></p>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>Evergreen is Pure Storage's hardware subscription model for the FlashArray platform (//X, //C, and //E series). Rather than purchasing hardware outright, customers subscribe to a capacity and performance tier — with controller hardware refreshes, Purity software upgrades, and support included in the subscription cost. The defining principle is no forklift upgrades: when controllers reach end of generation, Pure replaces them non-disruptively while data remains on the existing NVMe drive shelf — hosts stay connected and I/O continues during the swap.</p>
 <p>Evergreen spans two primary tiers:</p>
@@ -8667,9 +8630,9 @@ How It Works reference covering Overview, Controller Refresh Model, HA Topology,
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>purearray<span class="w"> </span>list<span class="w"> </span>--controller<span class="w">   </span><span class="c1"># show both controllers and Purity version</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>purehw<span class="w"> </span>list<span class="w"> </span>--type<span class="w"> </span>ct<span class="w">          </span><span class="c1"># hardware detail for CT0 and CT1</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>purehw<span class="w"> </span>list<span class="w"> </span>CT0<span class="w"> </span>--spec
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>purearray<span class="w"> </span>list<span class="w"> </span>--controller<span class="w">   </span><span class="c1"># show both controllers and Purity version</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>purehw<span class="w"> </span>list<span class="w"> </span>--type<span class="w"> </span>ct<span class="w">          </span><span class="c1"># hardware detail for CT0 and CT1</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>purehw<span class="w"> </span>list<span class="w"> </span>CT0<span class="w"> </span>--spec
 </code></pre></div>
 <h2 id="directflash-modules-dfm">DirectFlash Modules (DFM)<a class="headerlink" href="#directflash-modules-dfm" title="Permanent link">&para;</a></h2>
 <p>DirectFlash Modules are Pure Storage's proprietary NVMe flash storage units. Unlike commodity SSDs, they expose raw NAND flash directly to Purity OS, allowing Pure's software to manage wear levelling, garbage collection, and data placement at the array level.</p>
@@ -8699,13 +8662,13 @@ How It Works reference covering Overview, Controller Refresh Model, HA Topology,
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>purehw<span class="w"> </span>list<span class="w"> </span>--type<span class="w"> </span>drive<span class="w">         </span><span class="c1"># DFM health status</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>purehw<span class="w"> </span>list<span class="w"> </span>--type<span class="w"> </span>drive<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>Healthy<span class="w">   </span><span class="c1"># non-healthy drives only</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>purearray<span class="w"> </span>list<span class="w"> </span>--space<span class="w">           </span><span class="c1"># capacity and data reduction</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>purehw<span class="w"> </span>list<span class="w"> </span>--type<span class="w"> </span>drive<span class="w">         </span><span class="c1"># DFM health status</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>purehw<span class="w"> </span>list<span class="w"> </span>--type<span class="w"> </span>drive<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>Healthy<span class="w">   </span><span class="c1"># non-healthy drives only</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>purearray<span class="w"> </span>list<span class="w"> </span>--space<span class="w">           </span><span class="c1"># capacity and data reduction</span>
 </code></pre></div>
 <h2 id="nvram-write-cache">NVRAM (Write Cache)<a class="headerlink" href="#nvram-write-cache" title="Permanent link">&para;</a></h2>
 <p>Each controller contains NVRAM — a supercapacitor-backed write cache. Write acknowledged to NVRAM on CT0 <strong>and</strong> CT1 before host ACK — write is safe even if one controller fails immediately after. NVRAM drains to DFM within seconds under normal operation.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>purehw<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>nvram<span class="w">   </span><span class="c1"># NVRAM component health</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>purehw<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>nvram<span class="w">   </span><span class="c1"># NVRAM component health</span>
 </code></pre></div>
 <h2 id="host-connectivity">Host Connectivity<a class="headerlink" href="#host-connectivity" title="Permanent link">&para;</a></h2>
 <p>Each controller has host-facing connectivity ports and back-end storage ports:</p>
@@ -8740,23 +8703,23 @@ How It Works reference covering Overview, Controller Refresh Model, HA Topology,
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>pureport<span class="w"> </span>list<span class="w">                      </span><span class="c1"># all ports and status</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>pureport<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;FC\|iSCSI\|NVMe&quot;</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>pureport<span class="w"> </span>list<span class="w"> </span>--performance<span class="w">        </span><span class="c1"># port-level performance</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>pureport<span class="w"> </span>list<span class="w">                      </span><span class="c1"># all ports and status</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>pureport<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;FC\|iSCSI\|NVMe&quot;</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>pureport<span class="w"> </span>list<span class="w"> </span>--performance<span class="w">        </span><span class="c1"># port-level performance</span>
 </code></pre></div>
 <h2 id="replication">Replication<a class="headerlink" href="#replication" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>ActiveCluster</strong> — synchronous replication between two FlashArray systems; RPO=0, host-transparent failover via a Purity Mediator quorum service; requires ≤5 ms RTT between sites</li>
 <li><strong>Async replication</strong> — snapshot-based asynchronous replication to a remote FlashArray with configurable RPO intervals</li>
 </ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>purepod<span class="w"> </span>list<span class="w">                       </span><span class="c1"># ActiveCluster pod status</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>purepod<span class="w"> </span>list<span class="w"> </span>--failover-preference
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>purearray<span class="w"> </span>list<span class="w"> </span>--connect<span class="w">           </span><span class="c1"># replication connections</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>purepod<span class="w"> </span>list<span class="w">                       </span><span class="c1"># ActiveCluster pod status</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>purepod<span class="w"> </span>list<span class="w"> </span>--failover-preference
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>purearray<span class="w"> </span>list<span class="w"> </span>--connect<span class="w">           </span><span class="c1"># replication connections</span>
 </code></pre></div>
 <h2 id="component-health-summary">Component Health Summary<a class="headerlink" href="#component-health-summary" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>purehw<span class="w"> </span>list<span class="w">                            </span><span class="c1"># full hardware inventory and health</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>purehw<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;Healthy\|Name\|---&quot;</span><span class="w">   </span><span class="c1"># non-healthy components only</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>purealert<span class="w"> </span>list<span class="w"> </span>--flagged<span class="w">               </span><span class="c1"># open hardware alerts</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>purehw<span class="w"> </span>list<span class="w">                            </span><span class="c1"># full hardware inventory and health</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>purehw<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;Healthy\|Name\|---&quot;</span><span class="w">   </span><span class="c1"># non-healthy components only</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>purealert<span class="w"> </span>list<span class="w"> </span>--flagged<span class="w">               </span><span class="c1"># open hardware alerts</span>
 </code></pre></div>
 <hr />
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>

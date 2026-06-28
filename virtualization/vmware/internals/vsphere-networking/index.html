@@ -9497,23 +9497,7 @@ Comprehensive reference for vSphere networking. Covers the architecture differen
 </div>
 <p><img alt="vSphere Networking — VSS, VDS, VMkernel, and NIOC" src="../../../../assets/virtualization-vmware-internals-vsphere-networking-index.svg" /></p>
 <hr />
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>center: &quot;Vsphere Networking&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>standard_switch_vss_vs_distributed_s: &quot;Standard Switch (VSS) vs Distributed Switch (VDS)&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>vmkernel_adapters: &quot;VMkernel Adapters&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>networking_policies: &quot;Networking Policies&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>network_io_control_nioc: &quot;Network I/O Control (NIOC)&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>port_groups_and_vlans: &quot;Port Groups and VLANs&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>multiple_tcpip_stacks: &quot;Multiple TCP/IP Stacks&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>center -&gt; standard_switch_vss_vs_distributed_s
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>center -&gt; vmkernel_adapters
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>center -&gt; networking_policies
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>center -&gt; network_io_control_nioc
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>center -&gt; port_groups_and_vlans
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>center -&gt; multiple_tcpip_stacks
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNUUFqwzAQvPsVS07JoeSeQyAkUAJNYnDxdVHlxV6sSEJSnELJ3ysnpjaNKD3oMjM7mp2t2JEMbPQKHNdNyDJJOpBbwaz0tiFHcKRwNa5lXc_gyzfC0goa-hS10bfMB6Er4Sr0Vw6ywc77-LBiHxx_XAJFJnoVgwyKuwzmZVEsoPOwG4UjtysW41d9PqFrRbesO7fkNCkUlbAxZO9cHh4YbAYsOal_dkBrFEumfnbcDPIB_Wsa2aA0OjijULORowPslyfYPiiYH_enbXoBa1zA2pmL9RgLwU4J3QfJIw6vdxwiDuXb5piOcr6owFYRBmnZYqxftr3DYcDhfZsv9zkUdyJpMVwYXtbwn-tN5E_9T7hEw8_s7wYnimQ1Ez65ePYNcawC3g==?" /></p>
 <h2 id="standard-switch-vss-vs-distributed-switch-vds">Standard Switch (VSS) vs Distributed Switch (VDS)<a class="headerlink" href="#standard-switch-vss-vs-distributed-switch-vds" title="Permanent link">&para;</a></h2>
 <p>A <strong>vSphere Standard Switch (VSS)</strong> is configured per ESXi host. Each host maintains its own switch configuration independently. A <strong>vSphere Distributed Switch (VDS)</strong> is managed centrally from vCenter and spans multiple hosts — the configuration is consistent across all member hosts.</p>
 <table>
@@ -9591,16 +9575,16 @@ Comprehensive reference for vSphere networking. Covers the architecture differen
 <p><strong>When to use VDS:</strong> Any production cluster where operational consistency matters. VDS eliminates configuration drift between hosts and enables advanced capabilities (NIOC, port mirroring, LACP, PVLAN) that VSS cannot provide.</p>
 <h3 id="migrating-vss-to-vds">Migrating VSS to VDS<a class="headerlink" href="#migrating-vss-to-vds" title="Permanent link">&para;</a></h3>
 <p>Migration moves hosts from a VSS to an existing VDS without dropping connectivity. The general workflow:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># From vCenter UI: Networking → Right-click VDS → Add and Manage Hosts</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># CLI equivalent using esxcli to verify port group associations before migration</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>esxcli<span class="w"> </span>network<span class="w"> </span>vswitch<span class="w"> </span>standard<span class="w"> </span>list
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>esxcli<span class="w"> </span>network<span class="w"> </span>vswitch<span class="w"> </span>dvs<span class="w"> </span>vmware<span class="w"> </span>list
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># Verify vmkernel assignments before migrating</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>list
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># After migration, confirm vmk interfaces are on VDS portgroups</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Name|Portset&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># From vCenter UI: Networking → Right-click VDS → Add and Manage Hosts</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c1"># CLI equivalent using esxcli to verify port group associations before migration</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>esxcli<span class="w"> </span>network<span class="w"> </span>vswitch<span class="w"> </span>standard<span class="w"> </span>list
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>esxcli<span class="w"> </span>network<span class="w"> </span>vswitch<span class="w"> </span>dvs<span class="w"> </span>vmware<span class="w"> </span>list
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># Verify vmkernel assignments before migrating</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>list
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1"># After migration, confirm vmk interfaces are on VDS portgroups</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Name|Portset&quot;</span>
 </code></pre></div>
 <p>Key consideration: always migrate the management VMkernel port (vmk0) last and ensure physical uplinks are available to the VDS before detaching them from the VSS.</p>
 <blockquote>
@@ -9666,23 +9650,23 @@ Comprehensive reference for vSphere networking. Covers the architecture differen
 </tbody>
 </table>
 <h3 id="adding-a-vmkernel-adapter">Adding a VMkernel Adapter<a class="headerlink" href="#adding-a-vmkernel-adapter" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Add a VMkernel port using esxcli</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>add<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>--interface-name<span class="w"> </span>vmk1<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>--portgroup-name<span class="w"> </span><span class="s2">&quot;vMotion-PG&quot;</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># Set IP address on the new vmk</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>ipv4<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span>--interface-name<span class="w"> </span>vmk1<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span>--ipv4<span class="w"> </span><span class="m">192</span>.168.10.11<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">  </span>--netmask<span class="w"> </span><span class="m">255</span>.255.255.0<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">  </span>--type<span class="w"> </span>static
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Enable vMotion service on vmk1</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>esxcli<span class="w"> </span>vmotion<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--interface-name<span class="w"> </span>vmk1
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="c1"># Verify the interface is up</span>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>list
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Add a VMkernel port using esxcli</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>add<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>--interface-name<span class="w"> </span>vmk1<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>--portgroup-name<span class="w"> </span><span class="s2">&quot;vMotion-PG&quot;</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># Set IP address on the new vmk</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>ipv4<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">  </span>--interface-name<span class="w"> </span>vmk1<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">  </span>--ipv4<span class="w"> </span><span class="m">192</span>.168.10.11<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">  </span>--netmask<span class="w"> </span><span class="m">255</span>.255.255.0<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">  </span>--type<span class="w"> </span>static
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Enable vMotion service on vmk1</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>esxcli<span class="w"> </span>vmotion<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--interface-name<span class="w"> </span>vmk1
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="c1"># Verify the interface is up</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>list
 </code></pre></div>
 <p>From the vCenter UI: <strong>Host → Configure → Networking → VMkernel adapters → Add networking</strong>.</p>
 <blockquote>
@@ -9826,15 +9810,15 @@ Comprehensive reference for vSphere networking. Covers the architecture differen
 <p><strong>VCP-DCV Exam Note:</strong> NIOC traffic types that appear on exams: <strong>vMotion, vSAN, FT Logging, Management, and VM Traffic</strong>. Know that NIOC is a <strong>VDS-only</strong> feature — VSS has no equivalent. Shares are weighted allocations during contention, not hard reservations. A <strong>bandwidth limit</strong> (Mbps) hard-caps a traffic type regardless of available capacity.</p>
 </blockquote>
 <h3 id="configuring-nioc">Configuring NIOC<a class="headerlink" href="#configuring-nioc" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># NIOC is configured from vCenter UI:</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># VDS → Configure → Resource Allocation → System Traffic</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># PowerCLI — set vMotion shares to High (100)</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>Get-VDSwitch<span class="w"> </span><span class="s2">&quot;VDS-Production&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Get-VDTrafficShapingPolicy<span class="w"> </span>-Direction<span class="w"> </span>Ingress
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># Use Set-VDUplinkTeamingPolicy or Set-VDPortgroup for policy updates</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># Check current NIOC version on VDS</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>Get-VDSwitch<span class="w"> </span><span class="s2">&quot;VDS-Production&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Select<span class="w"> </span>Name,<span class="w"> </span>Version,<span class="w"> </span>NumUplinkPorts
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># NIOC is configured from vCenter UI:</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># VDS → Configure → Resource Allocation → System Traffic</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># PowerCLI — set vMotion shares to High (100)</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>Get-VDSwitch<span class="w"> </span><span class="s2">&quot;VDS-Production&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Get-VDTrafficShapingPolicy<span class="w"> </span>-Direction<span class="w"> </span>Ingress
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># Use Set-VDUplinkTeamingPolicy or Set-VDPortgroup for policy updates</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Check current NIOC version on VDS</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>Get-VDSwitch<span class="w"> </span><span class="s2">&quot;VDS-Production&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Select<span class="w"> </span>Name,<span class="w"> </span>Version,<span class="w"> </span>NumUplinkPorts
 </code></pre></div>
 <hr />
 <h2 id="port-groups-and-vlans">Port Groups and VLANs<a class="headerlink" href="#port-groups-and-vlans" title="Permanent link">&para;</a></h2>
@@ -9927,20 +9911,20 @@ Comprehensive reference for vSphere networking. Covers the architecture differen
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># List TCP/IP stacks on a host</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>netstack<span class="w"> </span>list
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Add a VMkernel to the vMotion TCP/IP stack</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>add<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span>--interface-name<span class="w"> </span>vmk2<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">  </span>--portgroup-name<span class="w"> </span><span class="s2">&quot;vMotion-PG&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">  </span>--netstack<span class="w"> </span>vmotion
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Set the default gateway for the vMotion stack</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>route<span class="w"> </span>ipv4<span class="w"> </span>add<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">  </span>--netstack<span class="w"> </span>vmotion<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">  </span>--network<span class="w"> </span>default<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="w">  </span>--gateway<span class="w"> </span><span class="m">192</span>.168.20.1
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># List TCP/IP stacks on a host</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>netstack<span class="w"> </span>list
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Add a VMkernel to the vMotion TCP/IP stack</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>add<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span>--interface-name<span class="w"> </span>vmk2<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span>--portgroup-name<span class="w"> </span><span class="s2">&quot;vMotion-PG&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">  </span>--netstack<span class="w"> </span>vmotion
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Set the default gateway for the vMotion stack</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>route<span class="w"> </span>ipv4<span class="w"> </span>add<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">  </span>--netstack<span class="w"> </span>vmotion<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">  </span>--network<span class="w"> </span>default<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="w">  </span>--gateway<span class="w"> </span><span class="m">192</span>.168.20.1
 </code></pre></div>
 <p><strong>Why they exist:</strong> Without separate stacks, vMotion and the management interface share the same routing table. If management is on 192.168.1.0/24 and vMotion is on 10.10.10.0/24, you need a route for both — but only one default gateway. Separate stacks eliminate this routing conflict by giving vMotion its own gateway.</p>
 <hr />
@@ -9991,16 +9975,16 @@ Comprehensive reference for vSphere networking. Covers the architecture differen
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Verify MTU on vmkernel interfaces</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A5<span class="w"> </span>vmk
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Check vSAN network health (MTU, latency, packet loss)</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>network<span class="w"> </span>list
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>health<span class="w"> </span>cluster<span class="w"> </span>list
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># Verify uplink status on all vSwitches</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>esxcli<span class="w"> </span>network<span class="w"> </span>vswitch<span class="w"> </span>standard<span class="w"> </span>uplink<span class="w"> </span>list
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>esxcli<span class="w"> </span>network<span class="w"> </span>vswitch<span class="w"> </span>dvs<span class="w"> </span>vmware<span class="w"> </span>uplink<span class="w"> </span>list
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Verify MTU on vmkernel interfaces</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A5<span class="w"> </span>vmk
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Check vSAN network health (MTU, latency, packet loss)</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>network<span class="w"> </span>list
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>health<span class="w"> </span>cluster<span class="w"> </span>list
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Verify uplink status on all vSwitches</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>esxcli<span class="w"> </span>network<span class="w"> </span>vswitch<span class="w"> </span>standard<span class="w"> </span>uplink<span class="w"> </span>list
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>esxcli<span class="w"> </span>network<span class="w"> </span>vswitch<span class="w"> </span>dvs<span class="w"> </span>vmware<span class="w"> </span>uplink<span class="w"> </span>list
 </code></pre></div>
 <hr />
 <h2 id="related-pages">Related Pages<a class="headerlink" href="#related-pages" title="Permanent link">&para;</a></h2>

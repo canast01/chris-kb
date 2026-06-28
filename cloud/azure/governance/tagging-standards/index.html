@@ -8579,23 +8579,7 @@ Azure resource tags are key-value pairs applied to resources and resource groups
 *Applies to: Azure*
 </div>
 <p><img alt="Tagging Standards" src="../../../../assets/cloud-azure-governance-tagging-standards-index.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>center: &quot;Azure&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>tag_governance_flow: &quot;Tag Governance Flow&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>required_tags: &quot;Required Tags&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>applying_tags_via_cli: &quot;Applying Tags via CLI&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>tag_enforcement_with_policy: &quot;Tag Enforcement with Policy&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>tag_inheritance: &quot;Tag Inheritance&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>reporting_on_tag_coverage: &quot;Reporting on Tag Coverage&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>center -&gt; tag_governance_flow
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>center -&gt; required_tags
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>center -&gt; applying_tags_via_cli
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>center -&gt; tag_enforcement_with_policy
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>center -&gt; tag_inheritance
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>center -&gt; reporting_on_tag_coverage
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp1UctqAzEMvPsrRO75gT0USkhCoIdScjfGUWyBK7te51ny77UX090E79EzmpFmfKCIOpHnDiIZm4TQyAljB4v3-yniAn57qwJ2YPGqjOeHSMpI488YWbFGeXT-kqf3ysD2H4VNRkdt2aHYOHyIiD-nvPMgs02fdV_1DdmgbypUCO5GbAaFPJOS2lG5r-KDEjIOq49d06FcjHz0UeN3TicvlKwM3pG-1cvXIwuFhc-BnXUjthgplajVYTciM7mDj6nE8FySSF3KUgaHDioHnksaWFWu6VR_CJZv0PiKCftU9QRvFvriOlPXy9Skhqe9M1HFH06I5A0=?" /></p>
 <h2 id="tag-governance-flow">Tag Governance Flow<a class="headerlink" href="#tag-governance-flow" title="Permanent link">&para;</a></h2>
 <pre class="mermaid"><code>flowchart LR
     deploy["Resource Deployment\nPortal / IaC / CLI"]
@@ -8661,89 +8645,89 @@ Azure resource tags are key-value pairs applied to resources and resource groups
 </tbody>
 </table>
 <h2 id="applying-tags-via-cli">Applying Tags via CLI<a class="headerlink" href="#applying-tags-via-cli" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Apply required tags to a resource group</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>az<span class="w"> </span>group<span class="w"> </span>update<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>--name<span class="w"> </span>rg-project-alpha-prod<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>--tags<span class="w"> </span><span class="nv">environment</span><span class="o">=</span>prod<span class="w"> </span><span class="nv">team</span><span class="o">=</span>platform<span class="w"> </span><span class="nv">project</span><span class="o">=</span>project-alpha<span class="w"> </span>cost-centre<span class="o">=</span>CC-1001<span class="w"> </span><span class="nv">owner</span><span class="o">=</span>chris.a@example.com<span class="w"> </span>managed-by<span class="o">=</span>terraform
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># Apply tags to an individual resource</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>az<span class="w"> </span>resource<span class="w"> </span>tag<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">  </span>--ids<span class="w"> </span>/subscriptions/&lt;sub-id&gt;/resourceGroups/rg-project-alpha-prod/providers/Microsoft.Compute/virtualMachines/vm-app-01<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">  </span>--tags<span class="w"> </span><span class="nv">environment</span><span class="o">=</span>prod<span class="w"> </span><span class="nv">team</span><span class="o">=</span>platform<span class="w"> </span><span class="nv">project</span><span class="o">=</span>project-alpha
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># Update a single tag on a resource (merge, not replace)</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>az<span class="w"> </span>resource<span class="w"> </span>tag<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">  </span>--ids<span class="w"> </span>&lt;resource-id&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">  </span>--tags<span class="w"> </span><span class="nv">owner</span><span class="o">=</span>new.owner@example.com
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="c1"># Remove all tags from a resource</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>az<span class="w"> </span>tag<span class="w"> </span>delete<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="w">  </span>--resource-id<span class="w"> </span>&lt;resource-id&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Apply required tags to a resource group</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>az<span class="w"> </span>group<span class="w"> </span>update<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>--name<span class="w"> </span>rg-project-alpha-prod<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span>--tags<span class="w"> </span><span class="nv">environment</span><span class="o">=</span>prod<span class="w"> </span><span class="nv">team</span><span class="o">=</span>platform<span class="w"> </span><span class="nv">project</span><span class="o">=</span>project-alpha<span class="w"> </span>cost-centre<span class="o">=</span>CC-1001<span class="w"> </span><span class="nv">owner</span><span class="o">=</span>chris.a@example.com<span class="w"> </span>managed-by<span class="o">=</span>terraform
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># Apply tags to an individual resource</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>az<span class="w"> </span>resource<span class="w"> </span>tag<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">  </span>--ids<span class="w"> </span>/subscriptions/&lt;sub-id&gt;/resourceGroups/rg-project-alpha-prod/providers/Microsoft.Compute/virtualMachines/vm-app-01<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">  </span>--tags<span class="w"> </span><span class="nv">environment</span><span class="o">=</span>prod<span class="w"> </span><span class="nv">team</span><span class="o">=</span>platform<span class="w"> </span><span class="nv">project</span><span class="o">=</span>project-alpha
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># Update a single tag on a resource (merge, not replace)</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>az<span class="w"> </span>resource<span class="w"> </span>tag<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">  </span>--ids<span class="w"> </span>&lt;resource-id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">  </span>--tags<span class="w"> </span><span class="nv">owner</span><span class="o">=</span>new.owner@example.com
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># Remove all tags from a resource</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>az<span class="w"> </span>tag<span class="w"> </span>delete<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="w">  </span>--resource-id<span class="w"> </span>&lt;resource-id&gt;
 </code></pre></div>
 <h2 id="tag-enforcement-with-policy">Tag Enforcement with Policy<a class="headerlink" href="#tag-enforcement-with-policy" title="Permanent link">&para;</a></h2>
 <p>Use Azure Policy to enforce tag presence and prevent resource creation without required tags.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Assign &quot;Require a tag on resources&quot; policy for each required tag</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="k">for</span><span class="w"> </span>TAG<span class="w"> </span><span class="k">in</span><span class="w"> </span>environment<span class="w"> </span>team<span class="w"> </span>project<span class="w"> </span>cost-centre<span class="w"> </span>owner<span class="w"> </span>managed-by<span class="p">;</span><span class="w"> </span><span class="k">do</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>az<span class="w"> </span>policy<span class="w"> </span>assignment<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">    </span>--name<span class="w"> </span><span class="s2">&quot;require-tag-</span><span class="si">${</span><span class="nv">TAG</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">    </span>--policy<span class="w"> </span><span class="s2">&quot;96670d01-0a4d-4649-9c89-2d3abc0a5025&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">    </span>--scope<span class="w"> </span><span class="s2">&quot;/subscriptions/&lt;subscription-id&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">    </span>--params<span class="w"> </span><span class="s2">&quot;{\&quot;tagName\&quot;: {\&quot;value\&quot;: \&quot;</span><span class="si">${</span><span class="nv">TAG</span><span class="si">}</span><span class="s2">\&quot;}}&quot;</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="k">done</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Assign &quot;Allowed tag values&quot; policy for environment tag</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>az<span class="w"> </span>policy<span class="w"> </span>assignment<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;allowed-environment-values&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">  </span>--policy<span class="w"> </span><span class="s2">&quot;d1cf8b34-ac74-4cdf-9ef7-13f9de23ea3c&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">  </span>--scope<span class="w"> </span><span class="s2">&quot;/subscriptions/&lt;subscription-id&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">  </span>--params<span class="w"> </span><span class="s1">&#39;{</span>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="s1">    &quot;tagName&quot;: {&quot;value&quot;: &quot;environment&quot;},</span>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="s1">    &quot;tagValue&quot;: {&quot;value&quot;: [&quot;prod&quot;, &quot;staging&quot;, &quot;dev&quot;, &quot;sandbox&quot;]}</span>
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="s1">  }&#39;</span>
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>
-<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="c1"># Check compliance for tag policies</span>
-<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>az<span class="w"> </span>policy<span class="w"> </span>state<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="w">  </span>--filter<span class="w"> </span><span class="s2">&quot;policyAssignmentName eq &#39;require-tag-environment&#39; and complianceState eq &#39;NonCompliant&#39;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;[].{Resource:resourceId, RG:resourceGroup}&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a><span class="w">  </span>--output<span class="w"> </span>table
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Assign &quot;Require a tag on resources&quot; policy for each required tag</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="k">for</span><span class="w"> </span>TAG<span class="w"> </span><span class="k">in</span><span class="w"> </span>environment<span class="w"> </span>team<span class="w"> </span>project<span class="w"> </span>cost-centre<span class="w"> </span>owner<span class="w"> </span>managed-by<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>az<span class="w"> </span>policy<span class="w"> </span>assignment<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">    </span>--name<span class="w"> </span><span class="s2">&quot;require-tag-</span><span class="si">${</span><span class="nv">TAG</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">    </span>--policy<span class="w"> </span><span class="s2">&quot;96670d01-0a4d-4649-9c89-2d3abc0a5025&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">    </span>--scope<span class="w"> </span><span class="s2">&quot;/subscriptions/&lt;subscription-id&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">    </span>--params<span class="w"> </span><span class="s2">&quot;{\&quot;tagName\&quot;: {\&quot;value\&quot;: \&quot;</span><span class="si">${</span><span class="nv">TAG</span><span class="si">}</span><span class="s2">\&quot;}}&quot;</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="k">done</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Assign &quot;Allowed tag values&quot; policy for environment tag</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>az<span class="w"> </span>policy<span class="w"> </span>assignment<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;allowed-environment-values&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">  </span>--policy<span class="w"> </span><span class="s2">&quot;d1cf8b34-ac74-4cdf-9ef7-13f9de23ea3c&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">  </span>--scope<span class="w"> </span><span class="s2">&quot;/subscriptions/&lt;subscription-id&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">  </span>--params<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="s1">    &quot;tagName&quot;: {&quot;value&quot;: &quot;environment&quot;},</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="s1">    &quot;tagValue&quot;: {&quot;value&quot;: [&quot;prod&quot;, &quot;staging&quot;, &quot;dev&quot;, &quot;sandbox&quot;]}</span>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="s1">  }&#39;</span>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="c1"># Check compliance for tag policies</span>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>az<span class="w"> </span>policy<span class="w"> </span>state<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="w">  </span>--filter<span class="w"> </span><span class="s2">&quot;policyAssignmentName eq &#39;require-tag-environment&#39; and complianceState eq &#39;NonCompliant&#39;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;[].{Resource:resourceId, RG:resourceGroup}&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="w">  </span>--output<span class="w"> </span>table
 </code></pre></div>
 <h2 id="tag-inheritance">Tag Inheritance<a class="headerlink" href="#tag-inheritance" title="Permanent link">&para;</a></h2>
 <p>Tags on resource groups are not automatically inherited by child resources. Use the <code>Inherit a tag from the resource group if missing</code> built-in policy to propagate tags.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Assign tag inheritance policy for environment and team tags</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>az<span class="w"> </span>policy<span class="w"> </span>assignment<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;inherit-tag-environment&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>--policy<span class="w"> </span><span class="s2">&quot;96670d01-0a4d-4649-9c89-2d3abc0a5025&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span>--scope<span class="w"> </span><span class="s2">&quot;/subscriptions/&lt;subscription-id&gt;&quot;</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Use Modify effect policy for automatic tag inheritance</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>az<span class="w"> </span>policy<span class="w"> </span>assignment<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;inherit-environment-from-rg&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">  </span>--policy<span class="w"> </span><span class="s2">&quot;9be884c0-2312-4049-b562-7e7cd8cc6bb2&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">  </span>--scope<span class="w"> </span><span class="s2">&quot;/subscriptions/&lt;subscription-id&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">  </span>--params<span class="w"> </span><span class="s1">&#39;{&quot;tagName&quot;: {&quot;value&quot;: &quot;environment&quot;}}&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">  </span>--mi-system-assigned<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="w">  </span>--location<span class="w"> </span>uksouth
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Assign tag inheritance policy for environment and team tags</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>az<span class="w"> </span>policy<span class="w"> </span>assignment<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;inherit-tag-environment&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>--policy<span class="w"> </span><span class="s2">&quot;96670d01-0a4d-4649-9c89-2d3abc0a5025&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>--scope<span class="w"> </span><span class="s2">&quot;/subscriptions/&lt;subscription-id&gt;&quot;</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Use Modify effect policy for automatic tag inheritance</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>az<span class="w"> </span>policy<span class="w"> </span>assignment<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;inherit-environment-from-rg&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">  </span>--policy<span class="w"> </span><span class="s2">&quot;9be884c0-2312-4049-b562-7e7cd8cc6bb2&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">  </span>--scope<span class="w"> </span><span class="s2">&quot;/subscriptions/&lt;subscription-id&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">  </span>--params<span class="w"> </span><span class="s1">&#39;{&quot;tagName&quot;: {&quot;value&quot;: &quot;environment&quot;}}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">  </span>--mi-system-assigned<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">  </span>--location<span class="w"> </span>uksouth
 </code></pre></div>
 <h2 id="reporting-on-tag-coverage">Reporting on Tag Coverage<a class="headerlink" href="#reporting-on-tag-coverage" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Find resources missing the cost-centre tag</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>az<span class="w"> </span>resource<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;[?tags.\&quot;cost-centre\&quot; == null].{Name:name, RG:resourceGroup, Type:type}&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>--output<span class="w"> </span>table
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># Find resources with no tags at all</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>az<span class="w"> </span>resource<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;[?tags == null || tags == {}].{Name:name, RG:resourceGroup}&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">  </span>--output<span class="w"> </span>table
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># Export all resource tags to JSON for audit</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>az<span class="w"> </span>resource<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;[].{Name:name, RG:resourceGroup, Type:type, Tags:tags}&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="w">  </span>--output<span class="w"> </span>json<span class="w"> </span>&gt;<span class="w"> </span>resource-tags-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.json
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="c1"># Count resources per team value</span>
-<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>az<span class="w"> </span>resource<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;sort_by([?tags.team != null].{Team:tags.team, Name:name}, &amp;Team)&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="w">  </span>--output<span class="w"> </span>table
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Find resources missing the cost-centre tag</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>az<span class="w"> </span>resource<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;[?tags.\&quot;cost-centre\&quot; == null].{Name:name, RG:resourceGroup, Type:type}&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>--output<span class="w"> </span>table
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># Find resources with no tags at all</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>az<span class="w"> </span>resource<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;[?tags == null || tags == {}].{Name:name, RG:resourceGroup}&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">  </span>--output<span class="w"> </span>table
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="c1"># Export all resource tags to JSON for audit</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>az<span class="w"> </span>resource<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;[].{Name:name, RG:resourceGroup, Type:type, Tags:tags}&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="w">  </span>--output<span class="w"> </span>json<span class="w"> </span>&gt;<span class="w"> </span>resource-tags-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.json
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="c1"># Count resources per team value</span>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>az<span class="w"> </span>resource<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;sort_by([?tags.team != null].{Team:tags.team, Name:name}, &amp;Team)&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="w">  </span>--output<span class="w"> </span>table
 </code></pre></div>
 <h2 id="tag-naming-conventions">Tag Naming Conventions<a class="headerlink" href="#tag-naming-conventions" title="Permanent link">&para;</a></h2>
 <table>

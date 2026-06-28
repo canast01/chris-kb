@@ -8791,44 +8791,8 @@ How It Works reference covering Deployment Architecture, Component Roles, Data C
 <p><img alt="InsightIQ — How It Works" src="../../../../../assets/storage-netapp-insightiq-architecture-how-it-works.svg" /></p>
 <p>InsightIQ is Dell EMC's performance analytics platform for NetApp PowerScale (Isilon) clusters, deployed as an on-premises virtual appliance. It collects, stores, and presents historical performance data for capacity planning, protocol analysis, and workload trending. A single InsightIQ instance can monitor multiple PowerScale clusters.</p>
 <hr />
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>center: &quot;InsightIQ&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>deployment_architecture: &quot;Deployment Architecture&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>component_roles: &quot;Component Roles&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>data_collection: &quot;Data Collection&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>storage_and_retention: &quot;Storage and Retention&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>sizing_guidelines: &quot;Sizing Guidelines&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>network_requirements: &quot;Network Requirements&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>center -&gt; deployment_architecture
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>center -&gt; component_roles
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>center -&gt; data_collection
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>center -&gt; storage_and_retention
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>center -&gt; sizing_guidelines
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>center -&gt; network_requirements
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>@startuml
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>skinparam sequenceArrowThickness 1.5
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>skinparam roundcorner 5
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>participant &quot;PowerScale Cluster\n(Isilon)&quot; as PSC
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>participant &quot;InsightIQ\nCollector&quot; as COL
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>participant &quot;InsightIQ\nDatastore&quot; as DS
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>participant &quot;Report Engine&quot; as RPT
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>actor &quot;Admin&quot; as ADM
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>PSC -&gt; COL: Performance stats (every 30s via REST)
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>COL -&gt; DS: Store raw + aggregated metrics
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>ADM -&gt; RPT: Request performance report
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>RPT -&gt; DS: Query time-series data
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>DS --&gt; RPT: Metrics
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>RPT --&gt; ADM: Charts (throughput / latency / ops)
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>ADM -&gt; RPT: Capacity planning query
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>RPT -&gt; DS: Trend + forecast
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>DS --&gt; ADM: Capacity forecast
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>@enduml
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp1kUFuwjAQRfc-xSj7XiCLShVIiE2lwgEsyx45FmacOo5oQdy9Y0KCQe72_fl_PN_GRdTJBWohOtslITRSwthCs6Uhk-1XA5ehUz220OGPsoGuwmDvw--RR6WKunOJQ8bIE816UeCjUB4ZeZ8i6_EqdDj2gXJIDB4Hdq9mArtMqi6jkpI6eD8_vFkzgdVCqq4hhagsSkVGRky8YvLuJw7MYTfzeoI7O7LSjs6gd3R77_7GYLOwqpMwnUI88N7vkfvO5WTz54R57QNX_fc_gbd3-Kf4YuKl1NL7XFyhVMsp9dfTC612nPgD60jeOw==?" /></p>
+<p><img alt="Kroki" src="https://kroki.io/plantuml/svg/eNp1kr1u6zAMhXc9BZGpQZH7g6JLhqKBnSHALZrGGbsQMq8t1KYcUm6Qty_lNkUydBOojzyHR3rUhJLGvnP6FnhAwR6UDiOxp5VIPO7b4N-YVOHvr_sLSOLItY_CJHDvnBVT8GFATjDbxiNJ5bEjKLpRE8kr32w0dJHnM0CFbVVcd2xYQ9OmzcsrF7HryKcoE1k8__uRLDGhGkgTWVbX4I6GKAnW3AT-JHbbvcM8GWarug88FVflk3PmBxYPWWwJW5L_UXq0AMDCSQo39E5ygrs_Cu8BYbeu9nNnbG4pqyVU2QMIHuEWsGmEGkxUQ09JgldnCpk09SXscrSaYLgQkcmos_vzwJcx66XQ00JJAinUtqorK1icBz19DZ-6rGgiSyhaC8D8ptZep2mHMcFv6MwM-5Od4qDzKzcFDuhDOsHQIXPgBg5Z-dLKXohr28vckre0zyY-9c7937ePRufP9AErD8ar?" /></p>
 <h2 id="deployment-architecture">Deployment Architecture<a class="headerlink" href="#deployment-architecture" title="Permanent link">&para;</a></h2>
 <pre class="mermaid"><code>graph LR
     Clusters["PowerScale Clusters&lt;br/&gt;OneFS management IP&lt;br/&gt;SmartConnect zones&lt;br/&gt;PAPI REST API"]

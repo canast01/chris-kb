@@ -8856,23 +8856,7 @@ Firewall port reference for AWS Elastic VMware Service (EVS). EVS runs VMware vS
 *Applies to: AWS EVS (generally available 2025)*
 </div>
 <p><img alt="AWS Elastic VMware Service (EVS) — Ports and Network Requirements" src="../../../../../assets/cloud-aws-evs-architecture-ports.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>center: &quot;AWS EVS&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>management_access_vpndirect_connect_: &quot;Management Access (VPN/Direct Connect → EVS VPC)&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>esxi_host_ports_vpcinternal: &quot;ESXi Host Ports (VPC-Internal)&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>nsxt_vpcinternal: &quot;NSX-T (VPC-Internal)&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>aws_evs_api_outbound_control_plane: &quot;AWS EVS API (Outbound — Control Plane)&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>firewall_zone_summary: &quot;Firewall Zone Summary&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>verify: &quot;Verify&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>center -&gt; management_access_vpndirect_connect_
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>center -&gt; esxi_host_ports_vpcinternal
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>center -&gt; nsxt_vpcinternal
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>center -&gt; aws_evs_api_outbound_control_plane
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>center -&gt; firewall_zone_summary
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>center -&gt; verify
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNkbFqwzAQhnc_xZEpHUx3D4XgpjRDU4OLG7oI1bnYAvtkJNlxWwKd-gClT5gnqeSYxATTZpK4_9P_6-7WQmFqhKQAlMhy43kpkkEVwGT2HMM8iSfwoXNeYQA5tjyTtPNKTjzD0oKMpylqzZqK1p0TSyWRO63BwxGDWYfBNImW17cdCOEBhP3Xt4uBJAqvTlkO4ZQVuPNQt4LlUhtWSWVcVircF4kXNmQerwTcWxUip7qI0F_0-rgh6dacuSzjlf90yVu-1QwbzXglmKzNq6xp7Xo2ShasKjjhaXIwixYwfewp2H_-uKYdCZEjxxM2djxbXhTsXRIyXZclV2_W9K6vw4utQ3yojzo0qMTGPUm6yyjTrxn8G7hkmwP8j3UMqPMZD6T_RziAR6cx0A-9er-EAwPo?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
 <li>EVS hosts run inside the customer's <strong>VPC</strong> — all inter-host traffic (vSAN, vMotion, NSX Geneve) is VPC-internal and not subject to AWS internet firewalls.</li>
@@ -9097,17 +9081,17 @@ Firewall port reference for AWS Elastic VMware Service (EVS). EVS runs VMware vS
 </tbody>
 </table>
 <h2 id="verify">Verify<a class="headerlink" href="#verify" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># From admin workstation (via DX/VPN) — test vCenter</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;%{http_code}&quot;</span><span class="w"> </span>https://&lt;vcenter-ip&gt;/
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># From admin workstation — test NSX Manager</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;%{http_code}&quot;</span><span class="w"> </span>https://&lt;nsx-manager-ip&gt;/
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># From ESXi host (VPC-internal) — test vSAN port to peer</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>nc<span class="w"> </span>-zv<span class="w"> </span>&lt;peer-esxi-ip&gt;<span class="w"> </span><span class="m">2233</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Verify AWS EVS security group allows vSAN ports</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>aws<span class="w"> </span>ec2<span class="w"> </span>describe-security-groups<span class="w"> </span>--group-ids<span class="w"> </span>&lt;evs-sg-id&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># From admin workstation (via DX/VPN) — test vCenter</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;%{http_code}&quot;</span><span class="w"> </span>https://&lt;vcenter-ip&gt;/
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># From admin workstation — test NSX Manager</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;%{http_code}&quot;</span><span class="w"> </span>https://&lt;nsx-manager-ip&gt;/
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># From ESXi host (VPC-internal) — test vSAN port to peer</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>nc<span class="w"> </span>-zv<span class="w"> </span>&lt;peer-esxi-ip&gt;<span class="w"> </span><span class="m">2233</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Verify AWS EVS security group allows vSAN ports</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>aws<span class="w"> </span>ec2<span class="w"> </span>describe-security-groups<span class="w"> </span>--group-ids<span class="w"> </span>&lt;evs-sg-id&gt;
 </code></pre></div>
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>

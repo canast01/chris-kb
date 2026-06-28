@@ -9069,23 +9069,7 @@ CloudIQ operational procedures: scheduling maintenance windows to suppress alert
 <p>Part of the <a href="../../">CloudIQ</a> reference.</p>
 </blockquote>
 <hr />
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>hub: &quot;CloudIQ\nOperations&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>maintenance_window: &quot;Maintenance Window&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>connect_a_storage_system_to_cloudiq: &quot;Connect a Storage System to CloudIQ&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>acknowledge_an_alert: &quot;Acknowledge an Alert&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>create_a_custom_capacity_report: &quot;Create a Custom Capacity Report&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>configure_thresholdbased_notificatio: &quot;Configure Threshold-Based Notifications&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>review_performance_anomaly: &quot;Review Performance Anomaly&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>hub -&gt; maintenance_window
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>hub -&gt; connect_a_storage_system_to_cloudiq
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>hub -&gt; acknowledge_an_alert
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>hub -&gt; create_a_custom_capacity_report
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>hub -&gt; configure_thresholdbased_notificatio
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>hub -&gt; review_performance_anomaly
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNks9OwzAMxu99Cmv3vcAOSKMnDvzbkLggRV7qtRGtXZKUMqG9O0m60kl0wLH2z5-_-GthLGlvhFdgTVn5LKu63QoWeS1dcfP4wvctWYyAW8Cnq7ClFVT0gaXwMWvQsCdG1qR6w4X0YfR2KsJzKk6TcRlyWdMx08IcvhQq58ViScodnKdGeVE6bjdv0cdAAcJ2oGCbKPACJ4-z6qhfWfqaiqCLrLAm64PceioDMqxjed6dJfRhVOku2GuUxha18QdlqZUklSciGMsTAfmJgE0iLr15b8rOkvKVJVdJXezQUaFYvNkbHQ89PHrA4GnElteRg7uJOw_kbIWld0O9CqntxTYpGWRpsD4E4U1qwsPUhPXQnNWK_wIsr-BnzGPnHyGO6Fwi3zK_X_ts25_nG9nLd8i-AASOGf8=?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Access:</strong> Storage admin credentials (cluster admin or equivalent)</li>
@@ -9098,18 +9082,18 @@ CloudIQ operational procedures: scheduling maintenance windows to suppress alert
 <ol>
 <li>Before the window: note the current health score for all affected systems as a baseline</li>
 <li>Suppress CloudIQ alerts for the duration of the maintenance window via REST API:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Create a maintenance window (suppresses alerts for the specified system)</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="si">${</span><span class="nv">CLOUDIQ_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="s1">    &quot;resource_id&quot;: &quot;&lt;system_object_id&gt;&quot;,</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="s1">    &quot;resource_type&quot;: &quot;STORAGE_SYSTEM&quot;,</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="s1">    &quot;start_time&quot;: &quot;2026-05-06T20:00:00Z&quot;,</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="s1">    &quot;end_time&quot;: &quot;2026-05-06T23:00:00Z&quot;,</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="s1">    &quot;description&quot;: &quot;Planned maintenance window&quot;</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="s1">  }&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">CLOUDIQ_BASE</span><span class="si">}</span><span class="s2">/maintenance-windows&quot;</span>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Create a maintenance window (suppresses alerts for the specified system)</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="si">${</span><span class="nv">CLOUDIQ_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="s1">    &quot;resource_id&quot;: &quot;&lt;system_object_id&gt;&quot;,</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="s1">    &quot;resource_type&quot;: &quot;STORAGE_SYSTEM&quot;,</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="s1">    &quot;start_time&quot;: &quot;2026-05-06T20:00:00Z&quot;,</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="s1">    &quot;end_time&quot;: &quot;2026-05-06T23:00:00Z&quot;,</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="s1">    &quot;description&quot;: &quot;Planned maintenance window&quot;</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="s1">  }&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">CLOUDIQ_BASE</span><span class="si">}</span><span class="s2">/maintenance-windows&quot;</span>
 </code></pre></div></li>
 <li>Perform the planned maintenance on the storage system</li>
 <li>After the window: remove or allow the maintenance window to expire</li>

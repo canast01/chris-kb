@@ -9386,38 +9386,7 @@ How It Works reference covering Networking Architecture, VMkernel Adapters (vmk)
 <p><img alt="ESXi — How It Works" src="../../../../../assets/virtualization-vmware-esxi-architecture-how-it-works.svg" /></p>
 <p>VMkernel Internals — Resource Stack</p>
 <h2 id="vmkernel-architecture">VMkernel Architecture<a class="headerlink" href="#vmkernel-architecture" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: down
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>hardware: Physical Hardware {
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>  cpu: CPUs {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>  mem: Memory {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>  nic: Network (NICs) {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>  hba: Storage (HBAs / NVMe) {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>vmkernel: VMkernel (Hypervisor) {
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>  scheduler: CPU Scheduler {shape: rectangle}
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>  memctl: Memory Manager {shape: rectangle}
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>  netstack: TCP/IP Network Stack {shape: rectangle}
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>  psa: Storage Stack (PSA/NMP) {shape: rectangle}
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>}
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>userworld: User World (Processes) {
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>  hostd: hostd (host agent) {shape: rectangle}
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>  vpxa: vpxa (vCenter agent) {shape: rectangle}
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>  ntpd: ntpd / syslog {shape: rectangle}
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>}
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>vms: Virtual Machines {
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>  vm1: VM 1 (vCPU / vMEM / vNIC / vDisk) {shape: rectangle}
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>  vm2: VM 2 {shape: rectangle}
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>  vmn: VM N {shape: rectangle}
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>}
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>hardware -&gt; vmkernel: direct hardware access
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>vmkernel -&gt; userworld: system calls
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>vmkernel -&gt; vms: virtualised resources
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp9U01vwjAMvfdX-FgOE4JjDpMYmwSHVpU62DlLLRq1Tao4LasQ_31OGYxJdJfYiZ8_nu0U2qHy2hoBhT2aKCqlK47SoYCsHEgrWcPm5wlOEYBqOwHrbEdwolK2jAsBpDnUeGZzg42ABBvrhscAo5WAFP3RugridLum2WNg-SkF5N46eUCINy8rgjmk-wQf4s9R1DcVOoO1gH1y0dhtaNH1mqybjdWTKrHoanQjB8iv10kyytc3Pok0XMsE1qAnL1Ul4H2dzbfZjWMeXh_7tHRH8YKLs3w1T5NsimRH6DhsXQjYsQofQWcvZxUSIV1olpY8I0YBcRDAKYyfaHXffnEh4YS4XzOOA_-HN77l6OHkkdBAtT1MzoR4HNr5jvcokarUBmkssW8WYVCwCCl5FHPok7ckCN6JIF41VVP1NsvRdzllNqM5nSjquuLw9Ay_S1OMPwFuRqlCR29bFcB3zWfWHhvg71H_xYyM-wtjTVhwbrKd41jRN7JrK4E=?" /></p>
 <h3 id="vmkernel-resource-scheduling">VMkernel Resource Scheduling<a class="headerlink" href="#vmkernel-resource-scheduling" title="Permanent link">&para;</a></h3>
 <pre class="mermaid"><code>graph TB
     subgraph VMs["VM Layer"]
@@ -9514,10 +9483,10 @@ How It Works reference covering Networking Architecture, VMkernel Adapters (vmk)
 <li><strong>Memory Compression</strong>: Compresses 4KB pages before swapping — faster than full swap</li>
 <li><strong>Host Swap</strong>: ESXi swaps VM memory to the <code>.vswp</code> file on a datastore — high latency</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Check memory stats on a host</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>esxtop
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># Press &#39;m&#39; for memory view</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Key columns: MCTLSZ (balloon), SWCUR (host swap), GRANT (memory given to VMs)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Check memory stats on a host</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>esxtop
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c1"># Press &#39;m&#39; for memory view</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Key columns: MCTLSZ (balloon), SWCUR (host swap), GRANT (memory given to VMs)</span>
 </code></pre></div>
 <hr />
 <h2 id="ha-and-drs">HA and DRS<a class="headerlink" href="#ha-and-drs" title="Permanent link">&para;</a></h2>
@@ -9574,11 +9543,11 @@ How It Works reference covering Networking Architecture, VMkernel Adapters (vmk)
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Check DRS recommendations</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">Get-Cluster</span> <span class="s2">&quot;CL-PROD&quot;</span> <span class="p">|</span> <span class="nb">Get-DrsRecommendation</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c"># Apply all pending recommendations</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nb">Get-Cluster</span> <span class="s2">&quot;CL-PROD&quot;</span> <span class="p">|</span> <span class="nb">Get-DrsRecommendation</span> <span class="p">|</span> <span class="n">Apply-DrsRecommendation</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Check DRS recommendations</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Get-Cluster</span> <span class="s2">&quot;CL-PROD&quot;</span> <span class="p">|</span> <span class="nb">Get-DrsRecommendation</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c"># Apply all pending recommendations</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nb">Get-Cluster</span> <span class="s2">&quot;CL-PROD&quot;</span> <span class="p">|</span> <span class="nb">Get-DrsRecommendation</span> <span class="p">|</span> <span class="n">Apply-DrsRecommendation</span>
 </code></pre></div>
 <hr />
 <h2 id="boot-architecture">Boot Architecture<a class="headerlink" href="#boot-architecture" title="Permanent link">&para;</a></h2>
@@ -9615,12 +9584,12 @@ How It Works reference covering Networking Architecture, VMkernel Adapters (vmk)
 - HBA must be configured as boot initiator in BIOS
 - SAN zoning: each HBA initiator sees only its own boot LUN
 - LUN minimum 8 GB; 32 GB recommended</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Verify boot device</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>boot<span class="w"> </span>device<span class="w"> </span>get
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># View HBA boot configuration</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>san<span class="w"> </span><span class="nb">fc</span><span class="w"> </span>list
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>esxcli<span class="w"> </span>iscsi<span class="w"> </span>adapter<span class="w"> </span>get<span class="w"> </span>-A<span class="w"> </span>vmhba64
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Verify boot device</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>boot<span class="w"> </span>device<span class="w"> </span>get
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># View HBA boot configuration</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>san<span class="w"> </span><span class="nb">fc</span><span class="w"> </span>list
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>esxcli<span class="w"> </span>iscsi<span class="w"> </span>adapter<span class="w"> </span>get<span class="w"> </span>-A<span class="w"> </span>vmhba64
 </code></pre></div>
 <hr />
 <h2 id="host-profiles">Host Profiles<a class="headerlink" href="#host-profiles" title="Permanent link">&para;</a></h2>
@@ -9634,16 +9603,16 @@ How It Works reference covering Networking Architecture, VMkernel Adapters (vmk)
 - SSH and ESXi Shell state
 - Syslog server
 - Advanced settings (security timeouts, etc.)</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Extract a host profile from a reference host</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">New-VMHostProfile</span> <span class="n">-Name</span> <span class="s2">&quot;HP-Cluster-Profile&quot;</span> <span class="p">`</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    <span class="n">-ReferenceHost</span> <span class="p">(</span><span class="nb">Get-VMHost</span> <span class="s2">&quot;esxi-01.example.local&quot;</span><span class="p">)</span> <span class="p">`</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    <span class="n">-Description</span> <span class="s2">&quot;Cluster hardened baseline&quot;</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c"># Check compliance for all hosts</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="nb">Get-VMHost</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>    <span class="nb">Test-VMHostProfileCompliance</span> <span class="n">-VMHost</span> <span class="nv">$_</span> <span class="p">|</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>        <span class="nb">Select-Object</span> <span class="n">VMHost</span><span class="p">,</span> <span class="n">ComplianceStatus</span><span class="p">,</span> <span class="n">IncomplianceDescription</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Extract a host profile from a reference host</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">New-VMHostProfile</span> <span class="n">-Name</span> <span class="s2">&quot;HP-Cluster-Profile&quot;</span> <span class="p">`</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    <span class="n">-ReferenceHost</span> <span class="p">(</span><span class="nb">Get-VMHost</span> <span class="s2">&quot;esxi-01.example.local&quot;</span><span class="p">)</span> <span class="p">`</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    <span class="n">-Description</span> <span class="s2">&quot;Cluster hardened baseline&quot;</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c"># Check compliance for all hosts</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="nb">Get-VMHost</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>    <span class="nb">Test-VMHostProfileCompliance</span> <span class="n">-VMHost</span> <span class="nv">$_</span> <span class="p">|</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>        <span class="nb">Select-Object</span> <span class="n">VMHost</span><span class="p">,</span> <span class="n">ComplianceStatus</span><span class="p">,</span> <span class="n">IncomplianceDescription</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="p">}</span>
 </code></pre></div>
 <hr />
 <h2 id="ports-and-logs">Ports and Logs<a class="headerlink" href="#ports-and-logs" title="Permanent link">&para;</a></h2>

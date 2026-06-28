@@ -10748,23 +10748,7 @@ is restored.
 *Applies to: vSphere 7.x / 8.x*
 </div>
 <p><img alt="vSAN Stretched Cluster Split-Brain" src="../../../../../assets/virtualization-vmware-topics-scenarios-vsan-stretched-cluste.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>center: &quot;Scenarios&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>products_involved: &quot;Products Involved&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>1_identify_the_failure_what_does_vce: &quot;1. Identify the Failure — What Does vCenter Show?&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>2_check_witness_appliance_reachabili: &quot;2. Check Witness Appliance Reachability&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>3_confirm_the_preferred_site_configu: &quot;3. Confirm the Preferred Site Configuration&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>4_determine_current_quorum_state: &quot;4. Determine Current Quorum State&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>5_check_intersite_vsan_network_path: &quot;5. Check Inter-Site vSAN Network Path&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>center -&gt; products_involved
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>center -&gt; 1_identify_the_failure_what_does_vce
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>center -&gt; 2_check_witness_appliance_reachabili
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>center -&gt; 3_confirm_the_preferred_site_configu
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>center -&gt; 4_determine_current_quorum_state
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>center -&gt; 5_check_intersite_vsan_network_path
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNks9qwzAMxu95CtF7C13bSw8bpWXQS-mWQ4_Cc5TYNLUz20lWRmEPsSfck8z5twUWWG7G-kmf9EmRNMSd1GoNRibCBQEn5cisYRL6FzNS2wm8W8EyWoOgN5ZodQsyo6OcO4tSFTotKPL8sf2Dffv3m1dpMJWkdAvmKCOvIOMrOkEYM5nmhrAUzGGkyWLBfcJkPoN9y4Hn4LHh4OvjE06ehZ1nodjWzUIodPkwKHeHXBA_YymdImuRZVkqmeKEhhgX7EWm0svdzWBbcXBqONh0HDz_cO46KLFArlUszaUeKDMUkzEUoZWOmlCSe4mFl2i4eqBjx0HouSaU5IZVuxiUWWJEftaLVL5q7jOVw9dcm_yC1jFXmbacwa5jYNsw8FQzEFbMYOFVa5GsrKybLixTqMiV2pwxY0742qvOoX2FTeumi3BzgEPDwdFzg_Xbi4LpPfw5m15szGH08DGL7eFjltTD_zO7h46wL_gGF8VCDg==?" /></p>
 <h2 id="products-involved">Products Involved<a class="headerlink" href="#products-involved" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -10801,11 +10785,11 @@ is restored.
 <p>The witness appliance holds the tiebreaker vote — it determines which site retains quorum when inter-site communication is lost.</p>
 <p>In vCenter, locate the <strong>witness host</strong> object and check its state: <strong>Connected</strong> = voting; <strong>Disconnected</strong> = quorum falls back to preferred site config.</p>
 <p>Look for: which site the witness can still reach — that site keeps quorum and its VMs keep running; the other site's VMs are stopped by vSphere HA.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># From Site A ESXi host — ping witness vSAN VMkernel IP</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk2<span class="w"> </span>&lt;witness-vsan-vmk-ip&gt;
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># From Site B ESXi host — same test</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk2<span class="w"> </span>&lt;witness-vsan-vmk-ip&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># From Site A ESXi host — ping witness vSAN VMkernel IP</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk2<span class="w"> </span>&lt;witness-vsan-vmk-ip&gt;
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># From Site B ESXi host — same test</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk2<span class="w"> </span>&lt;witness-vsan-vmk-ip&gt;
 </code></pre></div>
 <hr />
 <h2 id="3-confirm-the-preferred-site-configuration">3. Confirm the Preferred Site Configuration<a class="headerlink" href="#3-confirm-the-preferred-site-configuration" title="Permanent link">&para;</a></h2>
@@ -10860,39 +10844,39 @@ is restored.
 <hr />
 <h2 id="5-check-inter-site-vsan-network-path">5. Check Inter-Site vSAN Network Path<a class="headerlink" href="#5-check-inter-site-vsan-network-path" title="Permanent link">&para;</a></h2>
 <p>Test reachability and MTU on the vSAN VMkernel interface (tagged vmk2 or equivalent) used for inter-site replication traffic:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># From a Site A ESXi host — ping a Site B host&#39;s vSAN vmk IP</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># -d: do not fragment; -s 8972: full-size vSAN packet (8972 bytes payload)</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk2<span class="w"> </span>&lt;site-b-vsan-vmk-ip&gt;<span class="w"> </span>-d<span class="w"> </span>-s<span class="w"> </span><span class="m">8972</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Check the vSAN VMkernel interface is active and has the correct IP</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>ipv4<span class="w"> </span>get
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># From a Site A ESXi host — ping a Site B host&#39;s vSAN vmk IP</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># -d: do not fragment; -s 8972: full-size vSAN packet (8972 bytes payload)</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk2<span class="w"> </span>&lt;site-b-vsan-vmk-ip&gt;<span class="w"> </span>-d<span class="w"> </span>-s<span class="w"> </span><span class="m">8972</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Check the vSAN VMkernel interface is active and has the correct IP</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>ipv4<span class="w"> </span>get
 </code></pre></div>
 <p>Look for: failed 8972-byte ping with successful small-packet ping = MTU mismatch on the inter-site link (vSAN requires MTU 9000).</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Check vSAN cluster membership — which hosts are in the cluster from this host&#39;s view</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>cluster<span class="w"> </span>get
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Check inter-site communication partners</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>vmdk<span class="w"> </span>list
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check vSAN cluster membership — which hosts are in the cluster from this host&#39;s view</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>cluster<span class="w"> </span>get
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Check inter-site communication partners</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>vmdk<span class="w"> </span>list
 </code></pre></div>
 <hr />
 <h2 id="6-forced-recovery-full-isolation-last-resort">6. Forced Recovery — Full Isolation (Last Resort)<a class="headerlink" href="#6-forced-recovery-full-isolation-last-resort" title="Permanent link">&para;</a></h2>
 <p>Use only when all inter-site and witness connectivity is confirmed lost and all VMs have stopped — contact VMware/Dell GSS before proceeding.</p>
 <p><strong>Forcing quorum incorrectly when both sites are still running creates data divergence requiring manual reconciliation.</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># LAST RESORT ONLY — force master election on the surviving site</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># Only run this if you have confirmed the other site is fully powered off</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># and there is zero risk of both sites writing simultaneously</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>cluster<span class="w"> </span>forcemasterelection
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># LAST RESORT ONLY — force master election on the surviving site</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># Only run this if you have confirmed the other site is fully powered off</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># and there is zero risk of both sites writing simultaneously</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>cluster<span class="w"> </span>forcemasterelection
 </code></pre></div>
 <p>After forced election, start VMs on the surviving site only; treat the secondary site as potentially diverged and do not start it until vSAN resync completes after connectivity is restored.</p>
 <hr />
 <h2 id="7-after-connectivity-restores-monitor-resync">7. After Connectivity Restores — Monitor Resync<a class="headerlink" href="#7-after-connectivity-restores-monitor-resync" title="Permanent link">&para;</a></h2>
 <p>When inter-site connectivity comes back, vSAN automatically resyncs objects — this can take minutes to hours depending on change volume during the partition.</p>
 <p>Monitor: vCenter → <strong>vSAN</strong> → <strong>Monitor</strong> → <strong>Resyncing Objects</strong>.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Check resync queue from ESXi host</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>object<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>resync
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Get object resync status</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>resync<span class="w"> </span>list
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check resync queue from ESXi host</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>object<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>resync
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Get object resync status</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>resync<span class="w"> </span>list
 </code></pre></div>
 <p><strong>Do not perform host maintenance, storage policy changes, or vSAN upgrades until resync completes</strong> — resync adds I/O overhead, and any disruption risks further object degradation.</p>
 <hr />

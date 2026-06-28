@@ -8994,21 +8994,7 @@ EVS integration with on-premises infrastructure via HCX and Direct Connect, AWS 
     EVSVPC --&gt; S3
     EVSVPC --&gt; R53
     EVSVPC --&gt; CW</code></pre>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>center: &quot;AWS EVS&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>hcx_vmware_hybrid_cloud_extension: &quot;HCX (VMware Hybrid Cloud Extension)&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>direct_connect: &quot;Direct Connect&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>transit_gateway_tgw: &quot;Transit Gateway (TGW)&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>monitoring_integration: &quot;Monitoring Integration&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>aws_native_service_integration: &quot;AWS Native Service Integration&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>center -&gt; hcx_vmware_hybrid_cloud_extension
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>center -&gt; direct_connect
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>center -&gt; transit_gateway_tgw
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>center -&gt; monitoring_integration
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>center -&gt; aws_native_service_integration
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqFkcFOwzAQRO_-ilVO5cAP5ICEQtVyaC-pWm4r46wcS-0aOSZJhfrvODbQgCx6sjTzPN4dN8aR8sZyCc7o1guhiD25EorHQw3LfV3AR9fKNyqhpVFqyxfRqhH70yAdYXt-daZBdbTvDdLoibsYVqyrF1jsNxME6whBNUGw_IbursnTDJL1kS6iiQOhsszhDEFPUYAqCdk73smQ6FFLT4M8o9dDuLhLKqySCovd6pB_82TZeOsMazRhee1kaqTY_BjwfDWyGXLokIPdE3bkeqPoT9ZU5zYCUCfgZubXX8D9A9ysfMb-rnBmZHqaufkWZsD_K4pPu0TYfw==?" /></p>
 <h2 id="hcx-vmware-hybrid-cloud-extension">HCX (VMware Hybrid Cloud Extension)<a class="headerlink" href="#hcx-vmware-hybrid-cloud-extension" title="Permanent link">&para;</a></h2>
 <p>HCX is the primary migration tool for moving VMs from on-premises vSphere to EVS.</p>
 <h3 id="license-tiers">License Tiers<a class="headerlink" href="#license-tiers" title="Permanent link">&para;</a></h3>
@@ -9078,26 +9064,26 @@ EVS integration with on-premises infrastructure via HCX and Direct Connect, AWS 
 <li><strong>NE removal</strong>: after all VMs on a stretched segment are migrated and DNS/routing is updated, remove the NE and let the EVS T1 segment become the authoritative network for that IP range</li>
 </ol>
 <p><strong>Bulk migration vs RAV</strong>: bulk migration copies data in the background using HCX's own replication engine, then performs a brief powered-off switchover. RAV uses vSphere Replication for the copy phase and vMotion for the final switchover — RAV achieves near-zero downtime even for large VMs, but requires HCX Enterprise.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>HCX components:
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  HCX Manager (on-premises): deployed as OVA on on-prem vCenter; manages HCX service mesh
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  HCX Cloud (EVS side):      auto-deployed by EVS; mirrors on-prem HCX Manager
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  Service Mesh:              Interconnect (IX) + WAN Opt + Network Extension (NE) appliances
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>Migration types:
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>  vMotion         Live migration, no downtime. Requires 1 Gbps DX or sufficient bandwidth.
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>  Cold migration  Powered-off VM copy. Faster bulk data transfer.
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>  Bulk migration  Background copy with final vMotion switchover. Uses WAN optimization.
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>  OS-assisted     P2V or cross-hypervisor (requires HCX Enterprise license)
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>Network Extension (NE):
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>  Stretches on-prem L2 networks to EVS; VMs keep their IP addresses during migration.
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>  Remove NE after migration is complete (routing optimization).
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>HCX components:
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>  HCX Manager (on-premises): deployed as OVA on on-prem vCenter; manages HCX service mesh
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>  HCX Cloud (EVS side):      auto-deployed by EVS; mirrors on-prem HCX Manager
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>  Service Mesh:              Interconnect (IX) + WAN Opt + Network Extension (NE) appliances
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>Migration types:
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>  vMotion         Live migration, no downtime. Requires 1 Gbps DX or sufficient bandwidth.
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>  Cold migration  Powered-off VM copy. Faster bulk data transfer.
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>  Bulk migration  Background copy with final vMotion switchover. Uses WAN optimization.
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>  OS-assisted     P2V or cross-hypervisor (requires HCX Enterprise license)
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>Network Extension (NE):
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>  Stretches on-prem L2 networks to EVS; VMs keep their IP addresses during migration.
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>  Remove NE after migration is complete (routing optimization).
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Verify HCX connectivity (run from HCX Manager UI or API)</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># Check: HCX Manager → Interconnect → Service Mesh → Status = Green</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># HCX vMotion requires port 443 and 8301 open between on-prem and EVS HCX Cloud</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Direct Connect private VIF or VPN must have these ports allowed</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Verify HCX connectivity (run from HCX Manager UI or API)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># Check: HCX Manager → Interconnect → Service Mesh → Status = Green</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># HCX vMotion requires port 443 and 8301 open between on-prem and EVS HCX Cloud</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Direct Connect private VIF or VPN must have these ports allowed</span>
 </code></pre></div>
 <h2 id="direct-connect">Direct Connect<a class="headerlink" href="#direct-connect" title="Permanent link">&para;</a></h2>
 <p>Direct Connect provides the private, dedicated network path between on-premises and EVS. It is required for HCX vMotion (live migration) in production environments.</p>
@@ -9139,18 +9125,18 @@ EVS integration with on-premises infrastructure via HCX and Direct Connect, AWS 
 <p>Avoid advertising overly broad prefixes from on-premises (e.g., a default route) unless you want to route all EVS internet traffic through your on-premises edge.</p>
 <h3 id="vpn-failover">VPN Failover<a class="headerlink" href="#vpn-failover" title="Permanent link">&para;</a></h3>
 <p>Configure a Site-to-Site VPN as a backup to Direct Connect. When Direct Connect goes down, BGP sessions fail and AWS automatically routes traffic over the VPN. The VPN provides lower throughput (up to 1.25 Gbps per tunnel) but ensures management connectivity is maintained during a Direct Connect outage.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Connection types:
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  Dedicated: 1G or 10G physical port; request via AWS console; ~15-45 day lead time
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  Hosted:    Sub-1G via AWS partner; faster provisioning; shared infrastructure
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>VIF types for EVS:
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>  Private VIF: access VPC resources (management subnet, EVS hosts); required for HCX
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>  Transit VIF: attach to Transit Gateway; recommended for multi-VPC or hybrid architectures
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>BGP peering:
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>  AWS side: ASN 64512 (default) or custom
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>  On-prem:  your router ASN
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>  Advertise: on-prem prefixes to AWS; AWS advertises VPC CIDRs back
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Connection types:
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>  Dedicated: 1G or 10G physical port; request via AWS console; ~15-45 day lead time
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>  Hosted:    Sub-1G via AWS partner; faster provisioning; shared infrastructure
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>VIF types for EVS:
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>  Private VIF: access VPC resources (management subnet, EVS hosts); required for HCX
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>  Transit VIF: attach to Transit Gateway; recommended for multi-VPC or hybrid architectures
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>BGP peering:
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>  AWS side: ASN 64512 (default) or custom
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>  On-prem:  your router ASN
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>  Advertise: on-prem prefixes to AWS; AWS advertises VPC CIDRs back
 </code></pre></div>
 <h2 id="transit-gateway-tgw">Transit Gateway (TGW)<a class="headerlink" href="#transit-gateway-tgw" title="Permanent link">&para;</a></h2>
 <p>Transit Gateway is the hub for connecting EVS to other VPCs and to on-premises networks via a single Direct Connect Transit VIF.</p>
@@ -9178,20 +9164,20 @@ EVS integration with on-premises infrastructure via HCX and Direct Connect, AWS 
 <li>Cost: data transfer charges apply per GB transferred across regions</li>
 <li>Use case: active-active EVS clusters in two regions with workload replication via vSphere Replication or HCX RAV</li>
 </ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Use TGW when you need:
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>  EVS → other AWS VPCs (workload VPCs, shared services)
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>  On-premises → multiple AWS VPCs via single DX attachment
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>  East-west between multiple EVS clusters in same region
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>Architecture:
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>  DX → Transit VIF → TGW
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>  EVS VPC → TGW attachment (VPC route table points to TGW)
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>  Spoke VPCs → TGW attachments
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>  TGW route table: propagate EVS CIDR, on-prem CIDR, spoke VPC CIDRs
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>Note: EVS T0 router advertises workload VM prefixes via BGP to VPC ENI.
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>The VPC route table entry for those prefixes points to the T0 uplink ENI.
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>TGW then propagates those routes to connected spoke VPCs.
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Use TGW when you need:
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  EVS → other AWS VPCs (workload VPCs, shared services)
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  On-premises → multiple AWS VPCs via single DX attachment
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>  East-west between multiple EVS clusters in same region
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>Architecture:
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>  DX → Transit VIF → TGW
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>  EVS VPC → TGW attachment (VPC route table points to TGW)
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>  Spoke VPCs → TGW attachments
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>  TGW route table: propagate EVS CIDR, on-prem CIDR, spoke VPC CIDRs
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>Note: EVS T0 router advertises workload VM prefixes via BGP to VPC ENI.
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>The VPC route table entry for those prefixes points to the T0 uplink ENI.
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>TGW then propagates those routes to connected spoke VPCs.
 </code></pre></div>
 <h2 id="monitoring-integration">Monitoring Integration<a class="headerlink" href="#monitoring-integration" title="Permanent link">&para;</a></h2>
 <p>EVS integrates with AWS monitoring services to provide visibility into host health, API activity, and service events.</p>
@@ -9238,59 +9224,59 @@ EVS integration with on-premises infrastructure via HCX and Direct Connect, AWS 
 <p>Configure AWS Health event notifications via EventBridge: create a rule matching <code>source: aws.health</code> and <code>detail.service: EVS</code>, then route alerts to SNS or a ticketing system.</p>
 <h3 id="cloudwatch-alarms">CloudWatch Alarms<a class="headerlink" href="#cloudwatch-alarms" title="Permanent link">&para;</a></h3>
 <p>Recommended alarms for EVS clusters:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Alarm: any host in unhealthy state</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>aws<span class="w"> </span>cloudwatch<span class="w"> </span>put-metric-alarm<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>--alarm-name<span class="w"> </span>evs-host-unhealthy<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span>--namespace<span class="w"> </span>AWS/EVS<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span>--metric-name<span class="w"> </span>HostStatus<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">  </span>--dimensions<span class="w"> </span><span class="nv">Name</span><span class="o">=</span>ClusterId,Value<span class="o">=</span>evs-cluster-id<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">  </span>--period<span class="w"> </span><span class="m">300</span><span class="w"> </span>--evaluation-periods<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">  </span>--threshold<span class="w"> </span><span class="m">1</span><span class="w"> </span>--comparison-operator<span class="w"> </span>LessThanThreshold<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">  </span>--statistic<span class="w"> </span>Minimum<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">  </span>--alarm-actions<span class="w"> </span>arn:aws:sns:us-east-1:123456789012:evs-alerts
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="c1"># Alarm: host count drops below expected minimum</span>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>aws<span class="w"> </span>cloudwatch<span class="w"> </span>put-metric-alarm<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="w">  </span>--alarm-name<span class="w"> </span>evs-host-count-low<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="w">  </span>--namespace<span class="w"> </span>AWS/EVS<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="w">  </span>--metric-name<span class="w"> </span>HostCount<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="w">  </span>--dimensions<span class="w"> </span><span class="nv">Name</span><span class="o">=</span>ClusterId,Value<span class="o">=</span>evs-cluster-id<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="w">  </span>--period<span class="w"> </span><span class="m">300</span><span class="w"> </span>--evaluation-periods<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="w">  </span>--threshold<span class="w"> </span><span class="m">3</span><span class="w"> </span>--comparison-operator<span class="w"> </span>LessThanThreshold<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a><span class="w">  </span>--statistic<span class="w"> </span>Minimum<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a><span class="w">  </span>--alarm-actions<span class="w"> </span>arn:aws:sns:us-east-1:123456789012:evs-alerts
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Alarm: any host in unhealthy state</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>aws<span class="w"> </span>cloudwatch<span class="w"> </span>put-metric-alarm<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>--alarm-name<span class="w"> </span>evs-host-unhealthy<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>--namespace<span class="w"> </span>AWS/EVS<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span>--metric-name<span class="w"> </span>HostStatus<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span>--dimensions<span class="w"> </span><span class="nv">Name</span><span class="o">=</span>ClusterId,Value<span class="o">=</span>evs-cluster-id<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">  </span>--period<span class="w"> </span><span class="m">300</span><span class="w"> </span>--evaluation-periods<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">  </span>--threshold<span class="w"> </span><span class="m">1</span><span class="w"> </span>--comparison-operator<span class="w"> </span>LessThanThreshold<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">  </span>--statistic<span class="w"> </span>Minimum<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">  </span>--alarm-actions<span class="w"> </span>arn:aws:sns:us-east-1:123456789012:evs-alerts
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="c1"># Alarm: host count drops below expected minimum</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>aws<span class="w"> </span>cloudwatch<span class="w"> </span>put-metric-alarm<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="w">  </span>--alarm-name<span class="w"> </span>evs-host-count-low<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="w">  </span>--namespace<span class="w"> </span>AWS/EVS<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="w">  </span>--metric-name<span class="w"> </span>HostCount<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="w">  </span>--dimensions<span class="w"> </span><span class="nv">Name</span><span class="o">=</span>ClusterId,Value<span class="o">=</span>evs-cluster-id<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="w">  </span>--period<span class="w"> </span><span class="m">300</span><span class="w"> </span>--evaluation-periods<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="w">  </span>--threshold<span class="w"> </span><span class="m">3</span><span class="w"> </span>--comparison-operator<span class="w"> </span>LessThanThreshold<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="w">  </span>--statistic<span class="w"> </span>Minimum<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a><span class="w">  </span>--alarm-actions<span class="w"> </span>arn:aws:sns:us-east-1:123456789012:evs-alerts
 </code></pre></div>
 <h2 id="aws-native-service-integration">AWS Native Service Integration<a class="headerlink" href="#aws-native-service-integration" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># S3 — object storage for backups and cold data</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># Access from EVS VMs: via VPC Endpoint (Gateway) or NAT Gateway</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1"># Recommended: S3 Gateway VPC Endpoint (no cost, stays in VPC)</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>aws<span class="w"> </span>ec2<span class="w"> </span>create-vpc-endpoint<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span>--vpc-id<span class="w"> </span>vpc-evs-xxx<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">  </span>--service-name<span class="w"> </span>com.amazonaws.us-east-1.s3<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">  </span>--route-table-ids<span class="w"> </span>rtb-evs-workload
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1"># Route 53 — DNS for VCF components</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># Create private hosted zone for vcf.internal</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="c1"># Associate with EVS VPC</span>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>aws<span class="w"> </span>route53<span class="w"> </span>create-hosted-zone<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="w">  </span>--name<span class="w"> </span>vcf.internal<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="w">  </span>--vpc<span class="w"> </span><span class="nv">VPCRegion</span><span class="o">=</span>us-east-1,VPCId<span class="o">=</span>vpc-evs-xxx<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="w">  </span>--caller-reference<span class="w"> </span><span class="k">$(</span>date<span class="w"> </span>+%s<span class="k">)</span>
-<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>
-<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="c1"># IAM — EVS service role</span>
-<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a><span class="c1"># EVS creates an IAM service-linked role: AWSServiceRoleForAmazonEVS</span>
-<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a><span class="c1"># Do not delete this role — EVS uses it for host lifecycle management</span>
-<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a>
-<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a><span class="c1"># CloudWatch — EVS publishes host metrics (CPU, memory, disk) to CloudWatch</span>
-<a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a><span class="c1"># Namespace: AWS/EVS</span>
-<a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a><span class="c1"># Useful metric: HostCount, HostStatus</span>
-<a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a>aws<span class="w"> </span>cloudwatch<span class="w"> </span>get-metric-statistics<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-25" name="__codelineno-6-25" href="#__codelineno-6-25"></a><span class="w">  </span>--namespace<span class="w"> </span>AWS/EVS<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-26" name="__codelineno-6-26" href="#__codelineno-6-26"></a><span class="w">  </span>--metric-name<span class="w"> </span>HostStatus<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-27" name="__codelineno-6-27" href="#__codelineno-6-27"></a><span class="w">  </span>--dimensions<span class="w"> </span><span class="nv">Name</span><span class="o">=</span>ClusterId,Value<span class="o">=</span>evs-cluster-id<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-28" name="__codelineno-6-28" href="#__codelineno-6-28"></a><span class="w">  </span>--period<span class="w"> </span><span class="m">300</span><span class="w"> </span>--statistics<span class="w"> </span>Average<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-29" name="__codelineno-6-29" href="#__codelineno-6-29"></a><span class="w">  </span>--start-time<span class="w"> </span><span class="k">$(</span>date<span class="w"> </span>-u<span class="w"> </span>-v-1H<span class="w"> </span>+%Y-%m-%dT%H:%M:%SZ<span class="k">)</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-30" name="__codelineno-6-30" href="#__codelineno-6-30"></a><span class="w">  </span>--end-time<span class="w"> </span><span class="k">$(</span>date<span class="w"> </span>-u<span class="w"> </span>+%Y-%m-%dT%H:%M:%SZ<span class="k">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># S3 — object storage for backups and cold data</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># Access from EVS VMs: via VPC Endpoint (Gateway) or NAT Gateway</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># Recommended: S3 Gateway VPC Endpoint (no cost, stays in VPC)</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>aws<span class="w"> </span>ec2<span class="w"> </span>create-vpc-endpoint<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span>--vpc-id<span class="w"> </span>vpc-evs-xxx<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">  </span>--service-name<span class="w"> </span>com.amazonaws.us-east-1.s3<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">  </span>--route-table-ids<span class="w"> </span>rtb-evs-workload
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="c1"># Route 53 — DNS for VCF components</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># Create private hosted zone for vcf.internal</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="c1"># Associate with EVS VPC</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>aws<span class="w"> </span>route53<span class="w"> </span>create-hosted-zone<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="w">  </span>--name<span class="w"> </span>vcf.internal<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="w">  </span>--vpc<span class="w"> </span><span class="nv">VPCRegion</span><span class="o">=</span>us-east-1,VPCId<span class="o">=</span>vpc-evs-xxx<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="w">  </span>--caller-reference<span class="w"> </span><span class="k">$(</span>date<span class="w"> </span>+%s<span class="k">)</span>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="c1"># IAM — EVS service role</span>
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="c1"># EVS creates an IAM service-linked role: AWSServiceRoleForAmazonEVS</span>
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="c1"># Do not delete this role — EVS uses it for host lifecycle management</span>
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a><span class="c1"># CloudWatch — EVS publishes host metrics (CPU, memory, disk) to CloudWatch</span>
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a><span class="c1"># Namespace: AWS/EVS</span>
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a><span class="c1"># Useful metric: HostCount, HostStatus</span>
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>aws<span class="w"> </span>cloudwatch<span class="w"> </span>get-metric-statistics<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a><span class="w">  </span>--namespace<span class="w"> </span>AWS/EVS<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a><span class="w">  </span>--metric-name<span class="w"> </span>HostStatus<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a><span class="w">  </span>--dimensions<span class="w"> </span><span class="nv">Name</span><span class="o">=</span>ClusterId,Value<span class="o">=</span>evs-cluster-id<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a><span class="w">  </span>--period<span class="w"> </span><span class="m">300</span><span class="w"> </span>--statistics<span class="w"> </span>Average<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a><span class="w">  </span>--start-time<span class="w"> </span><span class="k">$(</span>date<span class="w"> </span>-u<span class="w"> </span>-v-1H<span class="w"> </span>+%Y-%m-%dT%H:%M:%SZ<span class="k">)</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-30" name="__codelineno-5-30" href="#__codelineno-5-30"></a><span class="w">  </span>--end-time<span class="w"> </span><span class="k">$(</span>date<span class="w"> </span>-u<span class="w"> </span>+%Y-%m-%dT%H:%M:%SZ<span class="k">)</span>
 </code></pre></div>
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>

@@ -6913,27 +6913,7 @@ Security platform troubleshooting — certificate validation failures, CyberArk 
 <a class="kb-card" href="authentication-failures/"><strong>Authentication Failures</strong><span>AD, Kerberos, LDAP, certificate, and MFA authentication failure diagnosis and resolution.</span></a>
 </div>
 
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: down
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>symptom: Identify Symptom {shape: diamond}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>symptom_index: &quot;Symptom Index&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>tls_certificate_failures: &quot;TLS / Certificate Failures&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>cyberark_vault_connectivity: &quot;CyberArk Vault Connectivity&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>mfa_duo_troubleshooting: &quot;MFA / Duo Troubleshooting&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>kerberos_authentication_failures: &quot;Kerberos Authentication Failures&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>resolution: Resolve or Escalate {shape: oval}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>symptom -&gt; symptom_index: investigate
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>symptom -&gt; tls_certificate_failures: investigate
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>symptom -&gt; cyberark_vault_connectivity: investigate
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>symptom -&gt; mfa_duo_troubleshooting: investigate
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>symptom -&gt; kerberos_authentication_failures: investigate
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>symptom_index -&gt; resolution
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>tls_certificate_failures -&gt; resolution
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>cyberark_vault_connectivity -&gt; resolution
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>mfa_duo_troubleshooting -&gt; resolution
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>kerberos_authentication_failures -&gt; resolution
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqFks1ugzAQhO88xSr3qncOlRBtpKjtpYl6tRzYgBXjjfxDiyrevbYICUE4uYHnmzUzSyk0FlaQSqGkH5UkpmtOlpoUNiUqKw4dbIcT-DM1P6HnBG9Ilf2IMqFK_E1hNYKb8L668OECriqJfWKlYQVqP1YU3CI7cCGdRuPNu48tPEN-FWF9FhcnFd0eNddH1nInLStIqZCjFbbzw_KgZvoI30GFfKIuTmsOnJWOmNXk9hJNTWSFqvykz3XmP-vVEexutcU5R9T-YjKMO1uH-nwQ3-005_sZgewGuZ_Wn5N0w5q-wnOLQBreTMFlqGq0UMtlf9khPL3AbEdCtWisqLxpSsX3EjHcrT_iiZYc4R-XuWAcggb7tbPobzfD7oSakZEoM-pRgBn-D6zcVxk=?" /></p>
 <h2 id="symptom-index">Symptom Index<a class="headerlink" href="#symptom-index" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -6982,52 +6962,52 @@ Security platform troubleshooting — certificate validation failures, CyberArk 
 </tbody>
 </table>
 <h2 id="tls-certificate-failures">TLS / Certificate Failures<a class="headerlink" href="#tls-certificate-failures" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Check certificate chain</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>host:443<span class="w"> </span>-servername<span class="w"> </span>host.example.com<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">&#39;verify|subject|issuer|Cipher|Protocol&#39;</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Check expiry</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-dates<span class="w"> </span>-in<span class="w"> </span>/etc/ssl/certs/cert.crt
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Check if CA in trust store</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>openssl<span class="w"> </span>verify<span class="w"> </span>-CAfile<span class="w"> </span>/etc/ssl/certs/ca-certificates.crt<span class="w"> </span>cert.crt
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Check certificate chain</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>host:443<span class="w"> </span>-servername<span class="w"> </span>host.example.com<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">&#39;verify|subject|issuer|Cipher|Protocol&#39;</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Check expiry</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-dates<span class="w"> </span>-in<span class="w"> </span>/etc/ssl/certs/cert.crt
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># Check if CA in trust store</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>openssl<span class="w"> </span>verify<span class="w"> </span>-CAfile<span class="w"> </span>/etc/ssl/certs/ca-certificates.crt<span class="w"> </span>cert.crt
 </code></pre></div>
 <p><strong>Expected output:</strong> Chain check shows <code>verify return:1</code> for each cert in the chain and <code>Verification: OK</code> at the end. <code>openssl verify</code> returns <code>cert.crt: OK</code>. Absence of <code>OK</code> or presence of <code>verify error:num=</code> indicates a chain or trust store problem.</p>
 <p>See <a href="../../protocols/tls/troubleshooting/">TLS Troubleshooting</a> for detailed steps.</p>
 <h2 id="cyberark-vault-connectivity">CyberArk Vault Connectivity<a class="headerlink" href="#cyberark-vault-connectivity" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Test vault reachability (port 1858)</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>nc<span class="w"> </span>-zv<span class="w"> </span>vault.corp.local<span class="w"> </span><span class="m">1858</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Test CPM → target account</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Review: PrivateArk → Monitoring → Last PM Action log</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Verify CPM service running</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>sc<span class="w"> </span>query<span class="w"> </span>CyberArk_CPM<span class="w">   </span><span class="c1"># Windows</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Test vault reachability (port 1858)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>nc<span class="w"> </span>-zv<span class="w"> </span>vault.corp.local<span class="w"> </span><span class="m">1858</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Test CPM → target account</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Review: PrivateArk → Monitoring → Last PM Action log</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Verify CPM service running</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>sc<span class="w"> </span>query<span class="w"> </span>CyberArk_CPM<span class="w">   </span><span class="c1"># Windows</span>
 </code></pre></div>
 <p><strong>Expected output:</strong> <code>nc</code> returns <code>Connection to vault.corp.local port 1858 [tcp] succeeded</code>. <code>sc query CyberArk_CPM</code> shows <code>STATE: 4 RUNNING</code>. If connection refused, check firewall rule for TCP 1858 between the CPM server and the Vault.</p>
 <h2 id="mfa-duo-troubleshooting">MFA / Duo Troubleshooting<a class="headerlink" href="#mfa-duo-troubleshooting" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Symptom: User not receiving push
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Check:
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>1. Mobile app connectivity (iOS/Android not blocked by corporate MDM)
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>2. Duo Authentication Proxy: tail /var/log/duo/authproxy.log
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>3. User enrolled: Duo Admin Panel → Users → search user
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>4. Failopen vs failclosed: check duoproxy.cfg fail_mode
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Symptom: User not receiving push
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>Check:
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>1. Mobile app connectivity (iOS/Android not blocked by corporate MDM)
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>2. Duo Authentication Proxy: tail /var/log/duo/authproxy.log
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>3. User enrolled: Duo Admin Panel → Users → search user
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>4. Failopen vs failclosed: check duoproxy.cfg fail_mode
 </code></pre></div>
 <h2 id="kerberos-authentication-failures">Kerberos Authentication Failures<a class="headerlink" href="#kerberos-authentication-failures" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check time sync (&lt; 5 min drift required)</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>date<span class="p">;</span><span class="w"> </span>ntpq<span class="w"> </span>-pn
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>timedatectl<span class="w"> </span>status
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># List current Kerberos tickets</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>klist<span class="w"> </span>-e
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Test kinit</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>kinit<span class="w"> </span>username@CORP.LOCAL
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>klist
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="c1"># Check SPN</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>setspn<span class="w"> </span>-L<span class="w"> </span>hostname<span class="w">   </span><span class="c1"># Windows</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>ldapsearch<span class="w"> </span>-H<span class="w"> </span>ldap://dc<span class="w"> </span>-D<span class="w"> </span><span class="s2">&quot;CORP\admin&quot;</span><span class="w"> </span>-W<span class="w"> </span>-b<span class="w"> </span><span class="s2">&quot;DC=corp,DC=local&quot;</span><span class="w"> </span><span class="s2">&quot;(servicePrincipalName=HTTP/host.corp.local)&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Check time sync (&lt; 5 min drift required)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>date<span class="p">;</span><span class="w"> </span>ntpq<span class="w"> </span>-pn
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>timedatectl<span class="w"> </span>status
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># List current Kerberos tickets</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>klist<span class="w"> </span>-e
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># Test kinit</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>kinit<span class="w"> </span>username@CORP.LOCAL
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>klist
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="c1"># Check SPN</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>setspn<span class="w"> </span>-L<span class="w"> </span>hostname<span class="w">   </span><span class="c1"># Windows</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>ldapsearch<span class="w"> </span>-H<span class="w"> </span>ldap://dc<span class="w"> </span>-D<span class="w"> </span><span class="s2">&quot;CORP\admin&quot;</span><span class="w"> </span>-W<span class="w"> </span>-b<span class="w"> </span><span class="s2">&quot;DC=corp,DC=local&quot;</span><span class="w"> </span><span class="s2">&quot;(servicePrincipalName=HTTP/host.corp.local)&quot;</span>
 </code></pre></div>
 
 

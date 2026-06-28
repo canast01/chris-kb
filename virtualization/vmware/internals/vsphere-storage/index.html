@@ -9493,23 +9493,7 @@
 <p><img alt="vSphere Storage Architecture — Datastores, Policies, and Advanced Features" src="../../../../assets/virtualization-vmware-internals-vsphere-storage-index.svg" /></p>
 <p>vSphere supports a broad set of storage protocols and datastore types. Choosing the right combination depends on performance requirements, existing hardware, budget, and operational complexity. This page covers the full vSphere storage stack from protocols through SPBM policies, multipathing, and advanced features such as NVMe-oF and PMem — all areas covered on the VCP-DCV 8 exam.</p>
 <hr />
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>center: &quot;Vsphere Storage&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>storage_protocol_overview: &quot;Storage Protocol Overview&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>datastore_types: &quot;Datastore Types&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>storage_policies_spbm: &quot;Storage Policies — SPBM&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>vaai_and_vasa: &quot;VAAI and VASA&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>multipathing: &quot;Multipathing&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>sioc_storage_io_control: &quot;SIOC — Storage I/O Control&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>center -&gt; storage_protocol_overview
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>center -&gt; datastore_types
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>center -&gt; storage_policies_spbm
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>center -&gt; vaai_and_vasa
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>center -&gt; multipathing
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>center -&gt; sioc_storage_io_control
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp1UUFqwzAQvPsVS-6ldx8KTnrxITjgkKvYyou94GiFpLopJdBH9IV9SW2stGpRjzujmZ0ddexIBxZTguN-CEWhyQRyJWxO3g7kCNogDnvawJsf0FIJA12wF3Mt_Moo6ySIllHJRG5iepnVUQWHyEETuR-fZTOafqRr0WHAxY1UeLXkZ_3jDYHjgmRV3_tlZM3klbdP53R3xOHz_QPaw3afdZkQWaHp1IQel7urqoZ5hlPVVlnF-XkMbDEMbPpZsE_GfE4WrW5hWZQWE5yMS9K62a3pYuT6voHdSmet4vfA3QP8237y5k-vOXXaXcL_aiXB09tTu_yJxRdak9-J?" /></p>
 <h2 id="storage-protocol-overview">Storage Protocol Overview<a class="headerlink" href="#storage-protocol-overview" title="Permanent link">&para;</a></h2>
 <p>vSphere can present storage to VMs through five main protocol stacks. The choice of protocol determines latency characteristics, cabling requirements, management complexity, and which datastore types are available.</p>
 <h3 id="protocol-comparison-table">Protocol Comparison Table<a class="headerlink" href="#protocol-comparison-table" title="Permanent link">&para;</a></h3>
@@ -9565,16 +9549,16 @@
 <p><strong>VCP-DCV Exam Note:</strong> iSCSI can use either a software initiator (built into ESXi VMkernel, no HBA required) or a hardware initiator (dedicated iSCSI HBA). Software iSCSI uses more CPU but is cheaper. Hardware iSCSI offloads processing to the HBA. Both support multipathing.</p>
 </blockquote>
 <h3 id="fc-vs-iscsi-vs-nfs-decision-guide">FC vs iSCSI vs NFS Decision Guide<a class="headerlink" href="#fc-vs-iscsi-vs-nfs-decision-guide" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Need shared block storage?
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    ├── Already have FC fabric? → Use FC (VMFS)
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    ├── IP-only network? → Use iSCSI (VMFS)
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    └── Need file-level sharing or templates? → Use NFS
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>Need HCI / converged storage?
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>    └── Use vSAN (local drives pooled via software)
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>Need per-VM policy control via array?
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>    └── Use vVols (requires VASA-capable array)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Need shared block storage?
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    ├── Already have FC fabric? → Use FC (VMFS)
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    ├── IP-only network? → Use iSCSI (VMFS)
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    └── Need file-level sharing or templates? → Use NFS
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>Need HCI / converged storage?
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    └── Use vSAN (local drives pooled via software)
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>Need per-VM policy control via array?
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    └── Use vVols (requires VASA-capable array)
 </code></pre></div>
 <hr />
 <h2 id="datastore-types">Datastore Types<a class="headerlink" href="#datastore-types" title="Permanent link">&para;</a></h2>
@@ -9587,12 +9571,12 @@
 <li>On-disk locking uses <strong>ATS (Atomic Test and Set)</strong> on hardware that supports it</li>
 </ul>
 <p><strong>Datastore provisioning commands:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># List available devices for VMFS</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>filesystem<span class="w"> </span>list
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>device<span class="w"> </span>list
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Create VMFS6 datastore (use vSphere Client for production)</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>vmfs<span class="w"> </span>extent<span class="w"> </span>add<span class="w"> </span>--volume-label<span class="o">=</span>DS-PROD01<span class="w"> </span>--disk-name<span class="o">=</span>naa.xxx
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># List available devices for VMFS</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>filesystem<span class="w"> </span>list
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>device<span class="w"> </span>list
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Create VMFS6 datastore (use vSphere Client for production)</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>vmfs<span class="w"> </span>extent<span class="w"> </span>add<span class="w"> </span>--volume-label<span class="o">=</span>DS-PROD01<span class="w"> </span>--disk-name<span class="o">=</span>naa.xxx
 </code></pre></div>
 <h3 id="nfs-41">NFS 4.1<a class="headerlink" href="#nfs-41" title="Permanent link">&para;</a></h3>
 <p>NFS datastores mount a network file share directly from a NAS array. NFS 4.1 (recommended over 3.x) adds:
@@ -9619,13 +9603,13 @@
 </ul>
 <h3 id="datastore-clusters-and-storage-drs-sdrs">Datastore Clusters and Storage DRS (SDRS)<a class="headerlink" href="#datastore-clusters-and-storage-drs-sdrs" title="Permanent link">&para;</a></h3>
 <p>A datastore cluster groups multiple datastores so that SDRS can balance space and I/O load across them, similar to how compute DRS balances hosts.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Datastore Cluster: GOLD-STORAGE
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  ├── Datastore: SAN-LUN-01  (10 TB, 80% full)
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  ├── Datastore: SAN-LUN-02  (10 TB, 40% full)
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>  └── Datastore: SAN-LUN-03  (10 TB, 55% full)
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>        │
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>        SDRS migrates VMDKs via Storage vMotion
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>        to rebalance space and I/O
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Datastore Cluster: GOLD-STORAGE
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>  ├── Datastore: SAN-LUN-01  (10 TB, 80% full)
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>  ├── Datastore: SAN-LUN-02  (10 TB, 40% full)
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>  └── Datastore: SAN-LUN-03  (10 TB, 55% full)
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>        │
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>        SDRS migrates VMDKs via Storage vMotion
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>        to rebalance space and I/O
 </code></pre></div>
 <p>SDRS generates migration recommendations or acts automatically (similar to compute DRS automation levels).</p>
 <hr />
@@ -9695,12 +9679,12 @@
 <p><strong>VCP-DCV Exam Note:</strong> A VM can show "Non-compliant" immediately after a datastore goes degraded — for example, a vSAN host failure that drops below FTT requirements. vCenter flags the compliance state within 15 minutes of a capacity-affecting event. The VM keeps running; it is just unprotected per its policy.</p>
 </blockquote>
 <h3 id="applying-policies">Applying Policies<a class="headerlink" href="#applying-policies" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>vSphere Client:
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>  VM → Edit Settings → VM Storage Policy → [select policy]
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>PowerCLI:
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>  $policy = Get-SpbmStoragePolicy -Name &quot;vSAN-RAID5-FTT1&quot;
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>  Set-SpbmEntityConfiguration -StoragePolicy $policy -Entity (Get-HardDisk -VM &quot;PROD-DB01&quot;)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>vSphere Client:
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  VM → Edit Settings → VM Storage Policy → [select policy]
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>PowerCLI:
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>  $policy = Get-SpbmStoragePolicy -Name &quot;vSAN-RAID5-FTT1&quot;
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>  Set-SpbmEntityConfiguration -StoragePolicy $policy -Entity (Get-HardDisk -VM &quot;PROD-DB01&quot;)
 </code></pre></div>
 <hr />
 <h2 id="vaai-and-vasa">VAAI and VASA<a class="headerlink" href="#vaai-and-vasa" title="Permanent link">&para;</a></h2>
@@ -9771,18 +9755,18 @@
 <h2 id="multipathing">Multipathing<a class="headerlink" href="#multipathing" title="Permanent link">&para;</a></h2>
 <p>ESXi uses the Native Multipathing Plugin (NMP) framework to manage multiple physical paths to a storage device.</p>
 <h3 id="nmp-architecture">NMP Architecture<a class="headerlink" href="#nmp-architecture" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>VM I/O Request
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>      │
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>      ▼
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>  NMP (Native Multipathing Plugin)
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>      │
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>      ├── SATP (Storage Array Type Plugin)
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>      │     Identifies array vendor, manages path health
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>      │     Examples: VMW_SATP_ALUA, VMW_SATP_SVC, VMW_SATP_LOCAL
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>      │
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>      └── PSP (Path Selection Plugin)
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>            Selects which physical path to use for each I/O
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>            Examples: VMW_PSP_RR, VMW_PSP_MRU, VMW_PSP_FIXED
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>VM I/O Request
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>      │
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>      ▼
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>  NMP (Native Multipathing Plugin)
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>      │
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>      ├── SATP (Storage Array Type Plugin)
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>      │     Identifies array vendor, manages path health
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>      │     Examples: VMW_SATP_ALUA, VMW_SATP_SVC, VMW_SATP_LOCAL
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>      │
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>      └── PSP (Path Selection Plugin)
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>            Selects which physical path to use for each I/O
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>            Examples: VMW_PSP_RR, VMW_PSP_MRU, VMW_PSP_FIXED
 </code></pre></div>
 <h3 id="path-selection-plugins-psp">Path Selection Plugins (PSP)<a class="headerlink" href="#path-selection-plugins-psp" title="Permanent link">&para;</a></h3>
 <table>
@@ -9816,32 +9800,32 @@
 </blockquote>
 <h3 id="iscsi-multipath-setup">iSCSI Multipath Setup<a class="headerlink" href="#iscsi-multipath-setup" title="Permanent link">&para;</a></h3>
 <p>Software iSCSI multipath requires multiple VMkernel ports bound to the software iSCSI initiator:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># List iSCSI adapters</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>esxcli<span class="w"> </span>iscsi<span class="w"> </span>adapter<span class="w"> </span>list
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Bind VMkernel ports to iSCSI adapter</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>esxcli<span class="w"> </span>iscsi<span class="w"> </span>networkportal<span class="w"> </span>add<span class="w"> </span>--adapter<span class="w"> </span>vmhba65<span class="w"> </span>--nic<span class="w"> </span>vmk1
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>esxcli<span class="w"> </span>iscsi<span class="w"> </span>networkportal<span class="w"> </span>add<span class="w"> </span>--adapter<span class="w"> </span>vmhba65<span class="w"> </span>--nic<span class="w"> </span>vmk2
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># Verify paths</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>nmp<span class="w"> </span>path<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>vmhba65
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># List iSCSI adapters</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>esxcli<span class="w"> </span>iscsi<span class="w"> </span>adapter<span class="w"> </span>list
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Bind VMkernel ports to iSCSI adapter</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>esxcli<span class="w"> </span>iscsi<span class="w"> </span>networkportal<span class="w"> </span>add<span class="w"> </span>--adapter<span class="w"> </span>vmhba65<span class="w"> </span>--nic<span class="w"> </span>vmk1
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>esxcli<span class="w"> </span>iscsi<span class="w"> </span>networkportal<span class="w"> </span>add<span class="w"> </span>--adapter<span class="w"> </span>vmhba65<span class="w"> </span>--nic<span class="w"> </span>vmk2
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># Verify paths</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>nmp<span class="w"> </span>path<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>vmhba65
 </code></pre></div>
 <p>ALUA (Asymmetric Logical Unit Access) arrays expose preferred/non-preferred path states. ESXi selects paths accordingly via the SATP.</p>
 <hr />
 <h2 id="sioc-storage-io-control">SIOC — Storage I/O Control<a class="headerlink" href="#sioc-storage-io-control" title="Permanent link">&para;</a></h2>
 <p>SIOC prevents storage "noisy neighbor" problems by enforcing per-VM disk I/O shares when the datastore is congested.</p>
 <h3 id="how-sioc-works">How SIOC Works<a class="headerlink" href="#how-sioc-works" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Normal operation (no congestion):
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>  All VMs get full I/O they request — shares ignored
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>Datastore congestion detected:
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>  (Latency &gt; congestion threshold, default 30 ms for SSD, 30 ms HDD)
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>        │
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>        ▼
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>  SIOC activates per-VM I/O throttling
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>  VM shares determine allocation:
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>    High shares VM  → gets more IOPS
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>    Low shares VM   → throttled
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Normal operation (no congestion):
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>  All VMs get full I/O they request — shares ignored
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>Datastore congestion detected:
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>  (Latency &gt; congestion threshold, default 30 ms for SSD, 30 ms HDD)
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>        │
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>        ▼
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>  SIOC activates per-VM I/O throttling
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>  VM shares determine allocation:
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>    High shares VM  → gets more IOPS
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>    Low shares VM   → throttled
 </code></pre></div>
 <p><strong>SIOC configuration per VM:</strong></p>
 <table>
@@ -9875,9 +9859,9 @@
 <p><strong>VCP-DCV Exam Note:</strong> SIOC congestion threshold is 30 ms by default (configurable). SIOC only activates when the datastore is congested — it has no effect during normal operation. SIOC requires the datastore to be enabled for SIOC in the datastore settings. It works with VMFS and NFS datastores, but NOT with vVols (vVols use array-side QoS via SPBM).</p>
 </blockquote>
 <h3 id="enabling-sioc">Enabling SIOC<a class="headerlink" href="#enabling-sioc" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>vSphere Client:
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>  Datastore → Configure → General → Storage I/O Control → Enabled
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>  Set congestion threshold (default: 30 ms, or % of peak throughput)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>vSphere Client:
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>  Datastore → Configure → General → Storage I/O Control → Enabled
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>  Set congestion threshold (default: 30 ms, or % of peak throughput)
 </code></pre></div>
 <hr />
 <h2 id="raw-device-mapping-rdm">Raw Device Mapping (RDM)<a class="headerlink" href="#raw-device-mapping-rdm" title="Permanent link">&para;</a></h2>
@@ -9917,11 +9901,11 @@
 <li>The .vmdk file in VMFS is just a mapping descriptor; the actual data is on the raw LUN</li>
 <li>Physical RDMs cannot be used with FT-protected VMs</li>
 </ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># List RDMs attached to a VM</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>vim-cmd<span class="w"> </span>vmsvc/get.summary<span class="w"> </span>&lt;vmid&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>rdm
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># ESXi — list available LUNs for RDM</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>device<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>naa
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># List RDMs attached to a VM</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>vim-cmd<span class="w"> </span>vmsvc/get.summary<span class="w"> </span>&lt;vmid&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>rdm
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># ESXi — list available LUNs for RDM</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>device<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>naa
 </code></pre></div>
 <hr />
 <h2 id="advanced-storage-pmem-nvme-and-nvme-of">Advanced Storage: PMem, NVMe, and NVMe-oF<a class="headerlink" href="#advanced-storage-pmem-nvme-and-nvme-of" title="Permanent link">&para;</a></h2>
@@ -9939,11 +9923,11 @@
 - VMFS6 can be created on NVMe devices
 - Lower I/O overhead vs SCSI-attached SSDs
 - vSAN ESA is designed around NVMe-only storage (no HDD or SATA SSD)</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># List NVMe adapters</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>esxcli<span class="w"> </span>nvme<span class="w"> </span>adapter<span class="w"> </span>list
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># List NVMe namespaces</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>esxcli<span class="w"> </span>nvme<span class="w"> </span>namespace<span class="w"> </span>list<span class="w"> </span>--adapter<span class="w"> </span>vmhba1
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># List NVMe adapters</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>esxcli<span class="w"> </span>nvme<span class="w"> </span>adapter<span class="w"> </span>list
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># List NVMe namespaces</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>esxcli<span class="w"> </span>nvme<span class="w"> </span>namespace<span class="w"> </span>list<span class="w"> </span>--adapter<span class="w"> </span>vmhba1
 </code></pre></div>
 <h3 id="nvme-of-nvme-over-fabrics">NVMe-oF — NVMe over Fabrics<a class="headerlink" href="#nvme-of-nvme-over-fabrics" title="Permanent link">&para;</a></h3>
 <p>NVMe-oF extends NVMe semantics over a network fabric, enabling shared NVMe storage with near-local latency:</p>

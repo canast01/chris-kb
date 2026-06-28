@@ -8183,23 +8183,7 @@ Restores a system to its last known-good state when a change produces failures, 
 *Applies to: ServiceNow*
 </div>
 <p><img alt="Rollback Procedure" src="../../../../assets/itsm-servicenow-lifecycle-rollback-procedure-index.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>center: &quot;ServiceNow&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>decision_framework: &quot;Decision Framework&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>method_3_configuration_revert: &quot;Method 3 — Configuration Revert&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>method_4_database_rollback: &quot;Method 4 — Database Rollback&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>method_5_full_backup_restore: &quot;Method 5 — Full Backup Restore&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>postrollback_validation: &quot;Post-Rollback Validation&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>rollback_checklist: &quot;Rollback Checklist&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>center -&gt; decision_framework
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>center -&gt; method_3_configuration_revert
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>center -&gt; method_4_database_rollback
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>center -&gt; method_5_full_backup_restore
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>center -&gt; postrollback_validation
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>center -&gt; rollback_checklist
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp9kU1qwzAQhfc-xeB9Vkk2XnTRhOxaQgrdiok8toUVyUiyUyiBHqIn7Ekqq_4Du97OfO_p6U0qDHEntErAiLxwUcRJOTIJxG9kGsHpVd9j-LQFVpRAQR-Ya_WIUuLCehnLDN7ork3pFcduCKd-OCrbZ1Dlkh7RjVyhU7ZlXKtM5LXBNgAz1JBx3uYl7GELP1_fcJgycAnMmuuOpejwipaY0VJekZej5S5YHjsALh2w5rdnWS0la7G68hmt04ZGx31wPHkEngPiIwZk0bPS1vWpWINSpPjXfXz2m02fB96H1aLNYMEL4qUUtm1tEB_64aK2uy9snmB-w8ly9UhzbqH2ObTY5QT7p54JMf959AtSpAW9?" /></p>
 <h2 id="decision-framework">Decision Framework<a class="headerlink" href="#decision-framework" title="Permanent link">&para;</a></h2>
 <pre class="mermaid"><code>flowchart TD
     A[Change Applied] --&gt; B{Post-change\nvalidation}
@@ -8213,50 +8197,50 @@ Restores a system to its last known-good state when a change produces failures, 
     F --&gt; H[Execute rollback]
     H --&gt; I[Validate rollback]
     I --&gt; J[Incident report\nand change re-plan]</code></pre>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Windows — uninstall cumulative update</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>wusa<span class="w"> </span>/uninstall<span class="w"> </span>/kb:&lt;KBnumber&gt;<span class="w"> </span>/quiet<span class="w"> </span>/norestart
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Windows — uninstall cumulative update</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>wusa<span class="w"> </span>/uninstall<span class="w"> </span>/kb:&lt;KBnumber&gt;<span class="w"> </span>/quiet<span class="w"> </span>/norestart
 </code></pre></div>
 <h2 id="method-3-configuration-revert">Method 3 — Configuration Revert<a class="headerlink" href="#method-3-configuration-revert" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Ansible — revert to previous playbook version</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>git<span class="w"> </span>checkout<span class="w"> </span>&lt;previous-commit&gt;<span class="w"> </span>--<span class="w"> </span>playbooks/site.yml
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>ansible-playbook<span class="w"> </span>-i<span class="w"> </span>inventory/production/<span class="w"> </span>playbooks/site.yml<span class="w"> </span>--limit<span class="w"> </span>&lt;hostname&gt;
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Manual file revert from backup copy</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>cp<span class="w"> </span>/etc/nginx/nginx.conf.bak.<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span><span class="w"> </span>/etc/nginx/nginx.conf
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>nginx<span class="w"> </span>-t<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>systemctl<span class="w"> </span>reload<span class="w"> </span>nginx
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Cisco IOS — revert to startup config</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>copy<span class="w"> </span>startup-config<span class="w"> </span>running-config
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># Arista EOS</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>configure<span class="w"> </span>replace<span class="w"> </span>checkpoint://pre-change-&lt;hostname&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Ansible — revert to previous playbook version</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>git<span class="w"> </span>checkout<span class="w"> </span>&lt;previous-commit&gt;<span class="w"> </span>--<span class="w"> </span>playbooks/site.yml
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>ansible-playbook<span class="w"> </span>-i<span class="w"> </span>inventory/production/<span class="w"> </span>playbooks/site.yml<span class="w"> </span>--limit<span class="w"> </span>&lt;hostname&gt;
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Manual file revert from backup copy</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>cp<span class="w"> </span>/etc/nginx/nginx.conf.bak.<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span><span class="w"> </span>/etc/nginx/nginx.conf
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>nginx<span class="w"> </span>-t<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>systemctl<span class="w"> </span>reload<span class="w"> </span>nginx
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># Cisco IOS — revert to startup config</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>copy<span class="w"> </span>startup-config<span class="w"> </span>running-config
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c1"># Arista EOS</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>configure<span class="w"> </span>replace<span class="w"> </span>checkpoint://pre-change-&lt;hostname&gt;
 </code></pre></div>
 <h2 id="method-4-database-rollback">Method 4 — Database Rollback<a class="headerlink" href="#method-4-database-rollback" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># PostgreSQL — restore from pre-change dump</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>pg_restore<span class="w"> </span>-h<span class="w"> </span>&lt;host&gt;<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-d<span class="w"> </span>&lt;db&gt;<span class="w"> </span>--clean<span class="w"> </span>/backups/&lt;db&gt;-pre-change-<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>.dump
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># SQL Server</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>RESTORE<span class="w"> </span>DATABASE<span class="w"> </span><span class="o">[</span>dbname<span class="o">]</span><span class="w"> </span>FROM<span class="w"> </span><span class="nv">DISK</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;D:\Backups\dbname_pre_change.bak&#39;</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span>WITH<span class="w"> </span>REPLACE,<span class="w"> </span>RECOVERY,<span class="w"> </span><span class="nv">STATS</span><span class="o">=</span><span class="m">10</span><span class="p">;</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># PostgreSQL PITR</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># In recovery.conf:</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># recovery_target_time = &#39;2026-05-10 02:00:00&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># PostgreSQL — restore from pre-change dump</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>pg_restore<span class="w"> </span>-h<span class="w"> </span>&lt;host&gt;<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-d<span class="w"> </span>&lt;db&gt;<span class="w"> </span>--clean<span class="w"> </span>/backups/&lt;db&gt;-pre-change-<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>.dump
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># SQL Server</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>RESTORE<span class="w"> </span>DATABASE<span class="w"> </span><span class="o">[</span>dbname<span class="o">]</span><span class="w"> </span>FROM<span class="w"> </span><span class="nv">DISK</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;D:\Backups\dbname_pre_change.bak&#39;</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span>WITH<span class="w"> </span>REPLACE,<span class="w"> </span>RECOVERY,<span class="w"> </span><span class="nv">STATS</span><span class="o">=</span><span class="m">10</span><span class="p">;</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># PostgreSQL PITR</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># In recovery.conf:</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># recovery_target_time = &#39;2026-05-10 02:00:00&#39;</span>
 </code></pre></div>
 <h2 id="method-5-full-backup-restore">Method 5 — Full Backup Restore<a class="headerlink" href="#method-5-full-backup-restore" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Veeam — restore entire VM from backup</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nv">$backup</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>Get-VBRBackup<span class="w"> </span>-Name<span class="w"> </span><span class="s2">&quot;Production VMs&quot;</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="nv">$restorePoint</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>Get-VBRRestorePoint<span class="w"> </span>-Backup<span class="w"> </span><span class="nv">$backup</span><span class="w"> </span>-Name<span class="w"> </span><span class="s2">&quot;HOSTNAME&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Select-Object<span class="w"> </span>-Last<span class="w"> </span><span class="m">1</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>Start-VBRRestoreVM<span class="w"> </span>-RestorePoint<span class="w"> </span><span class="nv">$restorePoint</span><span class="w"> </span>-PowerState<span class="w"> </span>PowerOn
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Veeam — restore entire VM from backup</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nv">$backup</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>Get-VBRBackup<span class="w"> </span>-Name<span class="w"> </span><span class="s2">&quot;Production VMs&quot;</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="nv">$restorePoint</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>Get-VBRRestorePoint<span class="w"> </span>-Backup<span class="w"> </span><span class="nv">$backup</span><span class="w"> </span>-Name<span class="w"> </span><span class="s2">&quot;HOSTNAME&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Select-Object<span class="w"> </span>-Last<span class="w"> </span><span class="m">1</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>Start-VBRRestoreVM<span class="w"> </span>-RestorePoint<span class="w"> </span><span class="nv">$restorePoint</span><span class="w"> </span>-PowerState<span class="w"> </span>PowerOn
 </code></pre></div>
 <p><strong>Expected time:</strong> 30–120 minutes depending on backup size.</p>
 <h2 id="post-rollback-validation">Post-Rollback Validation<a class="headerlink" href="#post-rollback-validation" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>systemctl<span class="w"> </span>--failed
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>journalctl<span class="w"> </span>-p<span class="w"> </span>err<span class="w"> </span>-n<span class="w"> </span><span class="m">50</span><span class="w"> </span>--no-pager
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>curl<span class="w"> </span>-sk<span class="w"> </span>https://&lt;app-url&gt;/health
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># Confirm the specific change is reverted</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>&lt;version-check-command&gt;<span class="w">   </span><span class="c1"># e.g. rpm -q nginx, vmware -v</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>systemctl<span class="w"> </span>--failed
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>journalctl<span class="w"> </span>-p<span class="w"> </span>err<span class="w"> </span>-n<span class="w"> </span><span class="m">50</span><span class="w"> </span>--no-pager
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>curl<span class="w"> </span>-sk<span class="w"> </span>https://&lt;app-url&gt;/health
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Confirm the specific change is reverted</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>&lt;version-check-command&gt;<span class="w">   </span><span class="c1"># e.g. rpm -q nginx, vmware -v</span>
 </code></pre></div>
 <h2 id="rollback-checklist">Rollback Checklist<a class="headerlink" href="#rollback-checklist" title="Permanent link">&para;</a></h2>
 <table>

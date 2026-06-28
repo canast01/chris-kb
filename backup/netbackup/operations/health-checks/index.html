@@ -7706,25 +7706,7 @@ Health Checks reference covering Daily Check Flow, Daily Checklist, Job Monitori
 *Applies to: NetBackup 10.x*
 </div>
 <p><img alt="NetBackup — Health Checks" src="../../../../assets/backup-netbackup-operations-health-checks-index.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>begin_checks: &quot;Begin Checks&quot; {shape: oval}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>run_this_routine: &quot;Run This Routine&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>daily_check_flow: &quot;Daily Check Flow&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>daily_checklist: &quot;Daily Checklist&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>job_monitoring: &quot;Job Monitoring&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>validation: &quot;Validation&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>verify: &quot;Verify&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>generate_report: &quot;Generate Report&quot; {shape: oval}
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>begin_checks -&gt; run_this_routine
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>run_this_routine -&gt; daily_check_flow
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>daily_check_flow -&gt; daily_checklist
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>daily_checklist -&gt; job_monitoring
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>job_monitoring -&gt; validation
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>validation -&gt; verify
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>verify -&gt; generate_report
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqFkUFqwzAQRfc6xeB9L-BFF01JoNCNKdkK2Z7I06pSGMstoeTu1cghqRVDd5rn_xnrqSfGLlLwNTDZISrVoiWvuwG7j7GG6klG2OSxgp9xMEesIXwZd1Y8eR0HGjWHKZJPvGomD28JQTOjW0X2GG8dnlVvyJ3mFfrgwnfqPQua18A2of96jsa4rAlZbb2HVn8GTzEweZtKL6GF1ytY7aTrUW9mL9X-Oqxnkelwklw-rGYsemQTUTMeA8uf7y4EmkxKtYtngIdHKF3fyZdQKfbOdBESZ6VViSyVFQYlcPPzR1X-kB1cnAgobq5-AY1d5C4=?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Access:</strong> Backup admin role on backup server; target system credentials</li>
@@ -7737,34 +7719,34 @@ Health Checks reference covering Daily Check Flow, Daily Checklist, Job Monitori
 <p>Run these commands on the NetBackup Primary Server each morning for a complete health snapshot.</p>
 <ol>
 <li><strong>NBU services status</strong> — confirm all NetBackup daemons/services are running:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>nbservices
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>nbservices
 </code></pre></div></li>
 <li><strong>Job activity summary</strong> — review active and queued job counts:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>bpdbjobs<span class="w"> </span>-summary
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>bpdbjobs<span class="w"> </span>-summary
 </code></pre></div></li>
 <li><strong>Failed jobs (last 24 h)</strong> — list all failed jobs with detail:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>bpdbjobs<span class="w"> </span>-filter<span class="w"> </span><span class="nv">starttime</span><span class="o">=</span>-24:00:00,status<span class="o">=</span>FAILED<span class="w"> </span>-l<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-50
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>bpdbjobs<span class="w"> </span>-filter<span class="w"> </span><span class="nv">starttime</span><span class="o">=</span>-24:00:00,status<span class="o">=</span>FAILED<span class="w"> </span>-l<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-50
 </code></pre></div></li>
 <li><strong>Media server connectivity</strong> — test connectivity to each media server (repeat per host):
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>bptestbpcd<span class="w"> </span>-host<span class="w"> </span>&lt;media-server&gt;
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>bptestbpcd<span class="w"> </span>-host<span class="w"> </span>&lt;media-server&gt;
 </code></pre></div></li>
 <li><strong>Storage unit status</strong> — confirm all STUs are Online:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>nbdevquery<span class="w"> </span>-liststu<span class="w"> </span>-U
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>nbdevquery<span class="w"> </span>-liststu<span class="w"> </span>-U
 </code></pre></div></li>
 <li><strong>MSDP pool status</strong> — check dedup pool free space:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>nbdevquery<span class="w"> </span>-listdp<span class="w"> </span>-U
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>nbdevquery<span class="w"> </span>-listdp<span class="w"> </span>-U
 </code></pre></div></li>
 <li><strong>Client connectivity sample</strong> — spot-check critical clients (repeat per host):
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>bptestbpcd<span class="w"> </span>-host<span class="w"> </span>&lt;client&gt;
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>bptestbpcd<span class="w"> </span>-host<span class="w"> </span>&lt;client&gt;
 </code></pre></div></li>
 <li><strong>Catalog backup recency</strong> — confirm catalog was backed up recently:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>bpbackupdb<span class="w"> </span>-h<span class="w"> </span>&lt;primary-server&gt;<span class="w"> </span>-l<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-5
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>bpbackupdb<span class="w"> </span>-h<span class="w"> </span>&lt;primary-server&gt;<span class="w"> </span>-l<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-5
 </code></pre></div></li>
 <li><strong>Policy compliance</strong> — verify a critical policy completed successfully in the last 24 h:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>bpdbjobs<span class="w"> </span>-filter<span class="w"> </span><span class="nv">policy</span><span class="o">=</span>&lt;critical-policy&gt;,starttime<span class="o">=</span>-24:00:00<span class="w"> </span>-l
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>bpdbjobs<span class="w"> </span>-filter<span class="w"> </span><span class="nv">policy</span><span class="o">=</span>&lt;critical-policy&gt;,starttime<span class="o">=</span>-24:00:00<span class="w"> </span>-l
 </code></pre></div></li>
 <li><strong>License check</strong> — confirm licence keys are valid and not expired:
-    <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>nbdevconfig<span class="w"> </span>-listconfig<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>license
+    <div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>nbdevconfig<span class="w"> </span>-listconfig<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>license
 </code></pre></div>
     Or check Admin Console → Host Properties → License Keys.</li>
 </ol>

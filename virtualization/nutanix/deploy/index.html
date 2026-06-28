@@ -7324,25 +7324,7 @@ End-to-end Nutanix cluster deployment — Foundation imaging, IPMI/iDRAC pre-fli
     s5["Phase 5 — Post-Deploy Validation"]
     s6["Prism Central Registration (Optional)"]
     s0 --&gt; s1 --&gt; s2 --&gt; s3 --&gt; s4 --&gt; s5 --&gt; s6</code></pre>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>plan: &quot;Plan&quot; {shape: oval}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>phase_1_preflight_checks: &quot;Phase 1 — Pre-flight Checks&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>phase_2_foundation_imaging: &quot;Phase 2 — Foundation Imaging&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>phase_3_cluster_creation: &quot;Phase 3 — Cluster Creation&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>phase_4_initial_configuration: &quot;Phase 4 — Initial Configuration&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>phase_5_postdeploy_validation: &quot;Phase 5 — Post-Deploy Validation&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>prism_central_registration_optional: &quot;Prism Central Registration (Optional)&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>validate: &quot;Validate&quot; {shape: oval}
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>plan -&gt; phase_1_preflight_checks
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>phase_1_preflight_checks -&gt; phase_2_foundation_imaging
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>phase_2_foundation_imaging -&gt; phase_3_cluster_creation
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>phase_3_cluster_creation -&gt; phase_4_initial_configuration
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>phase_4_initial_configuration -&gt; phase_5_postdeploy_validation
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>phase_5_postdeploy_validation -&gt; prism_central_registration_optional
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>prism_central_registration_optional -&gt; validate
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNkr9OwzAQh_c8xakTDB36b-nAEoTUiYqB9WQ5l8TCtS3bQUIIiYfgCXkSYjttWkhSJiu5775c_LtCWOJeaLUFK6raZ5mRrH2Y7dtjBu-uZoa2oF-Z_MhMzRzhAo2lUgYaeU38xQU8lGAB359fsLc0T3XIY733hI8xVUk6ypZY6kYVLIyA4sAqoaqTbhl1DycAdgmY8K2Qy8Z5ssgtsfRjnW0VbXkqQ96VJ1xrFEp4wSRyrUpRNfZSuI7CXWIgP2cmrBs02vmCjNRv2F6rKC6tm3SHLTO_jxA8n6BhrRXugJyUt-2olirhfJoCtQkHk0EeKMgTBU9nFNw8dtjtoL-bsX056yah34sRlwbmdzC2IaOr0zcNbcLEkvSNfyMf3YW-aSTb6eT79pEQpyOO7dfD-k-gQXXMJfsBY9Zpeg==?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Access:</strong> IPMI/iDRAC/iLO credentials for all nodes; network switch admin access</li>
@@ -7356,183 +7338,183 @@ End-to-end Nutanix cluster deployment — Foundation imaging, IPMI/iDRAC pre-fli
 <h2 id="phase-1-pre-flight-checks">Phase 1 — Pre-flight Checks<a class="headerlink" href="#phase-1-pre-flight-checks" title="Permanent link">&para;</a></h2>
 <h3 id="ipmi-out-of-band-access">IPMI / Out-of-Band Access<a class="headerlink" href="#ipmi-out-of-band-access" title="Permanent link">&para;</a></h3>
 <p>Verify IPMI access to each node before racking:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Test IPMI connectivity (from deployment workstation)</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ipmitool<span class="w"> </span>-I<span class="w"> </span>lanplus<span class="w"> </span>-H<span class="w"> </span>&lt;ipmi-ip&gt;<span class="w"> </span>-U<span class="w"> </span>ADMIN<span class="w"> </span>-P<span class="w"> </span>&lt;password&gt;<span class="w"> </span>chassis<span class="w"> </span>power<span class="w"> </span>status
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Verify virtual console works (needed for Foundation)</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Access: https://&lt;ipmi-ip&gt; → Remote Console</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Test IPMI connectivity (from deployment workstation)</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ipmitool<span class="w"> </span>-I<span class="w"> </span>lanplus<span class="w"> </span>-H<span class="w"> </span>&lt;ipmi-ip&gt;<span class="w"> </span>-U<span class="w"> </span>ADMIN<span class="w"> </span>-P<span class="w"> </span>&lt;password&gt;<span class="w"> </span>chassis<span class="w"> </span>power<span class="w"> </span>status
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Verify virtual console works (needed for Foundation)</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Access: https://&lt;ipmi-ip&gt; → Remote Console</span>
 </code></pre></div>
 <p>Each node must have a unique IPMI IP on a dedicated OOB network.</p>
 <h3 id="network-pre-flight">Network Pre-flight<a class="headerlink" href="#network-pre-flight" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Verify MTU 9000 on storage VLAN (run from each node after OS is up)</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ping<span class="w"> </span>-c<span class="w"> </span><span class="m">4</span><span class="w"> </span>-M<span class="w"> </span><span class="k">do</span><span class="w"> </span>-s<span class="w"> </span><span class="m">8972</span><span class="w"> </span>&lt;other-cvm-ip&gt;
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Verify VLAN tags are correct on switch (show interface trunk on Cisco)</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Each node bond should see: mgmt VLAN (native), storage VLAN, VM VLANs (tagged)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Verify MTU 9000 on storage VLAN (run from each node after OS is up)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ping<span class="w"> </span>-c<span class="w"> </span><span class="m">4</span><span class="w"> </span>-M<span class="w"> </span><span class="k">do</span><span class="w"> </span>-s<span class="w"> </span><span class="m">8972</span><span class="w"> </span>&lt;other-cvm-ip&gt;
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Verify VLAN tags are correct on switch (show interface trunk on Cisco)</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Each node bond should see: mgmt VLAN (native), storage VLAN, VM VLANs (tagged)</span>
 </code></pre></div>
 <hr />
 <h2 id="phase-2-foundation-imaging">Phase 2 — Foundation Imaging<a class="headerlink" href="#phase-2-foundation-imaging" title="Permanent link">&para;</a></h2>
 <p>Foundation is Nutanix's deployment tool that discovers nodes via IPMI and installs AOS + AHV in parallel.</p>
 <h3 id="run-foundation-vm">Run Foundation VM<a class="headerlink" href="#run-foundation-vm" title="Permanent link">&para;</a></h3>
 <p>Foundation runs as a VM (download OVA from portal.nutanix.com):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>1. Deploy Foundation OVA to any hypervisor with IPMI network access
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>2. Start Foundation VM → open browser to http://&lt;foundation-ip&gt;:8000
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>3. Foundation Discovery:
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>   - Click &quot;Start Discovery&quot; → Foundation finds nodes via IPMI multicast or manual IP entry
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>   - Select nodes to image
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>4. AOS configuration:
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>   - AOS version: select downloaded AOS installer
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>   - AHV version: select downloaded AHV installer (if using AHV)
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>5. Per-node configuration:
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>   - IPMI IP (pre-set on each node)
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>   - Hypervisor (AHV) IP — the management IP the AHV host will use
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>   - CVM IP — the Controller VM IP on each node
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>   - Hypervisor VLAN: management VLAN ID
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>6. Click &quot;Start&quot; — Foundation images all nodes in parallel (~45–90 min)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>1. Deploy Foundation OVA to any hypervisor with IPMI network access
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>2. Start Foundation VM → open browser to http://&lt;foundation-ip&gt;:8000
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>3. Foundation Discovery:
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>   - Click &quot;Start Discovery&quot; → Foundation finds nodes via IPMI multicast or manual IP entry
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>   - Select nodes to image
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>4. AOS configuration:
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>   - AOS version: select downloaded AOS installer
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>   - AHV version: select downloaded AHV installer (if using AHV)
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>5. Per-node configuration:
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>   - IPMI IP (pre-set on each node)
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>   - Hypervisor (AHV) IP — the management IP the AHV host will use
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>   - CVM IP — the Controller VM IP on each node
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>   - Hypervisor VLAN: management VLAN ID
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>6. Click &quot;Start&quot; — Foundation images all nodes in parallel (~45–90 min)
 </code></pre></div>
 <p><strong>During imaging:</strong> Foundation boots each node via IPMI virtual media, formats local disks, installs AHV, and starts the CVM. Progress visible in the Foundation UI.</p>
 <p><strong>Expected result:</strong> All nodes show green in Foundation. CVMs reachable via SSH on their management IPs.</p>
 <h3 id="verify-nodes-post-imaging">Verify Nodes Post-Imaging<a class="headerlink" href="#verify-nodes-post-imaging" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># SSH to each CVM and verify AOS services are running</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ssh<span class="w"> </span>nutanix@&lt;cvm-ip&gt;<span class="w">   </span><span class="c1"># password: nutanix/4u (change immediately)</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>genesis<span class="w"> </span>status<span class="w">          </span><span class="c1"># all services should be running</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>cluster<span class="w"> </span>status<span class="w">          </span><span class="c1"># cluster not yet created — &quot;Not part of a cluster&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># SSH to each CVM and verify AOS services are running</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ssh<span class="w"> </span>nutanix@&lt;cvm-ip&gt;<span class="w">   </span><span class="c1"># password: nutanix/4u (change immediately)</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>genesis<span class="w"> </span>status<span class="w">          </span><span class="c1"># all services should be running</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>cluster<span class="w"> </span>status<span class="w">          </span><span class="c1"># cluster not yet created — &quot;Not part of a cluster&quot;</span>
 </code></pre></div>
 <hr />
 <h2 id="phase-3-cluster-creation">Phase 3 — Cluster Creation<a class="headerlink" href="#phase-3-cluster-creation" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># SSH to any CVM</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>ssh<span class="w"> </span>nutanix@&lt;cvm1-ip&gt;
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Create the cluster (list all CVM IPs)</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>cluster<span class="w"> </span>-s<span class="w"> </span>&lt;cvm1-ip&gt;,&lt;cvm2-ip&gt;,&lt;cvm3-ip&gt;<span class="w"> </span>create
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Example with 3 nodes:</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>cluster<span class="w"> </span>-s<span class="w"> </span><span class="m">10</span>.0.1.11,10.0.1.12,10.0.1.13<span class="w"> </span>create
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># SSH to any CVM</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ssh<span class="w"> </span>nutanix@&lt;cvm1-ip&gt;
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Create the cluster (list all CVM IPs)</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>cluster<span class="w"> </span>-s<span class="w"> </span>&lt;cvm1-ip&gt;,&lt;cvm2-ip&gt;,&lt;cvm3-ip&gt;<span class="w"> </span>create
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Example with 3 nodes:</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>cluster<span class="w"> </span>-s<span class="w"> </span><span class="m">10</span>.0.1.11,10.0.1.12,10.0.1.13<span class="w"> </span>create
 </code></pre></div>
 <p><strong>Expected output:</strong> Cluster creation takes 5–10 minutes. Watch for <code>Cluster successfully created</code>.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Set the cluster name</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>ncli<span class="w"> </span>cluster<span class="w"> </span>edit-params<span class="w"> </span>new-name<span class="o">=</span>&lt;cluster-name&gt;
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Set the cluster Virtual IP (VIP) — used for Prism and management access</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>ncli<span class="w"> </span>cluster<span class="w"> </span>edit-params<span class="w"> </span>external-ip-address<span class="o">=</span>&lt;cluster-vip&gt;
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Set the Data Services IP (DSIP) — iSCSI endpoint for volume groups</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>ncli<span class="w"> </span>cluster<span class="w"> </span>edit-params<span class="w"> </span>external-data-services-ip-address<span class="o">=</span>&lt;dsip&gt;
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># Verify cluster is up</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>cluster<span class="w"> </span>status<span class="w">    </span><span class="c1"># all services running</span>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>ncli<span class="w"> </span>cluster<span class="w"> </span>info
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Set the cluster name</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>ncli<span class="w"> </span>cluster<span class="w"> </span>edit-params<span class="w"> </span>new-name<span class="o">=</span>&lt;cluster-name&gt;
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Set the cluster Virtual IP (VIP) — used for Prism and management access</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>ncli<span class="w"> </span>cluster<span class="w"> </span>edit-params<span class="w"> </span>external-ip-address<span class="o">=</span>&lt;cluster-vip&gt;
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Set the Data Services IP (DSIP) — iSCSI endpoint for volume groups</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>ncli<span class="w"> </span>cluster<span class="w"> </span>edit-params<span class="w"> </span>external-data-services-ip-address<span class="o">=</span>&lt;dsip&gt;
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># Verify cluster is up</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>cluster<span class="w"> </span>status<span class="w">    </span><span class="c1"># all services running</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>ncli<span class="w"> </span>cluster<span class="w"> </span>info
 </code></pre></div>
 <hr />
 <h2 id="phase-4-initial-configuration">Phase 4 — Initial Configuration<a class="headerlink" href="#phase-4-initial-configuration" title="Permanent link">&para;</a></h2>
 <h3 id="dns-and-ntp">DNS and NTP<a class="headerlink" href="#dns-and-ntp" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Set DNS servers</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>ncli<span class="w"> </span>cluster<span class="w"> </span>edit-params<span class="w"> </span>dns-server-ip-address-list<span class="o">=</span>&lt;dns1&gt;,&lt;dns2&gt;
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Set NTP servers</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>ncli<span class="w"> </span>cluster<span class="w"> </span>edit-params<span class="w"> </span>ntp-server-ip-address-list<span class="o">=</span>&lt;ntp1&gt;,&lt;ntp2&gt;
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># Verify NTP sync</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>allssh<span class="w"> </span><span class="s2">&quot;ntpq -pn&quot;</span><span class="w">   </span><span class="c1"># all CVMs should show * next to the active NTP server</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Set DNS servers</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>ncli<span class="w"> </span>cluster<span class="w"> </span>edit-params<span class="w"> </span>dns-server-ip-address-list<span class="o">=</span>&lt;dns1&gt;,&lt;dns2&gt;
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Set NTP servers</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>ncli<span class="w"> </span>cluster<span class="w"> </span>edit-params<span class="w"> </span>ntp-server-ip-address-list<span class="o">=</span>&lt;ntp1&gt;,&lt;ntp2&gt;
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Verify NTP sync</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>allssh<span class="w"> </span><span class="s2">&quot;ntpq -pn&quot;</span><span class="w">   </span><span class="c1"># all CVMs should show * next to the active NTP server</span>
 </code></pre></div>
 <h3 id="admin-password">Admin Password<a class="headerlink" href="#admin-password" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Change default admin password immediately</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>ncli<span class="w"> </span>user<span class="w"> </span>change-password<span class="w"> </span><span class="nv">username</span><span class="o">=</span>admin<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span>current-password<span class="o">=</span><span class="s2">&quot;Nutanix/4u&quot;</span><span class="w"> </span>new-password<span class="o">=</span>&lt;new-password&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Change default admin password immediately</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>ncli<span class="w"> </span>user<span class="w"> </span>change-password<span class="w"> </span><span class="nv">username</span><span class="o">=</span>admin<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span>current-password<span class="o">=</span><span class="s2">&quot;Nutanix/4u&quot;</span><span class="w"> </span>new-password<span class="o">=</span>&lt;new-password&gt;
 </code></pre></div>
 <h3 id="smtp-alerts">SMTP Alerts<a class="headerlink" href="#smtp-alerts" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Prism Element → Settings → SMTP Server
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>  Server: smtp.corp.local
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>  Port: 587
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>  Auth: TLS + credentials
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>  From: nutanix-alerts@corp.local
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>Prism Element → Settings → Alert Email
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>  Add recipient: infra-team@corp.local
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>  Alert severity: Critical and Warning
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Prism Element → Settings → SMTP Server
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>  Server: smtp.corp.local
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>  Port: 587
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>  Auth: TLS + credentials
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>  From: nutanix-alerts@corp.local
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>Prism Element → Settings → Alert Email
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>  Add recipient: infra-team@corp.local
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>  Alert severity: Critical and Warning
 </code></pre></div>
 <h3 id="active-directory-join">Active Directory Join<a class="headerlink" href="#active-directory-join" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>Prism Element → Settings → Authentication → Directory Services → Add Directory
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>  Type: Active Directory
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>  Domain: corp.local
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>  Directory URL: ldap://dc01.corp.local:389
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>  Service account: svc-nutanix@corp.local + password
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>  Search base: DC=corp,DC=local
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>Prism Element → Settings → Role Mapping → Add Mapping
-<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>  AD Group: nutanix-admins → Role: Cluster Admin
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Prism Element → Settings → Authentication → Directory Services → Add Directory
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>  Type: Active Directory
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>  Domain: corp.local
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>  Directory URL: ldap://dc01.corp.local:389
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>  Service account: svc-nutanix@corp.local + password
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>  Search base: DC=corp,DC=local
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>Prism Element → Settings → Role Mapping → Add Mapping
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>  AD Group: nutanix-admins → Role: Cluster Admin
 </code></pre></div>
 <h3 id="storage-configuration">Storage Configuration<a class="headerlink" href="#storage-configuration" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># List existing storage pools (created automatically during cluster creation)</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>ncli<span class="w"> </span>sp<span class="w"> </span>list
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># Create a VM container (datastore)</span>
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>ncli<span class="w"> </span>ctr<span class="w"> </span>create<span class="w"> </span><span class="nv">name</span><span class="o">=</span>VMs<span class="w"> </span>sp-name<span class="o">=</span>default-storage-pool<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="w">  </span>compression-enabled<span class="o">=</span><span class="nb">true</span><span class="w"> </span>compression-delay-in-secs<span class="o">=</span><span class="m">0</span>
-<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>
-<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="c1"># Create a backup container (with EC-X)</span>
-<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>ncli<span class="w"> </span>ctr<span class="w"> </span>create<span class="w"> </span><span class="nv">name</span><span class="o">=</span>Backups<span class="w"> </span>sp-name<span class="o">=</span>default-storage-pool<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="w">  </span>compression-enabled<span class="o">=</span><span class="nb">true</span><span class="w"> </span>erasure-code<span class="o">=</span>on
-<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>
-<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a><span class="c1"># Verify containers</span>
-<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>ncli<span class="w"> </span>ctr<span class="w"> </span>list
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># List existing storage pools (created automatically during cluster creation)</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>ncli<span class="w"> </span>sp<span class="w"> </span>list
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Create a VM container (datastore)</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>ncli<span class="w"> </span>ctr<span class="w"> </span>create<span class="w"> </span><span class="nv">name</span><span class="o">=</span>VMs<span class="w"> </span>sp-name<span class="o">=</span>default-storage-pool<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="w">  </span>compression-enabled<span class="o">=</span><span class="nb">true</span><span class="w"> </span>compression-delay-in-secs<span class="o">=</span><span class="m">0</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="c1"># Create a backup container (with EC-X)</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>ncli<span class="w"> </span>ctr<span class="w"> </span>create<span class="w"> </span><span class="nv">name</span><span class="o">=</span>Backups<span class="w"> </span>sp-name<span class="o">=</span>default-storage-pool<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="w">  </span>compression-enabled<span class="o">=</span><span class="nb">true</span><span class="w"> </span>erasure-code<span class="o">=</span>on
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="c1"># Verify containers</span>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>ncli<span class="w"> </span>ctr<span class="w"> </span>list
 </code></pre></div>
 <hr />
 <h2 id="phase-5-post-deploy-validation">Phase 5 — Post-Deploy Validation<a class="headerlink" href="#phase-5-post-deploy-validation" title="Permanent link">&para;</a></h2>
 <h3 id="ncc-health-check">NCC Health Check<a class="headerlink" href="#ncc-health-check" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Run from any CVM (takes 15–30 minutes)</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>ssh<span class="w"> </span>nutanix@&lt;cvm-ip&gt;
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>ncc<span class="w"> </span>--health_checks<span class="w"> </span>run_all<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tee<span class="w"> </span>/tmp/ncc-baseline.txt
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="c1"># Check summary</span>
-<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>ncc<span class="w"> </span>--health_checks<span class="w"> </span>run_all<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;PASS|FAIL|WARN|ERR&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Run from any CVM (takes 15–30 minutes)</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>ssh<span class="w"> </span>nutanix@&lt;cvm-ip&gt;
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>ncc<span class="w"> </span>--health_checks<span class="w"> </span>run_all<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tee<span class="w"> </span>/tmp/ncc-baseline.txt
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="c1"># Check summary</span>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>ncc<span class="w"> </span>--health_checks<span class="w"> </span>run_all<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;PASS|FAIL|WARN|ERR&quot;</span>
 </code></pre></div>
 <p><strong>Expected result:</strong> All checks PASS. Any FAIL must be resolved before going production.</p>
 <h3 id="cluster-resilience-check">Cluster Resilience Check<a class="headerlink" href="#cluster-resilience-check" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Verify cluster can tolerate a node failure</span>
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>ncli<span class="w"> </span>cluster<span class="w"> </span>get-domain-fault-tolerance-status<span class="w"> </span><span class="nv">type</span><span class="o">=</span>node
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
-<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c1"># Expected: FaultToleranceStatus = CAN_TOLERATE_FAILURE_COUNT=1 (RF2) or =2 (RF3)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Verify cluster can tolerate a node failure</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>ncli<span class="w"> </span>cluster<span class="w"> </span>get-domain-fault-tolerance-status<span class="w"> </span><span class="nv">type</span><span class="o">=</span>node
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># Expected: FaultToleranceStatus = CAN_TOLERATE_FAILURE_COUNT=1 (RF2) or =2 (RF3)</span>
 </code></pre></div>
 <h3 id="vm-creation-test">VM Creation Test<a class="headerlink" href="#vm-creation-test" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Create a test VM via acli (AHV CLI)</span>
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>acli<span class="w"> </span>vm.create<span class="w"> </span>TestVM<span class="w"> </span><span class="nv">num_vcpus</span><span class="o">=</span><span class="m">2</span><span class="w"> </span><span class="nv">num_cores_per_vcpu</span><span class="o">=</span><span class="m">1</span><span class="w"> </span><span class="nv">memory</span><span class="o">=</span>2G
-<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
-<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c1"># Add a disk</span>
-<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>acli<span class="w"> </span>vm.disk_create<span class="w"> </span>TestVM<span class="w"> </span><span class="nv">clone_from_image</span><span class="o">=</span>&lt;AHV-tools-ISO&gt;<span class="w"> </span><span class="nv">cdrom</span><span class="o">=</span><span class="nb">true</span>
-<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>acli<span class="w"> </span>vm.disk_create<span class="w"> </span>TestVM<span class="w"> </span><span class="nv">create_size</span><span class="o">=</span>20G<span class="w"> </span><span class="nv">container</span><span class="o">=</span>VMs
-<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>
-<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="c1"># Add a NIC</span>
-<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>acli<span class="w"> </span>vm.nic_create<span class="w"> </span>TestVM<span class="w"> </span><span class="nv">network</span><span class="o">=</span>&lt;vm-network-name&gt;
-<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>
-<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a><span class="c1"># Power on</span>
-<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a>acli<span class="w"> </span>vm.on<span class="w"> </span>TestVM
-<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a>
-<a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a><span class="c1"># Power off and delete after test</span>
-<a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a>acli<span class="w"> </span>vm.off<span class="w"> </span>TestVM
-<a id="__codelineno-14-16" name="__codelineno-14-16" href="#__codelineno-14-16"></a>acli<span class="w"> </span>vm.delete<span class="w"> </span>TestVM
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Create a test VM via acli (AHV CLI)</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>acli<span class="w"> </span>vm.create<span class="w"> </span>TestVM<span class="w"> </span><span class="nv">num_vcpus</span><span class="o">=</span><span class="m">2</span><span class="w"> </span><span class="nv">num_cores_per_vcpu</span><span class="o">=</span><span class="m">1</span><span class="w"> </span><span class="nv">memory</span><span class="o">=</span>2G
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c1"># Add a disk</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>acli<span class="w"> </span>vm.disk_create<span class="w"> </span>TestVM<span class="w"> </span><span class="nv">clone_from_image</span><span class="o">=</span>&lt;AHV-tools-ISO&gt;<span class="w"> </span><span class="nv">cdrom</span><span class="o">=</span><span class="nb">true</span>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>acli<span class="w"> </span>vm.disk_create<span class="w"> </span>TestVM<span class="w"> </span><span class="nv">create_size</span><span class="o">=</span>20G<span class="w"> </span><span class="nv">container</span><span class="o">=</span>VMs
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="c1"># Add a NIC</span>
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>acli<span class="w"> </span>vm.nic_create<span class="w"> </span>TestVM<span class="w"> </span><span class="nv">network</span><span class="o">=</span>&lt;vm-network-name&gt;
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a><span class="c1"># Power on</span>
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>acli<span class="w"> </span>vm.on<span class="w"> </span>TestVM
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>
+<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a><span class="c1"># Power off and delete after test</span>
+<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a>acli<span class="w"> </span>vm.off<span class="w"> </span>TestVM
+<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a>acli<span class="w"> </span>vm.delete<span class="w"> </span>TestVM
 </code></pre></div>
 <h3 id="network-reachability">Network Reachability<a class="headerlink" href="#network-reachability" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># Ping cluster VIP from client workstation</span>
-<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>ping<span class="w"> </span>&lt;cluster-vip&gt;
-<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>
-<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="c1"># Verify Prism Element accessible</span>
-<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>curl<span class="w"> </span>-k<span class="w"> </span>https://&lt;cluster-vip&gt;:9440
-<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>
-<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="c1"># Verify storage network MTU (from each CVM)</span>
-<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>allssh<span class="w"> </span><span class="s2">&quot;ping -c 3 -M do -s 8972 &lt;other-cvm-ip&gt;&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Ping cluster VIP from client workstation</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>ping<span class="w"> </span>&lt;cluster-vip&gt;
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c1"># Verify Prism Element accessible</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>curl<span class="w"> </span>-k<span class="w"> </span>https://&lt;cluster-vip&gt;:9440
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="c1"># Verify storage network MTU (from each CVM)</span>
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>allssh<span class="w"> </span><span class="s2">&quot;ping -c 3 -M do -s 8972 &lt;other-cvm-ip&gt;&quot;</span>
 </code></pre></div>
 <hr />
 <h2 id="prism-central-registration-optional">Prism Central Registration (Optional)<a class="headerlink" href="#prism-central-registration-optional" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Register the new cluster with Prism Central</span>
-<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="c1"># From Prism Element:</span>
-<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="c1"># Settings → Prism Central Registration → Register</span>
-<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="c1"># Enter Prism Central IP/FQDN + credentials</span>
-<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>
-<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="c1"># Verify from PC: Prism Central → Clusters → cluster appears and shows Connected</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># Register the new cluster with Prism Central</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="c1"># From Prism Element:</span>
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="c1"># Settings → Prism Central Registration → Register</span>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="c1"># Enter Prism Central IP/FQDN + credentials</span>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="c1"># Verify from PC: Prism Central → Clusters → cluster appears and shows Connected</span>
 </code></pre></div>
 <hr />
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>

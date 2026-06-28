@@ -8206,50 +8206,8 @@ How It Works reference covering Overview, Replication Types, Components, Connect
 *Applies to: SnapMirror*
 </div>
 <p><img alt="SnapMirror — How It Works" src="../../../../../assets/storage-netapp-snapmirror-architecture-how-it-works.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>center: &quot;SnapMirror&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>replication_types: &quot;Replication Types&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>components: &quot;Components&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>connectivity: &quot;Connectivity&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>key_commands: &quot;Key Commands&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>dr_failover_sequence: &quot;DR Failover Sequence&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>svmlevel_replication: &quot;SVM-Level Replication&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>center -&gt; replication_types
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>center -&gt; components
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>center -&gt; connectivity
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>center -&gt; key_commands
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>center -&gt; dr_failover_sequence
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>center -&gt; svmlevel_replication
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>@startuml
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>skinparam sequenceArrowThickness 1.5
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>skinparam roundcorner 5
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>participant &quot;Source Volume\n(primary SVM)&quot; as SRC
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>participant &quot;SnapMirror Engine&quot; as SM
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>participant &quot;Intercluster LIF\n(TCP 11104 / 11105)&quot; as NET
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>participant &quot;Destination Volume\n(DP — read-only)&quot; as DST
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>SRC -&gt; SM: Initialize relationship
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>SM -&gt; SRC: Baseline Snapshot
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>SM -&gt; NET: Transfer baseline (full copy)
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>NET -&gt; DST: Write baseline
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>DST --&gt; SM: Baseline complete
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>loop Scheduled update
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>  SM -&gt; SRC: New Snapshot
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>  SM -&gt; SM: Delta vs last transfer Snapshot
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>  SM -&gt; NET: Transfer delta blocks
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>  NET -&gt; DST: Apply delta
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>  DST --&gt; SM: LSN updated
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>  SM -&gt; SRC: Delete previous transfer Snapshot
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>end
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>note over SM,DST: Break + promote DST\nto R/W for DR activation
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>@enduml
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp1kLFuwyAQhnee4uTdL-ChS6osTZak6ooQvtoo-CBnYsWK8u41lRWIQsb7-P8DvtYw6mAcNcCm64MQGikgN1AdSfm9YXZcwW3slccGeryqztFdMHprtIpNGWaP41I4JAbfkaVevERRZ_EutBu8o-WSWNk8hjdZovi8yYT5P53GYv6Es1z2D4rauP0LZ9isYzHfsvxVxroJWY54viDpJVB9HmC7YjiuuNgfp8HihFZmOqK5n329ixwyJcUFq22oP-DFaHaWnD3BZCPDuYMMl76aHZd-Iv4AMEPGPA==?" /></p>
+<p><img alt="Kroki" src="https://kroki.io/plantuml/svg/eNptks1OG0EMgO_zFBYnUJtCpOaSAwKyVIrERii7gguXYdZpRpm1h_kJSk99iD5hn6TeTQgJ9DSS_dn-LM9VTDqk3DoVV5a8DrqFiC8ZyeB1CPxaL61ZEcYIw2-jAyhwpsZwIAwwUkqCyRrrNSU4qTgHg_DALrf4RKc-2FaHDVQP5dkJ6AjVfPKhgrQvrcwLcEs_LeEWK4-pKSUMxuUoD9xNf0jrenIPw-Hw4juc9-9oO2B2Wx-XFhiTJZ0s07tXcQ9_f_-BgLoZMLnNtraoaqXEEAaXYjCGKdlktbO_UEjXt4hL61VV9sR8MoYbHdGJNXR7xCWnXVI0xlAHTXEhxs9v1OkiOweG_eZMCdKRMnQMj8Em3GNKYjDYSewnGG69w4RKOWYPlVlikx02kH2jJQxw4DXD13elfUbaFeiShnUEp2OC9Gb4iT1eoOmrnh2bVRTkUP3ae7fZApI5NL-rZju35lhOHGQP8AHXlnP8jwVSoxSxQLzu4uXXftaNHGwFX6SS2y4pwSdKDPPzR1jIDyrmoE2y6_5U6kq6dP_7H1tj9EY=?" /></p>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>SnapMirror is ONTAP's built-in replication engine, providing volume-level and SVM-level replication across ONTAP clusters. It supports three primary operating modes: asynchronous (SnapMirror Async, RPO-based), synchronous (SnapMirror Synchronous, zero RPO), and extended data protection (XDP/SnapVault, backup retention). Relationships are always managed from the destination cluster. SnapMirror Business Continuity (SMBC/AutomatedFailOver) extends synchronous replication with transparent host-level failover for SAN workloads.</p>
 <h2 id="replication-types">Replication Types<a class="headerlink" href="#replication-types" title="Permanent link">&para;</a></h2>
@@ -8363,32 +8321,32 @@ How It Works reference covering Overview, Replication Types, Components, Connect
 </table>
 <p>Estimate required replication bandwidth: <code>(Daily change rate × source volume size) / replication window (seconds)</code></p>
 <h2 id="key-commands">Key Commands<a class="headerlink" href="#key-commands" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Show all relationships with lag time and health</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>lag-time,healthy,last-transfer-end-timestamp
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Show full detail for a specific relationship</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-destination-path<span class="w"> </span>svm_dst:vol_dst
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Show relationships in broken-off state</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-relationship-status<span class="w"> </span>broken-off
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Trigger immediate incremental update</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>snapmirror<span class="w"> </span>update<span class="w"> </span>-destination-path<span class="w"> </span>svm_dst:vol_dst
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Resync a broken-off relationship</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>snapmirror<span class="w"> </span>resync<span class="w"> </span>-destination-path<span class="w"> </span>svm_dst:vol_dst
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="c1"># Break a relationship for DR failover (makes destination read-write)</span>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>snapmirror<span class="w"> </span><span class="k">break</span><span class="w"> </span>-destination-path<span class="w"> </span>svm_dst:vol_dst
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="c1"># Initialize a new relationship (baseline transfer)</span>
-<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>snapmirror<span class="w"> </span>initialize<span class="w"> </span>-destination-path<span class="w"> </span>svm_dst:vol_dst
-<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>
-<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="c1"># Quiesce a relationship (pause future transfers, finishes current)</span>
-<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>snapmirror<span class="w"> </span>quiesce<span class="w"> </span>-destination-path<span class="w"> </span>svm_dst:vol_dst
-<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>
-<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a><span class="c1"># Show transfer history</span>
-<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a>snapmirror<span class="w"> </span>show-history<span class="w"> </span>-destination-path<span class="w"> </span>svm_dst:vol_dst
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Show all relationships with lag time and health</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>lag-time,healthy,last-transfer-end-timestamp
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Show full detail for a specific relationship</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-destination-path<span class="w"> </span>svm_dst:vol_dst
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Show relationships in broken-off state</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-relationship-status<span class="w"> </span>broken-off
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Trigger immediate incremental update</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>snapmirror<span class="w"> </span>update<span class="w"> </span>-destination-path<span class="w"> </span>svm_dst:vol_dst
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Resync a broken-off relationship</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>snapmirror<span class="w"> </span>resync<span class="w"> </span>-destination-path<span class="w"> </span>svm_dst:vol_dst
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># Break a relationship for DR failover (makes destination read-write)</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>snapmirror<span class="w"> </span><span class="k">break</span><span class="w"> </span>-destination-path<span class="w"> </span>svm_dst:vol_dst
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="c1"># Initialize a new relationship (baseline transfer)</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>snapmirror<span class="w"> </span>initialize<span class="w"> </span>-destination-path<span class="w"> </span>svm_dst:vol_dst
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="c1"># Quiesce a relationship (pause future transfers, finishes current)</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>snapmirror<span class="w"> </span>quiesce<span class="w"> </span>-destination-path<span class="w"> </span>svm_dst:vol_dst
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="c1"># Show transfer history</span>
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>snapmirror<span class="w"> </span>show-history<span class="w"> </span>-destination-path<span class="w"> </span>svm_dst:vol_dst
 </code></pre></div>
 <h2 id="dr-failover-sequence">DR Failover Sequence<a class="headerlink" href="#dr-failover-sequence" title="Permanent link">&para;</a></h2>
 <ol>
@@ -8402,18 +8360,18 @@ How It Works reference covering Overview, Replication Types, Components, Connect
 </ol>
 <h2 id="svm-level-replication">SVM-Level Replication<a class="headerlink" href="#svm-level-replication" title="Permanent link">&para;</a></h2>
 <p>SVM DR replicates the full SVM configuration (volumes, LIFs, NFS exports, CIFS shares, igroups) in addition to data:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Create an SVM DR relationship</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>snapmirror<span class="w"> </span>create<span class="w"> </span>-source-path<span class="w"> </span>svm_src:<span class="w"> </span>-destination-path<span class="w"> </span>svm_dst:<span class="w"> </span>-type<span class="w"> </span>XDP<span class="w"> </span>-policy<span class="w"> </span>MirrorAllSnapshots
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Initialize SVM DR baseline</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>snapmirror<span class="w"> </span>initialize<span class="w"> </span>-destination-path<span class="w"> </span>svm_dst:
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Update SVM DR configuration</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>snapmirror<span class="w"> </span>update<span class="w"> </span>-destination-path<span class="w"> </span>svm_dst:
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Activate SVM at DR site</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>snapmirror<span class="w"> </span><span class="k">break</span><span class="w"> </span>-destination-path<span class="w"> </span>svm_dst:
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>vserver<span class="w"> </span>start<span class="w"> </span>-vserver<span class="w"> </span>svm_dst
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Create an SVM DR relationship</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>snapmirror<span class="w"> </span>create<span class="w"> </span>-source-path<span class="w"> </span>svm_src:<span class="w"> </span>-destination-path<span class="w"> </span>svm_dst:<span class="w"> </span>-type<span class="w"> </span>XDP<span class="w"> </span>-policy<span class="w"> </span>MirrorAllSnapshots
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Initialize SVM DR baseline</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>snapmirror<span class="w"> </span>initialize<span class="w"> </span>-destination-path<span class="w"> </span>svm_dst:
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Update SVM DR configuration</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>snapmirror<span class="w"> </span>update<span class="w"> </span>-destination-path<span class="w"> </span>svm_dst:
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Activate SVM at DR site</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>snapmirror<span class="w"> </span><span class="k">break</span><span class="w"> </span>-destination-path<span class="w"> </span>svm_dst:
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>vserver<span class="w"> </span>start<span class="w"> </span>-vserver<span class="w"> </span>svm_dst
 </code></pre></div>
 <hr />
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>

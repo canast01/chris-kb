@@ -8206,47 +8206,8 @@ How It Works reference covering Overview, Topology, HA Options, Components, Conn
 *Applies to: SnapCenter 5.x*
 </div>
 <p><img alt="SnapCenter — How It Works" src="../../../../../assets/storage-netapp-snapcenter-architecture-how-it-works.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>center: &quot;SnapCenter&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>topology: &quot;Topology&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>ha_options: &quot;HA Options&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>components: &quot;Components&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>connectivity: &quot;Connectivity&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>sizing_guidelines: &quot;Sizing Guidelines&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>plugins: &quot;Plugins&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>center -&gt; topology
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>center -&gt; ha_options
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>center -&gt; components
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>center -&gt; connectivity
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>center -&gt; sizing_guidelines
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>center -&gt; plugins
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>@startuml
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>skinparam sequenceArrowThickness 1.5
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>skinparam roundcorner 5
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>actor &quot;Admin&quot; as ADM
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>participant &quot;SnapCenter Server\n(Windows)&quot; as SC
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>participant &quot;SnapCenter Plugin\n(host agent)&quot; as PLG
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>participant &quot;Application\n(SQL / Oracle / SAP)&quot; as APP
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>participant &quot;ONTAP\n(Snapshot engine)&quot; as ONTAP
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>participant &quot;SnapVault / SnapMirror&quot; as REP
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>ADM -&gt; SC: Schedule backup policy
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>SC -&gt; PLG: Trigger pre-backup quiesce
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>PLG -&gt; APP: Application-consistent quiesce
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>APP --&gt; PLG: Quiesced
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>PLG -&gt; ONTAP: Create Snapshot
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>ONTAP --&gt; PLG: Snapshot created
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>PLG -&gt; APP: Unquiesce
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>APP --&gt; PLG: Running
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>ONTAP -&gt; REP: Vault / mirror Snapshot to secondary
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>REP --&gt; ONTAP: Replicated
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>SC --&gt; ADM: Backup complete + catalog entry
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>@enduml
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp1kMEOgjAMhu97ioW7L8DBxHDQmyZ4Jwsso8lsFxhGNLy7bCCbcd76__vW_m0DnawtEOa8A9VaxmqJVnY5z0oUpvAi46--FUbmvJUPoQgnZsmQJjXO3HUtA-VaClRaTqwVFRnXv5_J04GfF5Fka7oZwnmiY4tN_GERXfA72NHTQSb5Hp6AqlIDNFIDSjei9B4_bl7yp9GDAh__slRJaj0b3-355zSRFa4QmWHdLzMsEtk_8aO3NSB7A-33pmM=?" /></p>
+<p><img alt="Kroki" src="https://kroki.io/plantuml/svg/eNp1kj9PwzAQxXd_ilMnECqIgSVDRUgRC4XQFFhYjHNKrSZn13-o-PacE0JbAZvl_N679y6-9kG6ELtW-I0mK53swOM2IinMnTO71VqrDaH3cHl-dQA5E6lWxhE6uBJCqmAcTPK60zQB6SGfLwSTQSttJQWYVCRtgRSYr9B9oHujk1dNtdn5015RFf8KyjY2mliwNj6AbPh20JT3d8ei3NpWKxm0SXj1dA8X8OikapEPVV4Osrwsj2WPD6u8TAKe6dcmABIPxIHuP_7O9iJjG5Irnxead-V6enlbCsHtYTrjShlUao115PnvUm2iBWs44KeoigRw_gxWTjcNt7QOp9_QNmr0CgV_TxjnzeCg2lQZ8toH3sMPygxMR8un4bIeDfoKGRQOZUAYW4r-eq_6aa96rj4a_0x_TlpGIk3NaDVL_TMYd9P1e9kbB8Ovi8PX0n0KJnuf73BLHPrx3LScNHe-yOBm2IgynW2Rw58BM7I1Df-jwC7XSHV6v1-lRurc?" /></p>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>SnapCenter is a Windows-based centralized data protection platform that orchestrates application-consistent ONTAP snapshots across a fleet of hosts and applications. It communicates with ONTAP storage systems via the ONTAP REST API or ZAPI, with application hosts via the SnapCenter Agent (TCP 8145), and exposes a web GUI on port 8146 and a REST API for automation. The architecture separates the control plane (SnapCenter Server), the data plane (ONTAP snapshots), and the agent layer (plugins on protected hosts).</p>
 <h2 id="topology">Topology<a class="headerlink" href="#topology" title="Permanent link">&para;</a></h2>
@@ -8403,11 +8364,11 @@ How It Works reference covering Overview, Topology, HA Options, Components, Conn
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Windows — restart plugin service</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>Restart-Service<span class="w"> </span>-Name<span class="w"> </span><span class="s2">&quot;SnapCenter Plug-in for Windows&quot;</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Linux — restart plugin service</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>/opt/NetApp/snapcenter/scc/bin/scc<span class="w"> </span>restart
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Windows — restart plugin service</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>Restart-Service<span class="w"> </span>-Name<span class="w"> </span><span class="s2">&quot;SnapCenter Plug-in for Windows&quot;</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Linux — restart plugin service</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>/opt/NetApp/snapcenter/scc/bin/scc<span class="w"> </span>restart
 </code></pre></div>
 <hr />
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>

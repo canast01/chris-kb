@@ -8317,23 +8317,7 @@ Eyeglass configuration backup preserves replication policies, SyncIQ jobs, share
 </div>
 <p><img alt="Superna Eyeglass — Backup &amp; Restore" src="../../../../../assets/storage-netapp-superna-eyeglass-operations-backup-restore.svg" /></p>
 <hr />
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>hub: &quot;Superna Eyeglass\nOperations&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>what_eyeglass_backs_up: &quot;What Eyeglass Backs Up&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>backup_architecture: &quot;Backup Architecture&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>postrestore_validation: &quot;Post-Restore Validation&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>policy_backup_export_manual: &quot;Policy Backup Export (Manual)&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>backup_verification_testing: &quot;Backup Verification Testing&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>related_pages: &quot;Related Pages&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>hub -&gt; what_eyeglass_backs_up
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>hub -&gt; backup_architecture
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>hub -&gt; postrestore_validation
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>hub -&gt; policy_backup_export_manual
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>hub -&gt; backup_verification_testing
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>hub -&gt; related_pages
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp9kctOAzEMRffzFdasYNEfmAUSlbpEVAXKBilyZ0wSEZIoj9IK9d9J5tEpKGVpH_vavu6kozZIoxtwkotQVSLuGqifoiWnEVZH4gq9f9OPKYG50tfw7QVaakDQAbnRp-pLYGA01rIdth-eRZt0XhM4i8AyA3ixs0KejporOlW5K1qGrhUypHR0idfLPgv3F9litzU-OPLBOGJ7VLLD4ap6ncBiMxDYnskVESXbIxs3oYM1LrBP1BFVr5QpjButego3Dz2-_e-kPTn5Ltt-LgtpFan5fNr2gsLzQItqjhQG6phFTj71b4YY1jkuduRnwuIOyu-ZaMH4CZVdnelVu_5olxyYSn6dVf0A9I3ydw==?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Access:</strong> Storage admin credentials (cluster admin or equivalent)</li>
@@ -8413,43 +8397,43 @@ Eyeglass configuration backup preserves replication policies, SyncIQ jobs, share
     EG --&gt; NFS
     EG --&gt; SFTP</code></pre>
 <h3 id="restore-to-newreplacement-appliance">Restore to New/Replacement Appliance<a class="headerlink" href="#restore-to-newreplacement-appliance" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># 1. Deploy new Eyeglass OVA (same version as backup)</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># 2. Complete initial setup wizard (network, hostname)</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># 3. Copy backup file to new appliance</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>scp<span class="w"> </span>eyeglass-backup-&lt;date&gt;.tar.gz<span class="w"> </span>admin@&lt;new-eyeglass-ip&gt;:/home/admin/
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># 4. SSH to new appliance</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>ssh<span class="w"> </span>admin@&lt;new-eyeglass-ip&gt;
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># 5. Import and restore the backup</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>igls<span class="w"> </span>backup<span class="w"> </span>import<span class="w"> </span>--file<span class="w"> </span>/home/admin/eyeglass-backup-&lt;date&gt;.tar.gz
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>igls<span class="w"> </span>backup<span class="w"> </span>restore<span class="w"> </span>--id<span class="w"> </span>&lt;imported-backup-id&gt;
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="c1"># 6. Verify cluster connections</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>igls<span class="w"> </span>clusters<span class="w"> </span>list
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="c1"># 7. Re-enter cluster credentials (passwords are not stored in backup)</span>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>igls<span class="w"> </span>clusters<span class="w"> </span>update-credentials<span class="w"> </span>--cluster<span class="w"> </span>&lt;cluster-name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># 1. Deploy new Eyeglass OVA (same version as backup)</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c1"># 2. Complete initial setup wizard (network, hostname)</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># 3. Copy backup file to new appliance</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>scp<span class="w"> </span>eyeglass-backup-&lt;date&gt;.tar.gz<span class="w"> </span>admin@&lt;new-eyeglass-ip&gt;:/home/admin/
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># 4. SSH to new appliance</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>ssh<span class="w"> </span>admin@&lt;new-eyeglass-ip&gt;
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># 5. Import and restore the backup</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>igls<span class="w"> </span>backup<span class="w"> </span>import<span class="w"> </span>--file<span class="w"> </span>/home/admin/eyeglass-backup-&lt;date&gt;.tar.gz
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>igls<span class="w"> </span>backup<span class="w"> </span>restore<span class="w"> </span>--id<span class="w"> </span>&lt;imported-backup-id&gt;
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="c1"># 6. Verify cluster connections</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>igls<span class="w"> </span>clusters<span class="w"> </span>list
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="c1"># 7. Re-enter cluster credentials (passwords are not stored in backup)</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>igls<span class="w"> </span>clusters<span class="w"> </span>update-credentials<span class="w"> </span>--cluster<span class="w"> </span>&lt;cluster-name&gt;
 </code></pre></div>
 <p><strong>Note:</strong> Cluster passwords and API tokens are not included in backups for security. After restore, re-enter credentials for each managed PowerScale cluster.</p>
 <hr />
 <h2 id="post-restore-validation">Post-Restore Validation<a class="headerlink" href="#post-restore-validation" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check Eyeglass service health</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>igls<span class="w"> </span>status
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Verify all clusters are connected</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>igls<span class="w"> </span>clusters<span class="w"> </span>list
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Verify replication jobs are visible</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>igls<span class="w"> </span><span class="nb">jobs</span><span class="w"> </span>list
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Check share/export configuration loaded correctly</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>igls<span class="w"> </span>shares<span class="w"> </span>list
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>igls<span class="w"> </span>exports<span class="w"> </span>list
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="c1"># Run a configuration sync to verify policies are intact</span>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>igls<span class="w"> </span>sync<span class="w"> </span>run<span class="w"> </span>--cluster<span class="w"> </span>&lt;cluster-name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Check Eyeglass service health</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>igls<span class="w"> </span>status
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Verify all clusters are connected</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>igls<span class="w"> </span>clusters<span class="w"> </span>list
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Verify replication jobs are visible</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>igls<span class="w"> </span><span class="nb">jobs</span><span class="w"> </span>list
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Check share/export configuration loaded correctly</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>igls<span class="w"> </span>shares<span class="w"> </span>list
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>igls<span class="w"> </span>exports<span class="w"> </span>list
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="c1"># Run a configuration sync to verify policies are intact</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>igls<span class="w"> </span>sync<span class="w"> </span>run<span class="w"> </span>--cluster<span class="w"> </span>&lt;cluster-name&gt;
 </code></pre></div>
 <p><strong>GUI validation:</strong></p>
 <ul>
@@ -8462,14 +8446,14 @@ Eyeglass configuration backup preserves replication policies, SyncIQ jobs, share
 <hr />
 <h2 id="policy-backup-export-manual">Policy Backup Export (Manual)<a class="headerlink" href="#policy-backup-export-manual" title="Permanent link">&para;</a></h2>
 <p>For additional protection, export individual policy configurations:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Export all SyncIQ policy mappings</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>igls<span class="w"> </span>dr<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--format<span class="w"> </span>json<span class="w"> </span>&gt;<span class="w"> </span>eyeglass-policy-export-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.json
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Export DFS configuration</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>igls<span class="w"> </span>dfs<span class="w"> </span><span class="nb">export</span><span class="w"> </span>&gt;<span class="w"> </span>eyeglass-dfs-export-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.json
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Store exports off-appliance</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>scp<span class="w"> </span>eyeglass-policy-export-*.json<span class="w"> </span>admin@nas:/backups/eyeglass/
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Export all SyncIQ policy mappings</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>igls<span class="w"> </span>dr<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--format<span class="w"> </span>json<span class="w"> </span>&gt;<span class="w"> </span>eyeglass-policy-export-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.json
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Export DFS configuration</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>igls<span class="w"> </span>dfs<span class="w"> </span><span class="nb">export</span><span class="w"> </span>&gt;<span class="w"> </span>eyeglass-dfs-export-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.json
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Store exports off-appliance</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>scp<span class="w"> </span>eyeglass-policy-export-*.json<span class="w"> </span>admin@nas:/backups/eyeglass/
 </code></pre></div>
 <hr />
 <h2 id="backup-verification-testing">Backup Verification Testing<a class="headerlink" href="#backup-verification-testing" title="Permanent link">&para;</a></h2>

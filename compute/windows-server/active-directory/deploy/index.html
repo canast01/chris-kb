@@ -7909,25 +7909,7 @@ Deploy a new Active Directory forest on Windows Server 2022 — first DC, DNS, N
     s0 --&gt; s1 --&gt; s2 --&gt; s3 --&gt; s4 --&gt; s5 --&gt; s6 --&gt; s7 --&gt; s8 --&gt; s9 --&gt; s10
     style s9 fill:#2e7d32,color:#fff,stroke:#1b5e20
     style s10 fill:#2e7d32,color:#fff,stroke:#1b5e20</code></pre>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>plan: &quot;Plan&quot; {shape: oval}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>prerequisites_hardware_and_network: &quot;Prerequisites — Hardware and Network&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>install_active_directory_domain_serv: &quot;Install Active Directory Domain Services&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>promote_the_first_domain_controller_: &quot;Promote the First Domain Controller (New Forest)&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>configure_dns_forwarders: &quot;Configure DNS Forwarders&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>configure_ntp_on_domain_controller: &quot;Configure NTP on Domain Controller&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>add_replica_domain_controllers: &quot;Add Replica Domain Controllers&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>validate: &quot;Validate&quot; {shape: oval}
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>plan -&gt; prerequisites_hardware_and_network
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>prerequisites_hardware_and_network -&gt; install_active_directory_domain_serv
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>install_active_directory_domain_serv -&gt; promote_the_first_domain_controller_
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>promote_the_first_domain_controller_ -&gt; configure_dns_forwarders
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>configure_dns_forwarders -&gt; configure_ntp_on_domain_controller
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>configure_ntp_on_domain_controller -&gt; add_replica_domain_controllers
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>add_replica_domain_controllers -&gt; validate
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNkk1OwzAQRvc5xagrWHCBLpCqVhVsoooitpYVTxoL1xPGbiqEKnEITshJsPMDlKQkqyT285uJ51OaMfOa7BxY7wqfJKWR4WO2CY8ZvLlCljgHqqQ5JSUj48tBO-3RiUKyOkpGIa0SFv2R-Dke_A3B5_sH3LUgBBDSBvxRx_rS7gyeEm2dl8YIGTqqUKi6N-JXoWgvtRUOuQoV7hsMFjUGqw6DVY3BNmA6QzdYo2Tak0fhCxS5Zuc7eUbWMxmDLOq_qDEIGKwj1smX3xhcpXiENTE6fz1YKyhzvTuEK1LWiZw43IJCdsG_7LZglW6jpN0a8VhfCrL9ls-M6eMGyPYbHnRLpQRjaXQm-9rY6UIpeGiAvnK43xAWraQPi7On9vVvlOqYwc0tjGdqQuyiaEp4JiWs6Wo8JZOiFGWXYnAxH-eHLs18Qiyi6P8Bj8w_CrppJl-7xJc0?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Access:</strong> admin credentials for the target system and any upstream dependencies (DNS, NTP, vCenter, directory services)</li>
@@ -7973,128 +7955,128 @@ Deploy a new Active Directory forest on Windows Server 2022 — first DC, DNS, N
 </tbody>
 </table>
 <p>Confirm the server hostname resolves forward and reverse in DNS before proceeding.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nb">Resolve-DnsName</span> <span class="p">&lt;</span><span class="n">hostname</span><span class="p">&gt;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nb">Resolve-DnsName</span> <span class="p">&lt;</span><span class="n">hostname</span><span class="p">&gt;</span>
 </code></pre></div>
 <hr />
 <h2 id="install-active-directory-domain-services">Install Active Directory Domain Services<a class="headerlink" href="#install-active-directory-domain-services" title="Permanent link">&para;</a></h2>
 <p>Install the AD DS role and management tools on the server that will become the first domain controller.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nb">Install-WindowsFeature</span> <span class="n">AD-Domain-Services</span> <span class="n">-IncludeManagementTools</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nb">Install-WindowsFeature</span> <span class="n">AD-Domain-Services</span> <span class="n">-IncludeManagementTools</span>
 </code></pre></div>
 <p>Verify the role installed successfully:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nb">Get-WindowsFeature</span> <span class="n">AD-Domain-Services</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nb">Get-WindowsFeature</span> <span class="n">AD-Domain-Services</span>
 </code></pre></div>
 <p>Expected output: <code>Install State: Installed</code>.</p>
 <hr />
 <h2 id="promote-the-first-domain-controller-new-forest">Promote the First Domain Controller (New Forest)<a class="headerlink" href="#promote-the-first-domain-controller-new-forest" title="Permanent link">&para;</a></h2>
 <p>Promote the server and create the new forest. Replace <code>corp.local</code> and <code>CORP</code> with your domain name and NetBIOS name.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nb">Install-ADDSForest</span> <span class="p">`</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>    <span class="n">-DomainName</span> <span class="s2">&quot;corp.local&quot;</span> <span class="p">`</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    <span class="n">-DomainNetbiosName</span> <span class="s2">&quot;CORP&quot;</span> <span class="p">`</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    <span class="n">-InstallDns</span> <span class="p">`</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>    <span class="n">-SafeModeAdministratorPassword</span> <span class="p">(</span><span class="nb">Read-Host</span> <span class="n">-AsSecureString</span><span class="p">)</span> <span class="p">`</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>    <span class="n">-Force</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nb">Install-ADDSForest</span> <span class="p">`</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>    <span class="n">-DomainName</span> <span class="s2">&quot;corp.local&quot;</span> <span class="p">`</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    <span class="n">-DomainNetbiosName</span> <span class="s2">&quot;CORP&quot;</span> <span class="p">`</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    <span class="n">-InstallDns</span> <span class="p">`</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>    <span class="n">-SafeModeAdministratorPassword</span> <span class="p">(</span><span class="nb">Read-Host</span> <span class="n">-AsSecureString</span><span class="p">)</span> <span class="p">`</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>    <span class="n">-Force</span>
 </code></pre></div>
 <p>The server will reboot automatically. After reboot, log in as <code>CORP\Administrator</code>.</p>
 <p>Verify forest creation:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nb">Get-ADForest</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">Get-ADDomain</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nb">Get-ADForest</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">Get-ADDomain</span>
 </code></pre></div>
 <hr />
 <h2 id="configure-dns-forwarders">Configure DNS Forwarders<a class="headerlink" href="#configure-dns-forwarders" title="Permanent link">&para;</a></h2>
 <p>After promotion the DNS Server role is active. Configure forwarders so internal clients can resolve external names.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nb">Set-DnsServerForwarder</span> <span class="n">-IPAddress</span> <span class="n">8</span><span class="p">.</span><span class="n">8</span><span class="p">.</span><span class="n">8</span><span class="p">.</span><span class="n">8</span><span class="p">,</span> <span class="n">8</span><span class="p">.</span><span class="n">8</span><span class="p">.</span><span class="n">4</span><span class="p">.</span><span class="n">4</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nb">Set-DnsServerForwarder</span> <span class="n">-IPAddress</span> <span class="n">8</span><span class="p">.</span><span class="n">8</span><span class="p">.</span><span class="n">8</span><span class="p">.</span><span class="n">8</span><span class="p">,</span> <span class="n">8</span><span class="p">.</span><span class="n">8</span><span class="p">.</span><span class="n">4</span><span class="p">.</span><span class="n">4</span>
 </code></pre></div>
 <p>Verify forwarders are set:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nb">Get-DnsServerForwarder</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nb">Get-DnsServerForwarder</span>
 </code></pre></div>
 <p>Test external resolution from the DC:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nb">Resolve-DnsName</span> <span class="n">google</span><span class="p">.</span><span class="n">com</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nb">Resolve-DnsName</span> <span class="n">google</span><span class="p">.</span><span class="n">com</span>
 </code></pre></div>
 <hr />
 <h2 id="configure-ntp-on-domain-controller">Configure NTP on Domain Controller<a class="headerlink" href="#configure-ntp-on-domain-controller" title="Permanent link">&para;</a></h2>
 <p>The PDC Emulator must synchronise with an external time source. All other DCs and domain members sync from the PDC Emulator automatically.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="n">w32tm</span> <span class="p">/</span><span class="n">config</span> <span class="p">/</span><span class="n">manualpeerlist</span><span class="p">:</span><span class="s2">&quot;time.windows.com&quot;</span> <span class="p">/</span><span class="n">syncfromflags</span><span class="p">:</span><span class="n">manual</span> <span class="p">/</span><span class="n">reliable</span><span class="p">:</span><span class="n">yes</span> <span class="p">/</span><span class="n">update</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="nb">Restart-Service</span> <span class="n">w32tm</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="n">w32tm</span> <span class="p">/</span><span class="n">resync</span> <span class="p">/</span><span class="n">force</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="n">w32tm</span> <span class="p">/</span><span class="n">config</span> <span class="p">/</span><span class="n">manualpeerlist</span><span class="p">:</span><span class="s2">&quot;time.windows.com&quot;</span> <span class="p">/</span><span class="n">syncfromflags</span><span class="p">:</span><span class="n">manual</span> <span class="p">/</span><span class="n">reliable</span><span class="p">:</span><span class="n">yes</span> <span class="p">/</span><span class="n">update</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nb">Restart-Service</span> <span class="n">w32tm</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="n">w32tm</span> <span class="p">/</span><span class="n">resync</span> <span class="p">/</span><span class="n">force</span>
 </code></pre></div>
 <p>Verify synchronisation:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="n">w32tm</span> <span class="p">/</span><span class="n">query</span> <span class="p">/</span><span class="n">status</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="n">w32tm</span> <span class="p">/</span><span class="n">query</span> <span class="p">/</span><span class="n">status</span>
 </code></pre></div>
 <p>Confirm <code>Stratum</code> is 2 or lower and <code>Last Successful Sync Time</code> is recent.</p>
 <hr />
 <h2 id="add-replica-domain-controllers">Add Replica Domain Controllers<a class="headerlink" href="#add-replica-domain-controllers" title="Permanent link">&para;</a></h2>
 <p>Deploying at least two DCs in every site provides fault tolerance. Repeat the steps below for each additional DC.</p>
 <p><strong>Step 1 — Install the AD DS role on the new server:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="nb">Install-WindowsFeature</span> <span class="n">AD-Domain-Services</span> <span class="n">-IncludeManagementTools</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="nb">Install-WindowsFeature</span> <span class="n">AD-Domain-Services</span> <span class="n">-IncludeManagementTools</span>
 </code></pre></div>
 <p><strong>Step 2 — Promote as a replica DC:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="nb">Install-ADDSDomainController</span> <span class="p">`</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>    <span class="n">-DomainName</span> <span class="s2">&quot;corp.local&quot;</span> <span class="p">`</span>
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>    <span class="n">-InstallDns</span> <span class="p">`</span>
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>    <span class="n">-Credential</span> <span class="p">(</span><span class="nb">Get-Credential</span><span class="p">)</span> <span class="p">`</span>
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>    <span class="n">-Force</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="nb">Install-ADDSDomainController</span> <span class="p">`</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>    <span class="n">-DomainName</span> <span class="s2">&quot;corp.local&quot;</span> <span class="p">`</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>    <span class="n">-InstallDns</span> <span class="p">`</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>    <span class="n">-Credential</span> <span class="p">(</span><span class="nb">Get-Credential</span><span class="p">)</span> <span class="p">`</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>    <span class="n">-Force</span>
 </code></pre></div>
 <p>The server reboots and joins the domain as a domain controller. Replication begins immediately after reboot.</p>
 <p>Verify the new DC is registered:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="nb">Get-ADDomainController</span> <span class="n">-Filter</span> <span class="p">*</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="nb">Get-ADDomainController</span> <span class="n">-Filter</span> <span class="p">*</span>
 </code></pre></div>
 <hr />
 <h2 id="create-organisational-unit-structure">Create Organisational Unit Structure<a class="headerlink" href="#create-organisational-unit-structure" title="Permanent link">&para;</a></h2>
 <p>A clear OU hierarchy is the foundation of GPO scope and delegation. Adjust the structure to your organisation.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c"># Top-level OUs</span>
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="nb">New-ADOrganizationalUnit</span> <span class="n">-Name</span> <span class="s2">&quot;Servers&quot;</span>    <span class="n">-Path</span> <span class="s2">&quot;DC=corp,DC=local&quot;</span>
-<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="nb">New-ADOrganizationalUnit</span> <span class="n">-Name</span> <span class="s2">&quot;Workstations&quot;</span> <span class="n">-Path</span> <span class="s2">&quot;DC=corp,DC=local&quot;</span>
-<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="nb">New-ADOrganizationalUnit</span> <span class="n">-Name</span> <span class="s2">&quot;Users&quot;</span>      <span class="n">-Path</span> <span class="s2">&quot;DC=corp,DC=local&quot;</span>
-<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="nb">New-ADOrganizationalUnit</span> <span class="n">-Name</span> <span class="s2">&quot;Groups&quot;</span>     <span class="n">-Path</span> <span class="s2">&quot;DC=corp,DC=local&quot;</span>
-<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="nb">New-ADOrganizationalUnit</span> <span class="n">-Name</span> <span class="s2">&quot;ServiceAccounts&quot;</span> <span class="n">-Path</span> <span class="s2">&quot;DC=corp,DC=local&quot;</span>
-<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>
-<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="c"># Server sub-OUs</span>
-<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a><span class="nb">New-ADOrganizationalUnit</span> <span class="n">-Name</span> <span class="s2">&quot;Domain Controllers&quot;</span> <span class="n">-Path</span> <span class="s2">&quot;OU=Servers,DC=corp,DC=local&quot;</span>
-<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a><span class="nb">New-ADOrganizationalUnit</span> <span class="n">-Name</span> <span class="s2">&quot;Member Servers&quot;</span>     <span class="n">-Path</span> <span class="s2">&quot;OU=Servers,DC=corp,DC=local&quot;</span>
-<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a><span class="nb">New-ADOrganizationalUnit</span> <span class="n">-Name</span> <span class="s2">&quot;File Servers&quot;</span>       <span class="n">-Path</span> <span class="s2">&quot;OU=Servers,DC=corp,DC=local&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c"># Top-level OUs</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="nb">New-ADOrganizationalUnit</span> <span class="n">-Name</span> <span class="s2">&quot;Servers&quot;</span>    <span class="n">-Path</span> <span class="s2">&quot;DC=corp,DC=local&quot;</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="nb">New-ADOrganizationalUnit</span> <span class="n">-Name</span> <span class="s2">&quot;Workstations&quot;</span> <span class="n">-Path</span> <span class="s2">&quot;DC=corp,DC=local&quot;</span>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="nb">New-ADOrganizationalUnit</span> <span class="n">-Name</span> <span class="s2">&quot;Users&quot;</span>      <span class="n">-Path</span> <span class="s2">&quot;DC=corp,DC=local&quot;</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="nb">New-ADOrganizationalUnit</span> <span class="n">-Name</span> <span class="s2">&quot;Groups&quot;</span>     <span class="n">-Path</span> <span class="s2">&quot;DC=corp,DC=local&quot;</span>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="nb">New-ADOrganizationalUnit</span> <span class="n">-Name</span> <span class="s2">&quot;ServiceAccounts&quot;</span> <span class="n">-Path</span> <span class="s2">&quot;DC=corp,DC=local&quot;</span>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="c"># Server sub-OUs</span>
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="nb">New-ADOrganizationalUnit</span> <span class="n">-Name</span> <span class="s2">&quot;Domain Controllers&quot;</span> <span class="n">-Path</span> <span class="s2">&quot;OU=Servers,DC=corp,DC=local&quot;</span>
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="nb">New-ADOrganizationalUnit</span> <span class="n">-Name</span> <span class="s2">&quot;Member Servers&quot;</span>     <span class="n">-Path</span> <span class="s2">&quot;OU=Servers,DC=corp,DC=local&quot;</span>
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a><span class="nb">New-ADOrganizationalUnit</span> <span class="n">-Name</span> <span class="s2">&quot;File Servers&quot;</span>       <span class="n">-Path</span> <span class="s2">&quot;OU=Servers,DC=corp,DC=local&quot;</span>
 </code></pre></div>
 <p>Verify structure:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="nb">Get-ADOrganizationalUnit</span> <span class="n">-Filter</span> <span class="p">*</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">DistinguishedName</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="nb">Get-ADOrganizationalUnit</span> <span class="n">-Filter</span> <span class="p">*</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">DistinguishedName</span>
 </code></pre></div>
 <hr />
 <h2 id="apply-security-baseline-gpo">Apply Security Baseline GPO<a class="headerlink" href="#apply-security-baseline-gpo" title="Permanent link">&para;</a></h2>
 <p>Download the Microsoft Security Compliance Toolkit from Microsoft, extract the Windows Server 2022 Security Baseline GPO, and import it.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c"># Import the GPO backup (adjust GpoName and Path to match your download)</span>
-<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="nb">Import-GPO</span> <span class="n">-BackupGpoName</span> <span class="s2">&quot;MSFT Windows Server 2022 - Domain Controller&quot;</span> <span class="p">`</span>
-<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>           <span class="n">-Path</span> <span class="s2">&quot;C:\SCT\GPOs&quot;</span> <span class="p">`</span>
-<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>           <span class="n">-TargetName</span> <span class="s2">&quot;Server Baseline - Domain Controllers&quot;</span> <span class="p">`</span>
-<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>           <span class="n">-CreateIfNeeded</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c"># Import the GPO backup (adjust GpoName and Path to match your download)</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="nb">Import-GPO</span> <span class="n">-BackupGpoName</span> <span class="s2">&quot;MSFT Windows Server 2022 - Domain Controller&quot;</span> <span class="p">`</span>
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>           <span class="n">-Path</span> <span class="s2">&quot;C:\SCT\GPOs&quot;</span> <span class="p">`</span>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>           <span class="n">-TargetName</span> <span class="s2">&quot;Server Baseline - Domain Controllers&quot;</span> <span class="p">`</span>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>           <span class="n">-CreateIfNeeded</span>
 </code></pre></div>
 <p>Link the GPO to the Domain Controllers OU:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="nb">New-GPLink</span> <span class="n">-Name</span> <span class="s2">&quot;Server Baseline - Domain Controllers&quot;</span> <span class="p">`</span>
-<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>           <span class="n">-Target</span> <span class="s2">&quot;OU=Domain Controllers,OU=Servers,DC=corp,DC=local&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="nb">New-GPLink</span> <span class="n">-Name</span> <span class="s2">&quot;Server Baseline - Domain Controllers&quot;</span> <span class="p">`</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>           <span class="n">-Target</span> <span class="s2">&quot;OU=Domain Controllers,OU=Servers,DC=corp,DC=local&quot;</span>
 </code></pre></div>
 <p>Force policy refresh and verify:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="n">gpupdate</span> <span class="p">/</span><span class="n">force</span>
-<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="n">gpresult</span> <span class="p">/</span><span class="nb">r</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="n">gpupdate</span> <span class="p">/</span><span class="n">force</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="n">gpresult</span> <span class="p">/</span><span class="nb">r</span>
 </code></pre></div>
 <p>Confirm the GPO name appears under <code>Applied Group Policy Objects</code>.</p>
 <hr />
 <h2 id="validate-the-deployment">Validate the Deployment<a class="headerlink" href="#validate-the-deployment" title="Permanent link">&para;</a></h2>
 <p>Run all checks from an elevated PowerShell session on a DC.</p>
 <p><strong>Replication health:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="n">repadmin</span> <span class="p">/</span><span class="n">showrepl</span>
-<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="n">repadmin</span> <span class="p">/</span><span class="n">replsummary</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="n">repadmin</span> <span class="p">/</span><span class="n">showrepl</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="n">repadmin</span> <span class="p">/</span><span class="n">replsummary</span>
 </code></pre></div>
 <p>No failures should be listed. All DCs should show <code>0 consecutive failures</code>.</p>
 <p><strong>DNS health:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="n">dcdiag</span> <span class="p">/</span><span class="n">test</span><span class="p">:</span><span class="n">dns</span> <span class="p">/</span><span class="n">v</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="n">dcdiag</span> <span class="p">/</span><span class="n">test</span><span class="p">:</span><span class="n">dns</span> <span class="p">/</span><span class="n">v</span>
 </code></pre></div>
 <p>All tests should pass. Investigate any <code>FAIL</code> entries before proceeding.</p>
 <p><strong>Secure channel and Kerberos:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="n">nltest</span> <span class="p">/</span><span class="n">sc_verify</span><span class="p">:</span><span class="n">corp</span><span class="p">.</span><span class="n">local</span>
-<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="n">klist</span> <span class="n">tickets</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="n">nltest</span> <span class="p">/</span><span class="n">sc_verify</span><span class="p">:</span><span class="n">corp</span><span class="p">.</span><span class="n">local</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="n">klist</span> <span class="n">tickets</span>
 </code></pre></div>
 <p><strong>General DC health:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="n">dcdiag</span> <span class="p">/</span><span class="n">test</span><span class="p">:</span><span class="n">replications</span> <span class="p">/</span><span class="n">test</span><span class="p">:</span><span class="n">services</span> <span class="p">/</span><span class="n">test</span><span class="p">:</span><span class="n">fsmocheck</span> <span class="p">/</span><span class="n">v</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="n">dcdiag</span> <span class="p">/</span><span class="n">test</span><span class="p">:</span><span class="n">replications</span> <span class="p">/</span><span class="n">test</span><span class="p">:</span><span class="n">services</span> <span class="p">/</span><span class="n">test</span><span class="p">:</span><span class="n">fsmocheck</span> <span class="p">/</span><span class="n">v</span>
 </code></pre></div>
 <p><strong>FSMO role placement:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="n">netdom</span> <span class="n">query</span> <span class="n">fsmo</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="n">netdom</span> <span class="n">query</span> <span class="n">fsmo</span>
 </code></pre></div>
 <p>All five FSMO roles (Schema Master, Domain Naming Master, PDC Emulator, RID Master, Infrastructure Master) should be assigned.</p>
 <hr />

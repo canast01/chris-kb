@@ -7978,25 +7978,7 @@ ServiceNow escalation: how to collect stats.do output and sys_log entries, open 
 *Applies to: ServiceNow (SaaS — any release)*
 </div>
 <p><img alt="ServiceNow — Escalation" src="../../../../assets/itsm-servicenow-troubleshooting-escalation-index.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>@startuml
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>skinparam sequenceArrowThickness 1.5
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>skinparam roundcorner 5
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>actor &quot;On-Call Engineer&quot; as ENG
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>participant &quot;ServiceNow\nSystem&quot; as SYS
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>participant &quot;Vendor Support&quot; as SUP
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>ENG -&gt; SYS: Severity Levels
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>SYS --&gt; ENG: Output
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>ENG -&gt; SYS: Pre-Escalation Triage Checklist
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>SYS --&gt; ENG: Output
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>ENG -&gt; SYS: Step-by-Step Data Collection
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>SYS --&gt; ENG: Output
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>ENG -&gt; SUP: Escalate with diagnostic bundle
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>SUP --&gt; ENG: Case / resolution path
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>@enduml
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/plantuml/svg/eNqFkTFvAjEMhff8Cov9WnVgYaioroilAqRApUpdTLC4iJCktsPp_n1ztFLL0k6OnO-95zhzUWQt52Dk5GNGxjMIfRSKjp6YU7_tvDtFEoGHu-kviFOJB5c4EsPUGHSaGCbr2LQYAizi0UcingAKLFZLU0Xqnc8YFSaW-OIdrVL_Hu0gSucrZ9_sLfdK8VBdbck5sX4xu40x1RCax5GfgaULsdcBXuohiKlNaOplZWawLpqL3vAbpmYhDgOqTxG27PFI0HbkTsGL_qu3SrnZD81Y4RkVoU0hkBvd_hTvNjP4DibovXZwqNExSX0v7OsyA5kK_ehbFIJ7YJIUynXYjNoZM69bGT_sExdakcY=?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Access:</strong> System Administrator role on the ServiceNow instance; HI portal account with access to your instance</li>
@@ -8093,88 +8075,88 @@ ServiceNow escalation: how to collect stats.do output and sys_log entries, open 
 <hr />
 <h2 id="step-by-step-data-collection">Step-by-Step Data Collection<a class="headerlink" href="#step-by-step-data-collection" title="Permanent link">&para;</a></h2>
 <h3 id="1-capture-statsdo-output">1. Capture stats.do output<a class="headerlink" href="#1-capture-statsdo-output" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>1. Navigate to: https://&lt;instance&gt;.service-now.com/stats.do
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>2. Use Ctrl+A and Ctrl+C to copy the entire page content
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>3. Paste into a text file: stats-&lt;date&gt;-&lt;time&gt;.txt
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>4. Key items to note from stats.do:
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>   - Java version and uptime
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>   - Number of database connections (current vs max)
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>   - Scheduler state
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>   - Any WARN or ERROR messages at the top
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>   - Memory usage (heap used / heap max)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>1. Navigate to: https://&lt;instance&gt;.service-now.com/stats.do
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>2. Use Ctrl+A and Ctrl+C to copy the entire page content
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>3. Paste into a text file: stats-&lt;date&gt;-&lt;time&gt;.txt
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>4. Key items to note from stats.do:
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>   - Java version and uptime
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>   - Number of database connections (current vs max)
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>   - Scheduler state
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>   - Any WARN or ERROR messages at the top
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>   - Memory usage (heap used / heap max)
 </code></pre></div>
 <h3 id="2-export-sys_log-entries">2. Export sys_log entries<a class="headerlink" href="#2-export-sys_log-entries" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1">// From ServiceNow Navigator, go to: System Log &gt; All</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1">// Apply these filters:</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1">//   Level = error</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1">//   Created &gt; [start time of issue - 1 hour]</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1">// Export: right-click column header → Export → CSV</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1">// Or use the REST API:</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1">// GET /api/now/table/sys_log?sysparm_query=level=error^sys_created_on&gt;2026-06-15 09:00:00&amp;sysparm_limit=200&amp;sysparm_fields=sys_created_on,level,source,message</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1">// From ServiceNow Navigator, go to: System Log &gt; All</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1">// Apply these filters:</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1">//   Level = error</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1">//   Created &gt; [start time of issue - 1 hour]</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1">// Export: right-click column header → Export → CSV</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1">// Or use the REST API:</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1">// GET /api/now/table/sys_log?sysparm_query=level=error^sys_created_on&gt;2026-06-15 09:00:00&amp;sysparm_limit=200&amp;sysparm_fields=sys_created_on,level,source,message</span>
 </code></pre></div>
 <h3 id="3-collect-a-thread-dump-for-hangs-or-slow-performance">3. Collect a thread dump (for hangs or slow performance)<a class="headerlink" href="#3-collect-a-thread-dump-for-hangs-or-slow-performance" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>1. Navigate to: https://&lt;instance&gt;.service-now.com/thread_dump.do
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>   (requires System Administrator role)
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>2. Click &quot;Get Thread Dump&quot;
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>3. Save the output to: thread-dump-&lt;date&gt;-&lt;time&gt;.txt
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>4. Repeat 3 times, 60 seconds apart, to capture thread state over time
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>1. Navigate to: https://&lt;instance&gt;.service-now.com/thread_dump.do
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>   (requires System Administrator role)
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>2. Click &quot;Get Thread Dump&quot;
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>3. Save the output to: thread-dump-&lt;date&gt;-&lt;time&gt;.txt
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>4. Repeat 3 times, 60 seconds apart, to capture thread state over time
 </code></pre></div>
 <h3 id="4-collect-the-diagnostics-archive">4. Collect the diagnostics archive<a class="headerlink" href="#4-collect-the-diagnostics-archive" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>1. Navigate to: https://&lt;instance&gt;.service-now.com/diag_stats.do
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>2. Click &quot;Download Diagnostics&quot; (creates a ZIP of stats, logs, and configuration)
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>3. Save: diagnostics-&lt;instance&gt;-&lt;date&gt;.zip
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>Alternatively, for a full support bundle:
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>1. Navigate to: System Diagnostics &gt; Support Bundle
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>2. Click &quot;Create Bundle&quot; — may take 3–5 minutes
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>3. Download the resulting ZIP when complete
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>1. Navigate to: https://&lt;instance&gt;.service-now.com/diag_stats.do
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>2. Click &quot;Download Diagnostics&quot; (creates a ZIP of stats, logs, and configuration)
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>3. Save: diagnostics-&lt;instance&gt;-&lt;date&gt;.zip
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>Alternatively, for a full support bundle:
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>1. Navigate to: System Diagnostics &gt; Support Bundle
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>2. Click &quot;Create Bundle&quot; — may take 3–5 minutes
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>3. Download the resulting ZIP when complete
 </code></pre></div>
 <h3 id="5-collect-integration-specific-data-if-the-issue-is-in-an-integration">5. Collect integration-specific data (if the issue is in an integration)<a class="headerlink" href="#5-collect-integration-specific-data-if-the-issue-is-in-an-integration" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>For MID Server issues:
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  - MID Server logs: &lt;mid-server-install-dir&gt;/logs/agent0.log
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  - MID Server status: https://&lt;instance&gt;.service-now.com/mid_server.do
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>For REST/SOAP integration issues:
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>  - Outbound REST log: System Log &gt; Outbound REST Messages
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>  - Filter by: Response Status != 200, Created &gt; [issue start time]
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>For email issues:
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>  - Email log: System Mailboxes &gt; Email Logs
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>  - ECC queue errors: sys_ecc_queue filtered by state=error
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>For MID Server issues:
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>  - MID Server logs: &lt;mid-server-install-dir&gt;/logs/agent0.log
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>  - MID Server status: https://&lt;instance&gt;.service-now.com/mid_server.do
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>For REST/SOAP integration issues:
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>  - Outbound REST log: System Log &gt; Outbound REST Messages
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>  - Filter by: Response Status != 200, Created &gt; [issue start time]
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>For email issues:
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>  - Email log: System Mailboxes &gt; Email Logs
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>  - ECC queue errors: sys_ecc_queue filtered by state=error
 </code></pre></div>
 <h3 id="6-write-the-timeline-and-case-template">6. Write the timeline and case template<a class="headerlink" href="#6-write-the-timeline-and-case-template" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>INSTANCE: mycompany.service-now.com
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>VERSION: Yokohama Patch 5 (from stats.do)
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>PRIORITY REQUESTED: P1 Critical
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>ISSUE START TIME: 2026-06-15 09:00 UTC
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>ISSUE DESCRIPTION:
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>Production instance returning HTTP 503 for all requests since 09:00 UTC.
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>Users cannot log in. All ITSM operations affected.
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>IMPACT:
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>- 500+ users unable to access ServiceNow
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>- ITSM incident management unavailable
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>- Critical integrations (Jira, Splunk) not able to call ServiceNow APIs
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>
-<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>STEPS TO REPRODUCE:
-<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>1. Navigate to https://mycompany.service-now.com
-<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>2. Observe HTTP 503 response (confirmed via curl from multiple locations)
-<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>
-<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a>WHAT HAS BEEN CHECKED:
-<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a>- status.servicenow.com: No active incidents for EMEA at 09:00 UTC
-<a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a>- stats.do: Unreachable (503)
-<a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a>- Network: Outbound from user locations confirmed working via alternate SaaS tools
-<a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a>
-<a id="__codelineno-6-25" name="__codelineno-6-25" href="#__codelineno-6-25"></a>CHANGES IN PRIOR 24H:
-<a id="__codelineno-6-26" name="__codelineno-6-26" href="#__codelineno-6-26"></a>- No administrative changes made to the instance
-<a id="__codelineno-6-27" name="__codelineno-6-27" href="#__codelineno-6-27"></a>- No scheduled upgrades
-<a id="__codelineno-6-28" name="__codelineno-6-28" href="#__codelineno-6-28"></a>
-<a id="__codelineno-6-29" name="__codelineno-6-29" href="#__codelineno-6-29"></a>CONTACT:
-<a id="__codelineno-6-30" name="__codelineno-6-30" href="#__codelineno-6-30"></a>Primary: &lt;name&gt;, &lt;email&gt;, &lt;phone&gt;
-<a id="__codelineno-6-31" name="__codelineno-6-31" href="#__codelineno-6-31"></a>Secondary: &lt;name&gt;, &lt;email&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>INSTANCE: mycompany.service-now.com
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>VERSION: Yokohama Patch 5 (from stats.do)
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>PRIORITY REQUESTED: P1 Critical
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>ISSUE START TIME: 2026-06-15 09:00 UTC
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>ISSUE DESCRIPTION:
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>Production instance returning HTTP 503 for all requests since 09:00 UTC.
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>Users cannot log in. All ITSM operations affected.
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>IMPACT:
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>- 500+ users unable to access ServiceNow
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>- ITSM incident management unavailable
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>- Critical integrations (Jira, Splunk) not able to call ServiceNow APIs
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>STEPS TO REPRODUCE:
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>1. Navigate to https://mycompany.service-now.com
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>2. Observe HTTP 503 response (confirmed via curl from multiple locations)
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>WHAT HAS BEEN CHECKED:
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>- status.servicenow.com: No active incidents for EMEA at 09:00 UTC
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>- stats.do: Unreachable (503)
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>- Network: Outbound from user locations confirmed working via alternate SaaS tools
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>CHANGES IN PRIOR 24H:
+<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>- No administrative changes made to the instance
+<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a>- No scheduled upgrades
+<a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a>
+<a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a>CONTACT:
+<a id="__codelineno-5-30" name="__codelineno-5-30" href="#__codelineno-5-30"></a>Primary: &lt;name&gt;, &lt;email&gt;, &lt;phone&gt;
+<a id="__codelineno-5-31" name="__codelineno-5-31" href="#__codelineno-5-31"></a>Secondary: &lt;name&gt;, &lt;email&gt;
 </code></pre></div>
 <hr />
 <h2 id="how-to-open-a-hi-support-case">How to Open a HI Support Case<a class="headerlink" href="#how-to-open-a-hi-support-case" title="Permanent link">&para;</a></h2>
@@ -8273,26 +8255,26 @@ ServiceNow escalation: how to collect stats.do output and sys_log entries, open 
 </table>
 <hr />
 <h2 id="useful-commands-for-case-updates">Useful Commands for Case Updates<a class="headerlink" href="#useful-commands-for-case-updates" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1">// REST API calls — run from a browser or curl with your ServiceNow credentials</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="c1">// Get recent error log count (include in every case update)</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1">// GET https://&lt;instance&gt;.service-now.com/api/now/stats/sys_log?sysparm_query=level=error^sys_created_onONLast 1 hours@javascript:gs.beginningOfLast1Hours()@javascript:gs.endOfLast1Hours()&amp;sysparm_count=true</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1">// → Returns total count of error log entries in the last hour</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1">// Check scheduler is running</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="c1">// GET https://&lt;instance&gt;.service-now.com/api/now/table/sys_trigger?sysparm_query=claim^sys_updated_onONToday@javascript:gs.beginningOfToday()@javascript:gs.endOfToday()&amp;sysparm_limit=1</span>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="c1">// Check active user sessions count</span>
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="c1">// GET https://&lt;instance&gt;.service-now.com/api/now/stats/sys_user_session?sysparm_count=true&amp;sysparm_query=active=true</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1">// REST API calls — run from a browser or curl with your ServiceNow credentials</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1">// Get recent error log count (include in every case update)</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1">// GET https://&lt;instance&gt;.service-now.com/api/now/stats/sys_log?sysparm_query=level=error^sys_created_onONLast 1 hours@javascript:gs.beginningOfLast1Hours()@javascript:gs.endOfLast1Hours()&amp;sysparm_count=true</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1">// → Returns total count of error log entries in the last hour</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1">// Check scheduler is running</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1">// GET https://&lt;instance&gt;.service-now.com/api/now/table/sys_trigger?sysparm_query=claim^sys_updated_onONToday@javascript:gs.beginningOfToday()@javascript:gs.endOfToday()&amp;sysparm_limit=1</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1">// Check active user sessions count</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="c1">// GET https://&lt;instance&gt;.service-now.com/api/now/stats/sys_user_session?sysparm_count=true&amp;sysparm_query=active=true</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># From CLI — check instance availability</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;%{http_code}&quot;</span><span class="w"> </span>https://&lt;instance&gt;.service-now.com/
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Check MID Server log for connection errors (on MID Server host)</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|exception\|fail&quot;</span><span class="w"> </span>&lt;mid-install-dir&gt;/logs/agent0.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># Test outbound connectivity from MID Server</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;%{http_code}&quot;</span><span class="w"> </span>https://&lt;instance&gt;.service-now.com/api/now/table/incident?sysparm_limit<span class="o">=</span><span class="m">1</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># From CLI — check instance availability</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;%{http_code}&quot;</span><span class="w"> </span>https://&lt;instance&gt;.service-now.com/
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Check MID Server log for connection errors (on MID Server host)</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|exception\|fail&quot;</span><span class="w"> </span>&lt;mid-install-dir&gt;/logs/agent0.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># Test outbound connectivity from MID Server</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;%{http_code}&quot;</span><span class="w"> </span>https://&lt;instance&gt;.service-now.com/api/now/table/incident?sysparm_limit<span class="o">=</span><span class="m">1</span>
 </code></pre></div>
 <hr />
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>

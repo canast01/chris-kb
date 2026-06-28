@@ -8183,25 +8183,7 @@ Validates that infrastructure is in a safe state before any upgrade or patching 
 *Applies to: ServiceNow*
 </div>
 <p><img alt="Upgrade Readiness Checklist" src="../../../../assets/itsm-servicenow-lifecycle-upgrade-readiness-index.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>plan: &quot;Plan&quot; {shape: oval}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>preupgrade_gate_criteria: &quot;Pre-Upgrade Gate Criteria&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>4_network_and_connectivity: &quot;4. Network and Connectivity&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>5_vendor_compatibility_matrix: &quot;5. Vendor Compatibility Matrix&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>6_preupgrade_snapshot_vms: &quot;6. Pre-Upgrade Snapshot (VMs)&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>7_rollback_plan: &quot;7. Rollback Plan&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>go_nogo_signoff: &quot;Go / No-Go Sign-Off&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>validate: &quot;Validate&quot; {shape: oval}
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>plan -&gt; preupgrade_gate_criteria
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>preupgrade_gate_criteria -&gt; 4_network_and_connectivity
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>4_network_and_connectivity -&gt; 5_vendor_compatibility_matrix
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>5_vendor_compatibility_matrix -&gt; 6_preupgrade_snapshot_vms
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>6_preupgrade_snapshot_vms -&gt; 7_rollback_plan
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>7_rollback_plan -&gt; go_nogo_signoff
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>go_nogo_signoff -&gt; validate
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp9kbtugzAUhnee4ihTO0CWXKQMXTJkSlo1KqvlgDFWjI9lXNqqyrv3mFCVImDB2P8FfL5cOZF5hWYHTsnSR5HVnDaLF1oW8F2X3IodYMP1LbJOvFvpeC6Y5F6wzCkvnOLB7kT8dtfgQBrsO-2vI3yIG6nFLVoxI_wHuivjJmcZGhN-olH-i6pWCZzuKpAK-546WrZmjTA5OuqpLPfqojRZWcW9U5_Ut04gbQ1U1TPAsTWMVm5Y76q14bYu0bOmqqluk0D_sudOhYf0WD-Otm2ZQ60vPLuybrjbBF67I_g_6F5MIjNIj1pJg0VBsQPCEk4Y03qmw_i5KEaTBEvlBIEiafc6RNlihvgJpphOwg6haX4zaENwltU8yRCf5DJNLMQGAIZAgmUw7OHwg-V3qtEPK2MsNg==?" /></p>
 <h2 id="pre-upgrade-gate-criteria">Pre-Upgrade Gate Criteria<a class="headerlink" href="#pre-upgrade-gate-criteria" title="Permanent link">&para;</a></h2>
 <pre class="mermaid"><code>flowchart LR
     A[Change Approved\nin ITSM] --&gt; B[Backups\nVerified]
@@ -8250,20 +8232,20 @@ Validates that infrastructure is in a safe state before any upgrade or patching 
 </tbody>
 </table>
 <h2 id="4-network-and-connectivity">4. Network and Connectivity<a class="headerlink" href="#4-network-and-connectivity" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>ping<span class="w"> </span>-c<span class="w"> </span><span class="m">3</span><span class="w"> </span>&lt;gateway&gt;
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ping<span class="w"> </span>-c<span class="w"> </span><span class="m">3</span><span class="w"> </span>&lt;dns-server&gt;
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>ping<span class="w"> </span>-c<span class="w"> </span><span class="m">3</span><span class="w"> </span>&lt;ntp-server&gt;
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># NTP sync (drift &lt; 1s)</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>chronyc<span class="w"> </span>tracking<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;System time&quot;</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># DNS resolution</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>nslookup<span class="w"> </span>&lt;hostname&gt;.example.com
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ping<span class="w"> </span>-c<span class="w"> </span><span class="m">3</span><span class="w"> </span>&lt;gateway&gt;
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ping<span class="w"> </span>-c<span class="w"> </span><span class="m">3</span><span class="w"> </span>&lt;dns-server&gt;
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>ping<span class="w"> </span>-c<span class="w"> </span><span class="m">3</span><span class="w"> </span>&lt;ntp-server&gt;
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># NTP sync (drift &lt; 1s)</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>chronyc<span class="w"> </span>tracking<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;System time&quot;</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># DNS resolution</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>nslookup<span class="w"> </span>&lt;hostname&gt;.example.com
 </code></pre></div>
 <h2 id="5-vendor-compatibility-matrix">5. Vendor Compatibility Matrix<a class="headerlink" href="#5-vendor-compatibility-matrix" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># VMware HCL — check driver/firmware compatibility before ESXi upgrade</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>esxcli<span class="w"> </span>software<span class="w"> </span>vib<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;bnx|igb|i40e|lpfc|nfnic|enic&quot;</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>esxcli<span class="w"> </span>hardware<span class="w"> </span>firmware<span class="w"> </span>get
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># VMware HCL — check driver/firmware compatibility before ESXi upgrade</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>esxcli<span class="w"> </span>software<span class="w"> </span>vib<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;bnx|igb|i40e|lpfc|nfnic|enic&quot;</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>esxcli<span class="w"> </span>hardware<span class="w"> </span>firmware<span class="w"> </span>get
 </code></pre></div>
 <table>
 <thead>
@@ -8308,31 +8290,31 @@ Validates that infrastructure is in a safe state before any upgrade or patching 
 </tbody>
 </table>
 <h2 id="6-pre-upgrade-snapshot-vms">6. Pre-Upgrade Snapshot (VMs)<a class="headerlink" href="#6-pre-upgrade-snapshot-vms" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Take quiesced snapshot immediately before change</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>New-Snapshot<span class="w"> </span>-VM<span class="w"> </span><span class="s2">&quot;HOSTNAME&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>-Name<span class="w"> </span><span class="s2">&quot;pre-upgrade-CHG-XXXX-</span><span class="k">$(</span>Get-Date<span class="w"> </span>-Format<span class="w"> </span>yyyyMMdd<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>-Description<span class="w"> </span><span class="s2">&quot;Pre-upgrade snapshot — CHG-XXXX&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span>-Quiesce<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span>-Memory:<span class="nv">$false</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># Verify</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>Get-VM<span class="w"> </span>-Name<span class="w"> </span><span class="s2">&quot;HOSTNAME&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Get-Snapshot<span class="w"> </span><span class="p">|</span><span class="w"> </span>Select-Object<span class="w"> </span>Name,<span class="w"> </span>Created,<span class="w"> </span>SizeMB
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Take quiesced snapshot immediately before change</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>New-Snapshot<span class="w"> </span>-VM<span class="w"> </span><span class="s2">&quot;HOSTNAME&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>-Name<span class="w"> </span><span class="s2">&quot;pre-upgrade-CHG-XXXX-</span><span class="k">$(</span>Get-Date<span class="w"> </span>-Format<span class="w"> </span>yyyyMMdd<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>-Description<span class="w"> </span><span class="s2">&quot;Pre-upgrade snapshot — CHG-XXXX&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>-Quiesce<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span>-Memory:<span class="nv">$false</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Verify</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>Get-VM<span class="w"> </span>-Name<span class="w"> </span><span class="s2">&quot;HOSTNAME&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Get-Snapshot<span class="w"> </span><span class="p">|</span><span class="w"> </span>Select-Object<span class="w"> </span>Name,<span class="w"> </span>Created,<span class="w"> </span>SizeMB
 </code></pre></div>
 <div class="admonition note">
 <p class="admonition-title">Snapshot retention</p>
 <p>Remove pre-upgrade snapshots within 48 hours of successful completion. Stale snapshots degrade VM performance and consume datastore space.</p>
 </div>
 <h2 id="7-rollback-plan">7. Rollback Plan<a class="headerlink" href="#7-rollback-plan" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Rollback Plan — CHG-XXXX
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>System:           &lt;hostname&gt;
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>Upgrade:          &lt;from version&gt; → &lt;to version&gt;
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>Rollback method:  [ ] Snapshot  [ ] Backup restore  [ ] Config revert
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>Snapshot name:    pre-upgrade-CHG-XXXX-YYYY-MM-DD
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>Estimated time:   &lt;X&gt; minutes
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>Rollback trigger: Service fails to start / error rate &gt; 5% / app team reports failures
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>Decision authority: &lt;name / role&gt;
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Rollback Plan — CHG-XXXX
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>System:           &lt;hostname&gt;
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>Upgrade:          &lt;from version&gt; → &lt;to version&gt;
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>Rollback method:  [ ] Snapshot  [ ] Backup restore  [ ] Config revert
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>Snapshot name:    pre-upgrade-CHG-XXXX-YYYY-MM-DD
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>Estimated time:   &lt;X&gt; minutes
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>Rollback trigger: Service fails to start / error rate &gt; 5% / app team reports failures
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>Decision authority: &lt;name / role&gt;
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 </code></pre></div>
 <h2 id="go-no-go-sign-off">Go / No-Go Sign-Off<a class="headerlink" href="#go-no-go-sign-off" title="Permanent link">&para;</a></h2>
 <table>

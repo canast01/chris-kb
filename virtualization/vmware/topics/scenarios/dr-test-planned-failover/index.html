@@ -10795,21 +10795,7 @@ them to fail.
 <p class="admonition-title">Production traffic cutover</p>
 <p>Executing a planned failover transfers production traffic to the recovery site. Confirm all replication groups are synchronised (RPO = 0) and stakeholders are notified before starting.</p>
 </div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>center: &quot;Scenarios&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>products_involved: &quot;Products Involved&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>dr_test_nondisruptive_recovery_valid: &quot;DR Test — Non-Disruptive Recovery Validation&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>planned_failover_graceful_production: &quot;Planned Failover — Graceful Production Migration to DR Site&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>posttask_validation: &quot;Post-Task Validation&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>key_terms: &quot;Key Terms&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>center -&gt; products_involved
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>center -&gt; dr_test_nondisruptive_recovery_valid
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>center -&gt; planned_failover_graceful_production
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>center -&gt; posttask_validation
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>center -&gt; key_terms
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNkcFqwzAMhu95CtF7XiCHncrGGBuhLbsaEauJqWcHWwkLo7CH2BPuSaakXhZoYL0J6ZP-X5I2gSo23hUQTN1wllXkmEIBm71EGIyPG_iIDbZUQEPvWHt3ztrgdVdxVMb13vakhS9TDh5T7q9v1EBXWzpnOiimyMp5p00MXcumJyWA7ykMqkdrxmHbHRwEg-_PL3jxLt_OLOwSC68ji6P5VaXWonOk1RGNHRtUHbCiY2dVcj9tvSkvGNwnbJJ8SCiUMwrPRgZMEXsQf3vDtC7sIzPG02UZ_NWRbH6Q9H--TzTIicJblKYnGuQOEq-S6VeQ38HVQxa1W06-HHXD3Zb49baL6rxM9gM_sueM?" /></p>
 <h2 id="products-involved">Products Involved<a class="headerlink" href="#products-involved" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -10846,8 +10832,8 @@ them to fail.
 <p>A DR test boots replicated VM snapshots in an isolated test network at the DR site while production VMs at the primary site continue running throughout.</p>
 <h3 id="1-verify-replication-health-before-the-test">1. Verify Replication Health Before the Test<a class="headerlink" href="#1-verify-replication-health-before-the-test" title="Permanent link">&para;</a></h3>
 <p>Confirm all VMs in the recovery plan are within their RPO before starting the test.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Confirm all VMs in the recovery plan are at RPO — must show OK, not Warning or Error</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c"># SRM → Site Recovery → Replication → review status column for all protected VMs</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Confirm all VMs in the recovery plan are at RPO — must show OK, not Warning or Error</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c"># SRM → Site Recovery → Replication → review status column for all protected VMs</span>
 </code></pre></div>
 <p>Expected: every VM shows status <strong>OK</strong> and last sync time within the configured RPO window. A VM showing <strong>RPO Violated</strong> or <strong>Not Responding</strong> will fail to power on during the test.</p>
 <h3 id="2-run-the-dr-test">2. Run the DR Test<a class="headerlink" href="#2-run-the-dr-test" title="Permanent link">&para;</a></h3>
@@ -10869,13 +10855,13 @@ conflicts with production.</p>
 <p>A planned failover gracefully migrates all protected workloads from the primary to the DR site with typically zero data loss if replication is current at the time of failover.</p>
 <h3 id="1-pre-failover-checks">1. Pre-Failover Checks<a class="headerlink" href="#1-pre-failover-checks" title="Permanent link">&para;</a></h3>
 <p>Confirm DR site capacity and replication currency before initiating failover.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Check replication status — all VMs must be at RPO before initiating planned failover</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c"># SRM → Replication → confirm all statuses show OK</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c"># Check DR site cluster has sufficient capacity for all failed-over VMs</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nb">Get-Cluster</span> <span class="s2">&quot;DR-Cluster&quot;</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">Name</span><span class="p">,</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>  <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;EffectiveCPUMHz&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={(</span><span class="nv">$_</span> <span class="p">|</span> <span class="nb">Get-View</span><span class="p">).</span><span class="n">Summary</span><span class="p">.</span><span class="n">EffectiveCpu</span><span class="p">}},</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>  <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;EffectiveMemMB&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={(</span><span class="nv">$_</span> <span class="p">|</span> <span class="nb">Get-View</span><span class="p">).</span><span class="n">Summary</span><span class="p">.</span><span class="n">EffectiveMemory</span><span class="p">}}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Check replication status — all VMs must be at RPO before initiating planned failover</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c"># SRM → Replication → confirm all statuses show OK</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c"># Check DR site cluster has sufficient capacity for all failed-over VMs</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nb">Get-Cluster</span> <span class="s2">&quot;DR-Cluster&quot;</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">Name</span><span class="p">,</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>  <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;EffectiveCPUMHz&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={(</span><span class="nv">$_</span> <span class="p">|</span> <span class="nb">Get-View</span><span class="p">).</span><span class="n">Summary</span><span class="p">.</span><span class="n">EffectiveCpu</span><span class="p">}},</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>  <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;EffectiveMemMB&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={(</span><span class="nv">$_</span> <span class="p">|</span> <span class="nb">Get-View</span><span class="p">).</span><span class="n">Summary</span><span class="p">.</span><span class="n">EffectiveMemory</span><span class="p">}}</span>
 </code></pre></div>
 <p>Expected: all VMs at RPO; DR cluster effective CPU and memory headroom sufficient for all recovery plan VMs plus HA admission control reservation.</p>
 <h3 id="2-initiate-planned-failover">2. Initiate Planned Failover<a class="headerlink" href="#2-initiate-planned-failover" title="Permanent link">&para;</a></h3>
@@ -10888,28 +10874,28 @@ conflicts with production.</p>
    Network Mapping configured in SRM</p>
 <h3 id="3-nsx-network-configuration-at-the-dr-site">3. NSX Network Configuration at the DR Site<a class="headerlink" href="#3-nsx-network-configuration-at-the-dr-site" title="Permanent link">&para;</a></h3>
 <p>Verify all required NSX segments exist and are mapped in SRM before initiating failover.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Verify required segments exist at DR site NSX Manager before failover</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># NSX Manager (DR site) → Networking → Segments → confirm all required segments are present</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># SRM → Site Recovery → Network Mappings → confirm all primary segments have a DR mapping</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Verify required segments exist at DR site NSX Manager before failover</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># NSX Manager (DR site) → Networking → Segments → confirm all required segments are present</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># SRM → Site Recovery → Network Mappings → confirm all primary segments have a DR mapping</span>
 </code></pre></div>
 <p>Expected: every primary segment has a corresponding DR segment and an SRM network mapping entry. Missing mappings cause VMs to power on with disconnected NICs.</p>
 <h3 id="4-dns-after-planned-failover">4. DNS After Planned Failover<a class="headerlink" href="#4-dns-after-planned-failover" title="Permanent link">&para;</a></h3>
 <p>Update DNS only if VMs receive new IP addresses at the DR site (different subnet — no stretched L2).</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Update DNS A records to point to the new DR IP for each application FQDN</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># If using Active Directory DNS — run on a DC at the DR site after VMs are up:</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># dnscmd /recorddelete &lt;zone&gt; &lt;hostname&gt; A &lt;old-IP&gt;</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># dnscmd /recordadd &lt;zone&gt; &lt;hostname&gt; A &lt;new-DR-IP&gt;</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># Verify resolution from a DR site client after DNS update</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>nslookup<span class="w"> </span>app.domain.local<span class="w"> </span>&lt;DR-DNS-server-IP&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Update DNS A records to point to the new DR IP for each application FQDN</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># If using Active Directory DNS — run on a DC at the DR site after VMs are up:</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># dnscmd /recorddelete &lt;zone&gt; &lt;hostname&gt; A &lt;old-IP&gt;</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># dnscmd /recordadd &lt;zone&gt; &lt;hostname&gt; A &lt;new-DR-IP&gt;</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># Verify resolution from a DR site client after DNS update</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>nslookup<span class="w"> </span>app.domain.local<span class="w"> </span>&lt;DR-DNS-server-IP&gt;
 </code></pre></div>
 <p>Expected: <code>nslookup</code> returns the DR site IP for each application FQDN.</p>
 <h3 id="5-post-failover-validation">5. Post-Failover Validation<a class="headerlink" href="#5-post-failover-validation" title="Permanent link">&para;</a></h3>
 <p>Confirm all VMs are powered on and connect Aria Operations to the DR site vCenter.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># Verify all VMs in the recovery plan are powered on at the DR site</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">Get-Cluster</span> <span class="s2">&quot;DR-Cluster&quot;</span> <span class="p">|</span> <span class="nb">Get-VM</span> <span class="p">|</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">PowerState</span> <span class="o">-ne</span> <span class="s2">&quot;PoweredOn&quot;</span><span class="p">}</span> <span class="p">|</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>  <span class="nb">Select </span><span class="n">Name</span><span class="p">,</span> <span class="n">PowerState</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Verify all VMs in the recovery plan are powered on at the DR site</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">Get-Cluster</span> <span class="s2">&quot;DR-Cluster&quot;</span> <span class="p">|</span> <span class="nb">Get-VM</span> <span class="p">|</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>  <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">PowerState</span> <span class="o">-ne</span> <span class="s2">&quot;PoweredOn&quot;</span><span class="p">}</span> <span class="p">|</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>  <span class="nb">Select </span><span class="n">Name</span><span class="p">,</span> <span class="n">PowerState</span>
 </code></pre></div>
 <p>Expected: zero VMs returned (all are PoweredOn). Aria Operations manual collection returns no critical alerts.</p>
 <h3 id="6-failback-to-primary-site">6. Failback to Primary Site<a class="headerlink" href="#6-failback-to-primary-site" title="Permanent link">&para;</a></h3>

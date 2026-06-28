@@ -9520,58 +9520,42 @@ vSphere HA uses slot-based or percentage-based admission control to guarantee ca
     F --&gt; G
     G --&gt;|Yes| H
     G --&gt;|No| I</code></pre>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>center: &quot;Ha Deep Dive&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>slotbased_admission_control: &quot;Slot-Based Admission Control&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>resource_fragmentation_problem: &quot;Resource Fragmentation Problem&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>admission_control_policies: &quot;Admission Control Policies&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>ha_restart_priority: &quot;HA Restart Priority&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>network_isolation_response: &quot;Network Isolation Response&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>apd_vs_pdl: &quot;APD vs PDL&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>center -&gt; slotbased_admission_control
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>center -&gt; resource_fragmentation_problem
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>center -&gt; admission_control_policies
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>center -&gt; ha_restart_priority
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>center -&gt; network_isolation_response
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>center -&gt; apd_vs_pdl
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp9kdFKxDAQRd_7FUPf9wf6IFSLKIiU9QNCth3bYJoJk1gV2X83MV0NbHZfc-7c3LkzKsbBKzINsJpmX1UDGo_cQP0goUO00KkVa_h2s7TYwIyfciJzrJwmf5AORyHHRTkXPMRAxjPpMPwS6O42YmhPGO4S_jeLf0szaTxWjI7eeUDxynJaQgYZUwnLdNC4BMf9JoD7XAB9EhQ9z4IJS1oNCl3wO4sF_QaLXrMUIaKX7EMmRaz8V-yohX16DUHSa3HaoP8gfhPKkU6LBTNLxgVZ_ZwgPJ5g9PyF5a3sKFYn7Bh7bvsOVgd991TUbteE3Q1cuVemun6GTHi520xUKC2jl0vJ__nbtvoBWcf-VA==?" /></p>
 <h2 id="slot-based-admission-control">Slot-Based Admission Control<a class="headerlink" href="#slot-based-admission-control" title="Permanent link">&para;</a></h2>
 <p>A <strong>slot</strong> is the atomic unit of capacity reserved per potential host failure. HA calculates slot size from the highest reservations in the cluster.</p>
 <p><strong>Slot size formula:</strong></p>
 <p>Memory overhead is VMkernel-computed per VM based on vCPU count, memory size, and VMX settings — not configurable by the admin but visible in VM advanced settings.</p>
 <p><strong>Available slots per host:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>CPU slots per host    = floor(host total CPU MHz / CPU slot size)
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Memory slots per host = floor(host total memory MB / memory slot size)
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Slots per host        = min(CPU slots per host, memory slots per host)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>CPU slots per host    = floor(host total CPU MHz / CPU slot size)
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>Memory slots per host = floor(host total memory MB / memory slot size)
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>Slots per host        = min(CPU slots per host, memory slots per host)
 </code></pre></div>
 <p><strong>Cluster available slots:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Total slots = sum of slots across all hosts
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>Failover slots reserved = slots on N largest hosts (where N = configured failover host count)
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>Available slots = total slots − failover slots reserved
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Total slots = sum of slots across all hosts
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Failover slots reserved = slots on N largest hosts (where N = configured failover host count)
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Available slots = total slots − failover slots reserved
 </code></pre></div>
 <h3 id="slot-math-worked-example">Slot Math Worked Example<a class="headerlink" href="#slot-math-worked-example" title="Permanent link">&para;</a></h3>
 <p>Cluster: 4 hosts × 32 GHz CPU, 256 GB RAM each. 100 VMs; largest CPU reservation = 2000 MHz; average VM memory overhead = 250 MB; no memory reservations set.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>CPU slot size  = 2000 MHz
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Mem slot size  = 0 MB + 250 MB (overhead) = 250 MB
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>CPU slots per host  = floor(32,000 / 2000) = 16
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>Mem slots per host  = floor(256,000 / 250) = 1024
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>Slots per host      = min(16, 1024) = 16   ← CPU-constrained
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>Total slots         = 4 × 16 = 64
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>Failover (1 host)   = 16
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>Available slots     = 64 − 16 = 48
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>CPU slot size  = 2000 MHz
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>Mem slot size  = 0 MB + 250 MB (overhead) = 250 MB
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>CPU slots per host  = floor(32,000 / 2000) = 16
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>Mem slots per host  = floor(256,000 / 250) = 1024
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>Slots per host      = min(16, 1024) = 16   ← CPU-constrained
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>Total slots         = 4 × 16 = 64
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>Failover (1 host)   = 16
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>Available slots     = 64 − 16 = 48
 </code></pre></div>
 <p>With 100 VMs and only 48 available slots, HA cannot power on all VMs if a host fails (48 &lt; 100). To fix: lower the CPU reservation on the largest VM, or switch to percentage-based admission control.</p>
 <h2 id="resource-fragmentation-problem">Resource Fragmentation Problem<a class="headerlink" href="#resource-fragmentation-problem" title="Permanent link">&para;</a></h2>
 <p>If a single VM has a disproportionately large CPU reservation (e.g., 8000 MHz for a database VM), the slot size bloats across the entire cluster:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>CPU slot = 8000 MHz
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>CPU slots per 32 GHz host = floor(32,000 / 8000) = 4 per host
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>4 hosts × 4 slots = 16 total slots
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>Failover (1 host) = 4
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>Available = 12 slots for 100 VMs → immediate admission control failure
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>CPU slot = 8000 MHz
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>CPU slots per 32 GHz host = floor(32,000 / 8000) = 4 per host
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>4 hosts × 4 slots = 16 total slots
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>Failover (1 host) = 4
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>Available = 12 slots for 100 VMs → immediate admission control failure
 </code></pre></div>
 <p><strong>Resolution options:</strong>
 - Use percentage-based admission control (avoids slot fragmentation entirely).

@@ -9493,47 +9493,31 @@
 <p><img alt="vSphere Security — Encryption, Identity, and VM Hardening" src="../../../../assets/virtualization-vmware-internals-vsphere-security-index.svg" /></p>
 <p>vSphere security covers a wide range of features from encrypting VM data at rest and in flight, to attestation of ESXi host integrity, to locking down administrative access. This page covers the security features tested on the VCP-DCV 8 exam — including VM Encryption, vSphere Trust Authority, vTPM, VBS, identity federation, lockdown mode, and Secure Boot.</p>
 <hr />
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>center: &quot;Vsphere Security&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>vm_encryption: &quot;VM Encryption&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>vsphere_trust_authority_vta: &quot;vSphere Trust Authority (vTA)&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>key_management_key_rotation_and_life: &quot;Key Management — Key Rotation and Lifecycle&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>virtual_trusted_platform_module_vtpm: &quot;Virtual Trusted Platform Module (vTPM)&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>bios_vs_uefi_firmware: &quot;BIOS vs UEFI Firmware&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>virtualizationbased_security_vbs: &quot;Virtualization-Based Security (VBS)&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>center -&gt; vm_encryption
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>center -&gt; vsphere_trust_authority_vta
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>center -&gt; key_management_key_rotation_and_life
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>center -&gt; virtual_trusted_platform_module_vtpm
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>center -&gt; bios_vs_uefi_firmware
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>center -&gt; virtualizationbased_security_vbs
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNksFOwzAMhu99CquncdgL7IC0SZs0QcVEx65W1rptRJtUSRooCImH4Al5EpK1bJ3o0I6xP__-bSflihLDpZiB4nlhgiAhYUjNINzpuiBFEFPSKG7aEN51wWqaQUGvLJfiI7AVkkhUW3cK4S6C5fF94n0LJvKSXEUnikY12iBrTCG9NlrDXL2Nu5Zbn4X5bxYmdju_GdV7phYrJlhOlfON_qmkYb4_MpFiyTNXEN5RC9ERg-_PL_Chxx4Fh8K9Q5M2KWncOFemYWVnnFKsS2YyqSqsZNqU5AaoK7-BDusmoBQ2PQbRAfOTbKLxUfZcarQaG8o4ZlxVL0x574v1QwxWw9NytYZVH__PI387DLVn2vnU_fXQ7vXJX49MF545Xhgmu0U8bq7_FjC9hbOjD-OXTzugrjnYUPSKtQ_w0R3-lbu4oeAHU9Alhg==?" /></p>
 <h2 id="vm-encryption">VM Encryption<a class="headerlink" href="#vm-encryption" title="Permanent link">&para;</a></h2>
 <p>vSphere VM Encryption (introduced in vSphere 6.5) encrypts VM data at rest — virtual machine disk files (VMDK), VM configuration files (VMX), and VM swap files.</p>
 <h3 id="how-vm-encryption-works">How VM Encryption Works<a class="headerlink" href="#how-vm-encryption-works" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                    vSphere VM Encryption Flow                                                         │
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│                                                                                                       │
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│  ┌──────────┐   1. Request DEK     ┌───────────────────────────┐                                      │
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│  │ vCenter  │ ──────────────────►  │  KMS (Key Provider)       │                                      │
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│  │          │ ◄──────────────────  │  External or Native       │                                      │
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│  │          │   2. Return KEK+DEK  └───────────────────────────┘                                      │
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│  └────┬─────┘                                                                                         │
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│       │ 3. Push encrypted DEK to ESXi host                                                            │
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│       ▼                                                                                               │
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│  ┌──────────┐                                                                                         │
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│  │ ESXi     │  4. ESXi VMkernel decrypts DEK using KEK                                                │
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│  │ Host     │     then uses DEK to encrypt/decrypt VM I/O                                             │
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│  │          │                                                                                         │
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│  │  [VM]    │  5. Data written to VMDK is always encrypted                                            │
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│  │  VMDK    │     at the disk layer — transparent to guest OS                                         │
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│  └──────────┘                                                                                         │
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>KEK = Key Encrypting Key (managed by KMS, never stored on ESXi)
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>DEK = Data Encrypting Key (generated per VM, encrypted by KEK)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                    vSphere VM Encryption Flow                                                         │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│                                                                                                       │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│  ┌──────────┐   1. Request DEK     ┌───────────────────────────┐                                      │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│  │ vCenter  │ ──────────────────►  │  KMS (Key Provider)       │                                      │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│  │          │ ◄──────────────────  │  External or Native       │                                      │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│  │          │   2. Return KEK+DEK  └───────────────────────────┘                                      │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│  └────┬─────┘                                                                                         │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│       │ 3. Push encrypted DEK to ESXi host                                                            │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│       ▼                                                                                               │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│  ┌──────────┐                                                                                         │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│  │ ESXi     │  4. ESXi VMkernel decrypts DEK using KEK                                                │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│  │ Host     │     then uses DEK to encrypt/decrypt VM I/O                                             │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│  │          │                                                                                         │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│  │  [VM]    │  5. Data written to VMDK is always encrypted                                            │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│  │  VMDK    │     at the disk layer — transparent to guest OS                                         │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│  └──────────┘                                                                                         │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>KEK = Key Encrypting Key (managed by KMS, never stored on ESXi)
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>DEK = Data Encrypting Key (generated per VM, encrypted by KEK)
 </code></pre></div>
 <h3 id="what-gets-encrypted">What Gets Encrypted<a class="headerlink" href="#what-gets-encrypted" title="Permanent link">&para;</a></h3>
 <table>
@@ -9630,26 +9614,26 @@
 <hr />
 <h2 id="key-management-key-rotation-and-lifecycle">Key Management — Key Rotation and Lifecycle<a class="headerlink" href="#key-management-key-rotation-and-lifecycle" title="Permanent link">&para;</a></h2>
 <h3 id="key-hierarchy">Key Hierarchy<a class="headerlink" href="#key-hierarchy" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>KMS holds: Key Encrypting Key (KEK) [never leaves KMS]
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    │
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    │ Encrypts
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    ▼
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>vCenter holds: Encrypted DEK (Data Encrypting Key)
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    │
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>    │ Decrypted by ESXi at VM startup using KEK from KMS
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>    ▼
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>ESXi uses: Plaintext DEK in memory only (never written to disk)
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>    │
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>    │ Encrypts all I/O
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>    ▼
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>Storage: Encrypted VMDK, VMX, swap
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>KMS holds: Key Encrypting Key (KEK) [never leaves KMS]
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    │ Encrypts
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    ▼
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>vCenter holds: Encrypted DEK (Data Encrypting Key)
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>    │ Decrypted by ESXi at VM startup using KEK from KMS
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>    ▼
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>ESXi uses: Plaintext DEK in memory only (never written to disk)
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>    │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>    │ Encrypts all I/O
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>    ▼
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>Storage: Encrypted VMDK, VMX, swap
 </code></pre></div>
 <h3 id="key-rotation">Key Rotation<a class="headerlink" href="#key-rotation" title="Permanent link">&para;</a></h3>
 <p><strong>Shallow rekey</strong> — generates a new DEK for the VM without decrypting and re-encrypting all disk data. Fast; requires the VM to be powered on.</p>
 <p><strong>Deep rekey</strong> — decrypts and re-encrypts all VM disk data with a new DEK. Slow (proportional to disk size); can be done while VM is running (online) or powered off.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>vSphere Client:
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  VM → Actions → VM Policies → Re-encrypt (Shallow)
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  VM → Actions → VM Policies → Re-encrypt (Deep)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>vSphere Client:
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>  VM → Actions → VM Policies → Re-encrypt (Shallow)
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>  VM → Actions → VM Policies → Re-encrypt (Deep)
 </code></pre></div>
 <hr />
 <h2 id="virtual-trusted-platform-module-vtpm">Virtual Trusted Platform Module (vTPM)<a class="headerlink" href="#virtual-trusted-platform-module-vtpm" title="Permanent link">&para;</a></h2>
@@ -9812,14 +9796,14 @@
 </table>
 <h3 id="changing-firmware-type">Changing Firmware Type<a class="headerlink" href="#changing-firmware-type" title="Permanent link">&para;</a></h3>
 <p>The firmware type can only be changed when the VM is powered off. Changing from BIOS to UEFI on an existing OS may break the boot — the OS partition table and bootloader must be converted separately.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>vSphere Client (VM must be powered off):
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>  VM → Edit Settings → VM Options → Boot Options → Firmware
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>  → Change from BIOS to EFI
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>PowerCLI:
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>  $spec = New-Object VMware.Vim.VirtualMachineConfigSpec
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>  $spec.firmware = &quot;efi&quot;
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>  (Get-VM &quot;PROD-VM01&quot;).ExtensionData.ReconfigVM($spec)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>vSphere Client (VM must be powered off):
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  VM → Edit Settings → VM Options → Boot Options → Firmware
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  → Change from BIOS to EFI
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>PowerCLI:
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>  $spec = New-Object VMware.Vim.VirtualMachineConfigSpec
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>  $spec.firmware = &quot;efi&quot;
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>  (Get-VM &quot;PROD-VM01&quot;).ExtensionData.ReconfigVM($spec)
 </code></pre></div>
 <blockquote>
 <p><strong>VCP-DCV Exam Note:</strong> Changing from BIOS to EFI does NOT automatically install or convert the operating system. A Windows VM will likely fail to boot after a firmware change unless you have also converted the disk from MBR to GPT. On the exam, know that UEFI is required for Secure Boot, vTPM, and VBS — but the firmware change itself requires a power-off.</p>
@@ -9872,39 +9856,39 @@
 <p><strong>VCP-DCV Exam Note:</strong> VBS requires UEFI firmware, vTPM, and Secure Boot — all three must be present. There is a measurable performance overhead (typically 5-15% on compute-intensive workloads) because the hypervisor must handle additional context switches between the normal and secure worlds. Enable VBS only on VMs that need Windows security features like Credential Guard.</p>
 </blockquote>
 <h3 id="enabling-vbs">Enabling VBS<a class="headerlink" href="#enabling-vbs" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>vSphere Client (VM must be powered off):
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  VM → Edit Settings → VM Options → Security → 
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  Enable Virtualization Based Security: Yes
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>  This automatically enables:
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>  - EFI firmware requirement
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>  - Secure Boot
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>  - vTPM (if not already present)
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>  - I/O MMU (required for DMA protection)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>vSphere Client (VM must be powered off):
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>  VM → Edit Settings → VM Options → Security → 
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>  Enable Virtualization Based Security: Yes
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>  This automatically enables:
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>  - EFI firmware requirement
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>  - Secure Boot
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>  - vTPM (if not already present)
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>  - I/O MMU (required for DMA protection)
 </code></pre></div>
 <hr />
 <h2 id="identity-federation">Identity Federation<a class="headerlink" href="#identity-federation" title="Permanent link">&para;</a></h2>
 <p>Traditional vCenter authentication uses LDAP identity sources (Active Directory, OpenLDAP) where vCenter directly queries the directory. Identity Federation replaces this with an external Identity Provider (IdP) using OIDC/OAuth 2.0.</p>
 <h3 id="how-identity-federation-works">How Identity Federation Works<a class="headerlink" href="#how-identity-federation-works" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Admin browser ──────► vCenter login page
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>                             │
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>                    Redirect to external IdP
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>                             │
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>                             ▼
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>                    ┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>                    │  External IdP    │
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>                    │  (Okta, ADFS,    │
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>                    │   Azure AD)      │
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>                    └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>                             │ IdP authenticates user
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>                             │ Issues ID token (JWT)
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>                             ▼
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>                    vCenter receives token
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>                    Validates token signature
-<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>                    Maps groups → vCenter roles
-<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>                             │
-<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>                             ▼
-<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>                    Admin logged in to vCenter
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Admin browser ──────► vCenter login page
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>                             │
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>                    Redirect to external IdP
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>                             │
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>                             ▼
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>                    ┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>                    │  External IdP    │
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>                    │  (Okta, ADFS,    │
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>                    │   Azure AD)      │
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>                    └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>                             │ IdP authenticates user
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>                             │ Issues ID token (JWT)
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>                             ▼
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>                    vCenter receives token
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>                    Validates token signature
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>                    Maps groups → vCenter roles
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>                             │
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>                             ▼
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>                    Admin logged in to vCenter
 </code></pre></div>
 <h3 id="federation-vs-traditional-ldap">Federation vs Traditional LDAP<a class="headerlink" href="#federation-vs-traditional-ldap" title="Permanent link">&para;</a></h3>
 <table>
@@ -9952,15 +9936,15 @@
 <p><strong>VCP-DCV Exam Note:</strong> With Identity Federation, vCenter acts as an OAuth 2.0 client — it never receives the user's password. Authentication happens entirely at the IdP. This is a security improvement over LDAP where vCenter must have bind credentials to query Active Directory. Federation also enables native MFA enforcement at the IdP level without additional vCenter configuration.</p>
 </blockquote>
 <h3 id="configuring-federation">Configuring Federation<a class="headerlink" href="#configuring-federation" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>vSphere Client:
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>  vCenter → Administration → Single Sign On → Configuration →
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>  Identity Provider → Set up Federation
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>  Required inputs:
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>  - Client ID (from IdP registration)
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>  - Client Secret
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>  - IdP discovery URL (OpenID Connect metadata endpoint)
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>  - Redirect URI (provided by vCenter)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>vSphere Client:
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>  vCenter → Administration → Single Sign On → Configuration →
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>  Identity Provider → Set up Federation
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>  Required inputs:
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>  - Client ID (from IdP registration)
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>  - Client Secret
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>  - IdP discovery URL (OpenID Connect metadata endpoint)
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>  - Redirect URI (provided by vCenter)
 </code></pre></div>
 <hr />
 <h2 id="lockdown-mode">Lockdown Mode<a class="headerlink" href="#lockdown-mode" title="Permanent link">&para;</a></h2>
@@ -10007,34 +9991,34 @@
 </blockquote>
 <h3 id="exception-users">Exception Users<a class="headerlink" href="#exception-users" title="Permanent link">&para;</a></h3>
 <p>The exception users list (configured in vCenter for each host) defines accounts that can directly access the host even in lockdown mode via the vSphere API:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>vSphere Client:
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>  Host → Configure → Security Profile → Lockdown Mode →
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>  Edit → Exception Users → Add accounts
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>vSphere Client:
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>  Host → Configure → Security Profile → Lockdown Mode →
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>  Edit → Exception Users → Add accounts
 </code></pre></div>
 <p>Typical exception users: monitoring service accounts (Aria Operations), backup agents.</p>
 <hr />
 <h2 id="secure-boot-for-esxi">Secure Boot for ESXi<a class="headerlink" href="#secure-boot-for-esxi" title="Permanent link">&para;</a></h2>
 <p>Secure Boot is a UEFI firmware feature that verifies digital signatures at each stage of the boot process. For ESXi, it ensures that only cryptographically signed software is loaded.</p>
 <h3 id="esxi-boot-chain-with-secure-boot">ESXi Boot Chain with Secure Boot<a class="headerlink" href="#esxi-boot-chain-with-secure-boot" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>1. UEFI Firmware
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>   Verifies bootloader signature against UEFI Secure Boot database (db)
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>        │
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>        ▼
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>2. ESXi Bootloader (mboot.efi)
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>   Signature checked by UEFI
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>        │
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>        ▼
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>3. VMkernel (vmkernel.gz)
-<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>   Signature checked by mboot.efi
-<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>        │
-<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>        ▼
-<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>4. ESXi Base System (esxbase.tgz)
-<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>   All VIBs must be signed at acceptance level &quot;VMwareCertified&quot;
-<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>   or &quot;VMwareAccepted&quot;
-<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>        │
-<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>        ▼
-<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>5. Third-party drivers and VIBs
-<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>   Must be signed — unsigned VIBs cause boot failure
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>1. UEFI Firmware
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>   Verifies bootloader signature against UEFI Secure Boot database (db)
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>        │
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>        ▼
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>2. ESXi Bootloader (mboot.efi)
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>   Signature checked by UEFI
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>        │
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>        ▼
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>3. VMkernel (vmkernel.gz)
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>   Signature checked by mboot.efi
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>        │
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>        ▼
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>4. ESXi Base System (esxbase.tgz)
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>   All VIBs must be signed at acceptance level &quot;VMwareCertified&quot;
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>   or &quot;VMwareAccepted&quot;
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>        │
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>        ▼
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a>5. Third-party drivers and VIBs
+<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a>   Must be signed — unsigned VIBs cause boot failure
 </code></pre></div>
 <h3 id="what-secure-boot-prevents">What Secure Boot Prevents<a class="headerlink" href="#what-secure-boot-prevents" title="Permanent link">&para;</a></h3>
 <ul>
@@ -10077,11 +10061,11 @@
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Verify Secure Boot status on ESXi host</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>settings<span class="w"> </span>encryption<span class="w"> </span>get
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Check VIB acceptance levels (ensure no unsigned VIBs before enabling Secure Boot)</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>esxcli<span class="w"> </span>software<span class="w"> </span>vib<span class="w"> </span>list<span class="w"> </span>--rebooting-image<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $1, $5}&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Verify Secure Boot status on ESXi host</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>settings<span class="w"> </span>encryption<span class="w"> </span>get
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Check VIB acceptance levels (ensure no unsigned VIBs before enabling Secure Boot)</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>esxcli<span class="w"> </span>software<span class="w"> </span>vib<span class="w"> </span>list<span class="w"> </span>--rebooting-image<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $1, $5}&#39;</span>
 </code></pre></div>
 <hr />
 <h2 id="security-architecture-summary">Security Architecture Summary<a class="headerlink" href="#security-architecture-summary" title="Permanent link">&para;</a></h2>

@@ -7543,25 +7543,7 @@ Red Hat support escalation process: severity levels, required data for support c
     class B,C,E,G,H,K action
     class D,J ok
     class M,N escalate</code></pre>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>@startuml
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>skinparam sequenceArrowThickness 1.5
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>skinparam roundcorner 5
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>actor &quot;On-Call Engineer&quot; as ENG
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>participant &quot;OpenShift\nSystem&quot; as SYS
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>participant &quot;Vendor Support&quot; as SUP
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>ENG -&gt; SYS: Severity Levels and SLA
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>SYS --&gt; ENG: Output
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>ENG -&gt; SYS: Red Hat Support Case Checklist
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>SYS --&gt; ENG: Output
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>ENG -&gt; SYS: Knowledge Base Search
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>SYS --&gt; ENG: Output
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>ENG -&gt; SUP: Escalate with diagnostic bundle
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>SUP --&gt; ENG: Case / resolution path
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>@enduml
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/plantuml/svg/eNqFkU9LgzEMh-_9FMH7FA-77CCbYyg43LBOELzEvnFvWZfWJHXs29tNRHfRWyDP8yN_xmooVrfJ6SZyQcEtKL1X4kATkbx77GPYMKnC5fnwFyS5cheyMAkMncNgWeBswYMppgQzXkcmkjNAhdn9jWuSxRALsjWqEPs-vtkL-70abY-Yf_an2BNx10J9LSWLfTGrpXMtDwZXB34Enj5Iou1h3oqkgNyBn09ca8KgQY0dwaJaqXbiPVAHt2jf4TBFJZj2FDYpqv2r33HeJerWBNcH0RNK6P-0VssRzDRgQiPYReuhi7jmrG1feG23TOQa9OMfJ7oAIc2pWswMBa13btyucvjXJ8MmkGA=?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Access:</strong> Admin credentials on all affected systems</li>
@@ -7610,28 +7592,28 @@ Red Hat support escalation process: severity levels, required data for support c
 </table>
 <h2 id="red-hat-support-case-checklist">Red Hat Support Case Checklist<a class="headerlink" href="#red-hat-support-case-checklist" title="Permanent link">&para;</a></h2>
 <p>Provide all of the following in the initial case description to avoid round-trips with the CEE.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># 1. Cluster version and update history</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>oc<span class="w"> </span>get<span class="w"> </span>clusterversion<span class="w"> </span>-o<span class="w"> </span>yaml<span class="w"> </span>&gt;<span class="w"> </span>/tmp/clusterversion.yaml
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>oc<span class="w"> </span>get<span class="w"> </span>clusterversion<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.status.history[*].version}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tr<span class="w"> </span><span class="s1">&#39; &#39;</span><span class="w"> </span><span class="s1">&#39;\n&#39;</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># 2. All cluster operator statuses</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>oc<span class="w"> </span>get<span class="w"> </span>co<span class="w"> </span>&gt;<span class="w"> </span>/tmp/co-status.txt
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># 3. Node status</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>oc<span class="w"> </span>get<span class="w"> </span>nodes<span class="w"> </span>-o<span class="w"> </span>wide<span class="w"> </span>&gt;<span class="w"> </span>/tmp/nodes.txt
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>oc<span class="w"> </span>describe<span class="w"> </span>nodes<span class="w"> </span>&gt;<span class="w"> </span>/tmp/nodes-describe.txt
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c1"># 4. Recent events across cluster sorted by time</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>oc<span class="w"> </span>get<span class="w"> </span>events<span class="w"> </span>-A<span class="w"> </span>--sort-by<span class="o">=</span><span class="s1">&#39;.lastTimestamp&#39;</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/events.txt
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="c1"># 5. Infrastructure details</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>oc<span class="w"> </span>version
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>oc<span class="w"> </span>get<span class="w"> </span>infrastructure<span class="w"> </span>cluster<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.status.platformStatus.type}&#39;</span>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>oc<span class="w"> </span>get<span class="w"> </span>network<span class="w"> </span>cluster<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.spec.networkType}&#39;</span>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="c1"># 6. Collect must-gather (always required)</span>
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>oc<span class="w"> </span>adm<span class="w"> </span>must-gather<span class="w"> </span>--dest-dir<span class="o">=</span>/tmp/must-gather
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>tar<span class="w"> </span>czf<span class="w"> </span>must-gather-<span class="k">$(</span>date<span class="w"> </span>+%F-%H%M<span class="k">)</span>.tar.gz<span class="w"> </span>/tmp/must-gather/
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># 1. Cluster version and update history</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>oc<span class="w"> </span>get<span class="w"> </span>clusterversion<span class="w"> </span>-o<span class="w"> </span>yaml<span class="w"> </span>&gt;<span class="w"> </span>/tmp/clusterversion.yaml
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>oc<span class="w"> </span>get<span class="w"> </span>clusterversion<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.status.history[*].version}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tr<span class="w"> </span><span class="s1">&#39; &#39;</span><span class="w"> </span><span class="s1">&#39;\n&#39;</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># 2. All cluster operator statuses</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>oc<span class="w"> </span>get<span class="w"> </span>co<span class="w"> </span>&gt;<span class="w"> </span>/tmp/co-status.txt
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># 3. Node status</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>oc<span class="w"> </span>get<span class="w"> </span>nodes<span class="w"> </span>-o<span class="w"> </span>wide<span class="w"> </span>&gt;<span class="w"> </span>/tmp/nodes.txt
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>oc<span class="w"> </span>describe<span class="w"> </span>nodes<span class="w"> </span>&gt;<span class="w"> </span>/tmp/nodes-describe.txt
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="c1"># 4. Recent events across cluster sorted by time</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>oc<span class="w"> </span>get<span class="w"> </span>events<span class="w"> </span>-A<span class="w"> </span>--sort-by<span class="o">=</span><span class="s1">&#39;.lastTimestamp&#39;</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/events.txt
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="c1"># 5. Infrastructure details</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>oc<span class="w"> </span>version
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>oc<span class="w"> </span>get<span class="w"> </span>infrastructure<span class="w"> </span>cluster<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.status.platformStatus.type}&#39;</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>oc<span class="w"> </span>get<span class="w"> </span>network<span class="w"> </span>cluster<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.spec.networkType}&#39;</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="c1"># 6. Collect must-gather (always required)</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>oc<span class="w"> </span>adm<span class="w"> </span>must-gather<span class="w"> </span>--dest-dir<span class="o">=</span>/tmp/must-gather
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>tar<span class="w"> </span>czf<span class="w"> </span>must-gather-<span class="k">$(</span>date<span class="w"> </span>+%F-%H%M<span class="k">)</span>.tar.gz<span class="w"> </span>/tmp/must-gather/
 </code></pre></div>
 <p>Case description must include:
 1. <strong>OpenShift version</strong>: exact version from <code>oc get clusterversion</code>
@@ -7683,53 +7665,53 @@ Red Hat support escalation process: severity levels, required data for support c
 </table>
 <h2 id="sos-report-per-node">SOS Report (Per Node)<a class="headerlink" href="#sos-report-per-node" title="Permanent link">&para;</a></h2>
 <p>SOS reports capture node-level OS state: kernel, systemd services, package versions, hardware, and storage. Run on every affected node separately.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Method 1: via oc debug + sos in toolbox (recommended for RHCOS)</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>oc<span class="w"> </span>debug<span class="w"> </span>node/&lt;node-name&gt;
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>chroot<span class="w"> </span>/host
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>toolbox
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># Inside toolbox container:</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>sos<span class="w"> </span>report<span class="w"> </span>--batch<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span>-k<span class="w"> </span>crio.all<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span>-k<span class="w"> </span>crio.logs<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">  </span>--label<span class="w"> </span>openshift-node
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># Method 2: direct sos without toolbox (if sos available on node)</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>oc<span class="w"> </span>debug<span class="w"> </span>node/&lt;node-name&gt;<span class="w"> </span>--<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">  </span>chroot<span class="w"> </span>/host<span class="w"> </span>sos<span class="w"> </span>report<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">    </span>-k<span class="w"> </span>crio.all<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="w">    </span>-k<span class="w"> </span>crio.logs<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="w">    </span>--batch
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="c1"># Copy sos report from node to workstation</span>
-<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="nv">NODE_DEBUG_POD</span><span class="o">=</span><span class="k">$(</span>oc<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>openshift-debug<span class="w"> </span>-o<span class="w"> </span>name<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;node-name&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-1<span class="k">)</span>
-<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>oc<span class="w"> </span>cp<span class="w"> </span><span class="si">${</span><span class="nv">NODE_DEBUG_POD</span><span class="p">#pod/</span><span class="si">}</span>:/host/var/tmp/sosreport*.tar.xz<span class="w"> </span>/tmp/
-<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>
-<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="c1"># Run sos on multiple nodes in parallel</span>
-<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a><span class="k">for</span><span class="w"> </span>node<span class="w"> </span><span class="k">in</span><span class="w"> </span>master-0<span class="w"> </span>master-1<span class="w"> </span>master-2<span class="p">;</span><span class="w"> </span><span class="k">do</span>
-<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Starting sosreport on </span><span class="nv">$node</span><span class="s2">&quot;</span>
-<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a><span class="w">  </span>oc<span class="w"> </span>debug<span class="w"> </span>node/<span class="nv">$node</span><span class="w"> </span>--<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a><span class="w">    </span>chroot<span class="w"> </span>/host<span class="w"> </span>bash<span class="w"> </span>-c<span class="w"> </span><span class="s1">&#39;toolbox sos report --batch -k crio.all --label escalation&#39;</span><span class="w"> </span><span class="p">&amp;</span>
-<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a><span class="k">done</span>
-<a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a><span class="nb">wait</span>
-<a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;All sos reports complete&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Method 1: via oc debug + sos in toolbox (recommended for RHCOS)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>oc<span class="w"> </span>debug<span class="w"> </span>node/&lt;node-name&gt;
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>chroot<span class="w"> </span>/host
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>toolbox
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># Inside toolbox container:</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>sos<span class="w"> </span>report<span class="w"> </span>--batch<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">  </span>-k<span class="w"> </span>crio.all<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">  </span>-k<span class="w"> </span>crio.logs<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">  </span>--label<span class="w"> </span>openshift-node
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c1"># Method 2: direct sos without toolbox (if sos available on node)</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>oc<span class="w"> </span>debug<span class="w"> </span>node/&lt;node-name&gt;<span class="w"> </span>--<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">  </span>chroot<span class="w"> </span>/host<span class="w"> </span>sos<span class="w"> </span>report<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">    </span>-k<span class="w"> </span>crio.all<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w">    </span>-k<span class="w"> </span>crio.logs<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="w">    </span>--batch
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="c1"># Copy sos report from node to workstation</span>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="nv">NODE_DEBUG_POD</span><span class="o">=</span><span class="k">$(</span>oc<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>openshift-debug<span class="w"> </span>-o<span class="w"> </span>name<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;node-name&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-1<span class="k">)</span>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>oc<span class="w"> </span>cp<span class="w"> </span><span class="si">${</span><span class="nv">NODE_DEBUG_POD</span><span class="p">#pod/</span><span class="si">}</span>:/host/var/tmp/sosreport*.tar.xz<span class="w"> </span>/tmp/
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="c1"># Run sos on multiple nodes in parallel</span>
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="k">for</span><span class="w"> </span>node<span class="w"> </span><span class="k">in</span><span class="w"> </span>master-0<span class="w"> </span>master-1<span class="w"> </span>master-2<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Starting sosreport on </span><span class="nv">$node</span><span class="s2">&quot;</span>
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="w">  </span>oc<span class="w"> </span>debug<span class="w"> </span>node/<span class="nv">$node</span><span class="w"> </span>--<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a><span class="w">    </span>chroot<span class="w"> </span>/host<span class="w"> </span>bash<span class="w"> </span>-c<span class="w"> </span><span class="s1">&#39;toolbox sos report --batch -k crio.all --label escalation&#39;</span><span class="w"> </span><span class="p">&amp;</span>
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a><span class="k">done</span>
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a><span class="nb">wait</span>
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;All sos reports complete&quot;</span>
 </code></pre></div>
 <h2 id="escalation-path">Escalation Path<a class="headerlink" href="#escalation-path" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>1. Open support case at access.redhat.com with appropriate severity
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>   ↓
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>2. For Sev 1: call Red Hat support phone immediately
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>   (number on access.redhat.com — varies by region: NA, EMEA, APAC)
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>   ↓
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>3. Attach must-gather, sos reports, and full case description in first update
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>   ↓
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>4. If no meaningful progress in 2–4 hours: request case escalation
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>   → Ask CEE to escalate to team lead or L3 engineering
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>   ↓
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>5. If still blocked: contact TAM (Technical Account Manager)
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>   → TAM can expedite internally and coordinate engineering resources
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>   ↓
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>6. For data corruption, security incidents, or catastrophic failure:
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>   → Request Critical Situation (CritSit) team engagement via TAM or account team
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>1. Open support case at access.redhat.com with appropriate severity
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>   ↓
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>2. For Sev 1: call Red Hat support phone immediately
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>   (number on access.redhat.com — varies by region: NA, EMEA, APAC)
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>   ↓
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>3. Attach must-gather, sos reports, and full case description in first update
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>   ↓
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>4. If no meaningful progress in 2–4 hours: request case escalation
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>   → Ask CEE to escalate to team lead or L3 engineering
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>   ↓
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>5. If still blocked: contact TAM (Technical Account Manager)
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>   → TAM can expedite internally and coordinate engineering resources
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>   ↓
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>6. For data corruption, security incidents, or catastrophic failure:
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>   → Request Critical Situation (CritSit) team engagement via TAM or account team
 </code></pre></div>
 <h2 id="what-not-to-send">What NOT to Send<a class="headerlink" href="#what-not-to-send" title="Permanent link">&para;</a></h2>
 <p>Before uploading must-gather or sos reports to Red Hat, verify they do not contain sensitive data. The <code>oc adm inspect</code> output is generally safe; raw etcd snapshots are not.</p>
@@ -7769,13 +7751,13 @@ Red Hat support escalation process: severity levels, required data for support c
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Verify must-gather does not contain raw secret values before uploading</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># must-gather scrubs Secret .data fields automatically, but verify:</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>grep<span class="w"> </span>-r<span class="w"> </span><span class="s2">&quot;password\|token\|key&quot;</span><span class="w"> </span>/tmp/must-gather/must-gather.local.*/<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;\.metadata\.&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;type:&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># oc adm inspect output is safe — scrubs Secret values</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>oc<span class="w"> </span>adm<span class="w"> </span>inspect<span class="w"> </span>namespace/my-project<span class="w"> </span>--dest-dir<span class="o">=</span>/tmp/inspect-ns
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Verify must-gather does not contain raw secret values before uploading</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># must-gather scrubs Secret .data fields automatically, but verify:</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>grep<span class="w"> </span>-r<span class="w"> </span><span class="s2">&quot;password\|token\|key&quot;</span><span class="w"> </span>/tmp/must-gather/must-gather.local.*/<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;\.metadata\.&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;type:&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># oc adm inspect output is safe — scrubs Secret values</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>oc<span class="w"> </span>adm<span class="w"> </span>inspect<span class="w"> </span>namespace/my-project<span class="w"> </span>--dest-dir<span class="o">=</span>/tmp/inspect-ns
 </code></pre></div>
 <h2 id="pre-escalation-triage-checklist">Pre-Escalation Triage Checklist<a class="headerlink" href="#pre-escalation-triage-checklist" title="Permanent link">&para;</a></h2>
 <p>Run through this checklist before opening a case to rule out self-resolvable issues.</p>
@@ -7831,30 +7813,30 @@ Red Hat support escalation process: severity levels, required data for support c
 </tbody>
 </table>
 <h2 id="useful-commands-for-case-updates">Useful Commands for Case Updates<a class="headerlink" href="#useful-commands-for-case-updates" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Snapshot current state with timestamp before each case update</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>oc<span class="w"> </span>get<span class="w"> </span>co,nodes,pods<span class="w"> </span>-A<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tee<span class="w"> </span>/tmp/state-<span class="k">$(</span>date<span class="w"> </span>+%F-%H%M<span class="k">)</span>.txt
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Verify issue persists (run before each update to Red Hat)</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>oc<span class="w"> </span>get<span class="w"> </span>co<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;True.*False.*False&quot;</span><span class="w">   </span><span class="c1"># operators not fully healthy</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>oc<span class="w"> </span>get<span class="w"> </span>nodes<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot; Ready &quot;</span><span class="w">           </span><span class="c1"># nodes not ready</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># etcd health for etcd-related cases</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>oc<span class="w"> </span>get<span class="w"> </span>etcd<span class="w"> </span>cluster<span class="w"> </span>-o<span class="w"> </span>yaml<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A30<span class="w"> </span>conditions
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="c1"># Check if any nodes have high resource pressure</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>oc<span class="w"> </span>adm<span class="w"> </span>top<span class="w"> </span>nodes
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>oc<span class="w"> </span>adm<span class="w"> </span>top<span class="w"> </span>pods<span class="w"> </span>-A<span class="w"> </span>--sort-by<span class="o">=</span>memory<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="c1"># API server audit logs for authentication or authorization issues</span>
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>oc<span class="w"> </span>adm<span class="w"> </span>inspect<span class="w"> </span>clusteroperator/kube-apiserver<span class="w"> </span>--dest-dir<span class="o">=</span>/tmp/apiserver-inspect
-<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="c1"># Audit logs are included in the inspect bundle under audit_logs/</span>
-<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>
-<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="c1"># Cluster version history — useful to correlate with when issue started</span>
-<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>oc<span class="w"> </span>get<span class="w"> </span>clusterversion<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{range .status.history[*]}{.version}{&quot;\t&quot;}{.completionTime}{&quot;\n&quot;}{end}&#39;</span>
-<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>
-<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a><span class="c1"># List all recent MachineConfig changes (node reboots correlate with these)</span>
-<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>oc<span class="w"> </span>get<span class="w"> </span>machineconfigpool<span class="w"> </span>-o<span class="w"> </span>wide
-<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>oc<span class="w"> </span>get<span class="w"> </span>machineconfig<span class="w"> </span>--sort-by<span class="o">=</span>.metadata.creationTimestamp<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-10
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Snapshot current state with timestamp before each case update</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>oc<span class="w"> </span>get<span class="w"> </span>co,nodes,pods<span class="w"> </span>-A<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tee<span class="w"> </span>/tmp/state-<span class="k">$(</span>date<span class="w"> </span>+%F-%H%M<span class="k">)</span>.txt
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Verify issue persists (run before each update to Red Hat)</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>oc<span class="w"> </span>get<span class="w"> </span>co<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;True.*False.*False&quot;</span><span class="w">   </span><span class="c1"># operators not fully healthy</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>oc<span class="w"> </span>get<span class="w"> </span>nodes<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot; Ready &quot;</span><span class="w">           </span><span class="c1"># nodes not ready</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># etcd health for etcd-related cases</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>oc<span class="w"> </span>get<span class="w"> </span>etcd<span class="w"> </span>cluster<span class="w"> </span>-o<span class="w"> </span>yaml<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A30<span class="w"> </span>conditions
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># Check if any nodes have high resource pressure</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>oc<span class="w"> </span>adm<span class="w"> </span>top<span class="w"> </span>nodes
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>oc<span class="w"> </span>adm<span class="w"> </span>top<span class="w"> </span>pods<span class="w"> </span>-A<span class="w"> </span>--sort-by<span class="o">=</span>memory<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="c1"># API server audit logs for authentication or authorization issues</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>oc<span class="w"> </span>adm<span class="w"> </span>inspect<span class="w"> </span>clusteroperator/kube-apiserver<span class="w"> </span>--dest-dir<span class="o">=</span>/tmp/apiserver-inspect
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="c1"># Audit logs are included in the inspect bundle under audit_logs/</span>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="c1"># Cluster version history — useful to correlate with when issue started</span>
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>oc<span class="w"> </span>get<span class="w"> </span>clusterversion<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{range .status.history[*]}{.version}{&quot;\t&quot;}{.completionTime}{&quot;\n&quot;}{end}&#39;</span>
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>
+<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a><span class="c1"># List all recent MachineConfig changes (node reboots correlate with these)</span>
+<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a>oc<span class="w"> </span>get<span class="w"> </span>machineconfigpool<span class="w"> </span>-o<span class="w"> </span>wide
+<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a>oc<span class="w"> </span>get<span class="w"> </span>machineconfig<span class="w"> </span>--sort-by<span class="o">=</span>.metadata.creationTimestamp<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-10
 </code></pre></div>
 <hr />
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>

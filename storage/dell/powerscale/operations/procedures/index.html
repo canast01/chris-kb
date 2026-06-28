@@ -9095,23 +9095,7 @@ PowerScale (Isilon) procedures — NFS export and SMB share management, snapshot
 *Applies to: PowerScale (Isilon) 9.x*
 </div>
 
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>hub: &quot;PowerScale (Isilon)\nOperations&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>change_readiness: &quot;Change Readiness&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>maintenance_window: &quot;Maintenance Window&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>postchange_validation: &quot;Post-Change Validation&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>nfs_export_management: &quot;NFS Export Management&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>smb_share_management: &quot;SMB Share Management&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>snapshot_management: &quot;Snapshot Management&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>hub -&gt; change_readiness
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>hub -&gt; maintenance_window
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>hub -&gt; postchange_validation
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>hub -&gt; nfs_export_management
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>hub -&gt; smb_share_management
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>hub -&gt; snapshot_management
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqFkUFLxDAQhe_5FcOe9LB_oAcPioKHqhjQixBm27EJtJOQRLsg-99Na9PF3cBev9f3XuelNZ6aaCxX4E2noxD6a1fB5sWO5GWDPcHVYzC95esPfnbkcfo4bOAnaHRUgaY9dpYPotHIHSlP2BqmEFLI3YzgNaOjaypNWk8HMaDhSIzckBoNt3ZMzvoI4X2GRa-zIS6939ibFv8uSX8f4nZpf1uFYgR_BkV7Z31UAzJ2NBDHFPH0IOF-5lCvvJgQhp1K1NP_AFnfgpzwRT-jC9qe9MuFXnJP7wXbGzidP_PzebNSHC-LxVmyWLp41c6vEb-g_9_0?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Access:</strong> Storage admin credentials (cluster admin or equivalent)</li>
@@ -9209,29 +9193,29 @@ PowerScale (Isilon) procedures — NFS export and SMB share management, snapshot
 <li>[ ] CloudIQ or InsightIQ shows no new performance anomalies in the post-change window</li>
 </ul>
 <h2 id="nfs-export-management">NFS Export Management<a class="headerlink" href="#nfs-export-management" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># List all exports</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>isi<span class="w"> </span>nfs<span class="w"> </span>exports<span class="w"> </span>list
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>isi<span class="w"> </span>nfs<span class="w"> </span>exports<span class="w"> </span>list<span class="w"> </span>-v
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># View a specific export</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>isi<span class="w"> </span>nfs<span class="w"> </span>exports<span class="w"> </span>view<span class="w"> </span>&lt;export_id&gt;
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Create an export</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>isi<span class="w"> </span>nfs<span class="w"> </span>exports<span class="w"> </span>create<span class="w"> </span>/ifs/data/myshare<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">    </span>--clients<span class="w"> </span><span class="m">10</span>.0.0.0/24<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">    </span>--read-write-clients<span class="w"> </span><span class="m">10</span>.0.0.0/24<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">    </span>--root-clients<span class="w"> </span><span class="m">10</span>.0.1.5<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">    </span>--description<span class="w"> </span><span class="s2">&quot;Application data share&quot;</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="c1"># Modify an existing export</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>isi<span class="w"> </span>nfs<span class="w"> </span>exports<span class="w"> </span>modify<span class="w"> </span>&lt;export_id&gt;<span class="w"> </span>--addread-write-clients<span class="w"> </span><span class="m">10</span>.0.2.0/24
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>isi<span class="w"> </span>nfs<span class="w"> </span>exports<span class="w"> </span>modify<span class="w"> </span>&lt;export_id&gt;<span class="w"> </span>--description<span class="w"> </span><span class="s2">&quot;Updated description&quot;</span>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="c1"># Delete an export</span>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>isi<span class="w"> </span>nfs<span class="w"> </span>exports<span class="w"> </span>delete<span class="w"> </span>&lt;export_id&gt;
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="c1"># Validate all exports for errors</span>
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>isi<span class="w"> </span>nfs<span class="w"> </span>exports<span class="w"> </span>check
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># List all exports</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>isi<span class="w"> </span>nfs<span class="w"> </span>exports<span class="w"> </span>list
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>isi<span class="w"> </span>nfs<span class="w"> </span>exports<span class="w"> </span>list<span class="w"> </span>-v
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># View a specific export</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>isi<span class="w"> </span>nfs<span class="w"> </span>exports<span class="w"> </span>view<span class="w"> </span>&lt;export_id&gt;
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># Create an export</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>isi<span class="w"> </span>nfs<span class="w"> </span>exports<span class="w"> </span>create<span class="w"> </span>/ifs/data/myshare<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">    </span>--clients<span class="w"> </span><span class="m">10</span>.0.0.0/24<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">    </span>--read-write-clients<span class="w"> </span><span class="m">10</span>.0.0.0/24<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">    </span>--root-clients<span class="w"> </span><span class="m">10</span>.0.1.5<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">    </span>--description<span class="w"> </span><span class="s2">&quot;Application data share&quot;</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="c1"># Modify an existing export</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>isi<span class="w"> </span>nfs<span class="w"> </span>exports<span class="w"> </span>modify<span class="w"> </span>&lt;export_id&gt;<span class="w"> </span>--addread-write-clients<span class="w"> </span><span class="m">10</span>.0.2.0/24
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>isi<span class="w"> </span>nfs<span class="w"> </span>exports<span class="w"> </span>modify<span class="w"> </span>&lt;export_id&gt;<span class="w"> </span>--description<span class="w"> </span><span class="s2">&quot;Updated description&quot;</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="c1"># Delete an export</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>isi<span class="w"> </span>nfs<span class="w"> </span>exports<span class="w"> </span>delete<span class="w"> </span>&lt;export_id&gt;
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="c1"># Validate all exports for errors</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>isi<span class="w"> </span>nfs<span class="w"> </span>exports<span class="w"> </span>check
 </code></pre></div>
 <h3 id="export-client-access-levels">Export Client Access Levels<a class="headerlink" href="#export-client-access-levels" title="Permanent link">&para;</a></h3>
 <p><img alt="Export Client Access Levels" src="../../../../../assets/powerscale-proc-export-client-access-levels.svg" /></p>
@@ -9259,263 +9243,263 @@ PowerScale (Isilon) procedures — NFS export and SMB share management, snapshot
 </table>
 <h3 id="nfs-zones-access-zones">NFS Zones (Access Zones)<a class="headerlink" href="#nfs-zones-access-zones" title="Permanent link">&para;</a></h3>
 <p><img alt="NFS Zones (Access Zones)" src="../../../../../assets/powerscale-proc-nfs-zones-access-zones.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># List access zones</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>isi<span class="w"> </span>zones<span class="w"> </span>list
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Create export in a specific access zone</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>isi<span class="w"> </span>nfs<span class="w"> </span>exports<span class="w"> </span>create<span class="w"> </span>/ifs/zone1/data<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">    </span>--zone<span class="w"> </span>Zone1<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">    </span>--read-write-clients<span class="w"> </span><span class="m">10</span>.1.0.0/24
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># List exports by access zone</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>isi<span class="w"> </span>nfs<span class="w"> </span>exports<span class="w"> </span>list<span class="w"> </span>--zone<span class="w"> </span>Zone1
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># List access zones</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>isi<span class="w"> </span>zones<span class="w"> </span>list
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Create export in a specific access zone</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>isi<span class="w"> </span>nfs<span class="w"> </span>exports<span class="w"> </span>create<span class="w"> </span>/ifs/zone1/data<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">    </span>--zone<span class="w"> </span>Zone1<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">    </span>--read-write-clients<span class="w"> </span><span class="m">10</span>.1.0.0/24
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># List exports by access zone</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>isi<span class="w"> </span>nfs<span class="w"> </span>exports<span class="w"> </span>list<span class="w"> </span>--zone<span class="w"> </span>Zone1
 </code></pre></div>
 <h3 id="troubleshooting-nfs">Troubleshooting NFS<a class="headerlink" href="#troubleshooting-nfs" title="Permanent link">&para;</a></h3>
 <p><img alt="Troubleshooting NFS" src="../../../../../assets/powerscale-proc-troubleshooting-nfs.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Check mount errors from client side (Linux)</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>showmount<span class="w"> </span>-e<span class="w"> </span>&lt;powerscale-ip&gt;
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>mount<span class="w"> </span>-t<span class="w"> </span>nfs<span class="w"> </span>&lt;ip&gt;:/ifs/data/share<span class="w"> </span>/mnt/test
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>dmesg<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>nfs<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-10
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># Check NFS stats on the cluster</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>isi<span class="w"> </span>statistics<span class="w"> </span>protocol<span class="w"> </span>list<span class="w"> </span>--protocol<span class="w"> </span>nfs3
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>isi<span class="w"> </span>statistics<span class="w"> </span>protocol<span class="w"> </span>list<span class="w"> </span>--protocol<span class="w"> </span>nfs4
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Check for NFS errors in events</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>isi<span class="w"> </span>event<span class="w"> </span>events<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>nfs
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c1"># Verify export path exists</span>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>isi<span class="w"> </span>quota<span class="w"> </span>quotas<span class="w"> </span>list<span class="w"> </span>--path<span class="w"> </span>/ifs/data/share
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>ls<span class="w"> </span>-la<span class="w"> </span>/ifs/data/share<span class="w">   </span><span class="c1"># (from cluster shell)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check mount errors from client side (Linux)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>showmount<span class="w"> </span>-e<span class="w"> </span>&lt;powerscale-ip&gt;
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>mount<span class="w"> </span>-t<span class="w"> </span>nfs<span class="w"> </span>&lt;ip&gt;:/ifs/data/share<span class="w"> </span>/mnt/test
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>dmesg<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>nfs<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-10
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># Check NFS stats on the cluster</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>isi<span class="w"> </span>statistics<span class="w"> </span>protocol<span class="w"> </span>list<span class="w"> </span>--protocol<span class="w"> </span>nfs3
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>isi<span class="w"> </span>statistics<span class="w"> </span>protocol<span class="w"> </span>list<span class="w"> </span>--protocol<span class="w"> </span>nfs4
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Check for NFS errors in events</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>isi<span class="w"> </span>event<span class="w"> </span>events<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>nfs
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Verify export path exists</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>isi<span class="w"> </span>quota<span class="w"> </span>quotas<span class="w"> </span>list<span class="w"> </span>--path<span class="w"> </span>/ifs/data/share
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>ls<span class="w"> </span>-la<span class="w"> </span>/ifs/data/share<span class="w">   </span><span class="c1"># (from cluster shell)</span>
 </code></pre></div>
 <h2 id="smb-share-management">SMB Share Management<a class="headerlink" href="#smb-share-management" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># List all SMB shares</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>isi<span class="w"> </span>smb<span class="w"> </span>shares<span class="w"> </span>list
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>isi<span class="w"> </span>smb<span class="w"> </span>shares<span class="w"> </span>list<span class="w"> </span>-v
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># View a specific share</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>isi<span class="w"> </span>smb<span class="w"> </span>shares<span class="w"> </span>view<span class="w"> </span>&lt;share_name&gt;
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Create a share</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>isi<span class="w"> </span>smb<span class="w"> </span>shares<span class="w"> </span>create<span class="w"> </span>&lt;share_name&gt;<span class="w"> </span>/ifs/data/project1<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">    </span>--description<span class="w"> </span><span class="s2">&quot;Project 1 share&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">    </span>--browsable<span class="w"> </span>yes<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">    </span>--allow-execute-always<span class="w"> </span>yes
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="c1"># Modify a share</span>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>isi<span class="w"> </span>smb<span class="w"> </span>shares<span class="w"> </span>modify<span class="w"> </span>&lt;share_name&gt;<span class="w"> </span>--description<span class="w"> </span><span class="s2">&quot;Updated description&quot;</span>
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>isi<span class="w"> </span>smb<span class="w"> </span>shares<span class="w"> </span>modify<span class="w"> </span>&lt;share_name&gt;<span class="w"> </span>--add-permissions<span class="w"> </span><span class="s1">&#39;user:&lt;username&gt;:allow:full&#39;</span>
-<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>
-<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="c1"># Delete a share</span>
-<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>isi<span class="w"> </span>smb<span class="w"> </span>shares<span class="w"> </span>delete<span class="w"> </span>&lt;share_name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># List all SMB shares</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>isi<span class="w"> </span>smb<span class="w"> </span>shares<span class="w"> </span>list
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>isi<span class="w"> </span>smb<span class="w"> </span>shares<span class="w"> </span>list<span class="w"> </span>-v
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># View a specific share</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>isi<span class="w"> </span>smb<span class="w"> </span>shares<span class="w"> </span>view<span class="w"> </span>&lt;share_name&gt;
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># Create a share</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>isi<span class="w"> </span>smb<span class="w"> </span>shares<span class="w"> </span>create<span class="w"> </span>&lt;share_name&gt;<span class="w"> </span>/ifs/data/project1<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">    </span>--description<span class="w"> </span><span class="s2">&quot;Project 1 share&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">    </span>--browsable<span class="w"> </span>yes<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">    </span>--allow-execute-always<span class="w"> </span>yes
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="c1"># Modify a share</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>isi<span class="w"> </span>smb<span class="w"> </span>shares<span class="w"> </span>modify<span class="w"> </span>&lt;share_name&gt;<span class="w"> </span>--description<span class="w"> </span><span class="s2">&quot;Updated description&quot;</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>isi<span class="w"> </span>smb<span class="w"> </span>shares<span class="w"> </span>modify<span class="w"> </span>&lt;share_name&gt;<span class="w"> </span>--add-permissions<span class="w"> </span><span class="s1">&#39;user:&lt;username&gt;:allow:full&#39;</span>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="c1"># Delete a share</span>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>isi<span class="w"> </span>smb<span class="w"> </span>shares<span class="w"> </span>delete<span class="w"> </span>&lt;share_name&gt;
 </code></pre></div>
 <h3 id="smb-permissions">SMB Permissions<a class="headerlink" href="#smb-permissions" title="Permanent link">&para;</a></h3>
 <p><img alt="SMB Permissions" src="../../../../../assets/powerscale-proc-smb-permissions.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># View share permissions (ACL)</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>isi<span class="w"> </span>smb<span class="w"> </span>shares<span class="w"> </span>view<span class="w"> </span>&lt;share_name&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A<span class="w"> </span><span class="m">20</span><span class="w"> </span><span class="s2">&quot;Permission&quot;</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Add a user with read permission</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>isi<span class="w"> </span>smb<span class="w"> </span>shares<span class="w"> </span>modify<span class="w"> </span>&lt;share_name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">    </span>--add-permissions<span class="w"> </span><span class="s1">&#39;user:CORP\jsmith:allow:read&#39;</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># Add a group with change permission</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>isi<span class="w"> </span>smb<span class="w"> </span>shares<span class="w"> </span>modify<span class="w"> </span>&lt;share_name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">    </span>--add-permissions<span class="w"> </span><span class="s1">&#39;group:CORP\fileusers:allow:change&#39;</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="c1"># Set full control for an admin group</span>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>isi<span class="w"> </span>smb<span class="w"> </span>shares<span class="w"> </span>modify<span class="w"> </span>&lt;share_name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="w">    </span>--add-permissions<span class="w"> </span><span class="s1">&#39;group:CORP\storeadmins:allow:full&#39;</span>
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="c1"># Remove a permission entry</span>
-<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>isi<span class="w"> </span>smb<span class="w"> </span>shares<span class="w"> </span>modify<span class="w"> </span>&lt;share_name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="w">    </span>--remove-permissions<span class="w"> </span><span class="s1">&#39;user:CORP\jsmith:allow:read&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># View share permissions (ACL)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>isi<span class="w"> </span>smb<span class="w"> </span>shares<span class="w"> </span>view<span class="w"> </span>&lt;share_name&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A<span class="w"> </span><span class="m">20</span><span class="w"> </span><span class="s2">&quot;Permission&quot;</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Add a user with read permission</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>isi<span class="w"> </span>smb<span class="w"> </span>shares<span class="w"> </span>modify<span class="w"> </span>&lt;share_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">    </span>--add-permissions<span class="w"> </span><span class="s1">&#39;user:CORP\jsmith:allow:read&#39;</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Add a group with change permission</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>isi<span class="w"> </span>smb<span class="w"> </span>shares<span class="w"> </span>modify<span class="w"> </span>&lt;share_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">    </span>--add-permissions<span class="w"> </span><span class="s1">&#39;group:CORP\fileusers:allow:change&#39;</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="c1"># Set full control for an admin group</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>isi<span class="w"> </span>smb<span class="w"> </span>shares<span class="w"> </span>modify<span class="w"> </span>&lt;share_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="w">    </span>--add-permissions<span class="w"> </span><span class="s1">&#39;group:CORP\storeadmins:allow:full&#39;</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="c1"># Remove a permission entry</span>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>isi<span class="w"> </span>smb<span class="w"> </span>shares<span class="w"> </span>modify<span class="w"> </span>&lt;share_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="w">    </span>--remove-permissions<span class="w"> </span><span class="s1">&#39;user:CORP\jsmith:allow:read&#39;</span>
 </code></pre></div>
 <h3 id="smb-sessions-and-open-files">SMB Sessions and Open Files<a class="headerlink" href="#smb-sessions-and-open-files" title="Permanent link">&para;</a></h3>
 <p><img alt="SMB Sessions and Open Files" src="../../../../../assets/powerscale-proc-smb-sessions-and-open-files.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Active SMB sessions</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>isi<span class="w"> </span>smb<span class="w"> </span>sessions<span class="w"> </span>list
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Open files per session</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>isi<span class="w"> </span>smb<span class="w"> </span>openfiles<span class="w"> </span>list
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Disconnect a specific session</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>isi<span class="w"> </span>smb<span class="w"> </span>sessions<span class="w"> </span>delete<span class="w"> </span>&lt;session_id&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Active SMB sessions</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>isi<span class="w"> </span>smb<span class="w"> </span>sessions<span class="w"> </span>list
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Open files per session</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>isi<span class="w"> </span>smb<span class="w"> </span>openfiles<span class="w"> </span>list
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Disconnect a specific session</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>isi<span class="w"> </span>smb<span class="w"> </span>sessions<span class="w"> </span>delete<span class="w"> </span>&lt;session_id&gt;
 </code></pre></div>
 <h3 id="troubleshooting-smb">Troubleshooting SMB<a class="headerlink" href="#troubleshooting-smb" title="Permanent link">&para;</a></h3>
 <p><img alt="Troubleshooting SMB" src="../../../../../assets/powerscale-proc-troubleshooting-smb.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Check SMB protocol stats</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>isi<span class="w"> </span>statistics<span class="w"> </span>protocol<span class="w"> </span>list<span class="w"> </span>--protocol<span class="w"> </span>smb2
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>isi<span class="w"> </span>statistics<span class="w"> </span>protocol<span class="w"> </span>list<span class="w"> </span>--protocol<span class="w"> </span>smb3
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1"># Check for SMB errors in events</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>isi<span class="w"> </span>event<span class="w"> </span>events<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>smb
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="c1"># Verify AD authentication is working</span>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>isi<span class="w"> </span>auth<span class="w"> </span>status<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;Active Directory\|joined&quot;</span>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>isi<span class="w"> </span>auth<span class="w"> </span>ads<span class="w"> </span>list
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="c1"># Check group memberships resolve correctly</span>
-<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>isi<span class="w"> </span>auth<span class="w"> </span>users<span class="w"> </span>view<span class="w"> </span>&lt;username&gt;
-<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>isi<span class="w"> </span>auth<span class="w"> </span>groups<span class="w"> </span>view<span class="w"> </span>&lt;groupname&gt;
-<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>
-<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a><span class="c1"># Test access zone authentication</span>
-<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>isi<span class="w"> </span>zone<span class="w"> </span>zones<span class="w"> </span>view<span class="w"> </span>&lt;zone_name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Check SMB protocol stats</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>isi<span class="w"> </span>statistics<span class="w"> </span>protocol<span class="w"> </span>list<span class="w"> </span>--protocol<span class="w"> </span>smb2
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>isi<span class="w"> </span>statistics<span class="w"> </span>protocol<span class="w"> </span>list<span class="w"> </span>--protocol<span class="w"> </span>smb3
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Check for SMB errors in events</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>isi<span class="w"> </span>event<span class="w"> </span>events<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>smb
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># Verify AD authentication is working</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>isi<span class="w"> </span>auth<span class="w"> </span>status<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;Active Directory\|joined&quot;</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>isi<span class="w"> </span>auth<span class="w"> </span>ads<span class="w"> </span>list
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="c1"># Check group memberships resolve correctly</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>isi<span class="w"> </span>auth<span class="w"> </span>users<span class="w"> </span>view<span class="w"> </span>&lt;username&gt;
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>isi<span class="w"> </span>auth<span class="w"> </span>groups<span class="w"> </span>view<span class="w"> </span>&lt;groupname&gt;
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="c1"># Test access zone authentication</span>
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>isi<span class="w"> </span>zone<span class="w"> </span>zones<span class="w"> </span>view<span class="w"> </span>&lt;zone_name&gt;
 </code></pre></div>
 <h2 id="snapshot-management">Snapshot Management<a class="headerlink" href="#snapshot-management" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Create a snapshot of a directory</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>isi<span class="w"> </span>snapshot<span class="w"> </span>snapshots<span class="w"> </span>create<span class="w"> </span>/ifs/data/project1<span class="w"> </span>--name<span class="w"> </span>project1-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># List all snapshots</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>isi<span class="w"> </span>snapshot<span class="w"> </span>snapshots<span class="w"> </span>list
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>isi<span class="w"> </span>snapshot<span class="w"> </span>snapshots<span class="w"> </span>list<span class="w"> </span>-v
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c1"># View details of a snapshot</span>
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>isi<span class="w"> </span>snapshot<span class="w"> </span>snapshots<span class="w"> </span>view<span class="w"> </span>&lt;snap_id&gt;
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="c1"># Delete a snapshot</span>
-<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>isi<span class="w"> </span>snapshot<span class="w"> </span>snapshots<span class="w"> </span>delete<span class="w"> </span>&lt;snap_id&gt;
-<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>
-<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="c1"># Delete by name</span>
-<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>isi<span class="w"> </span>snapshot<span class="w"> </span>snapshots<span class="w"> </span>delete<span class="w"> </span>--name<span class="w"> </span>project1-20260101
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Create a snapshot of a directory</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>isi<span class="w"> </span>snapshot<span class="w"> </span>snapshots<span class="w"> </span>create<span class="w"> </span>/ifs/data/project1<span class="w"> </span>--name<span class="w"> </span>project1-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># List all snapshots</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>isi<span class="w"> </span>snapshot<span class="w"> </span>snapshots<span class="w"> </span>list
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>isi<span class="w"> </span>snapshot<span class="w"> </span>snapshots<span class="w"> </span>list<span class="w"> </span>-v
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="c1"># View details of a snapshot</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>isi<span class="w"> </span>snapshot<span class="w"> </span>snapshots<span class="w"> </span>view<span class="w"> </span>&lt;snap_id&gt;
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="c1"># Delete a snapshot</span>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>isi<span class="w"> </span>snapshot<span class="w"> </span>snapshots<span class="w"> </span>delete<span class="w"> </span>&lt;snap_id&gt;
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="c1"># Delete by name</span>
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>isi<span class="w"> </span>snapshot<span class="w"> </span>snapshots<span class="w"> </span>delete<span class="w"> </span>--name<span class="w"> </span>project1-20260101
 </code></pre></div>
 <h3 id="snapshot-schedules">Snapshot Schedules<a class="headerlink" href="#snapshot-schedules" title="Permanent link">&para;</a></h3>
 <p><img alt="Snapshot Schedules" src="../../../../../assets/powerscale-proc-snapshot-schedules.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># List all schedules</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>isi<span class="w"> </span>snapshot<span class="w"> </span>schedules<span class="w"> </span>list
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Create a daily schedule retaining 14 snapshots</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>isi<span class="w"> </span>snapshot<span class="w"> </span>schedules<span class="w"> </span>create<span class="w"> </span>daily-project1<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="w">    </span>/ifs/data/project1<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="w">    </span>--schedule<span class="w"> </span><span class="s2">&quot;every 1 days at 00:00&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="w">    </span>--retention<span class="w"> </span>2W<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="w">    </span>--alias<span class="w"> </span>latest-project1
-<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>
-<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="c1"># Modify a schedule</span>
-<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>isi<span class="w"> </span>snapshot<span class="w"> </span>schedules<span class="w"> </span>modify<span class="w"> </span>&lt;schedule_name&gt;<span class="w"> </span>--retention<span class="w"> </span>1M
-<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>
-<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a><span class="c1"># Delete a schedule (does not delete existing snapshots)</span>
-<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>isi<span class="w"> </span>snapshot<span class="w"> </span>schedules<span class="w"> </span>delete<span class="w"> </span>&lt;schedule_name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># List all schedules</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>isi<span class="w"> </span>snapshot<span class="w"> </span>schedules<span class="w"> </span>list
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Create a daily schedule retaining 14 snapshots</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>isi<span class="w"> </span>snapshot<span class="w"> </span>schedules<span class="w"> </span>create<span class="w"> </span>daily-project1<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">    </span>/ifs/data/project1<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">    </span>--schedule<span class="w"> </span><span class="s2">&quot;every 1 days at 00:00&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w">    </span>--retention<span class="w"> </span>2W<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="w">    </span>--alias<span class="w"> </span>latest-project1
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="c1"># Modify a schedule</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>isi<span class="w"> </span>snapshot<span class="w"> </span>schedules<span class="w"> </span>modify<span class="w"> </span>&lt;schedule_name&gt;<span class="w"> </span>--retention<span class="w"> </span>1M
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="c1"># Delete a schedule (does not delete existing snapshots)</span>
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>isi<span class="w"> </span>snapshot<span class="w"> </span>schedules<span class="w"> </span>delete<span class="w"> </span>&lt;schedule_name&gt;
 </code></pre></div>
 <h3 id="recovering-files-from-a-snapshot">Recovering Files from a Snapshot<a class="headerlink" href="#recovering-files-from-a-snapshot" title="Permanent link">&para;</a></h3>
 <p><img alt="Recovering Files from a Snapshot" src="../../../../../assets/powerscale-proc-recovering-files-from-a-snapshot.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Copy a specific file from snapshot back to live filesystem</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>cp<span class="w"> </span>-p<span class="w"> </span>/ifs/data/project1/.snapshot/project1-20260101/report.xlsx<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">      </span>/ifs/data/project1/report.xlsx
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="c1"># Restore an entire directory</span>
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>rsync<span class="w"> </span>-av<span class="w"> </span>/ifs/data/project1/.snapshot/project1-20260101/<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="w">          </span>/ifs/data/project1/
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>
-<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="c1"># Restore via SnapshotIQ revert (rolls back entire path to snapshot state)</span>
-<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>isi<span class="w"> </span>snapshot<span class="w"> </span>snapshots<span class="w"> </span>modify<span class="w"> </span>&lt;snap_id&gt;<span class="w"> </span>--set-expiration<span class="w"> </span>never<span class="w">   </span><span class="c1"># Protect before reverting</span>
-<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>isi<span class="w"> </span>snapshot<span class="w"> </span>snapshots<span class="w"> </span>revert<span class="w"> </span>&lt;snap_id&gt;
-<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="c1"># WARNING: revert is destructive — all data written after the snapshot is lost</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Copy a specific file from snapshot back to live filesystem</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>cp<span class="w"> </span>-p<span class="w"> </span>/ifs/data/project1/.snapshot/project1-20260101/report.xlsx<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">      </span>/ifs/data/project1/report.xlsx
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="c1"># Restore an entire directory</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>rsync<span class="w"> </span>-av<span class="w"> </span>/ifs/data/project1/.snapshot/project1-20260101/<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="w">          </span>/ifs/data/project1/
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="c1"># Restore via SnapshotIQ revert (rolls back entire path to snapshot state)</span>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>isi<span class="w"> </span>snapshot<span class="w"> </span>snapshots<span class="w"> </span>modify<span class="w"> </span>&lt;snap_id&gt;<span class="w"> </span>--set-expiration<span class="w"> </span>never<span class="w">   </span><span class="c1"># Protect before reverting</span>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>isi<span class="w"> </span>snapshot<span class="w"> </span>snapshots<span class="w"> </span>revert<span class="w"> </span>&lt;snap_id&gt;
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="c1"># WARNING: revert is destructive — all data written after the snapshot is lost</span>
 </code></pre></div>
 <hr />
 <h3 id="smartconnect-zone-configuration">SmartConnect Zone Configuration<a class="headerlink" href="#smartconnect-zone-configuration" title="Permanent link">&para;</a></h3>
 <p><img alt="SmartConnect Zone Configuration" src="../../../../../assets/powerscale-proc-smartconnect-zone-configuration.svg" /></p>
 <p>SmartConnect zones distribute NFS and SMB client connections across node pools using DNS-based load balancing.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Create an IP pool with a SmartConnect DNS zone and round-robin load balancing</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>isi<span class="w"> </span>network<span class="w"> </span>pools<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">    </span>--name<span class="o">=</span>pool1<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="w">    </span>--subnet<span class="o">=</span>subnet0<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="w">    </span>--ifaces<span class="o">=</span><span class="m">1</span>:ext-1<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="w">    </span>--sc-dns-zone<span class="o">=</span>pool1.cluster.domain.com<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="w">    </span>--sc-load-balance-policy<span class="o">=</span>round_robin
-<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>
-<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="c1"># Verify the pool configuration</span>
-<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>isi<span class="w"> </span>network<span class="w"> </span>pools<span class="w"> </span>view<span class="w"> </span>pool1
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Create an IP pool with a SmartConnect DNS zone and round-robin load balancing</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>isi<span class="w"> </span>network<span class="w"> </span>pools<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">    </span>--name<span class="o">=</span>pool1<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">    </span>--subnet<span class="o">=</span>subnet0<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">    </span>--ifaces<span class="o">=</span><span class="m">1</span>:ext-1<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="w">    </span>--sc-dns-zone<span class="o">=</span>pool1.cluster.domain.com<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="w">    </span>--sc-load-balance-policy<span class="o">=</span>round_robin
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="c1"># Verify the pool configuration</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>isi<span class="w"> </span>network<span class="w"> </span>pools<span class="w"> </span>view<span class="w"> </span>pool1
 </code></pre></div>
 <p>Delegate the SmartConnect zone FQDN (<code>pool1.cluster.domain.com</code>) in your DNS infrastructure to the cluster's SmartConnect service IP. Test: <code>nslookup pool1.cluster.domain.com</code> — it should return multiple node IPs in rotation across successive lookups.</p>
 <h3 id="smartquotas-create-and-monitor-quotas">SmartQuotas — Create and Monitor Quotas<a class="headerlink" href="#smartquotas-create-and-monitor-quotas" title="Permanent link">&para;</a></h3>
 <p><img alt="SmartQuotas — Create and Monitor Quotas" src="../../../../../assets/powerscale-proc-smartquotas-create-and-monitor-quotas.svg" /></p>
 <p>Set hard and soft limits on directories, users, or groups to control storage consumption.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Create a directory quota with hard, soft, and advisory thresholds</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>isi<span class="w"> </span>quota<span class="w"> </span>quotas<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">    </span>--path<span class="o">=</span>/ifs/data/project1<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">    </span>--type<span class="o">=</span>directory<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="w">    </span>--hard-threshold<span class="o">=</span>10T<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="w">    </span>--soft-threshold<span class="o">=</span>8T<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="w">    </span>--soft-grace<span class="o">=</span>7D<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="w">    </span>--advisory-threshold<span class="o">=</span>9T
-<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>
-<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="c1"># List all active quotas</span>
-<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>isi<span class="w"> </span>quota<span class="w"> </span>quotas<span class="w"> </span>list
-<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>
-<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a><span class="c1"># Generate a quota usage report</span>
-<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>isi<span class="w"> </span>quota<span class="w"> </span>reports<span class="w"> </span>create
-<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>isi<span class="w"> </span>quota<span class="w"> </span>reports<span class="w"> </span>list
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Create a directory quota with hard, soft, and advisory thresholds</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>isi<span class="w"> </span>quota<span class="w"> </span>quotas<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">    </span>--path<span class="o">=</span>/ifs/data/project1<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="w">    </span>--type<span class="o">=</span>directory<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="w">    </span>--hard-threshold<span class="o">=</span>10T<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="w">    </span>--soft-threshold<span class="o">=</span>8T<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="w">    </span>--soft-grace<span class="o">=</span>7D<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="w">    </span>--advisory-threshold<span class="o">=</span>9T
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="c1"># List all active quotas</span>
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>isi<span class="w"> </span>quota<span class="w"> </span>quotas<span class="w"> </span>list
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a><span class="c1"># Generate a quota usage report</span>
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>isi<span class="w"> </span>quota<span class="w"> </span>reports<span class="w"> </span>create
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>isi<span class="w"> </span>quota<span class="w"> </span>reports<span class="w"> </span>list
 </code></pre></div>
 <p>Quota events appear in <code>isi event events list</code> when thresholds are crossed. Review reports regularly and adjust thresholds before directories approach the hard limit.</p>
 <h3 id="synciq-configure-replication-policy">SyncIQ — Configure Replication Policy<a class="headerlink" href="#synciq-configure-replication-policy" title="Permanent link">&para;</a></h3>
 <p><img alt="SyncIQ — Configure Replication Policy" src="../../../../../assets/powerscale-proc-synciq-configure-replication-policy.svg" /></p>
 <p>Set up asynchronous replication from this cluster to a remote PowerScale cluster for DR.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Create a SyncIQ replication policy</span>
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>isi<span class="w"> </span>sync<span class="w"> </span>policies<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="w">    </span>--name<span class="o">=</span>DR-Policy<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="w">    </span>--action<span class="o">=</span>sync<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="w">    </span>--source-root<span class="o">=</span>/ifs/data<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="w">    </span>--target-host<span class="o">=</span>&lt;remote-cluster-ip&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="w">    </span>--target-path<span class="o">=</span>/ifs/data-replica<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="w">    </span>--schedule<span class="o">=</span><span class="s2">&quot;every 1 hours&quot;</span>
-<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>
-<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="c1"># Trigger an immediate manual run</span>
-<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>isi<span class="w"> </span>sync<span class="w"> </span>policies<span class="w"> </span>run<span class="w"> </span>DR-Policy
-<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>
-<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a><span class="c1"># Monitor replication job progress</span>
-<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>isi<span class="w"> </span>sync<span class="w"> </span><span class="nb">jobs</span><span class="w"> </span>list
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Create a SyncIQ replication policy</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>isi<span class="w"> </span>sync<span class="w"> </span>policies<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">    </span>--name<span class="o">=</span>DR-Policy<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">    </span>--action<span class="o">=</span>sync<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="w">    </span>--source-root<span class="o">=</span>/ifs/data<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="w">    </span>--target-host<span class="o">=</span>&lt;remote-cluster-ip&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="w">    </span>--target-path<span class="o">=</span>/ifs/data-replica<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="w">    </span>--schedule<span class="o">=</span><span class="s2">&quot;every 1 hours&quot;</span>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="c1"># Trigger an immediate manual run</span>
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>isi<span class="w"> </span>sync<span class="w"> </span>policies<span class="w"> </span>run<span class="w"> </span>DR-Policy
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a><span class="c1"># Monitor replication job progress</span>
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>isi<span class="w"> </span>sync<span class="w"> </span><span class="nb">jobs</span><span class="w"> </span>list
 </code></pre></div>
 <p>Confirm the job completes with status SUCCESS. Check <code>isi sync reports list --policy=DR-Policy</code> for transfer statistics and any errors from previous runs.</p>
 <h3 id="synciq-failover-and-failback">SyncIQ — Failover and Failback<a class="headerlink" href="#synciq-failover-and-failback" title="Permanent link">&para;</a></h3>
 <p><img alt="SyncIQ — Failover and Failback" src="../../../../../assets/powerscale-proc-synciq-failover-and-failback.svg" /></p>
 <p>Promote the replica to writable on a DR event, then re-establish replication when the primary recovers.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># --- FAILOVER (run on the TARGET / DR cluster) ---</span>
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="c1"># Allow writes to the replica — breaks the replication relationship</span>
-<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>isi<span class="w"> </span>sync<span class="w"> </span>recovery<span class="w"> </span>allow-write<span class="w"> </span>--policy<span class="o">=</span>DR-Policy
-<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>
-<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="c1"># Update client mount points and DNS to point to the target cluster</span>
-<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>
-<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="c1"># --- FAILBACK (run when primary cluster is recovered) ---</span>
-<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="c1"># On the TARGET cluster: prepare the replica for resync back to the primary</span>
-<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>isi<span class="w"> </span>sync<span class="w"> </span>recovery<span class="w"> </span>resync-prep<span class="w"> </span>--policy<span class="o">=</span>DR-Policy
-<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>
-<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a><span class="c1"># On the TARGET cluster: commit the resync and re-establish original direction</span>
-<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a>isi<span class="w"> </span>sync<span class="w"> </span>recovery<span class="w"> </span>commit<span class="w"> </span>--policy<span class="o">=</span>DR-Policy
-<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a>
-<a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a><span class="c1"># Verify replication is active again</span>
-<a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a>isi<span class="w"> </span>sync<span class="w"> </span>policies<span class="w"> </span>list
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># --- FAILOVER (run on the TARGET / DR cluster) ---</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="c1"># Allow writes to the replica — breaks the replication relationship</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>isi<span class="w"> </span>sync<span class="w"> </span>recovery<span class="w"> </span>allow-write<span class="w"> </span>--policy<span class="o">=</span>DR-Policy
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="c1"># Update client mount points and DNS to point to the target cluster</span>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="c1"># --- FAILBACK (run when primary cluster is recovered) ---</span>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="c1"># On the TARGET cluster: prepare the replica for resync back to the primary</span>
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>isi<span class="w"> </span>sync<span class="w"> </span>recovery<span class="w"> </span>resync-prep<span class="w"> </span>--policy<span class="o">=</span>DR-Policy
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a><span class="c1"># On the TARGET cluster: commit the resync and re-establish original direction</span>
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>isi<span class="w"> </span>sync<span class="w"> </span>recovery<span class="w"> </span>commit<span class="w"> </span>--policy<span class="o">=</span>DR-Policy
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>
+<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a><span class="c1"># Verify replication is active again</span>
+<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a>isi<span class="w"> </span>sync<span class="w"> </span>policies<span class="w"> </span>list
 </code></pre></div>
 <p>After failback, trigger a manual run with <code>isi sync policies run DR-Policy</code> and confirm SUCCESS before updating client mount points back to the primary cluster.</p>
 <h3 id="access-zone-management">Access Zone Management<a class="headerlink" href="#access-zone-management" title="Permanent link">&para;</a></h3>
 <p><img alt="Access Zone Management" src="../../../../../assets/powerscale-proc-access-zone-management.svg" /></p>
 <p>Access zones isolate client namespaces and authentication providers, enabling multi-tenancy on a single cluster.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># Create a new access zone with a dedicated root path</span>
-<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>isi<span class="w"> </span>zone<span class="w"> </span>zones<span class="w"> </span>create<span class="w"> </span>--name<span class="o">=</span>Zone-DMZ<span class="w"> </span>--path<span class="o">=</span>/ifs/dmz<span class="w"> </span>--create-path
-<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>
-<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="c1"># Add an authentication provider to the zone</span>
-<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>isi<span class="w"> </span>zone<span class="w"> </span>zones<span class="w"> </span>modify<span class="w"> </span>Zone-DMZ<span class="w"> </span>--add-auth-providers<span class="o">=</span>lsa-local-provider:System
-<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>
-<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="c1"># View the zone configuration</span>
-<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>isi<span class="w"> </span>zone<span class="w"> </span>zones<span class="w"> </span>view<span class="w"> </span>Zone-DMZ
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Create a new access zone with a dedicated root path</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>isi<span class="w"> </span>zone<span class="w"> </span>zones<span class="w"> </span>create<span class="w"> </span>--name<span class="o">=</span>Zone-DMZ<span class="w"> </span>--path<span class="o">=</span>/ifs/dmz<span class="w"> </span>--create-path
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c1"># Add an authentication provider to the zone</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>isi<span class="w"> </span>zone<span class="w"> </span>zones<span class="w"> </span>modify<span class="w"> </span>Zone-DMZ<span class="w"> </span>--add-auth-providers<span class="o">=</span>lsa-local-provider:System
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="c1"># View the zone configuration</span>
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>isi<span class="w"> </span>zone<span class="w"> </span>zones<span class="w"> </span>view<span class="w"> </span>Zone-DMZ
 </code></pre></div>
 <p>After creating the zone, create a dedicated IP pool and SmartConnect zone scoped to <code>Zone-DMZ</code> so that clients connecting to the zone's IP are isolated from other zones. Verify NFS exports and SMB shares in the zone are reachable from the correct client subnet.</p>
 <h3 id="node-pool-and-tier-management">Node Pool and Tier Management<a class="headerlink" href="#node-pool-and-tier-management" title="Permanent link">&para;</a></h3>
 <p><img alt="Node Pool and Tier Management" src="../../../../../assets/powerscale-proc-node-pool-and-tier-management.svg" /></p>
 <p>Assign nodes to pools and configure file pool policies to place data on appropriate performance tiers.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># List existing node pools and their assigned nodes</span>
-<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>isi<span class="w"> </span>storagepool<span class="w"> </span>nodepools<span class="w"> </span>list
-<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>
-<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="c1"># Assign specific nodes (by logical node number) to a pool</span>
-<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>isi<span class="w"> </span>storagepool<span class="w"> </span>nodepools<span class="w"> </span>modify<span class="w"> </span>&lt;pool-name&gt;<span class="w"> </span>--lnns<span class="o">=</span><span class="m">1</span>,2,3
-<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>
-<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="c1"># Create a file pool policy to direct archive data to a capacity tier</span>
-<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>isi<span class="w"> </span>filepool<span class="w"> </span>policies<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a><span class="w">    </span>--name<span class="o">=</span>Archive<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a><span class="w">    </span>--apply-data-storage-target<span class="o">=</span>capacity-pool1<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a><span class="w">    </span>--file-matching-criteria<span class="o">=</span><span class="s2">&quot;accessed &gt; 90 days&quot;</span>
-<a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a>
-<a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a><span class="c1"># Verify overall storage pool health and tier usage</span>
-<a id="__codelineno-16-14" name="__codelineno-16-14" href="#__codelineno-16-14"></a>isi<span class="w"> </span>storagepool<span class="w"> </span>health
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># List existing node pools and their assigned nodes</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>isi<span class="w"> </span>storagepool<span class="w"> </span>nodepools<span class="w"> </span>list
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="c1"># Assign specific nodes (by logical node number) to a pool</span>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>isi<span class="w"> </span>storagepool<span class="w"> </span>nodepools<span class="w"> </span>modify<span class="w"> </span>&lt;pool-name&gt;<span class="w"> </span>--lnns<span class="o">=</span><span class="m">1</span>,2,3
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="c1"># Create a file pool policy to direct archive data to a capacity tier</span>
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>isi<span class="w"> </span>filepool<span class="w"> </span>policies<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a><span class="w">    </span>--name<span class="o">=</span>Archive<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a><span class="w">    </span>--apply-data-storage-target<span class="o">=</span>capacity-pool1<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a><span class="w">    </span>--file-matching-criteria<span class="o">=</span><span class="s2">&quot;accessed &gt; 90 days&quot;</span>
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a><span class="c1"># Verify overall storage pool health and tier usage</span>
+<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>isi<span class="w"> </span>storagepool<span class="w"> </span>health
 </code></pre></div>
 <p>Run <code>isi job list</code> after modifying pool assignments — a Restripe job will start automatically to redistribute data. Monitor it to completion before making further pool changes.</p>
 <hr />

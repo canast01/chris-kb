@@ -7794,46 +7794,7 @@ How It Works reference covering Overview, SAN Fabric Topology.
 *Applies to: Cisco MDS · Nexus*
 </div>
 <p><img alt="Cisco MDS — How It Works" src="../../../../../assets/san-cisco-mds-architecture-how-it-works.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>hosts: Servers {
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>  h1: Host 1 (HBA) {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>  h2: Host 2 (HBA) {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>director_a: MDS Director A\n(Fabric A) {
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>  linecard1: Line Card 1 (32×32G) {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>  linecard2: Line Card 2 (32×32G) {shape: rectangle}
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>  sup: Supervisor Module {shape: rectangle}
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>  linecard1 -&gt; sup: backplane
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>  linecard2 -&gt; sup: backplane
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>}
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>director_b: MDS Director B\n(Fabric B) {
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>  linecard3: Line Card 3 (32×32G) {shape: rectangle}
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>  linecard4: Line Card 4 (32×32G) {shape: rectangle}
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>  sup2: Supervisor Module {shape: rectangle}
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>  linecard3 -&gt; sup2: backplane
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>  linecard4 -&gt; sup2: backplane
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>}
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>storage: Storage Arrays {
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>  arr: Target Ports {shape: cylinder}
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>}
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>dcnm: Cisco DCNM\n(management) {shape: rectangle}
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>hosts.h1 -&gt; director_a.linecard1: F_Port (32G FC)
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>hosts.h1 -&gt; director_b.linecard3: F_Port (dual fabric)
-<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>hosts.h2 -&gt; director_a.linecard1: F_Port
-<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>hosts.h2 -&gt; director_b.linecard3: F_Port
-<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>
-<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>director_a.linecard2 -&gt; storage.arr: F_Port
-<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>director_b.linecard4 -&gt; storage.arr: F_Port
-<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>
-<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>dcnm -&gt; director_a.sup: SNMP / SSH
-<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>dcnm -&gt; director_b.sup2: SNMP / SSH
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqVU8tuwjAQvOcr9giHpsLJKYdKEAQcGoSUHishJ3ETq8GJ7KQSQnxHP6g_1s0DMGAKvTnxzO7O7DjhksUVL4QHkqdZZVlZoSrlQcjkF5MKdhZANvJggb9hBIPFZDyEncpoyZCCXCrSnO0bFOlR5DZqb1lJ27GQa-pBMA1h2n_D-F0MZjSSPIaGjBVzLlhMZYLtX_EIPp6bGRzy8-2Q-Y05Diyis8g9lqpLFF2XKJsrnCYokjpnf3cYwdNLR4xo_FnmVDC9v-FW1x9d6J-c9E_O9Tu6EudR_a7Och_QT_5tgNNLJGYHXNM1WqBQLk2xaNgdYCwl3XZZo1J68EZlyipYFbJSxwniLdZNmOxSFIuNBz5XcQFTfxmgdxsqsNaGicoosQu2nbVLO4XQ1kI2WzcdG6fmMPOHZkZka2s5MJKa5vDRLu9II_camYGG-vqjsc_j1Rlot671YEMl9xa29fFizu4lLIMVPEMYLq4hkd2H5YT5Bc_Haz0=?" /></p>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>Cisco MDS 9000 series switches run NX-OS and provide scalable SAN fabric services supporting Fibre Channel (FC). The core isolation mechanism is the <strong>VSAN (Virtual SAN)</strong> — multiple logical fabrics share physical infrastructure while maintaining separate name servers, zoning databases, and fabric login tables. Each VSAN operates as an independent fabric.</p>
 <h2 id="san-fabric-topology">SAN Fabric Topology<a class="headerlink" href="#san-fabric-topology" title="Permanent link">&para;</a></h2>

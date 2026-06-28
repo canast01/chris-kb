@@ -7734,25 +7734,7 @@ Health Checks reference covering Daily Health Check Workflow, AutoSupport Valida
 *Applies to: ONTAP 9.x*
 </div>
 <p><img alt="NetApp Operations — Health Checks" src="../../../../assets/storage-netapp-operations-health-checks-index.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>begin_checks: &quot;Begin Checks&quot; {shape: oval}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>run_this_routine: &quot;Run This Routine&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>daily_health_check_workflow: &quot;Daily Health Check Workflow&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>autosupport_validation: &quot;AutoSupport Validation&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>prechange_checklist: &quot;Pre-Change Checklist&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>health_summary_table: &quot;Health Summary Table&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>verify: &quot;Verify&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>generate_report: &quot;Generate Report&quot; {shape: oval}
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>begin_checks -&gt; run_this_routine
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>run_this_routine -&gt; daily_health_check_workflow
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>daily_health_check_workflow -&gt; autosupport_validation
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>autosupport_validation -&gt; prechange_checklist
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>prechange_checklist -&gt; health_summary_table
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>health_summary_table -&gt; verify
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>verify -&gt; generate_report
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp9UctqwzAQvPsrFt_zAz4UmhTaY0lCehSKvbFEFMmspART8u_VWqalrpqbNLOzj5lOE7ZBO9sA6V6Fqjpir61oFbZn30C95i9spm8Nn17JARtwV2nuFUUrgtJekItB24TX22hhnyDYZuhHwnOk7Q3eq05qMwqF0gSVJ4mbo_PJuFtq8cIsvE1sHgwfM1vsJmNwPg6DoyDSWrqT-Z76ORG7TMDhmyj2GNJbpTfmdYz2ITV4J1xtJjjvwXBRPp_i4-UiaRRBHg2bMd-wyzDsGS7qr0j6NCbFYXoUa3q0SDKgIOSLUvHrjMB2Qpbp_EoSVk-wjOtPflz0IJtHubG0HMQ_-bCg4HopCS4tOVy0nYuznbOrDCy8q74A-ewaUQ==?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Access:</strong> Storage admin credentials (cluster admin or equivalent)</li>
@@ -7771,36 +7753,36 @@ Health Checks reference covering Daily Health Check Workflow, AutoSupport Valida
 <li><strong>License compliance</strong> — run <code>license show</code> on each cluster — verify all required licences are active</li>
 </ol>
 <h2 id="daily-health-check-workflow">Daily Health Check Workflow<a class="headerlink" href="#daily-health-check-workflow" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># 1. Overall cluster health</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>cluster<span class="w"> </span>show
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>system<span class="w"> </span>health<span class="w"> </span>status<span class="w"> </span>show
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># 2. HA pair status</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>storage<span class="w"> </span>failover<span class="w"> </span>show
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># 3. Disk health</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>storage<span class="w"> </span>disk<span class="w"> </span>show<span class="w"> </span>-broken
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># 4. Aggregate health</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show<span class="w"> </span>-state<span class="w"> </span>!online
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>percent-used<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;$2 &gt; 80&#39;</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="c1"># 5. Volume health</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>volume<span class="w"> </span>show<span class="w"> </span>-state<span class="w"> </span>!online
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>volume<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>percent-used<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;$2 &gt; 85&#39;</span>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="c1"># 6. Interface health</span>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>network<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span>-status-oper<span class="w"> </span>down
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="c1"># 7. EMS critical events (last 24 hours)</span>
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>event<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-severity<span class="w"> </span>critical<span class="w"> </span>-time<span class="w"> </span><span class="s2">&quot;&gt;24h&quot;</span>
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>event<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-severity<span class="w"> </span>error<span class="w"> </span>-time<span class="w"> </span><span class="s2">&quot;&gt;24h&quot;</span>
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="c1"># 8. SnapMirror health</span>
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-health<span class="w"> </span><span class="nb">false</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># 1. Overall cluster health</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>cluster<span class="w"> </span>show
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>system<span class="w"> </span>health<span class="w"> </span>status<span class="w"> </span>show
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># 2. HA pair status</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>storage<span class="w"> </span>failover<span class="w"> </span>show
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># 3. Disk health</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>storage<span class="w"> </span>disk<span class="w"> </span>show<span class="w"> </span>-broken
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># 4. Aggregate health</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show<span class="w"> </span>-state<span class="w"> </span>!online
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>percent-used<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;$2 &gt; 80&#39;</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="c1"># 5. Volume health</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>volume<span class="w"> </span>show<span class="w"> </span>-state<span class="w"> </span>!online
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>volume<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>percent-used<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;$2 &gt; 85&#39;</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="c1"># 6. Interface health</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>network<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span>-status-oper<span class="w"> </span>down
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="c1"># 7. EMS critical events (last 24 hours)</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>event<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-severity<span class="w"> </span>critical<span class="w"> </span>-time<span class="w"> </span><span class="s2">&quot;&gt;24h&quot;</span>
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>event<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-severity<span class="w"> </span>error<span class="w"> </span>-time<span class="w"> </span><span class="s2">&quot;&gt;24h&quot;</span>
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="c1"># 8. SnapMirror health</span>
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-health<span class="w"> </span><span class="nb">false</span>
 </code></pre></div>
 <h2 id="autosupport-validation">AutoSupport Validation<a class="headerlink" href="#autosupport-validation" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>system<span class="w"> </span>node<span class="w"> </span>autosupport<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>state,last-successful-destination
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>system<span class="w"> </span>node<span class="w"> </span>autosupport<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>state,last-successful-destination
 </code></pre></div>
 <p>Confirm last successful delivery is recent (within 24 hours for daily AutoSupport).</p>
 <h2 id="pre-change-checklist">Pre-Change Checklist<a class="headerlink" href="#pre-change-checklist" title="Permanent link">&para;</a></h2>

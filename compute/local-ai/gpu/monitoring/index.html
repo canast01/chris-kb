@@ -7341,144 +7341,28 @@
 Monitoring GPU workloads requires tracking utilisation, memory, temperature, power draw, and errors. nvidia-smi provides instant snapshots; DCGM provides time-series and health checks for production clusters.
 </div>
 <p><img alt="GPU Monitoring" src="../../../../assets/compute-local-ai-gpu-monitoring-index.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>hub: &quot;GPU Compute\nOperations&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>nvidiasmi_basics: &quot;nvidia-smi Basics&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>key_metrics_to_track: &quot;Key Metrics to Track&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>dcgm_for_production_clusters: &quot;DCGM for Production Clusters&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>prometheus_grafana_stack: &quot;Prometheus + Grafana Stack&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>alerts_for_gpu_workloads: &quot;Alerts for GPU Workloads&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>hub -&gt; nvidiasmi_basics
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>hub -&gt; key_metrics_to_track
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>hub -&gt; dcgm_for_production_clusters
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>hub -&gt; prometheus_grafana_stack
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>hub -&gt; alerts_for_gpu_workloads
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>{
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  &quot;$schema&quot;: &quot;https://vega.github.io/schema/vega-lite/v5.json&quot;,
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  &quot;title&quot;: {
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    &quot;text&quot;: &quot;GPU Monitoring \u2014 Thresholds&quot;,
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    &quot;fontSize&quot;: 13,
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    &quot;fontWeight&quot;: &quot;normal&quot;
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>  },
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>  &quot;width&quot;: 480,
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>  &quot;height&quot;: {
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>    &quot;step&quot;: 26
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>  },
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>  &quot;data&quot;: {
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>    &quot;values&quot;: [
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>      {
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>        &quot;metric&quot;: &quot;GPU utilisation&quot;,
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>        &quot;zone&quot;: &quot;Safe&quot;,
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>        &quot;val&quot;: 80
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>      },
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>      {
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>        &quot;metric&quot;: &quot;GPU utilisation&quot;,
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>        &quot;zone&quot;: &quot;Alert&quot;,
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>        &quot;val&quot;: 20
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>      },
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>      {
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>        &quot;metric&quot;: &quot;Memory utilisation&quot;,
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>        &quot;zone&quot;: &quot;Safe&quot;,
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>        &quot;val&quot;: 98
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>      },
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>      {
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>        &quot;metric&quot;: &quot;Memory utilisation&quot;,
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>        &quot;zone&quot;: &quot;Alert&quot;,
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>        &quot;val&quot;: 2
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>      }
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>    ]
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>  },
-<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>  &quot;mark&quot;: {
-<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>    &quot;type&quot;: &quot;bar&quot;,
-<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>    &quot;cornerRadiusEnd&quot;: 3
-<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>  },
-<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>  &quot;encoding&quot;: {
-<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>    &quot;y&quot;: {
-<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>      &quot;field&quot;: &quot;metric&quot;,
-<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>      &quot;type&quot;: &quot;nominal&quot;,
-<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>      &quot;axis&quot;: {
-<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>        &quot;title&quot;: null,
-<a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a>        &quot;labelLimit&quot;: 200
-<a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a>      },
-<a id="__codelineno-1-48" name="__codelineno-1-48" href="#__codelineno-1-48"></a>      &quot;sort&quot;: null
-<a id="__codelineno-1-49" name="__codelineno-1-49" href="#__codelineno-1-49"></a>    },
-<a id="__codelineno-1-50" name="__codelineno-1-50" href="#__codelineno-1-50"></a>    &quot;x&quot;: {
-<a id="__codelineno-1-51" name="__codelineno-1-51" href="#__codelineno-1-51"></a>      &quot;field&quot;: &quot;val&quot;,
-<a id="__codelineno-1-52" name="__codelineno-1-52" href="#__codelineno-1-52"></a>      &quot;type&quot;: &quot;quantitative&quot;,
-<a id="__codelineno-1-53" name="__codelineno-1-53" href="#__codelineno-1-53"></a>      &quot;stack&quot;: &quot;normalize&quot;,
-<a id="__codelineno-1-54" name="__codelineno-1-54" href="#__codelineno-1-54"></a>      &quot;axis&quot;: {
-<a id="__codelineno-1-55" name="__codelineno-1-55" href="#__codelineno-1-55"></a>        &quot;title&quot;: &quot;Threshold boundary&quot;,
-<a id="__codelineno-1-56" name="__codelineno-1-56" href="#__codelineno-1-56"></a>        &quot;format&quot;: &quot;.0%&quot;
-<a id="__codelineno-1-57" name="__codelineno-1-57" href="#__codelineno-1-57"></a>      }
-<a id="__codelineno-1-58" name="__codelineno-1-58" href="#__codelineno-1-58"></a>    },
-<a id="__codelineno-1-59" name="__codelineno-1-59" href="#__codelineno-1-59"></a>    &quot;color&quot;: {
-<a id="__codelineno-1-60" name="__codelineno-1-60" href="#__codelineno-1-60"></a>      &quot;field&quot;: &quot;zone&quot;,
-<a id="__codelineno-1-61" name="__codelineno-1-61" href="#__codelineno-1-61"></a>      &quot;type&quot;: &quot;nominal&quot;,
-<a id="__codelineno-1-62" name="__codelineno-1-62" href="#__codelineno-1-62"></a>      &quot;scale&quot;: {
-<a id="__codelineno-1-63" name="__codelineno-1-63" href="#__codelineno-1-63"></a>        &quot;domain&quot;: [
-<a id="__codelineno-1-64" name="__codelineno-1-64" href="#__codelineno-1-64"></a>          &quot;Safe&quot;,
-<a id="__codelineno-1-65" name="__codelineno-1-65" href="#__codelineno-1-65"></a>          &quot;Alert&quot;
-<a id="__codelineno-1-66" name="__codelineno-1-66" href="#__codelineno-1-66"></a>        ],
-<a id="__codelineno-1-67" name="__codelineno-1-67" href="#__codelineno-1-67"></a>        &quot;range&quot;: [
-<a id="__codelineno-1-68" name="__codelineno-1-68" href="#__codelineno-1-68"></a>          &quot;#15803d&quot;,
-<a id="__codelineno-1-69" name="__codelineno-1-69" href="#__codelineno-1-69"></a>          &quot;#dc2626&quot;
-<a id="__codelineno-1-70" name="__codelineno-1-70" href="#__codelineno-1-70"></a>        ]
-<a id="__codelineno-1-71" name="__codelineno-1-71" href="#__codelineno-1-71"></a>      },
-<a id="__codelineno-1-72" name="__codelineno-1-72" href="#__codelineno-1-72"></a>      &quot;legend&quot;: {
-<a id="__codelineno-1-73" name="__codelineno-1-73" href="#__codelineno-1-73"></a>        &quot;title&quot;: &quot;Zone&quot;
-<a id="__codelineno-1-74" name="__codelineno-1-74" href="#__codelineno-1-74"></a>      }
-<a id="__codelineno-1-75" name="__codelineno-1-75" href="#__codelineno-1-75"></a>    },
-<a id="__codelineno-1-76" name="__codelineno-1-76" href="#__codelineno-1-76"></a>    &quot;order&quot;: {
-<a id="__codelineno-1-77" name="__codelineno-1-77" href="#__codelineno-1-77"></a>      &quot;field&quot;: &quot;zone&quot;,
-<a id="__codelineno-1-78" name="__codelineno-1-78" href="#__codelineno-1-78"></a>      &quot;sort&quot;: [
-<a id="__codelineno-1-79" name="__codelineno-1-79" href="#__codelineno-1-79"></a>        &quot;Safe&quot;,
-<a id="__codelineno-1-80" name="__codelineno-1-80" href="#__codelineno-1-80"></a>        &quot;Alert&quot;
-<a id="__codelineno-1-81" name="__codelineno-1-81" href="#__codelineno-1-81"></a>      ]
-<a id="__codelineno-1-82" name="__codelineno-1-82" href="#__codelineno-1-82"></a>    },
-<a id="__codelineno-1-83" name="__codelineno-1-83" href="#__codelineno-1-83"></a>    &quot;tooltip&quot;: [
-<a id="__codelineno-1-84" name="__codelineno-1-84" href="#__codelineno-1-84"></a>      {
-<a id="__codelineno-1-85" name="__codelineno-1-85" href="#__codelineno-1-85"></a>        &quot;field&quot;: &quot;metric&quot;,
-<a id="__codelineno-1-86" name="__codelineno-1-86" href="#__codelineno-1-86"></a>        &quot;type&quot;: &quot;nominal&quot;,
-<a id="__codelineno-1-87" name="__codelineno-1-87" href="#__codelineno-1-87"></a>        &quot;title&quot;: &quot;Metric&quot;
-<a id="__codelineno-1-88" name="__codelineno-1-88" href="#__codelineno-1-88"></a>      },
-<a id="__codelineno-1-89" name="__codelineno-1-89" href="#__codelineno-1-89"></a>      {
-<a id="__codelineno-1-90" name="__codelineno-1-90" href="#__codelineno-1-90"></a>        &quot;field&quot;: &quot;zone&quot;,
-<a id="__codelineno-1-91" name="__codelineno-1-91" href="#__codelineno-1-91"></a>        &quot;type&quot;: &quot;nominal&quot;,
-<a id="__codelineno-1-92" name="__codelineno-1-92" href="#__codelineno-1-92"></a>        &quot;title&quot;: &quot;Zone&quot;
-<a id="__codelineno-1-93" name="__codelineno-1-93" href="#__codelineno-1-93"></a>      },
-<a id="__codelineno-1-94" name="__codelineno-1-94" href="#__codelineno-1-94"></a>      {
-<a id="__codelineno-1-95" name="__codelineno-1-95" href="#__codelineno-1-95"></a>        &quot;field&quot;: &quot;val&quot;,
-<a id="__codelineno-1-96" name="__codelineno-1-96" href="#__codelineno-1-96"></a>        &quot;type&quot;: &quot;quantitative&quot;,
-<a id="__codelineno-1-97" name="__codelineno-1-97" href="#__codelineno-1-97"></a>        &quot;title&quot;: &quot;Segment %&quot;,
-<a id="__codelineno-1-98" name="__codelineno-1-98" href="#__codelineno-1-98"></a>        &quot;format&quot;: &quot;.0f&quot;
-<a id="__codelineno-1-99" name="__codelineno-1-99" href="#__codelineno-1-99"></a>      }
-<a id="__codelineno-1-100" name="__codelineno-1-100" href="#__codelineno-1-100"></a>    ]
-<a id="__codelineno-1-101" name="__codelineno-1-101" href="#__codelineno-1-101"></a>  }
-<a id="__codelineno-1-102" name="__codelineno-1-102" href="#__codelineno-1-102"></a>}
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp9kUFLxDAQhe_9FcNeZf9AD4JW6EEWC6t4EcJsO5uGtkmZTNRF9r-btHYF6Xp937zJm5fGMNVinM2BjW4ly9pwyGFTVi9QuGEMQm_2aSTGNOQ38OVbHCmHlj5RO3vO7LtpDPrBqAN6U_tonqVt1OB-0n5t6TW0uqdz1tFJDSQcuRKnhLHuovmRTrCbZRAHz0le9Te1HtTRsRrZNWE6QtV98EKcQjwU5Q4ihuqCofjBq_vimhinpeCVZjyiReVlzlRdENxAOUPYy7Vk2BOLn7LpMagPx13vsEmp7iY05UoVvy5odU_6C9jewt-KF32twYX9184yc-3ihV-7I_sGXAfP5g==?" /></p>
+<p><img alt="Kroki" src="https://kroki.io/vegalite/svg/eNqtVE1v2zAMvedXGOp66_LZBllvOwy7LMCwbBiwLQfFYmyuspRJtJe0yH-vrNqOkjhZsO1kixQfH8lHPXWiiL2ycQoZZ_cRS4lW9r7XKyDh3QQpzRdd1L2XC976WiJBr7jr_rRasZsynpAkuOgndyiPsKYS6_3HL9FUKyRtUCXRj3zYH9xGn1MDNtVSWB_s7i-1ohk-lgiDUWD7CpikHklpk3HJnGvrE_5GQalz3E76_pzWNysGlmDlTsNxEyE48Z2_4DIH687f_Tmq7N6XARmMa_45oUTLCataq0uPWpV02YwvIbQ7YGee9CvL9uYf8d9KMHScYHhZgilk2mz-roY3k_-Y4lQZdQr_nTfDyrh5COS0WXmQBTe1YmJtFJhPXGBu3ynhvKMmGFSshdPbDmDT_JbCQpBlQF1DTapJo3SGytFrHHyNNkAI9K5yKYOiJF-A_IAZkh_R0YyY1YaqsE7gYetWgkVIomb3K-fKpXedLnZDc3rn8cNuUcpduoA-a1YxWuhcCW424YyWJZZfv27_mu2NatvMQWrTSt5P_s-9tTEPXg5vEjrjqILd9NYDkUa1phrLPGBuuErgEOFqcDfpj8Q-yJWIh-PhOIA5GpqEBLzE2jr4rSyztTXaCLikNZUmdlSP9nGv0PleEtJaEq7aH7JTSj8zj7C06UvUmVegvaIL4fc6dw68OAA4twhhghkkGSiKrk9pesmOn5_OtvMMQ62t4Q==?" /></p>
 <h2 id="nvidia-smi-basics">nvidia-smi Basics<a class="headerlink" href="#nvidia-smi-basics" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Snapshot of all GPUs</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>nvidia-smi
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Watch mode (refresh every 2 seconds)</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>nvidia-smi<span class="w"> </span>dmon<span class="w"> </span>-s<span class="w"> </span>pucvmet<span class="w"> </span>-d<span class="w"> </span><span class="m">2</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Key fields: sm% (CUDA core util), mem% (memory util), fb (framebuffer used MB),</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># temp (°C), pwr (watts), rxpci/txpci (PCIe bandwidth)</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Per-process GPU memory</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>nvidia-smi<span class="w"> </span>pmon<span class="w"> </span>-s<span class="w"> </span>m
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Detailed info for GPU 0</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>nvidia-smi<span class="w"> </span>-i<span class="w"> </span><span class="m">0</span><span class="w"> </span>-q
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="c1"># Output as CSV for logging</span>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>nvidia-smi<span class="w"> </span>--query-gpu<span class="o">=</span>timestamp,name,utilization.gpu,utilization.memory,<span class="se">\</span>
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>memory.used,memory.free,temperature.gpu,power.draw<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>--format<span class="o">=</span>csv,noheader,nounits<span class="w"> </span>-l<span class="w"> </span><span class="m">5</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>/var/log/gpu_stats.csv
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Snapshot of all GPUs</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>nvidia-smi
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Watch mode (refresh every 2 seconds)</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>nvidia-smi<span class="w"> </span>dmon<span class="w"> </span>-s<span class="w"> </span>pucvmet<span class="w"> </span>-d<span class="w"> </span><span class="m">2</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Key fields: sm% (CUDA core util), mem% (memory util), fb (framebuffer used MB),</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># temp (°C), pwr (watts), rxpci/txpci (PCIe bandwidth)</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Per-process GPU memory</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>nvidia-smi<span class="w"> </span>pmon<span class="w"> </span>-s<span class="w"> </span>m
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Detailed info for GPU 0</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>nvidia-smi<span class="w"> </span>-i<span class="w"> </span><span class="m">0</span><span class="w"> </span>-q
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># Output as CSV for logging</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>nvidia-smi<span class="w"> </span>--query-gpu<span class="o">=</span>timestamp,name,utilization.gpu,utilization.memory,<span class="se">\</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>memory.used,memory.free,temperature.gpu,power.draw<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>--format<span class="o">=</span>csv,noheader,nounits<span class="w"> </span>-l<span class="w"> </span><span class="m">5</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>/var/log/gpu_stats.csv
 </code></pre></div>
 <h2 id="key-metrics-to-track">Key Metrics to Track<a class="headerlink" href="#key-metrics-to-track" title="Permanent link">&para;</a></h2>
 <table>
@@ -7531,62 +7415,62 @@ Monitoring GPU workloads requires tracking utilisation, memory, temperature, pow
 </table>
 <h2 id="dcgm-for-production-clusters">DCGM for Production Clusters<a class="headerlink" href="#dcgm-for-production-clusters" title="Permanent link">&para;</a></h2>
 <p>DCGM (Data Center GPU Manager) provides persistent monitoring, health checks, and Prometheus metrics.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Install DCGM (Ubuntu)</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>datacenter-gpu-manager
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Start DCGM service</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>--now<span class="w"> </span>nvidia-dcgm
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Run a health check</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>dcgmi<span class="w"> </span>health<span class="w"> </span>-g<span class="w"> </span><span class="m">0</span><span class="w"> </span>-c
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Diag level 1 (quick): ~30 seconds</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>dcgmi<span class="w"> </span>diag<span class="w"> </span>-g<span class="w"> </span><span class="m">0</span><span class="w"> </span>-r<span class="w"> </span><span class="m">1</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c1"># List all field IDs available for monitoring</span>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>dcgmi<span class="w"> </span>dmon<span class="w"> </span>--list
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="c1"># Export Prometheus metrics via dcgm-exporter</span>
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </span>--gpus<span class="w"> </span>all<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="w">  </span>-p<span class="w"> </span><span class="m">9400</span>:9400<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="w">  </span>--cap-add<span class="w"> </span>SYS_ADMIN<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="w">  </span>nvcr.io/nvidia/k8s/dcgm-exporter:3.3.0-3.2.0-ubuntu22.04
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Install DCGM (Ubuntu)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>datacenter-gpu-manager
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Start DCGM service</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>--now<span class="w"> </span>nvidia-dcgm
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Run a health check</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>dcgmi<span class="w"> </span>health<span class="w"> </span>-g<span class="w"> </span><span class="m">0</span><span class="w"> </span>-c
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Diag level 1 (quick): ~30 seconds</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>dcgmi<span class="w"> </span>diag<span class="w"> </span>-g<span class="w"> </span><span class="m">0</span><span class="w"> </span>-r<span class="w"> </span><span class="m">1</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># List all field IDs available for monitoring</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>dcgmi<span class="w"> </span>dmon<span class="w"> </span>--list
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="c1"># Export Prometheus metrics via dcgm-exporter</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </span>--gpus<span class="w"> </span>all<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="w">  </span>-p<span class="w"> </span><span class="m">9400</span>:9400<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="w">  </span>--cap-add<span class="w"> </span>SYS_ADMIN<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="w">  </span>nvcr.io/nvidia/k8s/dcgm-exporter:3.3.0-3.2.0-ubuntu22.04
 </code></pre></div>
 <h2 id="prometheus-grafana-stack">Prometheus + Grafana Stack<a class="headerlink" href="#prometheus-grafana-stack" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># prometheus.yml scrape config for dcgm-exporter</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nt">scrape_configs</span><span class="p">:</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">job_name</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;dcgm&#39;</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">    </span><span class="nt">static_configs</span><span class="p">:</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">targets</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&#39;gpu-node-1:9400&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;gpu-node-2:9400&#39;</span><span class="p p-Indicator">]</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">    </span><span class="nt">scrape_interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">15s</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># prometheus.yml scrape config for dcgm-exporter</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nt">scrape_configs</span><span class="p">:</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">job_name</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;dcgm&#39;</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">    </span><span class="nt">static_configs</span><span class="p">:</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">targets</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&#39;gpu-node-1:9400&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;gpu-node-2:9400&#39;</span><span class="p p-Indicator">]</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">    </span><span class="nt">scrape_interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">15s</span>
 </code></pre></div>
 <p>Key DCGM Prometheus metrics:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>DCGM_FI_DEV_GPU_UTIL           # GPU utilisation %
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>DCGM_FI_DEV_MEM_COPY_UTIL      # Memory bandwidth utilisation %
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>DCGM_FI_DEV_FB_USED            # Framebuffer memory used (MiB)
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>DCGM_FI_DEV_GPU_TEMP           # Temperature (°C)
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>DCGM_FI_DEV_POWER_USAGE        # Power draw (W)
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>DCGM_FI_DEV_ECC_DBE_VOL_TOTAL  # Double-bit ECC errors (fatal)
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>DCGM_FI_DEV_NVLINK_BANDWIDTH_TOTAL  # NVLink bandwidth
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>DCGM_FI_DEV_GPU_UTIL           # GPU utilisation %
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>DCGM_FI_DEV_MEM_COPY_UTIL      # Memory bandwidth utilisation %
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>DCGM_FI_DEV_FB_USED            # Framebuffer memory used (MiB)
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>DCGM_FI_DEV_GPU_TEMP           # Temperature (°C)
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>DCGM_FI_DEV_POWER_USAGE        # Power draw (W)
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>DCGM_FI_DEV_ECC_DBE_VOL_TOTAL  # Double-bit ECC errors (fatal)
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>DCGM_FI_DEV_NVLINK_BANDWIDTH_TOTAL  # NVLink bandwidth
 </code></pre></div>
 <h2 id="alerts-for-gpu-workloads">Alerts for GPU Workloads<a class="headerlink" href="#alerts-for-gpu-workloads" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Prometheus alert rules (alerts.yml)</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>groups:
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>-<span class="w"> </span>name:<span class="w"> </span>gpu_alerts
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">    </span>rules:
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">      </span>-<span class="w"> </span>alert:<span class="w"> </span>GPUHighTemperature
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">        </span>expr:<span class="w"> </span>DCGM_FI_DEV_GPU_TEMP<span class="w"> </span>&gt;<span class="w"> </span><span class="m">85</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">        </span><span class="k">for</span>:<span class="w"> </span>2m
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">        </span>labels:
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">          </span>severity:<span class="w"> </span>warning
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="w">        </span>annotations:
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="w">          </span>summary:<span class="w"> </span><span class="s2">&quot;GPU temperature above 85°C on {{ </span><span class="nv">$labels</span><span class="s2">.instance }}&quot;</span>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="w">      </span>-<span class="w"> </span>alert:<span class="w"> </span>GPUMemoryNearFull
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="w">        </span>expr:<span class="w"> </span>DCGM_FI_DEV_FB_USED<span class="w"> </span>/<span class="w"> </span>DCGM_FI_DEV_FB_FREE<span class="w"> </span>&gt;<span class="w"> </span><span class="m">0</span>.95
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="w">        </span><span class="k">for</span>:<span class="w"> </span>1m
-<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="w">        </span>labels:
-<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="w">          </span>severity:<span class="w"> </span>critical
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Prometheus alert rules (alerts.yml)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>groups:
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>-<span class="w"> </span>name:<span class="w"> </span>gpu_alerts
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">    </span>rules:
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">      </span>-<span class="w"> </span>alert:<span class="w"> </span>GPUHighTemperature
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">        </span>expr:<span class="w"> </span>DCGM_FI_DEV_GPU_TEMP<span class="w"> </span>&gt;<span class="w"> </span><span class="m">85</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">        </span><span class="k">for</span>:<span class="w"> </span>2m
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">        </span>labels:
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">          </span>severity:<span class="w"> </span>warning
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">        </span>annotations:
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">          </span>summary:<span class="w"> </span><span class="s2">&quot;GPU temperature above 85°C on {{ </span><span class="nv">$labels</span><span class="s2">.instance }}&quot;</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">      </span>-<span class="w"> </span>alert:<span class="w"> </span>GPUMemoryNearFull
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="w">        </span>expr:<span class="w"> </span>DCGM_FI_DEV_FB_USED<span class="w"> </span>/<span class="w"> </span>DCGM_FI_DEV_FB_FREE<span class="w"> </span>&gt;<span class="w"> </span><span class="m">0</span>.95
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="w">        </span><span class="k">for</span>:<span class="w"> </span>1m
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="w">        </span>labels:
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="w">          </span>severity:<span class="w"> </span>critical
 </code></pre></div>
 
 

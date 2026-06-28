@@ -8127,21 +8127,7 @@
 LDAP Binds reference covering Overview, Simple Bind, SASL / Kerberos Bind, Service Account Bind Configuration, Anonymous Bind Risks and 1 more sections.
 </div>
 <p><img alt="LDAP Binds" src="../../../../assets/networking-protocols-ldap-binds-index.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>center: &quot;LDAP&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>simple_bind: &quot;Simple Bind&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>sasl_kerberos_bind: &quot;SASL / Kerberos Bind&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>service_account_bind_configuration: &quot;Service Account Bind Configuration&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>anonymous_bind_risks: &quot;Anonymous Bind Risks&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>bind_test_checklist: &quot;Bind Test Checklist&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>center -&gt; simple_bind
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>center -&gt; sasl_kerberos_bind
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>center -&gt; service_account_bind_configuration
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>center -&gt; anonymous_bind_risks
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>center -&gt; bind_test_checklist
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqFkLFuwzAMRHd_BeG9yO6hgJtszVDU2QVZZmzCDmVIctEgyL9HkZxUQIV25PHegbyODCpHmisw1A-uKBSyQ1NBud_VHyVc7CBnrGDAb9lrvhaWTvOEoiXuvKkJE7z56cd7j5TcT-jd0k5iRNOi0fYJ1c0eNvC-yn_QaL5IoZBK6YVd4IXSfKR-MTKeXTbRBHU0hTTYpqZstmTN55Ne4lXCkB2tT6sfcsz5vMtZPlAOrRNqQDVOZJ3HA3TwKmwfapZea4aXV0gKTdVfxaXLf3tJzLlHk3Xmj-IGp-PC6A==?" /></p>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>A bind is how an LDAP client authenticates to a directory server. The bind operation establishes the identity used for subsequent queries. Choosing the wrong bind method exposes credentials or fails entirely in hardened environments.</p>
 <table>
@@ -8182,76 +8168,76 @@ LDAP Binds reference covering Overview, Simple Bind, SASL / Kerberos Bind, Servi
 </table>
 <h2 id="simple-bind">Simple Bind<a class="headerlink" href="#simple-bind" title="Permanent link">&para;</a></h2>
 <p>Simple bind sends the Distinguished Name (DN) and password in plaintext (base64 encoded, not encrypted). Always use LDAPS (port 636) or StartTLS with simple bind.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Test simple bind with ldapsearch</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ldapsearch<span class="w"> </span>-H<span class="w"> </span>ldap://dc01.corp.example.com<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">           </span>-D<span class="w"> </span><span class="s2">&quot;CN=svc-ldap,OU=Service Accounts,DC=corp,DC=example,DC=com&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">           </span>-w<span class="w"> </span><span class="s2">&quot;P@ssw0rd!&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">           </span>-b<span class="w"> </span><span class="s2">&quot;DC=corp,DC=example,DC=com&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">           </span><span class="s2">&quot;(objectClass=user)&quot;</span><span class="w"> </span>cn
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Bind using LDAPS (encrypted)</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>ldapsearch<span class="w"> </span>-H<span class="w"> </span>ldaps://dc01.corp.example.com:636<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">           </span>-D<span class="w"> </span><span class="s2">&quot;CN=svc-ldap,OU=Service Accounts,DC=corp,DC=example,DC=com&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">           </span>-w<span class="w"> </span><span class="s2">&quot;P@ssw0rd!&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">           </span>-b<span class="w"> </span><span class="s2">&quot;DC=corp,DC=example,DC=com&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">           </span><span class="s2">&quot;(sAMAccountName=jsmith)&quot;</span><span class="w"> </span>cn<span class="w"> </span>mail
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Test simple bind with ldapsearch</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ldapsearch<span class="w"> </span>-H<span class="w"> </span>ldap://dc01.corp.example.com<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">           </span>-D<span class="w"> </span><span class="s2">&quot;CN=svc-ldap,OU=Service Accounts,DC=corp,DC=example,DC=com&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">           </span>-w<span class="w"> </span><span class="s2">&quot;P@ssw0rd!&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">           </span>-b<span class="w"> </span><span class="s2">&quot;DC=corp,DC=example,DC=com&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">           </span><span class="s2">&quot;(objectClass=user)&quot;</span><span class="w"> </span>cn
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># Bind using LDAPS (encrypted)</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>ldapsearch<span class="w"> </span>-H<span class="w"> </span>ldaps://dc01.corp.example.com:636<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">           </span>-D<span class="w"> </span><span class="s2">&quot;CN=svc-ldap,OU=Service Accounts,DC=corp,DC=example,DC=com&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">           </span>-w<span class="w"> </span><span class="s2">&quot;P@ssw0rd!&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">           </span>-b<span class="w"> </span><span class="s2">&quot;DC=corp,DC=example,DC=com&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">           </span><span class="s2">&quot;(sAMAccountName=jsmith)&quot;</span><span class="w"> </span>cn<span class="w"> </span>mail
 </code></pre></div>
 <h2 id="sasl-kerberos-bind">SASL / Kerberos Bind<a class="headerlink" href="#sasl-kerberos-bind" title="Permanent link">&para;</a></h2>
 <p>SASL with GSSAPI uses a Kerberos ticket, avoiding password exposure. This is the preferred method for Active Directory.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Obtain Kerberos ticket first</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>kinit<span class="w"> </span>svc-ldap@CORP.EXAMPLE.COM
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Bind using existing Kerberos ticket (GSSAPI / SASL)</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>ldapsearch<span class="w"> </span>-H<span class="w"> </span>ldap://dc01.corp.example.com<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">           </span>-Y<span class="w"> </span>GSSAPI<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">           </span>-b<span class="w"> </span><span class="s2">&quot;DC=corp,DC=example,DC=com&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">           </span><span class="s2">&quot;(objectClass=organizationalUnit)&quot;</span><span class="w"> </span>ou
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Check current Kerberos tickets</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>klist
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Obtain Kerberos ticket first</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>kinit<span class="w"> </span>svc-ldap@CORP.EXAMPLE.COM
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Bind using existing Kerberos ticket (GSSAPI / SASL)</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>ldapsearch<span class="w"> </span>-H<span class="w"> </span>ldap://dc01.corp.example.com<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">           </span>-Y<span class="w"> </span>GSSAPI<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">           </span>-b<span class="w"> </span><span class="s2">&quot;DC=corp,DC=example,DC=com&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">           </span><span class="s2">&quot;(objectClass=organizationalUnit)&quot;</span><span class="w"> </span>ou
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Check current Kerberos tickets</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>klist
 </code></pre></div>
 <h2 id="service-account-bind-configuration">Service Account Bind Configuration<a class="headerlink" href="#service-account-bind-configuration" title="Permanent link">&para;</a></h2>
 <p>Service accounts used for LDAP bind should be dedicated, low-privilege accounts.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Create a dedicated service account in AD</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">New-ADUser</span> <span class="n">-Name</span> <span class="s2">&quot;svc-ldap&quot;</span> <span class="p">`</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>           <span class="n">-SamAccountName</span> <span class="s2">&quot;svc-ldap&quot;</span> <span class="p">`</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>           <span class="n">-UserPrincipalName</span> <span class="s2">&quot;svc-ldap@corp.example.com&quot;</span> <span class="p">`</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>           <span class="n">-AccountPassword</span> <span class="p">(</span><span class="nb">ConvertTo-SecureString</span> <span class="s2">&quot;P@ssw0rd!&quot;</span> <span class="n">-AsPlainText</span> <span class="n">-Force</span><span class="p">)</span> <span class="p">`</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>           <span class="n">-PasswordNeverExpires</span> <span class="nv">$true</span> <span class="p">`</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>           <span class="n">-Enabled</span> <span class="nv">$true</span> <span class="p">`</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>           <span class="n">-Path</span> <span class="s2">&quot;OU=Service Accounts,DC=corp,DC=example,DC=com&quot;</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c"># Grant only read access to the directory (deny write by default via AD defaults)</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="c"># Set delegation: right-click OU &gt; Delegate Control &gt; Read all user info</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Create a dedicated service account in AD</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">New-ADUser</span> <span class="n">-Name</span> <span class="s2">&quot;svc-ldap&quot;</span> <span class="p">`</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>           <span class="n">-SamAccountName</span> <span class="s2">&quot;svc-ldap&quot;</span> <span class="p">`</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>           <span class="n">-UserPrincipalName</span> <span class="s2">&quot;svc-ldap@corp.example.com&quot;</span> <span class="p">`</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>           <span class="n">-AccountPassword</span> <span class="p">(</span><span class="nb">ConvertTo-SecureString</span> <span class="s2">&quot;P@ssw0rd!&quot;</span> <span class="n">-AsPlainText</span> <span class="n">-Force</span><span class="p">)</span> <span class="p">`</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>           <span class="n">-PasswordNeverExpires</span> <span class="nv">$true</span> <span class="p">`</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>           <span class="n">-Enabled</span> <span class="nv">$true</span> <span class="p">`</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>           <span class="n">-Path</span> <span class="s2">&quot;OU=Service Accounts,DC=corp,DC=example,DC=com&quot;</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c"># Grant only read access to the directory (deny write by default via AD defaults)</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c"># Set delegation: right-click OU &gt; Delegate Control &gt; Read all user info</span>
 </code></pre></div>
 <h2 id="anonymous-bind-risks">Anonymous Bind Risks<a class="headerlink" href="#anonymous-bind-risks" title="Permanent link">&para;</a></h2>
 <p>Anonymous bind allows queries without authentication. In Active Directory, anonymous bind is disabled by default since Windows Server 2003.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Test whether anonymous bind is permitted</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ldapsearch<span class="w"> </span>-H<span class="w"> </span>ldap://dc01.corp.example.com<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">           </span>-x<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">           </span>-b<span class="w"> </span><span class="s2">&quot;DC=corp,DC=example,DC=com&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">           </span><span class="s2">&quot;(objectClass=*)&quot;</span><span class="w"> </span>dn<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># If anonymous access returns results, enforce restriction on the DC:</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># HKLM\SYSTEM\CurrentControlSet\Services\NTDS\Parameters</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># &quot;DSHeuristics&quot; value — see KB 326690</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Test whether anonymous bind is permitted</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ldapsearch<span class="w"> </span>-H<span class="w"> </span>ldap://dc01.corp.example.com<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">           </span>-x<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">           </span>-b<span class="w"> </span><span class="s2">&quot;DC=corp,DC=example,DC=com&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">           </span><span class="s2">&quot;(objectClass=*)&quot;</span><span class="w"> </span>dn<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># If anonymous access returns results, enforce restriction on the DC:</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># HKLM\SYSTEM\CurrentControlSet\Services\NTDS\Parameters</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># &quot;DSHeuristics&quot; value — see KB 326690</span>
 </code></pre></div>
 <h2 id="bind-test-checklist">Bind Test Checklist<a class="headerlink" href="#bind-test-checklist" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># 1. Resolve the DC name</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>nslookup<span class="w"> </span>dc01.corp.example.com
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># 2. Test port reachability</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>nc<span class="w"> </span>-zv<span class="w"> </span>dc01.corp.example.com<span class="w"> </span><span class="m">389</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>nc<span class="w"> </span>-zv<span class="w"> </span>dc01.corp.example.com<span class="w"> </span><span class="m">636</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># 3. Test simple bind</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>ldapsearch<span class="w"> </span>-H<span class="w"> </span>ldap://dc01.corp.example.com<span class="w"> </span>-x<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">           </span>-D<span class="w"> </span><span class="s2">&quot;svc-ldap@corp.example.com&quot;</span><span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;P@ssw0rd!&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">           </span>-b<span class="w"> </span><span class="s2">&quot;&quot;</span><span class="w"> </span>-s<span class="w"> </span>base<span class="w"> </span><span class="s2">&quot;(objectClass=*)&quot;</span><span class="w"> </span>supportedSASLMechanisms
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="c1"># 4. Check supported SASL mechanisms</span>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>ldapsearch<span class="w"> </span>-H<span class="w"> </span>ldap://dc01.corp.example.com<span class="w"> </span>-x<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="w">           </span>-b<span class="w"> </span><span class="s2">&quot;&quot;</span><span class="w"> </span>-s<span class="w"> </span>base<span class="w"> </span><span class="s2">&quot;(objectClass=*)&quot;</span><span class="w"> </span>supportedSASLMechanisms
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># 1. Resolve the DC name</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>nslookup<span class="w"> </span>dc01.corp.example.com
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># 2. Test port reachability</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>nc<span class="w"> </span>-zv<span class="w"> </span>dc01.corp.example.com<span class="w"> </span><span class="m">389</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>nc<span class="w"> </span>-zv<span class="w"> </span>dc01.corp.example.com<span class="w"> </span><span class="m">636</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># 3. Test simple bind</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>ldapsearch<span class="w"> </span>-H<span class="w"> </span>ldap://dc01.corp.example.com<span class="w"> </span>-x<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">           </span>-D<span class="w"> </span><span class="s2">&quot;svc-ldap@corp.example.com&quot;</span><span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;P@ssw0rd!&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">           </span>-b<span class="w"> </span><span class="s2">&quot;&quot;</span><span class="w"> </span>-s<span class="w"> </span>base<span class="w"> </span><span class="s2">&quot;(objectClass=*)&quot;</span><span class="w"> </span>supportedSASLMechanisms
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c1"># 4. Check supported SASL mechanisms</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>ldapsearch<span class="w"> </span>-H<span class="w"> </span>ldap://dc01.corp.example.com<span class="w"> </span>-x<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="w">           </span>-b<span class="w"> </span><span class="s2">&quot;&quot;</span><span class="w"> </span>-s<span class="w"> </span>base<span class="w"> </span><span class="s2">&quot;(objectClass=*)&quot;</span><span class="w"> </span>supportedSASLMechanisms
 </code></pre></div>
 
 

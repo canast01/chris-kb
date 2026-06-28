@@ -8316,23 +8316,7 @@ Health Checks reference covering Daily Checks, Health Check, Array Health, Blade
 <p>Part of the <a href="../">FlashBlade Operations</a> reference.</p>
 </blockquote>
 <hr />
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>hub: &quot;FlashBlade\nOperations&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>run_this_routine: &quot;Run This Routine&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>daily_checks: &quot;Daily Checks&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>health_check: &quot;Health Check&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>array_health: &quot;Array Health&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>blade_health: &quot;Blade Health&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>drive_media_health: &quot;Drive / Media Health&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>hub -&gt; run_this_routine
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>hub -&gt; daily_checks
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>hub -&gt; health_check
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>hub -&gt; array_health
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>hub -&gt; blade_health
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>hub -&gt; drive_media_health
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp9kEGLwjAUhO_5FY_eF-89CK6y7GURxKMQns2jL2w2lSQVi_S_mzR0W7R4nMk3SWaUdlQF3dgSnK45CMHtuYTiy6DnT4OKTnZ_IYeJ8QXcPeOFSmC6Yd3YXrjWysDaS9e0Qdt4VBxaC8dowSFbUyq9hbY21AuF2nSyYqp-fczskoTtIBd5JjSBcyDy34PMgUUencNO5lTkN0lCTi3y59R14ofq73jl9JXkHymNU2qXTFjBT7LfpdPK8LGG5_VGf77O6M0XGL15y9GbN_m_7-W34gGuYLOx?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Access:</strong> Storage admin credentials (cluster admin or equivalent)</li>
@@ -8411,38 +8395,38 @@ Health Checks reference covering Daily Checks, Health Check, Array Health, Blade
 <li>[ ] All network interfaces are <code>up</code>: <code>purefb network interface list</code></li>
 <li>[ ] Purity//FB version is within Pure's supported N-2 release window</li>
 </ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># FlashBlade array status and Purity//FB version</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>purefb<span class="w"> </span>array<span class="w"> </span>list
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># All blades and their health state</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>purefb<span class="w"> </span>blade<span class="w"> </span>list
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># All hardware components (PSUs, fans, FMs) and status</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>purefb<span class="w"> </span>hardware<span class="w"> </span>list
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># All filesystems with provisioned and used capacity</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>purefb<span class="w"> </span>filesystem<span class="w"> </span>list
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># All S3 buckets and usage</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>purefb<span class="w"> </span>bucket<span class="w"> </span>list
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="c1"># All active alerts</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>purefb<span class="w"> </span>alert<span class="w"> </span>list
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="c1"># ActiveDR replication links and lag</span>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>purefb<span class="w"> </span>replication<span class="w"> </span>list
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="c1"># All snapshots for filesystems and object store</span>
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>purefb<span class="w"> </span>snap<span class="w"> </span>list
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="c1"># Network interfaces and their operational state</span>
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>purefb<span class="w"> </span>network<span class="w"> </span>interface<span class="w"> </span>list
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># FlashBlade array status and Purity//FB version</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>purefb<span class="w"> </span>array<span class="w"> </span>list
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># All blades and their health state</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>purefb<span class="w"> </span>blade<span class="w"> </span>list
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># All hardware components (PSUs, fans, FMs) and status</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>purefb<span class="w"> </span>hardware<span class="w"> </span>list
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># All filesystems with provisioned and used capacity</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>purefb<span class="w"> </span>filesystem<span class="w"> </span>list
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># All S3 buckets and usage</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>purefb<span class="w"> </span>bucket<span class="w"> </span>list
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># All active alerts</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>purefb<span class="w"> </span>alert<span class="w"> </span>list
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="c1"># ActiveDR replication links and lag</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>purefb<span class="w"> </span>replication<span class="w"> </span>list
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="c1"># All snapshots for filesystems and object store</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>purefb<span class="w"> </span>snap<span class="w"> </span>list
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="c1"># Network interfaces and their operational state</span>
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>purefb<span class="w"> </span>network<span class="w"> </span>interface<span class="w"> </span>list
 </code></pre></div>
 <h2 id="array-health">Array Health<a class="headerlink" href="#array-health" title="Permanent link">&para;</a></h2>
 <p><img alt="Array Health" src="../../../../../assets/storage-pure-flashblade-hc-array-health.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>purefb<span class="w"> </span>array
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>purefb<span class="w"> </span>hardware
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>purefb<span class="w"> </span>alert<span class="w"> </span>list
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>purefb<span class="w"> </span>array
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>purefb<span class="w"> </span>hardware
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>purefb<span class="w"> </span>alert<span class="w"> </span>list
 </code></pre></div>
 <p>Or via the FlashBlade GUI:
 - <strong>Overview → Array</strong> — overall health summary
@@ -8450,23 +8434,23 @@ Health Checks reference covering Daily Checks, Health Check, Array Health, Blade
 - <strong>Alerts → Active</strong> — unacknowledged alerts</p>
 <h2 id="blade-health">Blade Health<a class="headerlink" href="#blade-health" title="Permanent link">&para;</a></h2>
 <p><img alt="Blade Health" src="../../../../../assets/storage-pure-flashblade-hc-blade-health.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>purefb<span class="w"> </span>blade<span class="w"> </span>list
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>purefb<span class="w"> </span>blade<span class="w"> </span>list
 </code></pre></div>
 <p>All blades should show <code>status: healthy</code>. Any blade showing <code>unhealthy</code> or <code>failed</code> requires investigation.</p>
 <h2 id="drive-media-health">Drive / Media Health<a class="headerlink" href="#drive-media-health" title="Permanent link">&para;</a></h2>
 <p><img alt="Drive / Media Health" src="../../../../../assets/storage-pure-flashblade-hc-drive-media-health.svg" /></p>
 <p>FlashBlade uses direct-attached blade storage. Drive-level health is abstracted — monitor at the blade level:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>purefb<span class="w"> </span>blade<span class="w"> </span>list<span class="w"> </span>--all
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>purefb<span class="w"> </span>blade<span class="w"> </span>list<span class="w"> </span>--all
 </code></pre></div>
 <h2 id="network-interface-health">Network Interface Health<a class="headerlink" href="#network-interface-health" title="Permanent link">&para;</a></h2>
 <p><img alt="Network Interface Health" src="../../../../../assets/storage-pure-flashblade-hc-network-interface-health.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>purefb<span class="w"> </span>network-interface<span class="w"> </span>list
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>purefb<span class="w"> </span>network-interface<span class="w"> </span>list
 </code></pre></div>
 <p>All data VIPs should show <code>enabled: true</code> and <code>type: vip</code>.</p>
 <h2 id="replication-health">Replication Health<a class="headerlink" href="#replication-health" title="Permanent link">&para;</a></h2>
 <p><img alt="Replication Health" src="../../../../../assets/storage-pure-flashblade-hc-replication-health.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>purefb<span class="w"> </span>fs-replica-link<span class="w"> </span>list
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>purefb<span class="w"> </span>bucket-replica-link<span class="w"> </span>list
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>purefb<span class="w"> </span>fs-replica-link<span class="w"> </span>list
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>purefb<span class="w"> </span>bucket-replica-link<span class="w"> </span>list
 </code></pre></div>
 <p>Verify replica links show <code>lag-time</code> within expected RPO.</p>
 <h2 id="pre-change-checklist">Pre-Change Checklist<a class="headerlink" href="#pre-change-checklist" title="Permanent link">&para;</a></h2>

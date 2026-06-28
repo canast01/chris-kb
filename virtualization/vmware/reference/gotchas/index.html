@@ -9291,28 +9291,12 @@ Known VMware platform pitfalls, unexpected behaviours, and operational traps. Ea
 <p><img alt="VMware Platform Gotchas" src="../../../../assets/virtualization-vmware-reference-gotchas-index.svg" /></p>
 <p>Known pitfalls, unexpected behaviours, and non-obvious operational traps across the VMware platform. Each entry documents the symptom, root cause, and corrective or preventive action.</p>
 <hr />
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>center: &quot;Gotchas&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>vsan_clomrepairdelay_catches_admins_: &quot;vSAN — clomRepairDelay Catches Admins Off Guard&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>vsan_esa_and_osa_are_mutually_exclus: &quot;vSAN — ESA and OSA Are Mutually Exclusive per Disk Group&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>vsan_stretched_cluster_witness_must_: &quot;vSAN — Stretched Cluster Witness Must Not Be Domain-Joined&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>nsx_dfw_policy_must_be_published_to_: &quot;NSX — DFW Policy Must Be Published to Take Effect&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>nsx_transport_node_reboot_required_a: &quot;NSX — Transport Node Reboot Required After Host Profile Appl&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>nsx_edge_vm_cpu_must_be_pinned_to_a_: &quot;NSX — Edge VM CPU Must Be Pinned to a Dedicated NUMA Node fo&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>center -&gt; vsan_clomrepairdelay_catches_admins_
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>center -&gt; vsan_esa_and_osa_are_mutually_exclus
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>center -&gt; vsan_stretched_cluster_witness_must_
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>center -&gt; nsx_dfw_policy_must_be_published_to_
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>center -&gt; nsx_transport_node_reboot_required_a
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>center -&gt; nsx_edge_vm_cpu_must_be_pinned_to_a_
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNkt1uGjEQRu95ilHu8wJcVNqyhKoSBIX89G40rGfBitfj2l4Cqir1IfqEfZLauyAICiJXo5WO98xnf0p7rqIWOwSvV-s4GFRsI_sh3EwkVmsKN_ArrMnxENa8pZXY34NNIIuVkcazI-0VG9phRQnngKQabQOmH2wWxQz-_fkLGX3o0DKjMOpRKDoU7usaJi15dVTlpciuDO9lHAjJKpQ8PWPTxpaM2SFvK9OGU9l4UUBC4T7NwjNM9yiMO1RvGBx7KHV4hYmX1l22hug5b6own0y3gm86Wg4h-UN8F3FxQGHUo_DSo8kfIswkwleGUhrS9va7aMsfp7Vhi6p-QydGV7ves2R07dLokDeJkr2zxY9OW969wLxDe09yzA8oRIFHemUY13USXNRFTzY48RGtKEbPS5GYxs82dUMhnegeD2gKpBgeOjSNHoWizsG_SVpk7qXWhqFwzlw0s1oxbhqsXHtMqq3tY9Jp0HFC4XkKo_nTMWmH5pgEJSudGpg-Z0_Tol-vlg_N-4bD7Rf4TJHP8StVPMevdOgE_8zTn-HXnu4Mv3bfg_8c24MI?" /></p>
 <h2 id="vsan-clomrepairdelay-catches-admins-off-guard">vSAN — clomRepairDelay Catches Admins Off Guard<a class="headerlink" href="#vsan-clomrepairdelay-catches-admins-off-guard" title="Permanent link">&para;</a></h2>
 <p><strong>Symptom:</strong> A host goes down during maintenance; no rebuild starts for 60 minutes. Alerts fire. Team panics.</p>
 <p><strong>Cause:</strong> <code>clomRepairDelay</code> (default 60 min) is intentional — vSAN waits to see if the host returns before triggering a rebuild. It is not a bug; it prevents unnecessary I/O churn when a host bounces briefly.</p>
 <p><strong>Fix / Avoid:</strong> For planned maintenance, put the host in Maintenance Mode (Full Data Migration or Ensure Accessibility) before powering off — this triggers an immediate, orderly resync. For an emergency outage where you need to force an early rebuild, reduce the delay temporarily:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>cluster<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--clom-repair-delay-minutes<span class="w"> </span><span class="m">0</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>cluster<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--clom-repair-delay-minutes<span class="w"> </span><span class="m">0</span>
 </code></pre></div>
 <p>Reset to the original value (60) after the resync completes.</p>
 <hr />
@@ -9345,7 +9329,7 @@ Known VMware platform pitfalls, unexpected behaviours, and operational traps. Ea
 <p><strong>Symptom:</strong> vCenter services fail to start; hosts disconnect; SSO authentication fails; the web UI shows a certificate error on login.</p>
 <p><strong>Cause:</strong> VMCA issues machine certificates with a 2-year validity by default. When the machine SSL certificate expires, the <code>vpxd</code> daemon, lookup service, and SSO token service all fail simultaneously because they mutually authenticate using the same certificate chain.</p>
 <p><strong>Fix / Avoid:</strong> Monitor VMCA certificate expiry proactively:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>/usr/lib/vmware-vmafd/bin/vecs-cli<span class="w"> </span>entry<span class="w"> </span>list<span class="w"> </span>--store<span class="w"> </span>MACHINE_SSL_CERT<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>valid
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>/usr/lib/vmware-vmafd/bin/vecs-cli<span class="w"> </span>entry<span class="w"> </span>list<span class="w"> </span>--store<span class="w"> </span>MACHINE_SSL_CERT<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>valid
 </code></pre></div>
 <p>Set a 60-day alert. Renew certificates proactively using <code>certificate-manager</code> before expiry. Do not wait for services to fail.</p>
 <hr />
@@ -9353,7 +9337,7 @@ Known VMware platform pitfalls, unexpected behaviours, and operational traps. Ea
 <p><strong>Symptom:</strong> An admin deletes or powers off vCLS agent VMs to reclaim resources; DRS immediately stops working for the affected cluster.</p>
 <p><strong>Cause:</strong> vCLS (vSphere Cluster Services) agent VMs are automatically managed by vCenter and are required for DRS and HA to function. vCenter will attempt to recreate any deleted agent VMs, but DRS operates in a degraded state until they are healthy.</p>
 <p><strong>Fix / Avoid:</strong> Never delete vCLS agent VMs. If troubleshooting requires temporarily disabling vCLS, use Retreat Mode by setting the following key in vCenter advanced settings:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>config.vcls.clusters.&lt;cluster-id&gt;.enabled = false
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>config.vcls.clusters.&lt;cluster-id&gt;.enabled = false
 </code></pre></div>
 <p>Re-enable after troubleshooting is complete. vCenter will automatically recreate healthy agent VMs when Retreat Mode is disabled.</p>
 <hr />
@@ -9366,7 +9350,7 @@ Known VMware platform pitfalls, unexpected behaviours, and operational traps. Ea
 <p><strong>Symptom:</strong> The Quick Boot option is greyed out for a host, or a host configured for Quick Boot falls back to a full reboot during remediation.</p>
 <p><strong>Cause:</strong> Quick Boot requires UEFI firmware, compatible hardware (listed on the VMware HCL), and no PCI passthrough devices attached to any VMs on the host. Any PCI passthrough assignment disables Quick Boot for the entire host.</p>
 <p><strong>Fix / Avoid:</strong> Check Quick Boot compatibility:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>vim-cmd<span class="w"> </span>hostsvc/quickboot/enabled
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>vim-cmd<span class="w"> </span>hostsvc/quickboot/enabled
 </code></pre></div>
 <p>Remove PCI passthrough device assignments from all VMs on the host before enabling Quick Boot. Verify against the HCL if the host is borderline-compatible.</p>
 <hr />
@@ -9399,7 +9383,7 @@ Known VMware platform pitfalls, unexpected behaviours, and operational traps. Ea
 <p><strong>Symptom:</strong> After upgrading SDDC Manager, NSX Manager shows as "Unsupported version" in the SDDC Manager UI.</p>
 <p><strong>Cause:</strong> VCF enforces strict BOM (Bill of Materials) ordering. NSX must be upgraded after SDDC Manager and vCenter, never before. Upgrading NSX outside of SDDC Manager orchestration, or upgrading it first, breaks the BOM alignment and puts the environment into an unsupported state.</p>
 <p><strong>Fix / Avoid:</strong> Always follow the VCF upgrade sequence:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>SDDC Manager → vCenter → ESXi → NSX → vSAN on-disk format
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>SDDC Manager → vCenter → ESXi → NSX → vSAN on-disk format
 </code></pre></div>
 <p>Never upgrade any component outside of SDDC Manager orchestration. If a component was upgraded out of order, open a VMware support case before proceeding — attempting to continue LCM operations in a mismatched BOM state can cause further failures.</p>
 <hr />
@@ -9417,7 +9401,7 @@ Known VMware platform pitfalls, unexpected behaviours, and operational traps. Ea
 <p><strong>What catches admins:</strong> New TKC (Tanzu Kubernetes Cluster) creation requests hang at "Pending" indefinitely. Existing clusters are unaffected. The Supervisor control plane shows no error in the vCenter UI.</p>
 <p><strong>Why it happens:</strong> The Supervisor Namespace IP range is configured during Workload Management enablement and is fixed at that point. Each Supervisor VM, each TKC control plane VM, and each TKC worker node consumes an IP from this range. In environments where the initial range was sized for a pilot and then expanded with additional TKCs, the range becomes exhausted. When all IPs are consumed, new cluster creation requests wait for an IP indefinitely with no explicit "out of IP addresses" error surfaced to the administrator.</p>
 <p><strong>How to avoid / fix:</strong> Size the Supervisor Namespace IP range to at least 5x the anticipated peak number of TKC nodes, including control planes, at design time. To check current consumption:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>virtualmachinesetresourcepolicies<span class="w"> </span>-A
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>virtualmachinesetresourcepolicies<span class="w"> </span>-A
 </code></pre></div>
 <p>If the range is exhausted, the only remediation is to remove unused TKCs to free IPs, or to re-enable Workload Management with a larger range — which requires destroying all existing TKCs. Plan the range generously at initial deployment.</p>
 <hr />
@@ -9425,7 +9409,7 @@ Known VMware platform pitfalls, unexpected behaviours, and operational traps. Ea
 <p><strong>What catches admins:</strong> An administrator attempts to upgrade a TKC from Kubernetes 1.25 to 1.27 in a single operation to catch up after a period of deferred upgrades. The upgrade request is rejected or silently queued without explanation.</p>
 <p><strong>Why it happens:</strong> Tanzu Kubernetes Grid enforces the same sequential minor-version upgrade constraint as upstream Kubernetes. A TKC on 1.25 must be upgraded to 1.26 before it can be upgraded to 1.27. Unlike vSphere component upgrades which can be batched, Kubernetes minor version skipping is not supported and will be blocked by the TKG service even if the target image is available in the content library.</p>
 <p><strong>How to avoid / fix:</strong> Establish a Kubernetes version lifecycle policy that limits the acceptable age of a running TKC to no more than two minor versions behind the current supported release. Check TKC versions regularly:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>tkc<span class="w"> </span>-A
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>tkc<span class="w"> </span>-A
 </code></pre></div>
 <p>For clusters that have fallen behind, plan sequential upgrade windows rather than attempting a single jump. Each minor version upgrade should be validated (workloads running, kube-system pods healthy) before proceeding to the next step.</p>
 <hr />

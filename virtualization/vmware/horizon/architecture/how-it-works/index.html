@@ -9266,44 +9266,8 @@ How It Works reference covering Component Overview, Connection Flow, Blast Extre
 *Applies to: Horizon 8.x*
 </div>
 <p><img alt="Horizon — How It Works" src="../../../../../assets/virtualization-vmware-horizon-architecture-how-it-works.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>center: &quot;Horizon&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>component_overview: &quot;Component Overview&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>blast_extreme_vs_pcoip: &quot;Blast Extreme vs PCoIP&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>session_broker_role: &quot;Session Broker Role&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>security_server_deprecation: &quot;Security Server Deprecation&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>instant_clone_technology_detail: &quot;Instant Clone Technology Detail&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>center -&gt; component_overview
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>center -&gt; blast_extreme_vs_pcoip
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>center -&gt; session_broker_role
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>center -&gt; security_server_deprecation
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>center -&gt; instant_clone_technology_detail
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>@startuml
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>skinparam sequenceArrowThickness 1.5
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>skinparam roundcorner 5
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>actor &quot;End User&quot; as USR
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>participant &quot;Horizon Client&quot; as CLT
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>participant &quot;Unified Access\nGateway (UAG)&quot; as UAG
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>participant &quot;Connection Server&quot; as CS
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>participant &quot;AD / IdP&quot; as AD
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>participant &quot;VDI Pool\n(Instant Clones)&quot; as VDI
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>USR -&gt; CLT: Launch Horizon Client
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>CLT -&gt; UAG: HTTPS / Blast Extreme
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>UAG -&gt; CS: Forward authentication
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>CS -&gt; AD: LDAP credential check
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>AD --&gt; CS: Groups + entitlements
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>CS --&gt; CLT: Desktop list
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>USR -&gt; CLT: Select desktop
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>CLT -&gt; UAG: Tunnel session
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>UAG -&gt; VDI: Blast / PCoIP protocol
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>VDI --&gt; USR: Desktop stream
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>@enduml
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqFkcFOwzAQRO_-ilXu_EAOHBqQ6ImK9m657iqxcL3W2oQW1H9nUxcahCtu1rzZ8Xq8c4w2OwotsOuHrJTFkJFbaJ6I3QeFBj7TYCK2MODB9BROytI-UhCfphF5dPgu9u5bhOeLeJ2c7jCh93hSW29S1njIjHvUY9LRkosyv5gAPBYAY4JVR8tVNSNhSrKy3jK9ImsmL7xZFxUWZxVeRL0xbd_Y5aNOsqaM7zAKNaUESSkU1mcKD1daTXMhyTFr6-XxOqMdAnnqjxKbjfOSuCwO6CYHbH4cEj05qqmXX4C7e_hb9gzW25wZKlX9ojermLn-eaL6AkpS2HQ=?" /></p>
+<p><img alt="Kroki" src="https://kroki.io/plantuml/svg/eNpVUj1PwzAQ3f0rTp2KEFQMXTKghqSkkTpEJGXqYjmHatU5B9uhwK_nnAZBVr_n92VvfJAuDJ0R_qypl0524PF9QFKYOmcvzUmrM6H38HC__kdydqBWWUfoYC2EVME6WGyphYNHtwDp4VC_CCYHrXQvKcBiZ53-tgSZ0Uhh5GT7Zs45kH7T2EKqFJseqZABL_ILloe0uLnKpsX8SmaJUAXNyjW6j8k9q-esNIcVlG01gmk-B1_zEiprzZGWJfEkfJYZy7WvlgwLwXXg7jEmTmAvB1InmBcSDEUGB0xg1zRVzY5PRvoA28_gsEPB0KhRJ_Bs3UW6FuQQTnxZKxkbiKyOhDRnjzytQDlsIyoNqBOqs-Aad5NCwW_Qe7iFSAiG9Sn4UeA3Zo7-HGwPRvswy1-j4cWgveKz4M3Aaxr-BN7HPFNiXiCZuqygymxZQe9ssMoaEceLlmzwZ-m5sOzEBqmNv-sHr8vHgg==?" /></p>
 <h2 id="component-overview">Component Overview<a class="headerlink" href="#component-overview" title="Permanent link">&para;</a></h2>
 <p>VMware Horizon is a broker-based VDI and published application delivery platform. The core components and their relationships:</p>
 <table>
@@ -9364,15 +9328,15 @@ How It Works reference covering Component Overview, Connection Flow, Blast Extre
 </table>
 <h3 id="component-interaction-diagram-text">Component Interaction Diagram (text)<a class="headerlink" href="#component-interaction-diagram-text" title="Permanent link">&para;</a></h3>
 <h3 id="external-client-via-uag">External Client via UAG<a class="headerlink" href="#external-client-via-uag" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>1. User opens Horizon Client → enters UAG external FQDN
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>2. Horizon Client → HTTPS (443) → UAG (DMZ)
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>3. UAG forwards authentication request → Connection Server (internal, 443)
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>4. Authentication + entitlement check on Connection Server
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>5. Connection Server returns session ticket to UAG
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>6. UAG returns connection details to client
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>7. Client establishes Blast Extreme (TCP 8443 / UDP 8443) → UAG
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>8. UAG proxies display protocol traffic → Horizon Agent in VM
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>   (UAG acts as a Blast/PCoIP proxy — client never directly reaches internal VM)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>1. User opens Horizon Client → enters UAG external FQDN
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>2. Horizon Client → HTTPS (443) → UAG (DMZ)
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>3. UAG forwards authentication request → Connection Server (internal, 443)
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>4. Authentication + entitlement check on Connection Server
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>5. Connection Server returns session ticket to UAG
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>6. UAG returns connection details to client
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>7. Client establishes Blast Extreme (TCP 8443 / UDP 8443) → UAG
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>8. UAG proxies display protocol traffic → Horizon Agent in VM
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>   (UAG acts as a Blast/PCoIP proxy — client never directly reaches internal VM)
 </code></pre></div>
 <pre class="mermaid"><code>flowchart LR
     EP["Endpoint Client\n(external)"]:::blue
@@ -9580,9 +9544,9 @@ How It Works reference covering Component Overview, Connection Flow, Blast Extre
 <p><strong>ClonePrep log location (in guest):</strong> <code>C:\Windows\Temp\vmware-viewcomposer-ga-new-*.log</code></p>
 <h3 id="replica-and-parent-vm-naming">Replica and Parent VM Naming<a class="headerlink" href="#replica-and-parent-vm-naming" title="Permanent link">&para;</a></h3>
 <p>Horizon names these automatically:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nt">Replica</span><span class="p">:</span><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">&lt;pool-name&gt;-replica-&lt;timestamp&gt;</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nt">Parent</span><span class="p">:</span><span class="w">   </span><span class="l l-Scalar l-Scalar-Plain">&lt;pool-name&gt;-parent-&lt;timestamp&gt;</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="nt">Desktop</span><span class="p">:</span><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">&lt;naming-pattern&gt;-{n}   (e.g., WIN10-{n} → WIN10-001, WIN10-002)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nt">Replica</span><span class="p">:</span><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">&lt;pool-name&gt;-replica-&lt;timestamp&gt;</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nt">Parent</span><span class="p">:</span><span class="w">   </span><span class="l l-Scalar l-Scalar-Plain">&lt;pool-name&gt;-parent-&lt;timestamp&gt;</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nt">Desktop</span><span class="p">:</span><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">&lt;naming-pattern&gt;-{n}   (e.g., WIN10-{n} → WIN10-001, WIN10-002)</span>
 </code></pre></div>
 <p>The replica and parent VMs consume resources on the ESXi host and datastore — size golden image appropriately and plan for replica storage overhead (one replica per datastore per pool).</p>
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>

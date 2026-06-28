@@ -8186,15 +8186,7 @@ Daily operations centre on replication health and authentication event monitorin
 *Applies to: Windows Server 2019 / 2022*
 </div>
 <p><img alt="Active Directory — Health Checks" src="../../../../../assets/compute-windows-server-active-directory-operations-health-ch.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>hub: &quot;Active Directory\nOperations&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>run_this_routine: &quot;Run This Routine&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>verify: &quot;Verify&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>hub -&gt; run_this_routine
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>hub -&gt; verify
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNptjsEKwjAMhu95itC7L9CDIHgXhngSRtXYBiQdaTscsne33RBBvIXv__InN1a6Zo5iUdmHDBDKxaLZVTgS7pc46nSWw0DqmpkMvlJwA1kM9HQ-ygxapM-BU6-xZJYama4IHivCbkXfrVbpxD9ohpGU71O1T8vw12kf4WaLvzc-fO2ANx5DSKc=?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Access:</strong> Local Administrator or Domain Admin on target hosts</li>
@@ -8208,52 +8200,52 @@ Daily operations centre on replication health and authentication event monitorin
 <ol>
 <li>
 <p><strong>DC replication status</strong> — check for replication failures across all domain controllers:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">repadmin</span> <span class="p">/</span><span class="n">showrepl</span>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">repadmin</span> <span class="p">/</span><span class="n">showrepl</span>
 </code></pre></div></p>
 </li>
 <li>
 <p><strong>DC replication summary</strong> — review fail count for all DCs:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">repadmin</span> <span class="p">/</span><span class="n">replsummary</span>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">repadmin</span> <span class="p">/</span><span class="n">replsummary</span>
 </code></pre></div></p>
 </li>
 <li>
 <p><strong>FSMO roles</strong> — verify each FSMO role is on the expected DC:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">netdom</span> <span class="n">query</span> <span class="n">fsmo</span>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">netdom</span> <span class="n">query</span> <span class="n">fsmo</span>
 </code></pre></div></p>
 </li>
 <li>
 <p><strong>DC services</strong> — confirm critical services are running (repeat per DC):
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nb">Get-Service</span> <span class="n">adws</span><span class="p">,</span><span class="n">dns</span><span class="p">,</span><span class="n">kdc</span><span class="p">,</span><span class="n">netlogon</span><span class="p">,</span><span class="n">w32tm</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">Name</span><span class="p">,</span><span class="n">Status</span>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nb">Get-Service</span> <span class="n">adws</span><span class="p">,</span><span class="n">dns</span><span class="p">,</span><span class="n">kdc</span><span class="p">,</span><span class="n">netlogon</span><span class="p">,</span><span class="n">w32tm</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">Name</span><span class="p">,</span><span class="n">Status</span>
 </code></pre></div></p>
 </li>
 <li>
 <p><strong>AD replication queue</strong> — should be empty or near-zero:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="n">repadmin</span> <span class="p">/</span><span class="n">queue</span>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">repadmin</span> <span class="p">/</span><span class="n">queue</span>
 </code></pre></div></p>
 </li>
 <li>
 <p><strong>SYSVOL replication (DFSR)</strong> — check for no backlog:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="n">dfsrdiag</span> <span class="n">replicationstate</span>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="n">dfsrdiag</span> <span class="n">replicationstate</span>
 </code></pre></div></p>
 </li>
 <li>
 <p><strong>DNS health</strong> — all tests should return PASS:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="n">dcdiag</span> <span class="p">/</span><span class="n">test</span><span class="p">:</span><span class="n">dns</span> <span class="p">/</span><span class="n">s</span><span class="p">:&lt;</span><span class="n">dc-name</span><span class="p">&gt;</span>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="n">dcdiag</span> <span class="p">/</span><span class="n">test</span><span class="p">:</span><span class="n">dns</span> <span class="p">/</span><span class="n">s</span><span class="p">:&lt;</span><span class="n">dc-name</span><span class="p">&gt;</span>
 </code></pre></div></p>
 </li>
 <li>
 <p><strong>Time sync</strong> — check Source and Stratum; offset should be less than 5 seconds:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="n">w32tm</span> <span class="p">/</span><span class="n">query</span> <span class="p">/</span><span class="n">status</span>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="n">w32tm</span> <span class="p">/</span><span class="n">query</span> <span class="p">/</span><span class="n">status</span>
 </code></pre></div></p>
 </li>
 <li>
 <p><strong>DC connectivity</strong> — verify network-level DC reachability:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="n">dcdiag</span> <span class="p">/</span><span class="n">test</span><span class="p">:</span><span class="n">connectivity</span> <span class="p">/</span><span class="n">s</span><span class="p">:&lt;</span><span class="n">dc-name</span><span class="p">&gt;</span>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="n">dcdiag</span> <span class="p">/</span><span class="n">test</span><span class="p">:</span><span class="n">connectivity</span> <span class="p">/</span><span class="n">s</span><span class="p">:&lt;</span><span class="n">dc-name</span><span class="p">&gt;</span>
 </code></pre></div></p>
 </li>
 <li>
 <p><strong>Event log errors (last 24h)</strong> — surface recent Directory Service errors:
-    <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="nb">Get-EventLog</span> <span class="n">-LogName</span> <span class="s2">&quot;Directory Service&quot;</span> <span class="n">-EntryType</span> <span class="n">Error</span> <span class="n">-Newest</span> <span class="n">20</span> <span class="n">-ComputerName</span> <span class="p">&lt;</span><span class="n">dc</span><span class="p">&gt;</span>
+    <div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="nb">Get-EventLog</span> <span class="n">-LogName</span> <span class="s2">&quot;Directory Service&quot;</span> <span class="n">-EntryType</span> <span class="n">Error</span> <span class="n">-Newest</span> <span class="n">20</span> <span class="n">-ComputerName</span> <span class="p">&lt;</span><span class="n">dc</span><span class="p">&gt;</span>
 </code></pre></div></p>
 </li>
 </ol>

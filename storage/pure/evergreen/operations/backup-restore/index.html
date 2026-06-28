@@ -8674,23 +8674,7 @@ Backup & Restore reference covering Evergreen//Forever — No Traditional Backup
 </div>
 <p><img alt="Evergreen — Backup &amp; Restore" src="../../../../../assets/storage-pure-evergreen-operations-backup-restore.svg" /></p>
 <p><img alt="Evergreen — Backup &amp; Restore — Diagram" src="../../../../../assets/storage-pure-evergreen-operations-backup-restore-diagram.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>hub: &quot;Evergreen\nOperations&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>evergreenforever_no_traditional_back: &quot;Evergreen//Forever — No Traditional Backup Required&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>export_array_configuration: &quot;Export Array Configuration&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>preupgrade_configuration_snapshot: &quot;Pre-Upgrade Configuration Snapshot&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>restore_after_model_swap: &quot;Restore After Model Swap&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>pure1_configuration_audit: &quot;Pure1 Configuration Audit&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>checklist: &quot;Checklist&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>hub -&gt; evergreenforever_no_traditional_back
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>hub -&gt; export_array_configuration
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>hub -&gt; preupgrade_configuration_snapshot
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>hub -&gt; restore_after_model_swap
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>hub -&gt; pure1_configuration_audit
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>hub -&gt; checklist
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNkk1OwzAQhfc5xaj7qmKbBVKoYMePWtghWdNkmkQNthnbUISQOAQn5CR4CEl_lKjsLL3Pb948u6iZcl8bnQLXZeWTpAqrFCaXL8QlE-lHfWuJURA3gXdXoaUUKtpiafRHQh23NixnpY3yjEUtF7BRK8w3-3az2VULwvfnF9wYuN_BcBHhYGFBzyHGKnbjJCPqsqE4cGsNe4XM-KZyo9d1Gdp4MuZXhExEmO-Lg16WKdgyBqBDJ-U0WlcZHy3vmKYPLXToCMs_aNCayfm4qMK1j6U8mYIa5V7RRsdFK0EmElyLBMsoDUcMTGdH6TDExiSaaEehMtEGnfKK8k1TO7k5786DpHwBmJ7Df962Z0efpSNOlt2BY9X1RmOVdEC_afID4EASmg==?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Access:</strong> Storage admin credentials (cluster admin or equivalent)</li>
@@ -8707,34 +8691,34 @@ Backup & Restore reference covering Evergreen//Forever — No Traditional Backup
 <li>Array configuration snapshot before a model swap or controller upgrade</li>
 </ul>
 <h2 id="export-array-configuration">Export Array Configuration<a class="headerlink" href="#export-array-configuration" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Via purearray CLI — export support bundle (includes config snapshot)</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>purearray<span class="w"> </span>list<span class="w"> </span>--api-token<span class="w"> </span>&lt;token&gt;<span class="w"> </span>--address<span class="w"> </span>&lt;array-ip&gt;
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Via REST API — get array info</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>curl<span class="w"> </span>-s<span class="w"> </span>-k<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;x-auth-token: &lt;token&gt;&quot;</span><span class="w"> </span>https://&lt;array-ip&gt;/api/2.16/arrays<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Export protection groups</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>curl<span class="w"> </span>-s<span class="w"> </span>-k<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;x-auth-token: &lt;token&gt;&quot;</span><span class="w"> </span>https://&lt;array-ip&gt;/api/2.16/protection-groups<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Export host and host group mappings</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>curl<span class="w"> </span>-s<span class="w"> </span>-k<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;x-auth-token: &lt;token&gt;&quot;</span><span class="w"> </span>https://&lt;array-ip&gt;/api/2.16/hosts<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>curl<span class="w"> </span>-s<span class="w"> </span>-k<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;x-auth-token: &lt;token&gt;&quot;</span><span class="w"> </span>https://&lt;array-ip&gt;/api/2.16/host-groups<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Via purearray CLI — export support bundle (includes config snapshot)</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>purearray<span class="w"> </span>list<span class="w"> </span>--api-token<span class="w"> </span>&lt;token&gt;<span class="w"> </span>--address<span class="w"> </span>&lt;array-ip&gt;
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Via REST API — get array info</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>curl<span class="w"> </span>-s<span class="w"> </span>-k<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;x-auth-token: &lt;token&gt;&quot;</span><span class="w"> </span>https://&lt;array-ip&gt;/api/2.16/arrays<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Export protection groups</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>curl<span class="w"> </span>-s<span class="w"> </span>-k<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;x-auth-token: &lt;token&gt;&quot;</span><span class="w"> </span>https://&lt;array-ip&gt;/api/2.16/protection-groups<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Export host and host group mappings</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>curl<span class="w"> </span>-s<span class="w"> </span>-k<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;x-auth-token: &lt;token&gt;&quot;</span><span class="w"> </span>https://&lt;array-ip&gt;/api/2.16/hosts<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>curl<span class="w"> </span>-s<span class="w"> </span>-k<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;x-auth-token: &lt;token&gt;&quot;</span><span class="w"> </span>https://&lt;array-ip&gt;/api/2.16/host-groups<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
 </code></pre></div>
 <h2 id="pre-upgrade-configuration-snapshot">Pre-Upgrade Configuration Snapshot<a class="headerlink" href="#pre-upgrade-configuration-snapshot" title="Permanent link">&para;</a></h2>
 <p>Run before a scheduled controller or model swap to capture current state.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="ch">#!/usr/bin/env bash</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># evergreen-config-snapshot.sh</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nv">ARRAY_IP</span><span class="o">=</span><span class="s2">&quot;&lt;array-ip&gt;&quot;</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="s2">&quot;&lt;api-token&gt;&quot;</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nv">OUT_DIR</span><span class="o">=</span><span class="s2">&quot;./pure-config-</span><span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span><span class="s2">&quot;</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>mkdir<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$OUT_DIR</span><span class="s2">&quot;</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="k">for</span><span class="w"> </span>endpoint<span class="w"> </span><span class="k">in</span><span class="w"> </span>arrays<span class="w"> </span>hosts<span class="w"> </span>host-groups<span class="w"> </span>volumes<span class="w"> </span>protection-groups<span class="w"> </span>network-interfaces<span class="p">;</span><span class="w"> </span><span class="k">do</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">    </span>curl<span class="w"> </span>-s<span class="w"> </span>-k<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;x-auth-token: </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">        </span><span class="s2">&quot;https://</span><span class="nv">$ARRAY_IP</span><span class="s2">/api/2.16/</span><span class="nv">$endpoint</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.<span class="w"> </span>&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$OUT_DIR</span><span class="s2">/</span><span class="nv">$endpoint</span><span class="s2">.json&quot;</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Saved: </span><span class="nv">$OUT_DIR</span><span class="s2">/</span><span class="nv">$endpoint</span><span class="s2">.json&quot;</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="k">done</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Config snapshot complete: </span><span class="nv">$OUT_DIR</span><span class="s2">&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="ch">#!/usr/bin/env bash</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># evergreen-config-snapshot.sh</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nv">ARRAY_IP</span><span class="o">=</span><span class="s2">&quot;&lt;array-ip&gt;&quot;</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="s2">&quot;&lt;api-token&gt;&quot;</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nv">OUT_DIR</span><span class="o">=</span><span class="s2">&quot;./pure-config-</span><span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span><span class="s2">&quot;</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>mkdir<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$OUT_DIR</span><span class="s2">&quot;</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="k">for</span><span class="w"> </span>endpoint<span class="w"> </span><span class="k">in</span><span class="w"> </span>arrays<span class="w"> </span>hosts<span class="w"> </span>host-groups<span class="w"> </span>volumes<span class="w"> </span>protection-groups<span class="w"> </span>network-interfaces<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">    </span>curl<span class="w"> </span>-s<span class="w"> </span>-k<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;x-auth-token: </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">        </span><span class="s2">&quot;https://</span><span class="nv">$ARRAY_IP</span><span class="s2">/api/2.16/</span><span class="nv">$endpoint</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.<span class="w"> </span>&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$OUT_DIR</span><span class="s2">/</span><span class="nv">$endpoint</span><span class="s2">.json&quot;</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Saved: </span><span class="nv">$OUT_DIR</span><span class="s2">/</span><span class="nv">$endpoint</span><span class="s2">.json&quot;</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="k">done</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Config snapshot complete: </span><span class="nv">$OUT_DIR</span><span class="s2">&quot;</span>
 </code></pre></div>
 <h2 id="restore-after-model-swap">Restore After Model Swap<a class="headerlink" href="#restore-after-model-swap" title="Permanent link">&para;</a></h2>
 <p>After a new controller ships under Evergreen//Forever:</p>

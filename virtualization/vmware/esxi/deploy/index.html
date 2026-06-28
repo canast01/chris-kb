@@ -8990,25 +8990,7 @@ Step-by-step guide to deploying a new ESXi host: hardware readiness, installatio
     s8["✓ Verify"]
     s0 --&gt; s1 --&gt; s2 --&gt; s3 --&gt; s4 --&gt; s5 --&gt; s6 --&gt; s7 --&gt; s8
     style s8 fill:#2e7d32,color:#fff,stroke:#1b5e20</code></pre>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>plan: &quot;Plan&quot; {shape: oval}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>phase_1_physical_host_readiness: &quot;Phase 1: Physical Host Readiness&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>phase_2_esxi_installation: &quot;Phase 2: ESXi Installation&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>phase_3_network_configuration: &quot;Phase 3: Network Configuration&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>phase_4_storage_configuration: &quot;Phase 4: Storage Configuration&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>phase_5_add_host_to_vcenter: &quot;Phase 5: Add Host to vCenter&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>phase_6_hardening_baseline: &quot;Phase 6: Hardening &amp; Baseline&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>validate: &quot;Validate&quot; {shape: oval}
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>plan -&gt; phase_1_physical_host_readiness
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>phase_1_physical_host_readiness -&gt; phase_2_esxi_installation
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>phase_2_esxi_installation -&gt; phase_3_network_configuration
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>phase_3_network_configuration -&gt; phase_4_storage_configuration
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>phase_4_storage_configuration -&gt; phase_5_add_host_to_vcenter
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>phase_5_add_host_to_vcenter -&gt; phase_6_hardening_baseline
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>phase_6_hardening_baseline -&gt; validate
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNkj9PwzAQxfd8ilMHNob-HTwgQYVUFlRRCbGdjtjEFpYd2aaAEN8dp0nqghKXKU7uvV-se48rJ8qgrGHgVCVDUdSa4stkGx8T-PKSasHA7kl_F7UkL3CKtfz0qiSN0vqAThBXRnjfuBoFTBlsOwlsogQeekkiNr8lU2nRY2co_IdCZXwgram9UwecMbjdPSm4OxlmUHM0Irxb94qlNS-qenO_cXMG960A1qeCDHKBPlhHlRhBLhjsWsG_kUskztsVBov7Upgg3BG4ZHDNebu-YGG_PowzuBVKclwYZSp8jh90XPiRtmKw6adwATfdfBAXo1acQmN-7I5_i3AoCVxewZlGnGtMQgykP96LZBtJOt-DZB9JNZ95sg8mmEs3WYfSygTZGPtcih9dKF1e?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <!-- video-link -->
 <div class="admonition tip">
@@ -9066,13 +9048,13 @@ Step-by-step guide to deploying a new ESXi host: hardware readiness, installatio
 </table>
 <p><strong>DNS pre-creation</strong></p>
 <p>Create A and PTR records for the host FQDN before installing ESXi. ESXi registers its hostname at first boot — missing DNS causes vCenter join failures and HA agent errors.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Verify DNS resolves in both directions after record creation</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>nslookup<span class="w"> </span>esxi-host-01.domain.local
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>nslookup<span class="w"> </span><span class="m">10</span>.0.0.10
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Verify DNS resolves in both directions after record creation</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>nslookup<span class="w"> </span>esxi-host-01.domain.local
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>nslookup<span class="w"> </span><span class="m">10</span>.0.0.10
 </code></pre></div>
 <p><strong>NTP reachability</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># From a jump host on the management VLAN</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ntpdate<span class="w"> </span>-q<span class="w"> </span>ntp1.domain.local
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># From a jump host on the management VLAN</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ntpdate<span class="w"> </span>-q<span class="w"> </span>ntp1.domain.local
 </code></pre></div>
 <p><strong>Cabling</strong></p>
 <ul>
@@ -9118,17 +9100,17 @@ Step-by-step guide to deploying a new ESXi host: hardware readiness, installatio
 <li>Reboot — remove boot media</li>
 </ol>
 <p><strong>DCUI initial configuration (F2 → Configure Management Network)</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Network Adapters:    vmnic0 (select management NIC)
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>VLAN (optional):     &lt;management VLAN ID&gt;
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>IPv4 Configuration:  Static — IP, Subnet, Gateway
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>DNS Configuration:   Primary + Secondary DNS, Hostname (FQDN)
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>Custom DNS Suffixes: domain.local
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Network Adapters:    vmnic0 (select management NIC)
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>VLAN (optional):     &lt;management VLAN ID&gt;
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>IPv4 Configuration:  Static — IP, Subnet, Gateway
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>DNS Configuration:   Primary + Secondary DNS, Hostname (FQDN)
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>Custom DNS Suffixes: domain.local
 </code></pre></div>
 <p>After saving, test connectivity:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>F12 → Test Management Network → ping gateway, DNS, hostname
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>F12 → Test Management Network → ping gateway, DNS, hostname
 </code></pre></div>
 <p><strong>Enable SSH temporarily for configuration</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>F2 → Troubleshooting Options → Enable SSH
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>F2 → Troubleshooting Options → Enable SSH
 </code></pre></div>
 <hr />
 <h2 id="phase-3-network-configuration">Phase 3: Network Configuration<a class="headerlink" href="#phase-3-network-configuration" title="Permanent link">&para;</a></h2>
@@ -9175,78 +9157,78 @@ Step-by-step guide to deploying a new ESXi host: hardware readiness, installatio
 </tbody>
 </table>
 <p><strong>Create vMotion VMkernel via esxcli</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Add VMkernel port for vMotion</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>add<span class="w"> </span>--interface-name<span class="w"> </span>vmk1<span class="w"> </span>--portgroup-name<span class="w"> </span><span class="s2">&quot;vMotion&quot;</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>ipv4<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--interface-name<span class="w"> </span>vmk1<span class="w"> </span>--type<span class="w"> </span>static<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span>--ipv4<span class="w"> </span><span class="m">10</span>.10.1.10<span class="w"> </span>--netmask<span class="w"> </span><span class="m">255</span>.255.255.0
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># Tag for vMotion traffic</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>network<span class="w"> </span>list<span class="w">   </span><span class="c1"># verify vSAN VMk</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>tag<span class="w"> </span>add<span class="w"> </span>--interface-name<span class="w"> </span>vmk1<span class="w"> </span>--tagname<span class="w"> </span>VMotion
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Add VMkernel port for vMotion</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>add<span class="w"> </span>--interface-name<span class="w"> </span>vmk1<span class="w"> </span>--portgroup-name<span class="w"> </span><span class="s2">&quot;vMotion&quot;</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>ipv4<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--interface-name<span class="w"> </span>vmk1<span class="w"> </span>--type<span class="w"> </span>static<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span>--ipv4<span class="w"> </span><span class="m">10</span>.10.1.10<span class="w"> </span>--netmask<span class="w"> </span><span class="m">255</span>.255.255.0
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1"># Tag for vMotion traffic</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>network<span class="w"> </span>list<span class="w">   </span><span class="c1"># verify vSAN VMk</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>tag<span class="w"> </span>add<span class="w"> </span>--interface-name<span class="w"> </span>vmk1<span class="w"> </span>--tagname<span class="w"> </span>VMotion
 </code></pre></div>
 <p><strong>Create vSAN VMkernel</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>add<span class="w"> </span>--interface-name<span class="w"> </span>vmk2<span class="w"> </span>--portgroup-name<span class="w"> </span><span class="s2">&quot;vSAN&quot;</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>ipv4<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--interface-name<span class="w"> </span>vmk2<span class="w"> </span>--type<span class="w"> </span>static<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span>--ipv4<span class="w"> </span><span class="m">10</span>.20.1.10<span class="w"> </span>--netmask<span class="w"> </span><span class="m">255</span>.255.255.0
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>tag<span class="w"> </span>add<span class="w"> </span>--interface-name<span class="w"> </span>vmk2<span class="w"> </span>--tagname<span class="w"> </span>VSAN
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="c1"># Set MTU to 9000 on vSwitch (or on dvSwitch from vCenter)</span>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>esxcli<span class="w"> </span>network<span class="w"> </span>vswitch<span class="w"> </span>standard<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--vswitch-name<span class="w"> </span>vSwitch1<span class="w"> </span>--mtu<span class="w"> </span><span class="m">9000</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>add<span class="w"> </span>--interface-name<span class="w"> </span>vmk2<span class="w"> </span>--portgroup-name<span class="w"> </span><span class="s2">&quot;vSAN&quot;</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>ipv4<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--interface-name<span class="w"> </span>vmk2<span class="w"> </span>--type<span class="w"> </span>static<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>--ipv4<span class="w"> </span><span class="m">10</span>.20.1.10<span class="w"> </span>--netmask<span class="w"> </span><span class="m">255</span>.255.255.0
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>tag<span class="w"> </span>add<span class="w"> </span>--interface-name<span class="w"> </span>vmk2<span class="w"> </span>--tagname<span class="w"> </span>VSAN
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># Set MTU to 9000 on vSwitch (or on dvSwitch from vCenter)</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>esxcli<span class="w"> </span>network<span class="w"> </span>vswitch<span class="w"> </span>standard<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--vswitch-name<span class="w"> </span>vSwitch1<span class="w"> </span>--mtu<span class="w"> </span><span class="m">9000</span>
 </code></pre></div>
 <p><strong>Verify connectivity from each VMkernel</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Ping gateway from specific VMkernel</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk1<span class="w"> </span><span class="m">10</span>.10.1.1
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk2<span class="w"> </span><span class="m">10</span>.20.1.1<span class="w"> </span>-d<span class="w"> </span>-s<span class="w"> </span><span class="m">8972</span><span class="w">   </span><span class="c1"># 9000 MTU test (8972 = 9000 - 28 byte header)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Ping gateway from specific VMkernel</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk1<span class="w"> </span><span class="m">10</span>.10.1.1
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk2<span class="w"> </span><span class="m">10</span>.20.1.1<span class="w"> </span>-d<span class="w"> </span>-s<span class="w"> </span><span class="m">8972</span><span class="w">   </span><span class="c1"># 9000 MTU test (8972 = 9000 - 28 byte header)</span>
 </code></pre></div>
 <p><strong>List all VMkernel interfaces</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>list
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>list
 </code></pre></div>
 <hr />
 <h2 id="phase-4-storage-configuration">Phase 4: Storage Configuration<a class="headerlink" href="#phase-4-storage-configuration" title="Permanent link">&para;</a></h2>
 <p><strong>iSCSI software initiator</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Enable software iSCSI initiator</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>esxcli<span class="w"> </span>iscsi<span class="w"> </span>software<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--enabled<span class="o">=</span><span class="nb">true</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Get initiator name (provide to storage team for IQN-based access)</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>esxcli<span class="w"> </span>iscsi<span class="w"> </span>adapter<span class="w"> </span>list
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># Add dynamic discovery target</span>
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>esxcli<span class="w"> </span>iscsi<span class="w"> </span>adapter<span class="w"> </span>discovery<span class="w"> </span>sendtarget<span class="w"> </span>add<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="w">  </span>--address<span class="w"> </span><span class="m">10</span>.30.1.10:3260<span class="w"> </span>--adapter<span class="w"> </span>vmhba65
-<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>
-<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="c1"># Rescan to discover LUNs</span>
-<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>adapter<span class="w"> </span>rescan<span class="w"> </span>--adapter<span class="w"> </span>vmhba65
-<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>
-<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="c1"># Verify targets</span>
-<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>esxcli<span class="w"> </span>iscsi<span class="w"> </span>adapter<span class="w"> </span>target<span class="w"> </span>list
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Enable software iSCSI initiator</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>esxcli<span class="w"> </span>iscsi<span class="w"> </span>software<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--enabled<span class="o">=</span><span class="nb">true</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Get initiator name (provide to storage team for IQN-based access)</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>esxcli<span class="w"> </span>iscsi<span class="w"> </span>adapter<span class="w"> </span>list
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1"># Add dynamic discovery target</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>esxcli<span class="w"> </span>iscsi<span class="w"> </span>adapter<span class="w"> </span>discovery<span class="w"> </span>sendtarget<span class="w"> </span>add<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="w">  </span>--address<span class="w"> </span><span class="m">10</span>.30.1.10:3260<span class="w"> </span>--adapter<span class="w"> </span>vmhba65
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="c1"># Rescan to discover LUNs</span>
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>adapter<span class="w"> </span>rescan<span class="w"> </span>--adapter<span class="w"> </span>vmhba65
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a><span class="c1"># Verify targets</span>
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>esxcli<span class="w"> </span>iscsi<span class="w"> </span>adapter<span class="w"> </span>target<span class="w"> </span>list
 </code></pre></div>
 <p><strong>Fibre Channel</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># List HBA WWPNs (provide to storage team for zoning)</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>adapter<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="nb">fc</span>
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># After zoning is confirmed, rescan</span>
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>adapter<span class="w"> </span>rescan<span class="w"> </span>--all
-<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>
-<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="c1"># Verify LUN visibility</span>
-<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>device<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>naa
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># List HBA WWPNs (provide to storage team for zoning)</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>adapter<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="nb">fc</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># After zoning is confirmed, rescan</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>adapter<span class="w"> </span>rescan<span class="w"> </span>--all
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># Verify LUN visibility</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>device<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>naa
 </code></pre></div>
 <p><strong>Multipathing (PSP)</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Set Round Robin for active-active arrays</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>nmp<span class="w"> </span>device<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--device<span class="w"> </span>naa.&lt;id&gt;<span class="w"> </span>--psp<span class="w"> </span>VMW_PSP_RR
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># Set IOPS threshold for Round Robin (default 1000; lower for better spread)</span>
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>nmp<span class="w"> </span>psp<span class="w"> </span>roundrobin<span class="w"> </span>deviceconfig<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--device<span class="w"> </span>naa.&lt;id&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="w">  </span>--type<span class="w"> </span>iops<span class="w"> </span>--iops<span class="w"> </span><span class="m">1</span>
-<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>
-<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="c1"># Verify paths</span>
-<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>nmp<span class="w"> </span>path<span class="w"> </span>list<span class="w"> </span>--device<span class="w"> </span>naa.&lt;id&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Set Round Robin for active-active arrays</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>nmp<span class="w"> </span>device<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--device<span class="w"> </span>naa.&lt;id&gt;<span class="w"> </span>--psp<span class="w"> </span>VMW_PSP_RR
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># Set IOPS threshold for Round Robin (default 1000; lower for better spread)</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>nmp<span class="w"> </span>psp<span class="w"> </span>roundrobin<span class="w"> </span>deviceconfig<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--device<span class="w"> </span>naa.&lt;id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="w">  </span>--type<span class="w"> </span>iops<span class="w"> </span>--iops<span class="w"> </span><span class="m">1</span>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="c1"># Verify paths</span>
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>nmp<span class="w"> </span>path<span class="w"> </span>list<span class="w"> </span>--device<span class="w"> </span>naa.&lt;id&gt;
 </code></pre></div>
 <p><strong>VAAI plugin</strong></p>
 <p>Install the array vendor's VAAI plugin via VUM/LCM if the array supports hardware acceleration (XCOPY, ATS, WriteSame). Verify:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>device<span class="w"> </span>vaai<span class="w"> </span>status<span class="w"> </span>get
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>device<span class="w"> </span>vaai<span class="w"> </span>status<span class="w"> </span>get
 </code></pre></div>
 <p><strong>Confirm datastores</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>filesystem<span class="w"> </span>list
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>filesystem<span class="w"> </span>list
 </code></pre></div>
 <hr />
 <h2 id="phase-5-add-host-to-vcenter">Phase 5: Add Host to vCenter<a class="headerlink" href="#phase-5-add-host-to-vcenter" title="Permanent link">&para;</a></h2>
@@ -9263,14 +9245,14 @@ Step-by-step guide to deploying a new ESXi host: hardware readiness, installatio
 <li>Confirm — vCenter installs HA agent automatically</li>
 </ol>
 <p><strong>Verify host state</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># In vCenter PowerCLI</span>
-<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>Connect-VIServer<span class="w"> </span>vcenter.domain.local
-<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>Get-VMHost<span class="w"> </span>esxi-host-01.domain.local<span class="w"> </span><span class="p">|</span><span class="w"> </span>Select-Object<span class="w"> </span>Name,<span class="w"> </span>ConnectionState,<span class="w"> </span>PowerState
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># In vCenter PowerCLI</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>Connect-VIServer<span class="w"> </span>vcenter.domain.local
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>Get-VMHost<span class="w"> </span>esxi-host-01.domain.local<span class="w"> </span><span class="p">|</span><span class="w"> </span>Select-Object<span class="w"> </span>Name,<span class="w"> </span>ConnectionState,<span class="w"> </span>PowerState
 </code></pre></div>
 <p>Expected output:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>Name                          ConnectionState  PowerState
-<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>----                          ---------------  ----------
-<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>esxi-host-01.domain.local     Connected        PoweredOn
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>Name                          ConnectionState  PowerState
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>----                          ---------------  ----------
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>esxi-host-01.domain.local     Connected        PoweredOn
 </code></pre></div>
 <p><strong>HA agent and DRS</strong></p>
 <p>Once the host is in a cluster with HA and DRS enabled, vCenter automatically:
@@ -9278,44 +9260,44 @@ Step-by-step guide to deploying a new ESXi host: hardware readiness, installatio
 - Adds host to DRS resource pool
 - Assigns cluster-level vSAN disk claim (if vSAN cluster)</p>
 <p><strong>Verify HA agent</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># From ESXi SSH</span>
-<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>/etc/init.d/vmware-fdm<span class="w"> </span>status
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># From ESXi SSH</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>/etc/init.d/vmware-fdm<span class="w"> </span>status
 </code></pre></div>
 <hr />
 <h2 id="phase-6-hardening-baseline">Phase 6: Hardening &amp; Baseline<a class="headerlink" href="#phase-6-hardening-baseline" title="Permanent link">&para;</a></h2>
 <p><strong>Lockdown mode</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># Enable normal lockdown mode (via vCenter — disables direct root login)</span>
-<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="c1"># vCenter → Host → Configure → Security Profile → Lockdown Mode → Edit → Normal</span>
-<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>
-<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="c1"># Via PowerCLI</span>
-<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="nv">$host</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>Get-VMHost<span class="w"> </span><span class="s2">&quot;esxi-host-01.domain.local&quot;</span>
-<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a><span class="nv">$hostView</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>Get-View<span class="w"> </span><span class="nv">$host</span>
-<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a><span class="nv">$hostView</span>.EnterLockdownMode<span class="o">()</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># Enable normal lockdown mode (via vCenter — disables direct root login)</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="c1"># vCenter → Host → Configure → Security Profile → Lockdown Mode → Edit → Normal</span>
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="c1"># Via PowerCLI</span>
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="nv">$host</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>Get-VMHost<span class="w"> </span><span class="s2">&quot;esxi-host-01.domain.local&quot;</span>
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a><span class="nv">$hostView</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>Get-View<span class="w"> </span><span class="nv">$host</span>
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a><span class="nv">$hostView</span>.EnterLockdownMode<span class="o">()</span>
 </code></pre></div>
 <p><strong>Disable SSH and ESXi Shell post-configuration</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1"># vCenter → Host → Configure → Security Profile → Services → SSH → Stop + Policy: Start/stop manually</span>
-<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="c1"># Via esxcli from local console or one final SSH session:</span>
-<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>esxcli<span class="w"> </span>system<span class="w"> </span>maintenanceMode<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--enable<span class="w"> </span><span class="nb">false</span><span class="w">   </span><span class="c1"># if in maintenance</span>
-<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>vim-cmd<span class="w"> </span>hostsvc/disable_ssh
-<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>vim-cmd<span class="w"> </span>hostsvc/disable_esx_shell
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># vCenter → Host → Configure → Security Profile → Services → SSH → Stop + Policy: Start/stop manually</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="c1"># Via esxcli from local console or one final SSH session:</span>
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>esxcli<span class="w"> </span>system<span class="w"> </span>maintenanceMode<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--enable<span class="w"> </span><span class="nb">false</span><span class="w">   </span><span class="c1"># if in maintenance</span>
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>vim-cmd<span class="w"> </span>hostsvc/disable_ssh
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>vim-cmd<span class="w"> </span>hostsvc/disable_esx_shell
 </code></pre></div>
 <p><strong>NTP service</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>esxcli<span class="w"> </span>system<span class="w"> </span>ntp<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--server<span class="w"> </span>ntp1.domain.local<span class="w"> </span>--server<span class="w"> </span>ntp2.domain.local
-<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>ntp<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--enabled<span class="w"> </span><span class="nb">true</span>
-<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>
-<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="c1"># Confirm sync</span>
-<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>esxcli<span class="w"> </span>system<span class="w"> </span>ntp<span class="w"> </span>get
-<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>ntpq<span class="w"> </span>-p
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>esxcli<span class="w"> </span>system<span class="w"> </span>ntp<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--server<span class="w"> </span>ntp1.domain.local<span class="w"> </span>--server<span class="w"> </span>ntp2.domain.local
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>ntp<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--enabled<span class="w"> </span><span class="nb">true</span>
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="c1"># Confirm sync</span>
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>esxcli<span class="w"> </span>system<span class="w"> </span>ntp<span class="w"> </span>get
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>ntpq<span class="w"> </span>-p
 </code></pre></div>
 <p><strong>Syslog forwarding</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="c1"># Forward to Aria Operations for Logs or a syslog server</span>
-<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>syslog<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--loghost<span class="o">=</span>udp://arialogs.domain.local:514
-<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>esxcli<span class="w"> </span>system<span class="w"> </span>syslog<span class="w"> </span>config<span class="w"> </span>get<span class="w">   </span><span class="c1"># verify</span>
-<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>esxcli<span class="w"> </span>system<span class="w"> </span>syslog<span class="w"> </span>reload
-<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>
-<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a><span class="c1"># Open firewall for syslog</span>
-<a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a>esxcli<span class="w"> </span>network<span class="w"> </span>firewall<span class="w"> </span>ruleset<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--ruleset-id<span class="w"> </span>syslog<span class="w"> </span>--enabled<span class="w"> </span><span class="nb">true</span>
-<a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a>esxcli<span class="w"> </span>network<span class="w"> </span>firewall<span class="w"> </span>refresh
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># Forward to Aria Operations for Logs or a syslog server</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>syslog<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--loghost<span class="o">=</span>udp://arialogs.domain.local:514
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>esxcli<span class="w"> </span>system<span class="w"> </span>syslog<span class="w"> </span>config<span class="w"> </span>get<span class="w">   </span><span class="c1"># verify</span>
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a>esxcli<span class="w"> </span>system<span class="w"> </span>syslog<span class="w"> </span>reload
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>
+<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a><span class="c1"># Open firewall for syslog</span>
+<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a>esxcli<span class="w"> </span>network<span class="w"> </span>firewall<span class="w"> </span>ruleset<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--ruleset-id<span class="w"> </span>syslog<span class="w"> </span>--enabled<span class="w"> </span><span class="nb">true</span>
+<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a>esxcli<span class="w"> </span>network<span class="w"> </span>firewall<span class="w"> </span>refresh
 </code></pre></div>
 <p><strong>LCM baseline remediation</strong></p>
 <ol>

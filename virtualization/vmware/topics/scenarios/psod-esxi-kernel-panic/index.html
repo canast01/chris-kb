@@ -10747,23 +10747,7 @@ and identifying driver/firmware mismatch as the most common production cause.
 *Applies to: vSphere 7.x / 8.x*
 </div>
 <p><img alt="PSOD — ESXi Kernel Panic (Purple Screen of Death)" src="../../../../../assets/virtualization-vmware-topics-scenarios-psod-esxi-kernel-pani.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>center: &quot;Scenarios&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>products_involved: &quot;Products Involved&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>1_confirm_ha_is_restarting_vms: &quot;1. Confirm HA Is Restarting VMs&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>2_capture_the_psod_screen: &quot;2. Capture the PSOD Screen&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>3_check_idrac_ilo_hardware_event_log: &quot;3. Check iDRAC / iLO Hardware Event Log&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>4_retrieve_logs_after_host_reboots: &quot;4. Retrieve Logs After Host Reboots&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>5_generate_a_vmsupport_bundle: &quot;5. Generate a vm-support Bundle&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>center -&gt; products_involved
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>center -&gt; 1_confirm_ha_is_restarting_vms
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>center -&gt; 2_capture_the_psod_screen
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>center -&gt; 3_check_idrac_ilo_hardware_event_log
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>center -&gt; 4_retrieve_logs_after_host_reboots
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>center -&gt; 5_generate_a_vmsupport_bundle
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNkk1rwkAQhu_5FUPuWvy6eChYLVWwKAq9DuvumCyNu2F3kxaK_72zGtpAU9tb2PfJs5l3orQjGbQ1U3A6y0OSSDKB3BTSPT8Jp61P4cPnoqQp5PQuMmvOSemsqmTwqE1ti5oU89vmDFbN2fd78Q5hsoLOyQClNUftTpgL1B4d-SBc0CbD-uRZM-jD_ErAcgYrD7svAl6efad0iFKUoXKEIScsvVXopSPiqdIh-64hcAjb_WYB-0vYqRqhzEm-olZOSNSF5e906k2wm2quBgubsXXE1siBXuxmc7gDvd7AsiHhMZKwtlnnFWMeOjjNuijzKI5cOObWBw4O1oZYw7jPg1-pKPIwixQsmeLgQnXKJ5iRIScCoYiNVmVpXcBDZVTBZDrpw1MDgID61GsIeLgQnc7mn4DePfxYfCu7vdoW-Ou6Wsx_9tDC_-60Bd_sKPkEX-IenQ==?" /></p>
 <h2 id="products-involved">Products Involved<a class="headerlink" href="#products-involved" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -10815,11 +10799,11 @@ and identifying driver/firmware mismatch as the most common production cause.
 <li>Physical photograph if necessary</li>
 </ul>
 <p>Critical elements to record:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>#PF Exception 14 in world XXXX:vmm0:&lt;vmname&gt;  → page fault in VMM world (driver or VM issue)
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>#GP Exception 13 in world XXXX:helper          → general protection fault in helper world
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>@BlueScreen: ASSERT bora/vmkernel/...          → assertion failure with source file and line
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>Backtrace: 0x...  vmw_pvscsi.o                 → module name = vmw_pvscsi (PVSCSI driver issue)
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Backtrace: 0x...  nmlx5_core.o                 → module name = nmlx5_core (Mellanox NIC driver)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>#PF Exception 14 in world XXXX:vmm0:&lt;vmname&gt;  → page fault in VMM world (driver or VM issue)
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>#GP Exception 13 in world XXXX:helper          → general protection fault in helper world
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>@BlueScreen: ASSERT bora/vmkernel/...          → assertion failure with source file and line
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>Backtrace: 0x...  vmw_pvscsi.o                 → module name = vmw_pvscsi (PVSCSI driver issue)
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>Backtrace: 0x...  nmlx5_core.o                 → module name = nmlx5_core (Mellanox NIC driver)
 </code></pre></div>
 <p>The module name in the backtrace is the most actionable piece of data — note it exactly.</p>
 <hr />
@@ -10860,30 +10844,30 @@ and identifying driver/firmware mismatch as the most common production cause.
 <hr />
 <h2 id="4-retrieve-logs-after-host-reboots">4. Retrieve Logs After Host Reboots<a class="headerlink" href="#4-retrieve-logs-after-host-reboots" title="Permanent link">&para;</a></h2>
 <p>After the host reboots and SSH is accessible, collect the key log files.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>cat<span class="w"> </span>/var/log/vmkernel.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-iE<span class="w"> </span><span class="s2">&quot;PSOD|panic|backtrace|oops&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>cat<span class="w"> </span>/var/log/vmkernel.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-iE<span class="w"> </span><span class="s2">&quot;PSOD|panic|backtrace|oops&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>cat<span class="w"> </span>/var/log/vmksummary.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>cat<span class="w"> </span>/var/log/vmksummary.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
 </code></pre></div>
 <p>Look for: the vmksummary.log gives a concise summary of the crash (timestamp, panic type, initiating world). The vmkernel.log contains the full backtrace.</p>
 <p>Check hostd for precursor events in the seconds before the crash:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>cat<span class="w"> </span>/var/log/hostd.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;ERROR|WARNING&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>cat<span class="w"> </span>/var/log/hostd.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;ERROR|WARNING&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
 </code></pre></div>
 <hr />
 <h2 id="5-generate-a-vm-support-bundle">5. Generate a vm-support Bundle<a class="headerlink" href="#5-generate-a-vm-support-bundle" title="Permanent link">&para;</a></h2>
 <p>Generate a support bundle after the host reboots — transfer it off the host before any further reboots as subsequent boots may overwrite logs.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>vm-support<span class="w"> </span>-w<span class="w"> </span>/tmp/
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>vm-support<span class="w"> </span>-w<span class="w"> </span>/tmp/
 </code></pre></div>
 <p>This creates a compressed archive in <code>/tmp/</code> containing all logs, configuration, and system state. Transfer with SCP.</p>
 <p>Alternatively, generate from vCenter: right-click the host → <strong>Export System Logs</strong> — equivalent but saves directly to your local machine.</p>
 <hr />
 <h2 id="6-match-module-name-to-vmware-kb">6. Match Module Name to VMware KB<a class="headerlink" href="#6-match-module-name-to-vmware-kb" title="Permanent link">&para;</a></h2>
 <p>The backtrace module name almost always maps to a known VMware KB article — search <code>kb.vmware.com</code> using the module name and ESXi version.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>&lt;module-name&gt; PSOD &lt;esxi-version&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>&lt;module-name&gt; PSOD &lt;esxi-version&gt;
 </code></pre></div>
 <p>Example searches:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>nmlx5_core PSOD 8.0
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>vmw_ahci PSOD 7.0 U3
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>lpfc PSOD 8.0 U2
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>nmlx5_core PSOD 8.0
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>vmw_ahci PSOD 7.0 U3
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>lpfc PSOD 8.0 U2
 </code></pre></div>
 <p>Common modules and their hardware components:</p>
 <table>
@@ -10930,10 +10914,10 @@ and identifying driver/firmware mismatch as the most common production cause.
 <h2 id="8-vxrail-hosts-only-update-through-vxrail-lcm">8. VxRail Hosts — Only Update Through VxRail LCM<a class="headerlink" href="#8-vxrail-hosts-only-update-through-vxrail-lcm" title="Permanent link">&para;</a></h2>
 <p>A PSOD on a VxRail host after a manually applied driver update is a strong indicator that the update bypassed VxRail LCM and is now outside the validated matrix.</p>
 <p>To resolve:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Verify the manually installed driver version</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>esxcli<span class="w"> </span>software<span class="w"> </span>vib<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;module&gt;
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="c1"># Remove the non-LCM VIB</span>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>esxcli<span class="w"> </span>software<span class="w"> </span>vib<span class="w"> </span>remove<span class="w"> </span>--vibname<span class="w"> </span>&lt;vib-name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Verify the manually installed driver version</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>esxcli<span class="w"> </span>software<span class="w"> </span>vib<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;module&gt;
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="c1"># Remove the non-LCM VIB</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>esxcli<span class="w"> </span>software<span class="w"> </span>vib<span class="w"> </span>remove<span class="w"> </span>--vibname<span class="w"> </span>&lt;vib-name&gt;
 </code></pre></div>
 <p>Then use VxRail Manager → LCM to apply the correct validated driver as part of a bundle upgrade. For the full VxRail LCM upgrade procedure, see the
 <a href="vxrail-lcm-upgrade-failure/index.md">VxRail LCM Upgrade Failure</a> scenario.</p>

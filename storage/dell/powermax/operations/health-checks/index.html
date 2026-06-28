@@ -9000,23 +9000,7 @@ Health Checks reference covering Monitoring Hierarchy, Daily Checks, Health Chec
 *Applies to: PowerMax 2500 / 8500*
 </div>
 
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>hub: &quot;PowerMax\nOperations&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>run_this_routine: &quot;Run This Routine&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>monitoring_hierarchy: &quot;Monitoring Hierarchy&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>daily_checks: &quot;Daily Checks&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>health_check: &quot;Health Check&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>array_connectivity_and_status: &quot;Array Connectivity and Status&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>director_and_port_status: &quot;Director and Port Status&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>hub -&gt; run_this_routine
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>hub -&gt; monitoring_hierarchy
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>hub -&gt; daily_checks
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>hub -&gt; health_check
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>hub -&gt; array_connectivity_and_status
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>hub -&gt; director_and_port_status
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp9Ub1qwzAQ3vUUh_e-gIdCSYYsoSHNWBBXW1ii7smcpDam5N0ryVViiprxvr_TfeoNq84bSy2wGbQXQoe3FpqD_VK8x_MrPU-KMSlcA99O46Ra0OqMg6WL4EDSa-Mk2-ANRao5BoJThOC4QDdX2oQ0jOoiPiwZb9nQILWJ-dzpOXr3Vxh2Ba76ezTjLDutuncXfds0wiaPVb1WOHq9GKJ-l8fFUNUjM8Z8S5Ta-TR-lki9dB59SAufEg-bFQ-Rh5fM11-ci7accybL_ha2_aVyxCFS93LS_8DDI_xtvuC1Zgu3bq1g62YKdvf6a9g_B4kftejaxg==?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Access:</strong> Storage admin credentials (cluster admin or equivalent)</li>
@@ -9139,99 +9123,99 @@ Health Checks reference covering Monitoring Hierarchy, Daily Checks, Health Chec
 <li>[ ] Unisphere → System → Hardware confirms no director, drive, or port faults</li>
 <li>[ ] CloudIQ risk score is green or within accepted threshold</li>
 </ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># List all Symmetrix arrays and confirm they are Online</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>symcfg<span class="w"> </span>list
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Full array health and director/port status for a specific SID</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>XXXX<span class="w"> </span>show
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># List all physical drives — check for Failed or Degraded state</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>sympd<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>XXXX
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Filter for failed drives only (should return empty on a healthy array)</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>sympd<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>XXXX<span class="w"> </span>-failed
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># List SRDF groups and pair states</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>symrdf<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>XXXX
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="c1"># Show detailed SRDF pair state for a specific RDF group</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>XXXX<span class="w"> </span>-rdfg<span class="w"> </span>&lt;group&gt;<span class="w"> </span>query
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="c1"># List all device groups</span>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>symdg<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>XXXX
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="c1"># List all storage groups</span>
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>symsg<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>XXXX
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="c1"># List all SnapVX snapshots across the array</span>
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>symsnap<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>XXXX
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a><span class="c1"># Show replication sessions (SRDF and SnapVX combined view)</span>
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>symreplicate<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>XXXX
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># List all Symmetrix arrays and confirm they are Online</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>symcfg<span class="w"> </span>list
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Full array health and director/port status for a specific SID</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>XXXX<span class="w"> </span>show
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># List all physical drives — check for Failed or Degraded state</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>sympd<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>XXXX
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Filter for failed drives only (should return empty on a healthy array)</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>sympd<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>XXXX<span class="w"> </span>-failed
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># List SRDF groups and pair states</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>symrdf<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>XXXX
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># Show detailed SRDF pair state for a specific RDF group</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>XXXX<span class="w"> </span>-rdfg<span class="w"> </span>&lt;group&gt;<span class="w"> </span>query
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="c1"># List all device groups</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>symdg<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>XXXX
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="c1"># List all storage groups</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>symsg<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>XXXX
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="c1"># List all SnapVX snapshots across the array</span>
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>symsnap<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>XXXX
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a><span class="c1"># Show replication sessions (SRDF and SnapVX combined view)</span>
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>symreplicate<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>XXXX
 </code></pre></div>
 <h2 id="array-connectivity-and-status">Array Connectivity and Status<a class="headerlink" href="#array-connectivity-and-status" title="Permanent link">&para;</a></h2>
 <p><img alt="Array Connectivity and Status" src="../../../../../assets/storage-dell-powermax-hc-array-connectivity-and-status.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Verify Solutions Enabler can reach the array</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>symcfg<span class="w"> </span>list
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>show<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Product|Microcode|Online&quot;</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Check array health via Unisphere REST (requires curl + valid token)</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://&lt;unisphere-ip&gt;:8443/univmax/restapi/system/symmetrix/&lt;sid&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">    </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer &lt;token&gt;&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;model|health|microcode&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Verify Solutions Enabler can reach the array</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>symcfg<span class="w"> </span>list
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>show<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Product|Microcode|Online&quot;</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Check array health via Unisphere REST (requires curl + valid token)</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://&lt;unisphere-ip&gt;:8443/univmax/restapi/system/symmetrix/&lt;sid&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">    </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer &lt;token&gt;&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;model|health|microcode&quot;</span>
 </code></pre></div>
 <h2 id="director-and-port-status">Director and Port Status<a class="headerlink" href="#director-and-port-status" title="Permanent link">&para;</a></h2>
 <p><img alt="Director and Port Status" src="../../../../../assets/storage-dell-powermax-hc-director-and-port-status.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Check all directors — flag any offline</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>list<span class="w"> </span>-dir<span class="w"> </span>all<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>Online
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Check all ports — flag any not RDY</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>list<span class="w"> </span>-port<span class="w"> </span>all<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>RDY
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># FA port login count (host connectivity)</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>list<span class="w"> </span>-fa<span class="w"> </span>-online<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Port|Logins&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check all directors — flag any offline</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>list<span class="w"> </span>-dir<span class="w"> </span>all<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>Online
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Check all ports — flag any not RDY</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>list<span class="w"> </span>-port<span class="w"> </span>all<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>RDY
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># FA port login count (host connectivity)</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>list<span class="w"> </span>-fa<span class="w"> </span>-online<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Port|Logins&quot;</span>
 </code></pre></div>
 <h2 id="events-and-alerts">Events and Alerts<a class="headerlink" href="#events-and-alerts" title="Permanent link">&para;</a></h2>
 <p><img alt="Events and Alerts" src="../../../../../assets/storage-dell-powermax-hc-events-and-alerts.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Active/uncleared events</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>symevent<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-v<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;uncleared\|Warning\|Error\|Fatal&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Events in last 24 hours</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>symevent<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-start_time<span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>date<span class="w"> </span>-d<span class="w"> </span><span class="s1">&#39;yesterday&#39;</span><span class="w"> </span><span class="s1">&#39;+%m/%d/%Y&#39;</span><span class="k">)</span><span class="s2"> 00:00:00&quot;</span><span class="w"> </span>-v<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-30
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Active/uncleared events</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>symevent<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-v<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;uncleared\|Warning\|Error\|Fatal&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Events in last 24 hours</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>symevent<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-start_time<span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>date<span class="w"> </span>-d<span class="w"> </span><span class="s1">&#39;yesterday&#39;</span><span class="w"> </span><span class="s1">&#39;+%m/%d/%Y&#39;</span><span class="k">)</span><span class="s2"> 00:00:00&quot;</span><span class="w"> </span>-v<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-30
 </code></pre></div>
 <h2 id="storage-pool-srp-capacity">Storage Pool (SRP) Capacity<a class="headerlink" href="#storage-pool-srp-capacity" title="Permanent link">&para;</a></h2>
 <p><img alt="Storage Pool (SRP) Capacity" src="../../../../../assets/storage-dell-powermax-hc-storage-pool-srp-capacity.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># SRP subscription and free capacity</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>list<span class="w"> </span>-srp
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Thin pool usage detail</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>show<span class="w"> </span>-pool<span class="w"> </span>-thin<span class="w"> </span>-demand
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Flag SRP above 80% subscribed</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>list<span class="w"> </span>-srp<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;$5+0 &gt; 80 {print &quot;WARNING:&quot;, $0}&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># SRP subscription and free capacity</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>list<span class="w"> </span>-srp
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Thin pool usage detail</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>show<span class="w"> </span>-pool<span class="w"> </span>-thin<span class="w"> </span>-demand
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Flag SRP above 80% subscribed</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>list<span class="w"> </span>-srp<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;$5+0 &gt; 80 {print &quot;WARNING:&quot;, $0}&#39;</span>
 </code></pre></div>
 <h2 id="srdf-replication-state">SRDF Replication State<a class="headerlink" href="#srdf-replication-state" title="Permanent link">&para;</a></h2>
 <p><img alt="SRDF Replication State" src="../../../../../assets/storage-dell-powermax-hc-srdf-replication-state.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Check all SRDF groups</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>list<span class="w"> </span>-rdfg<span class="w"> </span>all
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Check for any pairs not in Synchronized state</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>query<span class="w"> </span>-rdfg<span class="w"> </span>all<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;Synchronized\|InSync&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;^</span>$<span class="s2">\|Group\|Pair\|---&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Check all SRDF groups</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>list<span class="w"> </span>-rdfg<span class="w"> </span>all
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Check for any pairs not in Synchronized state</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>query<span class="w"> </span>-rdfg<span class="w"> </span>all<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;Synchronized\|InSync&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;^</span>$<span class="s2">\|Group\|Pair\|---&quot;</span>
 </code></pre></div>
 <h2 id="device-status">Device Status<a class="headerlink" href="#device-status" title="Permanent link">&para;</a></h2>
 <p><img alt="Device Status" src="../../../../../assets/storage-dell-powermax-hc-device-status.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Failed or degraded devices</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>symdev<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-failed
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Devices not ready</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>symdev<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-NR
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># Spare devices available</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>symdev<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-spare
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Failed or degraded devices</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>symdev<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-failed
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Devices not ready</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>symdev<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-NR
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Spare devices available</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>symdev<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-spare
 </code></pre></div>
 <h2 id="cache-health">Cache Health<a class="headerlink" href="#cache-health" title="Permanent link">&para;</a></h2>
 <p><img alt="Cache Health" src="../../../../../assets/storage-dell-powermax-hc-cache-health.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Cache write pending percentage — alert if &gt; 50%</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>symstat<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>list<span class="w"> </span>-type<span class="w"> </span>cache<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;WP\|Write Pending&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Cache write pending percentage — alert if &gt; 50%</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>symstat<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>list<span class="w"> </span>-type<span class="w"> </span>cache<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;WP\|Write Pending&quot;</span>
 </code></pre></div>
 <h2 id="health-check-decision-flow">Health Check Decision Flow<a class="headerlink" href="#health-check-decision-flow" title="Permanent link">&para;</a></h2>
 <p><img alt="Health Check Decision Flow" src="../../../../../assets/storage-dell-powermax-hc-health-check-decision-flow.svg" /></p>

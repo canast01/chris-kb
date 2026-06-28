@@ -9690,23 +9690,7 @@ Health checks for Aria Operations — cluster node status, adapter collection he
 *Applies to: Aria Ops 8.x*
 </div>
 
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>hub: &quot;Aria Operations\nOperations&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>run_this_routine: &quot;Run This Routine&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>adapter_collection_commands: &quot;Adapter Collection Commands&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>check_the_collector_service_log_for_: &quot;Check the collector service log for adapter errors&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>restart_an_adapter_that_is_stuck_in_: &quot;Restart an adapter that is stuck in &#39;Not Collecting&#39;&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>ui_administration_solutions_select_a: &quot;UI: Administration → Solutions → select adapter → Restart In&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>or_via_api: &quot;Or via API:&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>hub -&gt; run_this_routine
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>hub -&gt; adapter_collection_commands
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>hub -&gt; check_the_collector_service_log_for_
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>hub -&gt; restart_an_adapter_that_is_stuck_in_
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>hub -&gt; ui_administration_solutions_select_a
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>hub -&gt; or_via_api
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNksFOwzAMhu99CmuXnXiBHpCqnXZhaMANKTJdaCw6p3KSCQntygPwiDwJzrp0AlVot8T-4v-3nR2JbSN5rkGoc7GqXHqpYdEIIWwGK5iT4Zkv5wV8BIeDrcHZd-w8HytJbKKjYMSnSKypxTYxPGoItmPo8ioLIne9PVa4wyFaMa3v-9GGHvd75F3IHsYsrKasHsfsbLXW2fZNfdhSz4sJVg7UWtP7zrzqXcuuMgaKwYTBGQPFQDE4GwMr4mVeTWyIKNEgm9JGdBiNTiHEpEaIs9p2xAB5Kpox0MmcMCCG5Z2PU5fcLWf1EqnOnphCHBdhgu_TaSPaZX5qUPWe1jU0vzj4_vyCh8KebiM_Gcqh4nPNs-o6ugOhwYFUYyOgF2ju1_UsnP8Q3NzC329R4v-svSDX7HKSuWIThb1mioW99Fz9AK2oLSI=?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Access:</strong> vCenter read-only minimum; Administrator role for remediation steps</li>
@@ -9730,125 +9714,125 @@ Health checks for Aria Operations — cluster node status, adapter collection he
 <hr />
 <h2 id="adapter-collection-commands">Adapter Collection Commands<a class="headerlink" href="#adapter-collection-commands" title="Permanent link">&para;</a></h2>
 <p><img alt="Adapter Collection Commands" src="../../../../../assets/virtualization-vmware-aria-operations-hc-adapter-collection-commands.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># List adapters with verbose collection state</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>vracli<span class="w"> </span>adapter<span class="w"> </span>list<span class="w"> </span>--verbose
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1">## Check the collector service log for adapter errors</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>!<span class="o">[</span>Check<span class="w"> </span>the<span class="w"> </span>collector<span class="w"> </span>service<span class="w"> </span>log<span class="w"> </span><span class="k">for</span><span class="w"> </span>adapter<span class="w"> </span>errors<span class="o">](</span>../../../../assets/virtualization-vmware-aria-operations-hc-check-the-collector-service-log-for.svg<span class="o">)</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>tail<span class="w"> </span>-200<span class="w"> </span>/data/vcops/log/collector.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|exception\|fail&quot;</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1">## Restart an adapter that is stuck in &quot;Not Collecting&quot;</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>!<span class="o">[</span>Restart<span class="w"> </span>an<span class="w"> </span>adapter<span class="w"> </span>that<span class="w"> </span>is<span class="w"> </span>stuck<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="s2">&quot;Not Collecting&quot;</span><span class="o">](</span>../../../../assets/virtualization-vmware-aria-operations-hc-restart-an-adapter-that-is-stuck-in.svg<span class="o">)</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c1">## UI: Administration → Solutions → select adapter → Restart Instance</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>!<span class="o">[</span>UI:<span class="w"> </span>Administration<span class="w"> </span>→<span class="w"> </span>Solutions<span class="w"> </span>→<span class="w"> </span><span class="k">select</span><span class="w"> </span>adapter<span class="w"> </span>→<span class="w"> </span>Restart<span class="w"> </span>Instance<span class="o">](</span>../../../../assets/virtualization-vmware-aria-operations-hc-ui-administration-solutions-select-.svg<span class="o">)</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="c1">## Or via API:</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>!<span class="o">[</span>Or<span class="w"> </span>via<span class="w"> </span>API:<span class="o">](</span>../../../../assets/virtualization-vmware-aria-operations-hc-or-via-api.svg<span class="o">)</span>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: vRealizeOpsToken </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="w">  </span><span class="s2">&quot;https://vrops-prod-01.example.local/suite-api/api/adapters/&lt;adapter-id&gt;/monitoringstatedescriptor&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;collectorId&quot;: &quot;&lt;collector-id&gt;&quot;, &quot;resourceKindKey&quot;: &quot;ADAPTER&quot;, &quot;adapterKindKey&quot;: &quot;VMWARE&quot;}&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># List adapters with verbose collection state</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>vracli<span class="w"> </span>adapter<span class="w"> </span>list<span class="w"> </span>--verbose
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1">## Check the collector service log for adapter errors</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>!<span class="o">[</span>Check<span class="w"> </span>the<span class="w"> </span>collector<span class="w"> </span>service<span class="w"> </span>log<span class="w"> </span><span class="k">for</span><span class="w"> </span>adapter<span class="w"> </span>errors<span class="o">](</span>../../../../assets/virtualization-vmware-aria-operations-hc-check-the-collector-service-log-for.svg<span class="o">)</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>tail<span class="w"> </span>-200<span class="w"> </span>/data/vcops/log/collector.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|exception\|fail&quot;</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1">## Restart an adapter that is stuck in &quot;Not Collecting&quot;</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>!<span class="o">[</span>Restart<span class="w"> </span>an<span class="w"> </span>adapter<span class="w"> </span>that<span class="w"> </span>is<span class="w"> </span>stuck<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="s2">&quot;Not Collecting&quot;</span><span class="o">](</span>../../../../assets/virtualization-vmware-aria-operations-hc-restart-an-adapter-that-is-stuck-in.svg<span class="o">)</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="c1">## UI: Administration → Solutions → select adapter → Restart Instance</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>!<span class="o">[</span>UI:<span class="w"> </span>Administration<span class="w"> </span>→<span class="w"> </span>Solutions<span class="w"> </span>→<span class="w"> </span><span class="k">select</span><span class="w"> </span>adapter<span class="w"> </span>→<span class="w"> </span>Restart<span class="w"> </span>Instance<span class="o">](</span>../../../../assets/virtualization-vmware-aria-operations-hc-ui-administration-solutions-select-.svg<span class="o">)</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="c1">## Or via API:</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>!<span class="o">[</span>Or<span class="w"> </span>via<span class="w"> </span>API:<span class="o">](</span>../../../../assets/virtualization-vmware-aria-operations-hc-or-via-api.svg<span class="o">)</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: vRealizeOpsToken </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="w">  </span><span class="s2">&quot;https://vrops-prod-01.example.local/suite-api/api/adapters/&lt;adapter-id&gt;/monitoringstatedescriptor&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;collectorId&quot;: &quot;&lt;collector-id&gt;&quot;, &quot;resourceKindKey&quot;: &quot;ADAPTER&quot;, &quot;adapterKindKey&quot;: &quot;VMWARE&quot;}&#39;</span>
 </code></pre></div>
 <h2 id="disk-and-resource-commands">Disk and Resource Commands<a class="headerlink" href="#disk-and-resource-commands" title="Permanent link">&para;</a></h2>
 <p><img alt="Disk and Resource Commands" src="../../../../../assets/virtualization-vmware-aria-operations-hc-disk-and-resource-commands.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ssh<span class="w"> </span>admin@vrops-prod-01.example.local
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Check disk usage on primary node</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>df<span class="w"> </span>-h<span class="w"> </span>/storage/db<span class="w"> </span>/storage/log<span class="w"> </span>/storage/core
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1">## Check Cassandra data directory sizes (main metrics store)</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>!<span class="o">[</span>Check<span class="w"> </span>Cassandra<span class="w"> </span>data<span class="w"> </span>directory<span class="w"> </span>sizes<span class="w"> </span><span class="o">(</span>main<span class="w"> </span>metrics<span class="w"> </span>store<span class="o">)](</span>../../../../assets/virtualization-vmware-aria-operations-hc-check-cassandra-data-directory-size.svg<span class="o">)</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>du<span class="w"> </span>-sh<span class="w"> </span>/storage/db/cassandra/data/*
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1">## Check available inodes — can cause &quot;disk full&quot; errors even with space remaining</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>!<span class="o">[</span>Check<span class="w"> </span>available<span class="w"> </span>inodes<span class="w"> </span>—<span class="w"> </span>can<span class="w"> </span>cause<span class="w"> </span><span class="s2">&quot;disk full&quot;</span><span class="w"> </span>errors<span class="w"> </span>even<span class="w"> </span>with<span class="w"> </span>space<span class="w"> </span>remaining<span class="o">](</span>../../../../assets/virtualization-vmware-aria-operations-hc-check-available-inodes-can-cause-di.svg<span class="o">)</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>df<span class="w"> </span>-i<span class="w"> </span>/storage/db
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>ssh<span class="w"> </span>admin@vrops-prod-01.example.local
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># Check disk usage on primary node</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>df<span class="w"> </span>-h<span class="w"> </span>/storage/db<span class="w"> </span>/storage/log<span class="w"> </span>/storage/core
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1">## Check Cassandra data directory sizes (main metrics store)</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>!<span class="o">[</span>Check<span class="w"> </span>Cassandra<span class="w"> </span>data<span class="w"> </span>directory<span class="w"> </span>sizes<span class="w"> </span><span class="o">(</span>main<span class="w"> </span>metrics<span class="w"> </span>store<span class="o">)](</span>../../../../assets/virtualization-vmware-aria-operations-hc-check-cassandra-data-directory-size.svg<span class="o">)</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>du<span class="w"> </span>-sh<span class="w"> </span>/storage/db/cassandra/data/*
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1">## Check available inodes — can cause &quot;disk full&quot; errors even with space remaining</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>!<span class="o">[</span>Check<span class="w"> </span>available<span class="w"> </span>inodes<span class="w"> </span>—<span class="w"> </span>can<span class="w"> </span>cause<span class="w"> </span><span class="s2">&quot;disk full&quot;</span><span class="w"> </span>errors<span class="w"> </span>even<span class="w"> </span>with<span class="w"> </span>space<span class="w"> </span>remaining<span class="o">](</span>../../../../assets/virtualization-vmware-aria-operations-hc-check-available-inodes-can-cause-di.svg<span class="o">)</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>df<span class="w"> </span>-i<span class="w"> </span>/storage/db
 </code></pre></div>
 <h2 id="service-health-commands">Service Health Commands<a class="headerlink" href="#service-health-commands" title="Permanent link">&para;</a></h2>
 <p><img alt="Service Health Commands" src="../../../../../assets/virtualization-vmware-aria-operations-hc-service-health-commands.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Check all vmware services on the primary node</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>systemctl<span class="w"> </span>list-units<span class="w"> </span><span class="s1">&#39;vmware-*&#39;</span><span class="w"> </span>--state<span class="o">=</span>active
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1">## Check a specific service that appears failed</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>!<span class="o">[</span>Check<span class="w"> </span>a<span class="w"> </span>specific<span class="w"> </span>service<span class="w"> </span>that<span class="w"> </span>appears<span class="w"> </span>failed<span class="o">](</span>../../../../assets/virtualization-vmware-aria-operations-hc-check-a-specific-service-that-appea.svg<span class="o">)</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>systemctl<span class="w"> </span>status<span class="w"> </span>vmware-vcops-analytics
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>vmware-vcops-analytics<span class="w"> </span>--since<span class="w"> </span><span class="s2">&quot;1 hour ago&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-100
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1">## Key services and expected states</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>!<span class="o">[</span>Key<span class="w"> </span>services<span class="w"> </span>and<span class="w"> </span>expected<span class="w"> </span>states<span class="o">](</span>../../../../assets/virtualization-vmware-aria-operations-hc-key-services-and-expected-states.svg<span class="o">)</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c1">## vmware-vcops-analytics   — active (running)</span>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>!<span class="o">[</span>vmware-vcops-analytics<span class="w">   </span>—<span class="w"> </span>active<span class="w"> </span><span class="o">(</span>running<span class="o">)](</span>../../../../assets/virtualization-vmware-aria-operations-hc-vmware-vcops-analytics-active-runni.svg<span class="o">)</span>
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="c1">## vmware-vcops-cassandra   — active (running)</span>
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>
-<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>!<span class="o">[</span>vmware-vcops-cassandra<span class="w">   </span>—<span class="w"> </span>active<span class="w"> </span><span class="o">(</span>running<span class="o">)](</span>../../../../assets/virtualization-vmware-aria-operations-hc-vmware-vcops-cassandra-active-runni.svg<span class="o">)</span>
-<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="c1">## vmware-vcops-postgres    — active (running)</span>
-<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>
-<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>!<span class="o">[</span>vmware-vcops-postgres<span class="w">    </span>—<span class="w"> </span>active<span class="w"> </span><span class="o">(</span>running<span class="o">)](</span>../../../../assets/virtualization-vmware-aria-operations-hc-vmware-vcops-postgres-active-runnin.svg<span class="o">)</span>
-<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a><span class="c1">## vmware-vcops-gemfire     — active (running)</span>
-<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>
-<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>!<span class="o">[</span>vmware-vcops-gemfire<span class="w">     </span>—<span class="w"> </span>active<span class="w"> </span><span class="o">(</span>running<span class="o">)](</span>../../../../assets/virtualization-vmware-aria-operations-hc-vmware-vcops-gemfire-active-running.svg<span class="o">)</span>
-<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a><span class="c1">## vmware-casa              — active (running)</span>
-<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>
-<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>!<span class="o">[</span>vmware-casa<span class="w">              </span>—<span class="w"> </span>active<span class="w"> </span><span class="o">(</span>running<span class="o">)](</span>../../../../assets/virtualization-vmware-aria-operations-hc-vmware-casa-active-running.svg<span class="o">)</span>
-<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a><span class="c1">## nginx                    — active (running)</span>
-<a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a>
-<a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a>!<span class="o">[</span>nginx<span class="w">                    </span>—<span class="w"> </span>active<span class="w"> </span><span class="o">(</span>running<span class="o">)](</span>../../../../assets/virtualization-vmware-aria-operations-hc-nginx-active-running.svg<span class="o">)</span>
-<a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a><span class="c1">## vmware-vcops-watchdog    — active (running)</span>
-<a id="__codelineno-3-32" name="__codelineno-3-32" href="#__codelineno-3-32"></a>
-<a id="__codelineno-3-33" name="__codelineno-3-33" href="#__codelineno-3-33"></a>!<span class="o">[</span>vmware-vcops-watchdog<span class="w">    </span>—<span class="w"> </span>active<span class="w"> </span><span class="o">(</span>running<span class="o">)](</span>../../../../assets/virtualization-vmware-aria-operations-hc-vmware-vcops-watchdog-active-runnin.svg<span class="o">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check all vmware services on the primary node</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>systemctl<span class="w"> </span>list-units<span class="w"> </span><span class="s1">&#39;vmware-*&#39;</span><span class="w"> </span>--state<span class="o">=</span>active
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1">## Check a specific service that appears failed</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>!<span class="o">[</span>Check<span class="w"> </span>a<span class="w"> </span>specific<span class="w"> </span>service<span class="w"> </span>that<span class="w"> </span>appears<span class="w"> </span>failed<span class="o">](</span>../../../../assets/virtualization-vmware-aria-operations-hc-check-a-specific-service-that-appea.svg<span class="o">)</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>systemctl<span class="w"> </span>status<span class="w"> </span>vmware-vcops-analytics
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>vmware-vcops-analytics<span class="w"> </span>--since<span class="w"> </span><span class="s2">&quot;1 hour ago&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-100
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1">## Key services and expected states</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>!<span class="o">[</span>Key<span class="w"> </span>services<span class="w"> </span>and<span class="w"> </span>expected<span class="w"> </span>states<span class="o">](</span>../../../../assets/virtualization-vmware-aria-operations-hc-key-services-and-expected-states.svg<span class="o">)</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1">## vmware-vcops-analytics   — active (running)</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>!<span class="o">[</span>vmware-vcops-analytics<span class="w">   </span>—<span class="w"> </span>active<span class="w"> </span><span class="o">(</span>running<span class="o">)](</span>../../../../assets/virtualization-vmware-aria-operations-hc-vmware-vcops-analytics-active-runni.svg<span class="o">)</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="c1">## vmware-vcops-cassandra   — active (running)</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>!<span class="o">[</span>vmware-vcops-cassandra<span class="w">   </span>—<span class="w"> </span>active<span class="w"> </span><span class="o">(</span>running<span class="o">)](</span>../../../../assets/virtualization-vmware-aria-operations-hc-vmware-vcops-cassandra-active-runni.svg<span class="o">)</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="c1">## vmware-vcops-postgres    — active (running)</span>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>!<span class="o">[</span>vmware-vcops-postgres<span class="w">    </span>—<span class="w"> </span>active<span class="w"> </span><span class="o">(</span>running<span class="o">)](</span>../../../../assets/virtualization-vmware-aria-operations-hc-vmware-vcops-postgres-active-runnin.svg<span class="o">)</span>
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="c1">## vmware-vcops-gemfire     — active (running)</span>
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>!<span class="o">[</span>vmware-vcops-gemfire<span class="w">     </span>—<span class="w"> </span>active<span class="w"> </span><span class="o">(</span>running<span class="o">)](</span>../../../../assets/virtualization-vmware-aria-operations-hc-vmware-vcops-gemfire-active-running.svg<span class="o">)</span>
+<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a><span class="c1">## vmware-casa              — active (running)</span>
+<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a>
+<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a>!<span class="o">[</span>vmware-casa<span class="w">              </span>—<span class="w"> </span>active<span class="w"> </span><span class="o">(</span>running<span class="o">)](</span>../../../../assets/virtualization-vmware-aria-operations-hc-vmware-casa-active-running.svg<span class="o">)</span>
+<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a><span class="c1">## nginx                    — active (running)</span>
+<a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a>
+<a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a>!<span class="o">[</span>nginx<span class="w">                    </span>—<span class="w"> </span>active<span class="w"> </span><span class="o">(</span>running<span class="o">)](</span>../../../../assets/virtualization-vmware-aria-operations-hc-nginx-active-running.svg<span class="o">)</span>
+<a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a><span class="c1">## vmware-vcops-watchdog    — active (running)</span>
+<a id="__codelineno-2-32" name="__codelineno-2-32" href="#__codelineno-2-32"></a>
+<a id="__codelineno-2-33" name="__codelineno-2-33" href="#__codelineno-2-33"></a>!<span class="o">[</span>vmware-vcops-watchdog<span class="w">    </span>—<span class="w"> </span>active<span class="w"> </span><span class="o">(</span>running<span class="o">)](</span>../../../../assets/virtualization-vmware-aria-operations-hc-vmware-vcops-watchdog-active-runnin.svg<span class="o">)</span>
 </code></pre></div>
 <h2 id="ntp-health">NTP Health<a class="headerlink" href="#ntp-health" title="Permanent link">&para;</a></h2>
 <p><img alt="NTP Health" src="../../../../../assets/virtualization-vmware-aria-operations-hc-ntp-health.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check NTP sync on each cluster node</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="k">for</span><span class="w"> </span>node<span class="w"> </span><span class="k">in</span><span class="w"> </span>vrops-prod-01<span class="w"> </span>vrops-prod-02<span class="w"> </span>vrops-prod-03<span class="p">;</span><span class="w"> </span><span class="k">do</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$node</span><span class="s2">.example.local: &quot;</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>ssh<span class="w"> </span>admin@<span class="s2">&quot;</span><span class="nv">$node</span><span class="s2">.example.local&quot;</span><span class="w"> </span><span class="s2">&quot;chronyc tracking 2&gt;/dev/null | grep &#39;System time&#39;&quot;</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="k">done</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1">## Force sync if drift is detected</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>!<span class="o">[</span>Force<span class="w"> </span>sync<span class="w"> </span><span class="k">if</span><span class="w"> </span>drift<span class="w"> </span>is<span class="w"> </span>detected<span class="o">](</span>../../../../assets/virtualization-vmware-aria-operations-hc-force-sync-if-drift-is-detected.svg<span class="o">)</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>chronyc<span class="w"> </span>makestep
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="c1">## See also</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>-<span class="w"> </span><span class="o">[</span>Aria<span class="w"> </span>Operations<span class="w"> </span>Common<span class="w"> </span>Issues<span class="o">](</span>../troubleshooting/common-issues/<span class="o">)</span>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>-<span class="w"> </span><span class="o">[</span>Aria<span class="w"> </span>Operations<span class="w"> </span>Procedures<span class="o">](</span>procedures/<span class="o">)</span>
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>-<span class="w"> </span><span class="o">[</span>Aria<span class="w"> </span>Operations<span class="w"> </span>—<span class="w"> </span>CLI<span class="w"> </span>Reference<span class="o">](</span>cli-reference/<span class="o">)</span>
-<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>
-<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="c1">## Verify NTP sources</span>
-<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>
-<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>!<span class="o">[</span>Verify<span class="w"> </span>NTP<span class="w"> </span>sources<span class="o">](</span>../../../../assets/virtualization-vmware-aria-operations-hc-verify-ntp-sources.svg<span class="o">)</span>
-<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>chronyc<span class="w"> </span>sources<span class="w"> </span>-v
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Check NTP sync on each cluster node</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="k">for</span><span class="w"> </span>node<span class="w"> </span><span class="k">in</span><span class="w"> </span>vrops-prod-01<span class="w"> </span>vrops-prod-02<span class="w"> </span>vrops-prod-03<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$node</span><span class="s2">.example.local: &quot;</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>ssh<span class="w"> </span>admin@<span class="s2">&quot;</span><span class="nv">$node</span><span class="s2">.example.local&quot;</span><span class="w"> </span><span class="s2">&quot;chronyc tracking 2&gt;/dev/null | grep &#39;System time&#39;&quot;</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="k">done</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1">## Force sync if drift is detected</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>!<span class="o">[</span>Force<span class="w"> </span>sync<span class="w"> </span><span class="k">if</span><span class="w"> </span>drift<span class="w"> </span>is<span class="w"> </span>detected<span class="o">](</span>../../../../assets/virtualization-vmware-aria-operations-hc-force-sync-if-drift-is-detected.svg<span class="o">)</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>chronyc<span class="w"> </span>makestep
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="c1">## See also</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>-<span class="w"> </span><span class="o">[</span>Aria<span class="w"> </span>Operations<span class="w"> </span>Common<span class="w"> </span>Issues<span class="o">](</span>../troubleshooting/common-issues/<span class="o">)</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>-<span class="w"> </span><span class="o">[</span>Aria<span class="w"> </span>Operations<span class="w"> </span>Procedures<span class="o">](</span>procedures/<span class="o">)</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>-<span class="w"> </span><span class="o">[</span>Aria<span class="w"> </span>Operations<span class="w"> </span>—<span class="w"> </span>CLI<span class="w"> </span>Reference<span class="o">](</span>cli-reference/<span class="o">)</span>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="c1">## Verify NTP sources</span>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>!<span class="o">[</span>Verify<span class="w"> </span>NTP<span class="w"> </span>sources<span class="o">](</span>../../../../assets/virtualization-vmware-aria-operations-hc-verify-ntp-sources.svg<span class="o">)</span>
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>chronyc<span class="w"> </span>sources<span class="w"> </span>-v
 </code></pre></div>
 <h2 id="alert-api-queries">Alert API Queries<a class="headerlink" href="#alert-api-queries" title="Permanent link">&para;</a></h2>
 <p><img alt="Alert API Queries" src="../../../../../assets/virtualization-vmware-aria-operations-hc-alert-api-queries.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Get all active alerts grouped by criticality</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: vRealizeOpsToken </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="s2">&quot;https://vrops-prod-01.example.local/suite-api/api/alerts?activeOnly=true&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;[.alerts[] | .criticality] | group_by(.) | map({criticality: .[0], count: length})&#39;</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1">## Get all CRITICAL alerts with their object and alert name</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>!<span class="o">[</span>Get<span class="w"> </span>all<span class="w"> </span>CRITICAL<span class="w"> </span>alerts<span class="w"> </span>with<span class="w"> </span>their<span class="w"> </span>object<span class="w"> </span>and<span class="w"> </span>alert<span class="w"> </span>name<span class="o">](</span>../../../../assets/virtualization-vmware-aria-operations-hc-get-all-critical-alerts-with-their-.svg<span class="o">)</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: vRealizeOpsToken </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">  </span><span class="s2">&quot;https://vrops-prod-01.example.local/suite-api/api/alerts?activeOnly=true&amp;criticality=CRITICAL&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.alerts[] | {alert: .type.name, object: .resourceName, since: .startTimeUTC}&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Get all active alerts grouped by criticality</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: vRealizeOpsToken </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="s2">&quot;https://vrops-prod-01.example.local/suite-api/api/alerts?activeOnly=true&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;[.alerts[] | .criticality] | group_by(.) | map({criticality: .[0], count: length})&#39;</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1">## Get all CRITICAL alerts with their object and alert name</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>!<span class="o">[</span>Get<span class="w"> </span>all<span class="w"> </span>CRITICAL<span class="w"> </span>alerts<span class="w"> </span>with<span class="w"> </span>their<span class="w"> </span>object<span class="w"> </span>and<span class="w"> </span>alert<span class="w"> </span>name<span class="o">](</span>../../../../assets/virtualization-vmware-aria-operations-hc-get-all-critical-alerts-with-their-.svg<span class="o">)</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: vRealizeOpsToken </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">  </span><span class="s2">&quot;https://vrops-prod-01.example.local/suite-api/api/alerts?activeOnly=true&amp;criticality=CRITICAL&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.alerts[] | {alert: .type.name, object: .resourceName, since: .startTimeUTC}&#39;</span>
 </code></pre></div>
 <h2 id="capacity-summary-via-api">Capacity Summary via API<a class="headerlink" href="#capacity-summary-via-api" title="Permanent link">&para;</a></h2>
 <p><img alt="Capacity Summary via API" src="../../../../../assets/virtualization-vmware-aria-operations-hc-capacity-summary-via-api.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Check cluster-level capacity summary</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: vRealizeOpsToken </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span><span class="s2">&quot;https://vrops-prod-01.example.local/suite-api/api/resources?resourceKind=ClusterComputeResource&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.resourceList[] | {name: .resourceKey.name}&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Check cluster-level capacity summary</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: vRealizeOpsToken </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="s2">&quot;https://vrops-prod-01.example.local/suite-api/api/resources?resourceKind=ClusterComputeResource&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.resourceList[] | {name: .resourceKey.name}&#39;</span>
 </code></pre></div>
 <p>Also verify alert definitions are active: <strong>Administration → Alert Settings → Alert Definitions</strong> — confirm no policies are disabled unexpectedly.</p>
 <hr />
@@ -9857,15 +9841,15 @@ Health checks for Aria Operations — cluster node status, adapter collection he
 <ol>
 <li><strong>UI status</strong>: Aria Ops → <strong>Administration</strong> → <strong>Remote Collectors</strong> — every collector must show <strong>State: OK</strong>; any showing <strong>Offline</strong> or <strong>Error</strong> needs immediate investigation</li>
 <li><strong>Service check</strong> — SSH to each remote collector node:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>ssh<span class="w"> </span>admin@vrops-rc-01.example.local
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>systemctl<span class="w"> </span>status<span class="w"> </span>vmware-vrops-collector
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="c1"># Expected: active (running); if inactive — start with: systemctl start vmware-vrops-collector</span>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>ssh<span class="w"> </span>admin@vrops-rc-01.example.local
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>systemctl<span class="w"> </span>status<span class="w"> </span>vmware-vrops-collector
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1"># Expected: active (running); if inactive — start with: systemctl start vmware-vrops-collector</span>
 </code></pre></div></li>
 <li><strong>Collector log review</strong>:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Check for collection failure entries in the last 30 minutes</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|fail\|exception&quot;</span><span class="w"> </span>/usr/lib/vmware-vcops/user/log/collector.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="c1"># Check connectivity log for adapter reach failures</span>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;connection refused\|timeout\|unreachable&quot;</span><span class="w"> </span>/usr/lib/vmware-vcops/user/log/adapters/*/adapter.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-30
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Check for collection failure entries in the last 30 minutes</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|fail\|exception&quot;</span><span class="w"> </span>/usr/lib/vmware-vcops/user/log/collector.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="c1"># Check connectivity log for adapter reach failures</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;connection refused\|timeout\|unreachable&quot;</span><span class="w"> </span>/usr/lib/vmware-vcops/user/log/adapters/*/adapter.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-30
 </code></pre></div></li>
 <li><strong>Verify adapters assigned to the collector are collecting</strong>: Administration → Remote Collectors → select collector → <strong>Assigned Adapters</strong> — all must show green last-collection timestamps</li>
 </ol>
@@ -9879,9 +9863,9 @@ Health checks for Aria Operations — cluster node status, adapter collection he
 <li><strong>Check credential validity</strong>: if an adapter shows <code>Authentication failed</code> in its status message → update credentials:</li>
 <li><strong>Data Sources</strong> → select adapter → <strong>Edit</strong> → update <strong>Credentials</strong> → <strong>Test Connection</strong> → <strong>Save</strong></li>
 <li><strong>Bulk collection status query via API</strong>:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: vRealizeOpsToken </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="w">  </span><span class="s2">&quot;https://vrops-prod-01.example.local/suite-api/api/adapters&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.adapterInstancesInfoDto[] | {name: .resourceKey.name, lastCollection: .lastCollectionTimeUTC, status: .adapterStatus}&#39;</span>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: vRealizeOpsToken </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">  </span><span class="s2">&quot;https://vrops-prod-01.example.local/suite-api/api/adapters&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.adapterInstancesInfoDto[] | {name: .resourceKey.name, lastCollection: .lastCollectionTimeUTC, status: .adapterStatus}&#39;</span>
 </code></pre></div></li>
 <li><strong>Confirm object count stability</strong>: Administration → Inventory → total object count; a sudden drop (&gt;5%) indicates an adapter or credential failure causing object deletion</li>
 </ol>
@@ -9889,23 +9873,23 @@ Health checks for Aria Operations — cluster node status, adapter collection he
 <h2 id="database-health-cassandra">Database Health (Cassandra)<a class="headerlink" href="#database-health-cassandra" title="Permanent link">&para;</a></h2>
 <p><img alt="Database Health (Cassandra)" src="../../../../../assets/virtualization-vmware-aria-operations-hc-database-health-cassandra.svg" /></p>
 <p>Cassandra is the primary metrics store; node failures cause metric gaps and eventually alert misfires.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># SSH to the master node</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>ssh<span class="w"> </span>admin@vrops-prod-01.example.local
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Check Cassandra cluster membership</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>su<span class="w"> </span>-s<span class="w"> </span>/bin/bash<span class="w"> </span>vcops-svc<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;cd /usr/lib/vmware-vcops/cassandra/bin &amp;&amp; ./nodetool status&quot;</span>
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="c1"># All nodes must show: UN (Up/Normal)</span>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># DN = node down (critical); UJ = joining/rebuilding (normal post-recovery)</span>
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>
-<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="c1"># Check Cassandra data disk usage</span>
-<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>df<span class="w"> </span>-h<span class="w"> </span>/dev/sdb
-<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="c1"># Alert threshold: &gt; 80% full; Cassandra needs headroom for compaction</span>
-<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>
-<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="c1"># Check Cassandra repair status (run weekly)</span>
-<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>su<span class="w"> </span>-s<span class="w"> </span>/bin/bash<span class="w"> </span>vcops-svc<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;cd /usr/lib/vmware-vcops/cassandra/bin &amp;&amp; ./nodetool repair --full&quot;</span>
-<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>
-<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a><span class="c1"># Check for Cassandra errors in the last hour</span>
-<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|exception&quot;</span><span class="w"> </span>/storage/db/cassandra/logs/system.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>date<span class="w"> </span>+<span class="s1">&#39;%Y-%m-%d %H&#39;</span><span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-30
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># SSH to the master node</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>ssh<span class="w"> </span>admin@vrops-prod-01.example.local
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Check Cassandra cluster membership</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>su<span class="w"> </span>-s<span class="w"> </span>/bin/bash<span class="w"> </span>vcops-svc<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;cd /usr/lib/vmware-vcops/cassandra/bin &amp;&amp; ./nodetool status&quot;</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="c1"># All nodes must show: UN (Up/Normal)</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1"># DN = node down (critical); UJ = joining/rebuilding (normal post-recovery)</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="c1"># Check Cassandra data disk usage</span>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>df<span class="w"> </span>-h<span class="w"> </span>/dev/sdb
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="c1"># Alert threshold: &gt; 80% full; Cassandra needs headroom for compaction</span>
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="c1"># Check Cassandra repair status (run weekly)</span>
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>su<span class="w"> </span>-s<span class="w"> </span>/bin/bash<span class="w"> </span>vcops-svc<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;cd /usr/lib/vmware-vcops/cassandra/bin &amp;&amp; ./nodetool repair --full&quot;</span>
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a><span class="c1"># Check for Cassandra errors in the last hour</span>
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|exception&quot;</span><span class="w"> </span>/storage/db/cassandra/logs/system.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>date<span class="w"> </span>+<span class="s1">&#39;%Y-%m-%d %H&#39;</span><span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-30
 </code></pre></div>
 <p>If a node shows <code>DN</code>: check VM power state → if powered on, check service: <code>systemctl status vmware-vcops-cassandra</code> → if service is stopped, start it and monitor rejoining (nodetool status transitions <code>DN → UJ → UN</code> over 10–30 minutes).</p>
 <hr />
@@ -9916,14 +9900,14 @@ Health checks for Aria Operations — cluster node status, adapter collection he
 <li>CPU &gt; 85% sustained: add a data node or remote collector to distribute load</li>
 <li>Memory &gt; 90%: check for memory leak in analytics service — <code>systemctl restart vmware-vcops-analytics</code> as a short-term fix; engage VMware support if recurring</li>
 <li><strong>Object count vs. license limit</strong>:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: vRealizeOpsToken </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="w">  </span><span class="s2">&quot;https://vrops-prod-01.example.local/suite-api/api/resources/count&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.count&#39;</span>
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="c1"># Compare against licensed object count (Administration → Licenses)</span>
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># Alert if object count &gt; 90% of licensed capacity</span>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: vRealizeOpsToken </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="w">  </span><span class="s2">&quot;https://vrops-prod-01.example.local/suite-api/api/resources/count&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.count&#39;</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="c1"># Compare against licensed object count (Administration → Licenses)</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Alert if object count &gt; 90% of licensed capacity</span>
 </code></pre></div></li>
 <li><strong>Disk growth trend</strong>: check <code>/storage/db</code> growth over the last 7 days:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>du<span class="w"> </span>-sh<span class="w"> </span>/storage/db/cassandra/data/
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="c1"># Compare to previous week; if growing &gt; 5 GB/day, review retention settings or add disk</span>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>du<span class="w"> </span>-sh<span class="w"> </span>/storage/db/cassandra/data/
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="c1"># Compare to previous week; if growing &gt; 5 GB/day, review retention settings or add disk</span>
 </code></pre></div></li>
 <li><strong>Collection cycle time</strong>: if dashboards show metric freshness degrading (data &gt; 10 minutes old), the analytics cluster is under-provisioned — check node CPU and consider scaling</li>
 </ol>
@@ -9935,17 +9919,17 @@ Health checks for Aria Operations — cluster node status, adapter collection he
 <li>Any alert in <strong>Active</strong> state older than 7 days without acknowledgement indicates policy or notification failure</li>
 <li>Investigate: check if the triggering condition still exists; if resolved but alert persists, cancel the alert manually</li>
 <li><strong>Notification delivery verification</strong>:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Test SMTP outbound plugin</span>
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="c1"># UI: Administration → Outbound Settings → select SMTP plugin → Test</span>
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="c1"># Check SMTP relay logs for delivery confirmation or bounce</span>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Test SMTP outbound plugin</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="c1"># UI: Administration → Outbound Settings → select SMTP plugin → Test</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="c1"># Check SMTP relay logs for delivery confirmation or bounce</span>
 </code></pre></div></li>
 <li><strong>Notification queue check</strong>: Aria Ops → <strong>Administration</strong> → <strong>Notifications</strong> → <strong>Outbound Settings</strong> → select each plugin → click <strong>Test</strong> → confirm delivery</li>
 <li><strong>Alert definition integrity</strong>: <strong>Configure → Alert Definitions</strong> — confirm no definitions are in <strong>Draft</strong> state (draft definitions do not fire alerts); publish any that should be active</li>
 <li><strong>Alert count trend</strong>: compare today's active alert count to the 30-day rolling average using the Alert API:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: vRealizeOpsToken </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="w">  </span><span class="s2">&quot;https://vrops-prod-01.example.local/suite-api/api/alerts?activeOnly=true&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.pageInfo.totalCount&#39;</span>
-<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c1"># Sudden spike (&gt;2x normal) indicates a broad infrastructure event or a misconfigured policy firing excessively</span>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: vRealizeOpsToken </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="w">  </span><span class="s2">&quot;https://vrops-prod-01.example.local/suite-api/api/alerts?activeOnly=true&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.pageInfo.totalCount&#39;</span>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c1"># Sudden spike (&gt;2x normal) indicates a broad infrastructure event or a misconfigured policy firing excessively</span>
 </code></pre></div></li>
 </ol>
 

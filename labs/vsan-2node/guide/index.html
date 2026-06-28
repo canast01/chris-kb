@@ -6981,23 +6981,7 @@ Complete procedure: add virtual disks to nested ESXi VMs, mark disks as SSD, dep
 </div>
 <p><img alt="Lab 2 Guide — vSAN 2-node Step-by-Step" src="../../../assets/labs-vsan-2node-guide.svg" /></p>
 <hr />
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>center: &quot;Vsan 2Node&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>phase_1_add_virtual_disks_to_nested_: &quot;Phase 1 — Add Virtual Disks to Nested ESXi VMs&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>phase_2_deploy_the_witness_appliance: &quot;Phase 2 — Deploy the Witness Appliance&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>phase_3_enable_vsan_on_the_2node_clu: &quot;Phase 3 — Enable vSAN on the 2-node Cluster&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>phase_4_create_a_vsan_storage_policy: &quot;Phase 4 — Create a vSAN Storage Policy&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>phase_5_verify_vsan_health: &quot;Phase 5 — Verify vSAN Health&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>known_issues_in_nested_environments: &quot;Known Issues in Nested Environments&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>center -&gt; phase_1_add_virtual_disks_to_nested_
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>center -&gt; phase_2_deploy_the_witness_appliance
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>center -&gt; phase_3_enable_vsan_on_the_2node_clu
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>center -&gt; phase_4_create_a_vsan_storage_policy
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>center -&gt; phase_5_verify_vsan_health
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>center -&gt; known_issues_in_nested_environments
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqN0sFKw0AQgOF7nmLw3kPT9tKDUNqCIpZCIXob1uyYLF1nQ3aTWkTwIXxCn8TNxsZCSuj9Y_5kZ6QqKXXK8BxKleUuilJiR-UcbhIrGOKNkXQDHzYXBc0hp3eRGf6MilxYwjEKKbFWpauERqns3qIzyGQdSfQztg2DMfx8fcNCSkhaCquGgjOwCRTWu2cFyaP9LzWfJTjTdGrFKKnQ5oguJzwo5yMWRVFoJTilrhWH1ipQ8BSeWgqLEx1oTJBYvGjC2v87Gg6tmP0TYKqrrjEJjXWgUO8WGzAcWvGosbDUlf-rciA0xbQk4QhFm7LOlCIjLIxW6bELTUNoGSiINrVrKWwDHWjMsKZSvR7bQk5Cu7ybPAuTkwDauXcBXJy3Z3NgVNZWZFHxab_EfvOG3_zBWD_4oVFwHxQo7lZ7pi5O_7s4GN3CNVfV48OH0ePDO-7x4U31-KVHP0NXvGT0C-rMUpI=?" /></p>
 <h2 id="phase-1-add-virtual-disks-to-nested-esxi-vms">Phase 1 — Add Virtual Disks to Nested ESXi VMs<a class="headerlink" href="#phase-1-add-virtual-disks-to-nested-esxi-vms" title="Permanent link">&para;</a></h2>
 <p>On the <strong>physical host's vSphere client</strong>, add virtual disks to each nested ESXi VM. Do this for both ESXi-01 and ESXi-02.</p>
 <p><strong>1.1 Power off the nested ESXi VM</strong></p>
@@ -7018,18 +7002,18 @@ Complete procedure: add virtual disks to nested ESXi VMs, mark disks as SSD, dep
 <p><strong>1.4 Power on the nested ESXi VM</strong></p>
 <p><strong>1.5 Tag the cache disk as SSD inside nested ESXi</strong></p>
 <p>vSAN requires at least one disk per disk group to be tagged as a flash cache device. Nested VMDKs appear as HDDs by default — force the SSD tag via ESXCLI:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># SSH into the nested ESXi host</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>device<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>naa<span class="w">   </span><span class="c1"># find the disk NAA IDs</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Mark the 10 GB disk (SCSI 0:1) as SSD — replace naa.xxxx with actual ID</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>nmp<span class="w"> </span>satp<span class="w"> </span>rule<span class="w"> </span>add<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span>--satp<span class="w"> </span>VMW_SATP_LOCAL<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span>--device<span class="w"> </span>naa.xxxx<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">  </span>--option<span class="w"> </span><span class="s2">&quot;enable_ssd&quot;</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Rescan storage to apply</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>adapter<span class="w"> </span>rescan<span class="w"> </span>--all
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>device<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A2<span class="w"> </span>naa.xxxx<span class="w">   </span><span class="c1"># confirm IsSSD: true</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># SSH into the nested ESXi host</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>device<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>naa<span class="w">   </span><span class="c1"># find the disk NAA IDs</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Mark the 10 GB disk (SCSI 0:1) as SSD — replace naa.xxxx with actual ID</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>nmp<span class="w"> </span>satp<span class="w"> </span>rule<span class="w"> </span>add<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">  </span>--satp<span class="w"> </span>VMW_SATP_LOCAL<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">  </span>--device<span class="w"> </span>naa.xxxx<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">  </span>--option<span class="w"> </span><span class="s2">&quot;enable_ssd&quot;</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Rescan storage to apply</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>adapter<span class="w"> </span>rescan<span class="w"> </span>--all
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>device<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A2<span class="w"> </span>naa.xxxx<span class="w">   </span><span class="c1"># confirm IsSSD: true</span>
 </code></pre></div>
 <p>Repeat on ESXi-02 for its cache disk.</p>
 <hr />

@@ -8168,45 +8168,8 @@ How It Works reference covering Forest and Domain Hierarchy, Core Components, FS
 *Applies to: Active Directory (Windows Server 2019 / 2022)*
 </div>
 <p><img alt="Active Directory — How It Works" src="../../../../../assets/compute-windows-server-active-directory-architecture-how-it-.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>center: &quot;Active Directory&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>forest_and_domain_hierarchy: &quot;Forest and Domain Hierarchy&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>core_components: &quot;Core Components&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>fsmo_role_placement: &quot;FSMO Role Placement&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>key_services_and_ports: &quot;Key Services and Ports&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>replication_topology: &quot;Replication Topology&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>dc_high_availability_design: &quot;DC High Availability Design&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>center -&gt; forest_and_domain_hierarchy
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>center -&gt; core_components
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>center -&gt; fsmo_role_placement
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>center -&gt; key_services_and_ports
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>center -&gt; replication_topology
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>center -&gt; dc_high_availability_design
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>@startuml
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>skinparam sequenceArrowThickness 1.5
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>skinparam roundcorner 5
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>actor &quot;User&quot; as USR
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>participant &quot;Workstation\n(Kerberos client)&quot; as WS
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>participant &quot;Domain Controller\n(KDC)&quot; as DC
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>participant &quot;Global Catalog\nServer&quot; as GC
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>participant &quot;Target Service\n(file share / app)&quot; as SVC
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>USR -&gt; WS: Login (username + password)
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>WS -&gt; DC: AS-REQ (pre-auth with password hash)
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>DC --&gt; WS: AS-REP (TGT + session key)
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>WS -&gt; DC: TGS-REQ (request service ticket)
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>DC -&gt; GC: Universal group lookup
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>GC --&gt; DC: Group membership
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>DC --&gt; WS: TGS-REP (service ticket)
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>WS -&gt; SVC: AP-REQ (service ticket)
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>SVC --&gt; WS: AP-REP (session established)
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>WS --&gt; USR: Access granted
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>@enduml
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp9kcFqwzAQRO_-iiX3_oAPhWBTCqU0JL0LVd5IorJWSMLUlPx718JpTCtynTc70s4ONqLKlnwL0WqTm0ahzxhb2O1ZnxD64qA47-A7GRmwBYNfUpO_NGeKmLKQfhADjdJ6YSxGGZWZOeCpUGAKfaHwfKW3rCVceu3w0ij2C0VjIM9_SJzQsQLdr1KdOqeRRCSHIjipcGTj8vbp9Q2OrMLhqlanP3EWCeNkFaayR6BYnn7BGU4rKCscFlDNiBicVXJpUWQK5Egv6x9vMryvcnV-UFybNkJO0jr5YZ3NsxgwWc1X2fUd16YN7DcU-kKraesB4eER7pxn4_pT-3b-f7UbWq9uY6j1ssF31m5-ABeB9I4=?" /></p>
+<p><img alt="Kroki" src="https://kroki.io/plantuml/svg/eNpdkjFv2zAQhXf-ioMnG4VTdMjiIUggFRrawYnkeslypq8SIYpk7qgY-fc9WQ7qeNFAfXz33js-SkbO4-CN9C4kZBxA6G2kYOmJOZ6aztk-kAj8uLu_gjiO4WgjB2K4NwZtjgyLnRAvAAV29YtRMDvrEoYMi33kXmdlF8NrWP4iPhBHAesdhbw639nXX6-UcUAXoIghc_SeeLpYFjNcFl_hyscDeigwo4_ta6iJ3y9eqhu0QW4pw0Q4Syr613kC6ZAJvgOmNE-o_xTGaA5YP6i1DfyOrbpZjhox4EDwDRKKnCIfV2ZfT1RZbOCpXr_8fIZlYlrjmDs4Of18ktChdCtTFrC-qJ75LSybqlFF0aK1Iejp41q0qS6qPK1GsnJn76Chesqz4IMG3cAuOM0tWkWrK0rgY-zHZKp54iRWnc8HGnQD0rl07WYepHZuB8xetBJ1vJ293CL683-q7afMnEc948E76ehSlnJarYLWTm-rZd0MHc0jheP0GP8BEbnXHw==?" /></p>
 <h2 id="forest-and-domain-hierarchy">Forest and Domain Hierarchy<a class="headerlink" href="#forest-and-domain-hierarchy" title="Permanent link">&para;</a></h2>
 <p>Active Directory is organised in a Forest → Domain → OU hierarchy:</p>
 <pre class="mermaid"><code>graph TB
@@ -8299,9 +8262,9 @@ How It Works reference covering Forest and Domain Hierarchy, Core Components, FS
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">netdom</span> <span class="n">query</span> <span class="n">fsmo</span> <span class="p">/</span><span class="n">domain</span><span class="p">:</span><span class="n">corp</span><span class="p">.</span><span class="n">local</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">Get-ADDomain</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">InfrastructureMaster</span><span class="p">,</span> <span class="n">RIDMaster</span><span class="p">,</span> <span class="n">PDCEmulator</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nb">Get-ADForest</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">SchemaMaster</span><span class="p">,</span> <span class="n">DomainNamingMaster</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">netdom</span> <span class="n">query</span> <span class="n">fsmo</span> <span class="p">/</span><span class="n">domain</span><span class="p">:</span><span class="n">corp</span><span class="p">.</span><span class="n">local</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Get-ADDomain</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">InfrastructureMaster</span><span class="p">,</span> <span class="n">RIDMaster</span><span class="p">,</span> <span class="n">PDCEmulator</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nb">Get-ADForest</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">SchemaMaster</span><span class="p">,</span> <span class="n">DomainNamingMaster</span>
 </code></pre></div>
 <hr />
 <h2 id="key-services-and-ports">Key Services and Ports<a class="headerlink" href="#key-services-and-ports" title="Permanent link">&para;</a></h2>
@@ -8400,10 +8363,10 @@ How It Works reference covering Forest and Domain Hierarchy, Core Components, FS
     dc01 &lt;--&gt;|"inter-site link\nscheduled interval"| dc04
     dc01 &lt;--&gt;|"inter-site link\nscheduled interval"| dc06
     dc04 &lt;--&gt;|"inter-site link"| dc06</code></pre>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Check replication health</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="n">repadmin</span> <span class="p">/</span><span class="n">showrepl</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="n">repadmin</span> <span class="p">/</span><span class="n">replsummary</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="n">dcdiag</span> <span class="p">/</span><span class="n">test</span><span class="p">:</span><span class="n">replications</span> <span class="p">/</span><span class="n">v</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Check replication health</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="n">repadmin</span> <span class="p">/</span><span class="n">showrepl</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="n">repadmin</span> <span class="p">/</span><span class="n">replsummary</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="n">dcdiag</span> <span class="p">/</span><span class="n">test</span><span class="p">:</span><span class="n">replications</span> <span class="p">/</span><span class="n">v</span>
 </code></pre></div>
 <hr />
 <h2 id="dc-high-availability-design">DC High Availability Design<a class="headerlink" href="#dc-high-availability-design" title="Permanent link">&para;</a></h2>
@@ -8417,12 +8380,12 @@ How It Works reference covering Forest and Domain Hierarchy, Core Components, FS
 <hr />
 <h2 id="active-directory-database">Active Directory Database<a class="headerlink" href="#active-directory-database" title="Permanent link">&para;</a></h2>
 <p>The AD database file is <code>NTDS.DIT</code>:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Location: C:\Windows\NTDS\NTDS.DIT
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>Log files: C:\Windows\NTDS\*.log (EDB transaction logs)
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>SYSVOL:    C:\Windows\SYSVOL\sysvol\&lt;domain&gt;\
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Location: C:\Windows\NTDS\NTDS.DIT
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>Log files: C:\Windows\NTDS\*.log (EDB transaction logs)
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>SYSVOL:    C:\Windows\SYSVOL\sysvol\&lt;domain&gt;\
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># System State backup includes NTDS.DIT</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="n">wbadmin</span> <span class="nb">start </span><span class="n">systemstatebackup</span> <span class="n">-backupTarget</span><span class="p">:</span><span class="n">D</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># System State backup includes NTDS.DIT</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="n">wbadmin</span> <span class="nb">start </span><span class="n">systemstatebackup</span> <span class="n">-backupTarget</span><span class="p">:</span><span class="n">D</span><span class="p">:</span>
 </code></pre></div>
 <hr />
 <h2 id="kerberos-authentication">Kerberos Authentication<a class="headerlink" href="#kerberos-authentication" title="Permanent link">&para;</a></h2>

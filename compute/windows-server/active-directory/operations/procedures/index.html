@@ -8518,23 +8518,7 @@ Procedures reference covering AGDLP Group Design Flow, Groups, GPOs, Domain Cont
 *Applies to: Windows Server 2019 / 2022*
 </div>
 
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>hub: &quot;Active Directory\nOperations&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>agdlp_group_design_flow: &quot;AGDLP Group Design Flow&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>groups: &quot;Groups&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>gpos: &quot;GPOs&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>domain_controllers: &quot;Domain Controllers&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>transfer_fsmo_roles: &quot;Transfer FSMO Roles&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>create_a_group_policy_object: &quot;Create a Group Policy Object&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>hub -&gt; agdlp_group_design_flow
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>hub -&gt; groups
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>hub -&gt; gpos
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>hub -&gt; domain_controllers
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>hub -&gt; transfer_fsmo_roles
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>hub -&gt; create_a_group_policy_object
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp9kcFOwzAQRO_-ilXv_EAOSKhRewElAo5I1jbZOEau17JdoEL9d2yT0AOGmz1vZq0dj9rTEDXbBrxWcxRiPh0a2Nwl8Y2gLZj9-cV2jjxmZ9jAZ5jRUQMzfaBiexGoRuOk8nxycqSglZWT4fc8aN_e97DPBNpCYJfIdUZ-AK0ydBElH1Ko2EPd47g4-q7ORz6itnJgGz0bQz672yLC9ipWs9GjDRN5OYUjy-SkHH5eVNg9PXTwmNVqevCEkSQuNTg2ejhLPrwmSxqzLRhw6aIvGLqCq_PyT8DNLfzR7Yq_S_u5pXrW8-8qVlJZdEX_bSG-ALAhyhQ=?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Access:</strong> Local Administrator or Domain Admin on target hosts</li>
@@ -8596,73 +8580,73 @@ Procedures reference covering AGDLP Group Design Flow, Groups, GPOs, Domain Cont
 <p>Best practice: follow AGDLP — Accounts in Global groups, Global in Domain Local groups, Domain Local assigned Permissions.</p>
 <h3 id="creating-groups">Creating Groups<a class="headerlink" href="#creating-groups" title="Permanent link">&para;</a></h3>
 <p><img alt="Creating Groups" src="../../../../../assets/active-directory-proc-creating-groups.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Create a security group (Global scope)</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">New-ADGroup</span> <span class="n">-Name</span> <span class="s2">&quot;SG-ServerAdmins&quot;</span> <span class="p">`</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="n">-GroupScope</span> <span class="n">Global</span> <span class="p">`</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    <span class="n">-GroupCategory</span> <span class="n">Security</span> <span class="p">`</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    <span class="n">-Path</span> <span class="s2">&quot;OU=Groups,DC=corp,DC=example,DC=com&quot;</span> <span class="p">`</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    <span class="n">-Description</span> <span class="s2">&quot;Server administrators&quot;</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c"># Create a distribution group</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="nb">New-ADGroup</span> <span class="n">-Name</span> <span class="s2">&quot;DG-ITTeam&quot;</span> <span class="p">`</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>    <span class="n">-GroupScope</span> <span class="n">Universal</span> <span class="p">`</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>    <span class="n">-GroupCategory</span> <span class="n">Distribution</span> <span class="p">`</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>    <span class="n">-Path</span> <span class="s2">&quot;OU=Groups,DC=corp,DC=example,DC=com&quot;</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="c"># Create a Domain Local group for resource access</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="nb">New-ADGroup</span> <span class="n">-Name</span> <span class="s2">&quot;DL-FileShare-Finance-RW&quot;</span> <span class="p">`</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>    <span class="n">-GroupScope</span> <span class="n">DomainLocal</span> <span class="p">`</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>    <span class="n">-GroupCategory</span> <span class="n">Security</span> <span class="p">`</span>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>    <span class="n">-Path</span> <span class="s2">&quot;OU=Groups,DC=corp,DC=example,DC=com&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Create a security group (Global scope)</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">New-ADGroup</span> <span class="n">-Name</span> <span class="s2">&quot;SG-ServerAdmins&quot;</span> <span class="p">`</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="n">-GroupScope</span> <span class="n">Global</span> <span class="p">`</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">-GroupCategory</span> <span class="n">Security</span> <span class="p">`</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">-Path</span> <span class="s2">&quot;OU=Groups,DC=corp,DC=example,DC=com&quot;</span> <span class="p">`</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">-Description</span> <span class="s2">&quot;Server administrators&quot;</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c"># Create a distribution group</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="nb">New-ADGroup</span> <span class="n">-Name</span> <span class="s2">&quot;DG-ITTeam&quot;</span> <span class="p">`</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    <span class="n">-GroupScope</span> <span class="n">Universal</span> <span class="p">`</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    <span class="n">-GroupCategory</span> <span class="n">Distribution</span> <span class="p">`</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>    <span class="n">-Path</span> <span class="s2">&quot;OU=Groups,DC=corp,DC=example,DC=com&quot;</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="c"># Create a Domain Local group for resource access</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="nb">New-ADGroup</span> <span class="n">-Name</span> <span class="s2">&quot;DL-FileShare-Finance-RW&quot;</span> <span class="p">`</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>    <span class="n">-GroupScope</span> <span class="n">DomainLocal</span> <span class="p">`</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>    <span class="n">-GroupCategory</span> <span class="n">Security</span> <span class="p">`</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>    <span class="n">-Path</span> <span class="s2">&quot;OU=Groups,DC=corp,DC=example,DC=com&quot;</span>
 </code></pre></div>
 <h3 id="managing-group-membership">Managing Group Membership<a class="headerlink" href="#managing-group-membership" title="Permanent link">&para;</a></h3>
 <p><img alt="Managing Group Membership" src="../../../../../assets/active-directory-proc-managing-group-membership.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Add a single member</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">Add-ADGroupMember</span> <span class="n">-Identity</span> <span class="s2">&quot;SG-ServerAdmins&quot;</span> <span class="n">-Members</span> <span class="s2">&quot;jsmith&quot;</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c"># Add multiple members</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nb">Add-ADGroupMember</span> <span class="n">-Identity</span> <span class="s2">&quot;SG-ServerAdmins&quot;</span> <span class="n">-Members</span> <span class="s2">&quot;jsmith&quot;</span><span class="p">,</span><span class="s2">&quot;bwilson&quot;</span><span class="p">,</span><span class="s2">&quot;DC01$&quot;</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c"># Remove a member</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="nb">Remove-ADGroupMember</span> <span class="n">-Identity</span> <span class="s2">&quot;SG-ServerAdmins&quot;</span> <span class="n">-Members</span> <span class="s2">&quot;jsmith&quot;</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c"># List all members recursively</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="nb">Get-ADGroupMember</span> <span class="n">-Identity</span> <span class="s2">&quot;SG-ServerAdmins&quot;</span> <span class="n">-Recursive</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c"># List all groups a user belongs to</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="nb">Get-ADPrincipalGroupMembership</span> <span class="n">-Identity</span> <span class="s2">&quot;jsmith&quot;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">GroupScope</span><span class="p">,</span> <span class="n">GroupCategory</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Add a single member</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Add-ADGroupMember</span> <span class="n">-Identity</span> <span class="s2">&quot;SG-ServerAdmins&quot;</span> <span class="n">-Members</span> <span class="s2">&quot;jsmith&quot;</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c"># Add multiple members</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nb">Add-ADGroupMember</span> <span class="n">-Identity</span> <span class="s2">&quot;SG-ServerAdmins&quot;</span> <span class="n">-Members</span> <span class="s2">&quot;jsmith&quot;</span><span class="p">,</span><span class="s2">&quot;bwilson&quot;</span><span class="p">,</span><span class="s2">&quot;DC01$&quot;</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c"># Remove a member</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="nb">Remove-ADGroupMember</span> <span class="n">-Identity</span> <span class="s2">&quot;SG-ServerAdmins&quot;</span> <span class="n">-Members</span> <span class="s2">&quot;jsmith&quot;</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c"># List all members recursively</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="nb">Get-ADGroupMember</span> <span class="n">-Identity</span> <span class="s2">&quot;SG-ServerAdmins&quot;</span> <span class="n">-Recursive</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c"># List all groups a user belongs to</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="nb">Get-ADPrincipalGroupMembership</span> <span class="n">-Identity</span> <span class="s2">&quot;jsmith&quot;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">GroupScope</span><span class="p">,</span> <span class="n">GroupCategory</span>
 </code></pre></div>
 <h3 id="group-nesting">Group Nesting<a class="headerlink" href="#group-nesting" title="Permanent link">&para;</a></h3>
 <p><img alt="Group Nesting" src="../../../../../assets/active-directory-proc-group-nesting.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Add a Global group into a Domain Local group (AGDLP)</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Add-ADGroupMember</span> <span class="n">-Identity</span> <span class="s2">&quot;DL-FileShare-Finance-RW&quot;</span> <span class="n">-Members</span> <span class="s2">&quot;SG-FinanceUsers&quot;</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c"># Find nested groups inside a group</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="nb">Get-ADGroupMember</span> <span class="n">-Identity</span> <span class="s2">&quot;DL-FileShare-Finance-RW&quot;</span> <span class="n">-Recursive</span> <span class="p">|</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>    <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">objectClass</span> <span class="o">-eq</span> <span class="s2">&quot;group&quot;</span><span class="p">}</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c"># Show full group chain for a user</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="nb">Get-ADPrincipalGroupMembership</span> <span class="n">-Identity</span> <span class="s2">&quot;jsmith&quot;</span> <span class="n">-Recursive</span> <span class="p">|</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>    <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">GroupScope</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">Name</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Add a Global group into a Domain Local group (AGDLP)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">Add-ADGroupMember</span> <span class="n">-Identity</span> <span class="s2">&quot;DL-FileShare-Finance-RW&quot;</span> <span class="n">-Members</span> <span class="s2">&quot;SG-FinanceUsers&quot;</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c"># Find nested groups inside a group</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nb">Get-ADGroupMember</span> <span class="n">-Identity</span> <span class="s2">&quot;DL-FileShare-Finance-RW&quot;</span> <span class="n">-Recursive</span> <span class="p">|</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">objectClass</span> <span class="o">-eq</span> <span class="s2">&quot;group&quot;</span><span class="p">}</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c"># Show full group chain for a user</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="nb">Get-ADPrincipalGroupMembership</span> <span class="n">-Identity</span> <span class="s2">&quot;jsmith&quot;</span> <span class="n">-Recursive</span> <span class="p">|</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>    <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">GroupScope</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">Name</span>
 </code></pre></div>
 <h3 id="auditing-and-reporting">Auditing and Reporting<a class="headerlink" href="#auditing-and-reporting" title="Permanent link">&para;</a></h3>
 <p><img alt="Auditing and Reporting" src="../../../../../assets/active-directory-proc-auditing-and-reporting.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Find empty groups</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">Get-ADGroup</span> <span class="n">-Filter</span> <span class="p">*</span> <span class="n">-Properties</span> <span class="n">Members</span> <span class="p">|</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">Members</span><span class="p">.</span><span class="n">Count</span> <span class="o">-eq</span> <span class="n">0</span><span class="p">}</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c"># Find groups with no members and not nested anywhere</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="nb">Get-ADGroup</span> <span class="n">-Filter</span> <span class="p">*</span> <span class="n">-Properties</span> <span class="n">Members</span><span class="p">,</span> <span class="n">MemberOf</span> <span class="p">|</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>    <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">Members</span><span class="p">.</span><span class="n">Count</span> <span class="o">-eq</span> <span class="n">0</span> <span class="o">-and</span> <span class="nv">$_</span><span class="p">.</span><span class="n">MemberOf</span><span class="p">.</span><span class="n">Count</span> <span class="o">-eq</span> <span class="n">0</span><span class="p">}</span> <span class="p">|</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>    <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">DistinguishedName</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c"># Export group membership to CSV</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="nb">Get-ADGroupMember</span> <span class="s2">&quot;SG-ServerAdmins&quot;</span> <span class="p">|</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>    <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">SamAccountName</span><span class="p">,</span> <span class="n">objectClass</span> <span class="p">|</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>    <span class="nb">Export-Csv</span> <span class="n">C</span><span class="p">:\</span><span class="n">Reports</span><span class="p">\</span><span class="n">SG-ServerAdmins</span><span class="p">.</span><span class="n">csv</span> <span class="n">-NoTypeInformation</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="c"># Find all groups a computer account is in</span>
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="nb">Get-ADPrincipalGroupMembership</span> <span class="n">-Identity</span> <span class="s2">&quot;DC01$&quot;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Find empty groups</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Get-ADGroup</span> <span class="n">-Filter</span> <span class="p">*</span> <span class="n">-Properties</span> <span class="n">Members</span> <span class="p">|</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">Members</span><span class="p">.</span><span class="n">Count</span> <span class="o">-eq</span> <span class="n">0</span><span class="p">}</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c"># Find groups with no members and not nested anywhere</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="nb">Get-ADGroup</span> <span class="n">-Filter</span> <span class="p">*</span> <span class="n">-Properties</span> <span class="n">Members</span><span class="p">,</span> <span class="n">MemberOf</span> <span class="p">|</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>    <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">Members</span><span class="p">.</span><span class="n">Count</span> <span class="o">-eq</span> <span class="n">0</span> <span class="o">-and</span> <span class="nv">$_</span><span class="p">.</span><span class="n">MemberOf</span><span class="p">.</span><span class="n">Count</span> <span class="o">-eq</span> <span class="n">0</span><span class="p">}</span> <span class="p">|</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>    <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">DistinguishedName</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c"># Export group membership to CSV</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="nb">Get-ADGroupMember</span> <span class="s2">&quot;SG-ServerAdmins&quot;</span> <span class="p">|</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>    <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">SamAccountName</span><span class="p">,</span> <span class="n">objectClass</span> <span class="p">|</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>    <span class="nb">Export-Csv</span> <span class="n">C</span><span class="p">:\</span><span class="n">Reports</span><span class="p">\</span><span class="n">SG-ServerAdmins</span><span class="p">.</span><span class="n">csv</span> <span class="n">-NoTypeInformation</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="c"># Find all groups a computer account is in</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="nb">Get-ADPrincipalGroupMembership</span> <span class="n">-Identity</span> <span class="s2">&quot;DC01$&quot;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span>
 </code></pre></div>
 <hr />
 <h2 id="gpos">GPOs<a class="headerlink" href="#gpos" title="Permanent link">&para;</a></h2>
@@ -8708,76 +8692,76 @@ Procedures reference covering AGDLP Group Design Flow, Groups, GPOs, Domain Cont
 <p>Later-processed policies win unless Block Inheritance or Enforced (No Override) is set.</p>
 <h3 id="creating-and-linking-a-gpo">Creating and Linking a GPO<a class="headerlink" href="#creating-and-linking-a-gpo" title="Permanent link">&para;</a></h3>
 <p><img alt="Creating and Linking a GPO" src="../../../../../assets/active-directory-proc-creating-and-linking-a-gpo.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># Create a new GPO</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">New-GPO</span> <span class="n">-Name</span> <span class="s2">&quot;Security Baseline - Servers&quot;</span> <span class="n">-Comment</span> <span class="s2">&quot;CIS Level 1 server policy&quot;</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c"># Link GPO to an OU</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="nb">New-GPLink</span> <span class="n">-Name</span> <span class="s2">&quot;Security Baseline - Servers&quot;</span> <span class="n">-Target</span> <span class="s2">&quot;OU=Servers,DC=corp,DC=example,DC=com&quot;</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c"># Create and link in one step</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="nb">New-GPO</span> <span class="n">-Name</span> <span class="s2">&quot;Desktop Lockscreen&quot;</span> <span class="p">|</span> <span class="nb">New-GPLink</span> <span class="n">-Target</span> <span class="s2">&quot;OU=Workstations,DC=corp,DC=example,DC=com&quot;</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c"># Set link order (lower number = higher priority)</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="nb">Set-GPLink</span> <span class="n">-Name</span> <span class="s2">&quot;Desktop Lockscreen&quot;</span> <span class="n">-Target</span> <span class="s2">&quot;OU=Workstations,DC=corp,DC=example,DC=com&quot;</span> <span class="n">-Order</span> <span class="n">1</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Create a new GPO</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">New-GPO</span> <span class="n">-Name</span> <span class="s2">&quot;Security Baseline - Servers&quot;</span> <span class="n">-Comment</span> <span class="s2">&quot;CIS Level 1 server policy&quot;</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c"># Link GPO to an OU</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="nb">New-GPLink</span> <span class="n">-Name</span> <span class="s2">&quot;Security Baseline - Servers&quot;</span> <span class="n">-Target</span> <span class="s2">&quot;OU=Servers,DC=corp,DC=example,DC=com&quot;</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c"># Create and link in one step</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="nb">New-GPO</span> <span class="n">-Name</span> <span class="s2">&quot;Desktop Lockscreen&quot;</span> <span class="p">|</span> <span class="nb">New-GPLink</span> <span class="n">-Target</span> <span class="s2">&quot;OU=Workstations,DC=corp,DC=example,DC=com&quot;</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c"># Set link order (lower number = higher priority)</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="nb">Set-GPLink</span> <span class="n">-Name</span> <span class="s2">&quot;Desktop Lockscreen&quot;</span> <span class="n">-Target</span> <span class="s2">&quot;OU=Workstations,DC=corp,DC=example,DC=com&quot;</span> <span class="n">-Order</span> <span class="n">1</span>
 </code></pre></div>
 <h3 id="viewing-applied-policy">Viewing Applied Policy<a class="headerlink" href="#viewing-applied-policy" title="Permanent link">&para;</a></h3>
 <p><img alt="Viewing Applied Policy" src="../../../../../assets/active-directory-proc-viewing-applied-policy.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a># Show applied GPOs for the current user and computer
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>gpresult /r
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a># Verbose HTML report
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>gpresult /h C:\Temp\gpresult.html /f
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a># Show GPOs for a specific user on a remote computer
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>gpresult /s DC01 /u corp\jsmith /r
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a># Force immediate policy refresh
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>gpupdate /force
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a># Refresh user policy only (no reboot)
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>gpupdate /target:user
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a># Show applied GPOs for the current user and computer
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>gpresult /r
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a># Verbose HTML report
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>gpresult /h C:\Temp\gpresult.html /f
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a># Show GPOs for a specific user on a remote computer
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>gpresult /s DC01 /u corp\jsmith /r
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a># Force immediate policy refresh
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>gpupdate /force
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a># Refresh user policy only (no reboot)
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>gpupdate /target:user
 </code></pre></div>
 <h3 id="rsop-resultant-set-of-policy">RSoP (Resultant Set of Policy)<a class="headerlink" href="#rsop-resultant-set-of-policy" title="Permanent link">&para;</a></h3>
 <p><img alt="RSoP (Resultant Set of Policy)" src="../../../../../assets/active-directory-proc-rsop-resultant-set-of-policy.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a># RSoP wizard (GUI)
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>rsop.msc
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a># Full RSoP output to file
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>gpresult /z &gt; C:\Temp\rsop-full.txt
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a># Check which GPO set a specific setting
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>gpresult /r /scope computer | findstr /i &quot;password&quot;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a># RSoP wizard (GUI)
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>rsop.msc
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a># Full RSoP output to file
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>gpresult /z &gt; C:\Temp\rsop-full.txt
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a># Check which GPO set a specific setting
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>gpresult /r /scope computer | findstr /i &quot;password&quot;
 </code></pre></div>
 <h3 id="gpo-backup-and-restore">GPO Backup and Restore<a class="headerlink" href="#gpo-backup-and-restore" title="Permanent link">&para;</a></h3>
 <p><img alt="GPO Backup and Restore" src="../../../../../assets/active-directory-proc-gpo-backup-and-restore.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c"># Backup all GPOs</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nb">Backup-GPO</span> <span class="n">-All</span> <span class="n">-Path</span> <span class="s2">&quot;C:\GPOBackups&quot;</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c"># Backup a single GPO</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="nb">Backup-GPO</span> <span class="n">-Name</span> <span class="s2">&quot;Security Baseline - Servers&quot;</span> <span class="n">-Path</span> <span class="s2">&quot;C:\GPOBackups&quot;</span>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c"># Restore a GPO from backup</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="nb">Restore-GPO</span> <span class="n">-Name</span> <span class="s2">&quot;Security Baseline - Servers&quot;</span> <span class="n">-Path</span> <span class="s2">&quot;C:\GPOBackups&quot;</span>
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c"># Import settings from backup into existing GPO</span>
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="nb">Import-GPO</span> <span class="n">-BackupGpoName</span> <span class="s2">&quot;Security Baseline - Servers&quot;</span> <span class="p">`</span>
-<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>    <span class="n">-TargetName</span> <span class="s2">&quot;Security Baseline - Servers&quot;</span> <span class="n">-Path</span> <span class="s2">&quot;C:\GPOBackups&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c"># Backup all GPOs</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nb">Backup-GPO</span> <span class="n">-All</span> <span class="n">-Path</span> <span class="s2">&quot;C:\GPOBackups&quot;</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c"># Backup a single GPO</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="nb">Backup-GPO</span> <span class="n">-Name</span> <span class="s2">&quot;Security Baseline - Servers&quot;</span> <span class="n">-Path</span> <span class="s2">&quot;C:\GPOBackups&quot;</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c"># Restore a GPO from backup</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="nb">Restore-GPO</span> <span class="n">-Name</span> <span class="s2">&quot;Security Baseline - Servers&quot;</span> <span class="n">-Path</span> <span class="s2">&quot;C:\GPOBackups&quot;</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="c"># Import settings from backup into existing GPO</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="nb">Import-GPO</span> <span class="n">-BackupGpoName</span> <span class="s2">&quot;Security Baseline - Servers&quot;</span> <span class="p">`</span>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>    <span class="n">-TargetName</span> <span class="s2">&quot;Security Baseline - Servers&quot;</span> <span class="n">-Path</span> <span class="s2">&quot;C:\GPOBackups&quot;</span>
 </code></pre></div>
 <h3 id="gpo-inheritance-and-filtering">GPO Inheritance and Filtering<a class="headerlink" href="#gpo-inheritance-and-filtering" title="Permanent link">&para;</a></h3>
 <p><img alt="GPO Inheritance and Filtering" src="../../../../../assets/active-directory-proc-gpo-inheritance-and-filtering.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c"># Block inheritance on an OU</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="nb">Set-GPInheritance</span> <span class="n">-Target</span> <span class="s2">&quot;OU=Test,DC=corp,DC=example,DC=com&quot;</span> <span class="n">-IsBlocked</span> <span class="n">Yes</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c"># Enforce a GPO link (cannot be blocked by child OUs)</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="nb">Set-GPLink</span> <span class="n">-Name</span> <span class="s2">&quot;Domain Security Policy&quot;</span> <span class="n">-Target</span> <span class="s2">&quot;DC=corp,DC=example,DC=com&quot;</span> <span class="n">-Enforced</span> <span class="n">Yes</span>
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c"># Apply GPO to a specific security group only</span>
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="nb">Set-GPPermission</span> <span class="n">-Name</span> <span class="s2">&quot;Desktop Lockscreen&quot;</span> <span class="n">-TargetName</span> <span class="s2">&quot;Workstation Admins&quot;</span> <span class="p">`</span>
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>    <span class="n">-TargetType</span> <span class="nb">Group </span><span class="n">-PermissionLevel</span> <span class="n">GpoApply</span>
-<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>
-<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="c"># Remove Authenticated Users (for targeted group filtering)</span>
-<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="nb">Set-GPPermission</span> <span class="n">-Name</span> <span class="s2">&quot;Desktop Lockscreen&quot;</span> <span class="n">-TargetName</span> <span class="s2">&quot;Authenticated Users&quot;</span> <span class="p">`</span>
-<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>    <span class="n">-TargetType</span> <span class="nb">Group </span><span class="n">-PermissionLevel</span> <span class="n">None</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c"># Block inheritance on an OU</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nb">Set-GPInheritance</span> <span class="n">-Target</span> <span class="s2">&quot;OU=Test,DC=corp,DC=example,DC=com&quot;</span> <span class="n">-IsBlocked</span> <span class="n">Yes</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c"># Enforce a GPO link (cannot be blocked by child OUs)</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="nb">Set-GPLink</span> <span class="n">-Name</span> <span class="s2">&quot;Domain Security Policy&quot;</span> <span class="n">-Target</span> <span class="s2">&quot;DC=corp,DC=example,DC=com&quot;</span> <span class="n">-Enforced</span> <span class="n">Yes</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c"># Apply GPO to a specific security group only</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="nb">Set-GPPermission</span> <span class="n">-Name</span> <span class="s2">&quot;Desktop Lockscreen&quot;</span> <span class="n">-TargetName</span> <span class="s2">&quot;Workstation Admins&quot;</span> <span class="p">`</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>    <span class="n">-TargetType</span> <span class="nb">Group </span><span class="n">-PermissionLevel</span> <span class="n">GpoApply</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="c"># Remove Authenticated Users (for targeted group filtering)</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="nb">Set-GPPermission</span> <span class="n">-Name</span> <span class="s2">&quot;Desktop Lockscreen&quot;</span> <span class="n">-TargetName</span> <span class="s2">&quot;Authenticated Users&quot;</span> <span class="p">`</span>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>    <span class="n">-TargetType</span> <span class="nb">Group </span><span class="n">-PermissionLevel</span> <span class="n">None</span>
 </code></pre></div>
 <hr />
 <h2 id="domain-controllers">Domain Controllers<a class="headerlink" href="#domain-controllers" title="Permanent link">&para;</a></h2>
@@ -8821,101 +8805,101 @@ Procedures reference covering AGDLP Group Design Flow, Groups, GPOs, Domain Cont
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a># Show all FSMO role holders
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>netdom query fsmo
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a># Show via PowerShell
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>Get-ADDomain | Select-Object PDCEmulator, RIDMaster, InfrastructureMaster
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>Get-ADForest | Select-Object SchemaMaster, DomainNamingMaster
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a># Show all FSMO role holders
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>netdom query fsmo
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a># Show via PowerShell
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>Get-ADDomain | Select-Object PDCEmulator, RIDMaster, InfrastructureMaster
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>Get-ADForest | Select-Object SchemaMaster, DomainNamingMaster
 </code></pre></div>
 <h3 id="promoting-a-new-dc">Promoting a New DC<a class="headerlink" href="#promoting-a-new-dc" title="Permanent link">&para;</a></h3>
 <p><img alt="Promoting a New DC" src="../../../../../assets/active-directory-proc-promoting-a-new-dc.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c"># Install AD DS role</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="nb">Install-WindowsFeature</span> <span class="n">-Name</span> <span class="n">AD-Domain-Services</span> <span class="n">-IncludeManagementTools</span>
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c"># Promote as additional DC in existing domain</span>
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="nb">Import-Module</span> <span class="n">ADDSDeployment</span>
-<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="nb">Install-ADDSDomainController</span> <span class="p">`</span>
-<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>    <span class="n">-DomainName</span> <span class="s2">&quot;corp.example.com&quot;</span> <span class="p">`</span>
-<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>    <span class="n">-InstallDns</span><span class="p">:</span><span class="nv">$true</span> <span class="p">`</span>
-<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>    <span class="n">-Credential</span> <span class="p">(</span><span class="nb">Get-Credential</span><span class="p">)</span> <span class="p">`</span>
-<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>    <span class="n">-SafeModeAdministratorPassword</span> <span class="p">(</span><span class="nb">ConvertTo-SecureString</span> <span class="s2">&quot;P@ssw0rd!&quot;</span> <span class="n">-AsPlainText</span> <span class="n">-Force</span><span class="p">)</span> <span class="p">`</span>
-<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>    <span class="n">-Force</span><span class="p">:</span><span class="nv">$true</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c"># Install AD DS role</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="nb">Install-WindowsFeature</span> <span class="n">-Name</span> <span class="n">AD-Domain-Services</span> <span class="n">-IncludeManagementTools</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c"># Promote as additional DC in existing domain</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="nb">Import-Module</span> <span class="n">ADDSDeployment</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="nb">Install-ADDSDomainController</span> <span class="p">`</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>    <span class="n">-DomainName</span> <span class="s2">&quot;corp.example.com&quot;</span> <span class="p">`</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>    <span class="n">-InstallDns</span><span class="p">:</span><span class="nv">$true</span> <span class="p">`</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>    <span class="n">-Credential</span> <span class="p">(</span><span class="nb">Get-Credential</span><span class="p">)</span> <span class="p">`</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>    <span class="n">-SafeModeAdministratorPassword</span> <span class="p">(</span><span class="nb">ConvertTo-SecureString</span> <span class="s2">&quot;P@ssw0rd!&quot;</span> <span class="n">-AsPlainText</span> <span class="n">-Force</span><span class="p">)</span> <span class="p">`</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>    <span class="n">-Force</span><span class="p">:</span><span class="nv">$true</span>
 </code></pre></div>
 <h3 id="demoting-a-dc">Demoting a DC<a class="headerlink" href="#demoting-a-dc" title="Permanent link">&para;</a></h3>
 <p><img alt="Demoting a DC" src="../../../../../assets/active-directory-proc-demoting-a-dc.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c"># Graceful demotion</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="nb">Uninstall-ADDSDomainController</span> <span class="p">`</span>
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>    <span class="n">-LocalAdministratorPassword</span> <span class="p">(</span><span class="nb">ConvertTo-SecureString</span> <span class="s2">&quot;P@ssw0rd!&quot;</span> <span class="n">-AsPlainText</span> <span class="n">-Force</span><span class="p">)</span> <span class="p">`</span>
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>    <span class="n">-Force</span><span class="p">:</span><span class="nv">$true</span>
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>
-<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="c"># Metadata cleanup if DC is already offline</span>
-<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="n">ntdsutil</span>
-<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>  <span class="n">metadata</span> <span class="n">cleanup</span>
-<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>  <span class="n">remove</span> <span class="n">selected</span> <span class="n">server</span> <span class="n">CN</span><span class="p">=</span><span class="n">DC02</span><span class="p">,</span><span class="n">CN</span><span class="p">=</span><span class="n">Servers</span><span class="p">,</span><span class="n">CN</span><span class="p">=</span><span class="k">Default</span><span class="n">-First-Site</span><span class="p">,</span><span class="n">CN</span><span class="p">=</span><span class="n">Sites</span><span class="p">,</span><span class="n">CN</span><span class="p">=</span><span class="n">Configuration</span><span class="p">,</span><span class="n">DC</span><span class="p">=</span><span class="n">corp</span><span class="p">,</span><span class="n">DC</span><span class="p">=</span><span class="n">example</span><span class="p">,</span><span class="n">DC</span><span class="p">=</span><span class="n">com</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c"># Graceful demotion</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="nb">Uninstall-ADDSDomainController</span> <span class="p">`</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>    <span class="n">-LocalAdministratorPassword</span> <span class="p">(</span><span class="nb">ConvertTo-SecureString</span> <span class="s2">&quot;P@ssw0rd!&quot;</span> <span class="n">-AsPlainText</span> <span class="n">-Force</span><span class="p">)</span> <span class="p">`</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>    <span class="n">-Force</span><span class="p">:</span><span class="nv">$true</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="c"># Metadata cleanup if DC is already offline</span>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="n">ntdsutil</span>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>  <span class="n">metadata</span> <span class="n">cleanup</span>
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>  <span class="n">remove</span> <span class="n">selected</span> <span class="n">server</span> <span class="n">CN</span><span class="p">=</span><span class="n">DC02</span><span class="p">,</span><span class="n">CN</span><span class="p">=</span><span class="n">Servers</span><span class="p">,</span><span class="n">CN</span><span class="p">=</span><span class="k">Default</span><span class="n">-First-Site</span><span class="p">,</span><span class="n">CN</span><span class="p">=</span><span class="n">Sites</span><span class="p">,</span><span class="n">CN</span><span class="p">=</span><span class="n">Configuration</span><span class="p">,</span><span class="n">DC</span><span class="p">=</span><span class="n">corp</span><span class="p">,</span><span class="n">DC</span><span class="p">=</span><span class="n">example</span><span class="p">,</span><span class="n">DC</span><span class="p">=</span><span class="n">com</span>
 </code></pre></div>
 <h3 id="transferring-and-seizing-fsmo-roles">Transferring and Seizing FSMO Roles<a class="headerlink" href="#transferring-and-seizing-fsmo-roles" title="Permanent link">&para;</a></h3>
 <p><img alt="Transferring and Seizing FSMO Roles" src="../../../../../assets/active-directory-proc-transferring-and-seizing-fsmo-roles.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c"># Transfer PDC Emulator gracefully</span>
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="nb">Move-ADDirectoryServerOperationMasterRole</span> <span class="n">-Identity</span> <span class="s2">&quot;DC02&quot;</span> <span class="n">-OperationMasterRole</span> <span class="n">PDCEmulator</span>
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
-<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c"># Transfer multiple roles</span>
-<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="nb">Move-ADDirectoryServerOperationMasterRole</span> <span class="n">-Identity</span> <span class="s2">&quot;DC02&quot;</span> <span class="p">`</span>
-<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>    <span class="n">-OperationMasterRole</span> <span class="n">PDCEmulator</span><span class="p">,</span><span class="n">RIDMaster</span><span class="p">,</span><span class="n">InfrastructureMaster</span>
-<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>
-<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="c"># Seize a role (only if original holder is permanently offline)</span>
-<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="n">ntdsutil</span>
-<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>  <span class="n">roles</span>
-<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>  <span class="n">connections</span>
-<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>    <span class="n">connect</span> <span class="n">to</span> <span class="n">server</span> <span class="n">DC02</span>
-<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>  <span class="n">quit</span>
-<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>  <span class="n">seize</span> <span class="n">pdc</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c"># Transfer PDC Emulator gracefully</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="nb">Move-ADDirectoryServerOperationMasterRole</span> <span class="n">-Identity</span> <span class="s2">&quot;DC02&quot;</span> <span class="n">-OperationMasterRole</span> <span class="n">PDCEmulator</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c"># Transfer multiple roles</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="nb">Move-ADDirectoryServerOperationMasterRole</span> <span class="n">-Identity</span> <span class="s2">&quot;DC02&quot;</span> <span class="p">`</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>    <span class="n">-OperationMasterRole</span> <span class="n">PDCEmulator</span><span class="p">,</span><span class="n">RIDMaster</span><span class="p">,</span><span class="n">InfrastructureMaster</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="c"># Seize a role (only if original holder is permanently offline)</span>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="n">ntdsutil</span>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>  <span class="n">roles</span>
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>  <span class="n">connections</span>
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>    <span class="n">connect</span> <span class="n">to</span> <span class="n">server</span> <span class="n">DC02</span>
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>  <span class="n">quit</span>
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>  <span class="n">seize</span> <span class="n">pdc</span>
 </code></pre></div>
 <h3 id="dc-health-validation">DC Health Validation<a class="headerlink" href="#dc-health-validation" title="Permanent link">&para;</a></h3>
 <p><img alt="DC Health Validation" src="../../../../../assets/active-directory-proc-dc-health-validation.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a># Run all dcdiag tests
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>dcdiag /test:all /v
-<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
-<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a># Check replication health
-<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>repadmin /showrepl
-<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>
-<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a># Check DC services
-<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>sc query NTDS
-<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>sc query Netlogon
-<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>sc query W32Time
-<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>sc query DFSR
-<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a>
-<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a># Verify AD database integrity
-<a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a>ntdsutil &quot;activate instance ntds&quot; &quot;files&quot; &quot;integrity&quot; quit quit
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a># Run all dcdiag tests
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>dcdiag /test:all /v
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a># Check replication health
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>repadmin /showrepl
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a># Check DC services
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>sc query NTDS
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>sc query Netlogon
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>sc query W32Time
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>sc query DFSR
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a># Verify AD database integrity
+<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>ntdsutil &quot;activate instance ntds&quot; &quot;files&quot; &quot;integrity&quot; quit quit
 </code></pre></div>
 <h3 id="time-synchronisation">Time Synchronisation<a class="headerlink" href="#time-synchronisation" title="Permanent link">&para;</a></h3>
 <p><img alt="Time Synchronisation" src="../../../../../assets/active-directory-proc-time-synchronisation.svg" /></p>
 <p>The PDC Emulator is the authoritative time source for the domain. All other DCs and clients sync from the hierarchy.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a># Check current time source
-<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>w32tm /query /source
-<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>
-<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a># Force resync
-<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>w32tm /resync /force
-<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>
-<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a># Configure PDC Emulator to sync from external NTP
-<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>w32tm /config /manualpeerlist:&quot;pool.ntp.org&quot; /syncfromflags:manual /reliable:YES /update
-<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>
-<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a># Check time skew across DCs
-<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>w32tm /monitor /computers:dc01,dc02,dc03
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a># Check current time source
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>w32tm /query /source
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a># Force resync
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>w32tm /resync /force
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a># Configure PDC Emulator to sync from external NTP
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>w32tm /config /manualpeerlist:&quot;pool.ntp.org&quot; /syncfromflags:manual /reliable:YES /update
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a># Check time skew across DCs
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>w32tm /monitor /computers:dc01,dc02,dc03
 </code></pre></div>
 <hr />
 <h2 id="transfer-fsmo-roles">Transfer FSMO Roles<a class="headerlink" href="#transfer-fsmo-roles" title="Permanent link">&para;</a></h2>
 <p>Transfer FSMO roles to a new DC during planned migrations or before decommissioning the current role holder.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c"># Transfer PDC Emulator, RID Master, and Infrastructure Master to new DC</span>
-<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="nb">Move-ADDirectoryServerOperationMasterRole</span> <span class="n">-Identity</span> <span class="p">&lt;</span><span class="nb">new-dc</span><span class="p">&gt;</span> <span class="p">`</span>
-<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>    <span class="n">-OperationMasterRole</span> <span class="n">PDCEmulator</span><span class="p">,</span><span class="n">RIDMaster</span><span class="p">,</span><span class="n">InfrastructureMaster</span>
-<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>
-<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="c"># Verify all roles were transferred successfully</span>
-<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="n">netdom</span> <span class="n">query</span> <span class="n">fsmo</span>
-<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>
-<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a><span class="c"># Confirm via PowerShell</span>
-<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a><span class="nb">Get-ADDomain</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">PDCEmulator</span><span class="p">,</span> <span class="n">RIDMaster</span><span class="p">,</span> <span class="n">InfrastructureMaster</span>
-<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a><span class="nb">Get-ADForest</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">SchemaMaster</span><span class="p">,</span> <span class="n">DomainNamingMaster</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c"># Transfer PDC Emulator, RID Master, and Infrastructure Master to new DC</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="nb">Move-ADDirectoryServerOperationMasterRole</span> <span class="n">-Identity</span> <span class="p">&lt;</span><span class="nb">new-dc</span><span class="p">&gt;</span> <span class="p">`</span>
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>    <span class="n">-OperationMasterRole</span> <span class="n">PDCEmulator</span><span class="p">,</span><span class="n">RIDMaster</span><span class="p">,</span><span class="n">InfrastructureMaster</span>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="c"># Verify all roles were transferred successfully</span>
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="n">netdom</span> <span class="n">query</span> <span class="n">fsmo</span>
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a><span class="c"># Confirm via PowerShell</span>
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a><span class="nb">Get-ADDomain</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">PDCEmulator</span><span class="p">,</span> <span class="n">RIDMaster</span><span class="p">,</span> <span class="n">InfrastructureMaster</span>
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a><span class="nb">Get-ADForest</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">SchemaMaster</span><span class="p">,</span> <span class="n">DomainNamingMaster</span>
 </code></pre></div>
 <p>Pre-checks: confirm the target DC is healthy (<code>dcdiag /test:all</code>), replication is in sync (<code>repadmin /showrepl</code>), and a change ticket is approved. Only seize roles (via <code>ntdsutil</code>) if the original holder is permanently offline.</p>
 <hr />
@@ -8929,12 +8913,12 @@ Procedures reference covering AGDLP Group Design Flow, Groups, GPOs, Domain Cont
 <li>Close the editor — the GPO is already linked to the OU.</li>
 <li>Force immediate refresh on target machines:</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>gpupdate /force
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>gpupdate /force
 </code></pre></div>
 <ol>
 <li>Verify applied policy:</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>gpresult /r
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>gpresult /r
 </code></pre></div>
 <p>Use <strong>Security Filtering</strong> to scope the GPO to a specific group rather than all Authenticated Users when a targeted rollout is required.</p>
 <hr />
@@ -8990,64 +8974,64 @@ Procedures reference covering AGDLP Group Design Flow, Groups, GPOs, Domain Cont
 </table>
 <h3 id="query-security-event-log">Query Security Event Log<a class="headerlink" href="#query-security-event-log" title="Permanent link">&para;</a></h3>
 <p><img alt="Query Security Event Log" src="../../../../../assets/active-directory-proc-query-security-event-log.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c"># Find all account lockout events (4740) in the last 24 hours</span>
-<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="nb">Get-WinEvent</span> <span class="n">-FilterHashtable</span> <span class="p">@{</span><span class="n">LogName</span><span class="p">=</span><span class="s1">&#39;Security&#39;</span><span class="p">;</span> <span class="n">Id</span><span class="p">=</span><span class="n">4740</span><span class="p">;</span> <span class="n">StartTime</span><span class="p">=(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddDays</span><span class="p">(-</span><span class="n">1</span><span class="p">)}</span> <span class="p">|</span>
-<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>    <span class="nb">Select-Object</span> <span class="n">TimeCreated</span><span class="p">,</span> <span class="n">Message</span>
-<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>
-<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a><span class="c"># Find account creation events (4720)</span>
-<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a><span class="nb">Get-WinEvent</span> <span class="n">-FilterHashtable</span> <span class="p">@{</span><span class="n">LogName</span><span class="p">=</span><span class="s1">&#39;Security&#39;</span><span class="p">;</span> <span class="n">Id</span><span class="p">=</span><span class="n">4720</span><span class="p">}</span> <span class="p">|</span>
-<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a>    <span class="nb">Select-Object</span> <span class="n">TimeCreated</span><span class="p">,</span> <span class="n">Message</span> <span class="p">|</span> <span class="nb">Format-List</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c"># Find all account lockout events (4740) in the last 24 hours</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="nb">Get-WinEvent</span> <span class="n">-FilterHashtable</span> <span class="p">@{</span><span class="n">LogName</span><span class="p">=</span><span class="s1">&#39;Security&#39;</span><span class="p">;</span> <span class="n">Id</span><span class="p">=</span><span class="n">4740</span><span class="p">;</span> <span class="n">StartTime</span><span class="p">=(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddDays</span><span class="p">(-</span><span class="n">1</span><span class="p">)}</span> <span class="p">|</span>
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>    <span class="nb">Select-Object</span> <span class="n">TimeCreated</span><span class="p">,</span> <span class="n">Message</span>
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="c"># Find account creation events (4720)</span>
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a><span class="nb">Get-WinEvent</span> <span class="n">-FilterHashtable</span> <span class="p">@{</span><span class="n">LogName</span><span class="p">=</span><span class="s1">&#39;Security&#39;</span><span class="p">;</span> <span class="n">Id</span><span class="p">=</span><span class="n">4720</span><span class="p">}</span> <span class="p">|</span>
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a>    <span class="nb">Select-Object</span> <span class="n">TimeCreated</span><span class="p">,</span> <span class="n">Message</span> <span class="p">|</span> <span class="nb">Format-List</span>
 </code></pre></div>
 <hr />
 <h2 id="recover-deleted-objects-recycle-bin">Recover Deleted Objects (Recycle Bin)<a class="headerlink" href="#recover-deleted-objects-recycle-bin" title="Permanent link">&para;</a></h2>
 <p>The AD Recycle Bin preserves deleted objects with all attributes intact for the deleted object lifetime (default 180 days). The feature must be enabled before the deletion occurs.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c"># Verify Recycle Bin is enabled</span>
-<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="nb">Get-ADOptionalFeature</span> <span class="n">-Filter</span> <span class="p">{</span><span class="n">Name</span> <span class="o">-like</span> <span class="s2">&quot;Recycle Bin Feature&quot;</span><span class="p">}</span>
-<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>
-<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="c"># Enable Recycle Bin (forest-wide, requires Enterprise Admin — one-time, irreversible)</span>
-<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a><span class="nb">Enable-ADOptionalFeature</span> <span class="n">-Identity</span> <span class="s2">&quot;Recycle Bin Feature&quot;</span> <span class="p">`</span>
-<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>    <span class="n">-Scope</span> <span class="n">ForestOrConfigurationSet</span> <span class="p">`</span>
-<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a>    <span class="n">-Target</span> <span class="p">(</span><span class="nb">Get-ADForest</span><span class="p">).</span><span class="n">Name</span>
-<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a>
-<a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a><span class="c"># List all deleted objects</span>
-<a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a><span class="nb">Get-ADObject</span> <span class="n">-Filter</span> <span class="p">{</span><span class="n">isDeleted</span> <span class="o">-eq</span> <span class="nv">$true</span><span class="p">}</span> <span class="n">-IncludeDeletedObjects</span> <span class="p">|</span>
-<a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a>    <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">DistinguishedName</span><span class="p">,</span> <span class="n">WhenChanged</span>
-<a id="__codelineno-20-12" name="__codelineno-20-12" href="#__codelineno-20-12"></a>
-<a id="__codelineno-20-13" name="__codelineno-20-13" href="#__codelineno-20-13"></a><span class="c"># Restore a specific deleted user</span>
-<a id="__codelineno-20-14" name="__codelineno-20-14" href="#__codelineno-20-14"></a><span class="nb">Get-ADObject</span> <span class="n">-Filter</span> <span class="p">{</span><span class="n">isDeleted</span> <span class="o">-eq</span> <span class="nv">$true</span> <span class="o">-and</span> <span class="n">Name</span> <span class="o">-like</span> <span class="s2">&quot;*jsmith*&quot;</span><span class="p">}</span> <span class="p">`</span>
-<a id="__codelineno-20-15" name="__codelineno-20-15" href="#__codelineno-20-15"></a>    <span class="n">-IncludeDeletedObjects</span> <span class="p">|</span> <span class="nb">Restore-ADObject</span>
-<a id="__codelineno-20-16" name="__codelineno-20-16" href="#__codelineno-20-16"></a>
-<a id="__codelineno-20-17" name="__codelineno-20-17" href="#__codelineno-20-17"></a><span class="c"># Restore all deleted objects from a specific OU</span>
-<a id="__codelineno-20-18" name="__codelineno-20-18" href="#__codelineno-20-18"></a><span class="nb">Get-ADObject</span> <span class="n">-Filter</span> <span class="p">{</span><span class="n">isDeleted</span> <span class="o">-eq</span> <span class="nv">$true</span><span class="p">}</span> <span class="n">-IncludeDeletedObjects</span> <span class="p">|</span>
-<a id="__codelineno-20-19" name="__codelineno-20-19" href="#__codelineno-20-19"></a>    <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">DistinguishedName</span> <span class="o">-like</span> <span class="s2">&quot;*OU=Finance*&quot;</span><span class="p">}</span> <span class="p">|</span>
-<a id="__codelineno-20-20" name="__codelineno-20-20" href="#__codelineno-20-20"></a>    <span class="nb">Restore-ADObject</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c"># Verify Recycle Bin is enabled</span>
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="nb">Get-ADOptionalFeature</span> <span class="n">-Filter</span> <span class="p">{</span><span class="n">Name</span> <span class="o">-like</span> <span class="s2">&quot;Recycle Bin Feature&quot;</span><span class="p">}</span>
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="c"># Enable Recycle Bin (forest-wide, requires Enterprise Admin — one-time, irreversible)</span>
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a><span class="nb">Enable-ADOptionalFeature</span> <span class="n">-Identity</span> <span class="s2">&quot;Recycle Bin Feature&quot;</span> <span class="p">`</span>
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>    <span class="n">-Scope</span> <span class="n">ForestOrConfigurationSet</span> <span class="p">`</span>
+<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a>    <span class="n">-Target</span> <span class="p">(</span><span class="nb">Get-ADForest</span><span class="p">).</span><span class="n">Name</span>
+<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>
+<a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a><span class="c"># List all deleted objects</span>
+<a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a><span class="nb">Get-ADObject</span> <span class="n">-Filter</span> <span class="p">{</span><span class="n">isDeleted</span> <span class="o">-eq</span> <span class="nv">$true</span><span class="p">}</span> <span class="n">-IncludeDeletedObjects</span> <span class="p">|</span>
+<a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a>    <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">DistinguishedName</span><span class="p">,</span> <span class="n">WhenChanged</span>
+<a id="__codelineno-19-12" name="__codelineno-19-12" href="#__codelineno-19-12"></a>
+<a id="__codelineno-19-13" name="__codelineno-19-13" href="#__codelineno-19-13"></a><span class="c"># Restore a specific deleted user</span>
+<a id="__codelineno-19-14" name="__codelineno-19-14" href="#__codelineno-19-14"></a><span class="nb">Get-ADObject</span> <span class="n">-Filter</span> <span class="p">{</span><span class="n">isDeleted</span> <span class="o">-eq</span> <span class="nv">$true</span> <span class="o">-and</span> <span class="n">Name</span> <span class="o">-like</span> <span class="s2">&quot;*jsmith*&quot;</span><span class="p">}</span> <span class="p">`</span>
+<a id="__codelineno-19-15" name="__codelineno-19-15" href="#__codelineno-19-15"></a>    <span class="n">-IncludeDeletedObjects</span> <span class="p">|</span> <span class="nb">Restore-ADObject</span>
+<a id="__codelineno-19-16" name="__codelineno-19-16" href="#__codelineno-19-16"></a>
+<a id="__codelineno-19-17" name="__codelineno-19-17" href="#__codelineno-19-17"></a><span class="c"># Restore all deleted objects from a specific OU</span>
+<a id="__codelineno-19-18" name="__codelineno-19-18" href="#__codelineno-19-18"></a><span class="nb">Get-ADObject</span> <span class="n">-Filter</span> <span class="p">{</span><span class="n">isDeleted</span> <span class="o">-eq</span> <span class="nv">$true</span><span class="p">}</span> <span class="n">-IncludeDeletedObjects</span> <span class="p">|</span>
+<a id="__codelineno-19-19" name="__codelineno-19-19" href="#__codelineno-19-19"></a>    <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">DistinguishedName</span> <span class="o">-like</span> <span class="s2">&quot;*OU=Finance*&quot;</span><span class="p">}</span> <span class="p">|</span>
+<a id="__codelineno-19-20" name="__codelineno-19-20" href="#__codelineno-19-20"></a>    <span class="nb">Restore-ADObject</span>
 </code></pre></div>
 <p>Verify the restored object appears in AD Users and Computers and that group memberships are intact.</p>
 <hr />
 <h2 id="configure-fine-grained-password-policy">Configure Fine-Grained Password Policy<a class="headerlink" href="#configure-fine-grained-password-policy" title="Permanent link">&para;</a></h2>
 <p>Fine-Grained Password Policies (PSOs) allow different password requirements for specific users or groups, overriding the Default Domain Policy. Requires Domain Functional Level 2008 or higher.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="c"># Create a PSO for service accounts (longer password, no lockout)</span>
-<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="nb">New-ADFineGrainedPasswordPolicy</span> <span class="p">`</span>
-<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>    <span class="n">-Name</span> <span class="s2">&quot;ServiceAccounts&quot;</span> <span class="p">`</span>
-<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>    <span class="n">-MinPasswordLength</span> <span class="n">20</span> <span class="p">`</span>
-<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>    <span class="n">-PasswordHistoryCount</span> <span class="n">24</span> <span class="p">`</span>
-<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a>    <span class="n">-ComplexityEnabled</span> <span class="nv">$true</span> <span class="p">`</span>
-<a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a>    <span class="n">-ReversibleEncryptionEnabled</span> <span class="nv">$false</span> <span class="p">`</span>
-<a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a>    <span class="n">-MinPasswordAge</span> <span class="s2">&quot;1.00:00:00&quot;</span> <span class="p">`</span>
-<a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a>    <span class="n">-MaxPasswordAge</span> <span class="s2">&quot;0&quot;</span> <span class="p">`</span>
-<a id="__codelineno-21-10" name="__codelineno-21-10" href="#__codelineno-21-10"></a>    <span class="n">-LockoutThreshold</span> <span class="n">0</span> <span class="p">`</span>
-<a id="__codelineno-21-11" name="__codelineno-21-11" href="#__codelineno-21-11"></a>    <span class="n">-Precedence</span> <span class="n">10</span>
-<a id="__codelineno-21-12" name="__codelineno-21-12" href="#__codelineno-21-12"></a>
-<a id="__codelineno-21-13" name="__codelineno-21-13" href="#__codelineno-21-13"></a><span class="c"># Apply the PSO to a group</span>
-<a id="__codelineno-21-14" name="__codelineno-21-14" href="#__codelineno-21-14"></a><span class="nb">Add-ADFineGrainedPasswordPolicySubject</span> <span class="p">`</span>
-<a id="__codelineno-21-15" name="__codelineno-21-15" href="#__codelineno-21-15"></a>    <span class="n">-Identity</span> <span class="s2">&quot;ServiceAccounts&quot;</span> <span class="p">`</span>
-<a id="__codelineno-21-16" name="__codelineno-21-16" href="#__codelineno-21-16"></a>    <span class="n">-Subjects</span> <span class="s2">&quot;SG-ServiceAccounts&quot;</span>
-<a id="__codelineno-21-17" name="__codelineno-21-17" href="#__codelineno-21-17"></a>
-<a id="__codelineno-21-18" name="__codelineno-21-18" href="#__codelineno-21-18"></a><span class="c"># Verify which PSO applies to a user</span>
-<a id="__codelineno-21-19" name="__codelineno-21-19" href="#__codelineno-21-19"></a><span class="nb">Get-ADUserResultantPasswordPolicy</span> <span class="n">-Identity</span> <span class="n">svc-sql</span>
-<a id="__codelineno-21-20" name="__codelineno-21-20" href="#__codelineno-21-20"></a>
-<a id="__codelineno-21-21" name="__codelineno-21-21" href="#__codelineno-21-21"></a><span class="c"># List all PSOs</span>
-<a id="__codelineno-21-22" name="__codelineno-21-22" href="#__codelineno-21-22"></a><span class="nb">Get-ADFineGrainedPasswordPolicy</span> <span class="n">-Filter</span> <span class="p">*</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Precedence</span><span class="p">,</span> <span class="n">MinPasswordLength</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c"># Create a PSO for service accounts (longer password, no lockout)</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="nb">New-ADFineGrainedPasswordPolicy</span> <span class="p">`</span>
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>    <span class="n">-Name</span> <span class="s2">&quot;ServiceAccounts&quot;</span> <span class="p">`</span>
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a>    <span class="n">-MinPasswordLength</span> <span class="n">20</span> <span class="p">`</span>
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>    <span class="n">-PasswordHistoryCount</span> <span class="n">24</span> <span class="p">`</span>
+<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>    <span class="n">-ComplexityEnabled</span> <span class="nv">$true</span> <span class="p">`</span>
+<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a>    <span class="n">-ReversibleEncryptionEnabled</span> <span class="nv">$false</span> <span class="p">`</span>
+<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a>    <span class="n">-MinPasswordAge</span> <span class="s2">&quot;1.00:00:00&quot;</span> <span class="p">`</span>
+<a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a>    <span class="n">-MaxPasswordAge</span> <span class="s2">&quot;0&quot;</span> <span class="p">`</span>
+<a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a>    <span class="n">-LockoutThreshold</span> <span class="n">0</span> <span class="p">`</span>
+<a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a>    <span class="n">-Precedence</span> <span class="n">10</span>
+<a id="__codelineno-20-12" name="__codelineno-20-12" href="#__codelineno-20-12"></a>
+<a id="__codelineno-20-13" name="__codelineno-20-13" href="#__codelineno-20-13"></a><span class="c"># Apply the PSO to a group</span>
+<a id="__codelineno-20-14" name="__codelineno-20-14" href="#__codelineno-20-14"></a><span class="nb">Add-ADFineGrainedPasswordPolicySubject</span> <span class="p">`</span>
+<a id="__codelineno-20-15" name="__codelineno-20-15" href="#__codelineno-20-15"></a>    <span class="n">-Identity</span> <span class="s2">&quot;ServiceAccounts&quot;</span> <span class="p">`</span>
+<a id="__codelineno-20-16" name="__codelineno-20-16" href="#__codelineno-20-16"></a>    <span class="n">-Subjects</span> <span class="s2">&quot;SG-ServiceAccounts&quot;</span>
+<a id="__codelineno-20-17" name="__codelineno-20-17" href="#__codelineno-20-17"></a>
+<a id="__codelineno-20-18" name="__codelineno-20-18" href="#__codelineno-20-18"></a><span class="c"># Verify which PSO applies to a user</span>
+<a id="__codelineno-20-19" name="__codelineno-20-19" href="#__codelineno-20-19"></a><span class="nb">Get-ADUserResultantPasswordPolicy</span> <span class="n">-Identity</span> <span class="n">svc-sql</span>
+<a id="__codelineno-20-20" name="__codelineno-20-20" href="#__codelineno-20-20"></a>
+<a id="__codelineno-20-21" name="__codelineno-20-21" href="#__codelineno-20-21"></a><span class="c"># List all PSOs</span>
+<a id="__codelineno-20-22" name="__codelineno-20-22" href="#__codelineno-20-22"></a><span class="nb">Get-ADFineGrainedPasswordPolicy</span> <span class="n">-Filter</span> <span class="p">*</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Precedence</span><span class="p">,</span> <span class="n">MinPasswordLength</span>
 </code></pre></div>
 <p>A lower Precedence number wins when multiple PSOs apply to the same user. Apply PSOs to groups rather than individual users for easier management.</p>
 <hr />

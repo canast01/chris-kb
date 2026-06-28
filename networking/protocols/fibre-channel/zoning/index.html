@@ -8128,21 +8128,7 @@ Zoning restricts which initiators (HBAs) can communicate with which targets (sto
 </div>
 <p><img alt="FC Zoning" src="../../../../assets/networking-protocols-fibre-channel-zoning-index.svg" /></p>
 <p>Every production fabric must have active zoning; unzoned fabrics allow all nodes to see each other.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>center: &quot;Fibre Channel&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>zone_types: &quot;Zone Types&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>zoning_standards: &quot;Zoning Standards&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>brocade_fos_zone_commands: &quot;Brocade FOS — Zone Commands&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>cisco_mds_nxos_zone_commands: &quot;Cisco MDS / NX-OS — Zone Commands&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>common_issues: &quot;Common Issues&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>center -&gt; zone_types
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>center -&gt; zoning_standards
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>center -&gt; brocade_fos_zone_commands
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>center -&gt; cisco_mds_nxos_zone_commands
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>center -&gt; common_issues
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNUD0KwjAU3nuKR_fi3sHBiuCgDnUQlxCTZxtoX0pSoSqCh_CEnsQ0VqxQxfH7zcsnlUFRK00xGJXldRAIpBpNDOFM7QxCknMiLEI425xXGEOODc80XYKTJmT1sULrzFsHYN2Ct7Nt5pQV6L2KMmYdltzILuEoSF_UYG5ntOAS2V5b5t8TuixdoC2YPDWYrVK4X2_gT0g6fbBNKCs0K6Vl1AwUJq0Mi2kKI1huov9rnaiJKWsPfovEY5h7PJjoRoZoDO8VP8mPuXrS10V6nl__7Nv6dwcPRa2-8Q==?" /></p>
 <h2 id="zone-types">Zone Types<a class="headerlink" href="#zone-types" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -8178,42 +8164,42 @@ Zoning restricts which initiators (HBAs) can communicate with which targets (sto
 <li>Use a single zoneset per fabric; activate on both switches in a dual-fabric config</li>
 </ul>
 <h2 id="brocade-fos-zone-commands">Brocade FOS — Zone Commands<a class="headerlink" href="#brocade-fos-zone-commands" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># View active zoneset</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>cfgshow
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Create a zone</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>zonecreate<span class="w"> </span><span class="s2">&quot;esxi01_pure01_ctA1&quot;</span>,<span class="w"> </span><span class="s2">&quot;21:00:00:xx:xx:xx:xx:xx;50:00:99:xx:xx:xx:xx:xx&quot;</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Add zone to config</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>cfgadd<span class="w"> </span><span class="s2">&quot;PROD_CFG&quot;</span>,<span class="w"> </span><span class="s2">&quot;esxi01_pure01_ctA1&quot;</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Activate the config</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>cfgenable<span class="w"> </span><span class="s2">&quot;PROD_CFG&quot;</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Verify zone membership</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>zoneshow<span class="w"> </span><span class="s2">&quot;esxi01_pure01_ctA1&quot;</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="c1"># Show all zones containing a WWN</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>nsallshow<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;wwn&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># View active zoneset</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>cfgshow
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Create a zone</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>zonecreate<span class="w"> </span><span class="s2">&quot;esxi01_pure01_ctA1&quot;</span>,<span class="w"> </span><span class="s2">&quot;21:00:00:xx:xx:xx:xx:xx;50:00:99:xx:xx:xx:xx:xx&quot;</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Add zone to config</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>cfgadd<span class="w"> </span><span class="s2">&quot;PROD_CFG&quot;</span>,<span class="w"> </span><span class="s2">&quot;esxi01_pure01_ctA1&quot;</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Activate the config</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>cfgenable<span class="w"> </span><span class="s2">&quot;PROD_CFG&quot;</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Verify zone membership</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>zoneshow<span class="w"> </span><span class="s2">&quot;esxi01_pure01_ctA1&quot;</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># Show all zones containing a WWN</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>nsallshow<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;wwn&gt;
 </code></pre></div>
 <h2 id="cisco-mds-nx-os-zone-commands">Cisco MDS / NX-OS — Zone Commands<a class="headerlink" href="#cisco-mds-nx-os-zone-commands" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Show active zoneset</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>show<span class="w"> </span>zoneset<span class="w"> </span>active<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Create zone</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>zone<span class="w"> </span>name<span class="w"> </span>esxi01_pure01_ctA1<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span>member<span class="w"> </span>pwwn<span class="w"> </span><span class="m">21</span>:00:00:xx:xx:xx:xx:xx
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span>member<span class="w"> </span>pwwn<span class="w"> </span><span class="m">50</span>:00:99:xx:xx:xx:xx:xx
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Add to zoneset and activate</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>zoneset<span class="w"> </span>name<span class="w"> </span>PROD_ZONESET<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">  </span>member<span class="w"> </span>esxi01_pure01_ctA1
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>zoneset<span class="w"> </span>activate<span class="w"> </span>name<span class="w"> </span>PROD_ZONESET<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="c1"># Verify</span>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>show<span class="w"> </span>zone<span class="w"> </span>name<span class="w"> </span>esxi01_pure01_ctA1<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>show<span class="w"> </span>zoneset<span class="w"> </span>active<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Show active zoneset</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>show<span class="w"> </span>zoneset<span class="w"> </span>active<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Create zone</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>zone<span class="w"> </span>name<span class="w"> </span>esxi01_pure01_ctA1<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span>member<span class="w"> </span>pwwn<span class="w"> </span><span class="m">21</span>:00:00:xx:xx:xx:xx:xx
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span>member<span class="w"> </span>pwwn<span class="w"> </span><span class="m">50</span>:00:99:xx:xx:xx:xx:xx
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># Add to zoneset and activate</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>zoneset<span class="w"> </span>name<span class="w"> </span>PROD_ZONESET<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">  </span>member<span class="w"> </span>esxi01_pure01_ctA1
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>zoneset<span class="w"> </span>activate<span class="w"> </span>name<span class="w"> </span>PROD_ZONESET<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="c1"># Verify</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>show<span class="w"> </span>zone<span class="w"> </span>name<span class="w"> </span>esxi01_pure01_ctA1<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>show<span class="w"> </span>zoneset<span class="w"> </span>active<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
 </code></pre></div>
 <h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
 <table>

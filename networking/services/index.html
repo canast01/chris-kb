@@ -6809,54 +6809,38 @@
 Network services reference for load balancer VIP management, pool health monitoring, and IPAM. For DNS and DHCP protocol coverage, see <a href="../protocols/dns/">Protocols → DNS</a> and <a href="../protocols/dhcp/">Protocols → DHCP</a>.
 </div>
 <p><img alt="Networking — Load Balancer &amp; Services" src="../../assets/networking-services-index.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>center: &quot;Services&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>test_the_vip_endpoint: &quot;Test the VIP Endpoint&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>f5_bigip_pool_status: &quot;F5 BIG-IP Pool Status&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>haproxy_pool_status: &quot;HAProxy Pool Status&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>tls_certificate_on_vip: &quot;TLS Certificate on VIP&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>test_pool_member_health_check: &quot;Test Pool Member Health Check&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>lb_status_at_a_glance: &quot;LB Status at a Glance&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>center -&gt; test_the_vip_endpoint
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>center -&gt; f5_bigip_pool_status
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>center -&gt; haproxy_pool_status
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>center -&gt; tls_certificate_on_vip
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>center -&gt; test_pool_member_health_check
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>center -&gt; lb_status_at_a_glance
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqFUUFqwzAQvPsVi-855uJDoQltEkjB4NLrIisbS0SRjLQNKSV_ryRcYoJKrzM7szuzB-1Jsna2Aa8HxVUlyTL5BuqO_EVLCjV8ByVGakDRVQzO3iqmwMiK8KJHJHsYnbYcJe8Rh4jDx66Flwm_69MqYQdDt-q4xF4PUT06ZzCw4M8QDV6XsNptFlHdRhy6jBcNIuDd9etBv31uE_qvmk1ASZ71UUvBhM6mKCnBvoP1nQBnU5ayRyohrz_TuSePioRhhVKRPP2WkQ95yzxsMw_rxBcdTT8lQcEocDDCyjhR71dTFhAMAjYZLzpM34PFExR_NONLH5jRhX7n5sX-Hrf_Vc5srhi5-gETpPDl?" /></p>
 <h2 id="test-the-vip-endpoint">Test the VIP Endpoint<a class="headerlink" href="#test-the-vip-endpoint" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Test the VIP endpoint</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>curl<span class="w"> </span>-vk<span class="w"> </span>https://&lt;vip_fqdn&gt;/
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>curl<span class="w"> </span>-vk<span class="w"> </span>http://&lt;vip_fqdn&gt;:&lt;port&gt;/
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Test TCP port reachability</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>nc<span class="w"> </span>-zv<span class="w"> </span>&lt;vip_ip&gt;<span class="w"> </span>&lt;port&gt;
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Verify DNS resolves to the VIP</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>dig<span class="w"> </span>&lt;vip_fqdn&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Test the VIP endpoint</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>curl<span class="w"> </span>-vk<span class="w"> </span>https://&lt;vip_fqdn&gt;/
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>curl<span class="w"> </span>-vk<span class="w"> </span>http://&lt;vip_fqdn&gt;:&lt;port&gt;/
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Test TCP port reachability</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>nc<span class="w"> </span>-zv<span class="w"> </span>&lt;vip_ip&gt;<span class="w"> </span>&lt;port&gt;
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># Verify DNS resolves to the VIP</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>dig<span class="w"> </span>&lt;vip_fqdn&gt;
 </code></pre></div>
 <h2 id="f5-big-ip-pool-status">F5 BIG-IP Pool Status<a class="headerlink" href="#f5-big-ip-pool-status" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>tmsh<span class="w"> </span>show<span class="w"> </span>ltm<span class="w"> </span>node
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>tmsh<span class="w"> </span>show<span class="w"> </span>ltm<span class="w"> </span>pool
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>tmsh<span class="w"> </span>show<span class="w"> </span>ltm<span class="w"> </span>pool<span class="w"> </span>&lt;pool_name&gt;<span class="w"> </span>members
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>tmsh<span class="w"> </span>show<span class="w"> </span>ltm<span class="w"> </span>node
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>tmsh<span class="w"> </span>show<span class="w"> </span>ltm<span class="w"> </span>pool
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>tmsh<span class="w"> </span>show<span class="w"> </span>ltm<span class="w"> </span>pool<span class="w"> </span>&lt;pool_name&gt;<span class="w"> </span>members
 </code></pre></div>
 <h2 id="haproxy-pool-status">HAProxy Pool Status<a class="headerlink" href="#haproxy-pool-status" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;show stat&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>socat<span class="w"> </span>stdio<span class="w"> </span>/var/run/haproxy.sock<span class="w"> </span><span class="p">|</span><span class="w"> </span>cut<span class="w"> </span>-d<span class="w"> </span><span class="s1">&#39;,&#39;</span><span class="w"> </span>-f1,2,18<span class="w"> </span><span class="p">|</span><span class="w"> </span>column<span class="w"> </span>-t<span class="w"> </span>-s<span class="w"> </span><span class="s1">&#39;,&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;show stat&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>socat<span class="w"> </span>stdio<span class="w"> </span>/var/run/haproxy.sock<span class="w"> </span><span class="p">|</span><span class="w"> </span>cut<span class="w"> </span>-d<span class="w"> </span><span class="s1">&#39;,&#39;</span><span class="w"> </span>-f1,2,18<span class="w"> </span><span class="p">|</span><span class="w"> </span>column<span class="w"> </span>-t<span class="w"> </span>-s<span class="w"> </span><span class="s1">&#39;,&#39;</span>
 </code></pre></div>
 <h2 id="tls-certificate-on-vip">TLS Certificate on VIP<a class="headerlink" href="#tls-certificate-on-vip" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;vip_fqdn&gt;:443<span class="w"> </span>&lt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;subject|Verify|expire&quot;</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;vip_fqdn&gt;:443<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-dates
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;vip_fqdn&gt;:443<span class="w"> </span>&lt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;subject|Verify|expire&quot;</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;vip_fqdn&gt;:443<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-dates
 </code></pre></div>
 <h2 id="test-pool-member-health-check">Test Pool Member Health Check<a class="headerlink" href="#test-pool-member-health-check" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Test the health check manually from the LB server or another host</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>curl<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-s<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;%{http_code}&quot;</span><span class="w"> </span>http://&lt;member_ip&gt;:&lt;port&gt;/health
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Test the health check manually from the LB server or another host</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>curl<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-s<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;%{http_code}&quot;</span><span class="w"> </span>http://&lt;member_ip&gt;:&lt;port&gt;/health
 </code></pre></div>
 <h2 id="lb-status-at-a-glance">LB Status at a Glance<a class="headerlink" href="#lb-status-at-a-glance" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>curl<span class="w"> </span>-I<span class="w"> </span>http://load-balancer
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>curl<span class="w"> </span>http://backend-server
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>netstat<span class="w"> </span>-tulnp
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>curl<span class="w"> </span>-I<span class="w"> </span>http://load-balancer
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>curl<span class="w"> </span>http://backend-server
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>netstat<span class="w"> </span>-tulnp
 </code></pre></div>
 
 

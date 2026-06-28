@@ -7678,23 +7678,7 @@ Common Nutanix operational procedures — adding and removing nodes, entering ma
 </div>
 <p><img alt="Nutanix — Procedures" src="../../../../assets/virtualization-nutanix-operations-procedures.svg" /></p>
 <hr />
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>hub: &quot;Nutanix AHV\nOperations&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>enter_host_maintenance_mode: &quot;Enter Host Maintenance Mode&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>aos_ahv_upgrade_via_lcm: &quot;AOS / AHV Upgrade via LCM&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>add_a_node_to_an_existing_cluster: &quot;Add a Node to an Existing Cluster&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>remove_a_node_from_cluster: &quot;Remove a Node from Cluster&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>expand_storage_add_disks: &quot;Expand Storage (Add Disks)&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>clone_a_vm: &quot;Clone a VM&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>hub -&gt; enter_host_maintenance_mode
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>hub -&gt; aos_ahv_upgrade_via_lcm
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>hub -&gt; add_a_node_to_an_existing_cluster
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>hub -&gt; remove_a_node_from_cluster
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>hub -&gt; expand_storage_add_disks
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>hub -&gt; clone_a_vm
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqFkUFLw0AQhe_5FUNPehDvPQilFnowLVjsSRjG7JgsJrNhdxMC0v_uTmtaD2k9Lt_jy8sbYz0X0TqZg7dlFbOs6j7mMNt0kcQOsFjv32XbsicNhRl8h4pankPFA5VODhlLZI-VCxEbsukhJAVj40xKzVZKYZ0o5BcKeaIXl1YgKWs-ZOQCUtVj15aeDGNvCeuiSabFdgeP2gfeTgwSg5dlPu0xBgklfQajQxLkwYZopcSi7kLqpEZjgGCTMhAdkMDqNwPLU2bS7LlxPY_yT--aP8rXIxytCm-6eGhJDIboPJXJmUobG76CDndEsDshuNOyz8ruJ01F7URL9TrVUh-pxH56Gz0xPDzBjcuNkSvnOOP_Vh6D10c7l7kyxcgvP5j9AGBt-ms=?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Access:</strong> CVM SSH (nutanix) and Prism Element admin</li>
@@ -7704,39 +7688,39 @@ Common Nutanix operational procedures — adding and removing nodes, entering ma
 <hr />
 <h2 id="enter-host-maintenance-mode">Enter Host Maintenance Mode<a class="headerlink" href="#enter-host-maintenance-mode" title="Permanent link">&para;</a></h2>
 <p>Maintenance mode live-migrates all VMs off the host before you perform hardware or OS work.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># From Prism Element: right-click host → Enter Maintenance Mode</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># OR via CLI:</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>acli<span class="w"> </span>host.enter_maintenance_mode<span class="w"> </span>&lt;host-name&gt;
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Monitor migration progress</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>acli<span class="w"> </span>vm.list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;on</span>$<span class="s2">\|off</span>$<span class="s2">&quot;</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># All VMs should show &quot;on&quot; on other hosts</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># Verify host is in maintenance mode</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>acli<span class="w"> </span>host.list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>&lt;host-name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># From Prism Element: right-click host → Enter Maintenance Mode</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c1"># OR via CLI:</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>acli<span class="w"> </span>host.enter_maintenance_mode<span class="w"> </span>&lt;host-name&gt;
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Monitor migration progress</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>acli<span class="w"> </span>vm.list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;on</span>$<span class="s2">\|off</span>$<span class="s2">&quot;</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># All VMs should show &quot;on&quot; on other hosts</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1"># Verify host is in maintenance mode</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>acli<span class="w"> </span>host.list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>&lt;host-name&gt;
 </code></pre></div>
 <p><strong>Expected:</strong> Host shows <code>MAINTENANCE_MODE</code> state. No VMs running on it.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># After work is complete, exit maintenance mode</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>acli<span class="w"> </span>host.exit_maintenance_mode<span class="w"> </span>&lt;host-name&gt;
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Verify VMs rebalance back (DRS equivalent — Nutanix doesn&#39;t auto-rebalance;</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># VMs remain on other hosts until manually migrated or until next power cycle)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># After work is complete, exit maintenance mode</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>acli<span class="w"> </span>host.exit_maintenance_mode<span class="w"> </span>&lt;host-name&gt;
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Verify VMs rebalance back (DRS equivalent — Nutanix doesn&#39;t auto-rebalance;</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># VMs remain on other hosts until manually migrated or until next power cycle)</span>
 </code></pre></div>
 <hr />
 <h2 id="aos-ahv-upgrade-via-lcm">AOS / AHV Upgrade via LCM<a class="headerlink" href="#aos-ahv-upgrade-via-lcm" title="Permanent link">&para;</a></h2>
 <p>Life Cycle Manager (LCM) upgrades are non-disruptive rolling upgrades.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>1. Prism Central → LCM → Inventory → Run Inventory (discovers available updates)
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>2. Review available updates: AOS, AHV, firmware
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>3. Select updates to apply
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>4. LCM performs rolling upgrade:
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>   - One CVM at a time for AOS
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>   - One host at a time for AHV (VMs live-migrate off before AHV upgrade)
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>   - Firmware: node enters maintenance mode, firmware applied, node reboots
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>5. Monitor progress in LCM → Tasks
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>1. Prism Central → LCM → Inventory → Run Inventory (discovers available updates)
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>2. Review available updates: AOS, AHV, firmware
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>3. Select updates to apply
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>4. LCM performs rolling upgrade:
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>   - One CVM at a time for AOS
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>   - One host at a time for AHV (VMs live-migrate off before AHV upgrade)
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>   - Firmware: node enters maintenance mode, firmware applied, node reboots
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>5. Monitor progress in LCM → Tasks
 </code></pre></div>
 <p><strong>Pre-upgrade NCC run:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>ncc<span class="w"> </span>--health_checks<span class="w"> </span>run_all<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;FAIL|WARN&quot;</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># Must be clean before starting upgrade</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ncc<span class="w"> </span>--health_checks<span class="w"> </span>run_all<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;FAIL|WARN&quot;</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># Must be clean before starting upgrade</span>
 </code></pre></div></p>
 <p><strong>Estimated time:</strong>
 - AOS upgrade: ~20–30 minutes per node
@@ -7744,26 +7728,26 @@ Common Nutanix operational procedures — adding and removing nodes, entering ma
 - Firmware: ~60–90 minutes per node</p>
 <hr />
 <h2 id="add-a-node-to-an-existing-cluster">Add a Node to an Existing Cluster<a class="headerlink" href="#add-a-node-to-an-existing-cluster" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Prerequisites:</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># - New node imaged with same AOS/AHV version as cluster (use Foundation)</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># - New CVM IP on management network, reachable from existing CVMs</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># SSH to any existing CVM</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>ssh<span class="w"> </span>nutanix@&lt;existing-cvm-ip&gt;
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># Expand cluster (add new CVM to cluster)</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>cluster<span class="w"> </span>-s<span class="w"> </span>&lt;existing-cvm1&gt;,&lt;existing-cvm2&gt;,&lt;existing-cvm3&gt;,&lt;new-cvm-ip&gt;<span class="w"> </span>expand
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="c1"># Monitor expansion</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>ncli<span class="w"> </span>cluster<span class="w"> </span>get-domain-fault-tolerance-status<span class="w"> </span><span class="nv">type</span><span class="o">=</span>node
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="c1"># Wait until new node appears in: ncli host list</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Prerequisites:</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># - New node imaged with same AOS/AHV version as cluster (use Foundation)</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># - New CVM IP on management network, reachable from existing CVMs</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># SSH to any existing CVM</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>ssh<span class="w"> </span>nutanix@&lt;existing-cvm-ip&gt;
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Expand cluster (add new CVM to cluster)</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>cluster<span class="w"> </span>-s<span class="w"> </span>&lt;existing-cvm1&gt;,&lt;existing-cvm2&gt;,&lt;existing-cvm3&gt;,&lt;new-cvm-ip&gt;<span class="w"> </span>expand
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># Monitor expansion</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>ncli<span class="w"> </span>cluster<span class="w"> </span>get-domain-fault-tolerance-status<span class="w"> </span><span class="nv">type</span><span class="o">=</span>node
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c1"># Wait until new node appears in: ncli host list</span>
 </code></pre></div>
 <p><strong>After node is added:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Verify new disks are claimed</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>ncli<span class="w"> </span>disk<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;new-host-serial&gt;
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Check data is rebalancing to new node (Curator will trigger automatically)</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>curator_cli<span class="w"> </span>display_curator_tasks<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>rebalance
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Verify new disks are claimed</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>ncli<span class="w"> </span>disk<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;new-host-serial&gt;
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Check data is rebalancing to new node (Curator will trigger automatically)</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>curator_cli<span class="w"> </span>display_curator_tasks<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>rebalance
 </code></pre></div></p>
 <hr />
 <h2 id="remove-a-node-from-cluster">Remove a Node from Cluster<a class="headerlink" href="#remove-a-node-from-cluster" title="Permanent link">&para;</a></h2>
@@ -7771,110 +7755,110 @@ Common Nutanix operational procedures — adding and removing nodes, entering ma
 <p class="admonition-title">Node removal causes vSAN data rebalancing</p>
 <p>All data on the leaving node's disks must evacuate to remaining nodes before removal. Ensure remaining nodes have sufficient capacity before starting.</p>
 </div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Step 1: Check cluster can tolerate removal</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>ncli<span class="w"> </span>cluster<span class="w"> </span>get-domain-fault-tolerance-status<span class="w"> </span><span class="nv">type</span><span class="o">=</span>node
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="c1"># Must show CAN_TOLERATE_FAILURE_COUNT ≥ 1</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1"># Step 2: Mark node for removal (triggers data evacuation)</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="c1"># Prism Element → Hardware → select host → Remove Host</span>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># OR via ncli:</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>ncli<span class="w"> </span>host<span class="w"> </span>remove-start<span class="w"> </span><span class="nv">id</span><span class="o">=</span>&lt;host-id&gt;
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="c1"># Step 3: Monitor data evacuation</span>
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>ncli<span class="w"> </span>host<span class="w"> </span>get<span class="w"> </span><span class="nv">id</span><span class="o">=</span>&lt;host-id&gt;<span class="w">   </span><span class="c1"># watch &quot;removal_status&quot; field</span>
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="c1"># Also check: acli vm.list — all VMs should migrate off</span>
-<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>
-<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="c1"># Step 4: Confirm removal is complete</span>
-<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>ncli<span class="w"> </span>host<span class="w"> </span>list<span class="w">   </span><span class="c1"># host should no longer appear</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Step 1: Check cluster can tolerate removal</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>ncli<span class="w"> </span>cluster<span class="w"> </span>get-domain-fault-tolerance-status<span class="w"> </span><span class="nv">type</span><span class="o">=</span>node
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1"># Must show CAN_TOLERATE_FAILURE_COUNT ≥ 1</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Step 2: Mark node for removal (triggers data evacuation)</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># Prism Element → Hardware → select host → Remove Host</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># OR via ncli:</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>ncli<span class="w"> </span>host<span class="w"> </span>remove-start<span class="w"> </span><span class="nv">id</span><span class="o">=</span>&lt;host-id&gt;
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># Step 3: Monitor data evacuation</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>ncli<span class="w"> </span>host<span class="w"> </span>get<span class="w"> </span><span class="nv">id</span><span class="o">=</span>&lt;host-id&gt;<span class="w">   </span><span class="c1"># watch &quot;removal_status&quot; field</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="c1"># Also check: acli vm.list — all VMs should migrate off</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="c1"># Step 4: Confirm removal is complete</span>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>ncli<span class="w"> </span>host<span class="w"> </span>list<span class="w">   </span><span class="c1"># host should no longer appear</span>
 </code></pre></div>
 <hr />
 <h2 id="expand-storage-add-disks">Expand Storage (Add Disks)<a class="headerlink" href="#expand-storage-add-disks" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># New disks are typically auto-discovered and claimed by AOS within 5 minutes</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="c1"># Verify discovery:</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>ncli<span class="w"> </span>disk<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;host-name&gt;
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># If disk not auto-claimed:</span>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="c1"># Prism Element → Hardware → select host → claim disk manually</span>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>ncli<span class="w"> </span>disk<span class="w"> </span>create<span class="w"> </span>host-id<span class="o">=</span>&lt;host-id&gt;<span class="w"> </span>device-bus<span class="o">=</span>&lt;bus&gt;<span class="w"> </span>device-id<span class="o">=</span>&lt;id&gt;
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="c1"># Monitor Curator rebalancing to new disk</span>
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>curator_cli<span class="w"> </span>display_curator_tasks
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># New disks are typically auto-discovered and claimed by AOS within 5 minutes</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="c1"># Verify discovery:</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>ncli<span class="w"> </span>disk<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;host-name&gt;
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1"># If disk not auto-claimed:</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="c1"># Prism Element → Hardware → select host → claim disk manually</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>ncli<span class="w"> </span>disk<span class="w"> </span>create<span class="w"> </span>host-id<span class="o">=</span>&lt;host-id&gt;<span class="w"> </span>device-bus<span class="o">=</span>&lt;bus&gt;<span class="w"> </span>device-id<span class="o">=</span>&lt;id&gt;
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="c1"># Monitor Curator rebalancing to new disk</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>curator_cli<span class="w"> </span>display_curator_tasks
 </code></pre></div>
 <hr />
 <h2 id="clone-a-vm">Clone a VM<a class="headerlink" href="#clone-a-vm" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Via acli</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>acli<span class="w"> </span>vm.clone<span class="w"> </span>&lt;source-vm-name&gt;<span class="w"> </span><span class="nv">clone_vm_name</span><span class="o">=</span>&lt;new-vm-name&gt;
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Clone from snapshot</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>acli<span class="w"> </span>vm.clone<span class="w"> </span>&lt;source-vm-name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="w">  </span><span class="nv">clone_vm_name</span><span class="o">=</span>&lt;new-vm-name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="w">  </span><span class="nv">snapshot_name</span><span class="o">=</span>&lt;snap-name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Via acli</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>acli<span class="w"> </span>vm.clone<span class="w"> </span>&lt;source-vm-name&gt;<span class="w"> </span><span class="nv">clone_vm_name</span><span class="o">=</span>&lt;new-vm-name&gt;
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Clone from snapshot</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>acli<span class="w"> </span>vm.clone<span class="w"> </span>&lt;source-vm-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">  </span><span class="nv">clone_vm_name</span><span class="o">=</span>&lt;new-vm-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">  </span><span class="nv">snapshot_name</span><span class="o">=</span>&lt;snap-name&gt;
 </code></pre></div>
 <p>From Prism: right-click VM → Clone → specify name and count.</p>
 <hr />
 <h2 id="take-and-manage-vm-snapshots">Take and Manage VM Snapshots<a class="headerlink" href="#take-and-manage-vm-snapshots" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Create crash-consistent snapshot</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>acli<span class="w"> </span>vm.snapshot_create<span class="w"> </span>&lt;vm-name&gt;<span class="w"> </span><span class="nv">snapshot_name</span><span class="o">=</span>&lt;snap-name&gt;
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Create app-consistent snapshot (requires NGT installed in VM)</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>acli<span class="w"> </span>vm.snapshot_create<span class="w"> </span>&lt;vm-name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="w">  </span><span class="nv">snapshot_name</span><span class="o">=</span>&lt;snap-name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="w">  </span><span class="nv">vm_consistency_type</span><span class="o">=</span>APPLICATION_CONSISTENT
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>
-<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="c1"># List snapshots</span>
-<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>acli<span class="w"> </span>vm.snapshot_list<span class="w"> </span>&lt;vm-name&gt;
-<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>
-<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="c1"># Revert to snapshot (VM must be powered off)</span>
-<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>acli<span class="w"> </span>vm.off<span class="w"> </span>&lt;vm-name&gt;
-<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>acli<span class="w"> </span>vm.snapshot_revert<span class="w"> </span>&lt;vm-name&gt;<span class="w"> </span><span class="nv">snapshot_name</span><span class="o">=</span>&lt;snap-name&gt;
-<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>acli<span class="w"> </span>vm.on<span class="w"> </span>&lt;vm-name&gt;
-<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>
-<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a><span class="c1"># Delete old snapshots (free storage)</span>
-<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a>acli<span class="w"> </span>vm.snapshot_delete<span class="w"> </span>&lt;vm-name&gt;<span class="w"> </span><span class="nv">snapshot_name</span><span class="o">=</span>&lt;snap-name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Create crash-consistent snapshot</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>acli<span class="w"> </span>vm.snapshot_create<span class="w"> </span>&lt;vm-name&gt;<span class="w"> </span><span class="nv">snapshot_name</span><span class="o">=</span>&lt;snap-name&gt;
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Create app-consistent snapshot (requires NGT installed in VM)</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>acli<span class="w"> </span>vm.snapshot_create<span class="w"> </span>&lt;vm-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="w">  </span><span class="nv">snapshot_name</span><span class="o">=</span>&lt;snap-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="w">  </span><span class="nv">vm_consistency_type</span><span class="o">=</span>APPLICATION_CONSISTENT
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="c1"># List snapshots</span>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>acli<span class="w"> </span>vm.snapshot_list<span class="w"> </span>&lt;vm-name&gt;
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="c1"># Revert to snapshot (VM must be powered off)</span>
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>acli<span class="w"> </span>vm.off<span class="w"> </span>&lt;vm-name&gt;
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>acli<span class="w"> </span>vm.snapshot_revert<span class="w"> </span>&lt;vm-name&gt;<span class="w"> </span><span class="nv">snapshot_name</span><span class="o">=</span>&lt;snap-name&gt;
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>acli<span class="w"> </span>vm.on<span class="w"> </span>&lt;vm-name&gt;
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a><span class="c1"># Delete old snapshots (free storage)</span>
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>acli<span class="w"> </span>vm.snapshot_delete<span class="w"> </span>&lt;vm-name&gt;<span class="w"> </span><span class="nv">snapshot_name</span><span class="o">=</span>&lt;snap-name&gt;
 </code></pre></div>
 <hr />
 <h2 id="create-and-manage-protection-domains-legacy-dr">Create and Manage Protection Domains (Legacy DR)<a class="headerlink" href="#create-and-manage-protection-domains-legacy-dr" title="Permanent link">&para;</a></h2>
 <p>Protection Domains group VMs for coordinated snapshots and replication to a remote cluster.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Create a protection domain</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>ncli<span class="w"> </span>pd<span class="w"> </span>create<span class="w"> </span><span class="nv">name</span><span class="o">=</span>&lt;pd-name&gt;
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># Add VMs to the protection domain</span>
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>ncli<span class="w"> </span>pd<span class="w"> </span>add-vms<span class="w"> </span><span class="nv">name</span><span class="o">=</span>&lt;pd-name&gt;<span class="w"> </span>vm-names<span class="o">=</span>&lt;vm1&gt;,&lt;vm2&gt;
-<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>
-<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="c1"># Set snapshot schedule</span>
-<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>ncli<span class="w"> </span>pd<span class="w"> </span>set-schedule<span class="w"> </span><span class="nv">name</span><span class="o">=</span>&lt;pd-name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="w">  </span>app-consistent<span class="o">=</span><span class="nb">false</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="w">  </span>every-nth<span class="o">=</span><span class="m">3600</span><span class="w"> </span><span class="se">\ </span><span class="w">       </span><span class="c1"># snapshot every 3600 seconds (1 hour)</span>
-<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a><span class="w">  </span>num-snaps-to-retain<span class="o">=</span><span class="m">24</span><span class="w">  </span><span class="c1"># keep 24 snapshots</span>
-<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>
-<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a><span class="c1"># Add remote site for replication</span>
-<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>ncli<span class="w"> </span>remote-site<span class="w"> </span>create<span class="w"> </span><span class="nv">name</span><span class="o">=</span>&lt;remote-name&gt;<span class="w"> </span>address-list<span class="o">=</span>&lt;remote-cvm-ip&gt;
-<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>ncli<span class="w"> </span>pd<span class="w"> </span>set-schedule<span class="w"> </span><span class="nv">name</span><span class="o">=</span>&lt;pd-name&gt;<span class="w"> </span>remote-site-list<span class="o">=</span>&lt;remote-name&gt;
-<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>
-<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a><span class="c1"># Manual snapshot + replicate now</span>
-<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a>ncli<span class="w"> </span>pd<span class="w"> </span>snapshot<span class="w"> </span><span class="nv">name</span><span class="o">=</span>&lt;pd-name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Create a protection domain</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>ncli<span class="w"> </span>pd<span class="w"> </span>create<span class="w"> </span><span class="nv">name</span><span class="o">=</span>&lt;pd-name&gt;
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Add VMs to the protection domain</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>ncli<span class="w"> </span>pd<span class="w"> </span>add-vms<span class="w"> </span><span class="nv">name</span><span class="o">=</span>&lt;pd-name&gt;<span class="w"> </span>vm-names<span class="o">=</span>&lt;vm1&gt;,&lt;vm2&gt;
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># Set snapshot schedule</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>ncli<span class="w"> </span>pd<span class="w"> </span>set-schedule<span class="w"> </span><span class="nv">name</span><span class="o">=</span>&lt;pd-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="w">  </span>app-consistent<span class="o">=</span><span class="nb">false</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="w">  </span>every-nth<span class="o">=</span><span class="m">3600</span><span class="w"> </span><span class="se">\ </span><span class="w">       </span><span class="c1"># snapshot every 3600 seconds (1 hour)</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="w">  </span>num-snaps-to-retain<span class="o">=</span><span class="m">24</span><span class="w">  </span><span class="c1"># keep 24 snapshots</span>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="c1"># Add remote site for replication</span>
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>ncli<span class="w"> </span>remote-site<span class="w"> </span>create<span class="w"> </span><span class="nv">name</span><span class="o">=</span>&lt;remote-name&gt;<span class="w"> </span>address-list<span class="o">=</span>&lt;remote-cvm-ip&gt;
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>ncli<span class="w"> </span>pd<span class="w"> </span>set-schedule<span class="w"> </span><span class="nv">name</span><span class="o">=</span>&lt;pd-name&gt;<span class="w"> </span>remote-site-list<span class="o">=</span>&lt;remote-name&gt;
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>
+<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a><span class="c1"># Manual snapshot + replicate now</span>
+<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a>ncli<span class="w"> </span>pd<span class="w"> </span>snapshot<span class="w"> </span><span class="nv">name</span><span class="o">=</span>&lt;pd-name&gt;
 </code></pre></div>
 <hr />
 <h2 id="register-nutanix-guest-tools-ngt">Register Nutanix Guest Tools (NGT)<a class="headerlink" href="#register-nutanix-guest-tools-ngt" title="Permanent link">&para;</a></h2>
 <p>NGT installs inside VMs for application-consistent snapshots and in-guest operations.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>Prism Element → VM → select VM → Manage NGT → Mount NGT ISO → Install in VM
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Prism Element → VM → select VM → Manage NGT → Mount NGT ISO → Install in VM
 </code></pre></div>
 <p>Inside the VM (Windows):
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c"># Mount the NGT ISO and run installer</span>
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="n">D</span><span class="p">:\</span><span class="n">setup</span><span class="p">.</span><span class="n">exe</span> <span class="p">/</span><span class="n">quiet</span> <span class="p">/</span><span class="n">norestart</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c"># Mount the NGT ISO and run installer</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="n">D</span><span class="p">:\</span><span class="n">setup</span><span class="p">.</span><span class="n">exe</span> <span class="p">/</span><span class="n">quiet</span> <span class="p">/</span><span class="n">norestart</span>
 </code></pre></div></p>
 <p>Inside the VM (Linux):
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>mount<span class="w"> </span>/dev/sr0<span class="w"> </span>/mnt
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>/mnt/installer/linux/install_ngt.py
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>mount<span class="w"> </span>/dev/sr0<span class="w"> </span>/mnt
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>/mnt/installer/linux/install_ngt.py
 </code></pre></div></p>
 <hr />
 <h2 id="increase-container-capacity-limit">Increase Container Capacity Limit<a class="headerlink" href="#increase-container-capacity-limit" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># View current container config</span>
-<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>ncli<span class="w"> </span>ctr<span class="w"> </span>get<span class="w"> </span><span class="nv">name</span><span class="o">=</span>&lt;container-name&gt;
-<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>
-<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="c1"># Raise the reserved capacity (advertised size to datastores)</span>
-<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>ncli<span class="w"> </span>ctr<span class="w"> </span>edit<span class="w"> </span><span class="nv">name</span><span class="o">=</span>&lt;container-name&gt;<span class="w"> </span>advertised-capacity<span class="o">=</span>&lt;size-in-bytes&gt;
-<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="c1"># e.g. 10 TB = 10995116277760</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># View current container config</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>ncli<span class="w"> </span>ctr<span class="w"> </span>get<span class="w"> </span><span class="nv">name</span><span class="o">=</span>&lt;container-name&gt;
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c1"># Raise the reserved capacity (advertised size to datastores)</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>ncli<span class="w"> </span>ctr<span class="w"> </span>edit<span class="w"> </span><span class="nv">name</span><span class="o">=</span>&lt;container-name&gt;<span class="w"> </span>advertised-capacity<span class="o">=</span>&lt;size-in-bytes&gt;
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="c1"># e.g. 10 TB = 10995116277760</span>
 </code></pre></div>
 <hr />
 <hr />

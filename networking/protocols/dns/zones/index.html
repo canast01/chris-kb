@@ -8127,23 +8127,7 @@
 DNS Zones reference covering Overview, Zone Types Reference, Creating Zones, Zone Transfer, Zone Delegation and 2 more sections.
 </div>
 <p><img alt="DNS Zones" src="../../../../assets/networking-protocols-dns-zones-index.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>center: &quot;DNS&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>zone_types_reference: &quot;Zone Types Reference&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>creating_zones: &quot;Creating Zones&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>zone_transfer: &quot;Zone Transfer&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>zone_delegation: &quot;Zone Delegation&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>adintegrated_zone_replication_scopes: &quot;AD-Integrated Zone Replication Scopes&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>known_issues: &quot;Known Issues&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>center -&gt; zone_types_reference
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>center -&gt; creating_zones
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>center -&gt; zone_transfer
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>center -&gt; zone_delegation
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>center -&gt; adintegrated_zone_replication_scopes
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>center -&gt; known_issues
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNUTFuwzAM3PUKwrs_4CFAES9BgA51py6CIDOyEIMyJBVJWvjvlWTXdhoVyMjjHck7ttqi9NpQBVarzjMmkTzaCor6tSng23ViwAo6vAplaGRfhpD724COWzyhRZKhXXwEGN4jDG-_8KqOOwSpHkcmLQqvSfE4yAXlfgYgjnBZzbTTCnKndNm0bK7_V7TYoxKTuUlTL0hWJVodvCsrPLbpvmBx6LVMCu6kGdLFL3V5WHjp7OB54UGTeNkFZzIX4tq5zzToGEs4pDLLn58B5Q5yuW_a97E-6Oas_uJrQpvOMyls6FtP7Af689k5?" /></p>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>DNS zones are authoritative containers for a portion of the DNS namespace. Windows DNS supports primary, secondary, stub, and forward zones. AD-integrated zones store data in Active Directory, enabling multi-master replication and secure dynamic updates. Zone delegation carves out sub-domains to separate DNS servers.</p>
 <h2 id="zone-types-reference">Zone Types Reference<a class="headerlink" href="#zone-types-reference" title="Permanent link">&para;</a></h2>
@@ -8190,63 +8174,63 @@ DNS Zones reference covering Overview, Zone Types Reference, Creating Zones, Zon
 </tbody>
 </table>
 <h2 id="creating-zones">Creating Zones<a class="headerlink" href="#creating-zones" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Create a primary zone (file-backed)</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Add-DnsServerPrimaryZone</span> <span class="p">`</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  <span class="n">-Name</span> <span class="s2">&quot;corp.local&quot;</span> <span class="p">`</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  <span class="n">-ZoneFile</span> <span class="s2">&quot;corp.local.dns&quot;</span> <span class="p">`</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>  <span class="n">-DynamicUpdate</span> <span class="n">NonsecureAndSecure</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c"># Create an AD-integrated zone</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="nb">Add-DnsServerPrimaryZone</span> <span class="p">`</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>  <span class="n">-Name</span> <span class="s2">&quot;corp.local&quot;</span> <span class="p">`</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>  <span class="n">-ReplicationScope</span> <span class="s2">&quot;Forest&quot;</span> <span class="p">`</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>  <span class="n">-DynamicUpdate</span> <span class="n">Secure</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c"># Create a reverse lookup zone</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="nb">Add-DnsServerPrimaryZone</span> <span class="p">`</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>  <span class="n">-NetworkId</span> <span class="s2">&quot;192.168.10.0/24&quot;</span> <span class="p">`</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>  <span class="n">-ReplicationScope</span> <span class="s2">&quot;Forest&quot;</span> <span class="p">`</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>  <span class="n">-DynamicUpdate</span> <span class="n">Secure</span>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="c"># Create a secondary zone</span>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="nb">Add-DnsServerSecondaryZone</span> <span class="p">`</span>
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>  <span class="n">-Name</span> <span class="s2">&quot;corp.local&quot;</span> <span class="p">`</span>
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>  <span class="n">-ZoneFile</span> <span class="s2">&quot;corp.local.dns&quot;</span> <span class="p">`</span>
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>  <span class="n">-MasterServers</span> <span class="n">10</span><span class="p">.</span><span class="n">0</span><span class="p">.</span><span class="n">0</span><span class="p">.</span><span class="n">53</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Create a primary zone (file-backed)</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Add-DnsServerPrimaryZone</span> <span class="p">`</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>  <span class="n">-Name</span> <span class="s2">&quot;corp.local&quot;</span> <span class="p">`</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>  <span class="n">-ZoneFile</span> <span class="s2">&quot;corp.local.dns&quot;</span> <span class="p">`</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>  <span class="n">-DynamicUpdate</span> <span class="n">NonsecureAndSecure</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c"># Create an AD-integrated zone</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="nb">Add-DnsServerPrimaryZone</span> <span class="p">`</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>  <span class="n">-Name</span> <span class="s2">&quot;corp.local&quot;</span> <span class="p">`</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>  <span class="n">-ReplicationScope</span> <span class="s2">&quot;Forest&quot;</span> <span class="p">`</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>  <span class="n">-DynamicUpdate</span> <span class="n">Secure</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c"># Create a reverse lookup zone</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="nb">Add-DnsServerPrimaryZone</span> <span class="p">`</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>  <span class="n">-NetworkId</span> <span class="s2">&quot;192.168.10.0/24&quot;</span> <span class="p">`</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>  <span class="n">-ReplicationScope</span> <span class="s2">&quot;Forest&quot;</span> <span class="p">`</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>  <span class="n">-DynamicUpdate</span> <span class="n">Secure</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="c"># Create a secondary zone</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="nb">Add-DnsServerSecondaryZone</span> <span class="p">`</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>  <span class="n">-Name</span> <span class="s2">&quot;corp.local&quot;</span> <span class="p">`</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>  <span class="n">-ZoneFile</span> <span class="s2">&quot;corp.local.dns&quot;</span> <span class="p">`</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>  <span class="n">-MasterServers</span> <span class="n">10</span><span class="p">.</span><span class="n">0</span><span class="p">.</span><span class="n">0</span><span class="p">.</span><span class="n">53</span>
 </code></pre></div>
 <h2 id="zone-transfer">Zone Transfer<a class="headerlink" href="#zone-transfer" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Allow zone transfer to specific servers</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">Set-DnsServerPrimaryZone</span> <span class="p">`</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>  <span class="n">-Name</span> <span class="s2">&quot;corp.local&quot;</span> <span class="p">`</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>  <span class="n">-SecureSecondaries</span> <span class="n">TransferToSecureServers</span> <span class="p">`</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>  <span class="n">-SecondaryServers</span> <span class="n">10</span><span class="p">.</span><span class="n">0</span><span class="p">.</span><span class="n">0</span><span class="p">.</span><span class="n">54</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c"># Trigger manual zone transfer on secondary</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="nb">Start-DnsServerZoneTransfer</span> <span class="n">-Name</span> <span class="s2">&quot;corp.local&quot;</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c"># Check transfer status</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="nb">Get-DnsServerZone</span> <span class="n">-Name</span> <span class="s2">&quot;corp.local&quot;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">ZoneName</span><span class="p">,</span> <span class="n">LastZoneTransferAttempt</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Allow zone transfer to specific servers</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Set-DnsServerPrimaryZone</span> <span class="p">`</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  <span class="n">-Name</span> <span class="s2">&quot;corp.local&quot;</span> <span class="p">`</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  <span class="n">-SecureSecondaries</span> <span class="n">TransferToSecureServers</span> <span class="p">`</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>  <span class="n">-SecondaryServers</span> <span class="n">10</span><span class="p">.</span><span class="n">0</span><span class="p">.</span><span class="n">0</span><span class="p">.</span><span class="n">54</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c"># Trigger manual zone transfer on secondary</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="nb">Start-DnsServerZoneTransfer</span> <span class="n">-Name</span> <span class="s2">&quot;corp.local&quot;</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c"># Check transfer status</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="nb">Get-DnsServerZone</span> <span class="n">-Name</span> <span class="s2">&quot;corp.local&quot;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">ZoneName</span><span class="p">,</span> <span class="n">LastZoneTransferAttempt</span>
 </code></pre></div>
 <h2 id="zone-delegation">Zone Delegation<a class="headerlink" href="#zone-delegation" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Delegate child.example.local to a child DNS server</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Add-DnsServerZoneDelegation</span> <span class="p">`</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  <span class="n">-Name</span> <span class="s2">&quot;corp.local&quot;</span> <span class="p">`</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>  <span class="n">-ChildZoneName</span> <span class="s2">&quot;child&quot;</span> <span class="p">`</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>  <span class="n">-NameServer</span> <span class="s2">&quot;ns1.child.example.local&quot;</span> <span class="p">`</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>  <span class="n">-IPAddress</span> <span class="n">10</span><span class="p">.</span><span class="n">1</span><span class="p">.</span><span class="n">0</span><span class="p">.</span><span class="n">53</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c"># Verify delegation NS record exists</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="nb">Resolve-DnsName</span> <span class="n">-Name</span> <span class="s2">&quot;child.example.local&quot;</span> <span class="n">-Type</span> <span class="n">NS</span> <span class="n">-Server</span> <span class="n">10</span><span class="p">.</span><span class="n">0</span><span class="p">.</span><span class="n">0</span><span class="p">.</span><span class="n">53</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Delegate child.example.local to a child DNS server</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">Add-DnsServerZoneDelegation</span> <span class="p">`</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>  <span class="n">-Name</span> <span class="s2">&quot;corp.local&quot;</span> <span class="p">`</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>  <span class="n">-ChildZoneName</span> <span class="s2">&quot;child&quot;</span> <span class="p">`</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>  <span class="n">-NameServer</span> <span class="s2">&quot;ns1.child.example.local&quot;</span> <span class="p">`</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>  <span class="n">-IPAddress</span> <span class="n">10</span><span class="p">.</span><span class="n">1</span><span class="p">.</span><span class="n">0</span><span class="p">.</span><span class="n">53</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c"># Verify delegation NS record exists</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="nb">Resolve-DnsName</span> <span class="n">-Name</span> <span class="s2">&quot;child.example.local&quot;</span> <span class="n">-Type</span> <span class="n">NS</span> <span class="n">-Server</span> <span class="n">10</span><span class="p">.</span><span class="n">0</span><span class="p">.</span><span class="n">0</span><span class="p">.</span><span class="n">53</span>
 </code></pre></div>
 <h2 id="ad-integrated-zone-replication-scopes">AD-Integrated Zone Replication Scopes<a class="headerlink" href="#ad-integrated-zone-replication-scopes" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># View current replication scope</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">Get-DnsServerZone</span> <span class="n">-Name</span> <span class="s2">&quot;corp.local&quot;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">ReplicationScope</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c"># Change replication scope</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="nb">Set-DnsServerPrimaryZone</span> <span class="p">`</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>  <span class="n">-Name</span> <span class="s2">&quot;corp.local&quot;</span> <span class="p">`</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>  <span class="n">-ReplicationScope</span> <span class="s2">&quot;Forest&quot;</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c"># Options: Forest | Domain | Legacy | None</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># View current replication scope</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Get-DnsServerZone</span> <span class="n">-Name</span> <span class="s2">&quot;corp.local&quot;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">ReplicationScope</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c"># Change replication scope</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="nb">Set-DnsServerPrimaryZone</span> <span class="p">`</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>  <span class="n">-Name</span> <span class="s2">&quot;corp.local&quot;</span> <span class="p">`</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>  <span class="n">-ReplicationScope</span> <span class="s2">&quot;Forest&quot;</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c"># Options: Forest | Domain | Legacy | None</span>
 </code></pre></div>
 <h2 id="known-issues">Known Issues<a class="headerlink" href="#known-issues" title="Permanent link">&para;</a></h2>
 <ul>

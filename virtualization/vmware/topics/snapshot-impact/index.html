@@ -9503,120 +9503,12 @@ Snapshots are a write-redirect mechanism — they do not freeze data, they redir
 *Applies to: vSphere 7.x / 8.x*
 </div>
 <p><img alt="Snapshot Performance Impact" src="../../../../assets/virtualization-vmware-topics-snapshot-impact-index.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>center: &quot;Snapshot Impact&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>how_snapshots_work: &quot;How Snapshots Work&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>performance_impact_by_chain_depth: &quot;Performance Impact by Chain Depth&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>detecting_snapshot_issues: &quot;Detecting Snapshot Issues&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>consolidation_warnings: &quot;Consolidation Warnings&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>esxtop_identifying_snapshot_latency: &quot;esxtop — Identifying Snapshot Latency&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>backupinduced_snapshots: &quot;Backup-Induced Snapshots&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>center -&gt; how_snapshots_work
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>center -&gt; performance_impact_by_chain_depth
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>center -&gt; detecting_snapshot_issues
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>center -&gt; consolidation_warnings
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>center -&gt; esxtop_identifying_snapshot_latency
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>center -&gt; backupinduced_snapshots
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>{
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  &quot;$schema&quot;: &quot;https://vega.github.io/schema/vega-lite/v5.json&quot;,
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  &quot;title&quot;: {
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    &quot;text&quot;: &quot;Snapshot Performance Impact \u2014 Thresholds&quot;,
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    &quot;fontSize&quot;: 13,
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    &quot;fontWeight&quot;: &quot;normal&quot;
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>  },
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>  &quot;width&quot;: 480,
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>  &quot;height&quot;: {
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>    &quot;step&quot;: 26
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>  },
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>  &quot;data&quot;: {
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>    &quot;values&quot;: [
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>      {
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>        &quot;metric&quot;: &quot;Delta disk &gt; 50% of base disk&quot;,
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>        &quot;zone&quot;: &quot;Safe&quot;,
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>        &quot;val&quot;: 50
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>      },
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>      {
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>        &quot;metric&quot;: &quot;Delta disk &gt; 50% of base disk&quot;,
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>        &quot;zone&quot;: &quot;Alert&quot;,
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>        &quot;val&quot;: 50
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>      }
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>    ]
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>  },
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>  &quot;mark&quot;: {
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>    &quot;type&quot;: &quot;bar&quot;,
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>    &quot;cornerRadiusEnd&quot;: 3
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>  },
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>  &quot;encoding&quot;: {
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>    &quot;y&quot;: {
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>      &quot;field&quot;: &quot;metric&quot;,
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>      &quot;type&quot;: &quot;nominal&quot;,
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>      &quot;axis&quot;: {
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>        &quot;title&quot;: null,
-<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>        &quot;labelLimit&quot;: 200
-<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>      },
-<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>      &quot;sort&quot;: null
-<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>    },
-<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>    &quot;x&quot;: {
-<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>      &quot;field&quot;: &quot;val&quot;,
-<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>      &quot;type&quot;: &quot;quantitative&quot;,
-<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>      &quot;stack&quot;: &quot;normalize&quot;,
-<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>      &quot;axis&quot;: {
-<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>        &quot;title&quot;: &quot;Threshold boundary&quot;,
-<a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a>        &quot;format&quot;: &quot;.0%&quot;
-<a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a>      }
-<a id="__codelineno-1-48" name="__codelineno-1-48" href="#__codelineno-1-48"></a>    },
-<a id="__codelineno-1-49" name="__codelineno-1-49" href="#__codelineno-1-49"></a>    &quot;color&quot;: {
-<a id="__codelineno-1-50" name="__codelineno-1-50" href="#__codelineno-1-50"></a>      &quot;field&quot;: &quot;zone&quot;,
-<a id="__codelineno-1-51" name="__codelineno-1-51" href="#__codelineno-1-51"></a>      &quot;type&quot;: &quot;nominal&quot;,
-<a id="__codelineno-1-52" name="__codelineno-1-52" href="#__codelineno-1-52"></a>      &quot;scale&quot;: {
-<a id="__codelineno-1-53" name="__codelineno-1-53" href="#__codelineno-1-53"></a>        &quot;domain&quot;: [
-<a id="__codelineno-1-54" name="__codelineno-1-54" href="#__codelineno-1-54"></a>          &quot;Safe&quot;,
-<a id="__codelineno-1-55" name="__codelineno-1-55" href="#__codelineno-1-55"></a>          &quot;Alert&quot;
-<a id="__codelineno-1-56" name="__codelineno-1-56" href="#__codelineno-1-56"></a>        ],
-<a id="__codelineno-1-57" name="__codelineno-1-57" href="#__codelineno-1-57"></a>        &quot;range&quot;: [
-<a id="__codelineno-1-58" name="__codelineno-1-58" href="#__codelineno-1-58"></a>          &quot;#15803d&quot;,
-<a id="__codelineno-1-59" name="__codelineno-1-59" href="#__codelineno-1-59"></a>          &quot;#dc2626&quot;
-<a id="__codelineno-1-60" name="__codelineno-1-60" href="#__codelineno-1-60"></a>        ]
-<a id="__codelineno-1-61" name="__codelineno-1-61" href="#__codelineno-1-61"></a>      },
-<a id="__codelineno-1-62" name="__codelineno-1-62" href="#__codelineno-1-62"></a>      &quot;legend&quot;: {
-<a id="__codelineno-1-63" name="__codelineno-1-63" href="#__codelineno-1-63"></a>        &quot;title&quot;: &quot;Zone&quot;
-<a id="__codelineno-1-64" name="__codelineno-1-64" href="#__codelineno-1-64"></a>      }
-<a id="__codelineno-1-65" name="__codelineno-1-65" href="#__codelineno-1-65"></a>    },
-<a id="__codelineno-1-66" name="__codelineno-1-66" href="#__codelineno-1-66"></a>    &quot;order&quot;: {
-<a id="__codelineno-1-67" name="__codelineno-1-67" href="#__codelineno-1-67"></a>      &quot;field&quot;: &quot;zone&quot;,
-<a id="__codelineno-1-68" name="__codelineno-1-68" href="#__codelineno-1-68"></a>      &quot;sort&quot;: [
-<a id="__codelineno-1-69" name="__codelineno-1-69" href="#__codelineno-1-69"></a>        &quot;Safe&quot;,
-<a id="__codelineno-1-70" name="__codelineno-1-70" href="#__codelineno-1-70"></a>        &quot;Alert&quot;
-<a id="__codelineno-1-71" name="__codelineno-1-71" href="#__codelineno-1-71"></a>      ]
-<a id="__codelineno-1-72" name="__codelineno-1-72" href="#__codelineno-1-72"></a>    },
-<a id="__codelineno-1-73" name="__codelineno-1-73" href="#__codelineno-1-73"></a>    &quot;tooltip&quot;: [
-<a id="__codelineno-1-74" name="__codelineno-1-74" href="#__codelineno-1-74"></a>      {
-<a id="__codelineno-1-75" name="__codelineno-1-75" href="#__codelineno-1-75"></a>        &quot;field&quot;: &quot;metric&quot;,
-<a id="__codelineno-1-76" name="__codelineno-1-76" href="#__codelineno-1-76"></a>        &quot;type&quot;: &quot;nominal&quot;,
-<a id="__codelineno-1-77" name="__codelineno-1-77" href="#__codelineno-1-77"></a>        &quot;title&quot;: &quot;Metric&quot;
-<a id="__codelineno-1-78" name="__codelineno-1-78" href="#__codelineno-1-78"></a>      },
-<a id="__codelineno-1-79" name="__codelineno-1-79" href="#__codelineno-1-79"></a>      {
-<a id="__codelineno-1-80" name="__codelineno-1-80" href="#__codelineno-1-80"></a>        &quot;field&quot;: &quot;zone&quot;,
-<a id="__codelineno-1-81" name="__codelineno-1-81" href="#__codelineno-1-81"></a>        &quot;type&quot;: &quot;nominal&quot;,
-<a id="__codelineno-1-82" name="__codelineno-1-82" href="#__codelineno-1-82"></a>        &quot;title&quot;: &quot;Zone&quot;
-<a id="__codelineno-1-83" name="__codelineno-1-83" href="#__codelineno-1-83"></a>      },
-<a id="__codelineno-1-84" name="__codelineno-1-84" href="#__codelineno-1-84"></a>      {
-<a id="__codelineno-1-85" name="__codelineno-1-85" href="#__codelineno-1-85"></a>        &quot;field&quot;: &quot;val&quot;,
-<a id="__codelineno-1-86" name="__codelineno-1-86" href="#__codelineno-1-86"></a>        &quot;type&quot;: &quot;quantitative&quot;,
-<a id="__codelineno-1-87" name="__codelineno-1-87" href="#__codelineno-1-87"></a>        &quot;title&quot;: &quot;Segment %&quot;,
-<a id="__codelineno-1-88" name="__codelineno-1-88" href="#__codelineno-1-88"></a>        &quot;format&quot;: &quot;.0f&quot;
-<a id="__codelineno-1-89" name="__codelineno-1-89" href="#__codelineno-1-89"></a>      }
-<a id="__codelineno-1-90" name="__codelineno-1-90" href="#__codelineno-1-90"></a>    ]
-<a id="__codelineno-1-91" name="__codelineno-1-91" href="#__codelineno-1-91"></a>  }
-<a id="__codelineno-1-92" name="__codelineno-1-92" href="#__codelineno-1-92"></a>}
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNkUFuwyAQRfc-xSj7XMCLLposaqmLSl1kiTBMDIoDCLAcq4rUQ_SEPUnBdgpVidot_82f4X8uLTIvtarByk74qmKoPNoaNq-KGie0h-ZsKPMbeHOCGqxB4IV2Wl0roUfiVsqRUdtTGHvSI9xGHRzCY5qMu6jqerxWBu1R2zNVDImcF5B2IkxQqQhH40WweknMegS0E-wiA_vIFJ05-vgl1X3fRqRzA7rguL9pkH43a0UnppXTveQ0BkRGalWYjDa7XIDDKhQ90F28NkTyEKs8Tj_O6qlHxaZguFDw-f4BTSLTkc8LWdzQUnYajFR8YMhTH8H1cVa2zSKlVoo2a_GwfYDfvWbin8Vl7N0qMqYccgb8I8GMvpNG9QXGphjZ?" /></p>
+<p><img alt="Kroki" src="https://kroki.io/vegalite/svg/eNqtVE2P2jAQvfMrrGy5bSHAglZ7qFSpPVRqpapUqtSWwxAPiYtjp7aTwq7477W9-TCQpRx6SmbG8-bNzLOfBoREr3SSYQ7RA4kyYwr9MB5XmMIoZSYr1yMmx88HvPc1ZwbH1Xz0S0sR3bp8wwxHm_1kDWfizjispYBCZ9KQz6g2UuUgEiQf8gISQ36W03hyR75mCu0RTrVHsskbKcySPTq4ySzwfUOWZh5WOCge2dDBV__DqMls4O4-9nbWnKzpaIOFtaaLNoOCgS5eAS9RW_uHt0nt97EcjWKJq_oOuQFCmd6SN2QeD4nckDVo9K6avE95lAJ997DB0G_LWPc8rj2H2_9a7S1HZS6V899VO4Ic1DbY2L7wKGtQzR4SqQSqL0BZqd8LaqOzNhlFIikTaQewb3_duhhyl9D007BqywiZM2H5tQHYMR0gBJISJedBVxzWyD-ynLn9TuOzYUZaKlOnDYJItOslWIUkGna_SxC2PBhWdQu0KoJk28nPKfQK-lErcLKWpaCg9uGS_K3woh7Fw-hoVYd2D1yqXvJ-9f-erU4guJzeRWUOTASK994TwZJGVK1nFTBXIFI8RbiZzO_jGT0GuaHJdDFdBDBnS-OYopdY3wS_uzZ7RyMVxWtGU2uio3p2N48aXR0VMVJyw4r-5-ElpV_YR9jap-esCy9Cf0dXwh9N7hJ4dQJw6SKEBZaY5igMGb6k6U10_vwMDoO_iauLIQ==?" /></p>
 <h2 id="how-snapshots-work">How Snapshots Work<a class="headerlink" href="#how-snapshots-work" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Base VMDK (read-only once snapshot exists)
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>  └── Delta disk (-000001.vmdk) — all new writes go here
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>        └── Delta disk (-000002.vmdk) — if a second snapshot is taken
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Base VMDK (read-only once snapshot exists)
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>  └── Delta disk (-000001.vmdk) — all new writes go here
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>        └── Delta disk (-000002.vmdk) — if a second snapshot is taken
 </code></pre></div>
 <p>Every read must check whether the block exists in the delta chain before falling back to the base disk. Chain depth increases read latency.</p>
 <h2 id="performance-impact-by-chain-depth">Performance Impact by Chain Depth<a class="headerlink" href="#performance-impact-by-chain-depth" title="Permanent link">&para;</a></h2>
@@ -9652,31 +9544,31 @@ Snapshots are a write-redirect mechanism — they do not freeze data, they redir
 </tbody>
 </table>
 <h2 id="detecting-snapshot-issues">Detecting Snapshot Issues<a class="headerlink" href="#detecting-snapshot-issues" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># List all VMs with snapshots, sorted by snapshot count</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">Snapshot</span> <span class="o">-ne</span> <span class="nv">$null</span> <span class="p">}</span> <span class="p">|</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>        <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;SnapCount&quot;</span><span class="p">;</span> <span class="n">E</span><span class="p">={</span> <span class="p">(</span><span class="nv">$_</span> <span class="p">|</span> <span class="nb">Get-Snapshot</span> <span class="p">|</span> <span class="nb">Measure-Object</span><span class="p">).</span><span class="n">Count</span> <span class="p">}},</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>        <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;OldestSnap&quot;</span><span class="p">;</span> <span class="n">E</span><span class="p">={</span> <span class="p">(</span><span class="nv">$_</span> <span class="p">|</span> <span class="nb">Get-Snapshot</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">Created</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">1</span><span class="p">).</span><span class="n">Created</span> <span class="p">}}</span> <span class="p">|</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>    <span class="nb">Sort-Object</span> <span class="n">SnapCount</span> <span class="n">-Descending</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c"># Flag snapshots older than 3 days</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Get-Snapshot</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Created</span> <span class="o">-lt</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddDays</span><span class="p">(-</span><span class="n">3</span><span class="p">)</span> <span class="p">}</span> <span class="p">|</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>    <span class="nb">Select-Object</span> <span class="n">VM</span><span class="p">,</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Created</span><span class="p">,</span> <span class="n">SizeGB</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># List all VMs with snapshots, sorted by snapshot count</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">Snapshot</span> <span class="o">-ne</span> <span class="nv">$null</span> <span class="p">}</span> <span class="p">|</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>        <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;SnapCount&quot;</span><span class="p">;</span> <span class="n">E</span><span class="p">={</span> <span class="p">(</span><span class="nv">$_</span> <span class="p">|</span> <span class="nb">Get-Snapshot</span> <span class="p">|</span> <span class="nb">Measure-Object</span><span class="p">).</span><span class="n">Count</span> <span class="p">}},</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>        <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;OldestSnap&quot;</span><span class="p">;</span> <span class="n">E</span><span class="p">={</span> <span class="p">(</span><span class="nv">$_</span> <span class="p">|</span> <span class="nb">Get-Snapshot</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">Created</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">1</span><span class="p">).</span><span class="n">Created</span> <span class="p">}}</span> <span class="p">|</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    <span class="nb">Sort-Object</span> <span class="n">SnapCount</span> <span class="n">-Descending</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c"># Flag snapshots older than 3 days</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Get-Snapshot</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Created</span> <span class="o">-lt</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddDays</span><span class="p">(-</span><span class="n">3</span><span class="p">)</span> <span class="p">}</span> <span class="p">|</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>    <span class="nb">Select-Object</span> <span class="n">VM</span><span class="p">,</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Created</span><span class="p">,</span> <span class="n">SizeGB</span>
 </code></pre></div>
 <h2 id="consolidation-warnings">Consolidation Warnings<a class="headerlink" href="#consolidation-warnings" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Find VMs needing consolidation (orphaned delta files present)</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">Runtime</span><span class="p">.</span><span class="n">ConsolidationNeeded</span> <span class="o">-eq</span> <span class="nv">$true</span> <span class="p">}</span> <span class="p">|</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    <span class="nb">Select-Object</span> <span class="n">Name</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c"># Trigger consolidation</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="nb">Get-VM</span> <span class="s2">&quot;vm-name&quot;</span> <span class="p">|</span> <span class="nb">Get-View</span> <span class="p">|</span> <span class="nb">Invoke-Method</span> <span class="n">-Name</span> <span class="n">ConsolidateVMDisks_Task</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Find VMs needing consolidation (orphaned delta files present)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">Runtime</span><span class="p">.</span><span class="n">ConsolidationNeeded</span> <span class="o">-eq</span> <span class="nv">$true</span> <span class="p">}</span> <span class="p">|</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="nb">Select-Object</span> <span class="n">Name</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c"># Trigger consolidation</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="nb">Get-VM</span> <span class="s2">&quot;vm-name&quot;</span> <span class="p">|</span> <span class="nb">Get-View</span> <span class="p">|</span> <span class="nb">Invoke-Method</span> <span class="n">-Name</span> <span class="n">ConsolidateVMDisks_Task</span>
 </code></pre></div>
 <h2 id="esxtop-identifying-snapshot-latency">esxtop — Identifying Snapshot Latency<a class="headerlink" href="#esxtop-identifying-snapshot-latency" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Connect to host, run esxtop in disk mode</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>esxtop
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># Press &#39;u&#39; for disk view</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Look for GAVG (guest average latency) &gt; 25ms and DAVG (device latency) &gt; 15ms</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># Compare VMs with/without snapshots for correlation</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Connect to host, run esxtop in disk mode</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>esxtop
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># Press &#39;u&#39; for disk view</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Look for GAVG (guest average latency) &gt; 25ms and DAVG (device latency) &gt; 15ms</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Compare VMs with/without snapshots for correlation</span>
 </code></pre></div>
 <h2 id="backup-induced-snapshots">Backup-Induced Snapshots<a class="headerlink" href="#backup-induced-snapshots" title="Permanent link">&para;</a></h2>
 <p>Backup tools (Veeam, NBU, Commvault) create and delete a snapshot per job run. If the delta disk grows large during backup and consolidation is slow:</p>
@@ -9684,22 +9576,22 @@ Snapshots are a write-redirect mechanism — they do not freeze data, they redir
 <li>I/O is redirected to the delta for the entire backup window.</li>
 <li>Consolidation after backup can cause a "stun" (VM pause of 1–30 seconds) while delta is merged.</li>
 </ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># Monitor consolidation task progress</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">Get-Task</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Name</span> <span class="o">-match</span> <span class="s2">&quot;ConsolidateVM&quot;</span> <span class="p">}</span> <span class="p">|</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>    <span class="nb">Select-Object</span> <span class="n">ObjectId</span><span class="p">,</span> <span class="n">State</span><span class="p">,</span> <span class="n">PercentComplete</span><span class="p">,</span> <span class="n">StartTime</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Monitor consolidation task progress</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">Get-Task</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Name</span> <span class="o">-match</span> <span class="s2">&quot;ConsolidateVM&quot;</span> <span class="p">}</span> <span class="p">|</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    <span class="nb">Select-Object</span> <span class="n">ObjectId</span><span class="p">,</span> <span class="n">State</span><span class="p">,</span> <span class="n">PercentComplete</span><span class="p">,</span> <span class="n">StartTime</span>
 </code></pre></div>
 <h2 id="storage-impact">Storage Impact<a class="headerlink" href="#storage-impact" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c"># Check total snapshot disk consumption per datastore</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nb">Get-Datastore</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>    <span class="nv">$ds</span> <span class="p">=</span> <span class="nv">$_</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>    <span class="nv">$snaps</span> <span class="p">=</span> <span class="nb">Get-VM</span> <span class="n">-Datastore</span> <span class="nv">$ds</span> <span class="p">|</span> <span class="nb">Get-Snapshot</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>    <span class="no">[PSCustomObject]</span><span class="p">@{</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>        <span class="n">Datastore</span>     <span class="p">=</span> <span class="nv">$ds</span><span class="p">.</span><span class="n">Name</span>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>        <span class="n">FreeSpaceGB</span>   <span class="p">=</span> <span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$ds</span><span class="p">.</span><span class="n">FreeSpaceGB</span><span class="p">,</span> <span class="n">1</span><span class="p">)</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>        <span class="n">SnapshotCount</span> <span class="p">=</span> <span class="p">(</span><span class="nv">$snaps</span> <span class="p">|</span> <span class="nb">Measure-Object</span><span class="p">).</span><span class="n">Count</span>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>        <span class="n">SnapshotSizeGB</span><span class="p">=</span> <span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">((</span><span class="nv">$snaps</span> <span class="p">|</span> <span class="nb">Measure-Object</span> <span class="n">SizeGB</span> <span class="n">-Sum</span><span class="p">).</span><span class="n">Sum</span><span class="p">,</span> <span class="n">1</span><span class="p">)</span>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>    <span class="p">}</span>
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># Check total snapshot disk consumption per datastore</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">Get-Datastore</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>    <span class="nv">$ds</span> <span class="p">=</span> <span class="nv">$_</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    <span class="nv">$snaps</span> <span class="p">=</span> <span class="nb">Get-VM</span> <span class="n">-Datastore</span> <span class="nv">$ds</span> <span class="p">|</span> <span class="nb">Get-Snapshot</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>    <span class="no">[PSCustomObject]</span><span class="p">@{</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>        <span class="n">Datastore</span>     <span class="p">=</span> <span class="nv">$ds</span><span class="p">.</span><span class="n">Name</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>        <span class="n">FreeSpaceGB</span>   <span class="p">=</span> <span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$ds</span><span class="p">.</span><span class="n">FreeSpaceGB</span><span class="p">,</span> <span class="n">1</span><span class="p">)</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>        <span class="n">SnapshotCount</span> <span class="p">=</span> <span class="p">(</span><span class="nv">$snaps</span> <span class="p">|</span> <span class="nb">Measure-Object</span><span class="p">).</span><span class="n">Count</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>        <span class="n">SnapshotSizeGB</span><span class="p">=</span> <span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">((</span><span class="nv">$snaps</span> <span class="p">|</span> <span class="nb">Measure-Object</span> <span class="n">SizeGB</span> <span class="n">-Sum</span><span class="p">).</span><span class="n">Sum</span><span class="p">,</span> <span class="n">1</span><span class="p">)</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>    <span class="p">}</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="p">}</span>
 </code></pre></div>
 <h2 id="policy-and-remediation">Policy and Remediation<a class="headerlink" href="#policy-and-remediation" title="Permanent link">&para;</a></h2>
 <table>

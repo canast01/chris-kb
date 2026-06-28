@@ -7706,23 +7706,7 @@ Procedures reference covering Change Readiness, Incident Triage, Maintenance Win
 *Applies to: PowerShell 7.x*
 </div>
 <p><img alt="PowerShell — Procedures" src="../../../../assets/automation-powershell-operations-procedures-index.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>hub: &quot;PowerShell\nOperations&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>change_readiness: &quot;Change Readiness&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>incident_triage: &quot;Incident Triage&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>maintenance_window: &quot;Maintenance Window&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>postchange_validation: &quot;Post-Change Validation&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>powershell_error_handling_flow: &quot;PowerShell Error Handling Flow&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>create_and_use_a_powershell_module: &quot;Create and Use a PowerShell Module&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>hub -&gt; change_readiness
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>hub -&gt; incident_triage
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>hub -&gt; maintenance_window
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>hub -&gt; postchange_validation
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>hub -&gt; powershell_error_handling_flow
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>hub -&gt; create_and_use_a_powershell_module
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqFUctOwzAQvOcrVr33B3LgUoHgUIF4XpAsEy_xSu46sh2ChPrvrE3SVCWFk6V5eGdnDQVsEnmuIVBrU1XZ_q2G1Z0fMDxYdO6VbzsMOmviCr6i1R3WYPFTt573VWM1t6gCakOMMYp3UyC4n6DZlWcJ53BfETdkkJNKgXQr3OpmROCxIIuunSZOyJobVAOx8YMYtzMILwVc9HY-pjHth3Zk9M_asmpM6zHz84E484W0EnMrCkPwQYnLOOJWvbsSZa4NLrMArkcBXLkzsRqpLqESneqjvOpoyM6b3uVuNkUEIoKnKC8cDdoW0eLf-ZiwvoDTI034yREm-HfLE7PY4Uz-1c4hy7_7Vt930fOQ?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Access:</strong> Admin credentials on all affected systems</li>
@@ -7864,27 +7848,27 @@ Procedures reference covering Change Readiness, Incident Triage, Maintenance Win
     success --&gt; finallyBlock
     finallyBlock --&gt; exitCode</code></pre>
 <h3 id="scheduled-tasks-for-automated-reports">Scheduled Tasks for Automated Reports<a class="headerlink" href="#scheduled-tasks-for-automated-reports" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Create a scheduled task to run a report script daily</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nv">$action</span>  <span class="p">=</span> <span class="nb">New-ScheduledTaskAction</span> <span class="n">-Execute</span> <span class="s1">&#39;powershell.exe&#39;</span> <span class="p">`</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>               <span class="n">-Argument</span> <span class="s1">&#39;-NonInteractive -File C:\Scripts\daily-report.ps1&#39;</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="nv">$trigger</span> <span class="p">=</span> <span class="nb">New-ScheduledTaskTrigger</span> <span class="n">-Daily</span> <span class="n">-At</span> <span class="s1">&#39;06:00AM&#39;</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nv">$settings</span> <span class="p">=</span> <span class="nb">New-ScheduledTaskSettingsSet</span> <span class="n">-StartWhenAvailable</span> <span class="n">-RunOnlyIfNetworkAvailable</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="nb">Register-ScheduledTask</span> <span class="p">`</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>    <span class="n">-TaskName</span>   <span class="s1">&#39;DailyServerReport&#39;</span> <span class="p">`</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>    <span class="n">-TaskPath</span>   <span class="s1">&#39;\Automation\&#39;</span> <span class="p">`</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>    <span class="n">-Action</span>     <span class="nv">$action</span> <span class="p">`</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>    <span class="n">-Trigger</span>    <span class="nv">$trigger</span> <span class="p">`</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>    <span class="n">-Settings</span>   <span class="nv">$settings</span> <span class="p">`</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>    <span class="n">-RunLevel</span>   <span class="n">Highest</span> <span class="p">`</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>    <span class="n">-Description</span> <span class="s1">&#39;Generate and email daily server report&#39;</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="c"># Run the task immediately for testing</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="nb">Start-ScheduledTask</span> <span class="n">-TaskPath</span> <span class="s1">&#39;\Automation\&#39;</span> <span class="n">-TaskName</span> <span class="s1">&#39;DailyServerReport&#39;</span>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="c"># Check last run result</span>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="nb">Get-ScheduledTaskInfo</span> <span class="n">-TaskPath</span> <span class="s1">&#39;\Automation\&#39;</span> <span class="n">-TaskName</span> <span class="s1">&#39;DailyServerReport&#39;</span> <span class="p">|</span>
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>    <span class="nb">Select-Object</span> <span class="n">LastRunTime</span><span class="p">,</span> <span class="n">LastTaskResult</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Create a scheduled task to run a report script daily</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nv">$action</span>  <span class="p">=</span> <span class="nb">New-ScheduledTaskAction</span> <span class="n">-Execute</span> <span class="s1">&#39;powershell.exe&#39;</span> <span class="p">`</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>               <span class="n">-Argument</span> <span class="s1">&#39;-NonInteractive -File C:\Scripts\daily-report.ps1&#39;</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="nv">$trigger</span> <span class="p">=</span> <span class="nb">New-ScheduledTaskTrigger</span> <span class="n">-Daily</span> <span class="n">-At</span> <span class="s1">&#39;06:00AM&#39;</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nv">$settings</span> <span class="p">=</span> <span class="nb">New-ScheduledTaskSettingsSet</span> <span class="n">-StartWhenAvailable</span> <span class="n">-RunOnlyIfNetworkAvailable</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="nb">Register-ScheduledTask</span> <span class="p">`</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="n">-TaskName</span>   <span class="s1">&#39;DailyServerReport&#39;</span> <span class="p">`</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    <span class="n">-TaskPath</span>   <span class="s1">&#39;\Automation\&#39;</span> <span class="p">`</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    <span class="n">-Action</span>     <span class="nv">$action</span> <span class="p">`</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    <span class="n">-Trigger</span>    <span class="nv">$trigger</span> <span class="p">`</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>    <span class="n">-Settings</span>   <span class="nv">$settings</span> <span class="p">`</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    <span class="n">-RunLevel</span>   <span class="n">Highest</span> <span class="p">`</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>    <span class="n">-Description</span> <span class="s1">&#39;Generate and email daily server report&#39;</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c"># Run the task immediately for testing</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="nb">Start-ScheduledTask</span> <span class="n">-TaskPath</span> <span class="s1">&#39;\Automation\&#39;</span> <span class="n">-TaskName</span> <span class="s1">&#39;DailyServerReport&#39;</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="c"># Check last run result</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="nb">Get-ScheduledTaskInfo</span> <span class="n">-TaskPath</span> <span class="s1">&#39;\Automation\&#39;</span> <span class="n">-TaskName</span> <span class="s1">&#39;DailyServerReport&#39;</span> <span class="p">|</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>    <span class="nb">Select-Object</span> <span class="n">LastRunTime</span><span class="p">,</span> <span class="n">LastTaskResult</span>
 </code></pre></div>
 <h3 id="report-format-reference">Report Format Reference<a class="headerlink" href="#report-format-reference" title="Permanent link">&para;</a></h3>
 <table>
@@ -7928,39 +7912,39 @@ Procedures reference covering Change Readiness, Incident Triage, Maintenance Win
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># JSON export example</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">Get-Process</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Id</span><span class="p">,</span> <span class="n">CPU</span> <span class="p">|</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="nb">ConvertTo-Json</span> <span class="n">-Depth</span> <span class="n">3</span> <span class="p">|</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="nb">Out-File</span> <span class="n">C</span><span class="p">:\</span><span class="n">Reports</span><span class="p">\</span><span class="n">processes</span><span class="p">.</span><span class="n">json</span> <span class="n">-Encoding</span> <span class="n">UTF8</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># JSON export example</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Get-Process</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Id</span><span class="p">,</span> <span class="n">CPU</span> <span class="p">|</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="nb">ConvertTo-Json</span> <span class="n">-Depth</span> <span class="n">3</span> <span class="p">|</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    <span class="nb">Out-File</span> <span class="n">C</span><span class="p">:\</span><span class="n">Reports</span><span class="p">\</span><span class="n">processes</span><span class="p">.</span><span class="n">json</span> <span class="n">-Encoding</span> <span class="n">UTF8</span>
 </code></pre></div>
 <h2 id="create-and-use-a-powershell-module">Create and Use a PowerShell Module<a class="headerlink" href="#create-and-use-a-powershell-module" title="Permanent link">&para;</a></h2>
 <p><code>New-ModuleManifest -Path MyModule.psd1</code> → write functions in <code>.psm1</code> → <code>Import-Module ./MyModule.psd1</code> → verify with <code>Get-Command -Module MyModule</code>.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Create module manifest</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">New-ModuleManifest</span> <span class="n">-Path</span> <span class="n">MyModule</span><span class="p">.</span><span class="n">psd1</span> <span class="p">`</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    <span class="n">-RootModule</span> <span class="s1">&#39;MyModule.psm1&#39;</span> <span class="p">`</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    <span class="n">-ModuleVersion</span> <span class="s1">&#39;1.0.0&#39;</span> <span class="p">`</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>    <span class="n">-Author</span> <span class="s1">&#39;Your Name&#39;</span> <span class="p">`</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>    <span class="n">-Description</span> <span class="s1">&#39;Helper functions for automation&#39;</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c"># Write functions in the .psm1 file</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c"># MyModule.psm1</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="k">function</span> <span class="nb">Get-ServerStatus</span> <span class="p">{</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>    <span class="k">param</span><span class="p">(</span><span class="no">[string]</span><span class="nv">$ComputerName</span><span class="p">)</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>    <span class="nb">Test-Connection</span> <span class="n">-ComputerName</span> <span class="nv">$ComputerName</span> <span class="n">-Count</span> <span class="n">1</span> <span class="n">-Quiet</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="p">}</span>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="k">function</span> <span class="nb">Invoke-DailyReport</span> <span class="p">{</span>
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>    <span class="c"># ... report logic ...</span>
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="p">}</span>
-<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>
-<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="c"># Export only public functions</span>
-<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="nb">Export-ModuleMember</span> <span class="n">-Function</span> <span class="nb">Get-ServerStatus</span><span class="p">,</span> <span class="nb">Invoke-DailyReport</span>
-<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>
-<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a><span class="c"># Import and use the module</span>
-<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a><span class="nb">Import-Module</span> <span class="p">./</span><span class="n">MyModule</span><span class="p">.</span><span class="n">psd1</span>
-<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>
-<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a><span class="c"># Verify exported commands</span>
-<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a><span class="nb">Get-Command</span> <span class="n">-Module</span> <span class="n">MyModule</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Create module manifest</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">New-ModuleManifest</span> <span class="n">-Path</span> <span class="n">MyModule</span><span class="p">.</span><span class="n">psd1</span> <span class="p">`</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="n">-RootModule</span> <span class="s1">&#39;MyModule.psm1&#39;</span> <span class="p">`</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="n">-ModuleVersion</span> <span class="s1">&#39;1.0.0&#39;</span> <span class="p">`</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>    <span class="n">-Author</span> <span class="s1">&#39;Your Name&#39;</span> <span class="p">`</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    <span class="n">-Description</span> <span class="s1">&#39;Helper functions for automation&#39;</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c"># Write functions in the .psm1 file</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c"># MyModule.psm1</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="k">function</span> <span class="nb">Get-ServerStatus</span> <span class="p">{</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>    <span class="k">param</span><span class="p">(</span><span class="no">[string]</span><span class="nv">$ComputerName</span><span class="p">)</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>    <span class="nb">Test-Connection</span> <span class="n">-ComputerName</span> <span class="nv">$ComputerName</span> <span class="n">-Count</span> <span class="n">1</span> <span class="n">-Quiet</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="p">}</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="k">function</span> <span class="nb">Invoke-DailyReport</span> <span class="p">{</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>    <span class="c"># ... report logic ...</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="p">}</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="c"># Export only public functions</span>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="nb">Export-ModuleMember</span> <span class="n">-Function</span> <span class="nb">Get-ServerStatus</span><span class="p">,</span> <span class="nb">Invoke-DailyReport</span>
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="c"># Import and use the module</span>
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="nb">Import-Module</span> <span class="p">./</span><span class="n">MyModule</span><span class="p">.</span><span class="n">psd1</span>
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>
+<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a><span class="c"># Verify exported commands</span>
+<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a><span class="nb">Get-Command</span> <span class="n">-Module</span> <span class="n">MyModule</span>
 </code></pre></div>
 <table>
 <thead>
@@ -7990,21 +7974,21 @@ Procedures reference covering Change Readiness, Incident Triage, Maintenance Win
 </table>
 <h2 id="publish-a-module-to-psgallery">Publish a Module to PSGallery<a class="headerlink" href="#publish-a-module-to-psgallery" title="Permanent link">&para;</a></h2>
 <p><code>Publish-Module -Name MyModule -NuGetApiKey &lt;key&gt; -Repository PSGallery</code> → verify on powershellgallery.com.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Register PSGallery if not already registered (it is by default)</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">Get-PSRepository</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c"># Obtain an API key from https://www.powershellgallery.com/account/apikeys</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c"># Publish the module</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="nb">Publish-Module</span> <span class="n">-Name</span> <span class="n">MyModule</span> <span class="n">-NuGetApiKey</span> <span class="s1">&#39;&lt;YOUR_API_KEY&gt;&#39;</span> <span class="n">-Repository</span> <span class="n">PSGallery</span> <span class="n">-Verbose</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c"># Verify the published module is available</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="nb">Find-Module</span> <span class="n">-Name</span> <span class="n">MyModule</span> <span class="n">-Repository</span> <span class="n">PSGallery</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="c"># Install from PSGallery to confirm</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="nb">Install-Module</span> <span class="n">-Name</span> <span class="n">MyModule</span> <span class="n">-Scope</span> <span class="n">CurrentUser</span> <span class="n">-Force</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="nb">Import-Module</span> <span class="n">MyModule</span>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="nb">Get-Command</span> <span class="n">-Module</span> <span class="n">MyModule</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Register PSGallery if not already registered (it is by default)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Get-PSRepository</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c"># Obtain an API key from https://www.powershellgallery.com/account/apikeys</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c"># Publish the module</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="nb">Publish-Module</span> <span class="n">-Name</span> <span class="n">MyModule</span> <span class="n">-NuGetApiKey</span> <span class="s1">&#39;&lt;YOUR_API_KEY&gt;&#39;</span> <span class="n">-Repository</span> <span class="n">PSGallery</span> <span class="n">-Verbose</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c"># Verify the published module is available</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="nb">Find-Module</span> <span class="n">-Name</span> <span class="n">MyModule</span> <span class="n">-Repository</span> <span class="n">PSGallery</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="c"># Install from PSGallery to confirm</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="nb">Install-Module</span> <span class="n">-Name</span> <span class="n">MyModule</span> <span class="n">-Scope</span> <span class="n">CurrentUser</span> <span class="n">-Force</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="nb">Import-Module</span> <span class="n">MyModule</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="nb">Get-Command</span> <span class="n">-Module</span> <span class="n">MyModule</span>
 </code></pre></div>
 <table>
 <thead>
@@ -8034,28 +8018,28 @@ Procedures reference covering Change Readiness, Incident Triage, Maintenance Win
 </table>
 <h2 id="configure-powershell-remoting-over-https">Configure PowerShell Remoting over HTTPS<a class="headerlink" href="#configure-powershell-remoting-over-https" title="Permanent link">&para;</a></h2>
 <p><code>Enable-PSRemoting</code> → configure WinRM listener on 5986 → import certificate → test: <code>Enter-PSSession -ComputerName &lt;host&gt; -UseSSL</code>.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># On the remote host (run as Administrator)</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">Enable-PSRemoting</span> <span class="n">-Force</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c"># Create or import an SSL certificate (example using self-signed for lab)</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="nv">$cert</span> <span class="p">=</span> <span class="nb">New-SelfSignedCertificate</span> <span class="n">-DnsName</span> <span class="s1">&#39;server01.corp.local&#39;</span> <span class="p">`</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>    <span class="n">-CertStoreLocation</span> <span class="s1">&#39;Cert:\LocalMachine\My&#39;</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c"># Create HTTPS WinRM listener on port 5986</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="nb">New-WSManInstance</span> <span class="n">-ResourceURI</span> <span class="n">winrm</span><span class="p">/</span><span class="n">config</span><span class="p">/</span><span class="n">Listener</span> <span class="p">`</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>    <span class="n">-SelectorSet</span> <span class="p">@{</span><span class="n">Address</span><span class="p">=</span><span class="s1">&#39;*&#39;</span><span class="p">;</span> <span class="n">Transport</span><span class="p">=</span><span class="s1">&#39;HTTPS&#39;</span><span class="p">}</span> <span class="p">`</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>    <span class="n">-ValueSet</span> <span class="p">@{</span><span class="n">Hostname</span><span class="p">=</span><span class="s1">&#39;server01.corp.local&#39;</span><span class="p">;</span> <span class="n">CertificateThumbprint</span><span class="p">=</span><span class="nv">$cert</span><span class="p">.</span><span class="n">Thumbprint</span><span class="p">}</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="c"># Open firewall port 5986</span>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="nb">New-NetFirewallRule</span> <span class="n">-DisplayName</span> <span class="s1">&#39;WinRM HTTPS&#39;</span> <span class="n">-Direction</span> <span class="n">Inbound</span> <span class="p">`</span>
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>    <span class="n">-Protocol</span> <span class="n">TCP</span> <span class="n">-LocalPort</span> <span class="n">5986</span> <span class="n">-Action</span> <span class="n">Allow</span>
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>
-<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="c"># From the management host — connect over HTTPS</span>
-<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="nb">Enter-PSSession</span> <span class="n">-ComputerName</span> <span class="n">server01</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">local</span> <span class="n">-UseSSL</span> <span class="p">`</span>
-<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>    <span class="n">-Credential</span> <span class="p">(</span><span class="nb">Get-Credential</span><span class="p">)</span>
-<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>
-<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a><span class="c"># Test connectivity without opening a full session</span>
-<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a><span class="nb">Test-WSMan</span> <span class="n">-ComputerName</span> <span class="n">server01</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">local</span> <span class="n">-UseSSL</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># On the remote host (run as Administrator)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">Enable-PSRemoting</span> <span class="n">-Force</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c"># Create or import an SSL certificate (example using self-signed for lab)</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="nv">$cert</span> <span class="p">=</span> <span class="nb">New-SelfSignedCertificate</span> <span class="n">-DnsName</span> <span class="s1">&#39;server01.corp.local&#39;</span> <span class="p">`</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>    <span class="n">-CertStoreLocation</span> <span class="s1">&#39;Cert:\LocalMachine\My&#39;</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c"># Create HTTPS WinRM listener on port 5986</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="nb">New-WSManInstance</span> <span class="n">-ResourceURI</span> <span class="n">winrm</span><span class="p">/</span><span class="n">config</span><span class="p">/</span><span class="n">Listener</span> <span class="p">`</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>    <span class="n">-SelectorSet</span> <span class="p">@{</span><span class="n">Address</span><span class="p">=</span><span class="s1">&#39;*&#39;</span><span class="p">;</span> <span class="n">Transport</span><span class="p">=</span><span class="s1">&#39;HTTPS&#39;</span><span class="p">}</span> <span class="p">`</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>    <span class="n">-ValueSet</span> <span class="p">@{</span><span class="n">Hostname</span><span class="p">=</span><span class="s1">&#39;server01.corp.local&#39;</span><span class="p">;</span> <span class="n">CertificateThumbprint</span><span class="p">=</span><span class="nv">$cert</span><span class="p">.</span><span class="n">Thumbprint</span><span class="p">}</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c"># Open firewall port 5986</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="nb">New-NetFirewallRule</span> <span class="n">-DisplayName</span> <span class="s1">&#39;WinRM HTTPS&#39;</span> <span class="n">-Direction</span> <span class="n">Inbound</span> <span class="p">`</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>    <span class="n">-Protocol</span> <span class="n">TCP</span> <span class="n">-LocalPort</span> <span class="n">5986</span> <span class="n">-Action</span> <span class="n">Allow</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="c"># From the management host — connect over HTTPS</span>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="nb">Enter-PSSession</span> <span class="n">-ComputerName</span> <span class="n">server01</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">local</span> <span class="n">-UseSSL</span> <span class="p">`</span>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>    <span class="n">-Credential</span> <span class="p">(</span><span class="nb">Get-Credential</span><span class="p">)</span>
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a><span class="c"># Test connectivity without opening a full session</span>
+<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a><span class="nb">Test-WSMan</span> <span class="n">-ComputerName</span> <span class="n">server01</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">local</span> <span class="n">-UseSSL</span>
 </code></pre></div>
 <table>
 <thead>
@@ -8080,20 +8064,20 @@ Procedures reference covering Change Readiness, Incident Triage, Maintenance Win
 </table>
 <h2 id="sign-a-script-with-a-code-signing-certificate">Sign a Script with a Code Signing Certificate<a class="headerlink" href="#sign-a-script-with-a-code-signing-certificate" title="Permanent link">&para;</a></h2>
 <p><code>$cert = Get-ChildItem Cert:\CurrentUser\My -CodeSigningCert</code> → <code>Set-AuthenticodeSignature -FilePath script.ps1 -Certificate $cert</code> → verify signature.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># List available code signing certificates in the personal store</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">Get-ChildItem</span> <span class="n">Cert</span><span class="p">:\</span><span class="n">CurrentUser</span><span class="p">\</span><span class="n">My</span> <span class="n">-CodeSigningCert</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c"># Sign the script</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="nv">$cert</span> <span class="p">=</span> <span class="nb">Get-ChildItem</span> <span class="n">Cert</span><span class="p">:\</span><span class="n">CurrentUser</span><span class="p">\</span><span class="n">My</span> <span class="n">-CodeSigningCert</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">1</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="nb">Set-AuthenticodeSignature</span> <span class="n">-FilePath</span> <span class="s1">&#39;C:\Scripts\deploy.ps1&#39;</span> <span class="n">-Certificate</span> <span class="nv">$cert</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c"># Verify the signature</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="nb">Get-AuthenticodeSignature</span> <span class="n">-FilePath</span> <span class="s1">&#39;C:\Scripts\deploy.ps1&#39;</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="c"># Confirm the execution policy will accept signed scripts</span>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="nb">Set-ExecutionPolicy</span> <span class="n">AllSigned</span> <span class="n">-Scope</span> <span class="n">LocalMachine</span>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="c"># or for scripts from other sources:</span>
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="nb">Set-ExecutionPolicy</span> <span class="n">RemoteSigned</span> <span class="n">-Scope</span> <span class="n">LocalMachine</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># List available code signing certificates in the personal store</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">Get-ChildItem</span> <span class="n">Cert</span><span class="p">:\</span><span class="n">CurrentUser</span><span class="p">\</span><span class="n">My</span> <span class="n">-CodeSigningCert</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c"># Sign the script</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="nv">$cert</span> <span class="p">=</span> <span class="nb">Get-ChildItem</span> <span class="n">Cert</span><span class="p">:\</span><span class="n">CurrentUser</span><span class="p">\</span><span class="n">My</span> <span class="n">-CodeSigningCert</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">1</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="nb">Set-AuthenticodeSignature</span> <span class="n">-FilePath</span> <span class="s1">&#39;C:\Scripts\deploy.ps1&#39;</span> <span class="n">-Certificate</span> <span class="nv">$cert</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c"># Verify the signature</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="nb">Get-AuthenticodeSignature</span> <span class="n">-FilePath</span> <span class="s1">&#39;C:\Scripts\deploy.ps1&#39;</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="c"># Confirm the execution policy will accept signed scripts</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="nb">Set-ExecutionPolicy</span> <span class="n">AllSigned</span> <span class="n">-Scope</span> <span class="n">LocalMachine</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="c"># or for scripts from other sources:</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="nb">Set-ExecutionPolicy</span> <span class="n">RemoteSigned</span> <span class="n">-Scope</span> <span class="n">LocalMachine</span>
 </code></pre></div>
 <table>
 <thead>

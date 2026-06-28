@@ -8517,48 +8517,38 @@ Performance reference covering Performance via Pure1 API, Latency Investigation,
 *Applies to: Pure1*
 </div>
 <p><img alt="Pure1 — Performance" src="../../../../assets/storage-pure-pure1-performance-index.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>center: &quot;Pure1&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>latency_investigation: &quot;Latency Investigation&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>performance_benchmarking_fio: &quot;Performance Benchmarking (fio)&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>common_performance_issues: &quot;Common Performance Issues&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>center -&gt; latency_investigation
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>center -&gt; performance_benchmarking_fio
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>center -&gt; common_performance_issues
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp9j7sOwjAMRfd8hdUJBgbWDgwwVWLgD6IQ3MSicaokRSDUf6cPpGYorD6-x743CqgTeS4hkLFJCI2cMJRQXLqA-wLe0aoWS7D4VMZzLxqVkPVLEj8wJjJqjhfneQ5VPl_y4x3FpsFetBhqH5xijfI6ZKxT4U5sZE1-PLxgOGYYNgPfrhq1d86zzMUUY4dx0J0mBrm1mtiq6dsfdgdYLZrxfzWytZ-_iQ_x641w?" /></p>
 <h2 id="latency-investigation">Latency Investigation<a class="headerlink" href="#latency-investigation" title="Permanent link">&para;</a></h2>
 <p>High latency on a Pure FlashArray usually originates from the host side, not the array. Investigate in this order:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>1. Check array latency: purearray list --performance
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>   → If array latency OK (&lt; 1ms) → problem is host-side or network
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>2. Check volume-level latency: purevol list --performance
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>   → Identify which volumes are slow
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>3. Check host queue depth: purehost list --performance
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>   → High queue depth on a specific host → host HBA or multipath issue
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>4. Check network path (iSCSI/FC port errors):
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>   pureport list --performance
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>   purehw list | grep -i &quot;FC\|eth&quot;
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>5. Check for snapshot overhead:
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>   puresnapshot list --space | sort -k5 -rh | head -5
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>   → Large snapshot trees add read amplification
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>1. Check array latency: purearray list --performance
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>   → If array latency OK (&lt; 1ms) → problem is host-side or network
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>2. Check volume-level latency: purevol list --performance
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>   → Identify which volumes are slow
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>3. Check host queue depth: purehost list --performance
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>   → High queue depth on a specific host → host HBA or multipath issue
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>4. Check network path (iSCSI/FC port errors):
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>   pureport list --performance
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>   purehw list | grep -i &quot;FC\|eth&quot;
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>5. Check for snapshot overhead:
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>   puresnapshot list --space | sort -k5 -rh | head -5
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>   → Large snapshot trees add read amplification
 </code></pre></div>
 <h2 id="performance-benchmarking-fio">Performance Benchmarking (fio)<a class="headerlink" href="#performance-benchmarking-fio" title="Permanent link">&para;</a></h2>
 <p>Run from the host after verifying the issue is host-observable:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Sequential read (throughput baseline)</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>fio<span class="w"> </span>--name<span class="o">=</span>seqread<span class="w"> </span>--ioengine<span class="o">=</span>libaio<span class="w"> </span>--iodepth<span class="o">=</span><span class="m">32</span><span class="w"> </span>--rw<span class="o">=</span><span class="nb">read</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>--bs<span class="o">=</span>1m<span class="w"> </span>--direct<span class="o">=</span><span class="m">1</span><span class="w"> </span>--numjobs<span class="o">=</span><span class="m">4</span><span class="w"> </span>--size<span class="o">=</span>10g<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>--filename<span class="o">=</span>/dev/sdX<span class="w"> </span>--runtime<span class="o">=</span><span class="m">60</span><span class="w"> </span>--time_based
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># Random read latency (latency baseline)</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>fio<span class="w"> </span>--name<span class="o">=</span>randread_lat<span class="w"> </span>--ioengine<span class="o">=</span>libaio<span class="w"> </span>--iodepth<span class="o">=</span><span class="m">1</span><span class="w"> </span>--rw<span class="o">=</span>randread<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span>--bs<span class="o">=</span>4k<span class="w"> </span>--direct<span class="o">=</span><span class="m">1</span><span class="w"> </span>--numjobs<span class="o">=</span><span class="m">1</span><span class="w"> </span>--size<span class="o">=</span>10g<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span>--filename<span class="o">=</span>/dev/sdX<span class="w"> </span>--runtime<span class="o">=</span><span class="m">60</span><span class="w"> </span>--time_based<span class="w"> </span>--lat_percentiles<span class="o">=</span><span class="m">1</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">  </span>--percentile_list<span class="o">=</span><span class="m">50</span>,90,99,99.9
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Sequential read (throughput baseline)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>fio<span class="w"> </span>--name<span class="o">=</span>seqread<span class="w"> </span>--ioengine<span class="o">=</span>libaio<span class="w"> </span>--iodepth<span class="o">=</span><span class="m">32</span><span class="w"> </span>--rw<span class="o">=</span><span class="nb">read</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>--bs<span class="o">=</span>1m<span class="w"> </span>--direct<span class="o">=</span><span class="m">1</span><span class="w"> </span>--numjobs<span class="o">=</span><span class="m">4</span><span class="w"> </span>--size<span class="o">=</span>10g<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>--filename<span class="o">=</span>/dev/sdX<span class="w"> </span>--runtime<span class="o">=</span><span class="m">60</span><span class="w"> </span>--time_based
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># Random read latency (latency baseline)</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>fio<span class="w"> </span>--name<span class="o">=</span>randread_lat<span class="w"> </span>--ioengine<span class="o">=</span>libaio<span class="w"> </span>--iodepth<span class="o">=</span><span class="m">1</span><span class="w"> </span>--rw<span class="o">=</span>randread<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">  </span>--bs<span class="o">=</span>4k<span class="w"> </span>--direct<span class="o">=</span><span class="m">1</span><span class="w"> </span>--numjobs<span class="o">=</span><span class="m">1</span><span class="w"> </span>--size<span class="o">=</span>10g<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">  </span>--filename<span class="o">=</span>/dev/sdX<span class="w"> </span>--runtime<span class="o">=</span><span class="m">60</span><span class="w"> </span>--time_based<span class="w"> </span>--lat_percentiles<span class="o">=</span><span class="m">1</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">  </span>--percentile_list<span class="o">=</span><span class="m">50</span>,90,99,99.9
 </code></pre></div>
 <h2 id="common-performance-issues">Common Performance Issues<a class="headerlink" href="#common-performance-issues" title="Permanent link">&para;</a></h2>
 <table>

@@ -7873,19 +7873,7 @@
 Restoration in the IRE follows a staged process: identify the latest clean backup within the retention window that predates the compromise event, retrieve and mount it in isolation, restore to isolated staging, validate in the clean room, then reintroduce to production only after sign-off. Retention windows of 30–90 days are typical for ransomware scenarios.
 </div>
 <p><img alt="IRE — Restore" src="../../../../assets/backup-dr-operations-ire-restore-index.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>center: &quot;DR Operations&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>restore_workflow: &quot;Restore Workflow&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>reintroduction_to_production: &quot;Reintroduction to Production&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>restore_time_estimates: &quot;Restore Time Estimates&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>common_issues: &quot;Common Issues&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>center -&gt; restore_workflow
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>center -&gt; reintroduction_to_production
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>center -&gt; restore_time_estimates
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>center -&gt; common_issues
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp1UMEOgjAMve8rGu7-AAcv6sGThph4XBaosMhWspVgYvx3x0AEg7e-vr7X1xbaYc6abApOlxULkaNldCkk-wxODTrVsz6Bp69UgylU-FAl2Zdw6Jkcyo7c_VZTFyTZ0ILr2Pqq-i3KljX2Om3ZUdHGvZJJNhOKHnMamOA8oT9-Qw7WBmWotVGMfpbmEgg4fIhVj5yMCVm0922U7iKGY8SrivFPsNnC7yMW1P9bVxyWJ8wGFvnEGzuRow8=?" /></p>
 <h2 id="restore-workflow">Restore Workflow<a class="headerlink" href="#restore-workflow" title="Permanent link">&para;</a></h2>
 <pre class="mermaid"><code>flowchart TD
     A([Declare IRE activation]) --&gt; B[Identify recovery point\nRTO / RPO target]
@@ -7903,19 +7891,19 @@ Restoration in the IRE follows a staged process: identify the latest clean backu
     K --&gt; L[Reintroduce to production\nIRE isolation maintained until complete]
     L --&gt; M([IRE stand-down])</code></pre>
 <h3 id="database-restore">Database Restore<a class="headerlink" href="#database-restore" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1">-- SQL Server: restore to IRE SQL instance (from backup file on shared storage)</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="n">RESTORE</span><span class="w"> </span><span class="k">DATABASE</span><span class="w"> </span><span class="p">[</span><span class="n">recovered_db</span><span class="p">]</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="k">FROM</span><span class="w"> </span><span class="n">DISK</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;\\ire-fileserver\backups\prod_db_20260510.bak&#39;</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="k">WITH</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span><span class="k">MOVE</span><span class="w"> </span><span class="s1">&#39;prod_db&#39;</span><span class="w">     </span><span class="k">TO</span><span class="w"> </span><span class="s1">&#39;D:\Data\recovered_db.mdf&#39;</span><span class="p">,</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span><span class="k">MOVE</span><span class="w"> </span><span class="s1">&#39;prod_db_log&#39;</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="s1">&#39;D:\Log\recovered_db_ldf&#39;</span><span class="p">,</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span><span class="n">NORECOVERY</span><span class="p">,</span><span class="w">    </span><span class="c1">-- leave in restoring state for log restore</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">  </span><span class="k">REPLACE</span><span class="p">;</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1">-- Apply transaction logs</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="n">RESTORE</span><span class="w"> </span><span class="n">LOG</span><span class="w"> </span><span class="p">[</span><span class="n">recovered_db</span><span class="p">]</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="k">FROM</span><span class="w"> </span><span class="n">DISK</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;\\ire-fileserver\backups\prod_db_log_20260510_2300.bak&#39;</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="k">WITH</span><span class="w"> </span><span class="n">RECOVERY</span><span class="p">;</span><span class="w">  </span><span class="c1">-- bring online after final log</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1">-- SQL Server: restore to IRE SQL instance (from backup file on shared storage)</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="n">RESTORE</span><span class="w"> </span><span class="k">DATABASE</span><span class="w"> </span><span class="p">[</span><span class="n">recovered_db</span><span class="p">]</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="k">FROM</span><span class="w"> </span><span class="n">DISK</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;\\ire-fileserver\backups\prod_db_20260510.bak&#39;</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="k">WITH</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span><span class="k">MOVE</span><span class="w"> </span><span class="s1">&#39;prod_db&#39;</span><span class="w">     </span><span class="k">TO</span><span class="w"> </span><span class="s1">&#39;D:\Data\recovered_db.mdf&#39;</span><span class="p">,</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">  </span><span class="k">MOVE</span><span class="w"> </span><span class="s1">&#39;prod_db_log&#39;</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="s1">&#39;D:\Log\recovered_db_ldf&#39;</span><span class="p">,</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">  </span><span class="n">NORECOVERY</span><span class="p">,</span><span class="w">    </span><span class="c1">-- leave in restoring state for log restore</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">  </span><span class="k">REPLACE</span><span class="p">;</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1">-- Apply transaction logs</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="n">RESTORE</span><span class="w"> </span><span class="n">LOG</span><span class="w"> </span><span class="p">[</span><span class="n">recovered_db</span><span class="p">]</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="k">FROM</span><span class="w"> </span><span class="n">DISK</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;\\ire-fileserver\backups\prod_db_log_20260510_2300.bak&#39;</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="k">WITH</span><span class="w"> </span><span class="n">RECOVERY</span><span class="p">;</span><span class="w">  </span><span class="c1">-- bring online after final log</span>
 </code></pre></div>
 <h2 id="reintroduction-to-production">Reintroduction to Production<a class="headerlink" href="#reintroduction-to-production" title="Permanent link">&para;</a></h2>
 <p>Only after clean room sign-off:</p>

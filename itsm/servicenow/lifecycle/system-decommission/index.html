@@ -8183,23 +8183,7 @@ Safely removes a server, VM, or cloud instance from production — preventing or
 *Applies to: ServiceNow*
 </div>
 <p><img alt="System Decommission Procedure" src="../../../../assets/itsm-servicenow-lifecycle-system-decommission-index.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>center: &quot;ServiceNow&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>decommission_workflow: &quot;Decommission Workflow&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>4_remove_from_monitoring: &quot;4. Remove from Monitoring&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>5_remove_from_backup: &quot;5. Remove from Backup&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>6_revoke_access_and_credentials: &quot;6. Revoke Access and Credentials&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>7_shutdown_and_delete: &quot;7. Shutdown and Delete&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>8_cmdb_and_ansible_cleanup: &quot;8. CMDB and Ansible Cleanup&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>center -&gt; decommission_workflow
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>center -&gt; 4_remove_from_monitoring
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>center -&gt; 5_remove_from_backup
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>center -&gt; 6_revoke_access_and_credentials
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>center -&gt; 7_shutdown_and_delete
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>center -&gt; 8_cmdb_and_ansible_cleanup
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqFkT1rwzAQhnf_isN7PeULD4XEXtOhGToKWbrYwvoIkmIXSv57ZcU0Dih0vee9R-g9LiwyL4wuwYq281nGUHu0JeQntINg-GHGHH5cRy9YQofftDX6lnFkRinhXFglo7H9WZoxLNWLOXzN88f-9BjVrcRbtiIWlRmQnK1RRBktvLFCt0GyKuAzMpgYHP9YUrR-EjWU9ddLkKyfJYc4Two2QTCYHgllDJ0jVHPCLPJQhKDSBddmck0R2McIhAhUj0hSuyWuu3puRh2NHCX6kMi3BZxmED11BEnFjjDFm7hOtRONRMIkUh0_uCugOtaH6NjfKVR3mpTNl4W3d0heb8Ff3WYRSbW-wP90ukgma1rw1x1kv6hM_qI=?" /></p>
 <h2 id="decommission-workflow">Decommission Workflow<a class="headerlink" href="#decommission-workflow" title="Permanent link">&para;</a></h2>
 <pre class="mermaid"><code>flowchart TD
     A[Decommission\nrequest raised] --&gt; B[Owner approval\nand data sign-off]
@@ -8247,96 +8231,96 @@ Safely removes a server, VM, or cloud instance from production — preventing or
 </tbody>
 </table>
 <h2 id="4-remove-from-monitoring">4. Remove from Monitoring<a class="headerlink" href="#4-remove-from-monitoring" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Prometheus — remove from scrape targets</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># Edit prometheus/targets/linux_hosts.yml — delete host entry</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Verify no active alerts for this host</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>curl<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;http://prometheus:9090/api/v1/alerts&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import sys,json; [print(a) for a in json.load(sys.stdin)[&#39;data&#39;][&#39;alerts&#39;] if &#39;&lt;hostname&gt;&#39; in str(a)]&quot;</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Zabbix — disable host via API</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://zabbix.example.com/api_jsonrpc.php<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;jsonrpc&quot;:&quot;2.0&quot;,&quot;method&quot;:&quot;host.update&quot;,&quot;params&quot;:{&quot;hostid&quot;:&quot;&lt;id&gt;&quot;,&quot;status&quot;:1},&quot;auth&quot;:&quot;&lt;token&gt;&quot;,&quot;id&quot;:1}&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Prometheus — remove from scrape targets</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c1"># Edit prometheus/targets/linux_hosts.yml — delete host entry</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Verify no active alerts for this host</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>curl<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;http://prometheus:9090/api/v1/alerts&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">  </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import sys,json; [print(a) for a in json.load(sys.stdin)[&#39;data&#39;][&#39;alerts&#39;] if &#39;&lt;hostname&gt;&#39; in str(a)]&quot;</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># Zabbix — disable host via API</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://zabbix.example.com/api_jsonrpc.php<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;jsonrpc&quot;:&quot;2.0&quot;,&quot;method&quot;:&quot;host.update&quot;,&quot;params&quot;:{&quot;hostid&quot;:&quot;&lt;id&gt;&quot;,&quot;status&quot;:1},&quot;auth&quot;:&quot;&lt;token&gt;&quot;,&quot;id&quot;:1}&#39;</span>
 </code></pre></div>
 <h2 id="5-remove-from-backup">5. Remove from Backup<a class="headerlink" href="#5-remove-from-backup" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Veeam — remove from backup job</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nv">$job</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>Get-VBRJob<span class="w"> </span>-Name<span class="w"> </span><span class="s2">&quot;Production VMs&quot;</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nv">$vm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>Get-VBRJobObject<span class="w"> </span>-Job<span class="w"> </span><span class="nv">$job</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Where-Object<span class="w"> </span>Name<span class="w"> </span>-eq<span class="w"> </span><span class="s2">&quot;&lt;hostname&gt;&quot;</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>Remove-VBRJobObject<span class="w"> </span>-Job<span class="w"> </span><span class="nv">$job</span><span class="w"> </span>-Objects<span class="w"> </span><span class="nv">$vm</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># Delete backup data (only after retention period confirmed)</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Veeam UI: Home → Backups → Disk → &lt;hostname&gt; → Delete from Disk</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Commvault — retire client</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># CommCell Console: Client Computers → &lt;hostname&gt; → Retire Client</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Veeam — remove from backup job</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nv">$job</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>Get-VBRJob<span class="w"> </span>-Name<span class="w"> </span><span class="s2">&quot;Production VMs&quot;</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nv">$vm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>Get-VBRJobObject<span class="w"> </span>-Job<span class="w"> </span><span class="nv">$job</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Where-Object<span class="w"> </span>Name<span class="w"> </span>-eq<span class="w"> </span><span class="s2">&quot;&lt;hostname&gt;&quot;</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>Remove-VBRJobObject<span class="w"> </span>-Job<span class="w"> </span><span class="nv">$job</span><span class="w"> </span>-Objects<span class="w"> </span><span class="nv">$vm</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># Delete backup data (only after retention period confirmed)</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Veeam UI: Home → Backups → Disk → &lt;hostname&gt; → Delete from Disk</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># Commvault — retire client</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># CommCell Console: Client Computers → &lt;hostname&gt; → Retire Client</span>
 </code></pre></div>
 <h2 id="6-revoke-access-and-credentials">6. Revoke Access and Credentials<a class="headerlink" href="#6-revoke-access-and-credentials" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Remove SSH authorized keys</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ssh<span class="w"> </span>root@&lt;hostname&gt;<span class="w"> </span><span class="s2">&quot;rm -f /home/ansible/.ssh/authorized_keys&quot;</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># CyberArk — remove managed account</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># CyberArk UI: Accounts → search &lt;hostname&gt; → Delete</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Venafi — revoke SSL certificate</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># Venafi TLS Protect: Certificates → &lt;hostname&gt; → Revoke and Delete</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Active Directory — disable computer account (disable first, delete after 30 days)</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>Disable-ADComputer<span class="w"> </span>-Identity<span class="w"> </span><span class="s2">&quot;&lt;HOSTNAME&gt;&quot;</span><span class="w"> </span>-Confirm:<span class="nv">$false</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c1"># Remove DNS records</span>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>nsupdate<span class="w"> </span><span class="s">&lt;&lt;EOF</span>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="s">server dns.example.com</span>
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="s">update delete &lt;hostname&gt;.example.com A</span>
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="s">update delete &lt;reverse-ip&gt;.in-addr.arpa. PTR</span>
-<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="s">send</span>
-<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="s">EOF</span>
-<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>
-<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a><span class="c1"># Verify removal</span>
-<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>nslookup<span class="w"> </span>&lt;hostname&gt;.example.com
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Remove SSH authorized keys</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ssh<span class="w"> </span>root@&lt;hostname&gt;<span class="w"> </span><span class="s2">&quot;rm -f /home/ansible/.ssh/authorized_keys&quot;</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># CyberArk — remove managed account</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># CyberArk UI: Accounts → search &lt;hostname&gt; → Delete</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Venafi — revoke SSL certificate</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Venafi TLS Protect: Certificates → &lt;hostname&gt; → Revoke and Delete</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Active Directory — disable computer account (disable first, delete after 30 days)</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>Disable-ADComputer<span class="w"> </span>-Identity<span class="w"> </span><span class="s2">&quot;&lt;HOSTNAME&gt;&quot;</span><span class="w"> </span>-Confirm:<span class="nv">$false</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Remove DNS records</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>nsupdate<span class="w"> </span><span class="s">&lt;&lt;EOF</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="s">server dns.example.com</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="s">update delete &lt;hostname&gt;.example.com A</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="s">update delete &lt;reverse-ip&gt;.in-addr.arpa. PTR</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="s">send</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="s">EOF</span>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="c1"># Verify removal</span>
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>nslookup<span class="w"> </span>&lt;hostname&gt;.example.com
 </code></pre></div>
 <h2 id="7-shutdown-and-delete">7. Shutdown and Delete<a class="headerlink" href="#7-shutdown-and-delete" title="Permanent link">&para;</a></h2>
 <h3 id="virtual-machine">Virtual Machine<a class="headerlink" href="#virtual-machine" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="p">!!!</span> <span class="n">danger</span> <span class="s2">&quot;Permanently deletes VM and all disk files — no recovery&quot;</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>    <span class="p">`</span><span class="nb">Remove-VM</span> <span class="n">-DeletePermanently</span><span class="p">`</span> <span class="n">deletes</span> <span class="n">the</span> <span class="n">VM</span> <span class="n">configuration</span> <span class="n">and</span> <span class="n">all</span> <span class="n">VMDKs</span> <span class="n">from</span> <span class="n">the</span> <span class="n">datastore</span> <span class="n">immediately</span><span class="p">.</span> <span class="n">Ensure</span> <span class="n">the</span> <span class="n">decommission</span> <span class="n">checklist</span> <span class="n">is</span> <span class="n">complete</span><span class="p">:</span> <span class="n">data</span> <span class="n">backed</span> <span class="n">up</span><span class="p">,</span> <span class="n">application</span> <span class="n">decommissioned</span><span class="p">,</span> <span class="n">CMDB</span> <span class="n">updated</span><span class="p">,</span> <span class="n">and</span> <span class="n">approval</span> <span class="n">obtained</span> <span class="k">in</span> <span class="n">ServiceNow</span> <span class="n">before</span> <span class="n">running</span><span class="p">.</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c"># VMware — power off and delete</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="nb">Stop-VM</span> <span class="n">-VM</span> <span class="s2">&quot;&lt;hostname&gt;&quot;</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="nb">Remove-VM</span> <span class="n">-VM</span> <span class="s2">&quot;&lt;hostname&gt;&quot;</span> <span class="n">-DeletePermanently</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c"># Verify datastore space reclaimed</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="nb">Get-Datastore</span> <span class="n">-Name</span> <span class="s2">&quot;Datastore-01&quot;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">FreeSpaceGB</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="p">!!!</span> <span class="n">danger</span> <span class="s2">&quot;Permanently deletes VM and all disk files — no recovery&quot;</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>    <span class="p">`</span><span class="nb">Remove-VM</span> <span class="n">-DeletePermanently</span><span class="p">`</span> <span class="n">deletes</span> <span class="n">the</span> <span class="n">VM</span> <span class="n">configuration</span> <span class="n">and</span> <span class="n">all</span> <span class="n">VMDKs</span> <span class="n">from</span> <span class="n">the</span> <span class="n">datastore</span> <span class="n">immediately</span><span class="p">.</span> <span class="n">Ensure</span> <span class="n">the</span> <span class="n">decommission</span> <span class="n">checklist</span> <span class="n">is</span> <span class="n">complete</span><span class="p">:</span> <span class="n">data</span> <span class="n">backed</span> <span class="n">up</span><span class="p">,</span> <span class="n">application</span> <span class="n">decommissioned</span><span class="p">,</span> <span class="n">CMDB</span> <span class="n">updated</span><span class="p">,</span> <span class="n">and</span> <span class="n">approval</span> <span class="n">obtained</span> <span class="k">in</span> <span class="n">ServiceNow</span> <span class="n">before</span> <span class="n">running</span><span class="p">.</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c"># VMware — power off and delete</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="nb">Stop-VM</span> <span class="n">-VM</span> <span class="s2">&quot;&lt;hostname&gt;&quot;</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="nb">Remove-VM</span> <span class="n">-VM</span> <span class="s2">&quot;&lt;hostname&gt;&quot;</span> <span class="n">-DeletePermanently</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c"># Verify datastore space reclaimed</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="nb">Get-Datastore</span> <span class="n">-Name</span> <span class="s2">&quot;Datastore-01&quot;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">FreeSpaceGB</span>
 </code></pre></div>
 <h3 id="physical-server">Physical Server<a class="headerlink" href="#physical-server" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>shutdown<span class="w"> </span>-h<span class="w"> </span>now
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># DRAC: racadm serveraction powerdown</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># iLO:  ilorest set PowerState=Off</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># After physical removal:</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1"># → Coordinate rack removal with data centre team</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># → Complete hardware disposal form (WEEE compliance)</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># → Update asset management with disposal method</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>shutdown<span class="w"> </span>-h<span class="w"> </span>now
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># DRAC: racadm serveraction powerdown</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># iLO:  ilorest set PowerState=Off</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># After physical removal:</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># → Coordinate rack removal with data centre team</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># → Complete hardware disposal form (WEEE compliance)</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># → Update asset management with disposal method</span>
 </code></pre></div>
 <h3 id="cloud-instance">Cloud Instance<a class="headerlink" href="#cloud-instance" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># AWS</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>aws<span class="w"> </span>ec2<span class="w"> </span>terminate-instances<span class="w"> </span>--instance-ids<span class="w"> </span>i-1234567890abcdef0
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>aws<span class="w"> </span>ec2<span class="w"> </span>release-address<span class="w"> </span>--allocation-id<span class="w"> </span>eipalloc-12345678
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Azure</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>az<span class="w"> </span>vm<span class="w"> </span>delete<span class="w"> </span>--resource-group<span class="w"> </span>prod-rg<span class="w"> </span>--name<span class="w"> </span>&lt;hostname&gt;<span class="w"> </span>--yes
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>az<span class="w"> </span>disk<span class="w"> </span>delete<span class="w"> </span>--resource-group<span class="w"> </span>prod-rg<span class="w"> </span>--name<span class="w"> </span>&lt;hostname&gt;-osDisk<span class="w"> </span>--yes
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1"># GCP</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>gcloud<span class="w"> </span>compute<span class="w"> </span>instances<span class="w"> </span>delete<span class="w"> </span>&lt;hostname&gt;<span class="w"> </span>--zone<span class="o">=</span>europe-west1-b
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># AWS</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>aws<span class="w"> </span>ec2<span class="w"> </span>terminate-instances<span class="w"> </span>--instance-ids<span class="w"> </span>i-1234567890abcdef0
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>aws<span class="w"> </span>ec2<span class="w"> </span>release-address<span class="w"> </span>--allocation-id<span class="w"> </span>eipalloc-12345678
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># Azure</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>az<span class="w"> </span>vm<span class="w"> </span>delete<span class="w"> </span>--resource-group<span class="w"> </span>prod-rg<span class="w"> </span>--name<span class="w"> </span>&lt;hostname&gt;<span class="w"> </span>--yes
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>az<span class="w"> </span>disk<span class="w"> </span>delete<span class="w"> </span>--resource-group<span class="w"> </span>prod-rg<span class="w"> </span>--name<span class="w"> </span>&lt;hostname&gt;-osDisk<span class="w"> </span>--yes
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="c1"># GCP</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>gcloud<span class="w"> </span>compute<span class="w"> </span>instances<span class="w"> </span>delete<span class="w"> </span>&lt;hostname&gt;<span class="w"> </span>--zone<span class="o">=</span>europe-west1-b
 </code></pre></div>
 <h2 id="8-cmdb-and-ansible-cleanup">8. CMDB and Ansible Cleanup<a class="headerlink" href="#8-cmdb-and-ansible-cleanup" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Ansible — remove from inventory</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>git<span class="w"> </span>rm<span class="w"> </span>-r<span class="w"> </span>inventory/production/host_vars/&lt;hostname&gt;.example.com/
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="c1"># Remove host entry from hosts.yml</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Decommission &lt;hostname&gt; — CHG-XXXX&quot;</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>git<span class="w"> </span>push
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># CMDB entry: Status → Retired, Decommission date → YYYY-MM-DD</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Ansible — remove from inventory</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>git<span class="w"> </span>rm<span class="w"> </span>-r<span class="w"> </span>inventory/production/host_vars/&lt;hostname&gt;.example.com/
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1"># Remove host entry from hosts.yml</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Decommission &lt;hostname&gt; — CHG-XXXX&quot;</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>git<span class="w"> </span>push
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># CMDB entry: Status → Retired, Decommission date → YYYY-MM-DD</span>
 </code></pre></div>
 <h2 id="decommission-checklist">Decommission Checklist<a class="headerlink" href="#decommission-checklist" title="Permanent link">&para;</a></h2>
 <table>

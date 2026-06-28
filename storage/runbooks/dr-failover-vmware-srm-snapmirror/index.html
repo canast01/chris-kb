@@ -7433,29 +7433,7 @@ Cross-product runbook for executing a DR failover and failback using VMware Site
 </div>
 <p><img alt="DR Failover: VMware SRM with NetApp SnapMirror" src="../../../assets/storage-runbooks-dr-failover-vmware-srm-snapmirror.svg" /></p>
 <p><img alt="DR Failover: VMware SRM with NetApp SnapMirror — Diagram" src="../../../assets/storage-runbooks-dr-failover-vmware-srm-snapmirror-diagram.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>@startuml
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>skinparam sequenceArrowThickness 1.5
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>skinparam roundcorner 5
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>actor &quot;Responder&quot; as A
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>participant &quot;Runbooks System&quot; as B
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>participant &quot;Dependent System&quot; as C
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>A -&gt; B: Pre-Failover Checks
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>B --&gt; A: OK
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>A -&gt; B: Phase 1 Declare DR
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>B --&gt; A: OK
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>A -&gt; B: Phase 2 SRM Failover
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>B --&gt; A: OK
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>A -&gt; B: Phase 3 Validate
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>B --&gt; A: OK
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>A -&gt; B: Phase 4 Failback
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>B --&gt; A: OK
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>A -&gt; B: Rollback
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>B --&gt; A: OK
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>@enduml
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/plantuml/svg/eNp90cFKw0AQBuD7PsVP7xFq7aUHadLgRURJxft0M5BlN7txZqP49q4FsaLkNvB_M8Mwe80keR6DUe_iREIjlF9njpZrkfT-PDjrI6tifbW9QJLm2NskkQVbY8jmJFh1rFOKPcsKpKhNsdlZN1HMJZzjKSWvOH5o5vFMmt-k5YlLeykvzMGYGtUtmh2ehKs7ciG9lbWHga1X06AqYb3D4_2PG0gZa7RsAwmj7RbYNY7dA77HLsANXii4njIvoJvzpBNZ_y_qUvgbmn25-usJnxcDdwU=?" /></p>
 <h2 id="before-you-begin">Before You Begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <p><strong>Architecture prerequisites:</strong></p>
 <table>
@@ -7514,290 +7492,290 @@ Cross-product runbook for executing a DR failover and failback using VMware Site
 <hr />
 <h2 id="pre-failover-checks">Pre-Failover Checks<a class="headerlink" href="#pre-failover-checks" title="Permanent link">&para;</a></h2>
 <h3 id="check-snapmirror-replication-lag">Check SnapMirror Replication Lag<a class="headerlink" href="#check-snapmirror-replication-lag" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># On PRIMARY ONTAP cluster</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-destination-path<span class="w"> </span>svm_dr:*<span class="w"> </span>-fields<span class="w"> </span>lag-time,state,newest-snapshot
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Example healthy output:</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Destination Path        State     Lag-Time  Newest Snapshot</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># svm_dr:vol_dr_app01    Snapmirrored  00:02:15  daily.2026-06-21_2200</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Alert threshold: lag &gt; 1h indicates replication issues — investigate before failover</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># Critical threshold: lag &gt; RPO SLA — document RPO breach in incident ticket</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># On PRIMARY ONTAP cluster</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-destination-path<span class="w"> </span>svm_dr:*<span class="w"> </span>-fields<span class="w"> </span>lag-time,state,newest-snapshot
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Example healthy output:</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Destination Path        State     Lag-Time  Newest Snapshot</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># svm_dr:vol_dr_app01    Snapmirrored  00:02:15  daily.2026-06-21_2200</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># Alert threshold: lag &gt; 1h indicates replication issues — investigate before failover</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1"># Critical threshold: lag &gt; RPO SLA — document RPO breach in incident ticket</span>
 </code></pre></div>
 <h3 id="verify-srm-test-run-history">Verify SRM Test Run History<a class="headerlink" href="#verify-srm-test-run-history" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># In SRM UI: Site Recovery &gt; Recovery Plans &gt; &lt;PlanName&gt; &gt; History</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># Confirm last test completed successfully within the past 30 days</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># SRM REST API — check last test result</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;admin:&lt;pass&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span><span class="s2">&quot;https://srm-prod.corp.local/api/rest/vr/1.0/api/recoveryplans&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Accept: application/json&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A5<span class="w"> </span><span class="s2">&quot;lastTestResult&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># In SRM UI: Site Recovery &gt; Recovery Plans &gt; &lt;PlanName&gt; &gt; History</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># Confirm last test completed successfully within the past 30 days</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># SRM REST API — check last test result</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;admin:&lt;pass&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span><span class="s2">&quot;https://srm-prod.corp.local/api/rest/vr/1.0/api/recoveryplans&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Accept: application/json&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A5<span class="w"> </span><span class="s2">&quot;lastTestResult&quot;</span>
 </code></pre></div>
 <h3 id="verify-rpo-for-each-protection-group">Verify RPO for Each Protection Group<a class="headerlink" href="#verify-rpo-for-each-protection-group" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Per-volume SnapMirror lag on PRIMARY cluster</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-type<span class="w"> </span>dp<span class="w"> </span>-fields<span class="w"> </span>source-path,destination-path,lag-time,transfer-state
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Expected: lag &lt; RPO SLA (typically 1h for tier-1 workloads, 4h for tier-2)</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Document any volumes exceeding RPO in the incident ticket before proceeding</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Per-volume SnapMirror lag on PRIMARY cluster</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-type<span class="w"> </span>dp<span class="w"> </span>-fields<span class="w"> </span>source-path,destination-path,lag-time,transfer-state
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Expected: lag &lt; RPO SLA (typically 1h for tier-1 workloads, 4h for tier-2)</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Document any volumes exceeding RPO in the incident ticket before proceeding</span>
 </code></pre></div>
 <h3 id="final-gono-go-checklist">Final Go/No-Go Checklist<a class="headerlink" href="#final-gono-go-checklist" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Pre-failover gate — all must be YES before proceeding:
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>[ ] SnapMirror lag within RPO SLA for all protected volumes
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>[ ] SRM recovery plan test passed within 30 days
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>[ ] DR site ESXi hosts healthy (check vCenter-DR)
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>[ ] DR site ONTAP cluster reachable (ping + ssh)
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>[ ] Incident/change record opened
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>[ ] Application owners notified
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>[ ] Change manager approval obtained (for planned failover)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Pre-failover gate — all must be YES before proceeding:
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>[ ] SnapMirror lag within RPO SLA for all protected volumes
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>[ ] SRM recovery plan test passed within 30 days
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>[ ] DR site ESXi hosts healthy (check vCenter-DR)
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>[ ] DR site ONTAP cluster reachable (ping + ssh)
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>[ ] Incident/change record opened
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>[ ] Application owners notified
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>[ ] Change manager approval obtained (for planned failover)
 </code></pre></div>
 <hr />
 <h2 id="phase-1-declare-dr">Phase 1: Declare DR<a class="headerlink" href="#phase-1-declare-dr" title="Permanent link">&para;</a></h2>
 <h3 id="11-notification-checklist">1.1 Notification Checklist<a class="headerlink" href="#11-notification-checklist" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>CONTACTS TO NOTIFY (fill in for your environment):
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  - Incident Commander: ___________________________
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  - Application Owner(s): _________________________
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>  - Network Team: __________________________________
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>  - Change Manager: ________________________________
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>  - Customer/Stakeholder: __________________________
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>COMMUNICATION CHANNEL: #major-incident Slack / Bridge call +XX-XXXX-XXXXXX
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>CONTACTS TO NOTIFY (fill in for your environment):
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>  - Incident Commander: ___________________________
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>  - Application Owner(s): _________________________
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>  - Network Team: __________________________________
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>  - Change Manager: ________________________________
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>  - Customer/Stakeholder: __________________________
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>COMMUNICATION CHANNEL: #major-incident Slack / Bridge call +XX-XXXX-XXXXXX
 </code></pre></div>
 <h3 id="12-freeze-production-writes-planned-failover-only">1.2 Freeze Production Writes (Planned Failover Only)<a class="headerlink" href="#12-freeze-production-writes-planned-failover-only" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># For planned failover — quiesce application writes before breaking SnapMirror</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># This minimises RPO to near-zero</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Example: stop application services on VMs at primary site</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># (Application-specific — coordinate with app owner)</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>ssh<span class="w"> </span>app-server-01.prod<span class="w"> </span><span class="s2">&quot;sudo systemctl stop myapp&quot;</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>ssh<span class="w"> </span>db-server-01.prod<span class="w"> </span><span class="s2">&quot;sudo systemctl stop postgresql&quot;</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1"># Force a final SnapMirror update to capture quiesced state</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>snapmirror<span class="w"> </span>update<span class="w"> </span>-destination-path<span class="w"> </span>svm_dr:vol_dr_app01
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>snapmirror<span class="w"> </span>update<span class="w"> </span>-destination-path<span class="w"> </span>svm_dr:vol_dr_db01
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="c1"># Wait for transfer to complete</span>
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-destination-path<span class="w"> </span>svm_dr:*<span class="w"> </span>-fields<span class="w"> </span>transfer-state
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="c1"># State must be &quot;Idle&quot; before proceeding</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># For planned failover — quiesce application writes before breaking SnapMirror</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># This minimises RPO to near-zero</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Example: stop application services on VMs at primary site</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># (Application-specific — coordinate with app owner)</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>ssh<span class="w"> </span>app-server-01.prod<span class="w"> </span><span class="s2">&quot;sudo systemctl stop myapp&quot;</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>ssh<span class="w"> </span>db-server-01.prod<span class="w"> </span><span class="s2">&quot;sudo systemctl stop postgresql&quot;</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="c1"># Force a final SnapMirror update to capture quiesced state</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>snapmirror<span class="w"> </span>update<span class="w"> </span>-destination-path<span class="w"> </span>svm_dr:vol_dr_app01
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>snapmirror<span class="w"> </span>update<span class="w"> </span>-destination-path<span class="w"> </span>svm_dr:vol_dr_db01
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="c1"># Wait for transfer to complete</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-destination-path<span class="w"> </span>svm_dr:*<span class="w"> </span>-fields<span class="w"> </span>transfer-state
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="c1"># State must be &quot;Idle&quot; before proceeding</span>
 </code></pre></div>
 <hr />
 <h2 id="phase-2-srm-failover">Phase 2: SRM Failover<a class="headerlink" href="#phase-2-srm-failover" title="Permanent link">&para;</a></h2>
 <h3 id="21-run-recovery-plan-in-srm">2.1 Run Recovery Plan in SRM<a class="headerlink" href="#21-run-recovery-plan-in-srm" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Via SRM UI (preferred for audit trail):</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="c1"># 1. Log in to SRM at primary site (or DR site if primary is down)</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="c1"># 2. Navigate: Site Recovery &gt; Recovery Plans &gt; &lt;PlanName&gt;</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># 3. Click &quot;Run&quot; &gt; select &quot;Failover&quot; (not Test)</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1"># 4. Confirm: &quot;I understand this is not a test&quot;</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="c1"># 5. Monitor progress in the recovery plan steps panel</span>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="c1"># Via SRM REST API (for automation/scripted DR):</span>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="c1"># Get recovery plan ID first</span>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="nv">PLAN_ID</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;admin:&lt;pass&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="w">  </span><span class="s2">&quot;https://srm-dr.corp.local/api/rest/vr/1.0/api/recoveryplans&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Accept: application/json&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import sys,json; d=json.load(sys.stdin); print(d[&#39;list&#39;][0][&#39;id&#39;])&quot;</span><span class="k">)</span>
-<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>
-<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="c1"># Start recovery plan</span>
-<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;admin:&lt;pass&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a><span class="w">  </span><span class="s2">&quot;https://srm-dr.corp.local/api/rest/vr/1.0/api/recoveryplans/</span><span class="si">${</span><span class="nv">PLAN_ID</span><span class="si">}</span><span class="s2">/run&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;mode&quot;: &quot;failover&quot;}&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Via SRM UI (preferred for audit trail):</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># 1. Log in to SRM at primary site (or DR site if primary is down)</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1"># 2. Navigate: Site Recovery &gt; Recovery Plans &gt; &lt;PlanName&gt;</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># 3. Click &quot;Run&quot; &gt; select &quot;Failover&quot; (not Test)</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># 4. Confirm: &quot;I understand this is not a test&quot;</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># 5. Monitor progress in the recovery plan steps panel</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># Via SRM REST API (for automation/scripted DR):</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1"># Get recovery plan ID first</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="nv">PLAN_ID</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;admin:&lt;pass&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="w">  </span><span class="s2">&quot;https://srm-dr.corp.local/api/rest/vr/1.0/api/recoveryplans&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Accept: application/json&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import sys,json; d=json.load(sys.stdin); print(d[&#39;list&#39;][0][&#39;id&#39;])&quot;</span><span class="k">)</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="c1"># Start recovery plan</span>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;admin:&lt;pass&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="w">  </span><span class="s2">&quot;https://srm-dr.corp.local/api/rest/vr/1.0/api/recoveryplans/</span><span class="si">${</span><span class="nv">PLAN_ID</span><span class="si">}</span><span class="s2">/run&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;mode&quot;: &quot;failover&quot;}&#39;</span>
 </code></pre></div>
 <h3 id="22-break-snapmirror-on-dr-cluster">2.2 Break SnapMirror on DR Cluster<a class="headerlink" href="#22-break-snapmirror-on-dr-cluster" title="Permanent link">&para;</a></h3>
 <p>SRM with NetApp ONTAP SRA breaks SnapMirror automatically during recovery plan execution. If manual intervention is required:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># On DESTINATION (DR) ONTAP cluster</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="c1"># Break SnapMirror relationship — makes destination volume read-write</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>snapmirror<span class="w"> </span><span class="k">break</span><span class="w"> </span>-destination-path<span class="w"> </span>svm_dr:vol_dr_app01
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>snapmirror<span class="w"> </span><span class="k">break</span><span class="w"> </span>-destination-path<span class="w"> </span>svm_dr:vol_dr_db01
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="c1"># Verify destination volumes are now read-write</span>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>volume<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>svm_dr<span class="w"> </span>-fields<span class="w"> </span><span class="nb">type</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c1"># Expected: type = RW (previously DP)</span>
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># List available snapshots on the newly promoted DR volume</span>
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>snapshot<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>svm_dr<span class="w"> </span>-volume<span class="w"> </span>vol_dr_app01
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># On DESTINATION (DR) ONTAP cluster</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="c1"># Break SnapMirror relationship — makes destination volume read-write</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>snapmirror<span class="w"> </span><span class="k">break</span><span class="w"> </span>-destination-path<span class="w"> </span>svm_dr:vol_dr_app01
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>snapmirror<span class="w"> </span><span class="k">break</span><span class="w"> </span>-destination-path<span class="w"> </span>svm_dr:vol_dr_db01
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="c1"># Verify destination volumes are now read-write</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>volume<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>svm_dr<span class="w"> </span>-fields<span class="w"> </span><span class="nb">type</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="c1"># Expected: type = RW (previously DP)</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="c1"># List available snapshots on the newly promoted DR volume</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>snapshot<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>svm_dr<span class="w"> </span>-volume<span class="w"> </span>vol_dr_app01
 </code></pre></div>
 <h3 id="23-re-register-datastores-in-dr-vcenter">2.3 Re-register Datastores in DR vCenter<a class="headerlink" href="#23-re-register-datastores-in-dr-vcenter" title="Permanent link">&para;</a></h3>
 <p>SRM re-registers datastores and VMs automatically as part of the recovery plan. If manual re-registration is needed:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c"># Connect to DR vCenter</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="nb">Connect-VIServer</span> <span class="n">-Server</span> <span class="n">vcenter-dr</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">local</span> <span class="n">-Credential</span> <span class="p">(</span><span class="nb">Get-Credential</span><span class="p">)</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c"># Rescan storage on all DR ESXi hosts</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="nv">$drHosts</span> <span class="p">=</span> <span class="nb">Get-VMHost</span> <span class="n">-Location</span> <span class="p">(</span><span class="nb">Get-Cluster</span> <span class="s2">&quot;DR-Cluster&quot;</span><span class="p">)</span>
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="k">foreach</span> <span class="p">(</span><span class="nv">$h</span> <span class="k">in</span> <span class="nv">$drHosts</span><span class="p">)</span> <span class="p">{</span>
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>    <span class="nb">Get-VMHostStorage</span> <span class="n">-VMHost</span> <span class="nv">$h</span> <span class="n">-RescanAllHba</span> <span class="n">-RescanVmfs</span>
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="p">}</span>
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>
-<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="c"># Add NFS datastore pointing to DR ONTAP LIF</span>
-<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="k">foreach</span> <span class="p">(</span><span class="nv">$h</span> <span class="k">in</span> <span class="nv">$drHosts</span><span class="p">)</span> <span class="p">{</span>
-<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>    <span class="nb">New-Datastore</span> <span class="n">-VMHost</span> <span class="nv">$h</span> <span class="n">-Name</span> <span class="s2">&quot;ONTAP-DR-DS01&quot;</span> <span class="p">`</span>
-<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>      <span class="n">-NfsHost</span> <span class="s2">&quot;&lt;dr-nfs-lif-ip&gt;&quot;</span> <span class="n">-Path</span> <span class="s2">&quot;/vol_dr_app01&quot;</span> <span class="n">-Nfs</span>
-<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c"># Connect to DR vCenter</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nb">Connect-VIServer</span> <span class="n">-Server</span> <span class="n">vcenter-dr</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">local</span> <span class="n">-Credential</span> <span class="p">(</span><span class="nb">Get-Credential</span><span class="p">)</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c"># Rescan storage on all DR ESXi hosts</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="nv">$drHosts</span> <span class="p">=</span> <span class="nb">Get-VMHost</span> <span class="n">-Location</span> <span class="p">(</span><span class="nb">Get-Cluster</span> <span class="s2">&quot;DR-Cluster&quot;</span><span class="p">)</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="k">foreach</span> <span class="p">(</span><span class="nv">$h</span> <span class="k">in</span> <span class="nv">$drHosts</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>    <span class="nb">Get-VMHostStorage</span> <span class="n">-VMHost</span> <span class="nv">$h</span> <span class="n">-RescanAllHba</span> <span class="n">-RescanVmfs</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="p">}</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c"># Add NFS datastore pointing to DR ONTAP LIF</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="k">foreach</span> <span class="p">(</span><span class="nv">$h</span> <span class="k">in</span> <span class="nv">$drHosts</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>    <span class="nb">New-Datastore</span> <span class="n">-VMHost</span> <span class="nv">$h</span> <span class="n">-Name</span> <span class="s2">&quot;ONTAP-DR-DS01&quot;</span> <span class="p">`</span>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>      <span class="n">-NfsHost</span> <span class="s2">&quot;&lt;dr-nfs-lif-ip&gt;&quot;</span> <span class="n">-Path</span> <span class="s2">&quot;/vol_dr_app01&quot;</span> <span class="n">-Nfs</span>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="p">}</span>
 </code></pre></div>
 <hr />
 <h2 id="phase-3-validate">Phase 3: Validate<a class="headerlink" href="#phase-3-validate" title="Permanent link">&para;</a></h2>
 <h3 id="31-vm-power-on-sequence">3.1 VM Power-On Sequence<a class="headerlink" href="#31-vm-power-on-sequence" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c"># SRM handles power-on ordering from the recovery plan priority settings</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="c"># To manually verify and power on:</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="nb">Connect-VIServer</span> <span class="n">-Server</span> <span class="n">vcenter-dr</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">local</span> <span class="n">-Credential</span> <span class="p">(</span><span class="nb">Get-Credential</span><span class="p">)</span>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="c"># Check VM status after SRM recovery</span>
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="nb">Get-VM</span> <span class="n">-Location</span> <span class="p">(</span><span class="nb">Get-Cluster</span> <span class="s2">&quot;DR-Cluster&quot;</span><span class="p">)</span> <span class="p">|</span>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>  <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">PowerState</span><span class="p">,</span> <span class="n">NumCpu</span><span class="p">,</span> <span class="n">MemoryGB</span> <span class="p">|</span>
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>  <span class="nb">Sort-Object</span> <span class="n">Name</span>
-<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>
-<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="c"># Power on any VM that did not start automatically (in dependency order)</span>
-<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="nb">Start-VM</span> <span class="n">-VM</span> <span class="p">(</span><span class="nb">Get-VM</span> <span class="s2">&quot;db-server-01&quot;</span><span class="p">)</span>
-<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="nb">Start-Sleep</span> <span class="n">-Seconds</span> <span class="n">120</span>
-<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="nb">Start-VM</span> <span class="n">-VM</span> <span class="p">(</span><span class="nb">Get-VM</span> <span class="s2">&quot;app-server-01&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c"># SRM handles power-on ordering from the recovery plan priority settings</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="c"># To manually verify and power on:</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="nb">Connect-VIServer</span> <span class="n">-Server</span> <span class="n">vcenter-dr</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">local</span> <span class="n">-Credential</span> <span class="p">(</span><span class="nb">Get-Credential</span><span class="p">)</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="c"># Check VM status after SRM recovery</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="nb">Get-VM</span> <span class="n">-Location</span> <span class="p">(</span><span class="nb">Get-Cluster</span> <span class="s2">&quot;DR-Cluster&quot;</span><span class="p">)</span> <span class="p">|</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>  <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">PowerState</span><span class="p">,</span> <span class="n">NumCpu</span><span class="p">,</span> <span class="n">MemoryGB</span> <span class="p">|</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>  <span class="nb">Sort-Object</span> <span class="n">Name</span>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="c"># Power on any VM that did not start automatically (in dependency order)</span>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="nb">Start-VM</span> <span class="n">-VM</span> <span class="p">(</span><span class="nb">Get-VM</span> <span class="s2">&quot;db-server-01&quot;</span><span class="p">)</span>
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="nb">Start-Sleep</span> <span class="n">-Seconds</span> <span class="n">120</span>
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="nb">Start-VM</span> <span class="n">-VM</span> <span class="p">(</span><span class="nb">Get-VM</span> <span class="s2">&quot;app-server-01&quot;</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="32-application-health-checks">3.2 Application Health Checks<a class="headerlink" href="#32-application-health-checks" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Verify application service is running on DR VMs</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>ssh<span class="w"> </span>app-server-01.dr<span class="w"> </span><span class="s2">&quot;systemctl is-active myapp &amp;&amp; curl -sf http://localhost:8080/health&quot;</span>
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># Database connectivity</span>
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>ssh<span class="w"> </span>db-server-01.dr<span class="w"> </span><span class="s2">&quot;psql -U app_user -h localhost -c &#39;SELECT 1;&#39;&quot;</span>
-<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>
-<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="c1"># Check for data consistency (compare row counts against last known good)</span>
-<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>ssh<span class="w"> </span>db-server-01.dr<span class="w"> </span><span class="s2">&quot;psql -U app_user -d appdb -c &#39;SELECT COUNT(*) FROM orders;&#39;&quot;</span>
-<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>
-<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="c1"># Confirm storage I/O on DR ONTAP volume</span>
-<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a><span class="c1"># On DR ONTAP cluster:</span>
-<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>statistics<span class="w"> </span>show<span class="w"> </span>-object<span class="w"> </span>nfsv3<span class="w"> </span>-instance<span class="w"> </span>svm_dr<span class="w"> </span>-counter<span class="w"> </span>avg_latency,total_ops
-<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>volume<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>svm_dr<span class="w"> </span>-volume<span class="w"> </span>vol_dr_app01<span class="w"> </span>-fields<span class="w"> </span>used,available
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Verify application service is running on DR VMs</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>ssh<span class="w"> </span>app-server-01.dr<span class="w"> </span><span class="s2">&quot;systemctl is-active myapp &amp;&amp; curl -sf http://localhost:8080/health&quot;</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Database connectivity</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>ssh<span class="w"> </span>db-server-01.dr<span class="w"> </span><span class="s2">&quot;psql -U app_user -h localhost -c &#39;SELECT 1;&#39;&quot;</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># Check for data consistency (compare row counts against last known good)</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>ssh<span class="w"> </span>db-server-01.dr<span class="w"> </span><span class="s2">&quot;psql -U app_user -d appdb -c &#39;SELECT COUNT(*) FROM orders;&#39;&quot;</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="c1"># Confirm storage I/O on DR ONTAP volume</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="c1"># On DR ONTAP cluster:</span>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>statistics<span class="w"> </span>show<span class="w"> </span>-object<span class="w"> </span>nfsv3<span class="w"> </span>-instance<span class="w"> </span>svm_dr<span class="w"> </span>-counter<span class="w"> </span>avg_latency,total_ops
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>volume<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>svm_dr<span class="w"> </span>-volume<span class="w"> </span>vol_dr_app01<span class="w"> </span>-fields<span class="w"> </span>used,available
 </code></pre></div>
 <h3 id="33-dns-and-load-balancer-updates">3.3 DNS and Load Balancer Updates<a class="headerlink" href="#33-dns-and-load-balancer-updates" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Update DNS to point application FQDNs to DR IPs</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="c1"># (Tool-dependent — examples for nsupdate / Route53 / Infoblox)</span>
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>nsupdate<span class="w"> </span>-k<span class="w"> </span>/etc/dns/Kapp.key<span class="w"> </span><span class="s">&lt;&lt;EOF</span>
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="s">server dns-mgmt.corp.local</span>
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="s">update delete app.corp.local A</span>
-<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="s">update add app.corp.local 300 A &lt;dr-app-ip&gt;</span>
-<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="s">send</span>
-<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="s">EOF</span>
-<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>
-<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="c1"># Verify DNS propagation</span>
-<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>dig<span class="w"> </span>app.corp.local<span class="w"> </span>@dns-mgmt.corp.local<span class="w"> </span>+short
-<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>
-<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a><span class="c1"># Update load balancer pool to use DR backend</span>
-<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a><span class="c1"># (Vendor-specific — NSX ALB example)</span>
-<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>PATCH<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;admin:&lt;pass&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a><span class="w">  </span><span class="s2">&quot;https://nsx-alb.corp.local/api/pool/app-pool&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;servers&quot;: [{&quot;ip&quot;: {&quot;addr&quot;: &quot;&lt;dr-app-ip&gt;&quot;, &quot;type&quot;: &quot;V4&quot;}, &quot;enabled&quot;: true}]}&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Update DNS to point application FQDNs to DR IPs</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="c1"># (Tool-dependent — examples for nsupdate / Route53 / Infoblox)</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>nsupdate<span class="w"> </span>-k<span class="w"> </span>/etc/dns/Kapp.key<span class="w"> </span><span class="s">&lt;&lt;EOF</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="s">server dns-mgmt.corp.local</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="s">update delete app.corp.local A</span>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="s">update add app.corp.local 300 A &lt;dr-app-ip&gt;</span>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="s">send</span>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="s">EOF</span>
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="c1"># Verify DNS propagation</span>
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>dig<span class="w"> </span>app.corp.local<span class="w"> </span>@dns-mgmt.corp.local<span class="w"> </span>+short
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a><span class="c1"># Update load balancer pool to use DR backend</span>
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a><span class="c1"># (Vendor-specific — NSX ALB example)</span>
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>PATCH<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;admin:&lt;pass&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a><span class="w">  </span><span class="s2">&quot;https://nsx-alb.corp.local/api/pool/app-pool&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;servers&quot;: [{&quot;ip&quot;: {&quot;addr&quot;: &quot;&lt;dr-app-ip&gt;&quot;, &quot;type&quot;: &quot;V4&quot;}, &quot;enabled&quot;: true}]}&#39;</span>
 </code></pre></div>
 <hr />
 <h2 id="phase-4-failback">Phase 4: Failback<a class="headerlink" href="#phase-4-failback" title="Permanent link">&para;</a></h2>
 <h3 id="41-resync-snapmirror-in-reverse-direction">4.1 Resync SnapMirror in Reverse Direction<a class="headerlink" href="#41-resync-snapmirror-in-reverse-direction" title="Permanent link">&para;</a></h3>
 <p>Once the primary site is restored, resync SnapMirror from DR back to primary:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># On PRIMARY ONTAP cluster — reverse the SnapMirror relationship</span>
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="c1"># (Primary volume is now the destination; DR volume is source)</span>
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
-<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c1"># Quiesce current DR production writes first (coordinate with app team)</span>
-<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>ssh<span class="w"> </span>app-server-01.dr<span class="w"> </span><span class="s2">&quot;sudo systemctl stop myapp&quot;</span>
-<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>ssh<span class="w"> </span>db-server-01.dr<span class="w"> </span><span class="s2">&quot;sudo systemctl stop postgresql&quot;</span>
-<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>
-<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="c1"># On PRIMARY cluster — resync (pull changes from DR)</span>
-<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>snapmirror<span class="w"> </span>resync<span class="w"> </span>-source-path<span class="w"> </span>svm_dr:vol_dr_app01<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="w">  </span>-destination-path<span class="w"> </span>svm_prod:vol_prod_app01
-<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>
-<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>snapmirror<span class="w"> </span>resync<span class="w"> </span>-source-path<span class="w"> </span>svm_dr:vol_dr_db01<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a><span class="w">  </span>-destination-path<span class="w"> </span>svm_prod:vol_prod_db01
-<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>
-<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a><span class="c1"># Monitor resync transfer</span>
-<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-destination-path<span class="w"> </span>svm_prod:*<span class="w"> </span>-fields<span class="w"> </span>state,transfer-bytes,lag-time
-<a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a>
-<a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a><span class="c1"># Wait until state = Snapmirrored and lag-time is near 0</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># On PRIMARY ONTAP cluster — reverse the SnapMirror relationship</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="c1"># (Primary volume is now the destination; DR volume is source)</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># Quiesce current DR production writes first (coordinate with app team)</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>ssh<span class="w"> </span>app-server-01.dr<span class="w"> </span><span class="s2">&quot;sudo systemctl stop myapp&quot;</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>ssh<span class="w"> </span>db-server-01.dr<span class="w"> </span><span class="s2">&quot;sudo systemctl stop postgresql&quot;</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="c1"># On PRIMARY cluster — resync (pull changes from DR)</span>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>snapmirror<span class="w"> </span>resync<span class="w"> </span>-source-path<span class="w"> </span>svm_dr:vol_dr_app01<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="w">  </span>-destination-path<span class="w"> </span>svm_prod:vol_prod_app01
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>snapmirror<span class="w"> </span>resync<span class="w"> </span>-source-path<span class="w"> </span>svm_dr:vol_dr_db01<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a><span class="w">  </span>-destination-path<span class="w"> </span>svm_prod:vol_prod_db01
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a><span class="c1"># Monitor resync transfer</span>
+<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-destination-path<span class="w"> </span>svm_prod:*<span class="w"> </span>-fields<span class="w"> </span>state,transfer-bytes,lag-time
+<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a>
+<a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a><span class="c1"># Wait until state = Snapmirrored and lag-time is near 0</span>
 </code></pre></div>
 <h3 id="42-planned-failback-via-srm">4.2 Planned Failback via SRM<a class="headerlink" href="#42-planned-failback-via-srm" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># In SRM UI at primary site (now fully restored):</span>
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="c1"># 1. Navigate: Site Recovery &gt; Recovery Plans &gt; &lt;PlanName&gt;</span>
-<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="c1"># 2. Confirm primary site is listed as the Recovery Site</span>
-<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c1"># 3. Click &quot;Reprotect&quot; — this reverses protection groups back to primary</span>
-<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="c1"># 4. After reprotect completes, run the plan with &quot;Planned Migration&quot; mode</span>
-<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="c1">#    to fail VMs back cleanly without data loss</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># In SRM UI at primary site (now fully restored):</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="c1"># 1. Navigate: Site Recovery &gt; Recovery Plans &gt; &lt;PlanName&gt;</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="c1"># 2. Confirm primary site is listed as the Recovery Site</span>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c1"># 3. Click &quot;Reprotect&quot; — this reverses protection groups back to primary</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="c1"># 4. After reprotect completes, run the plan with &quot;Planned Migration&quot; mode</span>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="c1">#    to fail VMs back cleanly without data loss</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c"># Post-failback: update DNS back to primary site IPs</span>
-<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="n">nsupdate</span> <span class="n">-k</span> <span class="p">/</span><span class="n">etc</span><span class="p">/</span><span class="n">dns</span><span class="p">/</span><span class="n">Kapp</span><span class="p">.</span><span class="n">key</span> <span class="p">&lt;&lt;</span><span class="n">EOF</span>
-<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="n">server</span> <span class="n">dns-mgmt</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">local</span>
-<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="n">update</span> <span class="n">delete</span> <span class="n">app</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">local</span> <span class="n">A</span>
-<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="n">update</span> <span class="n">add</span> <span class="n">app</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">local</span> <span class="n">300</span> <span class="n">A</span> <span class="p">&lt;</span><span class="n">prod-app-ip</span><span class="p">&gt;</span>
-<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="n">send</span>
-<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="n">EOF</span>
-<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>
-<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a><span class="c"># Verify services healthy on primary</span>
-<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a><span class="n">ssh</span> <span class="n">app-server</span><span class="p">-</span><span class="n">01</span><span class="p">.</span><span class="n">prod</span> <span class="s2">&quot;systemctl is-active myapp &amp;&amp; curl -sf http://localhost:8080/health&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c"># Post-failback: update DNS back to primary site IPs</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="n">nsupdate</span> <span class="n">-k</span> <span class="p">/</span><span class="n">etc</span><span class="p">/</span><span class="n">dns</span><span class="p">/</span><span class="n">Kapp</span><span class="p">.</span><span class="n">key</span> <span class="p">&lt;&lt;</span><span class="n">EOF</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="n">server</span> <span class="n">dns-mgmt</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">local</span>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="n">update</span> <span class="n">delete</span> <span class="n">app</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">local</span> <span class="n">A</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="n">update</span> <span class="n">add</span> <span class="n">app</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">local</span> <span class="n">300</span> <span class="n">A</span> <span class="p">&lt;</span><span class="n">prod-app-ip</span><span class="p">&gt;</span>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="n">send</span>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="n">EOF</span>
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a><span class="c"># Verify services healthy on primary</span>
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a><span class="n">ssh</span> <span class="n">app-server</span><span class="p">-</span><span class="n">01</span><span class="p">.</span><span class="n">prod</span> <span class="s2">&quot;systemctl is-active myapp &amp;&amp; curl -sf http://localhost:8080/health&quot;</span>
 </code></pre></div>
 <h3 id="43-re-establish-normal-snapmirror-direction">4.3 Re-establish Normal SnapMirror Direction<a class="headerlink" href="#43-re-establish-normal-snapmirror-direction" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># After failback, restore the original SnapMirror direction</span>
-<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="c1"># (Primary = source, DR = destination)</span>
-<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>
-<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="c1"># On PRIMARY cluster — break the reverse relationship</span>
-<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>snapmirror<span class="w"> </span><span class="k">break</span><span class="w"> </span>-destination-path<span class="w"> </span>svm_prod:vol_prod_app01
-<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>
-<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="c1"># Re-create original forward relationship</span>
-<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>snapmirror<span class="w"> </span>create<span class="w"> </span>-source-path<span class="w"> </span>svm_prod:vol_prod_app01<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a><span class="w">  </span>-destination-path<span class="w"> </span>svm_dr:vol_dr_app01<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a><span class="w">  </span>-policy<span class="w"> </span>MirrorAndVault<span class="w"> </span>-type<span class="w"> </span>XDP
-<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a>
-<a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a>snapmirror<span class="w"> </span>resync<span class="w"> </span>-destination-path<span class="w"> </span>svm_dr:vol_dr_app01
-<a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a>
-<a id="__codelineno-16-14" name="__codelineno-16-14" href="#__codelineno-16-14"></a><span class="c1"># Verify</span>
-<a id="__codelineno-16-15" name="__codelineno-16-15" href="#__codelineno-16-15"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-destination-path<span class="w"> </span>svm_dr:*<span class="w"> </span>-fields<span class="w"> </span>state,lag-time
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># After failback, restore the original SnapMirror direction</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="c1"># (Primary = source, DR = destination)</span>
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="c1"># On PRIMARY cluster — break the reverse relationship</span>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>snapmirror<span class="w"> </span><span class="k">break</span><span class="w"> </span>-destination-path<span class="w"> </span>svm_prod:vol_prod_app01
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="c1"># Re-create original forward relationship</span>
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>snapmirror<span class="w"> </span>create<span class="w"> </span>-source-path<span class="w"> </span>svm_prod:vol_prod_app01<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a><span class="w">  </span>-destination-path<span class="w"> </span>svm_dr:vol_dr_app01<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a><span class="w">  </span>-policy<span class="w"> </span>MirrorAndVault<span class="w"> </span>-type<span class="w"> </span>XDP
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>snapmirror<span class="w"> </span>resync<span class="w"> </span>-destination-path<span class="w"> </span>svm_dr:vol_dr_app01
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>
+<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a><span class="c1"># Verify</span>
+<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-destination-path<span class="w"> </span>svm_dr:*<span class="w"> </span>-fields<span class="w"> </span>state,lag-time
 </code></pre></div>
 <hr />
 <h2 id="rollback">Rollback<a class="headerlink" href="#rollback" title="Permanent link">&para;</a></h2>
 <p><strong>If SRM recovery plan fails mid-way:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># In SRM UI: cancel the running recovery plan</span>
-<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="c1"># Navigate: Site Recovery &gt; Recovery Plans &gt; &lt;PlanName&gt; &gt; Cancel</span>
-<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>
-<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="c1"># Check SRM logs for failure reason</span>
-<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="c1"># Primary SRM appliance: /var/log/vmware/srm/</span>
-<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a><span class="c1"># Or via: vCenter &gt; Site Recovery &gt; Logs</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># In SRM UI: cancel the running recovery plan</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="c1"># Navigate: Site Recovery &gt; Recovery Plans &gt; &lt;PlanName&gt; &gt; Cancel</span>
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="c1"># Check SRM logs for failure reason</span>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="c1"># Primary SRM appliance: /var/log/vmware/srm/</span>
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="c1"># Or via: vCenter &gt; Site Recovery &gt; Logs</span>
 </code></pre></div>
 <p><strong>If SnapMirror break fails:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># Check relationship status</span>
-<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-destination-path<span class="w"> </span>svm_dr:vol_dr_app01<span class="w"> </span>-fields<span class="w"> </span>state,transfer-state
-<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>
-<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="c1"># If transfer is still in progress, abort it first</span>
-<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>snapmirror<span class="w"> </span>abort<span class="w"> </span>-destination-path<span class="w"> </span>svm_dr:vol_dr_app01
-<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>
-<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a><span class="c1"># Then retry break</span>
-<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>snapmirror<span class="w"> </span><span class="k">break</span><span class="w"> </span>-destination-path<span class="w"> </span>svm_dr:vol_dr_app01
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># Check relationship status</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-destination-path<span class="w"> </span>svm_dr:vol_dr_app01<span class="w"> </span>-fields<span class="w"> </span>state,transfer-state
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="c1"># If transfer is still in progress, abort it first</span>
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>snapmirror<span class="w"> </span>abort<span class="w"> </span>-destination-path<span class="w"> </span>svm_dr:vol_dr_app01
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a><span class="c1"># Then retry break</span>
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>snapmirror<span class="w"> </span><span class="k">break</span><span class="w"> </span>-destination-path<span class="w"> </span>svm_dr:vol_dr_app01
 </code></pre></div>
 <p><strong>If application validation fails on DR site:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1"># Option A: restore from most recent SnapMirror-consistent snapshot on DR volume</span>
-<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>snapshot<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>svm_dr<span class="w"> </span>-volume<span class="w"> </span>vol_dr_app01
-<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>volume<span class="w"> </span>snapshot<span class="w"> </span>restore<span class="w"> </span>-vserver<span class="w"> </span>svm_dr<span class="w"> </span>-volume<span class="w"> </span>vol_dr_app01<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="w">  </span>-snapshot<span class="w"> </span>&lt;last-known-good-snapshot&gt;
-<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>
-<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a><span class="c1"># Option B: re-sync from primary if primary is partially available</span>
-<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a>snapmirror<span class="w"> </span>resync<span class="w"> </span>-destination-path<span class="w"> </span>svm_dr:vol_dr_app01
-<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>
-<a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a><span class="c1"># Document the RPO breach and data loss window in the incident ticket</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># Option A: restore from most recent SnapMirror-consistent snapshot on DR volume</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>snapshot<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>svm_dr<span class="w"> </span>-volume<span class="w"> </span>vol_dr_app01
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>volume<span class="w"> </span>snapshot<span class="w"> </span>restore<span class="w"> </span>-vserver<span class="w"> </span>svm_dr<span class="w"> </span>-volume<span class="w"> </span>vol_dr_app01<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="w">  </span>-snapshot<span class="w"> </span>&lt;last-known-good-snapshot&gt;
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a><span class="c1"># Option B: re-sync from primary if primary is partially available</span>
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a>snapmirror<span class="w"> </span>resync<span class="w"> </span>-destination-path<span class="w"> </span>svm_dr:vol_dr_app01
+<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>
+<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a><span class="c1"># Document the RPO breach and data loss window in the incident ticket</span>
 </code></pre></div>
 <hr />
 <h2 id="escalation-contacts-template">Escalation Contacts Template<a class="headerlink" href="#escalation-contacts-template" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>ESCALATION MATRIX — fill in before DR exercise:
-<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>
-<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>Level 1 (Operations):
-<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a>  On-call engineer: ________________________  Mobile: ________________
-<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>  Storage SME:      ________________________  Mobile: ________________
-<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>  VMware SME:       ________________________  Mobile: ________________
-<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a>
-<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a>Level 2 (Management):
-<a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a>  IT Manager:       ________________________  Mobile: ________________
-<a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a>  CTO/VP Infra:     ________________________  Mobile: ________________
-<a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a>
-<a id="__codelineno-20-12" name="__codelineno-20-12" href="#__codelineno-20-12"></a>Vendor Support:
-<a id="__codelineno-20-13" name="__codelineno-20-13" href="#__codelineno-20-13"></a>  NetApp Support:   1-888-4-NETAPP  (Case: __________________)
-<a id="__codelineno-20-14" name="__codelineno-20-14" href="#__codelineno-20-14"></a>  VMware Support:   1-877-4-VMWARE  (SR: _____________________)
-<a id="__codelineno-20-15" name="__codelineno-20-15" href="#__codelineno-20-15"></a>  Veeam Support:    +1-800-691-1991 (Case: __________________)
-<a id="__codelineno-20-16" name="__codelineno-20-16" href="#__codelineno-20-16"></a>
-<a id="__codelineno-20-17" name="__codelineno-20-17" href="#__codelineno-20-17"></a>Application Owners:
-<a id="__codelineno-20-18" name="__codelineno-20-18" href="#__codelineno-20-18"></a>  App-1 owner:      ________________________  Mobile: ________________
-<a id="__codelineno-20-19" name="__codelineno-20-19" href="#__codelineno-20-19"></a>  DB owner:         ________________________  Mobile: ________________
-<a id="__codelineno-20-20" name="__codelineno-20-20" href="#__codelineno-20-20"></a>
-<a id="__codelineno-20-21" name="__codelineno-20-21" href="#__codelineno-20-21"></a>INCIDENT BRIDGE: +XX-XXXX-XXXXXX  |  Slack: #dr-bridge
-<a id="__codelineno-20-22" name="__codelineno-20-22" href="#__codelineno-20-22"></a>CHANGE TICKET:   __________________
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>ESCALATION MATRIX — fill in before DR exercise:
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>Level 1 (Operations):
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>  On-call engineer: ________________________  Mobile: ________________
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>  Storage SME:      ________________________  Mobile: ________________
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>  VMware SME:       ________________________  Mobile: ________________
+<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a>
+<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>Level 2 (Management):
+<a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a>  IT Manager:       ________________________  Mobile: ________________
+<a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a>  CTO/VP Infra:     ________________________  Mobile: ________________
+<a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a>
+<a id="__codelineno-19-12" name="__codelineno-19-12" href="#__codelineno-19-12"></a>Vendor Support:
+<a id="__codelineno-19-13" name="__codelineno-19-13" href="#__codelineno-19-13"></a>  NetApp Support:   1-888-4-NETAPP  (Case: __________________)
+<a id="__codelineno-19-14" name="__codelineno-19-14" href="#__codelineno-19-14"></a>  VMware Support:   1-877-4-VMWARE  (SR: _____________________)
+<a id="__codelineno-19-15" name="__codelineno-19-15" href="#__codelineno-19-15"></a>  Veeam Support:    +1-800-691-1991 (Case: __________________)
+<a id="__codelineno-19-16" name="__codelineno-19-16" href="#__codelineno-19-16"></a>
+<a id="__codelineno-19-17" name="__codelineno-19-17" href="#__codelineno-19-17"></a>Application Owners:
+<a id="__codelineno-19-18" name="__codelineno-19-18" href="#__codelineno-19-18"></a>  App-1 owner:      ________________________  Mobile: ________________
+<a id="__codelineno-19-19" name="__codelineno-19-19" href="#__codelineno-19-19"></a>  DB owner:         ________________________  Mobile: ________________
+<a id="__codelineno-19-20" name="__codelineno-19-20" href="#__codelineno-19-20"></a>
+<a id="__codelineno-19-21" name="__codelineno-19-21" href="#__codelineno-19-21"></a>INCIDENT BRIDGE: +XX-XXXX-XXXXXX  |  Slack: #dr-bridge
+<a id="__codelineno-19-22" name="__codelineno-19-22" href="#__codelineno-19-22"></a>CHANGE TICKET:   __________________
 </code></pre></div>
 <hr />
 <h2 id="see-also">See Also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>

@@ -9228,23 +9228,7 @@ Encryption reference covering Data at Rest, Data in Transit, Certificate Managem
 </div>
 <p><img alt="Aria Operations for Networks — Encryption" src="../../../../../assets/virtualization-vmware-aria-operations-for-networks-security-.svg" /></p>
 <hr />
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: down
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>external: External / Untrusted {shape: rectangle}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>data_at_rest: &quot;Data at Rest&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>data_in_transit: &quot;Data in Transit&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>certificate_management: &quot;Certificate Management&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>tls_cipher_hardening: &quot;TLS Cipher Hardening&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>credential_storage: &quot;Credential Storage&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>core: &quot;Aria Operations for Networks Core&quot; {shape: hexagon}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>external -&gt; data_at_rest: traffic in
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>data_at_rest -&gt; data_in_transit
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>data_in_transit -&gt; certificate_management
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>certificate_management -&gt; tls_cipher_hardening
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>tls_cipher_hardening -&gt; credential_storage
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>credential_storage -&gt; core: secured path
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp1kU9rwzAMxe_5FKL3sXsOg5ENdtgfWNuzEYmSiKVykFVaKP3us9MtoZt7s57ek-yfG1aqjb2U0PiDFAUdjVRwKOH55wT3sBXTfTBq4BR6HKmElELpBjoXDRo6NKcUrITVUywBDT5jubrpZ3GmKIHnCAtsLko2VZMat1yjkduhYEc7khSulga8zY3sDBuCq3nsSV2P2pCwdHHC5nUN1STDy6-cv4NS7Brj4IJ5javS_lmE9UXMZ70m96MywsdIigl6gNYrvJMdvH4FqKJnCfd0xM7LefkTuHuAa9qRYRvfHuFdfcNsXDD_xZ4seaY3UKdADmCW6jT9H60MwMk4oQlU72MbRrS--AakWfL1?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Access:</strong> vCenter Administrator role</li>
@@ -9337,25 +9321,25 @@ Encryption reference covering Data at Rest, Data in Transit, Certificate Managem
 <hr />
 <h2 id="tls-cipher-hardening">TLS Cipher Hardening<a class="headerlink" href="#tls-cipher-hardening" title="Permanent link">&para;</a></h2>
 <p>Restrict to strong ciphers by editing the Nginx config on the Platform VM:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>ssh<span class="w"> </span>ubuntu@vrni.example.local
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>sudo<span class="w"> </span>vim<span class="w"> </span>/etc/nginx/nginx.conf
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Find and update ssl_* directives:</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>ssl_protocols<span class="w"> </span>TLSv1.2<span class="w"> </span>TLSv1.3<span class="p">;</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>ssl_ciphers<span class="w"> </span>ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256<span class="p">;</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>ssl_prefer_server_ciphers<span class="w"> </span>on<span class="p">;</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>sudo<span class="w"> </span>nginx<span class="w"> </span>-t<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>sudo<span class="w"> </span>systemctl<span class="w"> </span>reload<span class="w"> </span>nginx
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ssh<span class="w"> </span>ubuntu@vrni.example.local
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>sudo<span class="w"> </span>vim<span class="w"> </span>/etc/nginx/nginx.conf
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Find and update ssl_* directives:</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>ssl_protocols<span class="w"> </span>TLSv1.2<span class="w"> </span>TLSv1.3<span class="p">;</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>ssl_ciphers<span class="w"> </span>ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256<span class="p">;</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>ssl_prefer_server_ciphers<span class="w"> </span>on<span class="p">;</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>sudo<span class="w"> </span>nginx<span class="w"> </span>-t<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>sudo<span class="w"> </span>systemctl<span class="w"> </span>reload<span class="w"> </span>nginx
 </code></pre></div>
 <p>Verify:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>nmap<span class="w"> </span>--script<span class="w"> </span>ssl-enum-ciphers<span class="w"> </span>-p<span class="w"> </span><span class="m">443</span><span class="w"> </span>vrni.example.local
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># Confirm: no TLS 1.0/1.1, no RC4/DES/3DES</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>nmap<span class="w"> </span>--script<span class="w"> </span>ssl-enum-ciphers<span class="w"> </span>-p<span class="w"> </span><span class="m">443</span><span class="w"> </span>vrni.example.local
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># Confirm: no TLS 1.0/1.1, no RC4/DES/3DES</span>
 </code></pre></div></p>
 <hr />
 <h2 id="credential-storage">Credential Storage<a class="headerlink" href="#credential-storage" title="Permanent link">&para;</a></h2>
 <p>vRNI encrypts all data source credentials (vCenter, NSX, physical device passwords) in its internal database. The encryption key is tied to the Platform VM instance. Do not copy the Platform VM VMDK to another host — credentials will not decrypt without the original key material.</p>
 <p>Update stored credentials when source system passwords change:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Settings → Data Sources → [source] → Edit → update password → Save
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Settings → Data Sources → [source] → Edit → update password → Save
 </code></pre></div></p>
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>

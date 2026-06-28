@@ -9367,45 +9367,8 @@ How It Works reference covering API Surfaces, Transport Nodes, Geneve Encapsulat
 *Applies to: NSX-T 3.x · NSX 4.x*
 </div>
 <p><img alt="NSX — How It Works" src="../../../../../assets/virtualization-vmware-nsx-architecture-how-it-works.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>center: &quot;NSX-T&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>control_and_data_plane: &quot;Control and Data Plane&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>geneve_encapsulation: &quot;Geneve Encapsulation&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>transport_zones: &quot;Transport Zones&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>gateway_architecture_t0_and_t1: &quot;Gateway Architecture — T0 and T1&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>edge_cluster: &quot;Edge Cluster&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>distributed_firewall_dfw: &quot;Distributed Firewall (DFW)&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>center -&gt; control_and_data_plane
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>center -&gt; geneve_encapsulation
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>center -&gt; transport_zones
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>center -&gt; gateway_architecture_t0_and_t1
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>center -&gt; edge_cluster
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>center -&gt; distributed_firewall_dfw
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>@startuml
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>skinparam sequenceArrowThickness 1.5
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>skinparam roundcorner 5
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>actor &quot;Admin&quot; as ADM
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>participant &quot;NSX Manager\n(policy API)&quot; as MGR
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>participant &quot;NSX Controller\n(cluster)&quot; as CTL
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>participant &quot;ESXi Transport Node\n(TEP + N-VDS)&quot; as ESX
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>participant &quot;Edge Node\n(Tier-0 / Tier-1 GW)&quot; as EDGE
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>participant &quot;Physical Fabric\n(BGP peer)&quot; as FABRIC
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>ADM -&gt; MGR: Define segment / DFW policy
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>MGR -&gt; CTL: Distribute intent
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>CTL -&gt; ESX: Push TEP config + DFW rules
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>CTL -&gt; EDGE: Push routing config
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>EDGE -&gt; FABRIC: BGP advertise prefixes
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>FABRIC --&gt; EDGE: BGP ack
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>ESX --&gt; CTL: Config applied
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>CTL --&gt; MGR: Realisation complete
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>MGR --&gt; ADM: Policy enforced
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>@enduml
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp9UUtLxDAQvvdXDD3pYWH32oMg-_AmggXFSxiT2TYQkpJMrQ8W_BH-Qn-JabuyQeIe53vM4xulPUnWzlbgddNyUUiyTL6C8vb-cVGX8BFa7KiCll6xcfZQSGfZOyPQKqGQUXQGbRSU65mASMAmEnA3EqcO4yS0jaFD0ZClFxJkJXahNzhvUN5MMGxTOOtnjzZ0zrN4d5ZCtNa_CDyNSH4qMg34JtDLVnPEe0-Cl9MlvBrnzwK4TgTw_fkF9XK6ql5l-5JqSEjThzm4bSxhPZdZvdKBvX7umZTYxwcMaIxQ-yF6NycKdkcKLja7h8tsp-O3YHEF-bckglzmCf0n0tR4NrZEmOaQwP-dW_wAjj3o_w==?" /></p>
+<p><img alt="Kroki" src="https://kroki.io/plantuml/svg/eNplkjFvGzEMhXf9CsJTisJJM2TxUOTis40AtXGwjSZDF0VHnwnrJJXStc2_L3VyjKTdBPF71Huk7mPSnIbeqngiFzTrHiL-HNAZrJj97_2RzMlhjHB7ffcOYj-41nh2yHCnlDbJM0yqtic3AR2hqtdKyESGgnYJJpvdM6y10x3yD3cVvCXzClXz-GnE16vt__jcu8Te2lFh7BATcsHn-28f8cXumWDP2sXgOcHGtyia_aKBz7CZfq93RSfYP7q2wwtNyNMvcAPj4RZWT2dRvVp8VDXH10hGW1jqFyYj2odVAwHf7C2rh-3jXCkZAky_5nAzqPFADmW4XY_S4wbq5ROUMSgBMiephKOYmF6GhEAuCarkOlfF-wyaIR4hxzLeHaiTdLkNDxbjhRO7Z1CWlMh1Z1jlSiaKvRlk07r9hZIsIgQWh3-kTynD9NJr5MxJiYPxdvQ5LwZ0CJawLY-_Zd2ithR1Iu_k7T5YTFhCCiFDEXtl_-gOno3I79G1-Rf-Bfbt0Uc=?" /></p>
 <h2 id="control-and-data-plane">Control and Data Plane<a class="headerlink" href="#control-and-data-plane" title="Permanent link">&para;</a></h2>
 <h3 id="nsx-3-plane-architecture">NSX 3-Plane Architecture<a class="headerlink" href="#nsx-3-plane-architecture" title="Permanent link">&para;</a></h3>
 <pre class="mermaid"><code>graph TB
@@ -9481,21 +9444,21 @@ How It Works reference covering API Surfaces, Transport Nodes, Geneve Encapsulat
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># SSH to Edge node</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>get<span class="w"> </span>interfaces
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>get<span class="w"> </span>service<span class="w"> </span>dataplane<span class="w">   </span><span class="c1"># Confirm dataplane is running</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>get<span class="w"> </span>service<span class="w"> </span>router<span class="w">      </span><span class="c1"># Confirm routing engine is running</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># SSH to Edge node</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>get<span class="w"> </span>interfaces
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>get<span class="w"> </span>service<span class="w"> </span>dataplane<span class="w">   </span><span class="c1"># Confirm dataplane is running</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>get<span class="w"> </span>service<span class="w"> </span>router<span class="w">      </span><span class="c1"># Confirm routing engine is running</span>
 </code></pre></div>
 <hr />
 <h2 id="geneve-encapsulation">Geneve Encapsulation<a class="headerlink" href="#geneve-encapsulation" title="Permanent link">&para;</a></h2>
 <p>NSX uses Geneve (port 6081) — not VXLAN. The VNI identifies which logical segment a packet belongs to.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>[Outer ETH][Outer IP: TEP-src → TEP-dst][UDP 6081][Geneve VNI=5001][Inner ETH][Inner IP: VM-src → VM-dst][Payload]
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>[Outer ETH][Outer IP: TEP-src → TEP-dst][UDP 6081][Geneve VNI=5001][Inner ETH][Inner IP: VM-src → VM-dst][Payload]
 </code></pre></div>
 <p>Geneve carries extensible metadata (security group tags, service chain IDs) inline — not possible with VXLAN.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Verify tunnel health from NSX Manager CLI</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>nsxcli
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>get<span class="w"> </span>tunnel<span class="w"> </span>status
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>get<span class="w"> </span>tunnel<span class="w"> </span>status<span class="w"> </span>&lt;remote-tep-ip&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Verify tunnel health from NSX Manager CLI</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>nsxcli
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>get<span class="w"> </span>tunnel<span class="w"> </span>status
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>get<span class="w"> </span>tunnel<span class="w"> </span>status<span class="w"> </span>&lt;remote-tep-ip&gt;
 </code></pre></div>
 <hr />
 <h2 id="transport-zones">Transport Zones<a class="headerlink" href="#transport-zones" title="Permanent link">&para;</a></h2>
@@ -9578,13 +9541,13 @@ How It Works reference covering API Surfaces, Transport Nodes, Geneve Encapsulat
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Check HA state from Edge node</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>get<span class="w"> </span>edge-cluster<span class="w"> </span>status
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="nb">set</span><span class="w"> </span>edge-cluster<span class="w"> </span>failover<span class="w">   </span><span class="c1"># Force failover from active Edge</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Check HA state from Edge node</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>get<span class="w"> </span>edge-cluster<span class="w"> </span>status
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="nb">set</span><span class="w"> </span>edge-cluster<span class="w"> </span>failover<span class="w">   </span><span class="c1"># Force failover from active Edge</span>
 </code></pre></div>
 <h3 id="routing-flow-vm-to-external">Routing Flow — VM to External<a class="headerlink" href="#routing-flow-vm-to-external" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>VM → vNIC → DFW filter → T1 distributed instance (same ESXi host)
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>  → T0 Service Router (Edge node) → Physical router (BGP peer) → Internet
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>VM → vNIC → DFW filter → T1 distributed instance (same ESXi host)
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>  → T0 Service Router (Edge node) → Physical router (BGP peer) → Internet
 </code></pre></div>
 <hr />
 <h2 id="edge-cluster">Edge Cluster<a class="headerlink" href="#edge-cluster" title="Permanent link">&para;</a></h2>
@@ -9673,17 +9636,17 @@ How It Works reference covering API Surfaces, Transport Nodes, Geneve Encapsulat
 </table>
 <p>Default rule (65535): <strong>DROP</strong> — do not change.</p>
 <h3 id="dfw-inspection-on-esxi-host">DFW Inspection on ESXi Host<a class="headerlink" href="#dfw-inspection-on-esxi-host" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># List all DFW filters (one per VM vNIC)</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>summarize-dvfilter
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Show rules applied to a vNIC filter</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>vsipioctl<span class="w"> </span>getrules<span class="w"> </span>-f<span class="w"> </span>nic-12345-eth0-vmware-sfw.2
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># Show rule hit counts</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>vsipioctl<span class="w"> </span>getstats<span class="w"> </span>-f<span class="w"> </span>nic-12345-eth0-vmware-sfw.2
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="c1"># Show security groups (address sets) in use</span>
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>vsipioctl<span class="w"> </span>getaddrsets<span class="w"> </span>-f<span class="w"> </span>nic-12345-eth0-vmware-sfw.2
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># List all DFW filters (one per VM vNIC)</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>summarize-dvfilter
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Show rules applied to a vNIC filter</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>vsipioctl<span class="w"> </span>getrules<span class="w"> </span>-f<span class="w"> </span>nic-12345-eth0-vmware-sfw.2
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Show rule hit counts</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>vsipioctl<span class="w"> </span>getstats<span class="w"> </span>-f<span class="w"> </span>nic-12345-eth0-vmware-sfw.2
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># Show security groups (address sets) in use</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>vsipioctl<span class="w"> </span>getaddrsets<span class="w"> </span>-f<span class="w"> </span>nic-12345-eth0-vmware-sfw.2
 </code></pre></div>
 <hr />
 <h2 id="segments">Segments<a class="headerlink" href="#segments" title="Permanent link">&para;</a></h2>
@@ -9709,29 +9672,29 @@ How It Works reference covering API Surfaces, Transport Nodes, Geneve Encapsulat
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Find the VNI of a segment</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>nsxcli
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>get<span class="w"> </span>logical-switch<span class="w"> </span>&lt;segment-id&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>VNI
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Find the VNI of a segment</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>nsxcli
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>get<span class="w"> </span>logical-switch<span class="w"> </span>&lt;segment-id&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>VNI
 </code></pre></div>
 <hr />
 <h2 id="ipam-and-dhcp">IPAM and DHCP<a class="headerlink" href="#ipam-and-dhcp" title="Permanent link">&para;</a></h2>
 <p>NSX includes built-in IPAM for IP pool management and a distributed DHCP server running on ESXi hosts — no dedicated DHCP VM required.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># List IP pools</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/api/v1/pools/ip-pools&quot;</span>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="c1"># Check pool allocations</span>
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/api/v1/pools/ip-pools/&lt;pool-id&gt;/ip-allocations&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># List IP pools</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/api/v1/pools/ip-pools&quot;</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1"># Check pool allocations</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/api/v1/pools/ip-pools/&lt;pool-id&gt;/ip-allocations&quot;</span>
 </code></pre></div>
 <hr />
 <h2 id="vpn-services">VPN Services<a class="headerlink" href="#vpn-services" title="Permanent link">&para;</a></h2>
 <p>NSX supports IPsec site-to-site VPN and L2 VPN on Edge nodes (T0 or T1 with Edge cluster).</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Check IPsec sessions from Edge CLI</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>get<span class="w"> </span>vpn<span class="w"> </span>ipsec<span class="w"> </span>session<span class="w"> </span>list
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Check L2 VPN sessions</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>get<span class="w"> </span>vpn<span class="w"> </span>l2vpn<span class="w"> </span>session<span class="w"> </span>list
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Check IPsec sessions from Edge CLI</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>get<span class="w"> </span>vpn<span class="w"> </span>ipsec<span class="w"> </span>session<span class="w"> </span>list
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Check L2 VPN sessions</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>get<span class="w"> </span>vpn<span class="w"> </span>l2vpn<span class="w"> </span>session<span class="w"> </span>list
 </code></pre></div>
 <table>
 <thead>
@@ -9848,8 +9811,8 @@ How It Works reference covering API Surfaces, Transport Nodes, Geneve Encapsulat
 <li><code>/var/log/vmware/nsx-controller/</code> — control plane logs</li>
 </ul>
 <p><strong>Edge node logs (SSH):</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>get<span class="w"> </span>log-file<span class="w"> </span>syslog<span class="w"> </span>follow<span class="w">   </span><span class="c1"># live tail</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>get<span class="w"> </span>log-file<span class="w"> </span>auth.log<span class="w">        </span><span class="c1"># authentication events</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>get<span class="w"> </span>log-file<span class="w"> </span>syslog<span class="w"> </span>follow<span class="w">   </span><span class="c1"># live tail</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>get<span class="w"> </span>log-file<span class="w"> </span>auth.log<span class="w">        </span><span class="c1"># authentication events</span>
 </code></pre></div>
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>

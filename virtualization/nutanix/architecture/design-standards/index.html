@@ -7617,23 +7617,7 @@ Cluster sizing rules, node type selection, replication factor decisions, network
 </div>
 <p><img alt="Nutanix — Design Standards" src="../../../../assets/virtualization-nutanix-architecture-design-standards.svg" /></p>
 <hr />
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>center: &quot;Nutanix AHV&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>cluster_minimum_requirements: &quot;Cluster Minimum Requirements&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>node_type_selection: &quot;Node Type Selection&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>replication_factor_rf_selection: &quot;Replication Factor (RF) Selection&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>storage_container_design: &quot;Storage Container Design&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>network_design: &quot;Network Design&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>block_awareness_fault_domains: &quot;Block Awareness (Fault Domains)&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>center -&gt; cluster_minimum_requirements
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>center -&gt; node_type_selection
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>center -&gt; replication_factor_rf_selection
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>center -&gt; storage_container_design
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>center -&gt; network_design
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>center -&gt; block_awareness_fault_domains
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqFkc1uwjAQhO95ilVOcOgL5FCJgqJemkNAXC3XWRwLx079I6gq3r02aRQjpeG638zYO9sIg8wJrQowgrcuyxgqh6aAvPKOKnGFzfsxhx_b0h4LaPFKuVa3jElvg450QonOd8Tglw9ZXXDbYN4OGD4GDHWCp7T4NlVc4i1TukHivnskFuX4pbwKUziEKezH6azbYC8Fo5GTE2VOG2JOD0n1pIDyroBVXa6f5NqgoxwJ08pRocK-DVrBY-B-QLAdEezuaH47dBdtzpO7GgZLnk-p2ZnQCzWo0Nqwl5eONLoLr8WK3yKHzchhVUYB7AbBejbz77rw8gpLB0xkM3dJ6JPeE-V_TaZPPZSUgMUmsl8ISAaX?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Access:</strong> Prism Central admin or Nutanix SE for sizing validation</li>
@@ -7763,23 +7747,23 @@ Cluster sizing rules, node type selection, replication factor decisions, network
 <hr />
 <h2 id="storage-container-design">Storage Container Design<a class="headerlink" href="#storage-container-design" title="Permanent link">&para;</a></h2>
 <p>A <strong>container</strong> is a logical storage pool mapped to a datastore (ESXi) or directly to VMs (AHV).</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Container design (recommended):
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  VMs (general)      → RF2, compression=on, dedup=off
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  Databases          → RF2, compression=off, dedup=off (random I/O, low compressibility)
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  VDI full clones    → RF2, dedup=on, compression=on
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>  VDI linked clones  → RF2, dedup=on (high shared-page ratio)
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>  Backup targets     → EC-X or RF2, compression=on, dedup=on
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>  ISOs / templates   → RF2, low capacity impact
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Container design (recommended):
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>  VMs (general)      → RF2, compression=on, dedup=off
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>  Databases          → RF2, compression=off, dedup=off (random I/O, low compressibility)
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>  VDI full clones    → RF2, dedup=on, compression=on
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>  VDI linked clones  → RF2, dedup=on (high shared-page ratio)
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>  Backup targets     → EC-X or RF2, compression=on, dedup=on
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>  ISOs / templates   → RF2, low capacity impact
 </code></pre></div>
 <p><strong>Reserved capacity:</strong> Keep at least 20% free on each container. Alert at 70%, do not exceed 80%.</p>
 <hr />
 <h2 id="network-design">Network Design<a class="headerlink" href="#network-design" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Recommended: dual 25 GbE (bonded) per node
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>  Bond0: active-backup or LACP
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    VLAN 10 (native) → AHV + CVM management
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    VLAN 20          → Storage / backplane (MTU 9000 required)
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>    VLAN 30+         → VM networks (trunked)
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>  Out-of-band: IPMI / iDRAC / iLO on dedicated OOB switch
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Recommended: dual 25 GbE (bonded) per node
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  Bond0: active-backup or LACP
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    VLAN 10 (native) → AHV + CVM management
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    VLAN 20          → Storage / backplane (MTU 9000 required)
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    VLAN 30+         → VM networks (trunked)
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>  Out-of-band: IPMI / iDRAC / iLO on dedicated OOB switch
 </code></pre></div>
 <p><strong>Critical requirements:</strong>
 - Storage VLAN must be L2 or low-latency routed between all CVMs

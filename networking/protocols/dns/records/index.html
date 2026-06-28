@@ -8127,21 +8127,7 @@
 DNS Records reference covering Overview, Common Record Types, Managing Records with PowerShell, Scavenging and Aging, Dynamic DNS and 1 more sections.
 </div>
 <p><img alt="DNS Records" src="../../../../assets/networking-protocols-dns-records-index.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>center: &quot;DNS&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>common_record_types: &quot;Common Record Types&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>managing_records_with_powershell: &quot;Managing Records with PowerShell&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>scavenging_and_aging: &quot;Scavenging and Aging&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>dynamic_dns: &quot;Dynamic DNS&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>known_issues: &quot;Known Issues&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>center -&gt; common_record_types
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>center -&gt; managing_records_with_powershell
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>center -&gt; scavenging_and_aging
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>center -&gt; dynamic_dns
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>center -&gt; known_issues
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqFkMGKAyEQRO9-RZN7fmAOgSW5hJCw7OxdRBuVzLSDupmEkH-PmiHrgrA3u3xdWqWsRxmtow681SYyJpEi-g5Wu1O_gnswYsIODF6FdvRg0o2jI562nFc83iYMid0WFb6KCt9Z_d3NLwjSAz7YKEhoS3rZD3y20fDJzeiDwWFIVscFWcwCZAQ-M9JnpOkbpLggFWdBiheD5NW_ZUgyfORTc1_dSIxWckU5ze41wZ8GKvpMbiZuQ_gp4Q95hH0Zm_zSKaw30Kivuv2vngptJa6uq0CVWn-cPQHicLl4?" /></p>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>DNS records define how names map to resources. Each record type serves a distinct purpose. On Windows DNS Server, records are managed with <code>DnsServer</code> PowerShell cmdlets or <code>dnscmd</code>. Dynamic DNS (DDNS) allows DHCP servers and clients to register records automatically.</p>
 <h2 id="common-record-types">Common Record Types<a class="headerlink" href="#common-record-types" title="Permanent link">&para;</a></h2>
@@ -8197,64 +8183,64 @@ DNS Records reference covering Overview, Common Record Types, Managing Records w
 </tbody>
 </table>
 <h2 id="managing-records-with-powershell">Managing Records with PowerShell<a class="headerlink" href="#managing-records-with-powershell" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Add an A record</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Add-DnsServerResourceRecordA</span> <span class="p">`</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  <span class="n">-ZoneName</span> <span class="s2">&quot;corp.local&quot;</span> <span class="p">`</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  <span class="n">-Name</span> <span class="s2">&quot;web01&quot;</span> <span class="p">`</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>  <span class="n">-IPv4Address</span> <span class="s2">&quot;192.168.10.100&quot;</span> <span class="p">`</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>  <span class="n">-TimeToLive</span> <span class="p">(</span><span class="nb">New-TimeSpan</span> <span class="n">-Hours</span> <span class="n">1</span><span class="p">)</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c"># Add a CNAME</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="nb">Add-DnsServerResourceRecordCName</span> <span class="p">`</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>  <span class="n">-ZoneName</span> <span class="s2">&quot;corp.local&quot;</span> <span class="p">`</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>  <span class="n">-Name</span> <span class="s2">&quot;www&quot;</span> <span class="p">`</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>  <span class="n">-HostNameAlias</span> <span class="s2">&quot;web01.example.local&quot;</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="c"># Add a PTR record</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="nb">Add-DnsServerResourceRecordPtr</span> <span class="p">`</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>  <span class="n">-ZoneName</span> <span class="s2">&quot;10.168.192.in-addr.arpa&quot;</span> <span class="p">`</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>  <span class="n">-Name</span> <span class="s2">&quot;100&quot;</span> <span class="p">`</span>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>  <span class="n">-PtrDomainName</span> <span class="s2">&quot;web01.example.local&quot;</span>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="c"># Add an MX record</span>
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="nb">Add-DnsServerResourceRecord</span> <span class="n">-MX</span> <span class="p">`</span>
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>  <span class="n">-ZoneName</span> <span class="s2">&quot;corp.local&quot;</span> <span class="p">`</span>
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>  <span class="n">-Name</span> <span class="s2">&quot;@&quot;</span> <span class="p">`</span>
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>  <span class="n">-MailExchange</span> <span class="s2">&quot;mail.example.local&quot;</span> <span class="p">`</span>
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>  <span class="n">-Preference</span> <span class="n">10</span>
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a><span class="c"># Remove a record</span>
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a><span class="nb">Remove-DnsServerResourceRecord</span> <span class="p">`</span>
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>  <span class="n">-ZoneName</span> <span class="s2">&quot;corp.local&quot;</span> <span class="p">`</span>
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>  <span class="n">-RRType</span> <span class="s2">&quot;A&quot;</span> <span class="p">`</span>
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>  <span class="n">-Name</span> <span class="s2">&quot;web01&quot;</span> <span class="p">`</span>
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>  <span class="n">-Force</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Add an A record</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Add-DnsServerResourceRecordA</span> <span class="p">`</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>  <span class="n">-ZoneName</span> <span class="s2">&quot;corp.local&quot;</span> <span class="p">`</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>  <span class="n">-Name</span> <span class="s2">&quot;web01&quot;</span> <span class="p">`</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>  <span class="n">-IPv4Address</span> <span class="s2">&quot;192.168.10.100&quot;</span> <span class="p">`</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>  <span class="n">-TimeToLive</span> <span class="p">(</span><span class="nb">New-TimeSpan</span> <span class="n">-Hours</span> <span class="n">1</span><span class="p">)</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c"># Add a CNAME</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="nb">Add-DnsServerResourceRecordCName</span> <span class="p">`</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>  <span class="n">-ZoneName</span> <span class="s2">&quot;corp.local&quot;</span> <span class="p">`</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>  <span class="n">-Name</span> <span class="s2">&quot;www&quot;</span> <span class="p">`</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>  <span class="n">-HostNameAlias</span> <span class="s2">&quot;web01.example.local&quot;</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="c"># Add a PTR record</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="nb">Add-DnsServerResourceRecordPtr</span> <span class="p">`</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>  <span class="n">-ZoneName</span> <span class="s2">&quot;10.168.192.in-addr.arpa&quot;</span> <span class="p">`</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>  <span class="n">-Name</span> <span class="s2">&quot;100&quot;</span> <span class="p">`</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>  <span class="n">-PtrDomainName</span> <span class="s2">&quot;web01.example.local&quot;</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="c"># Add an MX record</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="nb">Add-DnsServerResourceRecord</span> <span class="n">-MX</span> <span class="p">`</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>  <span class="n">-ZoneName</span> <span class="s2">&quot;corp.local&quot;</span> <span class="p">`</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>  <span class="n">-Name</span> <span class="s2">&quot;@&quot;</span> <span class="p">`</span>
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>  <span class="n">-MailExchange</span> <span class="s2">&quot;mail.example.local&quot;</span> <span class="p">`</span>
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>  <span class="n">-Preference</span> <span class="n">10</span>
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a><span class="c"># Remove a record</span>
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a><span class="nb">Remove-DnsServerResourceRecord</span> <span class="p">`</span>
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>  <span class="n">-ZoneName</span> <span class="s2">&quot;corp.local&quot;</span> <span class="p">`</span>
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>  <span class="n">-RRType</span> <span class="s2">&quot;A&quot;</span> <span class="p">`</span>
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>  <span class="n">-Name</span> <span class="s2">&quot;web01&quot;</span> <span class="p">`</span>
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>  <span class="n">-Force</span>
 </code></pre></div>
 <h2 id="scavenging-and-aging">Scavenging and Aging<a class="headerlink" href="#scavenging-and-aging" title="Permanent link">&para;</a></h2>
 <p>Aging and scavenging clean up stale dynamically registered records.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Enable aging on a zone</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">Set-DnsServerZoneAging</span> <span class="p">`</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>  <span class="n">-Name</span> <span class="s2">&quot;corp.local&quot;</span> <span class="p">`</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>  <span class="n">-Aging</span> <span class="nv">$true</span> <span class="p">`</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>  <span class="n">-ScavengeServers</span> <span class="n">10</span><span class="p">.</span><span class="n">0</span><span class="p">.</span><span class="n">0</span><span class="p">.</span><span class="n">53</span> <span class="p">`</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>  <span class="n">-RefreshInterval</span> <span class="p">(</span><span class="nb">New-TimeSpan</span> <span class="n">-Days</span> <span class="n">7</span><span class="p">)</span> <span class="p">`</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>  <span class="n">-NoRefreshInterval</span> <span class="p">(</span><span class="nb">New-TimeSpan</span> <span class="n">-Days</span> <span class="n">7</span><span class="p">)</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c"># Start an immediate scavenging pass</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="nb">Start-DnsServerScavenging</span> <span class="n">-Force</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c"># Check aging settings</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="nb">Get-DnsServerZoneAging</span> <span class="n">-Name</span> <span class="s2">&quot;corp.local&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Enable aging on a zone</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Set-DnsServerZoneAging</span> <span class="p">`</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  <span class="n">-Name</span> <span class="s2">&quot;corp.local&quot;</span> <span class="p">`</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  <span class="n">-Aging</span> <span class="nv">$true</span> <span class="p">`</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>  <span class="n">-ScavengeServers</span> <span class="n">10</span><span class="p">.</span><span class="n">0</span><span class="p">.</span><span class="n">0</span><span class="p">.</span><span class="n">53</span> <span class="p">`</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>  <span class="n">-RefreshInterval</span> <span class="p">(</span><span class="nb">New-TimeSpan</span> <span class="n">-Days</span> <span class="n">7</span><span class="p">)</span> <span class="p">`</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>  <span class="n">-NoRefreshInterval</span> <span class="p">(</span><span class="nb">New-TimeSpan</span> <span class="n">-Days</span> <span class="n">7</span><span class="p">)</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c"># Start an immediate scavenging pass</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="nb">Start-DnsServerScavenging</span> <span class="n">-Force</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c"># Check aging settings</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="nb">Get-DnsServerZoneAging</span> <span class="n">-Name</span> <span class="s2">&quot;corp.local&quot;</span>
 </code></pre></div>
 <h2 id="dynamic-dns">Dynamic DNS<a class="headerlink" href="#dynamic-dns" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Configure zone to allow secure dynamic updates (AD-integrated zones)</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Set-DnsServerPrimaryZone</span> <span class="n">-Name</span> <span class="s2">&quot;corp.local&quot;</span> <span class="n">-DynamicUpdate</span> <span class="n">Secure</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c"># Allow non-secure updates (test/lab only)</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="nb">Set-DnsServerPrimaryZone</span> <span class="n">-Name</span> <span class="s2">&quot;corp.local&quot;</span> <span class="n">-DynamicUpdate</span> <span class="n">NonsecureAndSecure</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c"># Force a client to re-register its DNS records</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="n">ipconfig</span> <span class="p">/</span><span class="n">registerdns</span>   <span class="c"># run on Windows client</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Configure zone to allow secure dynamic updates (AD-integrated zones)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">Set-DnsServerPrimaryZone</span> <span class="n">-Name</span> <span class="s2">&quot;corp.local&quot;</span> <span class="n">-DynamicUpdate</span> <span class="n">Secure</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c"># Allow non-secure updates (test/lab only)</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nb">Set-DnsServerPrimaryZone</span> <span class="n">-Name</span> <span class="s2">&quot;corp.local&quot;</span> <span class="n">-DynamicUpdate</span> <span class="n">NonsecureAndSecure</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c"># Force a client to re-register its DNS records</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="n">ipconfig</span> <span class="p">/</span><span class="n">registerdns</span>   <span class="c"># run on Windows client</span>
 </code></pre></div>
 <h2 id="known-issues">Known Issues<a class="headerlink" href="#known-issues" title="Permanent link">&para;</a></h2>
 <ul>

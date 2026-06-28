@@ -7136,29 +7136,7 @@ Response procedure for SnapMirror lag exceeding RPO targets, SRM replication ale
 <blockquote>
 <p><strong>Severity: P2</strong> (lag increasing) → <strong>P1</strong> (RPO breached). Escalate immediately on RPO breach.</p>
 </blockquote>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>@startuml
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>skinparam sequenceArrowThickness 1.5
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>skinparam roundcorner 5
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>actor &quot;Responder&quot; as A
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>participant &quot;Incident Response System&quot; as B
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>participant &quot;Dependent System&quot; as C
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>A -&gt; B: Symptoms
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>B --&gt; A: OK
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>A -&gt; B: Triage  Identify Scope and Severity
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>B --&gt; A: OK
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>A -&gt; B: Diagnose Root Cause
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>B --&gt; A: OK
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>A -&gt; B: Fix  Option A Force Immediate Update
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>B --&gt; A: OK
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>A -&gt; B: Fix  Option B Remove Throttle for Catch-Up
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>B --&gt; A: OK
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>A -&gt; B: Fix  Option C Expand Destination Volume
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>B --&gt; A: OK
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>@enduml
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/plantuml/svg/eNqFkUFrAjEQhe_5FQ_vFnrw4qG4u1aQHgRdew_ZsQbNTJrMWvffN1ooCoKnCS_fm5m8zLLapH04mnzwHG2yAZm-e2JHVUry0-69OzDljNeXyQ2UpOfOSWJKmBhjnUrCaE05CneURrAZlSmseuejZcVoyc53VE5_VCZshqwUrmx9z84pEl_hG6YxpsL4DfW0qCGqhGxqjItSTbH6-L9sk7dfBCwvDfxuwMZJJFjusKETJa_DQ9-82FjKXmsRRWP7TA-5hT8Dq6heGBUWkhxhGQJ13iphG7tSnhrrEkOQE6HdJ1E9EnYlwcaq24-38am9wfs5Xl40p6ye7VX8lGMf7kebWcnx8r-_rSaY_w==?" /></p>
 <h2 id="symptoms">Symptoms<a class="headerlink" href="#symptoms" title="Permanent link">&para;</a></h2>
 <ul>
 <li>ONTAP SnapMirror alert: lag time exceeds configured threshold</li>
@@ -7168,12 +7146,12 @@ Response procedure for SnapMirror lag exceeding RPO targets, SRM replication ale
 <li>Destination cluster shows stale <code>last-transfer-end-timestamp</code></li>
 </ul>
 <h2 id="triage-identify-scope-and-severity">Triage — Identify Scope and Severity<a class="headerlink" href="#triage-identify-scope-and-severity" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># ONTAP: list all SnapMirror relationships with lag and health</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>source-path,destination-path,lag-time,health,state
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Inspect a specific relationship</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-source-path<span class="w"> </span>&lt;svm&gt;:&lt;vol&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span>-fields<span class="w"> </span>lag-time,last-transfer-size,last-transfer-end-timestamp
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># ONTAP: list all SnapMirror relationships with lag and health</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>source-path,destination-path,lag-time,health,state
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Inspect a specific relationship</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-source-path<span class="w"> </span>&lt;svm&gt;:&lt;vol&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">  </span>-fields<span class="w"> </span>lag-time,last-transfer-size,last-transfer-end-timestamp
 </code></pre></div>
 <p>Compare current lag to your RPO target:</p>
 <table>
@@ -7209,41 +7187,41 @@ Response procedure for SnapMirror lag exceeding RPO targets, SRM replication ale
 </table>
 <h2 id="diagnose-root-cause">Diagnose Root Cause<a class="headerlink" href="#diagnose-root-cause" title="Permanent link">&para;</a></h2>
 <p>Common causes: WAN bandwidth saturation, high source change rate, destination full, missed schedule window.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check intercluster LIF speed and utilisation</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>network<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span>-role<span class="w"> </span>intercluster<span class="w"> </span>-fields<span class="w"> </span>curr-speed,status-oper
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Check source volume change rate (delta between recent snapshots)</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>snapshot<span class="w"> </span>show<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;<span class="w"> </span>-fields<span class="w"> </span>cumulative-total,name<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-5
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Check destination aggregate space</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>volume<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;dstsvm&gt;<span class="w"> </span>-fields<span class="w"> </span>available,percent-used
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Check if a transfer is currently in progress</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>transfer-progress,bytes-transferred
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Check intercluster LIF speed and utilisation</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>network<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span>-role<span class="w"> </span>intercluster<span class="w"> </span>-fields<span class="w"> </span>curr-speed,status-oper
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Check source volume change rate (delta between recent snapshots)</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>snapshot<span class="w"> </span>show<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;<span class="w"> </span>-fields<span class="w"> </span>cumulative-total,name<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-5
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Check destination aggregate space</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>volume<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;dstsvm&gt;<span class="w"> </span>-fields<span class="w"> </span>available,percent-used
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Check if a transfer is currently in progress</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>transfer-progress,bytes-transferred
 </code></pre></div>
 <h2 id="fix-option-a-force-immediate-update">Fix — Option A: Force Immediate Update<a class="headerlink" href="#fix-option-a-force-immediate-update" title="Permanent link">&para;</a></h2>
 <p>Use when lag is recoverable and bandwidth is available:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Trigger immediate update</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>snapmirror<span class="w"> </span>update<span class="w"> </span>-source-path<span class="w"> </span>&lt;svm:vol&gt;<span class="w"> </span>-destination-path<span class="w"> </span>&lt;dstsvm:dstvol&gt;
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Monitor progress</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>transfer-progress,bytes-transferred
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Trigger immediate update</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>snapmirror<span class="w"> </span>update<span class="w"> </span>-source-path<span class="w"> </span>&lt;svm:vol&gt;<span class="w"> </span>-destination-path<span class="w"> </span>&lt;dstsvm:dstvol&gt;
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Monitor progress</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>transfer-progress,bytes-transferred
 </code></pre></div>
 <h2 id="fix-option-b-remove-throttle-for-catch-up">Fix — Option B: Remove Throttle for Catch-Up<a class="headerlink" href="#fix-option-b-remove-throttle-for-catch-up" title="Permanent link">&para;</a></h2>
 <p>Use when throttle is limiting catch-up speed:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Remove bandwidth throttle temporarily</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>snapmirror<span class="w"> </span>modify<span class="w"> </span>-destination-path<span class="w"> </span>&lt;dstsvm:dstvol&gt;<span class="w"> </span>-throttle<span class="w"> </span><span class="m">0</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># After catching up, restore throttle</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>snapmirror<span class="w"> </span>modify<span class="w"> </span>-destination-path<span class="w"> </span>&lt;dstsvm:dstvol&gt;<span class="w"> </span>-throttle<span class="w"> </span><span class="m">100000</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Remove bandwidth throttle temporarily</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>snapmirror<span class="w"> </span>modify<span class="w"> </span>-destination-path<span class="w"> </span>&lt;dstsvm:dstvol&gt;<span class="w"> </span>-throttle<span class="w"> </span><span class="m">0</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># After catching up, restore throttle</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>snapmirror<span class="w"> </span>modify<span class="w"> </span>-destination-path<span class="w"> </span>&lt;dstsvm:dstvol&gt;<span class="w"> </span>-throttle<span class="w"> </span><span class="m">100000</span>
 </code></pre></div>
 <h2 id="fix-option-c-expand-destination-volume">Fix — Option C: Expand Destination Volume<a class="headerlink" href="#fix-option-c-expand-destination-volume" title="Permanent link">&para;</a></h2>
 <p>Use when destination is full and blocking replication:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Grow destination volume</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>volume<span class="w"> </span>modify<span class="w"> </span>-vserver<span class="w"> </span>&lt;dstsvm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;dstvol&gt;<span class="w"> </span>-size<span class="w"> </span>+200g
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Confirm new space</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>volume<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;dstsvm&gt;<span class="w"> </span>-fields<span class="w"> </span>available<span class="w"> </span>-volume<span class="w"> </span>&lt;dstvol&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Grow destination volume</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>volume<span class="w"> </span>modify<span class="w"> </span>-vserver<span class="w"> </span>&lt;dstsvm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;dstvol&gt;<span class="w"> </span>-size<span class="w"> </span>+200g
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Confirm new space</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>volume<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;dstsvm&gt;<span class="w"> </span>-fields<span class="w"> </span>available<span class="w"> </span>-volume<span class="w"> </span>&lt;dstvol&gt;
 </code></pre></div>
 <h2 id="if-rpo-is-breached">If RPO Is Breached<a class="headerlink" href="#if-rpo-is-breached" title="Permanent link">&para;</a></h2>
 <ol>
@@ -7254,11 +7232,11 @@ Response procedure for SnapMirror lag exceeding RPO targets, SRM replication ale
 <li><strong>Document</strong> breach in incident log: start time, end time, lag peak, cause, resolution</li>
 </ol>
 <h2 id="verify">Verify<a class="headerlink" href="#verify" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Confirm lag returned within RPO</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>lag-time,health
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Confirm last successful transfer</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>last-transfer-end-timestamp
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Confirm lag returned within RPO</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>lag-time,health
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Confirm last successful transfer</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>last-transfer-end-timestamp
 </code></pre></div>
 <p>Also confirm:
 - SRM alarm cleared in vCenter

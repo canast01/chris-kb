@@ -9221,23 +9221,7 @@ Authentication reference covering Authentication Architecture, Active Directory 
 *Applies to: Aria Automation 8.x*
 </div>
 <p><img alt="Aria Automation — Authentication" src="../../../../../assets/virtualization-vmware-aria-automation-security-authenticatio.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: down
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>external: External / Untrusted {shape: rectangle}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>authentication_architecture: &quot;Authentication Architecture&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>api_service_account: &quot;API Service Account&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>session_and_token_policies: &quot;Session and Token Policies&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>certificate_trust_for_api_clients: &quot;Certificate Trust for API Clients&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>related_reference: &quot;Related Reference&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>core: &quot;Aria Automation Core&quot; {shape: hexagon}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>external -&gt; authentication_architecture: traffic in
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>authentication_architecture -&gt; api_service_account
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>api_service_account -&gt; session_and_token_policies
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>session_and_token_policies -&gt; certificate_trust_for_api_clients
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>certificate_trust_for_api_clients -&gt; related_reference
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>related_reference -&gt; core: secured path
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqFUctqwzAQvPsrltxL7z4UjOmht5DHWQhpHYu6klmt20DJv1drpSTFqnMTO7Oj2RnrCA274Guw4ctXFZ4ZyeuhhtfrC57h6JmmyGjhO_Z6xBpkS_vTgJdKT9yjZ2e06ChNpnec4IkSb9P8QaG5QzdFtdGpiPTpDCptTJg8i8r2DfZ5Ck2eFrcjxjib8FZxeEevxjA44zAmkX0GIYFwEBC2V7CoZZDYdWIc1Xy-6gIp8WcGl04SyfbGgYNwIHFA3LaZU1QmHNKCVYQdEnojOe3yDHa_s7KnkEMlpyElGz5yqm24T7PHsz4Ff7mVCU8vsFoTk-7SGeD8Wp2zzLKfUmdC_b-MlZ5k8WHyj7sRmUXMy-Dn3-ZMI5p0oYVRc1_9ALh8J7w=?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Access:</strong> vCenter Administrator role</li>
@@ -9249,19 +9233,19 @@ Authentication reference covering Authentication Architecture, Active Directory 
 <h2 id="authentication-architecture">Authentication Architecture<a class="headerlink" href="#authentication-architecture" title="Permanent link">&para;</a></h2>
 <p>Aria Automation delegates all authentication to <strong>Workspace ONE Access (VIDM)</strong>. There is no standalone AD/LDAP connector in Aria Automation itself — VIDM acts as the identity broker between Aria Automation and Active Directory.</p>
 <p><strong>Acquire a token (AD user):</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="s2">&quot;https://vra-prod-01.example.local/csp/gateway/am/api/login&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;username&quot;:&quot;svc.vra@corp.local&quot;,&quot;password&quot;:&quot;&lt;password&gt;&quot;,&quot;domain&quot;:&quot;corp.local&quot;}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.token&#39;</span><span class="k">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="s2">&quot;https://vra-prod-01.example.local/csp/gateway/am/api/login&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;username&quot;:&quot;svc.vra@corp.local&quot;,&quot;password&quot;:&quot;&lt;password&gt;&quot;,&quot;domain&quot;:&quot;corp.local&quot;}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.token&#39;</span><span class="k">)</span>
 </code></pre></div>
 <p><strong>Token validity:</strong> 8 hours by default. For long-running scripts, implement token refresh logic:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Refresh token before expiry (every 7 hours)</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="s2">&quot;https://vra-prod-01.example.local/csp/gateway/am/api/login&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;username&quot;:&quot;svc-vra-api&quot;,&quot;password&quot;:&quot;&lt;password&gt;&quot;,&quot;domain&quot;:&quot;System Domain&quot;}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.token&#39;</span><span class="k">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Refresh token before expiry (every 7 hours)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="s2">&quot;https://vra-prod-01.example.local/csp/gateway/am/api/login&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;username&quot;:&quot;svc-vra-api&quot;,&quot;password&quot;:&quot;&lt;password&gt;&quot;,&quot;domain&quot;:&quot;System Domain&quot;}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.token&#39;</span><span class="k">)</span>
 </code></pre></div>
 <hr />
 <h2 id="api-service-account">API Service Account<a class="headerlink" href="#api-service-account" title="Permanent link">&para;</a></h2>
@@ -9314,15 +9298,15 @@ Authentication reference covering Authentication Architecture, Active Directory 
 <hr />
 <h2 id="certificate-trust-for-api-clients">Certificate Trust for API Clients<a class="headerlink" href="#certificate-trust-for-api-clients" title="Permanent link">&para;</a></h2>
 <p>Aria Automation uses TLS for all API endpoints. Clients must trust the CA that signed the Aria Automation certificate:</p>
-<h2 id="add-aria-automation-ca-to-the-os-trust-store-on-a-linux-client-cp-internal-capem-usrlocalshareca-certificatesinternal-cacrt-update-ca-certificates-debianubuntu-python-clients-import-requests-requestsgethttpsvra-prod-01examplelocaliaasapizones-headersauthorization-fbearer-token-verifyetcsslcertsca-certificatescrt"><div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Add Aria Automation CA to the OS trust store on a Linux client</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>cp<span class="w"> </span>internal-ca.pem<span class="w"> </span>/usr/local/share/ca-certificates/internal-ca.crt
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>update-ca-certificates<span class="w">   </span><span class="c1"># Debian/Ubuntu</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Python clients</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>import<span class="w"> </span>requests
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>requests.get<span class="o">(</span><span class="s2">&quot;https://vra-prod-01.example.local/iaas/api/zones&quot;</span>,
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">             </span><span class="nv">headers</span><span class="o">={</span><span class="s2">&quot;Authorization&quot;</span>:<span class="w"> </span>f<span class="s2">&quot;Bearer {token}&quot;</span><span class="o">}</span>,
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">             </span><span class="nv">verify</span><span class="o">=</span><span class="s2">&quot;/etc/ssl/certs/ca-certificates.crt&quot;</span><span class="o">)</span>
+<h2 id="add-aria-automation-ca-to-the-os-trust-store-on-a-linux-client-cp-internal-capem-usrlocalshareca-certificatesinternal-cacrt-update-ca-certificates-debianubuntu-python-clients-import-requests-requestsgethttpsvra-prod-01examplelocaliaasapizones-headersauthorization-fbearer-token-verifyetcsslcertsca-certificatescrt"><div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Add Aria Automation CA to the OS trust store on a Linux client</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>cp<span class="w"> </span>internal-ca.pem<span class="w"> </span>/usr/local/share/ca-certificates/internal-ca.crt
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>update-ca-certificates<span class="w">   </span><span class="c1"># Debian/Ubuntu</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Python clients</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>import<span class="w"> </span>requests
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>requests.get<span class="o">(</span><span class="s2">&quot;https://vra-prod-01.example.local/iaas/api/zones&quot;</span>,
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">             </span><span class="nv">headers</span><span class="o">={</span><span class="s2">&quot;Authorization&quot;</span>:<span class="w"> </span>f<span class="s2">&quot;Bearer {token}&quot;</span><span class="o">}</span>,
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">             </span><span class="nv">verify</span><span class="o">=</span><span class="s2">&quot;/etc/ssl/certs/ca-certificates.crt&quot;</span><span class="o">)</span>
 </code></pre></div><a class="headerlink" href="#add-aria-automation-ca-to-the-os-trust-store-on-a-linux-client-cp-internal-capem-usrlocalshareca-certificatesinternal-cacrt-update-ca-certificates-debianubuntu-python-clients-import-requests-requestsgethttpsvra-prod-01examplelocaliaasapizones-headersauthorization-fbearer-token-verifyetcsslcertsca-certificatescrt" title="Permanent link">&para;</a></h2>
 <h2 id="related-reference">Related Reference<a class="headerlink" href="#related-reference" title="Permanent link">&para;</a></h2>
 <ul>

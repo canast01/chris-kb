@@ -7540,25 +7540,7 @@ Ceph support escalation: Red Hat Ceph Storage support case process, community re
     F --&gt; G{Upstream bug?}:::escalate
     G -- Yes --&gt; H([File upstream issue\ntracker.ceph.com]):::community
     G -- No --&gt; I([Config / fix applied\ncase resolved]):::step</code></pre>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>@startuml
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>skinparam sequenceArrowThickness 1.5
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>skinparam roundcorner 5
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>actor &quot;On-Call Engineer&quot; as ENG
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>participant &quot;Ceph\nSystem&quot; as SYS
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>participant &quot;Vendor Support&quot; as SUP
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>ENG -&gt; SYS: Escalation Severity Table
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>SYS --&gt; ENG: Output
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>ENG -&gt; SYS: Red Hat Ceph Storage (RHCS) Support
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>SYS --&gt; ENG: Output
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>ENG -&gt; SYS: Must-Gather for ODF / OpenShift
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>SYS --&gt; ENG: Output
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>ENG -&gt; SUP: Escalate with diagnostic bundle
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>SUP --&gt; ENG: Case / resolution path
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>@enduml
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/plantuml/svg/eNqFkT9PAkEQxfv9FBMqLU5jQUNhMCdCo0dYMDGxGe4GbsMxu-7OSvj2zmH8Q6P1_t6b996Ok2CUvO9M2jkOGHEPid4ycU13MfrDsnX1jikluLka_oKiz9zUPjJFGBqDtfgIg4qLErsOJrx1TBQHgAkmT1OjInG1C8gCg5JC-8r2mIT2J8K-2HPimbhRP5tD8FE-mdXcGLWC4rbnRzBJNXYozjNYeqfo5AhLXHdk9BkKxZQeQZUlZDlTLqiBGQr0OcBqcNwSXCxmpb38Ovmvx2NOUkxRWu2_0ajV_QNcQxWIbes2f-tX8-_0BAcnLTQOt-yTDgBr3bXvsJr_6EtMpO6Rku_yqXHQy8aMdab-7z4A_AuTXA==?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Access:</strong> Storage admin credentials (cluster admin or equivalent)</li>
@@ -7609,61 +7591,61 @@ Ceph support escalation: Red Hat Ceph Storage support case process, community re
 <p><strong>Support portal</strong>: access.redhat.com → Create Case</p>
 <p>Set severity based on the impact table above. For Sev 1, call the Red Hat support phone number displayed on access.redhat.com immediately after opening the case.</p>
 <h3 id="required-information">Required information<a class="headerlink" href="#required-information" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Gather all of the following before opening the case:</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># 1. RHCS version</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>ceph<span class="w"> </span>version
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>ceph<span class="w"> </span>versions<span class="w">       </span><span class="c1"># all daemon versions (useful if mixed during upgrade)</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># 2. Cluster health snapshot</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>ceph<span class="w"> </span>-s<span class="w"> </span>&gt;<span class="w"> </span>/tmp/ceph-status.txt
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>ceph<span class="w"> </span>health<span class="w"> </span>detail<span class="w"> </span>&gt;&gt;<span class="w"> </span>/tmp/ceph-status.txt
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>ceph<span class="w"> </span>osd<span class="w"> </span>tree<span class="w"> </span>&gt;&gt;<span class="w"> </span>/tmp/ceph-status.txt
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>ceph<span class="w"> </span>pg<span class="w"> </span>dump_stuck<span class="w"> </span>&gt;&gt;<span class="w"> </span>/tmp/ceph-status.txt
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>ceph<span class="w"> </span>config<span class="w"> </span>dump<span class="w"> </span>&gt;&gt;<span class="w"> </span>/tmp/ceph-status.txt
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>ceph<span class="w"> </span>crash<span class="w"> </span>ls<span class="w"> </span>&gt;&gt;<span class="w"> </span>/tmp/ceph-status.txt
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="c1"># 3. Crash dumps</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>ceph<span class="w"> </span>crash<span class="w"> </span>info<span class="w"> </span><span class="k">$(</span>ceph<span class="w"> </span>crash<span class="w"> </span>ls<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $1}&#39;</span><span class="k">)</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/crash-dumps.txt
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="c1"># 4. Affected daemon logs (last 2000 lines per daemon)</span>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>ceph<span class="w"> </span>orch<span class="w"> </span>daemon<span class="w"> </span>logs<span class="w"> </span>osd.5<span class="w"> </span>&gt;<span class="w"> </span>/tmp/osd5.log
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>ceph-mon@<span class="k">$(</span>hostname<span class="k">)</span><span class="w"> </span>-n<span class="w"> </span><span class="m">2000</span><span class="w"> </span>--no-pager<span class="w"> </span>&gt;<span class="w"> </span>/tmp/mon.log
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="c1"># 5. sos reports from ALL MON hosts and affected OSD hosts</span>
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>sos<span class="w"> </span>report<span class="w"> </span>-e<span class="w"> </span>ceph<span class="w"> </span>-k<span class="w"> </span>ceph.all<span class="o">=</span><span class="nb">true</span><span class="w"> </span>--batch<span class="w"> </span>--label<span class="w"> </span>ceph
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="c1"># Compress everything for upload</span>
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>tar<span class="w"> </span>czf<span class="w"> </span>ceph-case-data-<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>.tar.gz<span class="w"> </span>/tmp/ceph-*.txt<span class="w"> </span>/tmp/osd*.log<span class="w"> </span>/tmp/mon.log
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Gather all of the following before opening the case:</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c1"># 1. RHCS version</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>ceph<span class="w"> </span>version
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>ceph<span class="w"> </span>versions<span class="w">       </span><span class="c1"># all daemon versions (useful if mixed during upgrade)</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># 2. Cluster health snapshot</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>ceph<span class="w"> </span>-s<span class="w"> </span>&gt;<span class="w"> </span>/tmp/ceph-status.txt
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>ceph<span class="w"> </span>health<span class="w"> </span>detail<span class="w"> </span>&gt;&gt;<span class="w"> </span>/tmp/ceph-status.txt
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>ceph<span class="w"> </span>osd<span class="w"> </span>tree<span class="w"> </span>&gt;&gt;<span class="w"> </span>/tmp/ceph-status.txt
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>ceph<span class="w"> </span>pg<span class="w"> </span>dump_stuck<span class="w"> </span>&gt;&gt;<span class="w"> </span>/tmp/ceph-status.txt
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>ceph<span class="w"> </span>config<span class="w"> </span>dump<span class="w"> </span>&gt;&gt;<span class="w"> </span>/tmp/ceph-status.txt
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>ceph<span class="w"> </span>crash<span class="w"> </span>ls<span class="w"> </span>&gt;&gt;<span class="w"> </span>/tmp/ceph-status.txt
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="c1"># 3. Crash dumps</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>ceph<span class="w"> </span>crash<span class="w"> </span>info<span class="w"> </span><span class="k">$(</span>ceph<span class="w"> </span>crash<span class="w"> </span>ls<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $1}&#39;</span><span class="k">)</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/crash-dumps.txt
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="c1"># 4. Affected daemon logs (last 2000 lines per daemon)</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>ceph<span class="w"> </span>orch<span class="w"> </span>daemon<span class="w"> </span>logs<span class="w"> </span>osd.5<span class="w"> </span>&gt;<span class="w"> </span>/tmp/osd5.log
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>ceph-mon@<span class="k">$(</span>hostname<span class="k">)</span><span class="w"> </span>-n<span class="w"> </span><span class="m">2000</span><span class="w"> </span>--no-pager<span class="w"> </span>&gt;<span class="w"> </span>/tmp/mon.log
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="c1"># 5. sos reports from ALL MON hosts and affected OSD hosts</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>sos<span class="w"> </span>report<span class="w"> </span>-e<span class="w"> </span>ceph<span class="w"> </span>-k<span class="w"> </span>ceph.all<span class="o">=</span><span class="nb">true</span><span class="w"> </span>--batch<span class="w"> </span>--label<span class="w"> </span>ceph
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="c1"># Compress everything for upload</span>
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>tar<span class="w"> </span>czf<span class="w"> </span>ceph-case-data-<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>.tar.gz<span class="w"> </span>/tmp/ceph-*.txt<span class="w"> </span>/tmp/osd*.log<span class="w"> </span>/tmp/mon.log
 </code></pre></div>
 <h2 id="must-gather-for-odf-openshift">Must-Gather for ODF / OpenShift<a class="headerlink" href="#must-gather-for-odf-openshift" title="Permanent link">&para;</a></h2>
 <p>If running Ceph via OpenShift Data Foundation (ODF), use must-gather instead of (or in addition to) sos report:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>oc<span class="w"> </span>adm<span class="w"> </span>must-gather<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span>--image<span class="o">=</span>registry.redhat.io/odf4/odf-must-gather-rhel9
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Output: must-gather.local.&lt;timestamp&gt;/ directory</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Includes: ODF operator logs, Rook-Ceph logs, Ceph health, PVC/PV state, storage class info</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>oc<span class="w"> </span>adm<span class="w"> </span>must-gather<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span>--image<span class="o">=</span>registry.redhat.io/odf4/odf-must-gather-rhel9
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># Output: must-gather.local.&lt;timestamp&gt;/ directory</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Includes: ODF operator logs, Rook-Ceph logs, Ceph health, PVC/PV state, storage class info</span>
 </code></pre></div>
 <h2 id="escalation-path-step-by-step">Escalation Path (Step-by-Step)<a class="headerlink" href="#escalation-path-step-by-step" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>1. Open case at access.redhat.com (RHCS subscription required)
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>   - Set severity based on impact table above
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>   - Attach ceph-case-data bundle + sos reports
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>   - Provide: Ceph version, cluster size (#nodes, #OSDs), symptoms, timeline
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>2. For Sev 1: call Red Hat support immediately after opening case
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>   - Phone number displayed on access.redhat.com
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>3. If no progress in 2–4 hours on Sev 1: request case escalation
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>   - Ask CEE (Customer Engagement Engineer) to escalate to the Ceph engineering team
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>4. If TAM assigned: contact TAM directly for critical situations
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>Community Ceph (upstream, no support contract):
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>  - ceph-users mailing list:  ceph-users@ceph.io
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>  - IRC:                      #ceph on OFTC
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>  - Slack:                    ceph.io/slack
-<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>  - GitHub (bugs):            https://github.com/ceph/ceph/issues
-<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>  - Forum:                    https://forum.ceph.io
-<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>  - Upstream tracker:         tracker.ceph.com
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>1. Open case at access.redhat.com (RHCS subscription required)
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>   - Set severity based on impact table above
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>   - Attach ceph-case-data bundle + sos reports
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>   - Provide: Ceph version, cluster size (#nodes, #OSDs), symptoms, timeline
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>2. For Sev 1: call Red Hat support immediately after opening case
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>   - Phone number displayed on access.redhat.com
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>3. If no progress in 2–4 hours on Sev 1: request case escalation
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>   - Ask CEE (Customer Engagement Engineer) to escalate to the Ceph engineering team
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>4. If TAM assigned: contact TAM directly for critical situations
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>Community Ceph (upstream, no support contract):
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>  - ceph-users mailing list:  ceph-users@ceph.io
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>  - IRC:                      #ceph on OFTC
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>  - Slack:                    ceph.io/slack
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>  - GitHub (bugs):            https://github.com/ceph/ceph/issues
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>  - Forum:                    https://forum.ceph.io
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>  - Upstream tracker:         tracker.ceph.com
 </code></pre></div>
 <h2 id="upstream-bug-filing">Upstream Bug Filing<a class="headerlink" href="#upstream-bug-filing" title="Permanent link">&para;</a></h2>
 <p>When filing a bug at tracker.ceph.com:</p>
@@ -7676,71 +7658,71 @@ Ceph support escalation: Red Hat Ceph Storage support case process, community re
 </ul>
 <h2 id="sanitise-before-sharing">Sanitise Before Sharing<a class="headerlink" href="#sanitise-before-sharing" title="Permanent link">&para;</a></h2>
 <p>Remove auth keys and secrets from all log output before uploading to support portals or public trackers.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check sos report for secrets before sharing</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>grep<span class="w"> </span>-ri<span class="w"> </span><span class="s2">&quot;password\|secret\|key\|token&quot;</span><span class="w"> </span>/var/tmp/sosreport*/
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Remove or redact keyring content from log files</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>sed<span class="w"> </span>-i<span class="w"> </span><span class="s1">&#39;s/key = .*/key = [REDACTED]/g&#39;</span><span class="w"> </span>/tmp/ceph-status.txt
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Use --mask option in newer sos versions to auto-redact</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>sos<span class="w"> </span>report<span class="w"> </span>-e<span class="w"> </span>ceph<span class="w"> </span>-k<span class="w"> </span>ceph.all<span class="o">=</span><span class="nb">true</span><span class="w"> </span>--mask
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Check exported ceph config for sensitive values</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>ceph<span class="w"> </span>config<span class="w"> </span>dump<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;pass|secret|key|token&quot;</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c1"># Never share client.admin keyring content in support cases</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="c1"># Strip key lines from any keyring file before attaching</span>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;^[[:space:]]*key&quot;</span><span class="w"> </span>/etc/ceph/ceph.client.admin.keyring
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Check sos report for secrets before sharing</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>grep<span class="w"> </span>-ri<span class="w"> </span><span class="s2">&quot;password\|secret\|key\|token&quot;</span><span class="w"> </span>/var/tmp/sosreport*/
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Remove or redact keyring content from log files</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>sed<span class="w"> </span>-i<span class="w"> </span><span class="s1">&#39;s/key = .*/key = [REDACTED]/g&#39;</span><span class="w"> </span>/tmp/ceph-status.txt
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Use --mask option in newer sos versions to auto-redact</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>sos<span class="w"> </span>report<span class="w"> </span>-e<span class="w"> </span>ceph<span class="w"> </span>-k<span class="w"> </span>ceph.all<span class="o">=</span><span class="nb">true</span><span class="w"> </span>--mask
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Check exported ceph config for sensitive values</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>ceph<span class="w"> </span>config<span class="w"> </span>dump<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;pass|secret|key|token&quot;</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c1"># Never share client.admin keyring content in support cases</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="c1"># Strip key lines from any keyring file before attaching</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;^[[:space:]]*key&quot;</span><span class="w"> </span>/etc/ceph/ceph.client.admin.keyring
 </code></pre></div>
 <h2 id="emergency-recovery-commands">Emergency Recovery Commands<a class="headerlink" href="#emergency-recovery-commands" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Cluster completely unresponsive — emergency recovery steps:</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># 1. Check MON quorum (minimum 2 of 3 must be up)</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>ceph<span class="w"> </span>mon<span class="w"> </span>stat
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>ceph<span class="w"> </span>quorum_status
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># 2. If no quorum: check MON services on each host</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="k">for</span><span class="w"> </span>host<span class="w"> </span><span class="k">in</span><span class="w"> </span>ceph-node1<span class="w"> </span>ceph-node2<span class="w"> </span>ceph-node3<span class="p">;</span><span class="w"> </span><span class="k">do</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">  </span>ssh<span class="w"> </span><span class="nv">$host</span><span class="w"> </span><span class="s2">&quot;systemctl status ceph-mon@</span><span class="nv">$host</span><span class="s2">&quot;</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="k">done</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="c1"># 3. Restart failed MONs</span>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>ceph-mon@&lt;id&gt;
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>ceph<span class="w"> </span>orch<span class="w"> </span>daemon<span class="w"> </span>restart<span class="w"> </span>mon.&lt;hostname&gt;
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="c1"># 4. Cluster full stop (halt all writes for investigation)</span>
-<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>ceph<span class="w"> </span>osd<span class="w"> </span><span class="nb">set</span><span class="w"> </span>pause<span class="w">   </span><span class="c1"># pause all OSD I/O</span>
-<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="c1"># Resume:</span>
-<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>ceph<span class="w"> </span>osd<span class="w"> </span><span class="nb">unset</span><span class="w"> </span>pause
-<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>
-<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a><span class="c1"># 5. Recover MON from monmap (advanced — contact support first)</span>
-<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a><span class="c1"># ceph-mon --extract-monmap /tmp/monmap --mon-data /var/lib/ceph/mon/ceph-$host</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Cluster completely unresponsive — emergency recovery steps:</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># 1. Check MON quorum (minimum 2 of 3 must be up)</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>ceph<span class="w"> </span>mon<span class="w"> </span>stat
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>ceph<span class="w"> </span>quorum_status
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># 2. If no quorum: check MON services on each host</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="k">for</span><span class="w"> </span>host<span class="w"> </span><span class="k">in</span><span class="w"> </span>ceph-node1<span class="w"> </span>ceph-node2<span class="w"> </span>ceph-node3<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">  </span>ssh<span class="w"> </span><span class="nv">$host</span><span class="w"> </span><span class="s2">&quot;systemctl status ceph-mon@</span><span class="nv">$host</span><span class="s2">&quot;</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="k">done</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="c1"># 3. Restart failed MONs</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>ceph-mon@&lt;id&gt;
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>ceph<span class="w"> </span>orch<span class="w"> </span>daemon<span class="w"> </span>restart<span class="w"> </span>mon.&lt;hostname&gt;
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="c1"># 4. Cluster full stop (halt all writes for investigation)</span>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>ceph<span class="w"> </span>osd<span class="w"> </span><span class="nb">set</span><span class="w"> </span>pause<span class="w">   </span><span class="c1"># pause all OSD I/O</span>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="c1"># Resume:</span>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>ceph<span class="w"> </span>osd<span class="w"> </span><span class="nb">unset</span><span class="w"> </span>pause
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a><span class="c1"># 5. Recover MON from monmap (advanced — contact support first)</span>
+<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a><span class="c1"># ceph-mon --extract-monmap /tmp/monmap --mon-data /var/lib/ceph/mon/ceph-$host</span>
 </code></pre></div>
 <h2 id="pre-case-self-service-checklist">Pre-Case Self-Service Checklist<a class="headerlink" href="#pre-case-self-service-checklist" title="Permanent link">&para;</a></h2>
 <p>Before opening a support case, check the Red Hat Knowledge Base for known solutions:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>1. Go to access.redhat.com/search
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>2. Search for the exact HEALTH code: e.g. &quot;OSD_FULL&quot; or &quot;PG_INACTIVE&quot;
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>3. Filter by product: Red Hat Ceph Storage
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>4. Check top solutions — most common issues have a KCS article
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>Common KCS articles:
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>  - &quot;How to recover from a full Ceph cluster&quot;
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>  - &quot;Ceph MON quorum lost recovery steps&quot;
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>  - &quot;AUTH_INSECURE_GLOBAL_ID_RECLAIM explained and remediation&quot;
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>  - &quot;Clock skew between Ceph Monitor nodes&quot;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>1. Go to access.redhat.com/search
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>2. Search for the exact HEALTH code: e.g. &quot;OSD_FULL&quot; or &quot;PG_INACTIVE&quot;
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>3. Filter by product: Red Hat Ceph Storage
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>4. Check top solutions — most common issues have a KCS article
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>Common KCS articles:
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>  - &quot;How to recover from a full Ceph cluster&quot;
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>  - &quot;Ceph MON quorum lost recovery steps&quot;
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>  - &quot;AUTH_INSECURE_GLOBAL_ID_RECLAIM explained and remediation&quot;
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>  - &quot;Clock skew between Ceph Monitor nodes&quot;
 </code></pre></div>
 <h2 id="ceph-version-and-support-lifecycle">Ceph Version and Support Lifecycle<a class="headerlink" href="#ceph-version-and-support-lifecycle" title="Permanent link">&para;</a></h2>
 <p>Check the RHCS support lifecycle before opening a case — running an end-of-life version may limit support options.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Check running version</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>ceph<span class="w"> </span>version
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># List all daemon versions (important during rolling upgrades)</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>ceph<span class="w"> </span>versions
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># RHCS support lifecycle:</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="c1"># RHCS 5 (Octopus-based): check access.redhat.com for EOL date</span>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="c1"># RHCS 6 (Quincy-based):  current; full support</span>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="c1"># RHCS 7 (Reef-based):    current; full support</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Check running version</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>ceph<span class="w"> </span>version
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># List all daemon versions (important during rolling upgrades)</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>ceph<span class="w"> </span>versions
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># RHCS support lifecycle:</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># RHCS 5 (Octopus-based): check access.redhat.com for EOL date</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1"># RHCS 6 (Quincy-based):  current; full support</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># RHCS 7 (Reef-based):    current; full support</span>
 </code></pre></div>
 <h2 id="information-to-include-in-every-case">Information to Include in Every Case<a class="headerlink" href="#information-to-include-in-every-case" title="Permanent link">&para;</a></h2>
 <p>When filing any Ceph support case, always include the following regardless of severity. Missing information adds round-trip delay.</p>

@@ -9906,74 +9906,58 @@ Use this when a VM cannot communicate on the network — applies to both NSX-T o
 <a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>                                │ vNIC → analyse in Wireshark │
 <a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>                                └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>direction: right
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>center: &quot;Quick Reference&quot; {shape: rectangle}
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>step_1_basic_connectivity_test: &quot;Step 1 — Basic Connectivity Test&quot; {shape: rectangle}
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>step_2_vlan_segment_issue: &quot;Step 2 — VLAN / Segment Issue&quot; {shape: rectangle}
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>step_3_mtu_check: &quot;Step 3 — MTU Check&quot; {shape: rectangle}
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>step_4_routing_issue: &quot;Step 4 — Routing Issue&quot; {shape: rectangle}
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>step_5_nsx_distributed_firewall_dfw: &quot;Step 5 — NSX Distributed Firewall (DFW)&quot; {shape: rectangle}
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>step_6_packet_capture: &quot;Step 6 — Packet Capture&quot; {shape: rectangle}
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>center -&gt; step_1_basic_connectivity_test
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>center -&gt; step_2_vlan_segment_issue
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>center -&gt; step_3_mtu_check
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>center -&gt; step_4_routing_issue
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>center -&gt; step_5_nsx_distributed_firewall_dfw
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>center -&gt; step_6_packet_capture
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqFkU1PwkAQhu_9FRNOejCGzwMHE4WQmChRwI_bZNkOZdOybXanoDEm_gh_ob_EbQuKG4rXfZ95djJvqAxJVqnug1HRkoNAkmYyfWjc50rGMKEFGdKSGvBmlyIjB7oJoaOE3gPLlGET58IqiTLVupCtFb8ik2UnmToAmvD18QlXBQSDPQhmDqr3tnCdCI2WopXbCZW1Oe2UrVL5eHM5hnOYVgRcF0S9r40rzlEuScY7TbvU3M4eYFA818920KQ5Kx39XaNTzk-q6L__u6jtC4bKslHznCnEhbv-RiQJhovNTtktlePpMwx_SRhtSTgZjp5O6__oYSZkTIxSZJybn0V7pfWuzGBQZQct2_7h7AKOl-uDh9rymb0G_Mg7sB8fv51P-1cIvgEf0hC9?" /></p>
 <h2 id="step-1-basic-connectivity-test">Step 1 — Basic Connectivity Test<a class="headerlink" href="#step-1-basic-connectivity-test" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># From within the VM</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ping<span class="w"> </span>-c<span class="w"> </span><span class="m">4</span><span class="w"> </span>&lt;gateway-ip&gt;
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>ping<span class="w"> </span>-c<span class="w"> </span><span class="m">4</span><span class="w"> </span><span class="m">8</span>.8.8.8
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>traceroute<span class="w"> </span>&lt;destination&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># From within the VM</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ping<span class="w"> </span>-c<span class="w"> </span><span class="m">4</span><span class="w"> </span>&lt;gateway-ip&gt;
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>ping<span class="w"> </span>-c<span class="w"> </span><span class="m">4</span><span class="w"> </span><span class="m">8</span>.8.8.8
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>traceroute<span class="w"> </span>&lt;destination&gt;
 </code></pre></div>
 <p><strong>Cannot ping gateway</strong> → Step 2 (L2/VLAN issue)
 <strong>Can ping gateway, not destination</strong> → Step 4 (routing/firewall issue)</p>
 <h2 id="step-2-vlan-segment-issue">Step 2 — VLAN / Segment Issue<a class="headerlink" href="#step-2-vlan-segment-issue" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Check VM&#39;s port group assignment</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Get-VM</span> <span class="n">-Name</span> <span class="p">&lt;</span><span class="n">vm_name</span><span class="p">&gt;</span> <span class="p">|</span> <span class="nb">Get-NetworkAdapter</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">NetworkName</span><span class="p">,</span> <span class="n">ConnectionState</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c"># Check port group VLAN ID (for standard/distributed vSwitch)</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="nb">Get-VDPortgroup</span> <span class="n">-Name</span> <span class="p">&lt;</span><span class="n">portgroup</span><span class="p">&gt;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">VlanConfiguration</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Check VM&#39;s port group assignment</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">Get-VM</span> <span class="n">-Name</span> <span class="p">&lt;</span><span class="n">vm_name</span><span class="p">&gt;</span> <span class="p">|</span> <span class="nb">Get-NetworkAdapter</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">NetworkName</span><span class="p">,</span> <span class="n">ConnectionState</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c"># Check port group VLAN ID (for standard/distributed vSwitch)</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nb">Get-VDPortgroup</span> <span class="n">-Name</span> <span class="p">&lt;</span><span class="n">portgroup</span><span class="p">&gt;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">VlanConfiguration</span>
 </code></pre></div>
 <p>For NSX overlay segments:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check segment exists and is connected to the correct tier-1</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>GET<span class="w"> </span>/api/v1/logical-switches?display_name<span class="o">=</span>&lt;segment-name&gt;
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># Verify attached to correct tier-1 gateway</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Check segment exists and is connected to the correct tier-1</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>GET<span class="w"> </span>/api/v1/logical-switches?display_name<span class="o">=</span>&lt;segment-name&gt;
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># Verify attached to correct tier-1 gateway</span>
 </code></pre></div></p>
 <p><strong>Port group/segment misconfigured</strong> → Correct assignment and re-test.</p>
 <h2 id="step-3-mtu-check">Step 3 — MTU Check<a class="headerlink" href="#step-3-mtu-check" title="Permanent link">&para;</a></h2>
 <p>VM-to-gateway communication failures can be caused by MTU mismatch (especially in NSX environments where the recommended MTU is 1600+):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># From VM — test with large packet (NSX requires MTU ≥ 1600 on uplinks)</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>ping<span class="w"> </span>-M<span class="w"> </span><span class="k">do</span><span class="w"> </span>-s<span class="w"> </span><span class="m">1500</span><span class="w"> </span>&lt;gateway-ip&gt;<span class="w">   </span><span class="c1"># Linux</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>ping<span class="w"> </span>-f<span class="w"> </span>-l<span class="w"> </span><span class="m">1472</span><span class="w"> </span>&lt;gateway-ip&gt;<span class="w">      </span><span class="c1"># Windows (1472 + 28 headers = 1500 bytes)</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># On ESXi host — check vmnic MTU</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>esxcfg-nics<span class="w"> </span>-l<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Name|MTU&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># From VM — test with large packet (NSX requires MTU ≥ 1600 on uplinks)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ping<span class="w"> </span>-M<span class="w"> </span><span class="k">do</span><span class="w"> </span>-s<span class="w"> </span><span class="m">1500</span><span class="w"> </span>&lt;gateway-ip&gt;<span class="w">   </span><span class="c1"># Linux</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>ping<span class="w"> </span>-f<span class="w"> </span>-l<span class="w"> </span><span class="m">1472</span><span class="w"> </span>&lt;gateway-ip&gt;<span class="w">      </span><span class="c1"># Windows (1472 + 28 headers = 1500 bytes)</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># On ESXi host — check vmnic MTU</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>esxcfg-nics<span class="w"> </span>-l<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Name|MTU&quot;</span>
 </code></pre></div>
 <p><strong>Packet loss on large packets</strong> → MTU mismatch on physical switch, dvSwitch, or NSX TEP VLAN.</p>
 <h2 id="step-4-routing-issue">Step 4 — Routing Issue<a class="headerlink" href="#step-4-routing-issue" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># From VM</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>ip<span class="w"> </span>route<span class="w"> </span>show<span class="w">   </span><span class="c1"># Confirm default gateway is correct</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>route<span class="w"> </span>print<span class="w">     </span><span class="c1"># Windows</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># From a Linux jump host on the same segment</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>traceroute<span class="w"> </span>&lt;destination&gt;<span class="w">   </span><span class="c1"># Where does it drop?</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># From VM</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>ip<span class="w"> </span>route<span class="w"> </span>show<span class="w">   </span><span class="c1"># Confirm default gateway is correct</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>route<span class="w"> </span>print<span class="w">     </span><span class="c1"># Windows</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># From a Linux jump host on the same segment</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>traceroute<span class="w"> </span>&lt;destination&gt;<span class="w">   </span><span class="c1"># Where does it drop?</span>
 </code></pre></div>
 <p>If traffic drops at the tier-0 edge:
 - Check BGP peer state on the edge node:
-  <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>get<span class="w"> </span>bgp<span class="w"> </span>neighbor<span class="w"> </span>summary<span class="w">   </span><span class="c1"># All peers should be Established</span>
+  <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>get<span class="w"> </span>bgp<span class="w"> </span>neighbor<span class="w"> </span>summary<span class="w">   </span><span class="c1"># All peers should be Established</span>
 </code></pre></div>
 - Verify edge uplink connectivity to the physical router</p>
 <h2 id="step-5-nsx-distributed-firewall-dfw">Step 5 — NSX Distributed Firewall (DFW)<a class="headerlink" href="#step-5-nsx-distributed-firewall-dfw" title="Permanent link">&para;</a></h2>
 <p>If L2 and routing are confirmed working:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Check DFW rules applied to the VM — from ESXi host where VM runs</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>vsipioctl<span class="w"> </span>getrules<span class="w"> </span>-f<span class="w"> </span>&lt;filter-name&gt;<span class="w">   </span><span class="c1"># Get filter name from VM&#39;s vmx file</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Get VM&#39;s DFW filter name</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>summarize-dvfilter<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A<span class="w"> </span><span class="m">5</span><span class="w"> </span>&lt;vm-name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Check DFW rules applied to the VM — from ESXi host where VM runs</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>vsipioctl<span class="w"> </span>getrules<span class="w"> </span>-f<span class="w"> </span>&lt;filter-name&gt;<span class="w">   </span><span class="c1"># Get filter name from VM&#39;s vmx file</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Get VM&#39;s DFW filter name</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>summarize-dvfilter<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A<span class="w"> </span><span class="m">5</span><span class="w"> </span>&lt;vm-name&gt;
 </code></pre></div>
 <p>Look for DENY rules matching the traffic flow. Check in NSX Manager:
 - Policy → Security → Gateway Firewall and Distributed Firewall
@@ -9981,11 +9965,11 @@ Use this when a VM cannot communicate on the network — applies to both NSX-T o
   NSX Manager → Plan &amp; Troubleshoot → Traffic Analysis</p>
 <h2 id="step-6-packet-capture">Step 6 — Packet Capture<a class="headerlink" href="#step-6-packet-capture" title="Permanent link">&para;</a></h2>
 <p>If still unresolved, capture on the relevant interface:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Capture on VM&#39;s vNIC from ESXi host</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>pktcap-uw<span class="w"> </span>--switchport<span class="w"> </span>&lt;port-id&gt;<span class="w"> </span>--proto<span class="w"> </span>0x0800<span class="w"> </span>-o<span class="w"> </span>/tmp/capture.pcap
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Get port ID</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>net-dvs<span class="w"> </span>-l<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A<span class="w"> </span><span class="m">10</span><span class="w"> </span>&lt;vm-name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Capture on VM&#39;s vNIC from ESXi host</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>pktcap-uw<span class="w"> </span>--switchport<span class="w"> </span>&lt;port-id&gt;<span class="w"> </span>--proto<span class="w"> </span>0x0800<span class="w"> </span>-o<span class="w"> </span>/tmp/capture.pcap
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Get port ID</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>net-dvs<span class="w"> </span>-l<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A<span class="w"> </span><span class="m">10</span><span class="w"> </span>&lt;vm-name&gt;
 </code></pre></div>
 <p>Analyse with Wireshark: download from <code>/tmp/capture.pcap</code> via SCP.</p>
 

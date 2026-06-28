@@ -10734,23 +10734,7 @@ to allow restarts, recovering the cluster, and preventing a recurrence through p
 *Applies to: vSphere 7.x / 8.x*
 </div>
 <p><img alt="HA Admission Control Breach / Failover Storm" src="../../../../../assets/virtualization-vmware-topics-scenarios-ha-admission-control-.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>center: &quot;Scenarios&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>products_involved: &quot;Products Involved&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>1_confirm_the_breach_how_many_hosts_: &quot;1. Confirm the Breach — How Many Hosts Failed and What Remai&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>2_triage_which_vms_are_critical: &quot;2. Triage — Which VMs Are Critical&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>3_assess_remaining_cluster_resources: &quot;3. Assess Remaining Cluster Resources&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>4_option_a_recover_a_failed_host_bes: &quot;4. Option A — Recover a Failed Host (Best Path)&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>5_option_b_temporarily_lower_admissi: &quot;5. Option B — Temporarily Lower Admission Control Reservatio&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>center -&gt; products_involved
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>center -&gt; 1_confirm_the_breach_how_many_hosts_
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>center -&gt; 2_triage_which_vms_are_critical
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>center -&gt; 3_assess_remaining_cluster_resources
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>center -&gt; 4_option_a_recover_a_failed_host_bes
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>center -&gt; 5_option_b_temporarily_lower_admissi
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNks1KxDAQgO99isGTHlzw77IHYXdBFBRFRY_DbDo2gTZZkmxXEcGH8Al9Eidp1YIF91KG6Zf5kpkpjWcVjbNT8KbSsSgU28h-Cjt3EpE3LuzAa9C04ilofqbK2bdi5V25VjGgsa2rWy6Fv-lzcNHnfs8lB9mq5rfiAJWzT8Y3GDXj0jMpjdptsCH7IkGQolLsYAKLjgPhYJ45-Hz_gHO3gSthJRAWzsjUXALZEh41Rbjlhsyo-RCjN1QxbrQRZ9sEJM-ovIlGUS3SwwncZySLHhMGD1cBZp5h0WOjpY-QQuAQ0Ce7NbZCVa-D9FEywa294iD1jyYwy1x3y8TBouMk03OjgmN0qzQlJCmoXCuFCZ_y03PPcJkFxxO4zhzM8hNuOxbou02pZ7A7Z_neUNR7o7KTb9kSIzcr52UL6hes3SZpy8aEYER28iObZ9n9LwuXiYVZxwohs4ze1emV7FuSU6Pmfvlg_xT-bNjg3zY7NMD_GfyA3GaOA3ybqQzwbfpafAHH7FHv?" /></p>
 <h2 id="products-involved">Products Involved<a class="headerlink" href="#products-involved" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -10785,156 +10769,156 @@ to allow restarts, recovering the cluster, and preventing a recurrence through p
 <hr />
 <h2 id="1-confirm-the-breach-how-many-hosts-failed-and-what-remains">1. Confirm the Breach — How Many Hosts Failed and What Remains<a class="headerlink" href="#1-confirm-the-breach-how-many-hosts-failed-and-what-remains" title="Permanent link">&para;</a></h2>
 <p>Go to <strong>vCenter → Cluster → Monitor → vSphere HA</strong> to see the current state of HA and which VMs could not be restarted.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Cluster → Monitor → vSphere HA → Summary
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  Protected VMs         — VMs monitored by HA and eligible for restart
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  Unprotected VMs       — VMs with HA restart priority = Disabled
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  Current failover capacity (%) — how much capacity HA currently has available
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>  Configured failover capacity (%) — your admission control reservation
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>If Current &lt; Configured: breach is active. HA is blocking or deferring restarts.
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Cluster → Monitor → vSphere HA → Summary
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>  Protected VMs         — VMs monitored by HA and eligible for restart
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>  Unprotected VMs       — VMs with HA restart priority = Disabled
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>  Current failover capacity (%) — how much capacity HA currently has available
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>  Configured failover capacity (%) — your admission control reservation
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>If Current &lt; Configured: breach is active. HA is blocking or deferring restarts.
 </code></pre></div>
 <p>Navigate to <strong>Cluster → Monitor → vSphere HA → VM Restarts</strong> and filter by Status = "Insufficient resources" — this lists every VM HA tried to restart but could not place.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Get the HA cluster status including admission control state</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nv">$cluster</span> <span class="p">=</span> <span class="nb">Get-Cluster</span> <span class="s2">&quot;cluster-name&quot;</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nv">$das</span> <span class="p">=</span> <span class="nv">$cluster</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">Configuration</span><span class="p">.</span><span class="n">DasConfig</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="nb">Write-Host</span> <span class="s2">&quot;HA Enabled: </span><span class="p">$(</span><span class="nv">$das</span><span class="p">.</span><span class="n">Enabled</span><span class="p">)</span><span class="s2">&quot;</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nb">Write-Host</span> <span class="s2">&quot;Admission Control Enabled: </span><span class="p">$(</span><span class="nv">$das</span><span class="p">.</span><span class="n">AdmissionControlEnabled</span><span class="p">)</span><span class="s2">&quot;</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c"># List VMs that HA attempted but could not place</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="nv">$cluster</span> <span class="p">|</span> <span class="nb">Get-VMHost</span> <span class="p">|</span> <span class="nb">Get-VM</span> <span class="p">`</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>  <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">PowerState</span> <span class="o">-eq</span> <span class="s2">&quot;PoweredOff&quot;</span> <span class="p">}</span> <span class="p">`</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>  <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">VMHost</span><span class="p">,</span> <span class="n">NumCpu</span><span class="p">,</span> <span class="n">MemoryGB</span> <span class="p">`</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>  <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">MemoryGB</span> <span class="n">-Descending</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Get the HA cluster status including admission control state</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nv">$cluster</span> <span class="p">=</span> <span class="nb">Get-Cluster</span> <span class="s2">&quot;cluster-name&quot;</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nv">$das</span> <span class="p">=</span> <span class="nv">$cluster</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">Configuration</span><span class="p">.</span><span class="n">DasConfig</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="nb">Write-Host</span> <span class="s2">&quot;HA Enabled: </span><span class="p">$(</span><span class="nv">$das</span><span class="p">.</span><span class="n">Enabled</span><span class="p">)</span><span class="s2">&quot;</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nb">Write-Host</span> <span class="s2">&quot;Admission Control Enabled: </span><span class="p">$(</span><span class="nv">$das</span><span class="p">.</span><span class="n">AdmissionControlEnabled</span><span class="p">)</span><span class="s2">&quot;</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c"># List VMs that HA attempted but could not place</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="nv">$cluster</span> <span class="p">|</span> <span class="nb">Get-VMHost</span> <span class="p">|</span> <span class="nb">Get-VM</span> <span class="p">`</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>  <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">PowerState</span> <span class="o">-eq</span> <span class="s2">&quot;PoweredOff&quot;</span> <span class="p">}</span> <span class="p">`</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>  <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">VMHost</span><span class="p">,</span> <span class="n">NumCpu</span><span class="p">,</span> <span class="n">MemoryGB</span> <span class="p">`</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>  <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">MemoryGB</span> <span class="n">-Descending</span>
 </code></pre></div>
 <hr />
 <h2 id="2-triage-which-vms-are-critical">2. Triage — Which VMs Are Critical<a class="headerlink" href="#2-triage-which-vms-are-critical" title="Permanent link">&para;</a></h2>
 <p>Before touching HA policy or attempting manual placement, triage the powered-off VM list into priority tiers. Trying to restart everything at once when resources are constrained will cause all restarts to fail.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Priority tier framework:
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  Tier 1 — Production-impacting: databases, ERP, identity services, monitoring infrastructure
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  Tier 2 — Business-impacting: email, file servers, internal tools
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>  Tier 3 — Non-critical: test, dev, batch, analytics
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>HA restart priority levels (configured per VM):
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>  High        → HA restarts these first
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>  Medium      → second priority
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>  Low         → third priority
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>  Disabled    → HA never restarts; manual action required
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>  Cluster default → inherits cluster default restart priority setting
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Priority tier framework:
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>  Tier 1 — Production-impacting: databases, ERP, identity services, monitoring infrastructure
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>  Tier 2 — Business-impacting: email, file servers, internal tools
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>  Tier 3 — Non-critical: test, dev, batch, analytics
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>HA restart priority levels (configured per VM):
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>  High        → HA restarts these first
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>  Medium      → second priority
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>  Low         → third priority
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>  Disabled    → HA never restarts; manual action required
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>  Cluster default → inherits cluster default restart priority setting
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># List all powered-off VMs with their HA restart priority</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">Get-Cluster</span> <span class="s2">&quot;cluster-name&quot;</span> <span class="p">|</span> <span class="nb">Get-VM</span> <span class="p">`</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>  <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">PowerState</span> <span class="o">-eq</span> <span class="s2">&quot;PoweredOff&quot;</span> <span class="p">}</span> <span class="p">`</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>  <span class="p">|</span> <span class="nb">Get-VMRestartPriority</span> <span class="p">`</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>  <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">VM</span><span class="p">,</span> <span class="n">RestartPriority</span> <span class="p">`</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>  <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">RestartPriority</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># List all powered-off VMs with their HA restart priority</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Get-Cluster</span> <span class="s2">&quot;cluster-name&quot;</span> <span class="p">|</span> <span class="nb">Get-VM</span> <span class="p">`</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">PowerState</span> <span class="o">-eq</span> <span class="s2">&quot;PoweredOff&quot;</span> <span class="p">}</span> <span class="p">`</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>  <span class="p">|</span> <span class="nb">Get-VMRestartPriority</span> <span class="p">`</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>  <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">VM</span><span class="p">,</span> <span class="n">RestartPriority</span> <span class="p">`</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>  <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">RestartPriority</span>
 </code></pre></div>
 <p>Look for: VMs with <code>RestartPriority = Disabled</code> will never be automatically restarted — these require manual intervention regardless of available capacity.</p>
 <hr />
 <h2 id="3-assess-remaining-cluster-resources">3. Assess Remaining Cluster Resources<a class="headerlink" href="#3-assess-remaining-cluster-resources" title="Permanent link">&para;</a></h2>
 <p>Calculate whether the surviving hosts can physically accommodate Tier 1 VMs even if admission control is temporarily relaxed.</p>
 <p>Navigate to <strong>Cluster → Monitor → Utilisation</strong> to view CPU and memory usage per host in real time.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># Get per-host CPU and memory stats</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">Get-Cluster</span> <span class="s2">&quot;cluster-name&quot;</span> <span class="p">|</span> <span class="nb">Get-VMHost</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="p">`</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;CPU GHz Free&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span> <span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">((</span><span class="nv">$_</span><span class="p">.</span><span class="n">CpuTotalMhz</span> <span class="p">-</span> <span class="nv">$_</span><span class="p">.</span><span class="n">CpuUsageMhz</span><span class="p">)/</span><span class="n">1000</span><span class="p">,</span> <span class="n">1</span><span class="p">)</span> <span class="p">}},</span> <span class="p">`</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>  <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;RAM GB Free&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span> <span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">MemoryTotalGB</span> <span class="p">-</span> <span class="nv">$_</span><span class="p">.</span><span class="n">MemoryUsageGB</span><span class="p">,</span> <span class="n">1</span><span class="p">)</span> <span class="p">}},</span> <span class="p">`</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>  <span class="n">ConnectionState</span> <span class="p">`</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>  <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="s2">&quot;RAM GB Free&quot;</span> <span class="n">-Descending</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c"># Sum the CPU and RAM requirements of all powered-off priority VMs</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="nb">Get-Cluster</span> <span class="s2">&quot;cluster-name&quot;</span> <span class="p">|</span> <span class="nb">Get-VM</span> <span class="p">`</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>  <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">PowerState</span> <span class="o">-eq</span> <span class="s2">&quot;PoweredOff&quot;</span> <span class="p">}</span> <span class="p">`</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>  <span class="p">|</span> <span class="nb">Measure-Object</span> <span class="n">-Property</span> <span class="n">NumCpu</span><span class="p">,</span> <span class="n">MemoryGB</span> <span class="n">-Sum</span> <span class="p">`</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>  <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Property</span><span class="p">,</span> <span class="n">Sum</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Get per-host CPU and memory stats</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">Get-Cluster</span> <span class="s2">&quot;cluster-name&quot;</span> <span class="p">|</span> <span class="nb">Get-VMHost</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="p">`</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>  <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;CPU GHz Free&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span> <span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">((</span><span class="nv">$_</span><span class="p">.</span><span class="n">CpuTotalMhz</span> <span class="p">-</span> <span class="nv">$_</span><span class="p">.</span><span class="n">CpuUsageMhz</span><span class="p">)/</span><span class="n">1000</span><span class="p">,</span> <span class="n">1</span><span class="p">)</span> <span class="p">}},</span> <span class="p">`</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>  <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;RAM GB Free&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span> <span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">MemoryTotalGB</span> <span class="p">-</span> <span class="nv">$_</span><span class="p">.</span><span class="n">MemoryUsageGB</span><span class="p">,</span> <span class="n">1</span><span class="p">)</span> <span class="p">}},</span> <span class="p">`</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>  <span class="n">ConnectionState</span> <span class="p">`</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>  <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="s2">&quot;RAM GB Free&quot;</span> <span class="n">-Descending</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c"># Sum the CPU and RAM requirements of all powered-off priority VMs</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="nb">Get-Cluster</span> <span class="s2">&quot;cluster-name&quot;</span> <span class="p">|</span> <span class="nb">Get-VM</span> <span class="p">`</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>  <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">PowerState</span> <span class="o">-eq</span> <span class="s2">&quot;PoweredOff&quot;</span> <span class="p">}</span> <span class="p">`</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>  <span class="p">|</span> <span class="nb">Measure-Object</span> <span class="n">-Property</span> <span class="n">NumCpu</span><span class="p">,</span> <span class="n">MemoryGB</span> <span class="n">-Sum</span> <span class="p">`</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>  <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Property</span><span class="p">,</span> <span class="n">Sum</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Decision framework:
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>  Free RAM on surviving hosts &gt; Sum of Tier 1 VM RAM  → restart Tier 1 first; assess Tier 2 after
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>  Free RAM barely covers Tier 1                       → restart Tier 1 only; hold Tier 2 until host recovered
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>  Free RAM insufficient even for Tier 1               → emergency: need a host back or an emergency add
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Decision framework:
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  Free RAM on surviving hosts &gt; Sum of Tier 1 VM RAM  → restart Tier 1 first; assess Tier 2 after
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  Free RAM barely covers Tier 1                       → restart Tier 1 only; hold Tier 2 until host recovered
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>  Free RAM insufficient even for Tier 1               → emergency: need a host back or an emergency add
 </code></pre></div>
 <hr />
 <h2 id="4-option-a-recover-a-failed-host-best-path">4. Option A — Recover a Failed Host (Best Path)<a class="headerlink" href="#4-option-a-recover-a-failed-host-best-path" title="Permanent link">&para;</a></h2>
 <p>If the failed hosts are recoverable (power failure, management network loss, transient hardware error), restoring even one host is the fastest path to resolution because it restores both capacity and HA re-arms admission control.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Check iDRAC/iLO status of failed hosts</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="c1"># For Dell VxRail hosts — check iDRAC chassis event log</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>racadm<span class="w"> </span>getsel<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-30
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1"># For standalone ESXi hosts — verify power state via iDRAC/iLO remote console</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="c1"># Attempt remote power-on if host is off</span>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>racadm<span class="w"> </span>serveraction<span class="w"> </span>powerup
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Check iDRAC/iLO status of failed hosts</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># For Dell VxRail hosts — check iDRAC chassis event log</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>racadm<span class="w"> </span>getsel<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-30
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># For standalone ESXi hosts — verify power state via iDRAC/iLO remote console</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># Attempt remote power-on if host is off</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>racadm<span class="w"> </span>serveraction<span class="w"> </span>powerup
 </code></pre></div>
 <p>Once a host is recovered and reconnects to vCenter, HA automatically re-evaluates VM placement and restarts any VMs still in "Insufficient resources" state — you do not need to manually trigger restarts.</p>
 <p>Monitor reconnection:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># On the recovering host after SSH access restored</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>service-control<span class="w"> </span>--status<span class="w"> </span>--all<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>stopped
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>/etc/init.d/vmware-fdm<span class="w"> </span>status
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># On the recovering host after SSH access restored</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>service-control<span class="w"> </span>--status<span class="w"> </span>--all<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>stopped
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>/etc/init.d/vmware-fdm<span class="w"> </span>status
 </code></pre></div>
 <hr />
 <h2 id="5-option-b-temporarily-lower-admission-control-reservation">5. Option B — Temporarily Lower Admission Control Reservation<a class="headerlink" href="#5-option-b-temporarily-lower-admission-control-reservation" title="Permanent link">&para;</a></h2>
 <p>If hosts cannot be immediately recovered and critical VMs must be restarted now, temporarily relax the admission control policy to allow HA to use the remaining capacity.</p>
 <p>Navigate to <strong>Cluster → Configure → vSphere Availability → Edit → Admission Control</strong>.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Admission control policy options:
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>  Cluster resource percentage    → HA reserves X% of cluster CPU and RAM for failover
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>  Slot policy (number of hosts)  → HA reserves capacity equal to N host failures
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>  Dedicated failover hosts       → specific hosts kept empty as failover reservation
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>To temporarily allow restarts beyond the normal reservation:
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>  1. Change &quot;Host failures cluster tolerates&quot; from 2 to 1 (or 1 to 0 for absolute emergency)
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>  2. Or: temporarily disable admission control (set to &quot;Disabled&quot;)
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>  3. Power on Tier 1 VMs — HA will now allow placement
-<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>  4. Restore admission control setting once a host is recovered
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Admission control policy options:
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>  Cluster resource percentage    → HA reserves X% of cluster CPU and RAM for failover
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>  Slot policy (number of hosts)  → HA reserves capacity equal to N host failures
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>  Dedicated failover hosts       → specific hosts kept empty as failover reservation
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>To temporarily allow restarts beyond the normal reservation:
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>  1. Change &quot;Host failures cluster tolerates&quot; from 2 to 1 (or 1 to 0 for absolute emergency)
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>  2. Or: temporarily disable admission control (set to &quot;Disabled&quot;)
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>  3. Power on Tier 1 VMs — HA will now allow placement
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>  4. Restore admission control setting once a host is recovered
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c"># Check current admission control setting</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="nv">$cluster</span> <span class="p">=</span> <span class="nb">Get-Cluster</span> <span class="s2">&quot;cluster-name&quot;</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="nv">$das</span> <span class="p">=</span> <span class="nv">$cluster</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">Configuration</span><span class="p">.</span><span class="n">DasConfig</span>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="nv">$das</span><span class="p">.</span><span class="n">AdmissionControlPolicy</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="c"># Disable admission control temporarily via SDK (requires vCenter SDK / REST API)</span>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c"># UI navigation is recommended for this one-time emergency action</span>
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="c"># Always document the change and set a calendar reminder to restore it</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c"># Check current admission control setting</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="nv">$cluster</span> <span class="p">=</span> <span class="nb">Get-Cluster</span> <span class="s2">&quot;cluster-name&quot;</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="nv">$das</span> <span class="p">=</span> <span class="nv">$cluster</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">Configuration</span><span class="p">.</span><span class="n">DasConfig</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="nv">$das</span><span class="p">.</span><span class="n">AdmissionControlPolicy</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="c"># Disable admission control temporarily via SDK (requires vCenter SDK / REST API)</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c"># UI navigation is recommended for this one-time emergency action</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="c"># Always document the change and set a calendar reminder to restore it</span>
 </code></pre></div>
 <p>Warning: with admission control disabled or reduced, the cluster has no guaranteed failover capacity. A second host failure during this window may cause further VM data loss or corruption. Restore the policy immediately after Tier 1 VMs are recovered.</p>
 <hr />
 <h2 id="6-option-c-add-an-emergency-host">6. Option C — Add an Emergency Host<a class="headerlink" href="#6-option-c-add-an-emergency-host" title="Permanent link">&para;</a></h2>
 <p>On VxRail or when spare hardware is available, adding a host to the cluster immediately expands capacity and re-arms HA admission control.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Emergency host addition paths:
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>  VxRail: VxRail Manager → Cluster Expansion wizard (adds node with LCM-validated config)
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>  Standalone ESXi: Install ESXi → Join vCenter → Join cluster → Wait for HA re-arm
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>  Loaner host: ensure ESXi version matches cluster EVC baseline before joining
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>Emergency host addition paths:
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>  VxRail: VxRail Manager → Cluster Expansion wizard (adds node with LCM-validated config)
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>  Standalone ESXi: Install ESXi → Join vCenter → Join cluster → Wait for HA re-arm
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>  Loaner host: ensure ESXi version matches cluster EVC baseline before joining
 </code></pre></div>
 <p>After a new host joins and HA re-arms:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>vCenter → Cluster → Monitor → vSphere HA → Summary
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>  Current failover capacity should now show ≥ Configured failover capacity
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>  VM Restarts list should show all VMs with status = Completed
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>vCenter → Cluster → Monitor → vSphere HA → Summary
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>  Current failover capacity should now show ≥ Configured failover capacity
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>  VM Restarts list should show all VMs with status = Completed
 </code></pre></div>
 <hr />
 <h2 id="7-post-incident-prevent-recurrence">7. Post-Incident — Prevent Recurrence<a class="headerlink" href="#7-post-incident-prevent-recurrence" title="Permanent link">&para;</a></h2>
 <p>An admission control breach is a design failure: the cluster was not sized to tolerate the number of hosts that actually failed. Address the root cause before the next failure.</p>
 <p><strong>Correct HA restart priorities for every VM:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c"># Set restart priority to High for all VMs tagged as production in vCenter</span>
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="nv">$productionVMs</span> <span class="p">=</span> <span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="p">(</span><span class="nb">Get-TagAssignment</span> <span class="n">-Entity</span> <span class="nv">$_</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Tag</span><span class="p">.</span><span class="n">Name</span> <span class="o">-eq</span> <span class="s2">&quot;Production&quot;</span> <span class="p">})</span> <span class="p">}</span>
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="nv">$productionVMs</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
-<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>    <span class="nv">$spec</span> <span class="p">=</span> <span class="nb">New-Object</span> <span class="n">VMware</span><span class="p">.</span><span class="n">Vim</span><span class="p">.</span><span class="n">ClusterDasVmConfigSpec</span>
-<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>    <span class="nv">$spec</span><span class="p">.</span><span class="n">Info</span> <span class="p">=</span> <span class="nb">New-Object</span> <span class="n">VMware</span><span class="p">.</span><span class="n">Vim</span><span class="p">.</span><span class="n">ClusterDasVmConfigInfo</span>
-<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>    <span class="nv">$spec</span><span class="p">.</span><span class="n">Info</span><span class="p">.</span><span class="n">DasSettings</span> <span class="p">=</span> <span class="nb">New-Object</span> <span class="n">VMware</span><span class="p">.</span><span class="n">Vim</span><span class="p">.</span><span class="n">ClusterDasVmSettings</span>
-<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>    <span class="nv">$spec</span><span class="p">.</span><span class="n">Info</span><span class="p">.</span><span class="n">DasSettings</span><span class="p">.</span><span class="n">RestartPriority</span> <span class="p">=</span> <span class="no">[VMware.Vim.ClusterDasVmSettingsRestartPriority]</span><span class="p">::</span><span class="n">high</span>
-<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>    <span class="nv">$spec</span><span class="p">.</span><span class="n">Info</span><span class="p">.</span><span class="n">Key</span> <span class="p">=</span> <span class="nv">$_</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">MoRef</span>
-<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>    <span class="nv">$spec</span><span class="p">.</span><span class="n">Operation</span> <span class="p">=</span> <span class="no">[VMware.Vim.ArrayUpdateOperation]</span><span class="p">::</span><span class="n">edit</span>
-<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;Setting High priority: </span><span class="p">$(</span><span class="nv">$_</span><span class="p">.</span><span class="n">Name</span><span class="p">)</span><span class="s2">&quot;</span>
-<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c"># Set restart priority to High for all VMs tagged as production in vCenter</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="nv">$productionVMs</span> <span class="p">=</span> <span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="p">(</span><span class="nb">Get-TagAssignment</span> <span class="n">-Entity</span> <span class="nv">$_</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Tag</span><span class="p">.</span><span class="n">Name</span> <span class="o">-eq</span> <span class="s2">&quot;Production&quot;</span> <span class="p">})</span> <span class="p">}</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="nv">$productionVMs</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>    <span class="nv">$spec</span> <span class="p">=</span> <span class="nb">New-Object</span> <span class="n">VMware</span><span class="p">.</span><span class="n">Vim</span><span class="p">.</span><span class="n">ClusterDasVmConfigSpec</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>    <span class="nv">$spec</span><span class="p">.</span><span class="n">Info</span> <span class="p">=</span> <span class="nb">New-Object</span> <span class="n">VMware</span><span class="p">.</span><span class="n">Vim</span><span class="p">.</span><span class="n">ClusterDasVmConfigInfo</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>    <span class="nv">$spec</span><span class="p">.</span><span class="n">Info</span><span class="p">.</span><span class="n">DasSettings</span> <span class="p">=</span> <span class="nb">New-Object</span> <span class="n">VMware</span><span class="p">.</span><span class="n">Vim</span><span class="p">.</span><span class="n">ClusterDasVmSettings</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>    <span class="nv">$spec</span><span class="p">.</span><span class="n">Info</span><span class="p">.</span><span class="n">DasSettings</span><span class="p">.</span><span class="n">RestartPriority</span> <span class="p">=</span> <span class="no">[VMware.Vim.ClusterDasVmSettingsRestartPriority]</span><span class="p">::</span><span class="n">high</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>    <span class="nv">$spec</span><span class="p">.</span><span class="n">Info</span><span class="p">.</span><span class="n">Key</span> <span class="p">=</span> <span class="nv">$_</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">MoRef</span>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>    <span class="nv">$spec</span><span class="p">.</span><span class="n">Operation</span> <span class="p">=</span> <span class="no">[VMware.Vim.ArrayUpdateOperation]</span><span class="p">::</span><span class="n">edit</span>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;Setting High priority: </span><span class="p">$(</span><span class="nv">$_</span><span class="p">.</span><span class="n">Name</span><span class="p">)</span><span class="s2">&quot;</span>
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="p">}</span>
 </code></pre></div>
 <p><strong>Sizing rule for admission control:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>N+1 design: cluster must tolerate 1 host failure and still have capacity to run all VMs
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>N+2 design: tolerate 2 simultaneous host failures (required for stretched clusters)
-<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
-<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>Minimum cluster size for N+1:
-<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>  vSAN RAID-1 FTT=1: minimum 3 hosts — HA needs 4+ for comfortable headroom
-<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>  vSAN RAID-5 FTT=1: minimum 4 hosts — HA needs 5+
-<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>  Standard VMFS/NFS:  size based on VM resource demand + 1 host equivalent reservation
-<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>
-<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>Admission control percentage = (1 / number-of-hosts) × 100
-<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>  4-host cluster: 25% reservation → 1 host failure tolerated
-<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>  5-host cluster: 20% reservation → 1 host failure tolerated with headroom
-<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a>  6-host cluster: 33% reservation → 2 host failures tolerated
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>N+1 design: cluster must tolerate 1 host failure and still have capacity to run all VMs
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>N+2 design: tolerate 2 simultaneous host failures (required for stretched clusters)
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>Minimum cluster size for N+1:
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>  vSAN RAID-1 FTT=1: minimum 3 hosts — HA needs 4+ for comfortable headroom
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>  vSAN RAID-5 FTT=1: minimum 4 hosts — HA needs 5+
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>  Standard VMFS/NFS:  size based on VM resource demand + 1 host equivalent reservation
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>Admission control percentage = (1 / number-of-hosts) × 100
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>  4-host cluster: 25% reservation → 1 host failure tolerated
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>  5-host cluster: 20% reservation → 1 host failure tolerated with headroom
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>  6-host cluster: 33% reservation → 2 host failures tolerated
 </code></pre></div>
 <p><strong>Aria Operations alert configuration:</strong></p>
 <p>Navigate to <strong>Aria Ops → Alerts → Alert Definitions → New Alert Definition</strong>:
@@ -10944,14 +10928,14 @@ to allow restarts, recovering the cluster, and preventing a recurrence through p
 - Action: Immediate page to on-call</p>
 <hr />
 <h2 id="8-post-recovery-validation-checklist">8. Post-Recovery Validation Checklist<a class="headerlink" href="#8-post-recovery-validation-checklist" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>[ ] All Tier 1 VMs running and application-verified by owner
-<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>[ ] HA VM Restarts list shows no VMs with status &quot;Insufficient resources&quot;
-<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>[ ] vCenter Cluster Summary shows Current failover capacity ≥ Configured failover capacity
-<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>[ ] vSAN resync queue is draining (host failures leave absent components)
-<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>[ ] Admission control policy restored to pre-incident setting (if temporarily relaxed)
-<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>[ ] Failed hosts: either repaired and returned, or permanently removed from cluster
-<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>[ ] HA restart priorities audited and corrected for all VMs
-<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>[ ] Post-incident review scheduled — root cause of multi-host failure documented
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>[ ] All Tier 1 VMs running and application-verified by owner
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>[ ] HA VM Restarts list shows no VMs with status &quot;Insufficient resources&quot;
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>[ ] vCenter Cluster Summary shows Current failover capacity ≥ Configured failover capacity
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>[ ] vSAN resync queue is draining (host failures leave absent components)
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>[ ] Admission control policy restored to pre-incident setting (if temporarily relaxed)
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>[ ] Failed hosts: either repaired and returned, or permanently removed from cluster
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>[ ] HA restart priorities audited and corrected for all VMs
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>[ ] Post-incident review scheduled — root cause of multi-host failure documented
 </code></pre></div>
 <hr />
 <h2 id="key-terms">Key Terms<a class="headerlink" href="#key-terms" title="Permanent link">&para;</a></h2>

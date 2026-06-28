@@ -8188,27 +8188,11 @@ A certificate chain (or chain of trust) links a server certificate back to a tru
 </div>
 <p><img alt="TLS Certificate Chains" src="../../../../assets/networking-protocols-tls-chains-index.svg" /></p>
 <p>If the chain is broken or incomplete, clients will reject the certificate.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>center: &quot;TLS&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>chain_structure: &quot;Chain Structure&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>why_chains_break: &quot;Why Chains Break&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>checking_the_chain: &quot;Checking the Chain&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>building_a_chain_bundle: &quot;Building a Chain Bundle&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>configuring_chain_in_common_web_serv: &quot;Configuring Chain in Common Web Servers&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>installing_internal_ca_certificates: &quot;Installing Internal CA Certificates&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>center -&gt; chain_structure
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>center -&gt; why_chains_break
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>center -&gt; checking_the_chain
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>center -&gt; building_a_chain_bundle
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>center -&gt; configuring_chain_in_common_web_serv
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>center -&gt; installing_internal_ca_certificates
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNkcFqwzAMhu95CpF7XyCHwZJTYbcMejS2o8amrj1kZ10pfffZcbZmwYOCTtL__RK_Bk0og3a2AdKjClUl0QakBur3t76Gm1f8AxtQ-MVHZ--VVFxb5gNNMkwUJ3WXOtD_dB5McuZ2NHivLurKZtIzQchPETuoK8yohza1ipxUKE_ajiwozAbzwtyE2MwWRVZM2gyJ5ZlkYrKDSRe3ywR4xqGdJ-ULnD3qcaJklG1iSXc-O8suKJhH-kw3PWSLZ6xulsEBBfRRhuSLK2IEgRuTNuiUveWGyXg0UtBHLXlAHzfsf1WwX1TQvUK3UhXdl4fC7gU2v1tNtv_5A21fsBr-k_EafyK_lfyJLKpvLnT-QA==?" /></p>
 <h2 id="chain-structure">Chain Structure<a class="headerlink" href="#chain-structure" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Root CA (self-signed, in OS/browser trust store)
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  └── Intermediate CA (signed by Root CA)
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>        └── Server Certificate (signed by Intermediate CA)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Root CA (self-signed, in OS/browser trust store)
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>  └── Intermediate CA (signed by Root CA)
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>        └── Server Certificate (signed by Intermediate CA)
 </code></pre></div>
 <p>The server presents its certificate plus all intermediate certificates. The client verifies each signature up to a trusted root.</p>
 <h2 id="why-chains-break">Why Chains Break<a class="headerlink" href="#why-chains-break" title="Permanent link">&para;</a></h2>
@@ -8220,73 +8204,73 @@ A certificate chain (or chain of trust) links a server certificate back to a tru
 <li>Root CA not in client's trust store (self-signed internal CA)</li>
 </ul>
 <h2 id="checking-the-chain">Checking the Chain<a class="headerlink" href="#checking-the-chain" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># View full chain served by a live endpoint</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;hostname&gt;:443<span class="w"> </span>-servername<span class="w"> </span>&lt;hostname&gt;
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Output shows: Certificate chain</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># 0 s:CN=web.example.com (server cert)</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1">#   i:CN=Example Intermediate CA</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># 1 s:CN=Example Intermediate CA</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1">#   i:CN=Example Root CA</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Verify chain file locally</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>openssl<span class="w"> </span>verify<span class="w"> </span>-CAfile<span class="w"> </span>chain.pem<span class="w"> </span>server.crt
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Check chain order in a bundle file</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>openssl<span class="w"> </span>crl2pkcs7<span class="w"> </span>-nocrl<span class="w"> </span>-certfile<span class="w"> </span>bundle.pem<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">  </span>openssl<span class="w"> </span>pkcs7<span class="w"> </span>-print_certs<span class="w"> </span>-noout
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># View full chain served by a live endpoint</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;hostname&gt;:443<span class="w"> </span>-servername<span class="w"> </span>&lt;hostname&gt;
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Output shows: Certificate chain</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># 0 s:CN=web.example.com (server cert)</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1">#   i:CN=Example Intermediate CA</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># 1 s:CN=Example Intermediate CA</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1">#   i:CN=Example Root CA</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Verify chain file locally</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>openssl<span class="w"> </span>verify<span class="w"> </span>-CAfile<span class="w"> </span>chain.pem<span class="w"> </span>server.crt
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Check chain order in a bundle file</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>openssl<span class="w"> </span>crl2pkcs7<span class="w"> </span>-nocrl<span class="w"> </span>-certfile<span class="w"> </span>bundle.pem<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">  </span>openssl<span class="w"> </span>pkcs7<span class="w"> </span>-print_certs<span class="w"> </span>-noout
 </code></pre></div>
 <h2 id="building-a-chain-bundle">Building a Chain Bundle<a class="headerlink" href="#building-a-chain-bundle" title="Permanent link">&para;</a></h2>
 <p>The bundle should be ordered: server cert → intermediate(s) → (optionally root).</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Concatenate into bundle</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>cat<span class="w"> </span>server.crt<span class="w"> </span>intermediate.crt<span class="w"> </span>&gt;<span class="w"> </span>bundle.pem
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Optional: include root (some applications require it)</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>cat<span class="w"> </span>server.crt<span class="w"> </span>intermediate.crt<span class="w"> </span>root.crt<span class="w"> </span>&gt;<span class="w"> </span>full-chain.pem
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Verify the bundle</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>openssl<span class="w"> </span>verify<span class="w"> </span>-CAfile<span class="w"> </span>root.crt<span class="w"> </span>-untrusted<span class="w"> </span>intermediate.crt<span class="w"> </span>server.crt
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Concatenate into bundle</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>cat<span class="w"> </span>server.crt<span class="w"> </span>intermediate.crt<span class="w"> </span>&gt;<span class="w"> </span>bundle.pem
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Optional: include root (some applications require it)</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>cat<span class="w"> </span>server.crt<span class="w"> </span>intermediate.crt<span class="w"> </span>root.crt<span class="w"> </span>&gt;<span class="w"> </span>full-chain.pem
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Verify the bundle</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>openssl<span class="w"> </span>verify<span class="w"> </span>-CAfile<span class="w"> </span>root.crt<span class="w"> </span>-untrusted<span class="w"> </span>intermediate.crt<span class="w"> </span>server.crt
 </code></pre></div>
 <h2 id="configuring-chain-in-common-web-servers">Configuring Chain in Common Web Servers<a class="headerlink" href="#configuring-chain-in-common-web-servers" title="Permanent link">&para;</a></h2>
 <h3 id="nginx">nginx<a class="headerlink" href="#nginx" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># nginx — combine cert and intermediates into one file</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="k">ssl_certificate</span><span class="w">     </span><span class="s">/etc/ssl/server-chain.pem</span><span class="p">;</span><span class="w">   </span><span class="c1"># cert + intermediates</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="k">ssl_certificate_key</span><span class="w"> </span><span class="s">/etc/ssl/server.key</span><span class="p">;</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Build the chain file:</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># cat server.crt intermediate.crt &gt; /etc/ssl/server-chain.pem</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># nginx — combine cert and intermediates into one file</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="k">ssl_certificate</span><span class="w">     </span><span class="s">/etc/ssl/server-chain.pem</span><span class="p">;</span><span class="w">   </span><span class="c1"># cert + intermediates</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="k">ssl_certificate_key</span><span class="w"> </span><span class="s">/etc/ssl/server.key</span><span class="p">;</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Build the chain file:</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># cat server.crt intermediate.crt &gt; /etc/ssl/server-chain.pem</span>
 </code></pre></div>
 <h3 id="apache-httpd">Apache httpd<a class="headerlink" href="#apache-httpd" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nb">SSLCertificateFile</span><span class="w">    </span><span class="sx">/etc/ssl/server.crt</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">SSLCertificateKeyFile</span><span class="w"> </span><span class="sx">/etc/ssl/server.key</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="nb">SSLCACertificateFile</span><span class="w">  </span><span class="sx">/etc/ssl/intermediate.crt</span><span class="w">  </span>#<span class="w"> </span>or<span class="w"> </span>chain<span class="w"> </span>bundle
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nb">SSLCertificateFile</span><span class="w">    </span><span class="sx">/etc/ssl/server.crt</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">SSLCertificateKeyFile</span><span class="w"> </span><span class="sx">/etc/ssl/server.key</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="nb">SSLCACertificateFile</span><span class="w">  </span><span class="sx">/etc/ssl/intermediate.crt</span><span class="w">  </span>#<span class="w"> </span>or<span class="w"> </span>chain<span class="w"> </span>bundle
 </code></pre></div>
 <h3 id="haproxy">HAProxy<a class="headerlink" href="#haproxy" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># HAProxy expects cert + key + chain in one PEM file</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>cat<span class="w"> </span>server.crt<span class="w"> </span>intermediate.crt<span class="w"> </span>server.key<span class="w"> </span>&gt;<span class="w"> </span>/etc/ssl/haproxy.pem
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># HAProxy expects cert + key + chain in one PEM file</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>cat<span class="w"> </span>server.crt<span class="w"> </span>intermediate.crt<span class="w"> </span>server.key<span class="w"> </span>&gt;<span class="w"> </span>/etc/ssl/haproxy.pem
 </code></pre></div>
 <h2 id="installing-internal-ca-certificates">Installing Internal CA Certificates<a class="headerlink" href="#installing-internal-ca-certificates" title="Permanent link">&para;</a></h2>
 <p>To make an internal CA trusted by Linux hosts:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># RHEL/Rocky</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>cp<span class="w"> </span>internal-ca.crt<span class="w"> </span>/etc/pki/ca-trust/source/anchors/
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>update-ca-trust
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1"># Ubuntu/Debian</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>cp<span class="w"> </span>internal-ca.crt<span class="w"> </span>/usr/local/share/ca-certificates/
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>update-ca-certificates
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="c1"># Verify</span>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>openssl<span class="w"> </span>verify<span class="w"> </span>-CAfile<span class="w"> </span>/etc/ssl/certs/ca-certificates.crt<span class="w"> </span>server.crt
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># RHEL/Rocky</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>cp<span class="w"> </span>internal-ca.crt<span class="w"> </span>/etc/pki/ca-trust/source/anchors/
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>update-ca-trust
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Ubuntu/Debian</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>cp<span class="w"> </span>internal-ca.crt<span class="w"> </span>/usr/local/share/ca-certificates/
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>update-ca-certificates
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1"># Verify</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>openssl<span class="w"> </span>verify<span class="w"> </span>-CAfile<span class="w"> </span>/etc/ssl/certs/ca-certificates.crt<span class="w"> </span>server.crt
 </code></pre></div>
 <h2 id="online-chain-verification-tools">Online Chain Verification Tools<a class="headerlink" href="#online-chain-verification-tools" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># SSL Labs (external)</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="c1"># https://www.ssllabs.com/ssltest/</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Check chain via openssl — simulates client verification</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;hostname&gt;:443<span class="w"> </span>-servername<span class="w"> </span>&lt;hostname&gt;<span class="w"> </span>-verify_return_error
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># Verify with specific CA bundle</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>curl<span class="w"> </span>--cacert<span class="w"> </span>/path/to/ca-bundle.pem<span class="w"> </span>https://&lt;hostname&gt;/
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># SSL Labs (external)</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="c1"># https://www.ssllabs.com/ssltest/</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Check chain via openssl — simulates client verification</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;hostname&gt;:443<span class="w"> </span>-servername<span class="w"> </span>&lt;hostname&gt;<span class="w"> </span>-verify_return_error
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># Verify with specific CA bundle</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>curl<span class="w"> </span>--cacert<span class="w"> </span>/path/to/ca-bundle.pem<span class="w"> </span>https://&lt;hostname&gt;/
 </code></pre></div>
 <h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
 <table>

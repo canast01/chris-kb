@@ -7642,23 +7642,7 @@ Firewall port reference for Nutanix AHV clusters. Covers Prism management, CVM-t
 *Applies to: AOS 6.x · AHV 20230302+*
 </div>
 <p><img alt="Nutanix — Ports and Network Requirements" src="../../../../assets/virtualization-nutanix-architecture-ports.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>center: &quot;Nutanix AHV&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>inbound_client_to_prism_element_and_: &quot;Inbound — Client to Prism (Element and Central)&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>prism_central_to_prism_element: &quot;Prism Central to Prism Element&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>cvm_cluster_fabric_internal_no_firew: &quot;CVM Cluster Fabric (Internal — No Firewall)&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>ahv_host_to_cvm: &quot;AHV Host to CVM&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>ahv_live_migration_host_to_host: &quot;AHV Live Migration (Host to Host)&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>storage_protocols_client_to_cluster_: &quot;Storage Protocols (Client to Cluster VIP / Data IP)&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>center -&gt; inbound_client_to_prism_element_and_
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>center -&gt; prism_central_to_prism_element
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>center -&gt; cvm_cluster_fabric_internal_no_firew
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>center -&gt; ahv_host_to_cvm
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>center -&gt; ahv_live_migration_host_to_host
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>center -&gt; storage_protocols_client_to_cluster_
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNkk1qwzAQhfc-xZCVuyjde1EobkMMSTAUvBUTRbEFshRk2Q2UQA_RE_YkHfmnNmkSvJKQPr0380Z7aQV30ugIrMwLFwRcaCdsBItt7VDLE7yssgV8VgUeRQSFOGFu9DmQemdqvWdcSXrAnGFHK6uSCSVKf4B0RyJJh8HP1zfELQrOQOpRCN86FoiFmDYW1cNo5QtDnStxDjpp3iH_vMimE-w1Rofe4Komb0hR1RU1yw64s5Iz6TvX5KANO1AwH6QcZxsqvMVg2WIQJj3XdrU1sPQsqhvFY9GwwlRtRmRKmpQorOjEF0r6N18p2QhWytyin9CfiF97lTURsBkICAdVv16vpnLGYi4oQeMMN6qaTHCIg8TfO4xy7DEIx_ENeWRJCk_wig4hSa_b9d8JHp9hzo-Z4PdnPgHnDHKCX4zj4uZO5BNyTojBL5aEPec=?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
 <li>CVM-to-CVM traffic (cluster fabric) requires no firewall on the CVM VLAN — all CVMs must reach each other without filtering</li>
@@ -8103,23 +8087,23 @@ Firewall port reference for Nutanix AHV clusters. Covers Prism management, CVM-t
 </table>
 <hr />
 <h2 id="verify">Verify<a class="headerlink" href="#verify" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># From jump host — test Prism Element API</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;%{http_code}&quot;</span><span class="w"> </span>https://&lt;prism-element-vip&gt;:9440/PrismGateway/services/rest/v2.0/cluster/
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># From jump host — test CVM SSH</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>ssh<span class="w"> </span>nutanix@&lt;cvm-ip&gt;
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># From CVM — test remote CVM reachability (replication path)</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>nc<span class="w"> </span>-zv<span class="w"> </span>&lt;remote-cvm-ip&gt;<span class="w"> </span><span class="m">2009</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># From CVM — check cluster services</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>cluster<span class="w"> </span>status
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># From CVM — check NTP sync</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>sudo<span class="w"> </span>ntpq<span class="w"> </span>-p
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="c1"># From AHV host — test libvirt port to peer AHV</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>nc<span class="w"> </span>-zv<span class="w"> </span>&lt;peer-ahv-ip&gt;<span class="w"> </span><span class="m">16514</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># From jump host — test Prism Element API</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;%{http_code}&quot;</span><span class="w"> </span>https://&lt;prism-element-vip&gt;:9440/PrismGateway/services/rest/v2.0/cluster/
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># From jump host — test CVM SSH</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>ssh<span class="w"> </span>nutanix@&lt;cvm-ip&gt;
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># From CVM — test remote CVM reachability (replication path)</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>nc<span class="w"> </span>-zv<span class="w"> </span>&lt;remote-cvm-ip&gt;<span class="w"> </span><span class="m">2009</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># From CVM — check cluster services</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>cluster<span class="w"> </span>status
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># From CVM — check NTP sync</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>sudo<span class="w"> </span>ntpq<span class="w"> </span>-p
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># From AHV host — test libvirt port to peer AHV</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>nc<span class="w"> </span>-zv<span class="w"> </span>&lt;peer-ahv-ip&gt;<span class="w"> </span><span class="m">16514</span>
 </code></pre></div>
 <hr />
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>

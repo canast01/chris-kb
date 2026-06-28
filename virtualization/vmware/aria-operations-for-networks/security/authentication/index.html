@@ -9244,25 +9244,7 @@ Authentication reference covering Authentication Methods, Local Authentication, 
 </div>
 <p><img alt="Aria Operations for Networks — Authentication" src="../../../../../assets/virtualization-vmware-aria-operations-for-networks-security-.svg" /></p>
 <hr />
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: down
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>external: External / Untrusted {shape: rectangle}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>authentication_methods: &quot;Authentication Methods&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>local_authentication: &quot;Local Authentication&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>api_token_authentication: &quot;API Token Authentication&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>session_management: &quot;Session Management&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>ldap_certificate_trust_ldaps: &quot;LDAP Certificate Trust (LDAPS)&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>token_rotation_policy: &quot;Token Rotation Policy&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>core: &quot;Aria Operations for Networks Core&quot; {shape: hexagon}
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>external -&gt; authentication_methods: traffic in
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>authentication_methods -&gt; local_authentication
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>local_authentication -&gt; api_token_authentication
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>api_token_authentication -&gt; session_management
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>session_management -&gt; ldap_certificate_trust_ldaps
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>ldap_certificate_trust_ldaps -&gt; token_rotation_policy
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>token_rotation_policy -&gt; core: secured path
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNk0FrwzAMhe_5FaKn7TB2z2EQuh0GbRfW7hyEoyamqR1shXaM_vdZSVkIdcpu4Unv2dLnlNqRYm1NCqU9mSShM5Mz2KTwdv2CZ_gy7DrPVMKPr7GlFMSFpmrokmDHNRnWCiWnOBLXtvQpLLJJAdZDYRHLaKzCppgmhYSVyDDNifqx1QXbA5nbjCx_h52U_pPjyft-CDRY0TF0h4TtIML6T4zPUGJbKHKs93IEFf3OCpFlG6vXLIflWIadlOFB9O1jNHGYyFkeNtvaRqvvEDWM83nVIe_1aIKyjmQHTiN8tOR6g4e9dbAhPll38LAMPaO5pjNW1lzGlwBPLzDHmB3uwzigzcwzEHMMbpR4f9IMyVnEYrrFFiHZX-UOo7sAxRzFEYck7cPuPanOhR-nRa6TX2XZSHg=?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Access:</strong> vCenter Administrator role</li>
@@ -9317,16 +9299,16 @@ Authentication reference covering Authentication Methods, Local Authentication, 
 <hr />
 <h2 id="api-token-authentication">API Token Authentication<a class="headerlink" href="#api-token-authentication" title="Permanent link">&para;</a></h2>
 <p>Create long-lived tokens in UI (Settings → API Tokens → Generate Token). Store in secrets manager — never hard-code.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Session token (short-lived — for interactive scripting)</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>https://vrni.example.local/api/ni/auth/token<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;username&quot;:&quot;admin@local&quot;,&quot;password&quot;:&quot;&lt;pass&gt;&quot;,&quot;domain&quot;:{&quot;domain_type&quot;:&quot;LOCAL&quot;}}&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import json,sys; print(json.load(sys.stdin)[&#39;token&#39;])&quot;</span><span class="k">)</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Use token</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: NetworkInsight </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">  </span><span class="s2">&quot;https://vrni.example.local/api/ni/data-sources/vcenters&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Session token (short-lived — for interactive scripting)</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>https://vrni.example.local/api/ni/auth/token<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;username&quot;:&quot;admin@local&quot;,&quot;password&quot;:&quot;&lt;pass&gt;&quot;,&quot;domain&quot;:{&quot;domain_type&quot;:&quot;LOCAL&quot;}}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import json,sys; print(json.load(sys.stdin)[&#39;token&#39;])&quot;</span><span class="k">)</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># Use token</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: NetworkInsight </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">  </span><span class="s2">&quot;https://vrni.example.local/api/ni/data-sources/vcenters&quot;</span>
 </code></pre></div>
 <hr />
 <h2 id="session-management">Session Management<a class="headerlink" href="#session-management" title="Permanent link">&para;</a></h2>
@@ -9360,15 +9342,15 @@ Authentication reference covering Authentication Methods, Local Authentication, 
 <hr />
 <h2 id="ldap-certificate-trust-ldaps">LDAP Certificate Trust (LDAPS)<a class="headerlink" href="#ldap-certificate-trust-ldaps" title="Permanent link">&para;</a></h2>
 <p>If using LDAPS (port 636), the LDAP CA certificate must be trusted by the Platform VM:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># SSH to Platform VM</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ssh<span class="w"> </span>ubuntu@vrni.example.local
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Install CA certificate</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>sudo<span class="w"> </span>cp<span class="w"> </span>/tmp/corp-root-ca.crt<span class="w"> </span>/usr/local/share/ca-certificates/corp-root-ca.crt
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>sudo<span class="w"> </span>update-ca-certificates
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Restart vRNI after cert trust update</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>hms
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># SSH to Platform VM</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ssh<span class="w"> </span>ubuntu@vrni.example.local
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Install CA certificate</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>sudo<span class="w"> </span>cp<span class="w"> </span>/tmp/corp-root-ca.crt<span class="w"> </span>/usr/local/share/ca-certificates/corp-root-ca.crt
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>sudo<span class="w"> </span>update-ca-certificates
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Restart vRNI after cert trust update</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>hms
 </code></pre></div>
 <hr />
 <h2 id="token-rotation-policy">Token Rotation Policy<a class="headerlink" href="#token-rotation-policy" title="Permanent link">&para;</a></h2>

@@ -8296,19 +8296,7 @@ SnapCenter health checks: `Get-SmJob -State Failed`, plugin service status, repo
 *Applies to: SnapCenter 5.x*
 </div>
 
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>hub: &quot;SnapCenter\nOperations&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>run_this_routine: &quot;Run This Routine&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>daily_checks: &quot;Daily Checks&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>health_check: &quot;Health Check&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>verify: &quot;Verify&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>hub -&gt; run_this_routine
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>hub -&gt; daily_checks
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>hub -&gt; health_check
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>hub -&gt; verify
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNptj00LgkAQhu_7Kwbv_QEPXezQLbDoFMikk7Mko-xHJOF_b9dFkvC277PPy8w02lDtdC85GN2yU4r9PYfsLDgUJI7MTU4DGYyOzeBjGQfKgemNbS-TMl4qx9pWpvdOS_jKSi9wCQjKhH6tOAul7WhSDepurGqm-mlD5xAjFHPc9Jmwc5wKwT_OMRU2_RcZ_RiDeZ0fm068FXZ7-L9h4esdF7beY2FplvoC84N2NQ==?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Access:</strong> Storage admin credentials (cluster admin or equivalent)</li>
@@ -8388,26 +8376,26 @@ SnapCenter health checks: `Get-SmJob -State Failed`, plugin service status, repo
 <li>[ ] No unprotected resources flagged in the SnapCenter Dashboard</li>
 <li>[ ] Server TLS certificate is valid and not expiring within 30 days</li>
 </ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Connect to SnapCenter (run from a host with SnapCenter PowerShell toolkit installed)</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Open-SmConnection<span class="w"> </span>-SMSbaseurl<span class="w"> </span>https://&lt;snapcenter-server&gt;:8146
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># List all backup jobs from the last 24 hours with status</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Get-SmJob<span class="w"> </span>-StartTime<span class="w"> </span><span class="o">(</span>Get-Date<span class="o">)</span>.AddHours<span class="o">(</span>-24<span class="o">)</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Select<span class="w"> </span>JobId,<span class="w"> </span>JobType,<span class="w"> </span>Status,<span class="w"> </span>StartDateTime,<span class="w"> </span>EndDateTime
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># List all jobs currently in Running or Queued state</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>Get-SmJob<span class="w"> </span><span class="p">|</span><span class="w"> </span>Where-Object<span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="nv">$_</span>.Status<span class="w"> </span>-in<span class="w"> </span>@<span class="o">(</span><span class="s2">&quot;Running&quot;</span>,<span class="s2">&quot;Queued&quot;</span><span class="o">)</span><span class="w"> </span><span class="o">}</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Select<span class="w"> </span>JobId,<span class="w"> </span>JobType,<span class="w"> </span>Status,<span class="w"> </span>StartDateTime
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Check plugin host connectivity and status</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>Get-SmHost<span class="w"> </span><span class="p">|</span><span class="w"> </span>Select<span class="w"> </span>HostName,<span class="w"> </span>HostType,<span class="w"> </span>PlugInStatus,<span class="w"> </span>OverallStatus
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># List all resource groups and their protection status</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>Get-SmResourceGroup<span class="w"> </span><span class="p">|</span><span class="w"> </span>Select<span class="w"> </span>ResourceGroupName,<span class="w"> </span>PluginCode,<span class="w"> </span>Status
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="c1"># List available backups for a specific resource</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>Get-SmBackup<span class="w"> </span>-ResourceName<span class="w"> </span>&lt;resource_name&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>Select<span class="w"> </span>BackupName,<span class="w"> </span>BackupTime,<span class="w"> </span>Status
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="c1"># Check all policies</span>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>Get-SmPolicy<span class="w"> </span><span class="p">|</span><span class="w"> </span>Select<span class="w"> </span>PolicyName,<span class="w"> </span>PluginType,<span class="w"> </span>BackupType
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Connect to SnapCenter (run from a host with SnapCenter PowerShell toolkit installed)</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>Open-SmConnection<span class="w"> </span>-SMSbaseurl<span class="w"> </span>https://&lt;snapcenter-server&gt;:8146
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># List all backup jobs from the last 24 hours with status</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>Get-SmJob<span class="w"> </span>-StartTime<span class="w"> </span><span class="o">(</span>Get-Date<span class="o">)</span>.AddHours<span class="o">(</span>-24<span class="o">)</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Select<span class="w"> </span>JobId,<span class="w"> </span>JobType,<span class="w"> </span>Status,<span class="w"> </span>StartDateTime,<span class="w"> </span>EndDateTime
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># List all jobs currently in Running or Queued state</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>Get-SmJob<span class="w"> </span><span class="p">|</span><span class="w"> </span>Where-Object<span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="nv">$_</span>.Status<span class="w"> </span>-in<span class="w"> </span>@<span class="o">(</span><span class="s2">&quot;Running&quot;</span>,<span class="s2">&quot;Queued&quot;</span><span class="o">)</span><span class="w"> </span><span class="o">}</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Select<span class="w"> </span>JobId,<span class="w"> </span>JobType,<span class="w"> </span>Status,<span class="w"> </span>StartDateTime
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Check plugin host connectivity and status</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>Get-SmHost<span class="w"> </span><span class="p">|</span><span class="w"> </span>Select<span class="w"> </span>HostName,<span class="w"> </span>HostType,<span class="w"> </span>PlugInStatus,<span class="w"> </span>OverallStatus
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># List all resource groups and their protection status</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>Get-SmResourceGroup<span class="w"> </span><span class="p">|</span><span class="w"> </span>Select<span class="w"> </span>ResourceGroupName,<span class="w"> </span>PluginCode,<span class="w"> </span>Status
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># List available backups for a specific resource</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>Get-SmBackup<span class="w"> </span>-ResourceName<span class="w"> </span>&lt;resource_name&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>Select<span class="w"> </span>BackupName,<span class="w"> </span>BackupTime,<span class="w"> </span>Status
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="c1"># Check all policies</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>Get-SmPolicy<span class="w"> </span><span class="p">|</span><span class="w"> </span>Select<span class="w"> </span>PolicyName,<span class="w"> </span>PluginType,<span class="w"> </span>BackupType
 </code></pre></div>
 <hr />
 <h2 id="verify">Verify<a class="headerlink" href="#verify" title="Permanent link">&para;</a></h2>

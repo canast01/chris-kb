@@ -8286,21 +8286,7 @@ Internal architecture and data-path reference: HA pair design, WAFL filesystem, 
 </table>
 <p>ONTAP Cloud (Cloud Volumes ONTAP) runs the same OS in AWS, Azure, and GCP, enabling SnapMirror replication directly between on-premises ONTAP clusters and cloud-hosted ONTAP instances.</p>
 <h2 id="ha-pair-architecture">HA Pair Architecture<a class="headerlink" href="#ha-pair-architecture" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>node_a: Controller A (Active) {shape: rectangle}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>node_b: Controller B (HA Partner) {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>shelves: Disk Shelves {shape: cylinder}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>clients: Clients {shape: person}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>svms: SVMs (Data LIFs) {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>node_a -&gt; node_b: HA interconnect\n(NVRAM mirror, RDMA)
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>node_a -&gt; shelves: SAS / NVMe (owns aggregates)
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>node_b -&gt; shelves: SAS / NVMe (takeover path)
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>clients -&gt; svms: NFS / CIFS / iSCSI / NVMe-oF
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>svms -&gt; node_a: served via aggregates
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>node_b -&gt; svms: serves LIFs during takeover
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp1kU9rhDAQxe9-ijkqdOndQ8EqUmGVsoKnQsnqoGGzE5mkllL2uzeNf7CwPWVCfm_y3kwnGVsrNcXAsh9sEJDu8F3EkGqyrJVChgTCxEETRvBtBjGig51KUK_wNgvOfwTPEL4k8CrYEvJdkRlQTWhiyKS5QD3fNrD9UpI65FvQKolkHZfOxYaMyEaTazRd3WvdlAbCTFgBxyI3d79cksHhCVbLzqQki9xqIge-UVg1p6SEq2TW_ACnrEyinW5zXSc1PELVlAih_iQDou8Ze2HRLPz5X96KC-rJTWkUdojWhB73War8l00Lf8g6rYtFetC5j7slcFsyyBN2MEmxs7B34Ft6yvjRQPfBknpYXQQ_Mc2tvQ==?" /></p>
 <p>Two ONTAP controller nodes form an HA pair. Both nodes are active simultaneously — each serves its own set of aggregates and volumes, and each holds the partner node's NVRAM write log as a mirror. Under normal operation the workload is split across both nodes; under takeover one node serves the entire workload.</p>
 <p>Key hardware components per node:</p>
 <table>
@@ -8493,34 +8479,7 @@ Internal architecture and data-path reference: HA pair design, WAFL filesystem, 
     class M1 media
     class REMOTE snap</code></pre>
 <h2 id="snapmirror-and-snapvault">SnapMirror and SnapVault<a class="headerlink" href="#snapmirror-and-snapvault" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>@startuml
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>skinparam sequenceArrowThickness 1.5
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>skinparam roundcorner 5
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>participant &quot;Source SVM\n(Primary)&quot; as SRC
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>participant &quot;Source Volume&quot; as SVOL
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>participant &quot;SnapMirror Engine&quot; as SM
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>participant &quot;Destination SVM\n(Secondary)&quot; as DST
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>participant &quot;Destination Volume\n(DP — read-only)&quot; as DVOL
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>SRC -&gt; SM: Initialize relationship
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>SM -&gt; SVOL: Create baseline Snapshot
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>SM -&gt; DST: Transfer baseline (full copy)
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>DST -&gt; DVOL: Write baseline
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>DVOL --&gt; SM: Baseline complete
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>loop Scheduled update (hourly / daily)
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>  SM -&gt; SVOL: Create new Snapshot
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>  SM -&gt; SM: Compute incremental delta from last transfer Snapshot
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>  SM -&gt; DST: Transfer delta blocks
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>  DST -&gt; DVOL: Apply delta
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>  DVOL --&gt; SM: Update complete
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>  SM -&gt; SVOL: Delete previous transfer Snapshot
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>end
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>note over SM,DST: On DR activation — break relationship, promote DVOL to R/W
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>@enduml
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/plantuml/svg/eNp1k7Fu2zAQhnc-xSGTA8QJOmTxUCS1OhSokMBynaULTZ0rwtQdS1IO3KkP0Sfsk_Qo2a7VOiv13X_fT0kPMemQutapuLXkddAtRPzeIRl8DIFfl401W8IY4d3t_RkUuKPacCAMcK-UHCZrrNeU4KriLhiEalV-pclzsK0O--sr0BGqxfwiumLXtTggq6fP_zCkfWlFJsBH-mbpwJVjqsCYLOlkmQ6bKzRM9Wl3US3fnhgEZKh4ht8_f0FAXU-Z3HE2Symxh-l72TyDT2ST1c7-QEFdnxEb61VV9oTgM5hLSEJY64hOrCH3iA2nAyQ-M1gGTXEjd3iiJpvOOTDs99dKkJ7s416CPUtT-RCmB50Px2nDrXeYUCnH7KEyDdadwxo6X2eZSSMX7vZwB7W20k4BXFAmfP1reyJkz1ziOwEsmYAtUtIOanRJwyZwC07HBOlY6b-EceNhbu3YbKMgo66P3otkT-RH51W_DEVORccFCsyH4APuLHfxggxSrRSxQLzL5-VNr_VEUCxAm2R3wxeRv4K1XMd29IJvJJrbPN1LJYbF3Yt6kND8D_0BpGwcIA==?" /></p>
 <p>SnapMirror is ONTAP's native data replication engine. It operates at the volume level and transfers only changed WAFL blocks between snapshots — making replication incremental and network-efficient.</p>
 <p><strong>SnapMirror Asynchronous (XDP)</strong></p>
 <ul>

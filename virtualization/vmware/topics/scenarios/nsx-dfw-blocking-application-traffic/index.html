@@ -10714,23 +10714,7 @@ opening broad exceptions — using Traceflow, hit count analysis, and packet cap
 *Applies to: vSphere 7.x / 8.x*
 </div>
 <p><img alt="NSX DFW Blocking Application Traffic" src="../../../../../assets/virtualization-vmware-topics-scenarios-nsx-dfw-blocking-appl.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>center: &quot;Scenarios&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>products_involved: &quot;Products Involved&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>1_confirm_dfw_is_the_cause: &quot;1. Confirm DFW Is the Cause&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>2_identify_the_blocking_rule: &quot;2. Identify the Blocking Rule&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>3_check_group_membership: &quot;3. Check Group Membership&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>4_resolve_rule_group_or_tag_fix: &quot;4. Resolve: Rule, Group, or Tag Fix&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>5_packet_capture_at_vnic_level: &quot;5. Packet Capture at vNIC Level&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>center -&gt; products_involved
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>center -&gt; 1_confirm_dfw_is_the_cause
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>center -&gt; 2_identify_the_blocking_rule
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>center -&gt; 3_check_group_membership
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>center -&gt; 4_resolve_rule_group_or_tag_fix
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>center -&gt; 5_packet_capture_at_vnic_level
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqFkctqwzAQRff-iiHr1JDXxosumpJiaEtIC10OqjyWhziSkWQ3peTfKzumNdRJd0L36Gi4k7El6dnoBCyrwkeRJO3JJjB5CSdh2bgJfLlCVJRAQUehjD5FlTVZLb1D1o0pG8oCv-3vIO3vft-1fwitSjpFM5RG52wPmOUfyA59QShF7QI2mcWwPqdwv3mD1EFIYd2mo7I5chbG5fyz07yXRu5ZK7R12ermMaR93onu-hx2IR8VLlAWJPeorKkrPNDhnawruAqyRZitzeChzeDpJxsVLdGSa1voZul9xqIXCnM-Bt8yht0ZSbp5pmfxFIyFV6Fgw8dR8worIffkQ2mVry2h8NhollhSQ2UQr2LYdkQoriNAeGie0zU8tsSotN863NzCn9UOssvLG0DXljLALlU9QP4pcUBeLyX6BgTKDMo=?" /></p>
 <h2 id="products-involved">Products Involved<a class="headerlink" href="#products-involved" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -10761,38 +10745,38 @@ opening broad exceptions — using Traceflow, hit count analysis, and packet cap
 <hr />
 <h2 id="1-confirm-dfw-is-the-cause">1. Confirm DFW Is the Cause<a class="headerlink" href="#1-confirm-dfw-is-the-cause" title="Permanent link">&para;</a></h2>
 <p>Before touching any rule, confirm that DFW is responsible and not a routing issue, firewall appliance, or OS-level firewall on the VM.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Quick elimination checklist:
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  VM OS firewall (iptables/Windows Firewall)?
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>      → Test: temporarily disable inside the guest and retry
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  NSX Edge firewall (not DFW)?
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>      → Only applies if traffic crosses a T0 or T1 gateway
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>  Physical firewall / ACL?
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>      → Trace the path — is the destination on the same overlay segment?
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>  DFW (distributed, per-vNIC)?
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>      → Applies to ALL VM-to-VM traffic regardless of IP subnet
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Quick elimination checklist:
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>  VM OS firewall (iptables/Windows Firewall)?
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>      → Test: temporarily disable inside the guest and retry
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>  NSX Edge firewall (not DFW)?
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>      → Only applies if traffic crosses a T0 or T1 gateway
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>  Physical firewall / ACL?
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>      → Trace the path — is the destination on the same overlay segment?
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>  DFW (distributed, per-vNIC)?
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>      → Applies to ALL VM-to-VM traffic regardless of IP subnet
 </code></pre></div>
 <p>Run <strong>Traceflow</strong> in NSX Manager to get a definitive answer:</p>
 <p><strong>NSX Manager → Plan &amp; Troubleshoot → Traceflow</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Traceflow settings:
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>  Source:       Select the source VM vNIC
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>  Destination:  Enter the destination VM vNIC or IP address
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>  Protocol:     Layer 4 — TCP, UDP, or ICMP
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>  Port:         Destination port (e.g., 1433 for SQL, 5432 for PostgreSQL)
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>  Direction:    Unidirectional (source to destination only)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Traceflow settings:
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  Source:       Select the source VM vNIC
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  Destination:  Enter the destination VM vNIC or IP address
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  Protocol:     Layer 4 — TCP, UDP, or ICMP
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>  Port:         Destination port (e.g., 1433 for SQL, 5432 for PostgreSQL)
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>  Direction:    Unidirectional (source to destination only)
 </code></pre></div>
 <p>Look for: a result showing <strong>Dropped — DFW</strong> at the source vNIC confirms DFW is the blocker. The output includes the rule ID that caused the drop.</p>
 <hr />
 <h2 id="2-identify-the-blocking-rule">2. Identify the Blocking Rule<a class="headerlink" href="#2-identify-the-blocking-rule" title="Permanent link">&para;</a></h2>
 <p>Traceflow output includes the NSX rule ID. Use this to locate the exact rule in the DFW policy table.</p>
 <p><strong>NSX Manager → Security → Distributed Firewall → find rule by ID</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>DFW rule table — columns to check:
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  Rule ID      — matches Traceflow output exactly
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  Action       — DROP or REJECT (REJECT sends TCP RST; DROP silently discards)
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>  Source       — group, IP set, or Any
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>  Destination  — group, IP set, or Any
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>  Service      — port/protocol; check if the required port is included
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>  Applied To   — which transport zone, DFW section, or specific group the rule applies to
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>  Hit Count    — number of times this rule has been matched; confirms it is active
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>DFW rule table — columns to check:
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>  Rule ID      — matches Traceflow output exactly
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>  Action       — DROP or REJECT (REJECT sends TCP RST; DROP silently discards)
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>  Source       — group, IP set, or Any
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>  Destination  — group, IP set, or Any
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>  Service      — port/protocol; check if the required port is included
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>  Applied To   — which transport zone, DFW section, or specific group the rule applies to
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>  Hit Count    — number of times this rule has been matched; confirms it is active
 </code></pre></div>
 <p>Check hit count on the suspect rule to confirm it is matching traffic (not just a theoretical match). A recent spike in hit count correlates with when the connectivity issue started.</p>
 <p>Look for: <strong>Default Drop</strong> rules at the bottom of a section are the most common culprit when a new VM is deployed or a group membership changes — the VM falls outside all allow rules and hits the implicit deny.</p>
@@ -10800,55 +10784,55 @@ opening broad exceptions — using Traceflow, hit count analysis, and packet cap
 <h2 id="3-check-group-membership">3. Check Group Membership<a class="headerlink" href="#3-check-group-membership" title="Permanent link">&para;</a></h2>
 <p>The most common cause of unexpected DFW drops is a VM not being a member of the group targeted by the allow rule.</p>
 <p><strong>NSX Manager → Inventory → Groups → select group → View Members</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Group membership types and how to check:
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>  Static members    → look for the specific VM in the member list
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>  Dynamic criteria  → check if the VM satisfies the criteria (name pattern, OS, tag)
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>  IP set            → confirm the VM&#39;s IP is in the set; check for IP change
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>  VM tag            → confirm the correct NSX tag is applied to the VM
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Group membership types and how to check:
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  Static members    → look for the specific VM in the member list
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  Dynamic criteria  → check if the VM satisfies the criteria (name pattern, OS, tag)
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>  IP set            → confirm the VM&#39;s IP is in the set; check for IP change
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>  VM tag            → confirm the correct NSX tag is applied to the VM
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Check NSX tags on a VM via NSX Manager API</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/api/v1/fabric/virtual-machines?display_name=&lt;vm-name&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A5<span class="w"> </span><span class="s2">&quot;tags&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check NSX tags on a VM via NSX Manager API</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/api/v1/fabric/virtual-machines?display_name=&lt;vm-name&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A5<span class="w"> </span><span class="s2">&quot;tags&quot;</span>
 </code></pre></div>
 <p>Look for: a recently changed IP address on the source or destination VM will invalidate an IP-set-based group membership. Dynamic tag criteria are the most fragile — confirm the tag is still present and spelled correctly.</p>
 <hr />
 <h2 id="4-resolve-rule-group-or-tag-fix">4. Resolve: Rule, Group, or Tag Fix<a class="headerlink" href="#4-resolve-rule-group-or-tag-fix" title="Permanent link">&para;</a></h2>
 <p>Choose the fix based on the root cause identified in Step 3.</p>
 <p><strong>Option A — Add a targeted allow rule above the deny:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>New rule placement (most specific first):
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>  Priority  Action  Source               Destination          Service
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>  100       Allow   App-Server-Group     DB-Server-Group      TCP:5432
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>  200       Drop    Any                  DB-Server-Group      Any          ← existing deny
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>  999       Drop    Any                  Any                  Any          ← default deny
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>New rule placement (most specific first):
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  Priority  Action  Source               Destination          Service
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  100       Allow   App-Server-Group     DB-Server-Group      TCP:5432
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>  200       Drop    Any                  DB-Server-Group      Any          ← existing deny
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>  999       Drop    Any                  Any                  Any          ← default deny
 </code></pre></div>
 <p>The new allow rule must be placed at a higher priority (lower number) than the blocking rule. Rules are evaluated top to bottom; the first match wins.</p>
 <p><strong>Option B — Fix group membership:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>For static groups: add the VM directly to the group via NSX Manager UI
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>For dynamic groups: apply the correct NSX tag to the VM
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>For IP-set groups: update the IP set with the VM&#39;s current IP address
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>For static groups: add the VM directly to the group via NSX Manager UI
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>For dynamic groups: apply the correct NSX tag to the VM
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>For IP-set groups: update the IP set with the VM&#39;s current IP address
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Apply an NSX tag to a VM via API</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;external_id&quot;:&quot;&lt;vm-moid&gt;&quot;,&quot;tags&quot;:[{&quot;scope&quot;:&quot;app&quot;,&quot;tag&quot;:&quot;web-tier&quot;}]}&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/api/v1/fabric/virtual-machines?action=update_tags&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Apply an NSX tag to a VM via API</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;external_id&quot;:&quot;&lt;vm-moid&gt;&quot;,&quot;tags&quot;:[{&quot;scope&quot;:&quot;app&quot;,&quot;tag&quot;:&quot;web-tier&quot;}]}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/api/v1/fabric/virtual-machines?action=update_tags&quot;</span>
 </code></pre></div>
 <p>After any rule or group change, re-run Traceflow to confirm the packet now shows <strong>Delivered</strong> at the destination.</p>
 <p>Look for: if Traceflow shows Delivered but the application still fails — the issue is now above Layer 4 (application layer, TLS, auth) rather than DFW.</p>
 <hr />
 <h2 id="5-packet-capture-at-vnic-level">5. Packet Capture at vNIC Level<a class="headerlink" href="#5-packet-capture-at-vnic-level" title="Permanent link">&para;</a></h2>
 <p>If Traceflow is inconclusive, capture at the ESXi vNIC level to see the raw traffic.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># SSH to the ESXi host running the source VM</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="c1"># List VM vNIC interfaces to find the right port</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>esxcli<span class="w"> </span>network<span class="w"> </span>vm<span class="w"> </span>list
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>esxcli<span class="w"> </span>network<span class="w"> </span>vm<span class="w"> </span>port<span class="w"> </span>list<span class="w"> </span>-w<span class="w"> </span>&lt;WorldID&gt;
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="c1"># Capture traffic on the vNIC (pktcap-uw)</span>
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>pktcap-uw<span class="w"> </span>--switchport<span class="w"> </span>&lt;SwitchPort&gt;<span class="w"> </span>--proto<span class="w"> </span><span class="m">6</span><span class="w"> </span>--dstport<span class="w"> </span><span class="m">5432</span><span class="w"> </span>-c<span class="w"> </span><span class="m">200</span><span class="w"> </span>-o<span class="w"> </span>/tmp/cap.pcap
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="c1"># Transfer and analyse in Wireshark</span>
-<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="c1"># Filter in Wireshark: tcp.port==5432 and tcp.flags.reset==1</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># SSH to the ESXi host running the source VM</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="c1"># List VM vNIC interfaces to find the right port</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>esxcli<span class="w"> </span>network<span class="w"> </span>vm<span class="w"> </span>list
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>esxcli<span class="w"> </span>network<span class="w"> </span>vm<span class="w"> </span>port<span class="w"> </span>list<span class="w"> </span>-w<span class="w"> </span>&lt;WorldID&gt;
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="c1"># Capture traffic on the vNIC (pktcap-uw)</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>pktcap-uw<span class="w"> </span>--switchport<span class="w"> </span>&lt;SwitchPort&gt;<span class="w"> </span>--proto<span class="w"> </span><span class="m">6</span><span class="w"> </span>--dstport<span class="w"> </span><span class="m">5432</span><span class="w"> </span>-c<span class="w"> </span><span class="m">200</span><span class="w"> </span>-o<span class="w"> </span>/tmp/cap.pcap
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="c1"># Transfer and analyse in Wireshark</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># Filter in Wireshark: tcp.port==5432 and tcp.flags.reset==1</span>
 </code></pre></div>
 <p>Look for: TCP RST packets in the capture confirm the DFW is sending a reset (REJECT rule). No response at all confirms a DROP rule. If neither appears and traffic is flowing out the vNIC, the issue is downstream.</p>
 <hr />

@@ -7646,23 +7646,7 @@ Firewall port reference for Confluence (Data Center, self-hosted). Covers web UI
 *Applies to: Confluence Data Center 8.x*
 </div>
 <p><img alt="Confluence — Ports and Network Requirements" src="../../../../assets/itsm-confluence-architecture-ports.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>center: &quot;Architecture&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>inbound_client_access: &quot;Inbound — Client Access&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>confluence_data_center_cluster: &quot;Confluence Data Center Cluster&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>confluence_to_database: &quot;Confluence to Database&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>confluence_outbound_services: &quot;Confluence Outbound Services&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>firewall_zone_summary: &quot;Firewall Zone Summary&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>verify: &quot;Verify&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>center -&gt; inbound_client_access
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>center -&gt; confluence_data_center_cluster
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>center -&gt; confluence_to_database
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>center -&gt; confluence_outbound_services
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>center -&gt; firewall_zone_summary
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>center -&gt; verify
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqFkU1qAzEMhfc-hci-F5hFIUwJZNVFoItujOLRzBgcu_gn_SPQQ-SEPUk19pBOqGl2Ru_pk_XUaU8qamcb8HoYoxCKbCTfwGrt1agjq8nTCj7DiC_UwEhvODh7EtruXbKdVEZzh0SlKARu25Y6fH-doc0arLP2y5hGoh0MnYRytjeJrCLZYURZpjM0hfKL9mKABzZAmw1MzoZbzOgydo-BrlnRZdwk3GK4FMumgfxR8ybXpMdZht0sV3k95_yKxsgPZ0mGdDigf2fQZq7DM9dhV-pVwpG87qeWp_yoeubjwd09VM-z0P8Pvm5cpFk3_IlqYasmsNDLfuIHwT30AQ==?" /></p>
 <h2 id="inbound-client-access">Inbound — Client Access<a class="headerlink" href="#inbound-client-access" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -7825,17 +7809,17 @@ Firewall port reference for Confluence (Data Center, self-hosted). Covers web UI
 </tbody>
 </table>
 <h2 id="verify">Verify<a class="headerlink" href="#verify" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># From user — test Confluence web</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;%{http_code}&quot;</span><span class="w"> </span>https://&lt;confluence-host&gt;/
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># From Confluence node — test DB</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>nc<span class="w"> </span>-zv<span class="w"> </span>&lt;postgres-host&gt;<span class="w"> </span><span class="m">5432</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># From second node — test Hazelcast</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>nc<span class="w"> </span>-zv<span class="w"> </span>&lt;peer-confluence-node&gt;<span class="w"> </span><span class="m">5701</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># From second node — test Synchrony</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>nc<span class="w"> </span>-zv<span class="w"> </span>&lt;peer-confluence-node&gt;<span class="w"> </span><span class="m">25500</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># From user — test Confluence web</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;%{http_code}&quot;</span><span class="w"> </span>https://&lt;confluence-host&gt;/
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># From Confluence node — test DB</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>nc<span class="w"> </span>-zv<span class="w"> </span>&lt;postgres-host&gt;<span class="w"> </span><span class="m">5432</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># From second node — test Hazelcast</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>nc<span class="w"> </span>-zv<span class="w"> </span>&lt;peer-confluence-node&gt;<span class="w"> </span><span class="m">5701</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># From second node — test Synchrony</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>nc<span class="w"> </span>-zv<span class="w"> </span>&lt;peer-confluence-node&gt;<span class="w"> </span><span class="m">25500</span>
 </code></pre></div>
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>

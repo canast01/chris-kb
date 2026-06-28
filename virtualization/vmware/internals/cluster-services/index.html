@@ -9493,23 +9493,7 @@
 <p><img alt="vSphere Cluster Services — DRS, HA, FT, and vCLS" src="../../../../assets/virtualization-vmware-internals-cluster-services-index.svg" /></p>
 <p>vSphere cluster services are the group of features that collectively make a cluster of ESXi hosts behave as a resilient, self-managing compute platform. vSphere High Availability (HA), Distributed Resource Scheduler (DRS), Fault Tolerance (FT), and vSphere Cluster Services (vCLS) are complementary — each addresses a different failure scenario or resource management goal. Understanding how they interact is essential for both day-to-day administration and for the VCP-DCV 8 exam.</p>
 <hr />
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>center: &quot;Cluster Services&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>overview_how_the_services_relate: &quot;Overview — How the Services Relate&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>vsphere_ha: &quot;vSphere HA&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>vsphere_drs: &quot;vSphere DRS&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>fault_tolerance_ft: &quot;Fault Tolerance (FT)&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>vsphere_cluster_services_vcls: &quot;vSphere Cluster Services (vCLS)&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>resource_pools_detailed_reference: &quot;Resource Pools — Detailed Reference&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>center -&gt; overview_how_the_services_relate
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>center -&gt; vsphere_ha
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>center -&gt; vsphere_drs
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>center -&gt; fault_tolerance_ft
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>center -&gt; vsphere_cluster_services_vcls
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>center -&gt; resource_pools_detailed_reference
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqFkcFqxCAQhu8-xZDT9tAXyKFQdln2UGhJ9i5iJjEgGtSYQlnoQ_QJ-ySdpLYJrezedPz8Z_xseocy9NaU4PpOBcYkmoCuhGKvR08rqNHFXqIv4M0rMWAJCl9FZ82F2Tif4cSVnXhQyH1iuUMtAqHFc0Lg8_0DTnYCwn4joVqwNXkeRphO44VFPyh0yJWglFgvGzg9XmUb5zfwoaqzdCtGHXiwGp0wEnkb6NJxLsL5pwi74_nuai_5rWd9cpR62_2vPtjF_VOdz3To7eholMFa7XmDQfQaG7LYUhSNQ7lVYuBlZhadh8SRxsRl09OXwv0D3PqwDbr6zxRJ9Kb6X2jmStbXhrvpgH0BbgH9TQ==?" /></p>
 <h2 id="overview-how-the-services-relate">Overview — How the Services Relate<a class="headerlink" href="#overview-how-the-services-relate" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -9557,14 +9541,14 @@
 <p>HA uses two heartbeat mechanisms to determine whether a host has failed:</p>
 <p><strong>Network heartbeats</strong> — HA master host sends and receives heartbeats to/from slave hosts every second on the management network. If a slave misses heartbeats for a configurable period (default 10 seconds), the master declares it unreachable.</p>
 <p><strong>Datastore heartbeats</strong> — HA writes heartbeat data to datastores shared between hosts. This secondary mechanism differentiates between a host that is truly down and one that has lost its management network connection (isolation). HA selects up to two datastores automatically but you can pin specific datastores.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Master Host
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    │
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    ├── Network heartbeat (every 1s) ──► Slave Host A  ✓ alive
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    ├── Network heartbeat            ──► Slave Host B  ✗ no response
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    │                                        │
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>            If no datastore HB either → Host declared FAILED
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>            If datastore HB present   → Host ISOLATED (not failed)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Master Host
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    ├── Network heartbeat (every 1s) ──► Slave Host A  ✓ alive
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    ├── Network heartbeat            ──► Slave Host B  ✗ no response
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    │                                        │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>            If no datastore HB either → Host declared FAILED
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>            If datastore HB present   → Host ISOLATED (not failed)
 </code></pre></div>
 <h3 id="admission-control">Admission Control<a class="headerlink" href="#admission-control" title="Permanent link">&para;</a></h3>
 <p>Admission control reserves cluster capacity to guarantee that HA can restart VMs after a host failure. vCenter will block VM power-ons that would exceed reserved capacity.</p>
@@ -9708,14 +9692,14 @@
 </blockquote>
 <h3 id="resource-pool-hierarchy">Resource Pool Hierarchy<a class="headerlink" href="#resource-pool-hierarchy" title="Permanent link">&para;</a></h3>
 <p>Resource pools allow you to partition cluster resources and apply them to groups of VMs. They sit in a tree below the cluster root resource pool.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Cluster Root Pool
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>├── Production Pool  (High shares, 16 GHz reservation)
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>│   ├── Web VMs
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>│   └── DB VMs
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>├── Dev Pool         (Normal shares, no reservation)
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>│   └── Dev VMs
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>└── DMZ Pool         (Low shares, 100 MHz limit)
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>    └── Bastion VMs
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Cluster Root Pool
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>├── Production Pool  (High shares, 16 GHz reservation)
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│   ├── Web VMs
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│   └── DB VMs
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>├── Dev Pool         (Normal shares, no reservation)
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   └── Dev VMs
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>└── DMZ Pool         (Low shares, 100 MHz limit)
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>    └── Bastion VMs
 </code></pre></div>
 <p><strong>Resource pool attributes:</strong></p>
 <table>
@@ -9756,20 +9740,20 @@
 <h2 id="fault-tolerance-ft">Fault Tolerance (FT)<a class="headerlink" href="#fault-tolerance-ft" title="Permanent link">&para;</a></h2>
 <p>FT provides zero-downtime protection for individual VMs by running a live shadow copy (secondary VM) on a separate host. If the primary host fails, the secondary takes over instantly with no VM restart.</p>
 <h3 id="how-vlockstep-works">How vLockstep Works<a class="headerlink" href="#how-vlockstep-works" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Primary Host                          Secondary Host
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>┌───────────────────────────────────────── ┐                 ┌ ─────────────────────────────────────────┐
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>│  Primary VM       │  FT Logging NIC │  Secondary VM                                                   │
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>│  (runs normally)  │ ─────────────── │  (mirrors primary)                                              │
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>│                   │ All CPU instr.  │                                                                 │
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>│  Executes + logs  │ + I/O + DMA     │  Replays log;                                                   │
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>│  all non-determ.  │ ──────────────► │  stays in sync                                                  │
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>│  events           │                 │                                                                 │
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>        │                                      │
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>        │  Primary host fails                  │
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>        ▼                                      ▼
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>  Secondary promoted instantly         New secondary found
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>  (zero restart, no data loss)         by HA on another host
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Primary Host                          Secondary Host
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>┌───────────────────────────────────────── ┐                 ┌ ─────────────────────────────────────────┐
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>│  Primary VM       │  FT Logging NIC │  Secondary VM                                                   │
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>│  (runs normally)  │ ─────────────── │  (mirrors primary)                                              │
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>│                   │ All CPU instr.  │                                                                 │
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>│  Executes + logs  │ + I/O + DMA     │  Replays log;                                                   │
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>│  all non-determ.  │ ──────────────► │  stays in sync                                                  │
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>│  events           │                 │                                                                 │
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>        │                                      │
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>        │  Primary host fails                  │
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>        ▼                                      ▼
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>  Secondary promoted instantly         New secondary found
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>  (zero restart, no data loss)         by HA on another host
 </code></pre></div>
 <p>vLockstep records all non-deterministic CPU events (timer interrupts, I/O completions) on the primary and replays them on the secondary, keeping both VMs in lock-step.</p>
 <h3 id="ft-requirements-and-limitations">FT Requirements and Limitations<a class="headerlink" href="#ft-requirements-and-limitations" title="Permanent link">&para;</a></h3>
@@ -9865,22 +9849,22 @@
 - Provide the control plane services that DRS and HA need
 - Cannot be managed like normal VMs (they are system VMs)
 - Consume minimal resources (~1 vCPU, 128 MB RAM each)</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>vCenter (may be offline)
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>         │
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>         │  Initial config only
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>         ▼
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>  ┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>  │           vSphere Cluster            │
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>  │                                      │
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>  │  ┌──────────┐ ┌──────────┐ ┌──────┐  │
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>  │  │ Host A   │ │ Host B   │ │ HostC│  │
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>  │  │          │ │          │ │      │  │
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>  │  │ [vCLS-1] │ │ [vCLS-2] │ │      │  │
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>  │  └──────────┘ └──────────┘ └──────┘  │
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>  │                                      │
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>  │  vCLS agents maintain HA/DRS         │
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>  │  even when vCenter is unavailable    │
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>  └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>vCenter (may be offline)
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>         │
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>         │  Initial config only
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>         ▼
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>  ┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>  │           vSphere Cluster            │
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>  │                                      │
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>  │  ┌──────────┐ ┌──────────┐ ┌──────┐  │
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>  │  │ Host A   │ │ Host B   │ │ HostC│  │
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>  │  │          │ │          │ │      │  │
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>  │  │ [vCLS-1] │ │ [vCLS-2] │ │      │  │
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>  │  └──────────┘ └──────────┘ └──────┘  │
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>  │                                      │
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>  │  vCLS agents maintain HA/DRS         │
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>  │  even when vCenter is unavailable    │
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>  └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
 <h3 id="retreat-mode">Retreat Mode<a class="headerlink" href="#retreat-mode" title="Permanent link">&para;</a></h3>
 <p>If vCLS agent VMs cannot run (e.g., all datastores are unavailable), vCLS enters <strong>retreat mode</strong>. In retreat mode:</p>
@@ -9895,16 +9879,16 @@
 </blockquote>
 <h3 id="managing-vcls-agent-vms">Managing vCLS Agent VMs<a class="headerlink" href="#managing-vcls-agent-vms" title="Permanent link">&para;</a></h3>
 <p>You cannot delete vCLS VMs through normal vCenter UI actions — they are automatically re-created. To relocate them (e.g., to a specific datastore):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>vSphere Client:
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  Cluster → Configure → vSphere Cluster Services → Datastores
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  → Select allowed datastores for vCLS VMs
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>vSphere Client:
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>  Cluster → Configure → vSphere Cluster Services → Datastores
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>  → Select allowed datastores for vCLS VMs
 </code></pre></div>
 <p>To temporarily disable vCLS (for troubleshooting only — not recommended in production):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a># Via vCenter MOB or PowerCLI — set the cluster&#39;s DAS config
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a># This is done via the cluster&#39;s advanced settings:
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a># das.ignoreRedundantNetWarning  ← unrelated
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a># vCLS disable is via cluster config UUID in ClusterConfigSpec
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a># Consult VMware KB 80565 for the supported procedure
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a># Via vCenter MOB or PowerCLI — set the cluster&#39;s DAS config
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a># This is done via the cluster&#39;s advanced settings:
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a># das.ignoreRedundantNetWarning  ← unrelated
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a># vCLS disable is via cluster config UUID in ClusterConfigSpec
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a># Consult VMware KB 80565 for the supported procedure
 </code></pre></div>
 <blockquote>
 <p><strong>VCP-DCV Exam Note:</strong> Disabling vCLS entirely is an advanced troubleshooting step supported only via the cluster's configuration UUID. On the exam, know that vCLS agent VMs are system-managed, cannot be deleted through normal means, and exist to maintain HA/DRS independence from vCenter.</p>
@@ -9913,39 +9897,39 @@
 <h2 id="resource-pools-detailed-reference">Resource Pools — Detailed Reference<a class="headerlink" href="#resource-pools-detailed-reference" title="Permanent link">&para;</a></h2>
 <h3 id="shares-explained">Shares Explained<a class="headerlink" href="#shares-explained" title="Permanent link">&para;</a></h3>
 <p>Shares only matter during contention. When the cluster has idle resources, all VMs get what they need regardless of shares. When resources are scarce:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Pool A: High shares (4000)   → gets 4000/(4000+2000+1000) = 57% of contested resources
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>Pool B: Normal shares (2000) → gets 2000/7000 = 29%
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>Pool C: Low shares (1000)    → gets 1000/7000 = 14%
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Pool A: High shares (4000)   → gets 4000/(4000+2000+1000) = 57% of contested resources
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>Pool B: Normal shares (2000) → gets 2000/7000 = 29%
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>Pool C: Low shares (1000)    → gets 1000/7000 = 14%
 </code></pre></div>
 <h3 id="sample-resource-pool-configuration">Sample Resource Pool Configuration<a class="headerlink" href="#sample-resource-pool-configuration" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Cluster: PROD-CLUSTER-01
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>  Resource Pool: PROD-CRITICAL
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>    Shares: High
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>    CPU Reservation: 20 GHz
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>    CPU Limit: Unlimited
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>    Mem Reservation: 64 GB
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>    Mem Limit: Unlimited
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>    Expandable: No
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>    ├── VM: DB-01 (8 vCPU, 32 GB)
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>    └── VM: APP-01 (4 vCPU, 16 GB)
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>
-<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>  Resource Pool: PROD-STANDARD
-<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>    Shares: Normal
-<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>    CPU Reservation: 0
-<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>    CPU Limit: Unlimited
-<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>    Mem Reservation: 0
-<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>    Mem Limit: Unlimited
-<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a>    Expandable: Yes
-<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a>    └── VM: WEB-01 (2 vCPU, 4 GB)
-<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a>
-<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a>  Resource Pool: DEV
-<a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a>    Shares: Low
-<a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a>    CPU Reservation: 0
-<a id="__codelineno-8-24" name="__codelineno-8-24" href="#__codelineno-8-24"></a>    CPU Limit: 8 GHz
-<a id="__codelineno-8-25" name="__codelineno-8-25" href="#__codelineno-8-25"></a>    Mem Reservation: 0
-<a id="__codelineno-8-26" name="__codelineno-8-26" href="#__codelineno-8-26"></a>    Mem Limit: 32 GB
-<a id="__codelineno-8-27" name="__codelineno-8-27" href="#__codelineno-8-27"></a>    Expandable: Yes
-<a id="__codelineno-8-28" name="__codelineno-8-28" href="#__codelineno-8-28"></a>    └── VM: DEV-01 (4 vCPU, 8 GB)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Cluster: PROD-CLUSTER-01
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>  Resource Pool: PROD-CRITICAL
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>    Shares: High
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>    CPU Reservation: 20 GHz
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>    CPU Limit: Unlimited
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>    Mem Reservation: 64 GB
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>    Mem Limit: Unlimited
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>    Expandable: No
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>    ├── VM: DB-01 (8 vCPU, 32 GB)
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>    └── VM: APP-01 (4 vCPU, 16 GB)
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>  Resource Pool: PROD-STANDARD
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>    Shares: Normal
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>    CPU Reservation: 0
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>    CPU Limit: Unlimited
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>    Mem Reservation: 0
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>    Mem Limit: Unlimited
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>    Expandable: Yes
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>    └── VM: WEB-01 (2 vCPU, 4 GB)
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>
+<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>  Resource Pool: DEV
+<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>    Shares: Low
+<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>    CPU Reservation: 0
+<a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a>    CPU Limit: 8 GHz
+<a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a>    Mem Reservation: 0
+<a id="__codelineno-7-26" name="__codelineno-7-26" href="#__codelineno-7-26"></a>    Mem Limit: 32 GB
+<a id="__codelineno-7-27" name="__codelineno-7-27" href="#__codelineno-7-27"></a>    Expandable: Yes
+<a id="__codelineno-7-28" name="__codelineno-7-28" href="#__codelineno-7-28"></a>    └── VM: DEV-01 (4 vCPU, 8 GB)
 </code></pre></div>
 <blockquote>
 <p><strong>VCP-DCV Exam Note:</strong> An Expandable Reservation on a child pool means it can borrow from its parent pool's unreserved capacity when its own reservation is exhausted. Setting Expandable to "No" strictly caps the child pool at its own reservation. The root resource pool's reservation is the total cluster capacity.</p>

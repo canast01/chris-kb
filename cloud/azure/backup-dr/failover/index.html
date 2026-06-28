@@ -8640,23 +8640,7 @@ Azure Site Recovery supports three types of failover: test failover (non-disrupt
 </div>
 <p><img alt="Failover" src="../../../../assets/cloud-azure-backup-dr-failover-index.svg" /></p>
 <hr />
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>center: &quot;Azure&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>failover_decision_flow: &quot;Failover Decision Flow&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>failover_types_compared: &quot;Failover Types Compared&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>prefailover_checks: &quot;Pre-Failover Checks&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>test_failover: &quot;Test Failover&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>planned_failover: &quot;Planned Failover&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>unplanned_failover: &quot;Unplanned Failover&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>center -&gt; failover_decision_flow
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>center -&gt; failover_types_compared
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>center -&gt; prefailover_checks
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>center -&gt; test_failover
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>center -&gt; planned_failover
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>center -&gt; unplanned_failover
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp9kc0OgyAQhO88xca7L-ChSWPj2YM9G4KrkloggP1N373YqsVKPDKz3ywMFdfILJciAc2b1hLCUFjUCUT7R68xgqdpqcIEWrzRRooXqSnv5AV1WSHjxqFl3cmrA7LRgMNoQOaMX8KwiYqmQy_D3hWaksmzohorP6QYHEhHJ5iiNM5BrEV2Mi4g1xjPIelHDcIWjS0n3HGFO8MEhtd1VAisfCj_SttcLwLkcRK32fE7IN5BuPfQwLJUb2JdmGcuCvGhv8t71vpl5A2ertnV?" /></p>
 <h2 id="failover-decision-flow">Failover Decision Flow<a class="headerlink" href="#failover-decision-flow" title="Permanent link">&para;</a></h2>
 <pre class="mermaid"><code>flowchart TD
     failoverNeeded["Failover Required"]
@@ -8707,115 +8691,115 @@ Azure Site Recovery supports three types of failover: test failover (non-disrupt
 </table>
 <hr />
 <h2 id="pre-failover-checks">Pre-Failover Checks<a class="headerlink" href="#pre-failover-checks" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Check replication health before failover</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>az<span class="w"> </span>rest<span class="w"> </span>--method<span class="w"> </span>GET<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>--uri<span class="w"> </span><span class="s2">&quot;https://management.azure.com/subscriptions/&lt;sub-id&gt;/resourceGroups/&lt;dr-rg&gt;/providers/Microsoft.RecoveryServices/vaults/&lt;vault-name&gt;/replicationProtectedItems?api-version=2022-10-01&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;value[].{Name:name, Health:properties.replicationHealth, RPO:properties.rpoInSeconds}&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>--output<span class="w"> </span>table
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Confirm the vault is accessible</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>az<span class="w"> </span>backup<span class="w"> </span>vault<span class="w"> </span>show<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;dr-rg&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">  </span>--name<span class="w"> </span>&lt;vault-name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;properties.provisioningState&quot;</span><span class="w"> </span>--output<span class="w"> </span>tsv
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Verify target network exists in DR region</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>az<span class="w"> </span>network<span class="w"> </span>vnet<span class="w"> </span>show<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;dr-rg&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w">  </span>--name<span class="w"> </span>&lt;target-vnet-name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;provisioningState&quot;</span><span class="w"> </span>--output<span class="w"> </span>tsv
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Check replication health before failover</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>az<span class="w"> </span>rest<span class="w"> </span>--method<span class="w"> </span>GET<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>--uri<span class="w"> </span><span class="s2">&quot;https://management.azure.com/subscriptions/&lt;sub-id&gt;/resourceGroups/&lt;dr-rg&gt;/providers/Microsoft.RecoveryServices/vaults/&lt;vault-name&gt;/replicationProtectedItems?api-version=2022-10-01&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;value[].{Name:name, Health:properties.replicationHealth, RPO:properties.rpoInSeconds}&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span>--output<span class="w"> </span>table
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Confirm the vault is accessible</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>az<span class="w"> </span>backup<span class="w"> </span>vault<span class="w"> </span>show<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;dr-rg&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">  </span>--name<span class="w"> </span>&lt;vault-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;properties.provisioningState&quot;</span><span class="w"> </span>--output<span class="w"> </span>tsv
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Verify target network exists in DR region</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>az<span class="w"> </span>network<span class="w"> </span>vnet<span class="w"> </span>show<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;dr-rg&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="w">  </span>--name<span class="w"> </span>&lt;target-vnet-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;provisioningState&quot;</span><span class="w"> </span>--output<span class="w"> </span>tsv
 </code></pre></div>
 <hr />
 <h2 id="test-failover">Test Failover<a class="headerlink" href="#test-failover" title="Permanent link">&para;</a></h2>
 <p>Test failover spins up a replica VM in an isolated network. Production replication is unaffected.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Trigger test failover</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>az<span class="w"> </span>rest<span class="w"> </span>--method<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>--uri<span class="w"> </span><span class="s2">&quot;https://management.azure.com/subscriptions/&lt;sub-id&gt;/resourceGroups/&lt;dr-rg&gt;/providers/Microsoft.RecoveryServices/vaults/&lt;vault-name&gt;/replicationFabrics/&lt;source-fabric&gt;/replicationProtectionContainers/&lt;source-container&gt;/replicationProtectedItems/&lt;item-name&gt;/testFailover?api-version=2022-10-01&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>--body<span class="w"> </span><span class="s1">&#39;{</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="s1">    &quot;properties&quot;: {</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="s1">      &quot;networkId&quot;: &quot;&lt;test-vnet-id&gt;&quot;,</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="s1">      &quot;failoverDirection&quot;: &quot;PrimaryToRecovery&quot;,</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="s1">      &quot;providerSpecificDetails&quot;: {&quot;instanceType&quot;: &quot;A2A&quot;}</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="s1">    }</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="s1">  }&#39;</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># Monitor the test failover job</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>az<span class="w"> </span>rest<span class="w"> </span>--method<span class="w"> </span>GET<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">  </span>--uri<span class="w"> </span><span class="s2">&quot;https://management.azure.com/subscriptions/&lt;sub-id&gt;/resourceGroups/&lt;dr-rg&gt;/providers/Microsoft.RecoveryServices/vaults/&lt;vault-name&gt;/replicationJobs?api-version=2022-10-01&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;value[?properties.jobType==&#39;TestFailover&#39;].{Name:name, State:properties.state}&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="w">  </span>--output<span class="w"> </span>table
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="c1"># Clean up test failover (mandatory after validation)</span>
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>az<span class="w"> </span>rest<span class="w"> </span>--method<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="w">  </span>--uri<span class="w"> </span><span class="s2">&quot;https://management.azure.com/subscriptions/&lt;sub-id&gt;/resourceGroups/&lt;dr-rg&gt;/providers/Microsoft.RecoveryServices/vaults/&lt;vault-name&gt;/replicationFabrics/&lt;source-fabric&gt;/replicationProtectionContainers/&lt;source-container&gt;/replicationProtectedItems/&lt;item-name&gt;/testFailoverCleanup?api-version=2022-10-01&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="w">  </span>--body<span class="w"> </span><span class="s1">&#39;{&quot;properties&quot;: {&quot;comments&quot;: &quot;DR drill completed - clean up&quot;}}&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Trigger test failover</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>az<span class="w"> </span>rest<span class="w"> </span>--method<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>--uri<span class="w"> </span><span class="s2">&quot;https://management.azure.com/subscriptions/&lt;sub-id&gt;/resourceGroups/&lt;dr-rg&gt;/providers/Microsoft.RecoveryServices/vaults/&lt;vault-name&gt;/replicationFabrics/&lt;source-fabric&gt;/replicationProtectionContainers/&lt;source-container&gt;/replicationProtectedItems/&lt;item-name&gt;/testFailover?api-version=2022-10-01&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>--body<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="s1">    &quot;properties&quot;: {</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="s1">      &quot;networkId&quot;: &quot;&lt;test-vnet-id&gt;&quot;,</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="s1">      &quot;failoverDirection&quot;: &quot;PrimaryToRecovery&quot;,</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="s1">      &quot;providerSpecificDetails&quot;: {&quot;instanceType&quot;: &quot;A2A&quot;}</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="s1">    }</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="s1">  }&#39;</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c1"># Monitor the test failover job</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>az<span class="w"> </span>rest<span class="w"> </span>--method<span class="w"> </span>GET<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">  </span>--uri<span class="w"> </span><span class="s2">&quot;https://management.azure.com/subscriptions/&lt;sub-id&gt;/resourceGroups/&lt;dr-rg&gt;/providers/Microsoft.RecoveryServices/vaults/&lt;vault-name&gt;/replicationJobs?api-version=2022-10-01&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;value[?properties.jobType==&#39;TestFailover&#39;].{Name:name, State:properties.state}&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w">  </span>--output<span class="w"> </span>table
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="c1"># Clean up test failover (mandatory after validation)</span>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>az<span class="w"> </span>rest<span class="w"> </span>--method<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="w">  </span>--uri<span class="w"> </span><span class="s2">&quot;https://management.azure.com/subscriptions/&lt;sub-id&gt;/resourceGroups/&lt;dr-rg&gt;/providers/Microsoft.RecoveryServices/vaults/&lt;vault-name&gt;/replicationFabrics/&lt;source-fabric&gt;/replicationProtectionContainers/&lt;source-container&gt;/replicationProtectedItems/&lt;item-name&gt;/testFailoverCleanup?api-version=2022-10-01&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="w">  </span>--body<span class="w"> </span><span class="s1">&#39;{&quot;properties&quot;: {&quot;comments&quot;: &quot;DR drill completed - clean up&quot;}}&#39;</span>
 </code></pre></div>
 <hr />
 <h2 id="planned-failover">Planned Failover<a class="headerlink" href="#planned-failover" title="Permanent link">&para;</a></h2>
 <p>Planned failover shuts down the source VM cleanly, synchronises all pending data, then brings up the target VM. Zero data loss guaranteed.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Trigger planned failover</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>az<span class="w"> </span>rest<span class="w"> </span>--method<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>--uri<span class="w"> </span><span class="s2">&quot;https://management.azure.com/subscriptions/&lt;sub-id&gt;/resourceGroups/&lt;dr-rg&gt;/providers/Microsoft.RecoveryServices/vaults/&lt;vault-name&gt;/replicationFabrics/&lt;source-fabric&gt;/replicationProtectionContainers/&lt;source-container&gt;/replicationProtectedItems/&lt;item-name&gt;/plannedFailover?api-version=2022-10-01&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>--body<span class="w"> </span><span class="s1">&#39;{</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="s1">    &quot;properties&quot;: {</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="s1">      &quot;failoverDirection&quot;: &quot;PrimaryToRecovery&quot;,</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="s1">      &quot;providerSpecificDetails&quot;: {&quot;instanceType&quot;: &quot;A2A&quot;}</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="s1">    }</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="s1">  }&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Trigger planned failover</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>az<span class="w"> </span>rest<span class="w"> </span>--method<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>--uri<span class="w"> </span><span class="s2">&quot;https://management.azure.com/subscriptions/&lt;sub-id&gt;/resourceGroups/&lt;dr-rg&gt;/providers/Microsoft.RecoveryServices/vaults/&lt;vault-name&gt;/replicationFabrics/&lt;source-fabric&gt;/replicationProtectionContainers/&lt;source-container&gt;/replicationProtectedItems/&lt;item-name&gt;/plannedFailover?api-version=2022-10-01&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>--body<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="s1">    &quot;properties&quot;: {</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="s1">      &quot;failoverDirection&quot;: &quot;PrimaryToRecovery&quot;,</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="s1">      &quot;providerSpecificDetails&quot;: {&quot;instanceType&quot;: &quot;A2A&quot;}</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="s1">    }</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="s1">  }&#39;</span>
 </code></pre></div>
 <hr />
 <h2 id="unplanned-failover">Unplanned Failover<a class="headerlink" href="#unplanned-failover" title="Permanent link">&para;</a></h2>
 <p>Used when the primary region is unavailable. Accept potential data loss of up to one RPO cycle.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Trigger unplanned failover to latest recovery point</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>az<span class="w"> </span>rest<span class="w"> </span>--method<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>--uri<span class="w"> </span><span class="s2">&quot;https://management.azure.com/subscriptions/&lt;sub-id&gt;/resourceGroups/&lt;dr-rg&gt;/providers/Microsoft.RecoveryServices/vaults/&lt;vault-name&gt;/replicationFabrics/&lt;source-fabric&gt;/replicationProtectionContainers/&lt;source-container&gt;/replicationProtectedItems/&lt;item-name&gt;/unplannedFailover?api-version=2022-10-01&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>--body<span class="w"> </span><span class="s1">&#39;{</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="s1">    &quot;properties&quot;: {</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="s1">      &quot;failoverDirection&quot;: &quot;PrimaryToRecovery&quot;,</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="s1">      &quot;sourceSiteOperations&quot;: &quot;NotRequired&quot;,</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="s1">      &quot;providerSpecificDetails&quot;: {</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="s1">        &quot;instanceType&quot;: &quot;A2A&quot;,</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="s1">        &quot;recoveryPointId&quot;: &quot;latest&quot;</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="s1">      }</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="s1">    }</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="s1">  }&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Trigger unplanned failover to latest recovery point</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>az<span class="w"> </span>rest<span class="w"> </span>--method<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>--uri<span class="w"> </span><span class="s2">&quot;https://management.azure.com/subscriptions/&lt;sub-id&gt;/resourceGroups/&lt;dr-rg&gt;/providers/Microsoft.RecoveryServices/vaults/&lt;vault-name&gt;/replicationFabrics/&lt;source-fabric&gt;/replicationProtectionContainers/&lt;source-container&gt;/replicationProtectedItems/&lt;item-name&gt;/unplannedFailover?api-version=2022-10-01&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>--body<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="s1">    &quot;properties&quot;: {</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="s1">      &quot;failoverDirection&quot;: &quot;PrimaryToRecovery&quot;,</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="s1">      &quot;sourceSiteOperations&quot;: &quot;NotRequired&quot;,</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="s1">      &quot;providerSpecificDetails&quot;: {</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="s1">        &quot;instanceType&quot;: &quot;A2A&quot;,</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="s1">        &quot;recoveryPointId&quot;: &quot;latest&quot;</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="s1">      }</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="s1">    }</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="s1">  }&#39;</span>
 </code></pre></div>
 <hr />
 <h2 id="recovery-plans">Recovery Plans<a class="headerlink" href="#recovery-plans" title="Permanent link">&para;</a></h2>
 <p>Recovery plans define the order in which VMs are failed over and allow pre/post scripts.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># List all recovery plans in the vault</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>az<span class="w"> </span>rest<span class="w"> </span>--method<span class="w"> </span>GET<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>--uri<span class="w"> </span><span class="s2">&quot;https://management.azure.com/subscriptions/&lt;sub-id&gt;/resourceGroups/&lt;dr-rg&gt;/providers/Microsoft.RecoveryServices/vaults/&lt;vault-name&gt;/replicationRecoveryPlans?api-version=2022-10-01&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;value[].{Name:name, Groups:properties.groups}&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span>--output<span class="w"> </span>table
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Trigger a recovery plan failover</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>az<span class="w"> </span>rest<span class="w"> </span>--method<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">  </span>--uri<span class="w"> </span><span class="s2">&quot;https://management.azure.com/subscriptions/&lt;sub-id&gt;/resourceGroups/&lt;dr-rg&gt;/providers/Microsoft.RecoveryServices/vaults/&lt;vault-name&gt;/replicationRecoveryPlans/&lt;plan-name&gt;/plannedFailover?api-version=2022-10-01&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">  </span>--body<span class="w"> </span><span class="s1">&#39;{&quot;properties&quot;: {&quot;failoverDirection&quot;: &quot;PrimaryToRecovery&quot;, &quot;providerSpecificDetails&quot;: [{&quot;instanceType&quot;: &quot;A2A&quot;}]}}&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># List all recovery plans in the vault</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>az<span class="w"> </span>rest<span class="w"> </span>--method<span class="w"> </span>GET<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>--uri<span class="w"> </span><span class="s2">&quot;https://management.azure.com/subscriptions/&lt;sub-id&gt;/resourceGroups/&lt;dr-rg&gt;/providers/Microsoft.RecoveryServices/vaults/&lt;vault-name&gt;/replicationRecoveryPlans?api-version=2022-10-01&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;value[].{Name:name, Groups:properties.groups}&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span>--output<span class="w"> </span>table
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Trigger a recovery plan failover</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>az<span class="w"> </span>rest<span class="w"> </span>--method<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">  </span>--uri<span class="w"> </span><span class="s2">&quot;https://management.azure.com/subscriptions/&lt;sub-id&gt;/resourceGroups/&lt;dr-rg&gt;/providers/Microsoft.RecoveryServices/vaults/&lt;vault-name&gt;/replicationRecoveryPlans/&lt;plan-name&gt;/plannedFailover?api-version=2022-10-01&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">  </span>--body<span class="w"> </span><span class="s1">&#39;{&quot;properties&quot;: {&quot;failoverDirection&quot;: &quot;PrimaryToRecovery&quot;, &quot;providerSpecificDetails&quot;: [{&quot;instanceType&quot;: &quot;A2A&quot;}]}}&#39;</span>
 </code></pre></div>
 <hr />
 <h2 id="commit-failover">Commit Failover<a class="headerlink" href="#commit-failover" title="Permanent link">&para;</a></h2>
 <p>After a failover (planned or unplanned), commit to finalize the state and stop reverse delta sync.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Commit failover for a protected item</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>az<span class="w"> </span>rest<span class="w"> </span>--method<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>--uri<span class="w"> </span><span class="s2">&quot;https://management.azure.com/subscriptions/&lt;sub-id&gt;/resourceGroups/&lt;dr-rg&gt;/providers/Microsoft.RecoveryServices/vaults/&lt;vault-name&gt;/replicationFabrics/&lt;source-fabric&gt;/replicationProtectionContainers/&lt;source-container&gt;/replicationProtectedItems/&lt;item-name&gt;/failoverCommit?api-version=2022-10-01&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Commit failover for a protected item</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>az<span class="w"> </span>rest<span class="w"> </span>--method<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>--uri<span class="w"> </span><span class="s2">&quot;https://management.azure.com/subscriptions/&lt;sub-id&gt;/resourceGroups/&lt;dr-rg&gt;/providers/Microsoft.RecoveryServices/vaults/&lt;vault-name&gt;/replicationFabrics/&lt;source-fabric&gt;/replicationProtectionContainers/&lt;source-container&gt;/replicationProtectedItems/&lt;item-name&gt;/failoverCommit?api-version=2022-10-01&quot;</span>
 </code></pre></div>
 <hr />
 <h2 id="post-failover-validation">Post-Failover Validation<a class="headerlink" href="#post-failover-validation" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Confirm DR VM is running</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>az<span class="w"> </span>vm<span class="w"> </span>show<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;dr-rg&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span>--name<span class="w"> </span>&lt;dr-vm-name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">  </span>--show-details<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;powerState&quot;</span><span class="w"> </span>--output<span class="w"> </span>tsv
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="c1"># Check activity log for failover-related events</span>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>az<span class="w"> </span>monitor<span class="w"> </span>activity-log<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;dr-rg&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="w">  </span>--start-time<span class="w"> </span><span class="k">$(</span>date<span class="w"> </span>-u<span class="w"> </span>-d<span class="w"> </span><span class="s1">&#39;2 hours ago&#39;</span><span class="w"> </span>+%Y-%m-%dT%H:%M:%SZ<span class="k">)</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;[].{Time:eventTimestamp, Op:operationName.value, Status:status.value}&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="w">  </span>--output<span class="w"> </span>table
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Confirm DR VM is running</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>az<span class="w"> </span>vm<span class="w"> </span>show<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;dr-rg&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span>--name<span class="w"> </span>&lt;dr-vm-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span>--show-details<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;powerState&quot;</span><span class="w"> </span>--output<span class="w"> </span>tsv
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># Check activity log for failover-related events</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>az<span class="w"> </span>monitor<span class="w"> </span>activity-log<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;dr-rg&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="w">  </span>--start-time<span class="w"> </span><span class="k">$(</span>date<span class="w"> </span>-u<span class="w"> </span>-d<span class="w"> </span><span class="s1">&#39;2 hours ago&#39;</span><span class="w"> </span>+%Y-%m-%dT%H:%M:%SZ<span class="k">)</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;[].{Time:eventTimestamp, Op:operationName.value, Status:status.value}&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="w">  </span>--output<span class="w"> </span>table
 </code></pre></div>
 
 

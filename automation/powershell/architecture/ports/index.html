@@ -7635,21 +7635,7 @@ Firewall port reference for PowerShell remoting. PowerShell itself has no listen
 *Applies to: PowerShell 7.x / Windows PowerShell 5.1*
 </div>
 <p><img alt="PowerShell — Ports and Network Requirements" src="../../../../assets/automation-powershell-architecture-ports.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>center: &quot;PowerShell&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>winrm_windows_remoting_primary: &quot;WinRM — Windows Remoting (Primary)&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>sshbased_ps_remoting_crossplatform: &quot;SSH-Based PS Remoting (Cross-Platform)&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>powershell_to_infrastructure_apis: &quot;PowerShell to Infrastructure APIs&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>firewall_zone_summary: &quot;Firewall Zone Summary&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>verify: &quot;Verify&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>center -&gt; winrm_windows_remoting_primary
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>center -&gt; sshbased_ps_remoting_crossplatform
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>center -&gt; powershell_to_infrastructure_apis
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>center -&gt; firewall_zone_summary
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>center -&gt; verify
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqFkc9KxDAQh-99imFP66Ev0IOwCuIehLAFF7yE2E7bQJuEmdT6hwUfwif0SUxswSwU9xLC5JuP_GZqTVh5bU0BpNvOZ1mFxiMVsBF2Qio77PsNfHCnHBbQ4atqrTllkzY0yHDWdmJJOFivTSsd6UHRW-g-anN4gO_PLzjOEBwWCLZipq7-vPETyrQ9njLm7lkx1tIl3ooss-uVbywNwV6W9_lNpECUifg2YrlYuHW_i7E4xpLeSm0aUuxprPxIKJXTfBYdvIX9GQM7sedVcxNmOangfbcGJY_DMoq7pQ5PoQ7lXF81vCDpJrY8_l5WmWVBkF_D_0tIwMszTeCLA0rY1cjJ-xwo-wFMgOXN?" /></p>
 <h2 id="winrm-windows-remoting-primary">WinRM — Windows Remoting (Primary)<a class="headerlink" href="#winrm-windows-remoting-primary" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -7757,15 +7743,15 @@ Firewall port reference for PowerShell remoting. PowerShell itself has no listen
 </tbody>
 </table>
 <h2 id="verify">Verify<a class="headerlink" href="#verify" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Test WinRM connectivity from source</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Test-WSMan</span> <span class="n">-ComputerName</span> <span class="p">&lt;</span><span class="n">target</span><span class="p">&gt;</span> <span class="n">-UseSSL</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c"># Test PS Session</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nv">$s</span> <span class="p">=</span> <span class="nb">New-PSSession</span> <span class="n">-ComputerName</span> <span class="p">&lt;</span><span class="n">target</span><span class="p">&gt;</span> <span class="n">-UseSSL</span> <span class="n">-Credential</span> <span class="p">(</span><span class="nb">Get-Credential</span><span class="p">)</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="nb">Invoke-Command</span> <span class="n">-Session</span> <span class="nv">$s</span> <span class="p">{</span> <span class="nv">$env:COMPUTERNAME</span> <span class="p">}</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c"># Test SSH-based remoting</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="nb">Enter-PSSession</span> <span class="n">-HostName</span> <span class="p">&lt;</span><span class="n">linux-host</span><span class="p">&gt;</span> <span class="n">-UserName</span> <span class="n">ansible</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Test WinRM connectivity from source</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Test-WSMan</span> <span class="n">-ComputerName</span> <span class="p">&lt;</span><span class="n">target</span><span class="p">&gt;</span> <span class="n">-UseSSL</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c"># Test PS Session</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nv">$s</span> <span class="p">=</span> <span class="nb">New-PSSession</span> <span class="n">-ComputerName</span> <span class="p">&lt;</span><span class="n">target</span><span class="p">&gt;</span> <span class="n">-UseSSL</span> <span class="n">-Credential</span> <span class="p">(</span><span class="nb">Get-Credential</span><span class="p">)</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="nb">Invoke-Command</span> <span class="n">-Session</span> <span class="nv">$s</span> <span class="p">{</span> <span class="nv">$env:COMPUTERNAME</span> <span class="p">}</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c"># Test SSH-based remoting</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="nb">Enter-PSSession</span> <span class="n">-HostName</span> <span class="p">&lt;</span><span class="n">linux-host</span><span class="p">&gt;</span> <span class="n">-UserName</span> <span class="n">ansible</span>
 </code></pre></div>
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>

@@ -8179,30 +8179,7 @@ AD failures typically trace back to replication, DNS, time sync, or Kerberos. Th
 *Applies to: Windows Server 2019 / 2022*
 </div>
 <p><img alt="Active Directory — Common Issues" src="../../../../../assets/compute-windows-server-active-directory-troubleshooting-comm.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: down
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>symptom: Identify Symptom {shape: diamond}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>diagnostic_flow: &quot;Diagnostic Flow&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>ad_failure_triage_flowchart: &quot;AD Failure Triage Flowchart&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>replication_errors: &quot;Replication Errors&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>common_replication_error_codes: &quot;Common Replication Error Codes&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>dcdiag_tests: &quot;Dcdiag Tests&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>kerberos_failures: &quot;Kerberos Failures&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>resolution: Resolve or Escalate {shape: oval}
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>symptom -&gt; diagnostic_flow: investigate
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>symptom -&gt; ad_failure_triage_flowchart: investigate
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>symptom -&gt; replication_errors: investigate
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>symptom -&gt; common_replication_error_codes: investigate
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>symptom -&gt; dcdiag_tests: investigate
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>symptom -&gt; kerberos_failures: investigate
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>diagnostic_flow -&gt; resolution
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>ad_failure_triage_flowchart -&gt; resolution
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>replication_errors -&gt; resolution
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>common_replication_error_codes -&gt; resolution
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>dcdiag_tests -&gt; resolution
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>kerberos_failures -&gt; resolution
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqFUkFuwyAQvPsVq9z7AR8qVXEiVb2luSMKawcVgwXEUVT57wVcuy7G6Q1mZ8bMrLkwyJzQqgSub6oo7L3tnG5LeOWonKjv8D4i8GUvtEPPE7TVig-FPzRKWycYqaW-lbCrZgSOHtnNmvARqhqJQ0E5qamQV4PEGc_HKGYXapx3eKngOE7hHKfRKE6zbgY7KRgNCQgao431JqdfEA4RzGqZbn0QsrIgTHMMPvtIgJUd7AMh68lZaIU4tC44VPEK53DN8j_RfKDRduokiN5-sKkJu5HcankdV3cK5x7BP-1gGZXU4SzRPZXDvFd4eobV3oTq_QNF42VL3sNNbWhy-9ig_lf_huxvwxukTK1LZtLA-PCpzkd_aMJcp00IjzMm5GWyZLTKk8y_AQIXamA=?" /></p>
 <h2 id="diagnostic-flow">Diagnostic Flow<a class="headerlink" href="#diagnostic-flow" title="Permanent link">&para;</a></h2>
 <pre class="mermaid"><code>graph TD
     S([What is the symptom?]) --&gt; D1{DC replication\nfailing / USN rollback?}
@@ -8251,20 +8228,20 @@ AD failures typically trace back to replication, DNS, time sync, or Kerberos. Th
     servicesCheck --&gt; validate</code></pre>
 <h2 id="replication-errors">Replication Errors<a class="headerlink" href="#replication-errors" title="Permanent link">&para;</a></h2>
 <p>AD replication failures cause inconsistent directory state across DCs. Start with <code>repadmin</code> to identify the scope.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a># Show replication status for all partners
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>repadmin /showrepl
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a># Show replication summary (good overview)
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>repadmin /replsummary
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a># Force replication from a specific source DC
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>repadmin /replicate dc02.corp.example.com dc01.corp.example.com &quot;DC=corp,DC=example,DC=com&quot;
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a># Force full sync from all partners
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>repadmin /syncall /AdeP
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a># Show replication errors only
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>repadmin /showrepl * /csv &gt; C:\repl-errors.csv
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a># Show replication status for all partners
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>repadmin /showrepl
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a># Show replication summary (good overview)
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>repadmin /replsummary
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a># Force replication from a specific source DC
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>repadmin /replicate dc02.corp.example.com dc01.corp.example.com &quot;DC=corp,DC=example,DC=com&quot;
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a># Force full sync from all partners
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>repadmin /syncall /AdeP
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a># Show replication errors only
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>repadmin /showrepl * /csv &gt; C:\repl-errors.csv
 </code></pre></div>
 <h2 id="common-replication-error-codes">Common Replication Error Codes<a class="headerlink" href="#common-replication-error-codes" title="Permanent link">&para;</a></h2>
 <table>
@@ -8304,62 +8281,62 @@ AD failures typically trace back to replication, DNS, time sync, or Kerberos. Th
 </tbody>
 </table>
 <h2 id="dcdiag-tests">Dcdiag Tests<a class="headerlink" href="#dcdiag-tests" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a># Full dcdiag run
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>dcdiag /test:all /v /f:C:\dcdiag-output.txt
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a># DNS-specific test
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>dcdiag /test:dns /v
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a># Connectivity test only
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>dcdiag /test:connectivity
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a># Run against a remote DC
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>dcdiag /s:dc02.corp.example.com /test:replications
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a># Full dcdiag run
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>dcdiag /test:all /v /f:C:\dcdiag-output.txt
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a># DNS-specific test
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>dcdiag /test:dns /v
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a># Connectivity test only
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>dcdiag /test:connectivity
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a># Run against a remote DC
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>dcdiag /s:dc02.corp.example.com /test:replications
 </code></pre></div>
 <h2 id="kerberos-failures">Kerberos Failures<a class="headerlink" href="#kerberos-failures" title="Permanent link">&para;</a></h2>
 <p>Most Kerberos errors stem from time skew (&gt;5 min), DNS, or SPN issues.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a># Check Kerberos tickets on a client
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>klist
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a># Purge Kerberos ticket cache
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>klist purge
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a># Check time difference between client and DC
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>w32tm /stripchart /computer:dc01.corp.example.com /samples:5
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a># List SPNs for a service account
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>setspn -L svc-webapp
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a># Find duplicate SPNs (common cause of Kerberos failures)
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>setspn -X -F
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a># Check Kerberos tickets on a client
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>klist
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a># Purge Kerberos ticket cache
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>klist purge
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a># Check time difference between client and DC
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>w32tm /stripchart /computer:dc01.corp.example.com /samples:5
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a># List SPNs for a service account
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>setspn -L svc-webapp
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a># Find duplicate SPNs (common cause of Kerberos failures)
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>setspn -X -F
 </code></pre></div>
 <h2 id="time-sync-issues">Time Sync Issues<a class="headerlink" href="#time-sync-issues" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a># Check current sync status
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>w32tm /query /status
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a># Force resync
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>w32tm /resync /force
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a># Check time source hierarchy
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>w32tm /query /peers
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a># Configure a workstation to use the domain hierarchy
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>w32tm /config /syncfromflags:domhier /update
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>net stop w32tm &amp;&amp; net start w32tm
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a># Check current sync status
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>w32tm /query /status
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a># Force resync
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>w32tm /resync /force
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a># Check time source hierarchy
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>w32tm /query /peers
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a># Configure a workstation to use the domain hierarchy
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>w32tm /config /syncfromflags:domhier /update
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>net stop w32tm &amp;&amp; net start w32tm
 </code></pre></div>
 <h2 id="event-log-references">Event Log References<a class="headerlink" href="#event-log-references" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># Check Directory Service log for replication errors</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">Get-WinEvent</span> <span class="n">-LogName</span> <span class="s2">&quot;Directory Service&quot;</span> <span class="p">|</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>    <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">Level</span> <span class="o">-le</span> <span class="n">3</span><span class="p">}</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">20</span> <span class="n">TimeCreated</span><span class="p">,</span> <span class="n">Id</span><span class="p">,</span> <span class="n">Message</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c"># Check System log for Netlogon errors</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="nb">Get-WinEvent</span> <span class="n">-LogName</span> <span class="n">System</span> <span class="n">-ProviderName</span> <span class="n">Netlogon</span> <span class="p">|</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>    <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">20</span> <span class="n">TimeCreated</span><span class="p">,</span> <span class="n">Id</span><span class="p">,</span> <span class="n">Message</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="c"># Check for Kerberos errors in Security log</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="nb">Get-WinEvent</span> <span class="n">-LogName</span> <span class="n">Security</span> <span class="p">|</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>    <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">Id</span> <span class="n">-in</span> <span class="p">@(</span><span class="n">4768</span><span class="p">,</span><span class="n">4769</span><span class="p">,</span><span class="n">4771</span><span class="p">)}</span> <span class="p">|</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>    <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">20</span> <span class="n">TimeCreated</span><span class="p">,</span> <span class="n">Id</span><span class="p">,</span> <span class="n">Message</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Check Directory Service log for replication errors</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">Get-WinEvent</span> <span class="n">-LogName</span> <span class="s2">&quot;Directory Service&quot;</span> <span class="p">|</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">Level</span> <span class="o">-le</span> <span class="n">3</span><span class="p">}</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">20</span> <span class="n">TimeCreated</span><span class="p">,</span> <span class="n">Id</span><span class="p">,</span> <span class="n">Message</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c"># Check System log for Netlogon errors</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="nb">Get-WinEvent</span> <span class="n">-LogName</span> <span class="n">System</span> <span class="n">-ProviderName</span> <span class="n">Netlogon</span> <span class="p">|</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>    <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">20</span> <span class="n">TimeCreated</span><span class="p">,</span> <span class="n">Id</span><span class="p">,</span> <span class="n">Message</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c"># Check for Kerberos errors in Security log</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="nb">Get-WinEvent</span> <span class="n">-LogName</span> <span class="n">Security</span> <span class="p">|</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>    <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">Id</span> <span class="n">-in</span> <span class="p">@(</span><span class="n">4768</span><span class="p">,</span><span class="n">4769</span><span class="p">,</span><span class="n">4771</span><span class="p">)}</span> <span class="p">|</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>    <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">20</span> <span class="n">TimeCreated</span><span class="p">,</span> <span class="n">Id</span><span class="p">,</span> <span class="n">Message</span>
 </code></pre></div>
 <hr />
 <h2 id="verify-resolution">Verify resolution<a class="headerlink" href="#verify-resolution" title="Permanent link">&para;</a></h2>

@@ -10723,23 +10723,7 @@ to prevent recurrence.
 *Applies to: vSphere 7.x / 8.x*
 </div>
 <p><img alt="Datastore Full / Capacity Alarm" src="../../../../../assets/virtualization-vmware-topics-scenarios-datastore-full-capaci.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>center: &quot;Scenarios&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>products_involved: &quot;Products Involved&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>1_identify_the_alarm_and_affected_da: &quot;1. Identify the Alarm and Affected Datastore&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>2_check_what_is_consuming_space: &quot;2. Check What Is Consuming Space&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>3_find_large_snapshots_powercli: &quot;3. Find Large Snapshots — PowerCLI&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>4_find_orphaned_vmdks_on_the_datasto: &quot;4. Find Orphaned VMDKs on the Datastore&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>5_expand_capacity_or_storage_vmotion: &quot;5. Expand Capacity or Storage vMotion VMs&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>center -&gt; products_involved
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>center -&gt; 1_identify_the_alarm_and_affected_da
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>center -&gt; 2_check_what_is_consuming_space
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>center -&gt; 3_find_large_snapshots_powercli
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>center -&gt; 4_find_orphaned_vmdks_on_the_datasto
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>center -&gt; 5_expand_capacity_or_storage_vmotion
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqN0t1qwjAUB_D7PsWh9xP8uvFiIHWDMmWCsF0eDklsg21SkliVIewh9oR7kp1qZYXJ9K6kv5yT_HOkdkoEbc0EnM7yEEVCmaDcBOIVf5HT1sfw4XOq1ARytafMmmNUOSu3InjUprZFrST7ZbsGabv2u6_pQSYr1DHqo5bcQa8PGHKFVJArkYxEWq9ZKYmSuFi_B2nrgB1MGwfsYNo6mFEgH6xTV_sMUORKbHCXU0DtUVjjt6U2GfqKBNt40IOkIfDOBFIPyYXAqiFXyw5xrfmwfJpMoTdU-dxyDJXdKScKzWWHPXhmAvOGwOpC4PvzC5YNS-bp1dKjc2nrqpwM51CXcuPRmlNO8nxZrj9q67-2Dt4WsxcP1pxy-j-UMap91YQtiG-ow4G7YcOJb1OX9jwI8bgHTycHSevAOlidHdSLk-O-_mqTdoLg4RH-jEnn3z2D0OE33rMjbzxRR96TeIffk170A-L4N6k=?" /></p>
 <h2 id="products-involved">Products Involved<a class="headerlink" href="#products-involved" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -10815,39 +10799,39 @@ to prevent recurrence.
 <hr />
 <h2 id="3-find-large-snapshots-powercli">3. Find Large Snapshots — PowerCLI<a class="headerlink" href="#3-find-large-snapshots-powercli" title="Permanent link">&para;</a></h2>
 <p>Snapshots are the fastest path to recovering space — confirm with the VM owner before deleting, but treat any snapshot older than your retention policy (typically 7 days) as a removal candidate.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Find all snapshots, sorted by size descending — top 20</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Get-Snapshot</span> <span class="p">|</span> <span class="p">`</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  <span class="nb">Select-Object</span> <span class="n">VM</span><span class="p">,</span> <span class="n">Name</span><span class="p">,</span> <span class="n">SizeMB</span><span class="p">,</span> <span class="n">Created</span> <span class="p">|</span> <span class="p">`</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  <span class="nb">Sort-Object</span> <span class="n">SizeMB</span> <span class="n">-Descending</span> <span class="p">|</span> <span class="p">`</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>  <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">20</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Find all snapshots, sorted by size descending — top 20</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Get-Snapshot</span> <span class="p">|</span> <span class="p">`</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>  <span class="nb">Select-Object</span> <span class="n">VM</span><span class="p">,</span> <span class="n">Name</span><span class="p">,</span> <span class="n">SizeMB</span><span class="p">,</span> <span class="n">Created</span> <span class="p">|</span> <span class="p">`</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>  <span class="nb">Sort-Object</span> <span class="n">SizeMB</span> <span class="n">-Descending</span> <span class="p">|</span> <span class="p">`</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>  <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">20</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Find snapshots older than 7 days across all VMs</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Get-Snapshot</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">Created</span> <span class="o">-lt</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddDays</span><span class="p">(-</span><span class="n">7</span><span class="p">)}</span> <span class="p">|</span> <span class="p">`</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>  <span class="nb">Select-Object</span> <span class="n">VM</span><span class="p">,</span> <span class="n">Name</span><span class="p">,</span> <span class="n">SizeMB</span><span class="p">,</span> <span class="n">Created</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">Created</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Find snapshots older than 7 days across all VMs</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Get-Snapshot</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">Created</span> <span class="o">-lt</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddDays</span><span class="p">(-</span><span class="n">7</span><span class="p">)}</span> <span class="p">|</span> <span class="p">`</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  <span class="nb">Select-Object</span> <span class="n">VM</span><span class="p">,</span> <span class="n">Name</span><span class="p">,</span> <span class="n">SizeMB</span><span class="p">,</span> <span class="n">Created</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">Created</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Remove a specific VM&#39;s stale snapshots (confirm with owner first)</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Get-VM</span> <span class="s2">&quot;vm-name&quot;</span> <span class="p">|</span> <span class="nb">Get-Snapshot</span> <span class="p">|</span> <span class="p">`</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">Created</span> <span class="o">-lt</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddDays</span><span class="p">(-</span><span class="n">7</span><span class="p">)}</span> <span class="p">|</span> <span class="p">`</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>  <span class="nb">Remove-Snapshot</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Remove a specific VM&#39;s stale snapshots (confirm with owner first)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">Get-VM</span> <span class="s2">&quot;vm-name&quot;</span> <span class="p">|</span> <span class="nb">Get-Snapshot</span> <span class="p">|</span> <span class="p">`</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>  <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">Created</span> <span class="o">-lt</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddDays</span><span class="p">(-</span><span class="n">7</span><span class="p">)}</span> <span class="p">|</span> <span class="p">`</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>  <span class="nb">Remove-Snapshot</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
 </code></pre></div>
 <p>Look for: snapshots older than 7 days or with SizeMB &gt; 10,000 as priority targets.</p>
 <p>Note: consolidation needs free space equal to the delta size — if the datastore is completely full, svMotion one VM off first, then consolidate.</p>
 <hr />
 <h2 id="4-find-orphaned-vmdks-on-the-datastore">4. Find Orphaned VMDKs on the Datastore<a class="headerlink" href="#4-find-orphaned-vmdks-on-the-datastore" title="Permanent link">&para;</a></h2>
 <p>Orphaned VMDKs have no corresponding VM in vCenter — safe to remove but must be confirmed carefully before deletion.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># SSH to ESXi host — list all VMDK files on a datastore</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>find<span class="w"> </span>/vmfs/volumes/&lt;datastore-name&gt;/<span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;*.vmdk&quot;</span><span class="w"> </span>-not<span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;*-flat.vmdk&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sort
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Find large delta files (snapshot deltas over 10 GB)</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>find<span class="w"> </span>/vmfs/volumes/&lt;datastore-name&gt;/<span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;*-delta.vmdk&quot;</span><span class="w"> </span>-size<span class="w"> </span>+10G
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># SSH to ESXi host — list all VMDK files on a datastore</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>find<span class="w"> </span>/vmfs/volumes/&lt;datastore-name&gt;/<span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;*.vmdk&quot;</span><span class="w"> </span>-not<span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;*-flat.vmdk&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sort
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Find large delta files (snapshot deltas over 10 GB)</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>find<span class="w"> </span>/vmfs/volumes/&lt;datastore-name&gt;/<span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;*-delta.vmdk&quot;</span><span class="w"> </span>-size<span class="w"> </span>+10G
 </code></pre></div>
 <p>Look for: VMDKs absent from every VM's <strong>Edit Settings</strong> → <strong>Hard Disk</strong> list and not a system snapshot = orphan candidate.</p>
 <p><strong>Never delete a VMDK directly without confirming it has no vCenter registration.</strong> If in doubt, move it to a holding folder and monitor for 72 hours before deletion.</p>
 <hr />
 <h2 id="5-expand-capacity-or-storage-vmotion-vms">5. Expand Capacity or Storage vMotion VMs<a class="headerlink" href="#5-expand-capacity-or-storage-vmotion-vms" title="Permanent link">&para;</a></h2>
 <p>If removing snapshots and orphans is not enough, move VMs or add capacity:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># Move a VM&#39;s storage to a different datastore (no downtime)</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">Move-VM</span> <span class="n">-VM</span> <span class="s2">&quot;vm-name&quot;</span> <span class="n">-Datastore</span> <span class="s2">&quot;target-datastore&quot;</span> <span class="n">-DiskStorageFormat</span> <span class="n">Thin</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Move a VM&#39;s storage to a different datastore (no downtime)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">Move-VM</span> <span class="n">-VM</span> <span class="s2">&quot;vm-name&quot;</span> <span class="n">-Datastore</span> <span class="s2">&quot;target-datastore&quot;</span> <span class="n">-DiskStorageFormat</span> <span class="n">Thin</span>
 </code></pre></div>
 <p>For vSAN: add a host or additional disk capacity — new capacity is available immediately after the disk group rebuilds.</p>
 <hr />
@@ -10858,11 +10842,11 @@ to prevent recurrence.
 <h2 id="7-aria-ops-capacity-trending-get-ahead-of-the-next-alarm">7. Aria Ops Capacity Trending — Get Ahead of the Next Alarm<a class="headerlink" href="#7-aria-ops-capacity-trending-get-ahead-of-the-next-alarm" title="Permanent link">&para;</a></h2>
 <p>After recovering space, project the next fill date: Aria Operations → <strong>Capacity</strong> → <strong>vSAN Cluster</strong> → <strong>Time Remaining</strong>.</p>
 <p>Look for: Days Remaining to Full under 30 = expansion request; under 7 = urgent incident.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Aria Ops REST API — get capacity remaining for a specific resource</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span><span class="s2">&quot;https://ariaops.domain.local/suite-api/api/resources/&lt;resource-uuid&gt;/stats?statKey=summary|capacity_remaining&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer &lt;token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.values[].statList.stat[] | {timestamp: .timestamps[], value: .data[]}&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Aria Ops REST API — get capacity remaining for a specific resource</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="s2">&quot;https://ariaops.domain.local/suite-api/api/resources/&lt;resource-uuid&gt;/stats?statKey=summary|capacity_remaining&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer &lt;token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.values[].statList.stat[] | {timestamp: .timestamps[], value: .data[]}&#39;</span>
 </code></pre></div>
 <p>Set proactive thresholds: vCenter → <strong>Cluster</strong> → <strong>Monitor</strong> → <strong>vSAN</strong> → <strong>Configure</strong> → <strong>Advanced Options</strong> — set warning to 60% and error to 70% for production clusters, giving lead time before the 80% write-stop.</p>
 <hr />

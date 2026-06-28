@@ -8852,23 +8852,7 @@ EVS cluster sizing, AZ placement, CIDR planning, Direct Connect bandwidth requir
 
     DEV --&gt; MIN --&gt; PROD
     PROD --&gt; STR</code></pre>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>center: &quot;AWS EVS&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>host_type_selection: &quot;Host Type Selection&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>cluster_sizing: &quot;Cluster Sizing&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>vsan_policy_selection: &quot;vSAN Policy Selection&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>stretched_cluster_design: &quot;Stretched Cluster Design&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>vpc_and_cidr_design: &quot;VPC and CIDR Design&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>high_availability_design: &quot;High Availability Design&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>center -&gt; host_type_selection
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>center -&gt; cluster_sizing
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>center -&gt; vsan_policy_selection
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>center -&gt; stretched_cluster_design
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>center -&gt; vpc_and_cidr_design
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>center -&gt; high_availability_design
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqFkUGLwjAUhO_5FY_e9w_0sFCqoJdFNqLHENNH8iCkpYnF7uJ_31gNRqzudT5m5mXSUI8qUOtK6EmbwJhCF7Avoaj2HJY7XsCvN7LDEgyepG7dmZnWBxHGDoVHm-zFKqqwjSrwpN69lxbptMUzU_boY4Pw9ENOR2N9FYBPwqxn8NKJrrWkxofOgVdfsJn0f1p96DEog41I_Q160pcQnhCkSxYTmr-kU0K6mEJNFrHb1BBVqNeL73duEzcWcpBk5YEshfEesYoIqgy9y7n9Enx8wsxnZPRx7AzMLprxV3vlEc9T5He9eCr7A_6j5V4=?" /></p>
 <h2 id="host-type-selection">Host Type Selection<a class="headerlink" href="#host-type-selection" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -8909,23 +8893,23 @@ EVS cluster sizing, AZ placement, CIDR planning, Direct Connect bandwidth requir
 <li>All hosts in a cluster must be the same instance type</li>
 </ul>
 <h2 id="cluster-sizing">Cluster Sizing<a class="headerlink" href="#cluster-sizing" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Minimum (dev/test):
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  3 hosts × i4i.metal
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  vSAN policy: RAID-1 FTT=1
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  Usable capacity: ~50% raw (metadata + slack)
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>Production baseline:
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>  4 hosts — FTT=1 can survive 1 host failure
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>  Hosts: i4i.metal
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>Production recommended:
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>  6 hosts — allows FTT=2 (2 concurrent host failures tolerated)
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>  Or: FTT=1 with capacity headroom for host replacement without evacuation
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>Stretched (multi-AZ):
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>  6 hosts minimum: 3 in AZ-a, 3 in AZ-b
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>  1 witness appliance in AZ-c (t3.medium EC2 or dedicated)
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>  vSAN policy: RAID-1 FTT=1 (site-level) + FTT=0 host
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Minimum (dev/test):
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>  3 hosts × i4i.metal
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>  vSAN policy: RAID-1 FTT=1
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>  Usable capacity: ~50% raw (metadata + slack)
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>Production baseline:
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>  4 hosts — FTT=1 can survive 1 host failure
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>  Hosts: i4i.metal
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>Production recommended:
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>  6 hosts — allows FTT=2 (2 concurrent host failures tolerated)
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>  Or: FTT=1 with capacity headroom for host replacement without evacuation
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>Stretched (multi-AZ):
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>  6 hosts minimum: 3 in AZ-a, 3 in AZ-b
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>  1 witness appliance in AZ-c (t3.medium EC2 or dedicated)
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>  vSAN policy: RAID-1 FTT=1 (site-level) + FTT=0 host
 </code></pre></div>
 <h2 id="vsan-policy-selection">vSAN Policy Selection<a class="headerlink" href="#vsan-policy-selection" title="Permanent link">&para;</a></h2>
 <p>Storage Policy Based Management (SPBM) governs how vSAN protects data. Choose the policy based on the number of hosts in the cluster and the tolerance requirements for each workload.</p>
@@ -8989,19 +8973,19 @@ EVS cluster sizing, AZ placement, CIDR planning, Direct Connect bandwidth requir
 <p>NSX-T Edge nodes must be deployed in both sites. Place at least one Edge node in AZ-a and one in AZ-b so that north-south traffic can continue when either site is the active site. The T0 gateway uses an active-standby uplink model between the two site Edge nodes.</p>
 <p>Direct Connect connectivity must reach both AZs. If you use a single Direct Connect location, confirm that the connection can reach the VPC subnets in both AZs (VPC subnets in the same VPC span all AZs by design, so routing typically works automatically through the VPC).</p>
 <h2 id="vpc-and-cidr-design">VPC and CIDR Design<a class="headerlink" href="#vpc-and-cidr-design" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Subnet allocation per EVS cluster:
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>  10.0.0.0/20  — Management (vCenter, SDDC Manager, NSX Manager, ESXi mgmt VMkernel)
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>  10.0.16.0/20 — NSX-T VTEP (Geneve tunnel overlay; one ENI per host)
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>  10.0.32.0/20 — vMotion VMkernel (dedicated subnet recommended)
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>  10.0.48.0/20 — vSAN VMkernel (dedicated for performance isolation)
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>  10.1.0.0/16  — Workload VM segments (NSX-T logical networks, routed via T0)
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>Rules:
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>  - No overlap with on-premises CIDR ranges
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>  - VPC must be in the same region as the EVS cluster
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>  - Security groups on ENIs: allow VMware ports (443, 902, 8301, etc.)
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>  - VPC route table: workload subnets routed to ENI of T0 uplink
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Subnet allocation per EVS cluster:
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  10.0.0.0/20  — Management (vCenter, SDDC Manager, NSX Manager, ESXi mgmt VMkernel)
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  10.0.16.0/20 — NSX-T VTEP (Geneve tunnel overlay; one ENI per host)
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>  10.0.32.0/20 — vMotion VMkernel (dedicated subnet recommended)
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>  10.0.48.0/20 — vSAN VMkernel (dedicated for performance isolation)
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>  10.1.0.0/16  — Workload VM segments (NSX-T logical networks, routed via T0)
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>Rules:
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>  - No overlap with on-premises CIDR ranges
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>  - VPC must be in the same region as the EVS cluster
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>  - Security groups on ENIs: allow VMware ports (443, 902, 8301, etc.)
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>  - VPC route table: workload subnets routed to ENI of T0 uplink
 </code></pre></div>
 <p>A /20 per management subnet accommodates up to 4,094 host addresses, which provides enough room for all VCF management VMs, ESXi VMkernel IPs, and future expansion without renumbering. Do not use smaller blocks — some VCF components require non-contiguous address reservations within the management range.</p>
 <p>For multi-cluster EVS deployments, each cluster needs its own independent set of /20 blocks. Clusters share a VPC but use separate subnets; overlapping CIDR ranges between clusters cause routing conflicts at the VPC level. A common pattern is to use a /16 per cluster for all VMkernel subnets (four /20s fit within a /16 with room to spare).</p>

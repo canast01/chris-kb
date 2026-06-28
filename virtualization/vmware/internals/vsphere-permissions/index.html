@@ -9497,23 +9497,7 @@ vSphere access control is built on a layered permission model: SSO handles authe
 </div>
 <p><img alt="vSphere Permissions Model — SSO, Roles, Inheritance, and Least Privilege" src="../../../../assets/virtualization-vmware-internals-vsphere-permissions-index.svg" /></p>
 <hr />
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>center: &quot;Vsphere Permissions&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>authentication_layer_sso_and_identit: &quot;Authentication Layer — SSO and Identity Sources&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>the_permission_model: &quot;The Permission Model&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>builtin_roles: &quot;Built-In Roles&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>custom_roles: &quot;Custom Roles&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>permission_propagation_and_inheritan: &quot;Permission Propagation and Inheritance Rules&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>global_permissions: &quot;Global Permissions&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>center -&gt; authentication_layer_sso_and_identit
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>center -&gt; the_permission_model
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>center -&gt; builtin_roles
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>center -&gt; custom_roles
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>center -&gt; permission_propagation_and_inheritan
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>center -&gt; global_permissions
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNkc1KAzEUhfd5ikv3fYFZCOpCCoqlI25DmrkkgUwS8gMWKfgQPqFPYjKj9RZH6TIn37k5OXcwEWU23nUQjdKZMYkuY-xg9ZyCxoiwxTialCqTVvCatAjYgcYXobw7MlGyrg4jRZvCrThg5Cl5LtzAzdCuch12fYbBfcPg4-0d-v4RKgqbGT1A70uUSJ5qAYVTFo-szuDhFIePfkBbhz9pmhIemrzo3xdjs3E8eoupGm_aeb1xsGvCokWWlP14ctxOx394Ei9EH4Sae5nacLVPU8E6h8Td_mBzE9-YRNiVv95R1u-FJW20dHeTuLwx4v3aMayv4JL1EXxpAeT6rF-i0xKJfElXBP_9ZfYJ5WoGyQ==?" /></p>
 <h2 id="authentication-layer-sso-and-identity-sources">Authentication Layer — SSO and Identity Sources<a class="headerlink" href="#authentication-layer-sso-and-identity-sources" title="Permanent link">&para;</a></h2>
 <h3 id="vcenter-single-sign-on-sso">vCenter Single Sign-On (SSO)<a class="headerlink" href="#vcenter-single-sign-on-sso" title="Permanent link">&para;</a></h3>
 <p>SSO is the authentication broker for all vSphere components. Every login to vCenter, ESXi (via vCenter), and other VMware products goes through SSO. It issues SAML tokens that components exchange after initial authentication.</p>
@@ -9559,12 +9543,12 @@ vSphere access control is built on a layered permission model: SSO handles authe
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># List configured identity sources via CLI (vCenter)</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>/usr/lib/vmware-vmafd/bin/dir-cli<span class="w"> </span>sso-config<span class="w"> </span>show-identity-sources<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>--login<span class="w"> </span>administrator@vsphere.local
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Or via API (useful in automation):</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># GET https://vcenter/api/vcenter/identity/providers</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># List configured identity sources via CLI (vCenter)</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>/usr/lib/vmware-vmafd/bin/dir-cli<span class="w"> </span>sso-config<span class="w"> </span>show-identity-sources<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>--login<span class="w"> </span>administrator@vsphere.local
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Or via API (useful in automation):</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># GET https://vcenter/api/vcenter/identity/providers</span>
 </code></pre></div>
 <p><strong>LDAP binding account best practice:</strong></p>
 <ul>
@@ -9575,38 +9559,38 @@ vSphere access control is built on a layered permission model: SSO handles authe
 </ul>
 <h3 id="sso-lockout-and-password-policies">SSO Lockout and Password Policies<a class="headerlink" href="#sso-lockout-and-password-policies" title="Permanent link">&para;</a></h3>
 <p>SSO has its own lockout policy independent of AD:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Default SSO policies (vsphere.local accounts):
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>  Password: 8+ chars, 1 upper, 1 lower, 1 digit, 1 special
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>  Max failures before lockout: 5
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>  Lockout duration: 300 seconds
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>  Failed attempt window: 180 seconds
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>Location in vCenter UI:
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>  Administration → Single Sign On → Configuration → Local Accounts → Policy
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Default SSO policies (vsphere.local accounts):
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  Password: 8+ chars, 1 upper, 1 lower, 1 digit, 1 special
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  Max failures before lockout: 5
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  Lockout duration: 300 seconds
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>  Failed attempt window: 180 seconds
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>Location in vCenter UI:
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>  Administration → Single Sign On → Configuration → Local Accounts → Policy
 </code></pre></div>
 <hr />
 <h2 id="the-permission-model">The Permission Model<a class="headerlink" href="#the-permission-model" title="Permanent link">&para;</a></h2>
 <p>A <strong>permission</strong> in vSphere is a triple: <code>(user_or_group, role, inventory_object)</code>. It answers: "Who can do What on Which object."</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Permission = Principal + Role + Object
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>Example:
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>  Principal:  CORP\vsphere-admins (AD group)
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>  Role:       VM Power User
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>  Object:     Folder: Production VMs
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>  Propagate:  Yes (applies to all child objects)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Permission = Principal + Role + Object
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>Example:
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>  Principal:  CORP\vsphere-admins (AD group)
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>  Role:       VM Power User
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>  Object:     Folder: Production VMs
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>  Propagate:  Yes (applies to all child objects)
 </code></pre></div>
 <h3 id="object-hierarchy-inheritance-chain">Object Hierarchy (Inheritance Chain)<a class="headerlink" href="#object-hierarchy-inheritance-chain" title="Permanent link">&para;</a></h3>
 <p>Permissions propagate down the inventory tree when <strong>Propagate to children</strong> is checked:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Global (root)
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>  └── vCenter Server
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>        └── Datacenter
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>              ├── Cluster
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>              │     └── ESXi Host
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>              │           └── VM
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>              ├── Datastore
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>              ├── Network
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>              └── Folder
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>                    └── VM
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Global (root)
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  └── vCenter Server
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>        └── Datacenter
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>              ├── Cluster
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>              │     └── ESXi Host
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>              │           └── VM
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>              ├── Datastore
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>              ├── Network
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>              └── Folder
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>                    └── VM
 </code></pre></div>
 <p>A permission set on the Datacenter with propagation enabled applies to all objects within it — clusters, hosts, VMs, datastores, and networks. A permission set at the VM level only applies to that VM.</p>
 <p><strong>Resolution rule:</strong> The most specific permission wins. If a user has <code>Read Only</code> on the Datacenter but <code>VM Power User</code> on a specific VM, they get <code>VM Power User</code> rights on that VM and <code>Read Only</code> on everything else.</p>
@@ -9664,40 +9648,40 @@ vSphere access control is built on a layered permission model: SSO handles authe
 </tbody>
 </table>
 <h3 id="sample-roles-for-common-scenarios">Sample Roles for Common Scenarios<a class="headerlink" href="#sample-roles-for-common-scenarios" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Helpdesk operator — needs VM console access only:
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  Role: Virtual Machine User
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  Object: Folder containing all user VMs
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>  Propagate: Yes
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>Storage admin — manages datastores, no VM access:
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>  Role: Custom (Datastore: all privileges, VM: none)
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>  Object: Datacenter (datastores visible at this level)
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>L1 infrastructure team — power ops, no provisioning:
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>  Role: Virtual Machine Power User
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>  Object: Cluster or Datacenter
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>  Propagate: Yes
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Helpdesk operator — needs VM console access only:
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>  Role: Virtual Machine User
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>  Object: Folder containing all user VMs
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>  Propagate: Yes
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>Storage admin — manages datastores, no VM access:
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>  Role: Custom (Datastore: all privileges, VM: none)
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>  Object: Datacenter (datastores visible at this level)
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>L1 infrastructure team — power ops, no provisioning:
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>  Role: Virtual Machine Power User
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>  Object: Cluster or Datacenter
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>  Propagate: Yes
 </code></pre></div>
 <hr />
 <h2 id="custom-roles">Custom Roles<a class="headerlink" href="#custom-roles" title="Permanent link">&para;</a></h2>
 <p>Custom roles let you build precisely scoped permission sets from vSphere's ~350 individual privileges.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># PowerCLI — create a custom role</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">New-VIRole</span> <span class="n">-Name</span> <span class="s2">&quot;AppTeam-VM-Operator&quot;</span> <span class="p">`</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>  <span class="n">-Privilege</span> <span class="p">(</span><span class="nb">Get-VIPrivilege</span> <span class="p">`</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>    <span class="n">-Id</span> <span class="n">VirtualMachine</span><span class="p">.</span><span class="n">Interact</span><span class="p">.</span><span class="n">PowerOn</span><span class="p">,</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>         <span class="n">VirtualMachine</span><span class="p">.</span><span class="n">Interact</span><span class="p">.</span><span class="n">PowerOff</span><span class="p">,</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>         <span class="n">VirtualMachine</span><span class="p">.</span><span class="n">Interact</span><span class="p">.</span><span class="n">Reset</span><span class="p">,</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>         <span class="n">VirtualMachine</span><span class="p">.</span><span class="n">Interact</span><span class="p">.</span><span class="n">ConsoleInteract</span><span class="p">,</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>         <span class="n">VirtualMachine</span><span class="p">.</span><span class="n">State</span><span class="p">.</span><span class="n">CreateSnapshot</span><span class="p">,</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>         <span class="n">VirtualMachine</span><span class="p">.</span><span class="n">State</span><span class="p">.</span><span class="n">RemoveSnapshot</span><span class="p">,</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>         <span class="n">Global</span><span class="p">.</span><span class="n">CancelTask</span><span class="p">)</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="c"># Assign the role to a group on a folder</span>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="nv">$folder</span>   <span class="p">=</span> <span class="nb">Get-Folder</span> <span class="s2">&quot;Production-Apps&quot;</span>
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="nv">$role</span>     <span class="p">=</span> <span class="nb">Get-VIRole</span> <span class="s2">&quot;AppTeam-VM-Operator&quot;</span>
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="nv">$principal</span> <span class="p">=</span> <span class="s2">&quot;CORP\appteam-ops&quot;</span>
-<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="nb">New-VIPermission</span> <span class="n">-Entity</span> <span class="nv">$folder</span> <span class="n">-Principal</span> <span class="nv">$principal</span> <span class="p">`</span>
-<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>  <span class="n">-Role</span> <span class="nv">$role</span> <span class="n">-Propagate</span> <span class="nv">$true</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># PowerCLI — create a custom role</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">New-VIRole</span> <span class="n">-Name</span> <span class="s2">&quot;AppTeam-VM-Operator&quot;</span> <span class="p">`</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  <span class="n">-Privilege</span> <span class="p">(</span><span class="nb">Get-VIPrivilege</span> <span class="p">`</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    <span class="n">-Id</span> <span class="n">VirtualMachine</span><span class="p">.</span><span class="n">Interact</span><span class="p">.</span><span class="n">PowerOn</span><span class="p">,</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>         <span class="n">VirtualMachine</span><span class="p">.</span><span class="n">Interact</span><span class="p">.</span><span class="n">PowerOff</span><span class="p">,</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>         <span class="n">VirtualMachine</span><span class="p">.</span><span class="n">Interact</span><span class="p">.</span><span class="n">Reset</span><span class="p">,</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>         <span class="n">VirtualMachine</span><span class="p">.</span><span class="n">Interact</span><span class="p">.</span><span class="n">ConsoleInteract</span><span class="p">,</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>         <span class="n">VirtualMachine</span><span class="p">.</span><span class="n">State</span><span class="p">.</span><span class="n">CreateSnapshot</span><span class="p">,</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>         <span class="n">VirtualMachine</span><span class="p">.</span><span class="n">State</span><span class="p">.</span><span class="n">RemoveSnapshot</span><span class="p">,</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>         <span class="n">Global</span><span class="p">.</span><span class="n">CancelTask</span><span class="p">)</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="c"># Assign the role to a group on a folder</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="nv">$folder</span>   <span class="p">=</span> <span class="nb">Get-Folder</span> <span class="s2">&quot;Production-Apps&quot;</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="nv">$role</span>     <span class="p">=</span> <span class="nb">Get-VIRole</span> <span class="s2">&quot;AppTeam-VM-Operator&quot;</span>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="nv">$principal</span> <span class="p">=</span> <span class="s2">&quot;CORP\appteam-ops&quot;</span>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="nb">New-VIPermission</span> <span class="n">-Entity</span> <span class="nv">$folder</span> <span class="n">-Principal</span> <span class="nv">$principal</span> <span class="p">`</span>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>  <span class="n">-Role</span> <span class="nv">$role</span> <span class="n">-Propagate</span> <span class="nv">$true</span>
 </code></pre></div>
 <h3 id="privilege-categories-to-know">Privilege Categories to Know<a class="headerlink" href="#privilege-categories-to-know" title="Permanent link">&para;</a></h3>
 <table>
@@ -9749,28 +9733,28 @@ vSphere access control is built on a layered permission model: SSO handles authe
 <blockquote>
 <p><strong>Audit shortcut:</strong> Export current role definitions to CSV regularly. Unexpected privilege additions to custom roles are a common audit finding.</p>
 </blockquote>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c"># Export all roles and privileges to CSV</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nb">Get-VIRole</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>  <span class="nv">$role</span> <span class="p">=</span> <span class="nv">$_</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>  <span class="nv">$role</span><span class="p">.</span><span class="n">PrivilegeList</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>    <span class="no">[PSCustomObject]</span><span class="p">@{</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>      <span class="n">Role</span>      <span class="p">=</span> <span class="nv">$role</span><span class="p">.</span><span class="n">Name</span>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>      <span class="n">Privilege</span> <span class="p">=</span> <span class="nv">$_</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>    <span class="p">}</span>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>  <span class="p">}</span>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="p">}</span> <span class="p">|</span> <span class="nb">Export-Csv</span> <span class="n">-Path</span> <span class="s2">&quot;/tmp/vsphere-roles-audit.csv&quot;</span> <span class="n">-NoTypeInformation</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># Export all roles and privileges to CSV</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">Get-VIRole</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>  <span class="nv">$role</span> <span class="p">=</span> <span class="nv">$_</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>  <span class="nv">$role</span><span class="p">.</span><span class="n">PrivilegeList</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>    <span class="no">[PSCustomObject]</span><span class="p">@{</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>      <span class="n">Role</span>      <span class="p">=</span> <span class="nv">$role</span><span class="p">.</span><span class="n">Name</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>      <span class="n">Privilege</span> <span class="p">=</span> <span class="nv">$_</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>    <span class="p">}</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>  <span class="p">}</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="p">}</span> <span class="p">|</span> <span class="nb">Export-Csv</span> <span class="n">-Path</span> <span class="s2">&quot;/tmp/vsphere-roles-audit.csv&quot;</span> <span class="n">-NoTypeInformation</span>
 </code></pre></div>
 <hr />
 <h2 id="permission-propagation-and-inheritance-rules">Permission Propagation and Inheritance Rules<a class="headerlink" href="#permission-propagation-and-inheritance-rules" title="Permanent link">&para;</a></h2>
 <h3 id="how-propagation-works">How Propagation Works<a class="headerlink" href="#how-propagation-works" title="Permanent link">&para;</a></h3>
 <p>When you create a permission with <strong>Propagate to children: Yes</strong>, all current and future child objects inherit it. Permissions are not stored on child objects — they are evaluated at access time by walking up the hierarchy.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Permission evaluation for user accessing VM &quot;APP-01&quot;:
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>  1. Check VM &quot;APP-01&quot; — direct permission? → use it
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>  2. No direct? → check parent folder
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>  3. No folder permission? → check cluster
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>  4. No cluster? → check datacenter
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>  5. No datacenter? → check global (root)
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>  6. No permission found anywhere → No Access
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Permission evaluation for user accessing VM &quot;APP-01&quot;:
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>  1. Check VM &quot;APP-01&quot; — direct permission? → use it
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>  2. No direct? → check parent folder
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>  3. No folder permission? → check cluster
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>  4. No cluster? → check datacenter
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>  5. No datacenter? → check global (root)
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>  6. No permission found anywhere → No Access
 </code></pre></div>
 <h3 id="blocking-inheritance">Blocking Inheritance<a class="headerlink" href="#blocking-inheritance" title="Permanent link">&para;</a></h3>
 <p>To deny access to a subtree while granting access to the parent:</p>
@@ -9778,10 +9762,10 @@ vSphere access control is built on a layered permission model: SSO handles authe
 <li>Set <code>No Access</code> role on the object where you want to block — this is the only way to deny</li>
 <li>Or: do not propagate the parent permission; grant explicit permissions only on specific child objects</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Scenario: AD group &quot;AllEngineers&quot; has Read Only on the Datacenter.
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>Problem:  Sensitive VM &quot;PAYROLL-01&quot; must not be visible to AllEngineers.
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>Solution: Assign the &quot;No Access&quot; role to AllEngineers directly on &quot;PAYROLL-01&quot;.
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>          This overrides the inherited Read Only from the Datacenter.
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Scenario: AD group &quot;AllEngineers&quot; has Read Only on the Datacenter.
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>Problem:  Sensitive VM &quot;PAYROLL-01&quot; must not be visible to AllEngineers.
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>Solution: Assign the &quot;No Access&quot; role to AllEngineers directly on &quot;PAYROLL-01&quot;.
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>          This overrides the inherited Read Only from the Datacenter.
 </code></pre></div>
 <h3 id="common-mistakes">Common Mistakes<a class="headerlink" href="#common-mistakes" title="Permanent link">&para;</a></h3>
 <table>
@@ -9813,20 +9797,20 @@ vSphere access control is built on a layered permission model: SSO handles authe
 <hr />
 <h2 id="global-permissions">Global Permissions<a class="headerlink" href="#global-permissions" title="Permanent link">&para;</a></h2>
 <p>Global permissions (set at the <strong>root</strong> of the vSphere inventory) apply across multiple vCenter instances linked via Enhanced Linked Mode. They are evaluated before vCenter-level permissions.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>Normal permission: applies to one vCenter&#39;s objects
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>Global permission: applies to all vCenter objects across the linked domain
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>Use cases for global permissions:
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>  - SSO administrators who manage identity sources on all vCenters
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>  - Enterprise monitoring accounts that need read-only access everywhere
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>  - vCenter-level administrators (need access to the vCenter appliance itself,
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>    not just inventory objects)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Normal permission: applies to one vCenter&#39;s objects
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>Global permission: applies to all vCenter objects across the linked domain
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>Use cases for global permissions:
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>  - SSO administrators who manage identity sources on all vCenters
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>  - Enterprise monitoring accounts that need read-only access everywhere
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>  - vCenter-level administrators (need access to the vCenter appliance itself,
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>    not just inventory objects)
 </code></pre></div>
 <p><strong>Setting global permissions:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>vSphere Client → Administration → Global Permissions → Add
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>  Principal: CORP\vcenter-global-admins
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>  Role: Administrator
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>  Propagate: Yes
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>vSphere Client → Administration → Global Permissions → Add
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>  Principal: CORP\vcenter-global-admins
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>  Role: Administrator
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>  Propagate: Yes
 </code></pre></div>
 <blockquote>
 <p>Global permissions are stored in the SSO directory, not in individual vCenter databases. They survive vCenter reinstalls if SSO is preserved. Back up SSO configuration before major vCenter upgrades.</p>
@@ -9835,17 +9819,17 @@ vSphere access control is built on a layered permission model: SSO handles authe
 <h2 id="solution-users-and-service-accounts">Solution Users and Service Accounts<a class="headerlink" href="#solution-users-and-service-accounts" title="Permanent link">&para;</a></h2>
 <h3 id="solution-users">Solution Users<a class="headerlink" href="#solution-users" title="Permanent link">&para;</a></h3>
 <p>Solution users are machine accounts representing vCenter services (vpxd, vsphere-ui, vpxd-extension). They authenticate using X.509 certificates rather than passwords.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># List solution users on vCenter</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>/usr/lib/vmware-vmafd/bin/dir-cli<span class="w"> </span>service<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">  </span>--login<span class="w"> </span>administrator@vsphere.local
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="c1"># Check certificate expiry for solution users</span>
-<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>/usr/lib/vmware-vmafd/bin/vecs-cli<span class="w"> </span>entry<span class="w"> </span>getcert<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="w">  </span>--store<span class="w"> </span>MACHINE_SSL_CERT<span class="w"> </span>--alias<span class="w"> </span>__MACHINE_CERT<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="w">  </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-dates
-<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>
-<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="c1"># Renew all certificates (run as root on VCSA)</span>
-<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>/usr/lib/vmware-vmca/bin/certificate-manager
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># List solution users on vCenter</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>/usr/lib/vmware-vmafd/bin/dir-cli<span class="w"> </span>service<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">  </span>--login<span class="w"> </span>administrator@vsphere.local
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="c1"># Check certificate expiry for solution users</span>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>/usr/lib/vmware-vmafd/bin/vecs-cli<span class="w"> </span>entry<span class="w"> </span>getcert<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="w">  </span>--store<span class="w"> </span>MACHINE_SSL_CERT<span class="w"> </span>--alias<span class="w"> </span>__MACHINE_CERT<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="w">  </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-dates
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="c1"># Renew all certificates (run as root on VCSA)</span>
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>/usr/lib/vmware-vmca/bin/certificate-manager
 </code></pre></div>
 <p><strong>Certificate expiry is a common production incident.</strong> Solution user certificates expire after 2 years by default in some vCenter versions. When they expire, vCenter services cannot communicate internally — symptoms include grey hosts, missing datastores in vCenter UI, and API authentication failures.</p>
 <h3 id="service-accounts-for-automation-and-backup">Service Accounts for Automation and Backup<a class="headerlink" href="#service-accounts-for-automation-and-backup" title="Permanent link">&para;</a></h3>
@@ -9881,12 +9865,12 @@ vSphere access control is built on a layered permission model: SSO handles authe
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c"># PowerCLI — create a read-only monitoring service account permission</span>
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="nv">$vcUser</span>   <span class="p">=</span> <span class="s2">&quot;CORP\svc-vsphere-monitor&quot;</span>
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="nv">$role</span>     <span class="p">=</span> <span class="nb">Get-VIRole</span> <span class="s2">&quot;ReadOnly&quot;</span>
-<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="nv">$vcRoot</span>   <span class="p">=</span> <span class="nb">Get-Folder</span> <span class="n">-Type</span> <span class="n">Datacenter</span> <span class="n">-Name</span> <span class="s2">&quot;/&quot;</span>  <span class="c"># root</span>
-<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="nb">New-VIPermission</span> <span class="n">-Entity</span> <span class="p">(</span><span class="nb">Get-Datacenter</span><span class="p">)</span> <span class="p">`</span>
-<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>  <span class="n">-Principal</span> <span class="nv">$vcUser</span> <span class="n">-Role</span> <span class="nv">$role</span> <span class="n">-Propagate</span> <span class="nv">$true</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c"># PowerCLI — create a read-only monitoring service account permission</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="nv">$vcUser</span>   <span class="p">=</span> <span class="s2">&quot;CORP\svc-vsphere-monitor&quot;</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="nv">$role</span>     <span class="p">=</span> <span class="nb">Get-VIRole</span> <span class="s2">&quot;ReadOnly&quot;</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="nv">$vcRoot</span>   <span class="p">=</span> <span class="nb">Get-Folder</span> <span class="n">-Type</span> <span class="n">Datacenter</span> <span class="n">-Name</span> <span class="s2">&quot;/&quot;</span>  <span class="c"># root</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="nb">New-VIPermission</span> <span class="n">-Entity</span> <span class="p">(</span><span class="nb">Get-Datacenter</span><span class="p">)</span> <span class="p">`</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>  <span class="n">-Principal</span> <span class="nv">$vcUser</span> <span class="n">-Role</span> <span class="nv">$role</span> <span class="n">-Propagate</span> <span class="nv">$true</span>
 </code></pre></div>
 <p><strong>Service account hygiene:</strong></p>
 <ul>
@@ -9898,65 +9882,65 @@ vSphere access control is built on a layered permission model: SSO handles authe
 <hr />
 <h2 id="least-privilege-design-patterns">Least-Privilege Design Patterns<a class="headerlink" href="#least-privilege-design-patterns" title="Permanent link">&para;</a></h2>
 <h3 id="pattern-1-tiered-team-access">Pattern 1 — Tiered Team Access<a class="headerlink" href="#pattern-1-tiered-team-access" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>Tier       | Principal              | Role                    | Object
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>-----------|------------------------|-------------------------|------------------
-<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>L3 vSphere | CORP\vsphere-l3        | Administrator           | Datacenter
-<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>L2 infra   | CORP\vsphere-l2        | Virtual Machine Power User | Cluster
-<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>L1 ops     | CORP\vsphere-l1        | Virtual Machine User    | Production Folder
-<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>App teams  | CORP\&lt;app-team&gt;        | Custom (power + console) | App Folder
-<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>Monitoring | CORP\svc-monitor       | Read Only               | vCenter root
-<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>Backup     | CORP\svc-backup        | Custom backup role      | Datacenter
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>Tier       | Principal              | Role                    | Object
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>-----------|------------------------|-------------------------|------------------
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>L3 vSphere | CORP\vsphere-l3        | Administrator           | Datacenter
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>L2 infra   | CORP\vsphere-l2        | Virtual Machine Power User | Cluster
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>L1 ops     | CORP\vsphere-l1        | Virtual Machine User    | Production Folder
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>App teams  | CORP\&lt;app-team&gt;        | Custom (power + console) | App Folder
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>Monitoring | CORP\svc-monitor       | Read Only               | vCenter root
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>Backup     | CORP\svc-backup        | Custom backup role      | Datacenter
 </code></pre></div>
 <h3 id="pattern-2-folder-per-environment-isolation">Pattern 2 — Folder-Per-Environment Isolation<a class="headerlink" href="#pattern-2-folder-per-environment-isolation" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>Datacenter: CORP-DC
-<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>  ├── Folder: PRODUCTION           → CORP\vsphere-prod-admins: Administrator
-<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>  │     ├── Folder: PROD-DATABASES → CORP\dba-team: Custom (power, console)
-<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>  │     └── Folder: PROD-APP       → CORP\app-team: Virtual Machine User
-<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>  ├── Folder: DR                   → CORP\vsphere-l3: Administrator
-<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>  └── Folder: DEV-TEST             → CORP\devops: Administrator
-<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>                                     (limited blast radius — no prod access)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>Datacenter: CORP-DC
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>  ├── Folder: PRODUCTION           → CORP\vsphere-prod-admins: Administrator
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>  │     ├── Folder: PROD-DATABASES → CORP\dba-team: Custom (power, console)
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>  │     └── Folder: PROD-APP       → CORP\app-team: Virtual Machine User
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>  ├── Folder: DR                   → CORP\vsphere-l3: Administrator
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>  └── Folder: DEV-TEST             → CORP\devops: Administrator
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>                                     (limited blast radius — no prod access)
 </code></pre></div>
 <h3 id="pattern-3-restricting-vm-configuration-changes">Pattern 3 — Restricting VM Configuration Changes<a class="headerlink" href="#pattern-3-restricting-vm-configuration-changes" title="Permanent link">&para;</a></h3>
 <p>Grant power operations without allowing configuration changes:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c"># Custom role: allow power ops + console, deny all config changes</span>
-<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="nv">$powerOnly</span> <span class="p">=</span> <span class="nb">New-VIRole</span> <span class="n">-Name</span> <span class="s2">&quot;Power-Only&quot;</span> <span class="p">`</span>
-<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>  <span class="n">-Privilege</span> <span class="p">(</span><span class="nb">Get-VIPrivilege</span> <span class="n">-Id</span> <span class="p">`</span>
-<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>    <span class="n">VirtualMachine</span><span class="p">.</span><span class="n">Interact</span><span class="p">.</span><span class="n">PowerOn</span><span class="p">,</span>
-<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>    <span class="n">VirtualMachine</span><span class="p">.</span><span class="n">Interact</span><span class="p">.</span><span class="n">PowerOff</span><span class="p">,</span>
-<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>    <span class="n">VirtualMachine</span><span class="p">.</span><span class="n">Interact</span><span class="p">.</span><span class="n">Reset</span><span class="p">,</span>
-<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>    <span class="n">VirtualMachine</span><span class="p">.</span><span class="n">Interact</span><span class="p">.</span><span class="n">Suspend</span><span class="p">,</span>
-<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>    <span class="n">VirtualMachine</span><span class="p">.</span><span class="n">Interact</span><span class="p">.</span><span class="n">ConsoleInteract</span><span class="p">,</span>
-<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>    <span class="n">VirtualMachine</span><span class="p">.</span><span class="n">State</span><span class="p">.</span><span class="n">CreateSnapshot</span><span class="p">,</span>
-<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a>    <span class="n">VirtualMachine</span><span class="p">.</span><span class="n">State</span><span class="p">.</span><span class="n">RemoveSnapshot</span><span class="p">,</span>
-<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a>    <span class="n">VirtualMachine</span><span class="p">.</span><span class="n">State</span><span class="p">.</span><span class="n">RevertToSnapshot</span><span class="p">,</span>
-<a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a>    <span class="n">Global</span><span class="p">.</span><span class="n">CancelTask</span><span class="p">,</span>
-<a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a>    <span class="n">System</span><span class="p">.</span><span class="n">Anonymous</span><span class="p">,</span>
-<a id="__codelineno-16-14" name="__codelineno-16-14" href="#__codelineno-16-14"></a>    <span class="n">System</span><span class="p">.</span><span class="n">Read</span><span class="p">,</span>
-<a id="__codelineno-16-15" name="__codelineno-16-15" href="#__codelineno-16-15"></a>    <span class="n">System</span><span class="p">.</span><span class="n">View</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c"># Custom role: allow power ops + console, deny all config changes</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="nv">$powerOnly</span> <span class="p">=</span> <span class="nb">New-VIRole</span> <span class="n">-Name</span> <span class="s2">&quot;Power-Only&quot;</span> <span class="p">`</span>
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>  <span class="n">-Privilege</span> <span class="p">(</span><span class="nb">Get-VIPrivilege</span> <span class="n">-Id</span> <span class="p">`</span>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>    <span class="n">VirtualMachine</span><span class="p">.</span><span class="n">Interact</span><span class="p">.</span><span class="n">PowerOn</span><span class="p">,</span>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>    <span class="n">VirtualMachine</span><span class="p">.</span><span class="n">Interact</span><span class="p">.</span><span class="n">PowerOff</span><span class="p">,</span>
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>    <span class="n">VirtualMachine</span><span class="p">.</span><span class="n">Interact</span><span class="p">.</span><span class="n">Reset</span><span class="p">,</span>
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>    <span class="n">VirtualMachine</span><span class="p">.</span><span class="n">Interact</span><span class="p">.</span><span class="n">Suspend</span><span class="p">,</span>
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>    <span class="n">VirtualMachine</span><span class="p">.</span><span class="n">Interact</span><span class="p">.</span><span class="n">ConsoleInteract</span><span class="p">,</span>
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>    <span class="n">VirtualMachine</span><span class="p">.</span><span class="n">State</span><span class="p">.</span><span class="n">CreateSnapshot</span><span class="p">,</span>
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>    <span class="n">VirtualMachine</span><span class="p">.</span><span class="n">State</span><span class="p">.</span><span class="n">RemoveSnapshot</span><span class="p">,</span>
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>    <span class="n">VirtualMachine</span><span class="p">.</span><span class="n">State</span><span class="p">.</span><span class="n">RevertToSnapshot</span><span class="p">,</span>
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>    <span class="n">Global</span><span class="p">.</span><span class="n">CancelTask</span><span class="p">,</span>
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>    <span class="n">System</span><span class="p">.</span><span class="n">Anonymous</span><span class="p">,</span>
+<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>    <span class="n">System</span><span class="p">.</span><span class="n">Read</span><span class="p">,</span>
+<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a>    <span class="n">System</span><span class="p">.</span><span class="n">View</span><span class="p">)</span>
 </code></pre></div>
 <hr />
 <h2 id="auditing-and-compliance">Auditing and Compliance<a class="headerlink" href="#auditing-and-compliance" title="Permanent link">&para;</a></h2>
 <h3 id="event-log-permission-changes">Event Log — Permission Changes<a class="headerlink" href="#event-log-permission-changes" title="Permanent link">&para;</a></h3>
 <p>All permission changes are logged in the vCenter events database:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># PowerCLI — find recent permission change events</span>
-<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>Get-VIEvent<span class="w"> </span>-MaxSamples<span class="w"> </span><span class="m">1000</span><span class="w"> </span>-Type<span class="w"> </span>UserLoginSessionEvent,<span class="w"> </span><span class="sb">`</span>
-<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="w">  </span>UserLogoutSessionEvent,<span class="w"> </span>PermissionAddedEvent,<span class="w"> </span><span class="sb">`</span>
-<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="w">  </span>PermissionRemovedEvent,<span class="w"> </span>PermissionUpdatedEvent<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="sb">`</span>
-<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="w">  </span>Where-Object<span class="w"> </span><span class="o">{</span><span class="nv">$_</span>.CreatedTime<span class="w"> </span>-gt<span class="w"> </span><span class="o">(</span>Get-Date<span class="o">)</span>.AddDays<span class="o">(</span>-7<span class="o">)}</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="sb">`</span>
-<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a><span class="w">  </span>Select-Object<span class="w"> </span>CreatedTime,<span class="w"> </span>UserName,<span class="w"> </span>FullFormattedMessage<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="sb">`</span>
-<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a><span class="w">  </span>Sort-Object<span class="w"> </span>CreatedTime<span class="w"> </span>-Descending
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># PowerCLI — find recent permission change events</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>Get-VIEvent<span class="w"> </span>-MaxSamples<span class="w"> </span><span class="m">1000</span><span class="w"> </span>-Type<span class="w"> </span>UserLoginSessionEvent,<span class="w"> </span><span class="sb">`</span>
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="w">  </span>UserLogoutSessionEvent,<span class="w"> </span>PermissionAddedEvent,<span class="w"> </span><span class="sb">`</span>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="w">  </span>PermissionRemovedEvent,<span class="w"> </span>PermissionUpdatedEvent<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="sb">`</span>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="w">  </span>Where-Object<span class="w"> </span><span class="o">{</span><span class="nv">$_</span>.CreatedTime<span class="w"> </span>-gt<span class="w"> </span><span class="o">(</span>Get-Date<span class="o">)</span>.AddDays<span class="o">(</span>-7<span class="o">)}</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="sb">`</span>
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="w">  </span>Select-Object<span class="w"> </span>CreatedTime,<span class="w"> </span>UserName,<span class="w"> </span>FullFormattedMessage<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="sb">`</span>
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="w">  </span>Sort-Object<span class="w"> </span>CreatedTime<span class="w"> </span>-Descending
 </code></pre></div>
 <h3 id="quarterly-permission-audit-checklist">Quarterly Permission Audit Checklist<a class="headerlink" href="#quarterly-permission-audit-checklist" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>[ ] No individual user accounts with Administrator role (must be AD groups)
-<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>[ ] administrator@vsphere.local has no non-emergency active sessions
-<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>[ ] All service accounts have minimum required privileges documented
-<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>[ ] Solution user certificates expire &gt; 60 days out
-<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>[ ] No permissions set directly on VMs (must be on folders)
-<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>[ ] Global permissions list reviewed — no unexpected principals
-<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a>[ ] Identity sources use LDAPS (not plain LDAP)
-<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>[ ] SSO lockout policy is enabled (max failures ≤ 5)
-<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a>[ ] vCenter SSL certificate expires &gt; 90 days out
-<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a>[ ] Inactive user accounts (no login &gt; 90 days) removed from vsphere.local
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>[ ] No individual user accounts with Administrator role (must be AD groups)
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>[ ] administrator@vsphere.local has no non-emergency active sessions
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>[ ] All service accounts have minimum required privileges documented
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>[ ] Solution user certificates expire &gt; 60 days out
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>[ ] No permissions set directly on VMs (must be on folders)
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>[ ] Global permissions list reviewed — no unexpected principals
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>[ ] Identity sources use LDAPS (not plain LDAP)
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>[ ] SSO lockout policy is enabled (max failures ≤ 5)
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>[ ] vCenter SSL certificate expires &gt; 90 days out
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>[ ] Inactive user accounts (no login &gt; 90 days) removed from vsphere.local
 </code></pre></div>
 <hr />
 <h2 id="quick-reference-key-facts">Quick Reference — Key Facts<a class="headerlink" href="#quick-reference-key-facts" title="Permanent link">&para;</a></h2>

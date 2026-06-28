@@ -9659,25 +9659,7 @@ Verify version compatibility across the full VMware stack before any upgrade. Up
 *Applies to: vSphere 7.x / 8.x*
 </div>
 <p><img alt="Compatibility Review" src="../../../../../assets/virtualization-vmware-reference-upgrade-readiness-compatibil.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>plan: &quot;Plan&quot; {shape: oval}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>vmware_product_interoperability_matr: &quot;VMware Product Interoperability Matrix&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>hardware_compatibility: &quot;Hardware Compatibility&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>thirdparty_tool_compatibility: &quot;Third-Party Tool Compatibility&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>vmware_tools_and_vm_hardware: &quot;VMware Tools and VM Hardware&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>certificate_compatibility: &quot;Certificate Compatibility&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>compatibility_review_signoff_checkli: &quot;Compatibility Review Sign-Off Checklist&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>validate: &quot;Validate&quot; {shape: oval}
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>plan -&gt; vmware_product_interoperability_matr
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>vmware_product_interoperability_matr -&gt; hardware_compatibility
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>hardware_compatibility -&gt; thirdparty_tool_compatibility
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>thirdparty_tool_compatibility -&gt; vmware_tools_and_vm_hardware
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>vmware_tools_and_vm_hardware -&gt; certificate_compatibility
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>certificate_compatibility -&gt; compatibility_review_signoff_checkli
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>compatibility_review_signoff_checkli -&gt; validate
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNUrFugzAU3PmKp-z8QIYuLO2Aitooq_VqG3iqwZZxSasq_14biKAJIE-A3t1xpztBVnJHuj2Cpap2SWIU-o9D4R8H-O1qNPIIukd1TfrmglYyY7X44o5R66TVRlr8IEXuhzXorKee8wCDYoTByx0Mcg-j71k8OMC2UvKa1GjF8A-uG4OORobXfJ4OkC0PqxquJisMWm_Iaa0epE7hnhYBACcPiJCcgge5jmErWN-wm9U5cBDrwJ_hnMPN8Koel9ZRSRzdY9JsvkU4-8dmVvYkL6yjqtVlyXgt-aeiILqEwdsAg3cPS1_LErIR17n18KhIeDch6PR6P4xhNJA-QcxComYUxNbHsLGRQNhtfn8XC_OrLe9OIJA3K90ue6BF9BdV8hBgqif5A-d_doc=?" /></p>
 <h2 id="vmware-product-interoperability-matrix">VMware Product Interoperability Matrix<a class="headerlink" href="#vmware-product-interoperability-matrix" title="Permanent link">&para;</a></h2>
 <p>Primary source: <a href="https://interopmatrix.vmware.com/">VMware Product Interoperability Matrix</a></p>
 <p>Required checks:
@@ -9688,12 +9670,12 @@ Verify version compatibility across the full VMware stack before any upgrade. Up
 - VxRail ↔ vCenter / ESXi / vSAN (VxRail owns this combination — check VxRail release notes)
 - Aria LCM ↔ all Aria products (Ops, Automation, Log Insight, vRNI)</p>
 <h2 id="hardware-compatibility">Hardware Compatibility<a class="headerlink" href="#hardware-compatibility" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Check current ESXi version on all hosts</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Get-VMHost</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Version</span><span class="p">,</span> <span class="n">Build</span> <span class="p">|</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="nb">Sort-Object</span> <span class="n">Version</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c"># Get NIC and HBA driver/firmware versions on a host</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="n">esxcli</span> <span class="n">software</span> <span class="n">vib</span> <span class="n">list</span> <span class="p">|</span> <span class="n">grep</span> <span class="n">-i</span> <span class="s2">&quot;net-\|scsi-\|nfnic\|lpfc\|bnx&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Check current ESXi version on all hosts</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Get-VMHost</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Version</span><span class="p">,</span> <span class="n">Build</span> <span class="p">|</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="nb">Sort-Object</span> <span class="n">Version</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c"># Get NIC and HBA driver/firmware versions on a host</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="n">esxcli</span> <span class="n">software</span> <span class="n">vib</span> <span class="n">list</span> <span class="p">|</span> <span class="n">grep</span> <span class="n">-i</span> <span class="s2">&quot;net-\|scsi-\|nfnic\|lpfc\|bnx&quot;</span>
 </code></pre></div>
 <p>Check <a href="https://www.vmware.com/resources/compatibility/search.php">VMware HCL</a> for:
 - Server model + ESXi target version
@@ -9740,21 +9722,21 @@ Verify version compatibility across the full VMware stack before any upgrade. Up
 </tbody>
 </table>
 <h2 id="vmware-tools-and-vm-hardware">VMware Tools and VM Hardware<a class="headerlink" href="#vmware-tools-and-vm-hardware" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># VMs with VMware Tools older than target version</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Guest</span><span class="p">.</span><span class="n">ToolsVersionStatus</span> <span class="o">-eq</span> <span class="s2">&quot;guestToolsNeedUpgrade&quot;</span> <span class="p">}</span> <span class="p">|</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;ToolsVersion&quot;</span><span class="p">;</span> <span class="n">E</span><span class="p">={</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Guest</span><span class="p">.</span><span class="n">ToolsVersion</span> <span class="p">}}</span> <span class="p">|</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="nb">Measure-Object</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Count</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c"># VMs with hardware version below target</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="nv">$targetHWVersion</span> <span class="p">=</span> <span class="n">19</span>   <span class="c"># vSphere 7.0 U3+ = HW19, vSphere 8 = HW21</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">HardwareVersion</span> <span class="o">-replace</span> <span class="s2">&quot;vmx-&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">-lt</span> <span class="nv">$targetHWVersion</span> <span class="p">}</span> <span class="p">|</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>    <span class="nb">Measure-Object</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Count</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># VMs with VMware Tools older than target version</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Guest</span><span class="p">.</span><span class="n">ToolsVersionStatus</span> <span class="o">-eq</span> <span class="s2">&quot;guestToolsNeedUpgrade&quot;</span> <span class="p">}</span> <span class="p">|</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;ToolsVersion&quot;</span><span class="p">;</span> <span class="n">E</span><span class="p">={</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Guest</span><span class="p">.</span><span class="n">ToolsVersion</span> <span class="p">}}</span> <span class="p">|</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    <span class="nb">Measure-Object</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Count</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c"># VMs with hardware version below target</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="nv">$targetHWVersion</span> <span class="p">=</span> <span class="n">19</span>   <span class="c"># vSphere 7.0 U3+ = HW19, vSphere 8 = HW21</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">HardwareVersion</span> <span class="o">-replace</span> <span class="s2">&quot;vmx-&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">-lt</span> <span class="nv">$targetHWVersion</span> <span class="p">}</span> <span class="p">|</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>    <span class="nb">Measure-Object</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Count</span>
 </code></pre></div>
 <p>VMware Tools and VM hardware upgrades are independent of ESXi upgrade — schedule separately after host upgrade.</p>
 <h2 id="certificate-compatibility">Certificate Compatibility<a class="headerlink" href="#certificate-compatibility" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Check VMCA certificate expiry before upgrade (VMCA certs expire 2 years from issuance)</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Get-VIObject</span> <span class="n">-MoRef</span> <span class="p">(</span><span class="nb">Get-View</span> <span class="n">ServiceInstance</span><span class="p">).</span><span class="n">Content</span><span class="p">.</span><span class="n">CertificateManager</span> <span class="p">|</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    <span class="nb">Invoke-Method</span> <span class="n">-Name</span> <span class="n">QueryCertificates</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Check VMCA certificate expiry before upgrade (VMCA certs expire 2 years from issuance)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">Get-VIObject</span> <span class="n">-MoRef</span> <span class="p">(</span><span class="nb">Get-View</span> <span class="n">ServiceInstance</span><span class="p">).</span><span class="n">Content</span><span class="p">.</span><span class="n">CertificateManager</span> <span class="p">|</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="nb">Invoke-Method</span> <span class="n">-Name</span> <span class="n">QueryCertificates</span>
 </code></pre></div>
 <p>Also verify: custom certificates on VCSA, NSX Manager, and Aria products have not expired.</p>
 <h2 id="compatibility-review-sign-off-checklist">Compatibility Review Sign-Off Checklist<a class="headerlink" href="#compatibility-review-sign-off-checklist" title="Permanent link">&para;</a></h2>

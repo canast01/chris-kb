@@ -8032,23 +8032,7 @@ FabricOS procedures: `switchshow`, `fabricshow`, zone configuration with `cfgadd
 </div>
 
 <hr />
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>hub: &quot;Brocade Fabric OS\nOperations&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>zoning_workflow: &quot;Zoning Workflow&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>add_a_new_switch_to_an_existing_fabr: &quot;Add a New Switch to an Existing Fabric&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>create_a_zone_and_zone_configuration: &quot;Create a Zone and Zone Configuration&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>add_a_member_to_an_existing_zone: &quot;Add a Member to an Existing Zone&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>remove_a_zone_member: &quot;Remove a Zone Member&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>replace_a_failed_sfp: &quot;Replace a Failed SFP&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>hub -&gt; zoning_workflow
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>hub -&gt; add_a_new_switch_to_an_existing_fabr
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>hub -&gt; create_a_zone_and_zone_configuration
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>hub -&gt; add_a_member_to_an_existing_zone
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>hub -&gt; remove_a_zone_member
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>hub -&gt; replace_a_failed_sfp
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNUkFOwzAQvOcVq975QA5IUJEbFDUHJIRkbexNYpHYkeOSCtS_s3aaFkKKevJqPDsz67XSjqTX1qTgdFX7JKl3RQqre2clKoIMC6clbPI3s-nIYaD2K_jqa-wohZr2WFlzSD6t0aYSg3XvZWMHVniNCLwckXNPMERTNXRIUCmBwtAg-kF7WQtvBRpBe937IFeyO0vdKQUITzRAHmngLaCBhyPtGHLRQTpCT2zCAfkwaiykNaWuduM87LCONDbh1HwYNRbrn7R_JmipLcjN0wenU_rHSJknDy6Luo5a-3HKPeqz1jbCU85R80J_16AMAiXqhpToyy72R5gFsghDnj0v9odvADe3MNvrBF-zuIl7zQp-615-zom39Dznu7-jJ9-eTxBB?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Access:</strong> Storage admin credentials (cluster admin or equivalent)</li>
@@ -8073,74 +8057,74 @@ FabricOS procedures: `switchshow`, `fabricshow`, zone configuration with `cfgadd
     style start fill:#2563eb,color:#fff</code></pre>
 <h3 id="create-aliases">Create Aliases<a class="headerlink" href="#create-aliases" title="Permanent link">&para;</a></h3>
 <p><img alt="Create Aliases" src="../../../../../assets/fabric-os-proc-create-aliases.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Host HBA</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>alicreate<span class="w"> </span><span class="s2">&quot;esxi01_hba0&quot;</span>,<span class="w"> </span><span class="s2">&quot;10:00:00:00:c9:ab:cd:ef&quot;</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Array port</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>alicreate<span class="w"> </span><span class="s2">&quot;fa01_ct0_p0&quot;</span>,<span class="w"> </span><span class="s2">&quot;52:4a:93:7c:00:00:00:01&quot;</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>alicreate<span class="w"> </span><span class="s2">&quot;fa01_ct0_p1&quot;</span>,<span class="w"> </span><span class="s2">&quot;52:4a:93:7c:00:00:00:02&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Host HBA</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>alicreate<span class="w"> </span><span class="s2">&quot;esxi01_hba0&quot;</span>,<span class="w"> </span><span class="s2">&quot;10:00:00:00:c9:ab:cd:ef&quot;</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Array port</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>alicreate<span class="w"> </span><span class="s2">&quot;fa01_ct0_p0&quot;</span>,<span class="w"> </span><span class="s2">&quot;52:4a:93:7c:00:00:00:01&quot;</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>alicreate<span class="w"> </span><span class="s2">&quot;fa01_ct0_p1&quot;</span>,<span class="w"> </span><span class="s2">&quot;52:4a:93:7c:00:00:00:02&quot;</span>
 </code></pre></div>
 <h3 id="create-and-manage-zones">Create and Manage Zones<a class="headerlink" href="#create-and-manage-zones" title="Permanent link">&para;</a></h3>
 <p><img alt="Create and Manage Zones" src="../../../../../assets/fabric-os-proc-create-and-manage-zones.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Create zone</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>zonecreate<span class="w"> </span><span class="s2">&quot;esxi01_hba0__fa01_ct0_p0&quot;</span>,<span class="w"> </span><span class="s2">&quot;esxi01_hba0; fa01_ct0_p0; fa01_ct0_p1&quot;</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Add member to existing zone</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>zoneadd<span class="w"> </span><span class="s2">&quot;esxi01_hba0__fa01_ct0_p0&quot;</span>,<span class="w"> </span><span class="s2">&quot;fa01_ct0_p2&quot;</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Remove member from zone</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>zoneremove<span class="w"> </span><span class="s2">&quot;esxi01_hba0__fa01_ct0_p0&quot;</span>,<span class="w"> </span><span class="s2">&quot;fa01_ct0_p2&quot;</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Delete a zone (remove from zone set first)</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>zonedelete<span class="w"> </span><span class="s2">&quot;esxi01_hba0__fa01_ct0_p0&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Create zone</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>zonecreate<span class="w"> </span><span class="s2">&quot;esxi01_hba0__fa01_ct0_p0&quot;</span>,<span class="w"> </span><span class="s2">&quot;esxi01_hba0; fa01_ct0_p0; fa01_ct0_p1&quot;</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Add member to existing zone</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>zoneadd<span class="w"> </span><span class="s2">&quot;esxi01_hba0__fa01_ct0_p0&quot;</span>,<span class="w"> </span><span class="s2">&quot;fa01_ct0_p2&quot;</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Remove member from zone</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>zoneremove<span class="w"> </span><span class="s2">&quot;esxi01_hba0__fa01_ct0_p0&quot;</span>,<span class="w"> </span><span class="s2">&quot;fa01_ct0_p2&quot;</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Delete a zone (remove from zone set first)</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>zonedelete<span class="w"> </span><span class="s2">&quot;esxi01_hba0__fa01_ct0_p0&quot;</span>
 </code></pre></div>
 <h3 id="zone-set-management">Zone Set Management<a class="headerlink" href="#zone-set-management" title="Permanent link">&para;</a></h3>
 <p><img alt="Zone Set Management" src="../../../../../assets/fabric-os-proc-zone-set-management.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Create zone set and add initial members</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>cfgcreate<span class="w"> </span><span class="s2">&quot;dc1-fabA-prod&quot;</span>,<span class="w"> </span><span class="s2">&quot;esxi01_hba0__fa01_ct0_p0; esxi01_hba1__fa01_ct1_p0&quot;</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Add zone to existing zone set</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>cfgadd<span class="w"> </span><span class="s2">&quot;dc1-fabA-prod&quot;</span>,<span class="w"> </span><span class="s2">&quot;esxi02_hba0__fa01_ct0_p0&quot;</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Remove zone from zone set</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>cfgremove<span class="w"> </span><span class="s2">&quot;dc1-fabA-prod&quot;</span>,<span class="w"> </span><span class="s2">&quot;esxi02_hba0__fa01_ct0_p0&quot;</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Activate zone set (live immediately in fabric)</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>cfgenable<span class="w"> </span><span class="s2">&quot;dc1-fabA-prod&quot;</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c1"># Save to flash (persists across reboot)</span>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>cfgsave
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Create zone set and add initial members</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>cfgcreate<span class="w"> </span><span class="s2">&quot;dc1-fabA-prod&quot;</span>,<span class="w"> </span><span class="s2">&quot;esxi01_hba0__fa01_ct0_p0; esxi01_hba1__fa01_ct1_p0&quot;</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Add zone to existing zone set</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>cfgadd<span class="w"> </span><span class="s2">&quot;dc1-fabA-prod&quot;</span>,<span class="w"> </span><span class="s2">&quot;esxi02_hba0__fa01_ct0_p0&quot;</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Remove zone from zone set</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>cfgremove<span class="w"> </span><span class="s2">&quot;dc1-fabA-prod&quot;</span>,<span class="w"> </span><span class="s2">&quot;esxi02_hba0__fa01_ct0_p0&quot;</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Activate zone set (live immediately in fabric)</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>cfgenable<span class="w"> </span><span class="s2">&quot;dc1-fabA-prod&quot;</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Save to flash (persists across reboot)</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>cfgsave
 </code></pre></div>
 <h3 id="example-zone-a-new-host-to-flasharray">Example: Zone a New Host to FlashArray<a class="headerlink" href="#example-zone-a-new-host-to-flasharray" title="Permanent link">&para;</a></h3>
 <p><img alt="Example: Zone a New Host to FlashArray" src="../../../../../assets/fabric-os-proc-example-zone-a-new-host-to-flasharray.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># 1. Create host HBA aliases</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>alicreate<span class="w"> </span><span class="s2">&quot;web01_hba0&quot;</span>,<span class="w"> </span><span class="s2">&quot;10:00:00:90:fa:12:34:56&quot;</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>alicreate<span class="w"> </span><span class="s2">&quot;web01_hba1&quot;</span>,<span class="w"> </span><span class="s2">&quot;10:00:00:90:fa:12:34:57&quot;</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># 2. Create zones (Fabric A — HBA0 to CT0 ports)</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>zonecreate<span class="w"> </span><span class="s2">&quot;web01_hba0__fa01_ct0_p0&quot;</span>,<span class="w"> </span><span class="s2">&quot;web01_hba0; fa01_ct0_p0; fa01_ct0_p1&quot;</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># 3. Create zones (Fabric B switch — HBA1 to CT1 ports)</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>zonecreate<span class="w"> </span><span class="s2">&quot;web01_hba1__fa01_ct1_p0&quot;</span>,<span class="w"> </span><span class="s2">&quot;web01_hba1; fa01_ct1_p0; fa01_ct1_p1&quot;</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># 4. Add to zone set</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>cfgadd<span class="w"> </span><span class="s2">&quot;dc1-fabA-prod&quot;</span>,<span class="w"> </span><span class="s2">&quot;web01_hba0__fa01_ct0_p0&quot;</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="c1"># 5. Activate and save</span>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>cfgenable<span class="w"> </span><span class="s2">&quot;dc1-fabA-prod&quot;</span>
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>cfgsave
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># 1. Create host HBA aliases</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>alicreate<span class="w"> </span><span class="s2">&quot;web01_hba0&quot;</span>,<span class="w"> </span><span class="s2">&quot;10:00:00:90:fa:12:34:56&quot;</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>alicreate<span class="w"> </span><span class="s2">&quot;web01_hba1&quot;</span>,<span class="w"> </span><span class="s2">&quot;10:00:00:90:fa:12:34:57&quot;</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># 2. Create zones (Fabric A — HBA0 to CT0 ports)</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>zonecreate<span class="w"> </span><span class="s2">&quot;web01_hba0__fa01_ct0_p0&quot;</span>,<span class="w"> </span><span class="s2">&quot;web01_hba0; fa01_ct0_p0; fa01_ct0_p1&quot;</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># 3. Create zones (Fabric B switch — HBA1 to CT1 ports)</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>zonecreate<span class="w"> </span><span class="s2">&quot;web01_hba1__fa01_ct1_p0&quot;</span>,<span class="w"> </span><span class="s2">&quot;web01_hba1; fa01_ct1_p0; fa01_ct1_p1&quot;</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="c1"># 4. Add to zone set</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>cfgadd<span class="w"> </span><span class="s2">&quot;dc1-fabA-prod&quot;</span>,<span class="w"> </span><span class="s2">&quot;web01_hba0__fa01_ct0_p0&quot;</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="c1"># 5. Activate and save</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>cfgenable<span class="w"> </span><span class="s2">&quot;dc1-fabA-prod&quot;</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>cfgsave
 </code></pre></div>
 <h3 id="zone-audit">Zone Audit<a class="headerlink" href="#zone-audit" title="Permanent link">&para;</a></h3>
 <p><img alt="Zone Audit" src="../../../../../assets/fabric-os-proc-zone-audit.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Show all zones and member count — find zones with &gt; 1 initiator</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>zoneshow
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Cross-check alias WWNs against physical HBA WWNs</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>alishow
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1"># Compare with: host: cat /sys/class/fc_host/host*/port_name</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># Show what a WWN can talk to</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>nszonemember<span class="w"> </span><span class="s2">&quot;&lt;alias_or_wwn&gt;&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Show all zones and member count — find zones with &gt; 1 initiator</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>zoneshow
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Cross-check alias WWNs against physical HBA WWNs</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>alishow
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># Compare with: host: cat /sys/class/fc_host/host*/port_name</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Show what a WWN can talk to</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>nszonemember<span class="w"> </span><span class="s2">&quot;&lt;alias_or_wwn&gt;&quot;</span>
 </code></pre></div>
 <h3 id="zoning-troubleshooting">Zoning Troubleshooting<a class="headerlink" href="#zoning-troubleshooting" title="Permanent link">&para;</a></h3>
 <p><img alt="Zoning Troubleshooting" src="../../../../../assets/fabric-os-proc-zoning-troubleshooting.svg" /></p>
@@ -8187,184 +8171,184 @@ FabricOS procedures: `switchshow`, `fabricshow`, zone configuration with `cfgadd
 </table>
 <h2 id="add-a-new-switch-to-an-existing-fabric">Add a New Switch to an Existing Fabric<a class="headerlink" href="#add-a-new-switch-to-an-existing-fabric" title="Permanent link">&para;</a></h2>
 <p>Connect ISL cables → <code>switchDisable</code> on new switch → configure domain ID (must be unique in fabric) → set fabric parameters to match existing → <code>switchEnable</code> → verify <code>fabricshow</code> shows new switch.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Disable new switch before connecting to fabric</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>switchDisable
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Set domain ID (must be unique across the fabric)</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>configure
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># Answer domain ID prompt with a unique value</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># Re-enable switch</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>switchEnable
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="c1"># Verify new switch appears in fabric</span>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>fabricshow
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Disable new switch before connecting to fabric</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>switchDisable
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Set domain ID (must be unique across the fabric)</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>configure
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1"># Answer domain ID prompt with a unique value</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># Re-enable switch</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>switchEnable
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="c1"># Verify new switch appears in fabric</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>fabricshow
 </code></pre></div>
 <h2 id="create-a-zone-and-zone-configuration">Create a Zone and Zone Configuration<a class="headerlink" href="#create-a-zone-and-zone-configuration" title="Permanent link">&para;</a></h2>
 <p><code>zonecreate "zone_host01_array01", "10:00:00:00:00:00:00:01; 50:00:00:00:00:00:00:02"</code> → <code>cfgadd "cfg_prod", "zone_host01_array01"</code> → <code>cfgsave</code> → <code>cfgenable "cfg_prod"</code>.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>zonecreate<span class="w"> </span><span class="s2">&quot;zone_host01_array01&quot;</span>,<span class="w"> </span><span class="s2">&quot;10:00:00:00:00:00:00:01; 50:00:00:00:00:00:00:02&quot;</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>cfgadd<span class="w"> </span><span class="s2">&quot;cfg_prod&quot;</span>,<span class="w"> </span><span class="s2">&quot;zone_host01_array01&quot;</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>cfgsave
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>cfgenable<span class="w"> </span><span class="s2">&quot;cfg_prod&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>zonecreate<span class="w"> </span><span class="s2">&quot;zone_host01_array01&quot;</span>,<span class="w"> </span><span class="s2">&quot;10:00:00:00:00:00:00:01; 50:00:00:00:00:00:00:02&quot;</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>cfgadd<span class="w"> </span><span class="s2">&quot;cfg_prod&quot;</span>,<span class="w"> </span><span class="s2">&quot;zone_host01_array01&quot;</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>cfgsave
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>cfgenable<span class="w"> </span><span class="s2">&quot;cfg_prod&quot;</span>
 </code></pre></div>
 <h2 id="add-a-member-to-an-existing-zone">Add a Member to an Existing Zone<a class="headerlink" href="#add-a-member-to-an-existing-zone" title="Permanent link">&para;</a></h2>
 <p><code>zoneadd "zone_host01_array01", "10:00:00:00:00:00:00:03"</code> → <code>cfgsave</code> → <code>cfgenable "cfg_prod"</code>.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>zoneadd<span class="w"> </span><span class="s2">&quot;zone_host01_array01&quot;</span>,<span class="w"> </span><span class="s2">&quot;10:00:00:00:00:00:00:03&quot;</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>cfgsave
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>cfgenable<span class="w"> </span><span class="s2">&quot;cfg_prod&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>zoneadd<span class="w"> </span><span class="s2">&quot;zone_host01_array01&quot;</span>,<span class="w"> </span><span class="s2">&quot;10:00:00:00:00:00:00:03&quot;</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>cfgsave
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>cfgenable<span class="w"> </span><span class="s2">&quot;cfg_prod&quot;</span>
 </code></pre></div>
 <h2 id="remove-a-zone-member">Remove a Zone Member<a class="headerlink" href="#remove-a-zone-member" title="Permanent link">&para;</a></h2>
 <p><code>zoneremove "zone_host01_array01", "10:00:00:00:00:00:00:03"</code> → <code>cfgsave</code> → <code>cfgenable</code>.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>zoneremove<span class="w"> </span><span class="s2">&quot;zone_host01_array01&quot;</span>,<span class="w"> </span><span class="s2">&quot;10:00:00:00:00:00:00:03&quot;</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>cfgsave
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>cfgenable<span class="w"> </span><span class="s2">&quot;cfg_prod&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>zoneremove<span class="w"> </span><span class="s2">&quot;zone_host01_array01&quot;</span>,<span class="w"> </span><span class="s2">&quot;10:00:00:00:00:00:00:03&quot;</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>cfgsave
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>cfgenable<span class="w"> </span><span class="s2">&quot;cfg_prod&quot;</span>
 </code></pre></div>
 <h2 id="replace-a-failed-sfp">Replace a Failed SFP<a class="headerlink" href="#replace-a-failed-sfp" title="Permanent link">&para;</a></h2>
 <p>Identify failed port with <code>portshow &lt;port&gt;</code> → hot-replace SFP (no switch reboot needed) → verify with <code>sfpshow &lt;port&gt;</code>.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Identify the failed port</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>portshow<span class="w"> </span>&lt;port&gt;
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Hot-replace SFP (no reboot needed)</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="c1"># -- Physical replacement --</span>
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># Verify new SFP</span>
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>sfpshow<span class="w"> </span>&lt;port&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Identify the failed port</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>portshow<span class="w"> </span>&lt;port&gt;
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Hot-replace SFP (no reboot needed)</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="c1"># -- Physical replacement --</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1"># Verify new SFP</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>sfpshow<span class="w"> </span>&lt;port&gt;
 </code></pre></div>
 <h2 id="replace-a-failed-switch-fabric-resilience">Replace a Failed Switch (Fabric Resilience)<a class="headerlink" href="#replace-a-failed-switch-fabric-resilience" title="Permanent link">&para;</a></h2>
 <p>ISL failover to redundant paths → install replacement switch → restore domain ID and port config from backup → reconnect ISLs → verify fabric.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Verify redundant paths are carrying traffic before replacing</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>fabricshow
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>portshow
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="c1"># After replacement: restore config from backup</span>
-<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>configdownload<span class="w"> </span>-all<span class="w"> </span>-P<span class="w"> </span>ftp<span class="w"> </span>-h<span class="w"> </span>&lt;server&gt;<span class="w"> </span>-u<span class="w"> </span>&lt;user&gt;<span class="w"> </span>-f<span class="w"> </span>&lt;filename&gt;
-<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>
-<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="c1"># Verify fabric topology is restored</span>
-<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>fabricshow
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Verify redundant paths are carrying traffic before replacing</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>fabricshow
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>portshow
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="c1"># After replacement: restore config from backup</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>configdownload<span class="w"> </span>-all<span class="w"> </span>-P<span class="w"> </span>ftp<span class="w"> </span>-h<span class="w"> </span>&lt;server&gt;<span class="w"> </span>-u<span class="w"> </span>&lt;user&gt;<span class="w"> </span>-f<span class="w"> </span>&lt;filename&gt;
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="c1"># Verify fabric topology is restored</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>fabricshow
 </code></pre></div>
 <h2 id="collect-support-bundle">Collect Support Bundle<a class="headerlink" href="#collect-support-bundle" title="Permanent link">&para;</a></h2>
 <p><code>supportsave</code> → saves fabric and switch state to USB or remote FTP — use for TAC cases.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>supportsave
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>supportsave
 </code></pre></div>
 <h2 id="monitor-port-errors">Monitor Port Errors<a class="headerlink" href="#monitor-port-errors" title="Permanent link">&para;</a></h2>
 <p><code>porterrshow</code> — shows CRC errors, LR in/out, link failures per port; investigate any port with non-zero CRC.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>porterrshow
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>porterrshow
 </code></pre></div>
 <h2 id="back-up-switch-configuration">Back Up Switch Configuration<a class="headerlink" href="#back-up-switch-configuration" title="Permanent link">&para;</a></h2>
 <p><code>configupload -all -P ftp -h &lt;server&gt; -u &lt;user&gt; -f &lt;filename&gt;</code> — saves running configuration for DR.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>configupload<span class="w"> </span>-all<span class="w"> </span>-P<span class="w"> </span>ftp<span class="w"> </span>-h<span class="w"> </span>&lt;server&gt;<span class="w"> </span>-u<span class="w"> </span>&lt;user&gt;<span class="w"> </span>-f<span class="w"> </span>&lt;filename&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>configupload<span class="w"> </span>-all<span class="w"> </span>-P<span class="w"> </span>ftp<span class="w"> </span>-h<span class="w"> </span>&lt;server&gt;<span class="w"> </span>-u<span class="w"> </span>&lt;user&gt;<span class="w"> </span>-f<span class="w"> </span>&lt;filename&gt;
 </code></pre></div>
 <hr />
 <h3 id="enable-and-disable-ports">Enable and Disable Ports<a class="headerlink" href="#enable-and-disable-ports" title="Permanent link">&para;</a></h3>
 <p><img alt="Enable and Disable Ports" src="../../../../../assets/fabric-os-proc-enable-and-disable-ports.svg" /></p>
 <p>Control individual FC ports for maintenance or isolation.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># Take a port offline</span>
-<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>portdisable<span class="w"> </span>&lt;port-number&gt;
-<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>
-<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="c1"># Bring a port back online</span>
-<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>portenable<span class="w"> </span>&lt;port-number&gt;
-<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>
-<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="c1"># Disable a range of ports</span>
-<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>portdisable<span class="w"> </span>--range<span class="w"> </span><span class="m">0</span>-7
-<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>
-<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a><span class="c1"># Verify port state</span>
-<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>switchshow<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;^&lt;port&gt;&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Take a port offline</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>portdisable<span class="w"> </span>&lt;port-number&gt;
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c1"># Bring a port back online</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>portenable<span class="w"> </span>&lt;port-number&gt;
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="c1"># Disable a range of ports</span>
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>portdisable<span class="w"> </span>--range<span class="w"> </span><span class="m">0</span>-7
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a><span class="c1"># Verify port state</span>
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>switchshow<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;^&lt;port&gt;&quot;</span>
 </code></pre></div>
 <p>Always disable both ends of an ISL before removing a cable. Never disable a port that is the only active path to a host.</p>
 <h3 id="configure-an-isl-e-port-trunk">Configure an ISL (E-Port / Trunk)<a class="headerlink" href="#configure-an-isl-e-port-trunk" title="Permanent link">&para;</a></h3>
 <p><img alt="Configure an ISL (E-Port / Trunk)" src="../../../../../assets/fabric-os-proc-configure-an-isl-e-port-trunk.svg" /></p>
 <p>Inter-switch links connect fabric switches. Connect cables first, then verify E-port negotiation.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Confirm the port has negotiated as E-Port</span>
-<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>switchshow
-<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>
-<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="c1"># Enable trunking on the ISL port</span>
-<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>portcfgtrunkport<span class="w"> </span>&lt;port-number&gt;<span class="w"> </span><span class="m">1</span>
-<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>
-<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="c1"># Set ISL R_RDY mode for best performance</span>
-<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>portcfg<span class="w"> </span>isl<span class="w"> </span>&lt;port-number&gt;
-<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>
-<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a><span class="c1"># View current trunk groups</span>
-<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a>trunkshow
-<a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a>
-<a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a><span class="c1"># Verify fabric topology and switch membership</span>
-<a id="__codelineno-16-14" name="__codelineno-16-14" href="#__codelineno-16-14"></a>fabricshow
-<a id="__codelineno-16-15" name="__codelineno-16-15" href="#__codelineno-16-15"></a>nsallshow
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># Confirm the port has negotiated as E-Port</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>switchshow
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="c1"># Enable trunking on the ISL port</span>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>portcfgtrunkport<span class="w"> </span>&lt;port-number&gt;<span class="w"> </span><span class="m">1</span>
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="c1"># Set ISL R_RDY mode for best performance</span>
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>portcfg<span class="w"> </span>isl<span class="w"> </span>&lt;port-number&gt;
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a><span class="c1"># View current trunk groups</span>
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>trunkshow
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a><span class="c1"># Verify fabric topology and switch membership</span>
+<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>fabricshow
+<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a>nsallshow
 </code></pre></div>
 <p>The port column in <code>switchshow</code> must show <code>E-Port</code> before enabling trunking. Fabric parameters (BB credit, speed, distance) must match on both ends.</p>
 <h3 id="firmware-upgrade">Firmware Upgrade<a class="headerlink" href="#firmware-upgrade" title="Permanent link">&para;</a></h3>
 <p><img alt="Firmware Upgrade" src="../../../../../assets/fabric-os-proc-firmware-upgrade.svg" /></p>
 <p>Download and apply a Fabric OS upgrade one switch at a time. Never upgrade both fabric planes simultaneously.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># Step 1: Download firmware — -b triggers HA boot to standby CP first</span>
-<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>firmwaredownload<span class="w"> </span>-s<span class="w"> </span>-b<span class="w"> </span>-n<span class="w"> </span>&lt;ftp-or-sftp-host&gt;<span class="w"> </span>&lt;path/to/FOS_image&gt;
-<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>
-<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="c1"># Step 2: Monitor download and install progress</span>
-<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>firmwaredownloadstatus
-<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>
-<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a><span class="c1"># Step 3: Confirm both CPs are on the new version</span>
-<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>firmwareshow
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Step 1: Download firmware — -b triggers HA boot to standby CP first</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>firmwaredownload<span class="w"> </span>-s<span class="w"> </span>-b<span class="w"> </span>-n<span class="w"> </span>&lt;ftp-or-sftp-host&gt;<span class="w"> </span>&lt;path/to/FOS_image&gt;
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="c1"># Step 2: Monitor download and install progress</span>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>firmwaredownloadstatus
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="c1"># Step 3: Confirm both CPs are on the new version</span>
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>firmwareshow
 </code></pre></div>
 <p>The <code>-b</code> flag causes the standby CP to upgrade and reboot first; the active CP follows automatically. Verify all ISLs are healthy and no alarms are present before starting.</p>
 <h3 id="switch-health-check">Switch Health Check<a class="headerlink" href="#switch-health-check" title="Permanent link">&para;</a></h3>
 <p><img alt="Switch Health Check" src="../../../../../assets/fabric-os-proc-switch-health-check.svg" /></p>
 <p>Full health snapshot to run before any change window.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># Overall pass/fail status</span>
-<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>switchstatusshow
-<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>
-<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="c1"># Temperature, fan, and power sensor readings</span>
-<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>sensorshow
-<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>
-<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a><span class="c1"># Blade and slot status (chassis switches)</span>
-<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>slotshow
-<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a>
-<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a><span class="c1"># Per-port detail for a specific port</span>
-<a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a>portshow<span class="w"> </span>&lt;port&gt;
-<a id="__codelineno-18-12" name="__codelineno-18-12" href="#__codelineno-18-12"></a>
-<a id="__codelineno-18-13" name="__codelineno-18-13" href="#__codelineno-18-13"></a><span class="c1"># Error log — last 100 entries</span>
-<a id="__codelineno-18-14" name="__codelineno-18-14" href="#__codelineno-18-14"></a>errdump
-<a id="__codelineno-18-15" name="__codelineno-18-15" href="#__codelineno-18-15"></a>
-<a id="__codelineno-18-16" name="__codelineno-18-16" href="#__codelineno-18-16"></a><span class="c1"># Fabric membership — count expected switches</span>
-<a id="__codelineno-18-17" name="__codelineno-18-17" href="#__codelineno-18-17"></a>fabricshow
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># Overall pass/fail status</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>switchstatusshow
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="c1"># Temperature, fan, and power sensor readings</span>
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>sensorshow
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a><span class="c1"># Blade and slot status (chassis switches)</span>
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>slotshow
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a><span class="c1"># Per-port detail for a specific port</span>
+<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a>portshow<span class="w"> </span>&lt;port&gt;
+<a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a>
+<a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a><span class="c1"># Error log — last 100 entries</span>
+<a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a>errdump
+<a id="__codelineno-17-15" name="__codelineno-17-15" href="#__codelineno-17-15"></a>
+<a id="__codelineno-17-16" name="__codelineno-17-16" href="#__codelineno-17-16"></a><span class="c1"># Fabric membership — count expected switches</span>
+<a id="__codelineno-17-17" name="__codelineno-17-17" href="#__codelineno-17-17"></a>fabricshow
 </code></pre></div>
 <p>Flag any <code>FAIL</code> or <code>MARGINAL</code> result before proceeding. A healthy switch shows all sensors <code>OK</code> and all expected switches in <code>fabricshow</code>.</p>
 <h3 id="user-and-rbac-management">User and RBAC Management<a class="headerlink" href="#user-and-rbac-management" title="Permanent link">&para;</a></h3>
 <p><img alt="User and RBAC Management" src="../../../../../assets/fabric-os-proc-user-and-rbac-management.svg" /></p>
 <p>Create role-based accounts for operators and admins. Brocade FOS supports predefined roles: <code>user</code>, <code>admin</code>, <code>securityadmin</code>, <code>zoneadmin</code>, <code>fabricadmin</code>.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1"># Add a read-only operator account</span>
-<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>userconfig<span class="w"> </span>--add<span class="w"> </span>&lt;username&gt;<span class="w"> </span>-r<span class="w"> </span>user<span class="w"> </span>-p<span class="w"> </span>&lt;password&gt;
-<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>
-<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="c1"># Add a full admin account</span>
-<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>userconfig<span class="w"> </span>--add<span class="w"> </span>&lt;username&gt;<span class="w"> </span>-r<span class="w"> </span>admin<span class="w"> </span>-p<span class="w"> </span>&lt;password&gt;
-<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>
-<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a><span class="c1"># Add a zone-admin-only account</span>
-<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>userconfig<span class="w"> </span>--add<span class="w"> </span>zone-admin<span class="w"> </span>-r<span class="w"> </span>zoneadmin<span class="w"> </span>-p<span class="w"> </span>&lt;password&gt;
-<a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a>
-<a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a><span class="c1"># List all local accounts</span>
-<a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a>userconfig<span class="w"> </span>--show<span class="w"> </span>-a
-<a id="__codelineno-19-12" name="__codelineno-19-12" href="#__codelineno-19-12"></a>
-<a id="__codelineno-19-13" name="__codelineno-19-13" href="#__codelineno-19-13"></a><span class="c1"># Change a user&#39;s password</span>
-<a id="__codelineno-19-14" name="__codelineno-19-14" href="#__codelineno-19-14"></a>passwd<span class="w"> </span>&lt;username&gt;
-<a id="__codelineno-19-15" name="__codelineno-19-15" href="#__codelineno-19-15"></a>
-<a id="__codelineno-19-16" name="__codelineno-19-16" href="#__codelineno-19-16"></a><span class="c1"># Delete a user account</span>
-<a id="__codelineno-19-17" name="__codelineno-19-17" href="#__codelineno-19-17"></a>userconfig<span class="w"> </span>--delete<span class="w"> </span>&lt;username&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># Add a read-only operator account</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>userconfig<span class="w"> </span>--add<span class="w"> </span>&lt;username&gt;<span class="w"> </span>-r<span class="w"> </span>user<span class="w"> </span>-p<span class="w"> </span>&lt;password&gt;
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="c1"># Add a full admin account</span>
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>userconfig<span class="w"> </span>--add<span class="w"> </span>&lt;username&gt;<span class="w"> </span>-r<span class="w"> </span>admin<span class="w"> </span>-p<span class="w"> </span>&lt;password&gt;
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a><span class="c1"># Add a zone-admin-only account</span>
+<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>userconfig<span class="w"> </span>--add<span class="w"> </span>zone-admin<span class="w"> </span>-r<span class="w"> </span>zoneadmin<span class="w"> </span>-p<span class="w"> </span>&lt;password&gt;
+<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a>
+<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a><span class="c1"># List all local accounts</span>
+<a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a>userconfig<span class="w"> </span>--show<span class="w"> </span>-a
+<a id="__codelineno-18-12" name="__codelineno-18-12" href="#__codelineno-18-12"></a>
+<a id="__codelineno-18-13" name="__codelineno-18-13" href="#__codelineno-18-13"></a><span class="c1"># Change a user&#39;s password</span>
+<a id="__codelineno-18-14" name="__codelineno-18-14" href="#__codelineno-18-14"></a>passwd<span class="w"> </span>&lt;username&gt;
+<a id="__codelineno-18-15" name="__codelineno-18-15" href="#__codelineno-18-15"></a>
+<a id="__codelineno-18-16" name="__codelineno-18-16" href="#__codelineno-18-16"></a><span class="c1"># Delete a user account</span>
+<a id="__codelineno-18-17" name="__codelineno-18-17" href="#__codelineno-18-17"></a>userconfig<span class="w"> </span>--delete<span class="w"> </span>&lt;username&gt;
 </code></pre></div>
 <p>Verify: <code>userconfig --show -a</code> should list the account with the correct role. Use <code>securityadmin</code> role for managing certificates and security policies only.</p>
 <h3 id="port-diagnostics">Port Diagnostics<a class="headerlink" href="#port-diagnostics" title="Permanent link">&para;</a></h3>
 <p><img alt="Port Diagnostics" src="../../../../../assets/fabric-os-proc-port-diagnostics.svg" /></p>
 <p>Run loopback and frame tests to verify port hardware health.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># Internal loopback — no cable needed, tests internal hardware path</span>
-<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>portloopbacktest<span class="w"> </span>-port<span class="w"> </span>&lt;port&gt;
-<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>
-<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="c1"># External loopback — requires loopback SFP installed</span>
-<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>portloopbacktest<span class="w"> </span>-port<span class="w"> </span>&lt;port&gt;<span class="w"> </span>-type<span class="w"> </span>eloopback
-<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>
-<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a><span class="c1"># Real-time frame counts and error rates on a connected port</span>
-<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a>portperfshow<span class="w"> </span>&lt;port&gt;
-<a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a>
-<a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a><span class="c1"># Check BB credit starvation — B2B credit 0 count indicates congestion</span>
-<a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a>portbuffershow<span class="w"> </span>&lt;port&gt;
-<a id="__codelineno-20-12" name="__codelineno-20-12" href="#__codelineno-20-12"></a>
-<a id="__codelineno-20-13" name="__codelineno-20-13" href="#__codelineno-20-13"></a><span class="c1"># Per-port CRC, LR, and link failure counters</span>
-<a id="__codelineno-20-14" name="__codelineno-20-14" href="#__codelineno-20-14"></a>porterrshow
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1"># Internal loopback — no cable needed, tests internal hardware path</span>
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>portloopbacktest<span class="w"> </span>-port<span class="w"> </span>&lt;port&gt;
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="c1"># External loopback — requires loopback SFP installed</span>
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>portloopbacktest<span class="w"> </span>-port<span class="w"> </span>&lt;port&gt;<span class="w"> </span>-type<span class="w"> </span>eloopback
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>
+<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a><span class="c1"># Real-time frame counts and error rates on a connected port</span>
+<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>portperfshow<span class="w"> </span>&lt;port&gt;
+<a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a>
+<a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a><span class="c1"># Check BB credit starvation — B2B credit 0 count indicates congestion</span>
+<a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a>portbuffershow<span class="w"> </span>&lt;port&gt;
+<a id="__codelineno-19-12" name="__codelineno-19-12" href="#__codelineno-19-12"></a>
+<a id="__codelineno-19-13" name="__codelineno-19-13" href="#__codelineno-19-13"></a><span class="c1"># Per-port CRC, LR, and link failure counters</span>
+<a id="__codelineno-19-14" name="__codelineno-19-14" href="#__codelineno-19-14"></a>porterrshow
 </code></pre></div>
 <p>A non-zero B2B credit 0 count in <code>portbuffershow</code> indicates the remote end is not returning credits fast enough — investigate slow-drain devices on that path. <code>portperfshow</code> output auto-refreshes every second; press Ctrl-C to exit.</p>
 <hr />

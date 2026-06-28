@@ -8735,23 +8735,7 @@ Common Issues reference covering Keystone Collector Not Reporting, Subscription 
 *Applies to: Keystone STaaS*
 </div>
 <p><img alt="NetApp Keystone — Common Issues" src="../../../../../assets/storage-netapp-keystone-operations-common-issues.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>hub: &quot;Keystone STaaS\nOperations&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>keystone_collector_not_reporting: &quot;Keystone Collector Not Reporting&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>subscription_consumption_shows_unexp: &quot;Subscription Consumption Shows Unexpected Spike&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>snapmirror_lag_alert: &quot;SnapMirror Lag Alert&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>collector_vm_cannot_reach_ontap_arra: &quot;Collector VM Cannot Reach ONTAP Array&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>keystone_portal_shows_wrong_committe: &quot;Keystone Portal Shows Wrong Committed Capacity&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>quick_reference_error_patterns: &quot;Quick Reference — Error Patterns&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>hub -&gt; keystone_collector_not_reporting
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>hub -&gt; subscription_consumption_shows_unexp
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>hub -&gt; snapmirror_lag_alert
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>hub -&gt; collector_vm_cannot_reach_ontap_arra
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>hub -&gt; keystone_portal_shows_wrong_committe
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>hub -&gt; quick_reference_error_patterns
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNkk1OwzAQRvc5xYg9F-gCqapYQX8gBTZI1tQdHKuJbWyHtkKVOAQn5CSM06StRFS6iybP38w8e6k9yaitGYDXqohZVtSLAVzd0TZEawjyOWL-aqaOPCYuXMFnKNDRAAraoLJml61aWEhblhxnvTA2Ck_O-qiNOs0bdQhMbITHDjmmpnnQqJJ2WagXQXrtUl_ONqGu9t-hsOsgakMbx9n5Ccb5BwzyhMFTwjiUlpA7vaL-VgZdpb3n0UtUAkvyMUVzedyU4R4VDFO59_xx849KSDT7_VEWwpqITqD3yHnH7Z_HMGowdsAYTCfz4QyGjG17GxwcJ2FYtgrW3hrFaqpKx0innmcN1ip4SRir2WNL7uxQ6tjf6b3WcsXDv5EnI0lQY8Uhn_QmcI-HBPDYLQA_X99w2ziatVBvbnpZcH0D_72Wjrvk9g9sz_V1_y65mj-znbHcsec9Zb_DkUTK?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Access:</strong> Storage admin credentials (cluster admin or equivalent)</li>
@@ -8763,16 +8747,16 @@ Common Issues reference covering Keystone Collector Not Reporting, Subscription 
 <h2 id="keystone-collector-not-reporting">Keystone Collector Not Reporting<a class="headerlink" href="#keystone-collector-not-reporting" title="Permanent link">&para;</a></h2>
 <p><strong>Symptom:</strong> Keystone portal shows arrays as "not reporting" or last collection timestamp is stale.</p>
 <p><strong>Checks:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># On Collector VM</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>keystone-collector<span class="w"> </span>status
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>keystone-collector<span class="w"> </span>show-last-collection
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Check network connectivity to Keystone cloud endpoints</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>curl<span class="w"> </span>-I<span class="w"> </span>https://keystone.netapp.com
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>curl<span class="w"> </span>-I<span class="w"> </span>https://api.keystone.netapp.com
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># Check Collector logs</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>keystone-collector<span class="w"> </span>--since<span class="w"> </span><span class="s2">&quot;1 hour ago&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># On Collector VM</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>keystone-collector<span class="w"> </span>status
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>keystone-collector<span class="w"> </span>show-last-collection
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Check network connectivity to Keystone cloud endpoints</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>curl<span class="w"> </span>-I<span class="w"> </span>https://keystone.netapp.com
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>curl<span class="w"> </span>-I<span class="w"> </span>https://api.keystone.netapp.com
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1"># Check Collector logs</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>keystone-collector<span class="w"> </span>--since<span class="w"> </span><span class="s2">&quot;1 hour ago&quot;</span>
 </code></pre></div>
 <p><strong>Resolution:</strong></p>
 <ol>
@@ -8785,38 +8769,38 @@ Common Issues reference covering Keystone Collector Not Reporting, Subscription 
 <h2 id="subscription-consumption-shows-unexpected-spike">Subscription Consumption Shows Unexpected Spike<a class="headerlink" href="#subscription-consumption-shows-unexpected-spike" title="Permanent link">&para;</a></h2>
 <p><strong>Symptom:</strong> Keystone portal reports a sudden jump in consumed TiB not explained by provisioning.</p>
 <p><strong>Checks:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># On ONTAP — check which volumes grew</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>volume<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;keystone-svm&gt;<span class="w"> </span>-fields<span class="w"> </span>size,used,percent-used<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-k3<span class="w"> </span>-r
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Check for large snapshot accumulation</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>volume<span class="w"> </span>snapshot<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;keystone-svm&gt;<span class="w"> </span>-fields<span class="w"> </span>size
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Check for new qtrees or volumes provisioned without Keystone awareness</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>volume<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;keystone-svm&gt;
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>qtree<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;keystone-svm&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># On ONTAP — check which volumes grew</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>volume<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;keystone-svm&gt;<span class="w"> </span>-fields<span class="w"> </span>size,used,percent-used<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-k3<span class="w"> </span>-r
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Check for large snapshot accumulation</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>volume<span class="w"> </span>snapshot<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;keystone-svm&gt;<span class="w"> </span>-fields<span class="w"> </span>size
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Check for new qtrees or volumes provisioned without Keystone awareness</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>volume<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;keystone-svm&gt;
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>qtree<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;keystone-svm&gt;
 </code></pre></div>
 <p><strong>Common causes:</strong> Snapshot accumulation from a missed cleanup job; a bulk data ingest; a new volume provisioned directly on the SVM outside of Keystone portal workflow.</p>
 <hr />
 <h2 id="snapmirror-lag-alert">SnapMirror Lag Alert<a class="headerlink" href="#snapmirror-lag-alert" title="Permanent link">&para;</a></h2>
 <p><strong>Symptom:</strong> Keystone portal or ONTAP reports replication lag on a Keystone-backed SnapMirror relationship.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Check SnapMirror relationship status</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-fields<span class="w"> </span>state,lag-time,health
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Re-sync if relationship is broken</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>snapmirror<span class="w"> </span>resync<span class="w"> </span>-source-path<span class="w"> </span>&lt;src&gt;<span class="w"> </span>-destination-path<span class="w"> </span>&lt;dst&gt;
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Update immediately</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>snapmirror<span class="w"> </span>update<span class="w"> </span>-destination-path<span class="w"> </span>&lt;dst&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check SnapMirror relationship status</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-fields<span class="w"> </span>state,lag-time,health
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Re-sync if relationship is broken</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>snapmirror<span class="w"> </span>resync<span class="w"> </span>-source-path<span class="w"> </span>&lt;src&gt;<span class="w"> </span>-destination-path<span class="w"> </span>&lt;dst&gt;
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Update immediately</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>snapmirror<span class="w"> </span>update<span class="w"> </span>-destination-path<span class="w"> </span>&lt;dst&gt;
 </code></pre></div>
 <hr />
 <h2 id="collector-vm-cannot-reach-ontap-array">Collector VM Cannot Reach ONTAP Array<a class="headerlink" href="#collector-vm-cannot-reach-ontap-array" title="Permanent link">&para;</a></h2>
 <p><strong>Symptom:</strong> <code>keystone-collector list-arrays</code> shows an array as unreachable.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Test from Collector VM</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ping<span class="w"> </span>&lt;ontap-mgmt-ip&gt;
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>admin:&lt;pass&gt;<span class="w"> </span>https://&lt;ontap-mgmt-ip&gt;/api/cluster<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.name
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Check ONTAP management LIF status</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>network<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span>-role<span class="w"> </span>cluster-mgmt
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Test from Collector VM</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ping<span class="w"> </span>&lt;ontap-mgmt-ip&gt;
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>admin:&lt;pass&gt;<span class="w"> </span>https://&lt;ontap-mgmt-ip&gt;/api/cluster<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.name
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Check ONTAP management LIF status</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>network<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span>-role<span class="w"> </span>cluster-mgmt
 </code></pre></div>
 <p><strong>Resolution:</strong> Confirm ONTAP management LIF is up, firewall rules allow 443 from Collector VM, and credentials stored in Collector config are current.</p>
 <hr />

@@ -9006,23 +9006,7 @@ Integration with back-end storage arrays, hypervisors, replication systems, and 
     vms --&gt;|"management"| dirB
     vms --&gt;|"telemetry"| cloudiq
     vms --&gt;|"syslog"| siem</code></pre>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>center: &quot;VPLEX&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>backend_storage_arrays: &quot;Back-End Storage Arrays&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>vmware_vsphere: &quot;VMware vSphere&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>dell_recoverpoint_vplex_geo: &quot;Dell RecoverPoint (VPLEX Geo)&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>unisphere_for_vplex_web_gui: &quot;Unisphere for VPLEX (Web GUI)&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>dell_cloudiq_apex_aiops: &quot;Dell CloudIQ / APEX AIOps&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>snmp_and_syslog_alerting: &quot;SNMP and Syslog Alerting&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>center -&gt; backend_storage_arrays
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>center -&gt; vmware_vsphere
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>center -&gt; dell_recoverpoint_vplex_geo
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>center -&gt; unisphere_for_vplex_web_gui
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>center -&gt; dell_cloudiq_apex_aiops
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>center -&gt; snmp_and_syslog_alerting
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp9kUFPgzAUx-98ipedtsPinYMJ6rKQOEXJ1FtT4Fkau7a2wFjMvrstsIjKdmx_r7_3-n8FN5hXXMkQDGdlFQQ5ygpNCLOX5H71NoMvW1KNIZTYUqbkMcho_oGyILZShjIk1Bh6sO7BjQPLlSwg7QlEHflR-FZUMoHHoNntqUHSWF2iQd9t4y-gSbuLyTcFCkHcWTVotOKyIo0W2BKGygnuHIXnniaewrz7AaxRLSZ9teR9e_KuzODaY0ZYzZ1ve6LgKPSq-StmsN7Gi_Pz5ULVBf8kDraEcqXtabZbT-InuIIoca4oftTT2Vi504T6hA9WKEaoQFNxyZwofdgkQH3EHYJoQJOeYZWwvIbpnY0Kfu9jBC6EPqq6EOVf1_-ARhXnvh58A6CT9uo=?" /></p>
 <h2 id="back-end-storage-arrays">Back-End Storage Arrays<a class="headerlink" href="#back-end-storage-arrays" title="Permanent link">&para;</a></h2>
 <p>VPLEX presents a virtualisation layer over heterogeneous back-end arrays. The back-end ports on each VPLEX director zone to the target ports on the back-end array, then VPLEX discovers and claims the LUNs exposed to those ports.</p>
 <h3 id="supported-back-end-arrays">Supported Back-End Arrays<a class="headerlink" href="#supported-back-end-arrays" title="Permanent link">&para;</a></h3>
@@ -9063,20 +9047,20 @@ Integration with back-end storage arrays, hypervisors, replication systems, and 
 <li><strong>Discover</strong>: From vplexcli, rediscover the back-end array.</li>
 <li><strong>Claim</strong>: Claim the storage volume.</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># List discovered back-end arrays</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ls /storage-elements/storage-arrays&quot;</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Show a specific array and its visible storage volumes</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /storage-elements/storage-arrays/array-A/&quot;</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ls /storage-elements/storage-arrays/array-A/storage-volumes&quot;</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Rediscover storage volumes on a back-end array (after adding new LUNs)</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;storage-volume rediscover \</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="s2">  --storage-volume /storage-elements/storage-arrays/array-A/storage-volumes/sv_001&quot;</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c1"># Claim a discovered storage volume for use in VPLEX provisioning</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;storage-volume claim \</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="s2">  --storage-volume /storage-elements/storage-arrays/array-A/storage-volumes/sv_001&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># List discovered back-end arrays</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ls /storage-elements/storage-arrays&quot;</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Show a specific array and its visible storage volumes</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /storage-elements/storage-arrays/array-A/&quot;</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ls /storage-elements/storage-arrays/array-A/storage-volumes&quot;</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># Rediscover storage volumes on a back-end array (after adding new LUNs)</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;storage-volume rediscover \</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="s2">  --storage-volume /storage-elements/storage-arrays/array-A/storage-volumes/sv_001&quot;</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="c1"># Claim a discovered storage volume for use in VPLEX provisioning</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;storage-volume claim \</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="s2">  --storage-volume /storage-elements/storage-arrays/array-A/storage-volumes/sv_001&quot;</span>
 </code></pre></div>
 <h3 id="powermax-integration-notes">PowerMax Integration Notes<a class="headerlink" href="#powermax-integration-notes" title="Permanent link">&para;</a></h3>
 <ul>
@@ -9084,13 +9068,13 @@ Integration with back-end storage arrays, hypervisors, replication systems, and 
 <li>Use PowerMax Service Levels to assign appropriate performance tiers to LUNs before presenting them to VPLEX.</li>
 <li>When expanding a PowerMax LUN, expand on the array first, then rediscover and expand the extent and virtual volume in VPLEX.</li>
 </ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># After expanding a back-end LUN on PowerMax, rediscover and expand in VPLEX:</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;storage-volume rediscover \</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="s2">  --storage-volume /storage-elements/storage-arrays/array-A/storage-volumes/sv_001&quot;</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;extent expand \</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="s2">  --extent /clusters/cluster-1/storage-elements/extents/ext_app_001&quot;</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;virtual-volume expand \</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="s2">  --virtual-volume /virtual-volumes/my_app_vol_1&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># After expanding a back-end LUN on PowerMax, rediscover and expand in VPLEX:</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;storage-volume rediscover \</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="s2">  --storage-volume /storage-elements/storage-arrays/array-A/storage-volumes/sv_001&quot;</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;extent expand \</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="s2">  --extent /clusters/cluster-1/storage-elements/extents/ext_app_001&quot;</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;virtual-volume expand \</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="s2">  --virtual-volume /virtual-volumes/my_app_vol_1&quot;</span>
 </code></pre></div>
 <h2 id="vmware-vsphere">VMware vSphere<a class="headerlink" href="#vmware-vsphere" title="Permanent link">&para;</a></h2>
 <p>VPLEX is deeply integrated with VMware vSphere environments, particularly for Metro stretched-cluster configurations.</p>
@@ -9100,11 +9084,11 @@ Integration with back-end storage arrays, hypervisors, replication systems, and 
 <li>Each ESXi host requires a storage view on each VPLEX cluster (for Metro); each view contains the front-end ports on that cluster and the distributed virtual volume(s) the host needs.</li>
 <li>ESXi multipathing: configure VMware NMP with the Round Robin policy or use the VPLEX-specific SATP rule. Verify that all expected paths are active in <code>esxcli storage nmp path list</code>.</li>
 </ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># From ESXi host: list active paths to a VPLEX volume</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>nmp<span class="w"> </span>path<span class="w"> </span>list<span class="w"> </span>-d<span class="w"> </span>&lt;naa_id&gt;
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Rescan HBAs after storage view changes</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>adapter<span class="w"> </span>rescan<span class="w"> </span>--adapter<span class="w"> </span>vmhba&lt;n&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># From ESXi host: list active paths to a VPLEX volume</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>nmp<span class="w"> </span>path<span class="w"> </span>list<span class="w"> </span>-d<span class="w"> </span>&lt;naa_id&gt;
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Rescan HBAs after storage view changes</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>adapter<span class="w"> </span>rescan<span class="w"> </span>--adapter<span class="w"> </span>vmhba&lt;n&gt;
 </code></pre></div>
 <h3 id="vplex-metro-vsphere-ha-vmotion">VPLEX Metro + vSphere HA / vMotion<a class="headerlink" href="#vplex-metro-vsphere-ha-vmotion" title="Permanent link">&para;</a></h3>
 <p>VPLEX Metro is the prerequisite for vSphere Metro Storage Cluster (vMSC) configurations:</p>
@@ -9142,17 +9126,17 @@ Integration with back-end storage arrays, hypervisors, replication systems, and 
 <h2 id="dell-recoverpoint-vplex-geo">Dell RecoverPoint (VPLEX Geo)<a class="headerlink" href="#dell-recoverpoint-vplex-geo" title="Permanent link">&para;</a></h2>
 <p>VPLEX Geo uses RecoverPoint to extend the VPLEX federation beyond the ≤5ms Metro RTT limit with asynchronous replication.</p>
 <h3 id="architecture">Architecture<a class="headerlink" href="#architecture" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Site A (Active)
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>  VPLEX Cluster-1
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>  RecoverPoint Splitter (integrated with VPLEX directors)
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>  RecoverPoint Cluster A
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>      |
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>      | Async replication (WAN journal)
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>      |
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>Site B (DR)
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>  VPLEX Cluster-2
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>  RecoverPoint Cluster B (receives journal)
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>  Volumes active only after failover
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Site A (Active)
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  VPLEX Cluster-1
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  RecoverPoint Splitter (integrated with VPLEX directors)
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>  RecoverPoint Cluster A
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>      |
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>      | Async replication (WAN journal)
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>      |
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>Site B (DR)
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>  VPLEX Cluster-2
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>  RecoverPoint Cluster B (receives journal)
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>  Volumes active only after failover
 </code></pre></div>
 <p>The RecoverPoint splitter is embedded within VPLEX and intercepts writes to copy them asynchronously to the remote RecoverPoint cluster. RPO is configurable based on journal settings.</p>
 <h3 id="key-points">Key Points<a class="headerlink" href="#key-points" title="Permanent link">&para;</a></h3>
@@ -9263,12 +9247,12 @@ Integration with back-end storage arrays, hypervisors, replication systems, and 
 </ul>
 <h3 id="syslog-forwarding">Syslog Forwarding<a class="headerlink" href="#syslog-forwarding" title="Permanent link">&para;</a></h3>
 <p>Forward VMS syslog to the centralised SIEM or log aggregator:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># On VMS (as root or admin), add a syslog forward rule:</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># /etc/rsyslog.d/vplex-siem.conf  (example for rsyslog)</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>*.*<span class="w"> </span>@&lt;SIEM_IP&gt;:514
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># Restart rsyslog to apply</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>rsyslog
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># On VMS (as root or admin), add a syslog forward rule:</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># /etc/rsyslog.d/vplex-siem.conf  (example for rsyslog)</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>*.*<span class="w"> </span>@&lt;SIEM_IP&gt;:514
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Restart rsyslog to apply</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>rsyslog
 </code></pre></div>
 <p>Key log sources to forward:</p>
 <table>

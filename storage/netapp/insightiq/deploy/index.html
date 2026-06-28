@@ -8538,25 +8538,7 @@ Step-by-step guide to deploying Dell EMC InsightIQ, connecting PowerScale cluste
     s0 --&gt; s1 --&gt; s2 --&gt; s3 --&gt; s4 --&gt; s5 --&gt; s6 --&gt; s7
     style s6 fill:#2e7d32,color:#fff,stroke:#1b5e20
     style s7 fill:#2e7d32,color:#fff,stroke:#1b5e20</code></pre>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>plan: &quot;Plan&quot; {shape: oval}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>prerequisites: &quot;Prerequisites&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>deploy_insightiq_ova: &quot;Deploy InsightIQ OVA&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>add_powerscale_cluster_data_source: &quot;Add PowerScale Cluster Data Source&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>configure_data_collection_schedule: &quot;Configure Data Collection Schedule&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>configure_reports: &quot;Configure Reports&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>validate_collection_and_reporting: &quot;Validate Collection and Reporting&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>validate: &quot;Validate&quot; {shape: oval}
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>plan -&gt; prerequisites
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>prerequisites -&gt; deploy_insightiq_ova
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>deploy_insightiq_ova -&gt; add_powerscale_cluster_data_source
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>add_powerscale_cluster_data_source -&gt; configure_data_collection_schedule
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>configure_data_collection_schedule -&gt; configure_reports
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>configure_reports -&gt; validate_collection_and_reporting
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>validate_collection_and_reporting -&gt; validate
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNkcFqxCAQQO9-xZB7f2APhSV72VO3DexVRKeJIOqq2VLK_nvHmLZJG-qegubNY_ApHVAm7ewOgu6HxJg3gg7NiT4NfMRBeNyBuwpzYz5gwMuoo04YM7M8_8DZKGxv8MYUeuPeubYxy_WFk4gGD9M1HMv18RmezvvNeaEU9-4NQ5TCIJdmjAkDVyIJHt0YJOHNXik4ZajLELQFggNB0E3Qpls6-6r7MWDRSWdMeQoe5YBqNNndfkFF135D0M1QxR3Qu5DiSvVS7jYn6aE17YPLfYRVs0fbnkznmVmuQ8zsJeZf80LwO_AUHx4eYVV63T3_3sq62TrD9YZ3ZM6ierA7mq5Fc52_vTJWTVGPtdSwTw4nSdw=?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Access:</strong> admin credentials for the target system and any upstream dependencies (DNS, NTP, vCenter, directory services)</li>
@@ -8639,13 +8621,13 @@ Step-by-step guide to deploying Dell EMC InsightIQ, connecting PowerScale cluste
 <ol>
 <li>SSH to the InsightIQ VM: <code>ssh admin@&lt;insightiq-ip&gt;</code></li>
 <li>Copy the licence file to the VM:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>scp<span class="w"> </span>InsightIQ.lic<span class="w"> </span>admin@&lt;insightiq-ip&gt;:/home/admin/
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>scp<span class="w"> </span>InsightIQ.lic<span class="w"> </span>admin@&lt;insightiq-ip&gt;:/home/admin/
 </code></pre></div></li>
 <li>Apply the licence:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>sudo<span class="w"> </span>/usr/local/insight/bin/iq_apply_license<span class="w"> </span>/home/admin/InsightIQ.lic
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>sudo<span class="w"> </span>/usr/local/insight/bin/iq_apply_license<span class="w"> </span>/home/admin/InsightIQ.lic
 </code></pre></div></li>
 <li>Restart the InsightIQ service:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>insightiq
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>insightiq
 </code></pre></div></li>
 </ol>
 <hr />
@@ -8750,10 +8732,10 @@ Step-by-step guide to deploying Dell EMC InsightIQ, connecting PowerScale cluste
 <p><strong>Resource usage:</strong></p>
 <ul>
 <li>SSH to the InsightIQ VM and confirm the data disk has sufficient free space:
-  <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>df<span class="w"> </span>-h<span class="w"> </span>/data
+  <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>df<span class="w"> </span>-h<span class="w"> </span>/data
 </code></pre></div></li>
 <li>Confirm InsightIQ service is running:
-  <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>status<span class="w"> </span>insightiq
+  <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>status<span class="w"> </span>insightiq
 </code></pre></div></li>
 </ul>
 <hr />

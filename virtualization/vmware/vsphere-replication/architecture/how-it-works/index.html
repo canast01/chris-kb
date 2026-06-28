@@ -9361,46 +9361,8 @@ How It Works reference covering Replication Engine — ESXi Kernel Module, Data 
 *Applies to: vSphere Replication 8.x*
 </div>
 <p><img alt="vSphere Replication — How It Works" src="../../../../../assets/virtualization-vmware-vsphere-replication-architecture-how-i.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>center: &quot;vSphere Replication&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>replication_engine_esxi_kernel_modul: &quot;Replication Engine — ESXi Kernel Module&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>data_flow: &quot;Data Flow&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>rpo_mechanics: &quot;RPO Mechanics&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>vra_role_vsphere_replication_applian: &quot;VRA Role — vSphere Replication Appliance&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>vrs_vsphere_replication_server_scale: &quot;VRS — vSphere Replication Server (Scale-Out)&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>consistency_groups: &quot;Consistency Groups&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>center -&gt; replication_engine_esxi_kernel_modul
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>center -&gt; data_flow
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>center -&gt; rpo_mechanics
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>center -&gt; vra_role_vsphere_replication_applian
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>center -&gt; vrs_vsphere_replication_server_scale
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>center -&gt; consistency_groups
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>@startuml
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>skinparam sequenceArrowThickness 1.5
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>skinparam roundcorner 5
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>participant &quot;Source VM\n(protected site)&quot; as SRC
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>participant &quot;vSphere Replication\nAgent (VRA)&quot; as VRA_S
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>participant &quot;Network\n(TCP 31031)&quot; as NET
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>participant &quot;vSphere Replication\nServer (VRS)&quot; as VRS_R
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>participant &quot;Target Datastore\n(recovery site)&quot; as TGT
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>SRC -&gt; VRA_S: Changed blocks (write intercept)
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>VRA_S -&gt; NET: Compressed + encrypted delta
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>NET -&gt; VRS_R: Delta transfer
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>VRS_R -&gt; TGT: Apply to replica VMDK
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>TGT --&gt; VRS_R: Write confirmed
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>VRS_R --&gt; VRA_S: RPO checkpoint saved
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>note over VRA_S,VRS_R
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>  RPO: 5 min – 24 h
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>  Quiesce: VMware Tools snapshot
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>end note
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>@enduml
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNkc9OwzAMxu99CqsnOOwFekCaYHBA01ArIW5RlJo2IksiJy1DaBIPwRPyJKThT4PItN0c52d_9udWEgovja6AZNf7ohCoPVIF5djYHgmhRquk4BNUwqvrucUKetzxzuh9QfMvQ91JjQzdTrInJI2KbU07qNAsaQKriMHH2zusmgcJtxGF9YTiLDENxnWncF-03HP2qMxz6HQVYrgOcZYka9gWRc-1FG7SvdvA-uedrRiJMzIK2ejivizdiNsQ82BOeV8voQ5YHDtjDSy_UIEHVFxWwCGNSMwJrjCqNAcFmojCWTOxi83gz7NKwmgnnUctXlhHZrCTDZdzEm5iMlv7fXxYXMApd03w3wulLdJbJPlTHP-DH7cuwf_vX3wCBCsUuA==?" /></p>
+<p><img alt="Kroki" src="https://kroki.io/plantuml/svg/eNqNUk1P40AMvc-vsDgV7YIobC85IKoWcUB8bBLBBQkNE9OMkngGj9Oqt_0P_EN-yTqNEPTGbWS_Z7_3PBdJLEvftSY1nqJl20HCtx7J4Zw5bMrau4YwJZgez76BOPRUucCEDDNjtCje-WhJ4KAIPTuEh5snmkQOgk6wguQFDw_AJijyxT5hXcQaGSHH2HpnxQd6ovkKtTd5yOcjSx_PxT7vFmUTuNE15eIezqYnZ9MRe3tZ_mBDgbxW-bqi-FxRPOf7xNLyCgWWVmySwKi7GF1Q3vabo_KqNEZtwdH5qDODRW1ppbZf2uCaBJMNKxo8CWo2UQ7NDjcQVKzCQxdZY1bGL9D0eRuH0CpsxRpFjJNVXgbLoQbCltIrstlVh7aKyGAeY7sFCcCjU73C8tpoC46-JjzutLhAr547rD5HfInP7-_A1eiaGFQxJLtWlCE9JQzWR9jvMS4Y0BnMoPMEH__e4fQP1Fr923tMDjNVsLEafRlCmyCRjakOYpAqGAaaC30NH_A_1cnZfQ==?" /></p>
 <h2 id="replication-engine-esxi-kernel-module">Replication Engine — ESXi Kernel Module<a class="headerlink" href="#replication-engine-esxi-kernel-module" title="Permanent link">&para;</a></h2>
 <p>vSphere Replication operates at the hypervisor level using a kernel module (<code>hbr</code> — Host-Based Replication) loaded on each ESXi host. This module intercepts write I/Os to VM virtual disks and tracks which disk blocks have changed since the last replication cycle — functionally equivalent to Changed Block Tracking (CBT) but implemented as a separate subsystem within the VMkernel.</p>
 <p>The tracking is per-VMDK. When a VM disk write occurs, the kernel module marks the corresponding block in a bitmap. At the end of each replication cycle, changed blocks are read from the source datastore and transmitted to the target VRA. This approach is storage-agnostic — it does not rely on array-level snapshotting or replication, and works with any datastore type: VMFS, NFS, vSAN.</p>
@@ -9413,23 +9375,23 @@ How It Works reference covering Replication Engine — ESXi Kernel Module, Data 
 <li>Executing the data transfer at each replication cycle end</li>
 <li>Reporting replication status back to the vSphere Replication Management Server (VRMS) on the VRA</li>
 </ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check hbrsvc status on ESXi host (via SSH to ESXi)</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>/etc/init.d/hbrsvc<span class="w"> </span>status
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># List active replication tasks on the host</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>esxcli<span class="w"> </span>hbr<span class="w"> </span>replication<span class="w"> </span>list
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Show detailed replication state for all VMs on this host</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>esxcli<span class="w"> </span>hbr<span class="w"> </span>replication<span class="w"> </span>getstate
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># View hbrsvc log on ESXi</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>tail<span class="w"> </span>-f<span class="w"> </span>/var/log/hbr.log
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Check if hbr kernel module is loaded</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>vmkload_mod<span class="w"> </span>-l<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>hbr
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="c1"># Show hbr replication stats for a specific VM (by moref or VM ID)</span>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>esxcli<span class="w"> </span>hbr<span class="w"> </span>replication<span class="w"> </span>getstate<span class="w"> </span>-i<span class="w"> </span>&lt;vmid&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Check hbrsvc status on ESXi host (via SSH to ESXi)</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>/etc/init.d/hbrsvc<span class="w"> </span>status
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># List active replication tasks on the host</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>esxcli<span class="w"> </span>hbr<span class="w"> </span>replication<span class="w"> </span>list
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Show detailed replication state for all VMs on this host</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>esxcli<span class="w"> </span>hbr<span class="w"> </span>replication<span class="w"> </span>getstate
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># View hbrsvc log on ESXi</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>tail<span class="w"> </span>-f<span class="w"> </span>/var/log/hbr.log
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Check if hbr kernel module is loaded</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>vmkload_mod<span class="w"> </span>-l<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>hbr
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># Show hbr replication stats for a specific VM (by moref or VM ID)</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>esxcli<span class="w"> </span>hbr<span class="w"> </span>replication<span class="w"> </span>getstate<span class="w"> </span>-i<span class="w"> </span>&lt;vmid&gt;
 </code></pre></div>
 <h3 id="changed-block-tracking-vs-hbr-bitmap">Changed Block Tracking vs hbr Bitmap<a class="headerlink" href="#changed-block-tracking-vs-hbr-bitmap" title="Permanent link">&para;</a></h3>
 <table>
@@ -9506,30 +9468,30 @@ How It Works reference covering Replication Engine — ESXi Kernel Module, Data 
     classDef green  fill:#15803d,stroke:#166534,color:#fff
     classDef amber  fill:#b45309,stroke:#92400e,color:#fff
     classDef purple fill:#7c3aed,stroke:#6d28d9,color:#fff</code></pre>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Source Site                                    Target Site
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>-----------                                    -----------
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>VM VMDK Write
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>     |
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>ESXi hbr kernel module
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>  (tracks changed blocks in bitmap)
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>     |
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>  [RPO cycle expires]
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>     |
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>hbrsvc reads changed blocks
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>  from source datastore
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>     |
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>TCP 31031 ──────────────────────────────────► VRA HMS
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>                                               (target site)
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>                                                    |
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>                                              Write changed blocks
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>                                              to replica VMDK
-<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>                                              on target datastore
-<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>                                                    |
-<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>                                              Update recovery point
-<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>                                              instance (snapshot)
-<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>                                                    |
-<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>                                              VRMS updates replication
-<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>                                              status in vCenter DB
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Source Site                                    Target Site
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>-----------                                    -----------
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>VM VMDK Write
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>     |
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>ESXi hbr kernel module
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>  (tracks changed blocks in bitmap)
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>     |
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>  [RPO cycle expires]
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>     |
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>hbrsvc reads changed blocks
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>  from source datastore
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>     |
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>TCP 31031 ──────────────────────────────────► VRA HMS
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>                                               (target site)
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>                                                    |
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>                                              Write changed blocks
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>                                              to replica VMDK
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>                                              on target datastore
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>                                                    |
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>                                              Update recovery point
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>                                              instance (snapshot)
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>                                                    |
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>                                              VRMS updates replication
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>                                              status in vCenter DB
 </code></pre></div>
 <p>The source VRA (VRMS) handles management and scheduling only. Replication data does NOT route through the source-site VRA — it flows directly from the ESXi host running the VM to the target-site VRA's HMS service.</p>
 <h3 id="port-reference">Port Reference<a class="headerlink" href="#port-reference" title="Permanent link">&para;</a></h3>
@@ -9665,39 +9627,39 @@ How It Works reference covering Replication Engine — ESXi Kernel Module, Data 
 <li>Storage overhead: base replica VMDK + (N × average changed data per cycle)</li>
 <li>Instances are managed as a ring buffer — oldest is discarded when a new one is created and the max count is reached</li>
 </ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Target Datastore Layout (per replicated VM):
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>  &lt;VM-name&gt;/
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    &lt;VM-name&gt;.vmdk          ← base replica disk (merged latest state)
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    &lt;VM-name&gt;-000001.vmdk   ← delta disk for recovery point N-2
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>    &lt;VM-name&gt;-000002.vmdk   ← delta disk for recovery point N-1
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>    &lt;VM-name&gt;-000003.vmdk   ← delta disk for recovery point N (most recent)
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>    &lt;VM-name&gt;.hbr           ← replication metadata
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>    &lt;VM-name&gt;.vrepl         ← replication state file
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Target Datastore Layout (per replicated VM):
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>  &lt;VM-name&gt;/
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    &lt;VM-name&gt;.vmdk          ← base replica disk (merged latest state)
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    &lt;VM-name&gt;-000001.vmdk   ← delta disk for recovery point N-2
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>    &lt;VM-name&gt;-000002.vmdk   ← delta disk for recovery point N-1
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    &lt;VM-name&gt;-000003.vmdk   ← delta disk for recovery point N (most recent)
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>    &lt;VM-name&gt;.hbr           ← replication metadata
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>    &lt;VM-name&gt;.vrepl         ← replication state file
 </code></pre></div>
 <h3 id="vra-services-management">VRA Services Management<a class="headerlink" href="#vra-services-management" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># SSH to VRA appliance</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>ssh<span class="w"> </span>admin@&lt;VRA-FQDN&gt;
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Check HMS service (replication data reception)</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>systemctl<span class="w"> </span>status<span class="w"> </span>hms
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Check VRMS service (management/UI layer)</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>systemctl<span class="w"> </span>status<span class="w"> </span>vrms
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># Restart HMS — interrupts active data transfer momentarily</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>hms
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="c1"># Restart VRMS — reloads management layer; does not interrupt data plane</span>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>vrms
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="c1"># Tail HMS log</span>
-<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>tail<span class="w"> </span>-f<span class="w"> </span>/var/log/vmware/hms/hms.log
-<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>
-<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="c1"># Tail VRMS log</span>
-<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>tail<span class="w"> </span>-f<span class="w"> </span>/var/log/vmware/vrms/vrms.log
-<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>
-<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a><span class="c1"># List all VR-related services</span>
-<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>systemctl<span class="w"> </span>list-units<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">&#39;hms|vrms|lighttpd&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># SSH to VRA appliance</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ssh<span class="w"> </span>admin@&lt;VRA-FQDN&gt;
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Check HMS service (replication data reception)</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>systemctl<span class="w"> </span>status<span class="w"> </span>hms
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Check VRMS service (management/UI layer)</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>systemctl<span class="w"> </span>status<span class="w"> </span>vrms
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Restart HMS — interrupts active data transfer momentarily</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>hms
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c1"># Restart VRMS — reloads management layer; does not interrupt data plane</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>vrms
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="c1"># Tail HMS log</span>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>tail<span class="w"> </span>-f<span class="w"> </span>/var/log/vmware/hms/hms.log
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="c1"># Tail VRMS log</span>
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>tail<span class="w"> </span>-f<span class="w"> </span>/var/log/vmware/vrms/vrms.log
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a><span class="c1"># List all VR-related services</span>
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>systemctl<span class="w"> </span>list-units<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">&#39;hms|vrms|lighttpd&#39;</span>
 </code></pre></div>
 <hr />
 <h2 id="vrs-vsphere-replication-server-scale-out">VRS — vSphere Replication Server (Scale-Out)<a class="headerlink" href="#vrs-vsphere-replication-server-scale-out" title="Permanent link">&para;</a></h2>
@@ -9710,31 +9672,31 @@ How It Works reference covering Replication Engine — ESXi Kernel Module, Data 
 <li>Source ESXi hosts send data directly to the assigned VRS instance, bypassing the VRA data plane</li>
 </ul>
 <h3 id="vrs-architecture">VRS Architecture<a class="headerlink" href="#vrs-architecture" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Source Site ESXi Hosts
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>        |
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>        | TCP 31031 (replication data)
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>        |
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>        ├─────────────────► Target VRA (HMS)
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>        |                    manages first ~500 streams
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>        |
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>        ├─────────────────► VRS-1 (HMS scale-out)
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>        |                    handles next ~1000 streams
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>        |
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>        └─────────────────► VRS-2 (HMS scale-out)
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>                             handles next ~1000 streams
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>Target VRA (VRMS) coordinates all VRS assignments
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Source Site ESXi Hosts
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>        |
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>        | TCP 31031 (replication data)
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>        |
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>        ├─────────────────► Target VRA (HMS)
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>        |                    manages first ~500 streams
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>        |
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>        ├─────────────────► VRS-1 (HMS scale-out)
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>        |                    handles next ~1000 streams
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>        |
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>        └─────────────────► VRS-2 (HMS scale-out)
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>                             handles next ~1000 streams
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>Target VRA (VRMS) coordinates all VRS assignments
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># On VRA: list registered VRS instances via REST API</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>curl<span class="w"> </span>-k<span class="w"> </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span>https://&lt;VRA-FQDN&gt;:8043/api/vrs/instances
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1"># On a VRS appliance: check HMS service</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>ssh<span class="w"> </span>admin@&lt;VRS-FQDN&gt;
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>systemctl<span class="w"> </span>status<span class="w"> </span>hms
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="c1"># Check VRS log</span>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>tail<span class="w"> </span>-f<span class="w"> </span>/var/log/vmware/hms/hms.log
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># On VRA: list registered VRS instances via REST API</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>curl<span class="w"> </span>-k<span class="w"> </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>https://&lt;VRA-FQDN&gt;:8043/api/vrs/instances
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># On a VRS appliance: check HMS service</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>ssh<span class="w"> </span>admin@&lt;VRS-FQDN&gt;
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>systemctl<span class="w"> </span>status<span class="w"> </span>hms
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="c1"># Check VRS log</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>tail<span class="w"> </span>-f<span class="w"> </span>/var/log/vmware/hms/hms.log
 </code></pre></div>
 <hr />
 <h2 id="consistency-groups">Consistency Groups<a class="headerlink" href="#consistency-groups" title="Permanent link">&para;</a></h2>

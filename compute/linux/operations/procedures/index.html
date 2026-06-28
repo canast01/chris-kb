@@ -8345,23 +8345,7 @@
 <a id="__codelineno-18-12" name="__codelineno-18-12" href="#__codelineno-18-12"></a>diff<span class="w"> </span>/tmp/pre-patch-packages.txt<span class="w"> </span>/tmp/post-patch-packages.txt
 </code></pre></div></p>
 <hr />
-<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>direction: right
-<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>
-<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>hub: &quot;Linux\nOperations&quot; {shape: hexagon}
-<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>add_a_user_account: &quot;Add a User Account&quot; {shape: rectangle}
-<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>configure_sudo_access: &quot;Configure Sudo Access&quot; {shape: rectangle}
-<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>configure_network_interface_nmcli: &quot;Configure Network Interface (nmcli)&quot; {shape: rectangle}
-<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a>mount_a_filesystem_permanently: &quot;Mount a Filesystem Permanently&quot; {shape: rectangle}
-<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>configure_ntp_chrony: &quot;Configure NTP (chrony)&quot; {shape: rectangle}
-<a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a>extend_an_lvm_volume: &quot;Extend an LVM Volume&quot; {shape: rectangle}
-<a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a>
-<a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a>hub -&gt; add_a_user_account
-<a id="__codelineno-19-12" name="__codelineno-19-12" href="#__codelineno-19-12"></a>hub -&gt; configure_sudo_access
-<a id="__codelineno-19-13" name="__codelineno-19-13" href="#__codelineno-19-13"></a>hub -&gt; configure_network_interface_nmcli
-<a id="__codelineno-19-14" name="__codelineno-19-14" href="#__codelineno-19-14"></a>hub -&gt; mount_a_filesystem_permanently
-<a id="__codelineno-19-15" name="__codelineno-19-15" href="#__codelineno-19-15"></a>hub -&gt; configure_ntp_chrony
-<a id="__codelineno-19-16" name="__codelineno-19-16" href="#__codelineno-19-16"></a>hub -&gt; extend_an_lvm_volume
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqFkc1qwzAQhO9-iiWn9NAX8KEQSguFpA20zakgVGlti0oro5_UpuTdK9k4IcRtrt_OjHZHUjkUQVkqwam6CUXRxM8SFmtFsfuglxYdz2O_gB_f8BZLaLDjtaVDwaVknEWPjnEhbKSQjCspgcN7grAa4cmZn-JUazwUwlKl6uiQ-Sht9qP3yX4_cXhNPEckfiWBMHxb98UUBXQVF4kYodVZ2vOogadJA8tBdDObbfLe6bZKafS9D2hYKsJwQgq6T8GbLEh3Ph4FsD0Jru0bWiYaZ6k_X_FtC8uRz2-FXUBKlRPTe8P2VkeTBIuHAQMnWO82sBvwrD9_LdzeweW_TZPZX7kc_lH4JPy_vZm4Yx_TbO7S4hfBp_vq?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Access:</strong> root or sudo-capable account on target hosts</li>
@@ -8372,87 +8356,87 @@
 <hr />
 <h2 id="add-a-user-account">Add a User Account<a class="headerlink" href="#add-a-user-account" title="Permanent link">&para;</a></h2>
 <p>Create a new local user account, set a password, assign group membership, and ensure a home directory is created.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># Create user with home directory</span>
-<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>useradd<span class="w"> </span>-m<span class="w"> </span>-s<span class="w"> </span>/bin/bash<span class="w"> </span>&lt;username&gt;
-<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>
-<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="c1"># Set password</span>
-<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>passwd<span class="w"> </span>&lt;username&gt;
-<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>
-<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a><span class="c1"># Add user to supplementary groups (e.g., wheel for sudo, docker, adm)</span>
-<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a>usermod<span class="w"> </span>-aG<span class="w"> </span>wheel,adm<span class="w"> </span>&lt;username&gt;
-<a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a>
-<a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a><span class="c1"># Verify account and home directory</span>
-<a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a>id<span class="w"> </span>&lt;username&gt;
-<a id="__codelineno-20-12" name="__codelineno-20-12" href="#__codelineno-20-12"></a>ls<span class="w"> </span>-la<span class="w"> </span>/home/&lt;username&gt;
-<a id="__codelineno-20-13" name="__codelineno-20-13" href="#__codelineno-20-13"></a>
-<a id="__codelineno-20-14" name="__codelineno-20-14" href="#__codelineno-20-14"></a><span class="c1"># Confirm group membership</span>
-<a id="__codelineno-20-15" name="__codelineno-20-15" href="#__codelineno-20-15"></a>groups<span class="w"> </span>&lt;username&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1"># Create user with home directory</span>
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>useradd<span class="w"> </span>-m<span class="w"> </span>-s<span class="w"> </span>/bin/bash<span class="w"> </span>&lt;username&gt;
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="c1"># Set password</span>
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>passwd<span class="w"> </span>&lt;username&gt;
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>
+<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a><span class="c1"># Add user to supplementary groups (e.g., wheel for sudo, docker, adm)</span>
+<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>usermod<span class="w"> </span>-aG<span class="w"> </span>wheel,adm<span class="w"> </span>&lt;username&gt;
+<a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a>
+<a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a><span class="c1"># Verify account and home directory</span>
+<a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a>id<span class="w"> </span>&lt;username&gt;
+<a id="__codelineno-19-12" name="__codelineno-19-12" href="#__codelineno-19-12"></a>ls<span class="w"> </span>-la<span class="w"> </span>/home/&lt;username&gt;
+<a id="__codelineno-19-13" name="__codelineno-19-13" href="#__codelineno-19-13"></a>
+<a id="__codelineno-19-14" name="__codelineno-19-14" href="#__codelineno-19-14"></a><span class="c1"># Confirm group membership</span>
+<a id="__codelineno-19-15" name="__codelineno-19-15" href="#__codelineno-19-15"></a>groups<span class="w"> </span>&lt;username&gt;
 </code></pre></div>
 <p>Home directory is created automatically with <code>-m</code>; skeleton files from <code>/etc/skel</code> are copied in. On RHEL, <code>wheel</code> group members get sudo access by default.</p>
 <hr />
 <h2 id="configure-sudo-access">Configure Sudo Access<a class="headerlink" href="#configure-sudo-access" title="Permanent link">&para;</a></h2>
 <p>Grant a user or group elevated privileges using the <code>/etc/sudoers.d/</code> drop-in approach (preferred over editing <code>/etc/sudoers</code> directly).</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="c1"># Create a drop-in file for the user (preferred — avoids editing /etc/sudoers directly)</span>
-<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>visudo<span class="w"> </span>-f<span class="w"> </span>/etc/sudoers.d/&lt;username&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># Create a drop-in file for the user (preferred — avoids editing /etc/sudoers directly)</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>visudo<span class="w"> </span>-f<span class="w"> </span>/etc/sudoers.d/&lt;username&gt;
 </code></pre></div>
 <p>Drop-in file contents:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="c1"># Validate sudoers syntax before saving</span>
-<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>visudo<span class="w"> </span>-c
-<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>
-<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a><span class="c1"># Validate a specific drop-in file</span>
-<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a>visudo<span class="w"> </span>-c<span class="w"> </span>-f<span class="w"> </span>/etc/sudoers.d/&lt;username&gt;
-<a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a>
-<a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a><span class="c1"># List what a user can sudo</span>
-<a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a>sudo<span class="w"> </span>-l<span class="w"> </span>-U<span class="w"> </span>&lt;username&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="c1"># Validate sudoers syntax before saving</span>
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>visudo<span class="w"> </span>-c
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="c1"># Validate a specific drop-in file</span>
+<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>visudo<span class="w"> </span>-c<span class="w"> </span>-f<span class="w"> </span>/etc/sudoers.d/&lt;username&gt;
+<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a>
+<a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a><span class="c1"># List what a user can sudo</span>
+<a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a>sudo<span class="w"> </span>-l<span class="w"> </span>-U<span class="w"> </span>&lt;username&gt;
 </code></pre></div></p>
 <p>Drop-in files in <code>/etc/sudoers.d/</code> are included automatically. File names must not contain <code>.</code> or <code>~</code>. Set permissions to <code>0440</code>.</p>
 <hr />
 <h2 id="configure-network-interface-nmcli">Configure Network Interface (nmcli)<a class="headerlink" href="#configure-network-interface-nmcli" title="Permanent link">&para;</a></h2>
 <p>Configure a static IP address, DNS, and gateway on a NetworkManager-managed interface.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="c1"># List all connections</span>
-<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>nmcli<span class="w"> </span>con<span class="w"> </span>show
-<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>
-<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a><span class="c1"># Show current connection details</span>
-<a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a>nmcli<span class="w"> </span>con<span class="w"> </span>show<span class="w"> </span><span class="s2">&quot;&lt;connection-name&gt;&quot;</span>
-<a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a>
-<a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a><span class="c1"># Set static IP address (replace DHCP)</span>
-<a id="__codelineno-23-8" name="__codelineno-23-8" href="#__codelineno-23-8"></a>nmcli<span class="w"> </span>con<span class="w"> </span>mod<span class="w"> </span><span class="s2">&quot;&lt;connection-name&gt;&quot;</span><span class="w"> </span>ipv4.method<span class="w"> </span>manual<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-23-9" name="__codelineno-23-9" href="#__codelineno-23-9"></a><span class="w">    </span>ipv4.addresses<span class="w"> </span><span class="s2">&quot;192.168.1.100/24&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-23-10" name="__codelineno-23-10" href="#__codelineno-23-10"></a><span class="w">    </span>ipv4.gateway<span class="w"> </span><span class="s2">&quot;192.168.1.1&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-23-11" name="__codelineno-23-11" href="#__codelineno-23-11"></a><span class="w">    </span>ipv4.dns<span class="w"> </span><span class="s2">&quot;192.168.1.10,8.8.8.8&quot;</span>
-<a id="__codelineno-23-12" name="__codelineno-23-12" href="#__codelineno-23-12"></a>
-<a id="__codelineno-23-13" name="__codelineno-23-13" href="#__codelineno-23-13"></a><span class="c1"># Disable IPv6 if not required</span>
-<a id="__codelineno-23-14" name="__codelineno-23-14" href="#__codelineno-23-14"></a>nmcli<span class="w"> </span>con<span class="w"> </span>mod<span class="w"> </span><span class="s2">&quot;&lt;connection-name&gt;&quot;</span><span class="w"> </span>ipv6.method<span class="w"> </span>ignore
-<a id="__codelineno-23-15" name="__codelineno-23-15" href="#__codelineno-23-15"></a>
-<a id="__codelineno-23-16" name="__codelineno-23-16" href="#__codelineno-23-16"></a><span class="c1"># Apply changes by restarting the connection</span>
-<a id="__codelineno-23-17" name="__codelineno-23-17" href="#__codelineno-23-17"></a>nmcli<span class="w"> </span>con<span class="w"> </span>down<span class="w"> </span><span class="s2">&quot;&lt;connection-name&gt;&quot;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>nmcli<span class="w"> </span>con<span class="w"> </span>up<span class="w"> </span><span class="s2">&quot;&lt;connection-name&gt;&quot;</span>
-<a id="__codelineno-23-18" name="__codelineno-23-18" href="#__codelineno-23-18"></a>
-<a id="__codelineno-23-19" name="__codelineno-23-19" href="#__codelineno-23-19"></a><span class="c1"># Verify the new configuration</span>
-<a id="__codelineno-23-20" name="__codelineno-23-20" href="#__codelineno-23-20"></a>ip<span class="w"> </span>addr<span class="w"> </span>show
-<a id="__codelineno-23-21" name="__codelineno-23-21" href="#__codelineno-23-21"></a>ip<span class="w"> </span>route<span class="w"> </span>show
-<a id="__codelineno-23-22" name="__codelineno-23-22" href="#__codelineno-23-22"></a>cat<span class="w"> </span>/etc/resolv.conf
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="c1"># List all connections</span>
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>nmcli<span class="w"> </span>con<span class="w"> </span>show
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>
+<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a><span class="c1"># Show current connection details</span>
+<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a>nmcli<span class="w"> </span>con<span class="w"> </span>show<span class="w"> </span><span class="s2">&quot;&lt;connection-name&gt;&quot;</span>
+<a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a>
+<a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a><span class="c1"># Set static IP address (replace DHCP)</span>
+<a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a>nmcli<span class="w"> </span>con<span class="w"> </span>mod<span class="w"> </span><span class="s2">&quot;&lt;connection-name&gt;&quot;</span><span class="w"> </span>ipv4.method<span class="w"> </span>manual<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-22-9" name="__codelineno-22-9" href="#__codelineno-22-9"></a><span class="w">    </span>ipv4.addresses<span class="w"> </span><span class="s2">&quot;192.168.1.100/24&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-22-10" name="__codelineno-22-10" href="#__codelineno-22-10"></a><span class="w">    </span>ipv4.gateway<span class="w"> </span><span class="s2">&quot;192.168.1.1&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-22-11" name="__codelineno-22-11" href="#__codelineno-22-11"></a><span class="w">    </span>ipv4.dns<span class="w"> </span><span class="s2">&quot;192.168.1.10,8.8.8.8&quot;</span>
+<a id="__codelineno-22-12" name="__codelineno-22-12" href="#__codelineno-22-12"></a>
+<a id="__codelineno-22-13" name="__codelineno-22-13" href="#__codelineno-22-13"></a><span class="c1"># Disable IPv6 if not required</span>
+<a id="__codelineno-22-14" name="__codelineno-22-14" href="#__codelineno-22-14"></a>nmcli<span class="w"> </span>con<span class="w"> </span>mod<span class="w"> </span><span class="s2">&quot;&lt;connection-name&gt;&quot;</span><span class="w"> </span>ipv6.method<span class="w"> </span>ignore
+<a id="__codelineno-22-15" name="__codelineno-22-15" href="#__codelineno-22-15"></a>
+<a id="__codelineno-22-16" name="__codelineno-22-16" href="#__codelineno-22-16"></a><span class="c1"># Apply changes by restarting the connection</span>
+<a id="__codelineno-22-17" name="__codelineno-22-17" href="#__codelineno-22-17"></a>nmcli<span class="w"> </span>con<span class="w"> </span>down<span class="w"> </span><span class="s2">&quot;&lt;connection-name&gt;&quot;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>nmcli<span class="w"> </span>con<span class="w"> </span>up<span class="w"> </span><span class="s2">&quot;&lt;connection-name&gt;&quot;</span>
+<a id="__codelineno-22-18" name="__codelineno-22-18" href="#__codelineno-22-18"></a>
+<a id="__codelineno-22-19" name="__codelineno-22-19" href="#__codelineno-22-19"></a><span class="c1"># Verify the new configuration</span>
+<a id="__codelineno-22-20" name="__codelineno-22-20" href="#__codelineno-22-20"></a>ip<span class="w"> </span>addr<span class="w"> </span>show
+<a id="__codelineno-22-21" name="__codelineno-22-21" href="#__codelineno-22-21"></a>ip<span class="w"> </span>route<span class="w"> </span>show
+<a id="__codelineno-22-22" name="__codelineno-22-22" href="#__codelineno-22-22"></a>cat<span class="w"> </span>/etc/resolv.conf
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="c1"># Add a secondary DNS search domain</span>
-<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>nmcli<span class="w"> </span>con<span class="w"> </span>mod<span class="w"> </span><span class="s2">&quot;&lt;connection-name&gt;&quot;</span><span class="w"> </span>ipv4.dns-search<span class="w"> </span><span class="s2">&quot;example.local,corp.local&quot;</span>
-<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>
-<a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a><span class="c1"># Verify NetworkManager applied the settings</span>
-<a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a>nmcli<span class="w"> </span>-p<span class="w"> </span>con<span class="w"> </span>show<span class="w"> </span><span class="s2">&quot;&lt;connection-name&gt;&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;ipv4|ipv6&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="c1"># Add a secondary DNS search domain</span>
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>nmcli<span class="w"> </span>con<span class="w"> </span>mod<span class="w"> </span><span class="s2">&quot;&lt;connection-name&gt;&quot;</span><span class="w"> </span>ipv4.dns-search<span class="w"> </span><span class="s2">&quot;example.local,corp.local&quot;</span>
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>
+<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a><span class="c1"># Verify NetworkManager applied the settings</span>
+<a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a>nmcli<span class="w"> </span>-p<span class="w"> </span>con<span class="w"> </span>show<span class="w"> </span><span class="s2">&quot;&lt;connection-name&gt;&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;ipv4|ipv6&quot;</span>
 </code></pre></div>
 <hr />
 <h2 id="mount-a-filesystem-permanently">Mount a Filesystem Permanently<a class="headerlink" href="#mount-a-filesystem-permanently" title="Permanent link">&para;</a></h2>
 <p>Add a persistent mount entry to <code>/etc/fstab</code> so a filesystem mounts automatically at boot.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="c1"># Identify the device UUID (preferred over /dev/sdX — stable across reboots)</span>
-<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>blkid<span class="w"> </span>/dev/sdb1
-<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>
-<a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a><span class="c1"># Create the mount point directory</span>
-<a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a>mkdir<span class="w"> </span>-p<span class="w"> </span>/mnt/data
-<a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a>
-<a id="__codelineno-25-7" name="__codelineno-25-7" href="#__codelineno-25-7"></a><span class="c1"># Test the fstab entry without rebooting</span>
-<a id="__codelineno-25-8" name="__codelineno-25-8" href="#__codelineno-25-8"></a>mount<span class="w"> </span>-a
-<a id="__codelineno-25-9" name="__codelineno-25-9" href="#__codelineno-25-9"></a>
-<a id="__codelineno-25-10" name="__codelineno-25-10" href="#__codelineno-25-10"></a><span class="c1"># Verify the mount</span>
-<a id="__codelineno-25-11" name="__codelineno-25-11" href="#__codelineno-25-11"></a>df<span class="w"> </span>-h<span class="w"> </span>/mnt/data
-<a id="__codelineno-25-12" name="__codelineno-25-12" href="#__codelineno-25-12"></a>mount<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>/mnt/data
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="c1"># Identify the device UUID (preferred over /dev/sdX — stable across reboots)</span>
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>blkid<span class="w"> </span>/dev/sdb1
+<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>
+<a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a><span class="c1"># Create the mount point directory</span>
+<a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a>mkdir<span class="w"> </span>-p<span class="w"> </span>/mnt/data
+<a id="__codelineno-24-6" name="__codelineno-24-6" href="#__codelineno-24-6"></a>
+<a id="__codelineno-24-7" name="__codelineno-24-7" href="#__codelineno-24-7"></a><span class="c1"># Test the fstab entry without rebooting</span>
+<a id="__codelineno-24-8" name="__codelineno-24-8" href="#__codelineno-24-8"></a>mount<span class="w"> </span>-a
+<a id="__codelineno-24-9" name="__codelineno-24-9" href="#__codelineno-24-9"></a>
+<a id="__codelineno-24-10" name="__codelineno-24-10" href="#__codelineno-24-10"></a><span class="c1"># Verify the mount</span>
+<a id="__codelineno-24-11" name="__codelineno-24-11" href="#__codelineno-24-11"></a>df<span class="w"> </span>-h<span class="w"> </span>/mnt/data
+<a id="__codelineno-24-12" name="__codelineno-24-12" href="#__codelineno-24-12"></a>mount<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>/mnt/data
 </code></pre></div>
 <p>Add entry to <code>/etc/fstab</code>:
 Common NFS mount options in <code>/etc/fstab</code>:
@@ -8460,190 +8444,190 @@ The <code>_netdev</code> option tells systemd to wait for the network before mou
 <hr />
 <h2 id="configure-ntp-chrony">Configure NTP (chrony)<a class="headerlink" href="#configure-ntp-chrony" title="Permanent link">&para;</a></h2>
 <p>Configure chrony as the NTP client on RHEL/CentOS/AlmaLinux or configure systemd-timesyncd on Debian/Ubuntu.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="c1"># RHEL / AlmaLinux — edit chrony configuration</span>
-<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>vi<span class="w"> </span>/etc/chrony.conf
+<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="c1"># RHEL / AlmaLinux — edit chrony configuration</span>
+<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>vi<span class="w"> </span>/etc/chrony.conf
 </code></pre></div>
 <p>Key directives in <code>/etc/chrony.conf</code>:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a><span class="c1"># Restart and enable chrony</span>
-<a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>--now<span class="w"> </span>chronyd
-<a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a>
-<a id="__codelineno-27-4" name="__codelineno-27-4" href="#__codelineno-27-4"></a><span class="c1"># Verify time sources and synchronisation</span>
-<a id="__codelineno-27-5" name="__codelineno-27-5" href="#__codelineno-27-5"></a>chronyc<span class="w"> </span>sources<span class="w"> </span>-v
-<a id="__codelineno-27-6" name="__codelineno-27-6" href="#__codelineno-27-6"></a>chronyc<span class="w"> </span>tracking
-<a id="__codelineno-27-7" name="__codelineno-27-7" href="#__codelineno-27-7"></a>
-<a id="__codelineno-27-8" name="__codelineno-27-8" href="#__codelineno-27-8"></a><span class="c1"># Check offset — should be &lt; 1 second in normal operation</span>
-<a id="__codelineno-27-9" name="__codelineno-27-9" href="#__codelineno-27-9"></a>chronyc<span class="w"> </span>tracking<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;System time&quot;</span>
-<a id="__codelineno-27-10" name="__codelineno-27-10" href="#__codelineno-27-10"></a>
-<a id="__codelineno-27-11" name="__codelineno-27-11" href="#__codelineno-27-11"></a><span class="c1"># Force immediate sync</span>
-<a id="__codelineno-27-12" name="__codelineno-27-12" href="#__codelineno-27-12"></a>chronyc<span class="w"> </span>makestep
-<a id="__codelineno-27-13" name="__codelineno-27-13" href="#__codelineno-27-13"></a>
-<a id="__codelineno-27-14" name="__codelineno-27-14" href="#__codelineno-27-14"></a><span class="c1"># Confirm system clock is synchronised</span>
-<a id="__codelineno-27-15" name="__codelineno-27-15" href="#__codelineno-27-15"></a>timedatectl<span class="w"> </span>status
+<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="c1"># Restart and enable chrony</span>
+<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>--now<span class="w"> </span>chronyd
+<a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a>
+<a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a><span class="c1"># Verify time sources and synchronisation</span>
+<a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a>chronyc<span class="w"> </span>sources<span class="w"> </span>-v
+<a id="__codelineno-26-6" name="__codelineno-26-6" href="#__codelineno-26-6"></a>chronyc<span class="w"> </span>tracking
+<a id="__codelineno-26-7" name="__codelineno-26-7" href="#__codelineno-26-7"></a>
+<a id="__codelineno-26-8" name="__codelineno-26-8" href="#__codelineno-26-8"></a><span class="c1"># Check offset — should be &lt; 1 second in normal operation</span>
+<a id="__codelineno-26-9" name="__codelineno-26-9" href="#__codelineno-26-9"></a>chronyc<span class="w"> </span>tracking<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;System time&quot;</span>
+<a id="__codelineno-26-10" name="__codelineno-26-10" href="#__codelineno-26-10"></a>
+<a id="__codelineno-26-11" name="__codelineno-26-11" href="#__codelineno-26-11"></a><span class="c1"># Force immediate sync</span>
+<a id="__codelineno-26-12" name="__codelineno-26-12" href="#__codelineno-26-12"></a>chronyc<span class="w"> </span>makestep
+<a id="__codelineno-26-13" name="__codelineno-26-13" href="#__codelineno-26-13"></a>
+<a id="__codelineno-26-14" name="__codelineno-26-14" href="#__codelineno-26-14"></a><span class="c1"># Confirm system clock is synchronised</span>
+<a id="__codelineno-26-15" name="__codelineno-26-15" href="#__codelineno-26-15"></a>timedatectl<span class="w"> </span>status
 </code></pre></div></p>
 <p>Ubuntu/Debian — systemd-timesyncd alternative:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a><span class="c1"># /etc/systemd/timesyncd.conf</span>
-<a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a><span class="k">[Time]</span>
-<a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a><span class="na">NTP</span><span class="o">=</span><span class="s">ntp1.example.local ntp2.example.local</span>
-<a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a><span class="na">FallbackNTP</span><span class="o">=</span><span class="s">pool.ntp.org</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a><span class="c1"># /etc/systemd/timesyncd.conf</span>
+<a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a><span class="k">[Time]</span>
+<a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a><span class="na">NTP</span><span class="o">=</span><span class="s">ntp1.example.local ntp2.example.local</span>
+<a id="__codelineno-27-4" name="__codelineno-27-4" href="#__codelineno-27-4"></a><span class="na">FallbackNTP</span><span class="o">=</span><span class="s">pool.ntp.org</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>systemd-timesyncd
-<a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a>timedatectl<span class="w"> </span>show-timesync<span class="w"> </span>--no-pager
+<div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>systemd-timesyncd
+<a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a>timedatectl<span class="w"> </span>show-timesync<span class="w"> </span>--no-pager
 </code></pre></div>
 <hr />
 <h2 id="extend-an-lvm-volume">Extend an LVM Volume<a class="headerlink" href="#extend-an-lvm-volume" title="Permanent link">&para;</a></h2>
 <p>Grow a logical volume online and resize the filesystem to use the additional space.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a><span class="c1"># 1. Confirm new disk or partition is visible</span>
-<a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a>lsblk
-<a id="__codelineno-30-3" name="__codelineno-30-3" href="#__codelineno-30-3"></a>fdisk<span class="w"> </span>-l<span class="w"> </span>/dev/sdb
-<a id="__codelineno-30-4" name="__codelineno-30-4" href="#__codelineno-30-4"></a>
-<a id="__codelineno-30-5" name="__codelineno-30-5" href="#__codelineno-30-5"></a><span class="c1"># 2. Initialise the disk as a Physical Volume</span>
-<a id="__codelineno-30-6" name="__codelineno-30-6" href="#__codelineno-30-6"></a>pvcreate<span class="w"> </span>/dev/sdb
-<a id="__codelineno-30-7" name="__codelineno-30-7" href="#__codelineno-30-7"></a>
-<a id="__codelineno-30-8" name="__codelineno-30-8" href="#__codelineno-30-8"></a><span class="c1"># 3. Extend the Volume Group with the new PV</span>
-<a id="__codelineno-30-9" name="__codelineno-30-9" href="#__codelineno-30-9"></a>vgextend<span class="w"> </span>&lt;vg-name&gt;<span class="w"> </span>/dev/sdb
-<a id="__codelineno-30-10" name="__codelineno-30-10" href="#__codelineno-30-10"></a>
-<a id="__codelineno-30-11" name="__codelineno-30-11" href="#__codelineno-30-11"></a><span class="c1"># 4. Confirm free extents are available</span>
-<a id="__codelineno-30-12" name="__codelineno-30-12" href="#__codelineno-30-12"></a>vgdisplay<span class="w"> </span>&lt;vg-name&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Free  PE&quot;</span>
-<a id="__codelineno-30-13" name="__codelineno-30-13" href="#__codelineno-30-13"></a>
-<a id="__codelineno-30-14" name="__codelineno-30-14" href="#__codelineno-30-14"></a><span class="c1"># 5. Extend the Logical Volume (use all available space with -l +100%FREE)</span>
-<a id="__codelineno-30-15" name="__codelineno-30-15" href="#__codelineno-30-15"></a>lvextend<span class="w"> </span>-l<span class="w"> </span>+100%FREE<span class="w"> </span>/dev/&lt;vg-name&gt;/&lt;lv-name&gt;
-<a id="__codelineno-30-16" name="__codelineno-30-16" href="#__codelineno-30-16"></a><span class="c1"># Or extend by a specific size:</span>
-<a id="__codelineno-30-17" name="__codelineno-30-17" href="#__codelineno-30-17"></a>lvextend<span class="w"> </span>-L<span class="w"> </span>+20G<span class="w"> </span>/dev/&lt;vg-name&gt;/&lt;lv-name&gt;
-<a id="__codelineno-30-18" name="__codelineno-30-18" href="#__codelineno-30-18"></a>
-<a id="__codelineno-30-19" name="__codelineno-30-19" href="#__codelineno-30-19"></a><span class="c1"># 6. Resize the filesystem (online — no unmount required)</span>
-<a id="__codelineno-30-20" name="__codelineno-30-20" href="#__codelineno-30-20"></a><span class="c1"># For XFS:</span>
-<a id="__codelineno-30-21" name="__codelineno-30-21" href="#__codelineno-30-21"></a>xfs_growfs<span class="w"> </span>/mount/point
-<a id="__codelineno-30-22" name="__codelineno-30-22" href="#__codelineno-30-22"></a>
-<a id="__codelineno-30-23" name="__codelineno-30-23" href="#__codelineno-30-23"></a><span class="c1"># For ext4:</span>
-<a id="__codelineno-30-24" name="__codelineno-30-24" href="#__codelineno-30-24"></a>resize2fs<span class="w"> </span>/dev/&lt;vg-name&gt;/&lt;lv-name&gt;
-<a id="__codelineno-30-25" name="__codelineno-30-25" href="#__codelineno-30-25"></a>
-<a id="__codelineno-30-26" name="__codelineno-30-26" href="#__codelineno-30-26"></a><span class="c1"># 7. Verify</span>
-<a id="__codelineno-30-27" name="__codelineno-30-27" href="#__codelineno-30-27"></a>df<span class="w"> </span>-h<span class="w"> </span>/mount/point
-<a id="__codelineno-30-28" name="__codelineno-30-28" href="#__codelineno-30-28"></a>lvdisplay<span class="w"> </span>/dev/&lt;vg-name&gt;/&lt;lv-name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a><span class="c1"># 1. Confirm new disk or partition is visible</span>
+<a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a>lsblk
+<a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a>fdisk<span class="w"> </span>-l<span class="w"> </span>/dev/sdb
+<a id="__codelineno-29-4" name="__codelineno-29-4" href="#__codelineno-29-4"></a>
+<a id="__codelineno-29-5" name="__codelineno-29-5" href="#__codelineno-29-5"></a><span class="c1"># 2. Initialise the disk as a Physical Volume</span>
+<a id="__codelineno-29-6" name="__codelineno-29-6" href="#__codelineno-29-6"></a>pvcreate<span class="w"> </span>/dev/sdb
+<a id="__codelineno-29-7" name="__codelineno-29-7" href="#__codelineno-29-7"></a>
+<a id="__codelineno-29-8" name="__codelineno-29-8" href="#__codelineno-29-8"></a><span class="c1"># 3. Extend the Volume Group with the new PV</span>
+<a id="__codelineno-29-9" name="__codelineno-29-9" href="#__codelineno-29-9"></a>vgextend<span class="w"> </span>&lt;vg-name&gt;<span class="w"> </span>/dev/sdb
+<a id="__codelineno-29-10" name="__codelineno-29-10" href="#__codelineno-29-10"></a>
+<a id="__codelineno-29-11" name="__codelineno-29-11" href="#__codelineno-29-11"></a><span class="c1"># 4. Confirm free extents are available</span>
+<a id="__codelineno-29-12" name="__codelineno-29-12" href="#__codelineno-29-12"></a>vgdisplay<span class="w"> </span>&lt;vg-name&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Free  PE&quot;</span>
+<a id="__codelineno-29-13" name="__codelineno-29-13" href="#__codelineno-29-13"></a>
+<a id="__codelineno-29-14" name="__codelineno-29-14" href="#__codelineno-29-14"></a><span class="c1"># 5. Extend the Logical Volume (use all available space with -l +100%FREE)</span>
+<a id="__codelineno-29-15" name="__codelineno-29-15" href="#__codelineno-29-15"></a>lvextend<span class="w"> </span>-l<span class="w"> </span>+100%FREE<span class="w"> </span>/dev/&lt;vg-name&gt;/&lt;lv-name&gt;
+<a id="__codelineno-29-16" name="__codelineno-29-16" href="#__codelineno-29-16"></a><span class="c1"># Or extend by a specific size:</span>
+<a id="__codelineno-29-17" name="__codelineno-29-17" href="#__codelineno-29-17"></a>lvextend<span class="w"> </span>-L<span class="w"> </span>+20G<span class="w"> </span>/dev/&lt;vg-name&gt;/&lt;lv-name&gt;
+<a id="__codelineno-29-18" name="__codelineno-29-18" href="#__codelineno-29-18"></a>
+<a id="__codelineno-29-19" name="__codelineno-29-19" href="#__codelineno-29-19"></a><span class="c1"># 6. Resize the filesystem (online — no unmount required)</span>
+<a id="__codelineno-29-20" name="__codelineno-29-20" href="#__codelineno-29-20"></a><span class="c1"># For XFS:</span>
+<a id="__codelineno-29-21" name="__codelineno-29-21" href="#__codelineno-29-21"></a>xfs_growfs<span class="w"> </span>/mount/point
+<a id="__codelineno-29-22" name="__codelineno-29-22" href="#__codelineno-29-22"></a>
+<a id="__codelineno-29-23" name="__codelineno-29-23" href="#__codelineno-29-23"></a><span class="c1"># For ext4:</span>
+<a id="__codelineno-29-24" name="__codelineno-29-24" href="#__codelineno-29-24"></a>resize2fs<span class="w"> </span>/dev/&lt;vg-name&gt;/&lt;lv-name&gt;
+<a id="__codelineno-29-25" name="__codelineno-29-25" href="#__codelineno-29-25"></a>
+<a id="__codelineno-29-26" name="__codelineno-29-26" href="#__codelineno-29-26"></a><span class="c1"># 7. Verify</span>
+<a id="__codelineno-29-27" name="__codelineno-29-27" href="#__codelineno-29-27"></a>df<span class="w"> </span>-h<span class="w"> </span>/mount/point
+<a id="__codelineno-29-28" name="__codelineno-29-28" href="#__codelineno-29-28"></a>lvdisplay<span class="w"> </span>/dev/&lt;vg-name&gt;/&lt;lv-name&gt;
 </code></pre></div>
 <p>XFS filesystems can only grow, not shrink. <code>resize2fs</code> works online for ext4 on kernels 3.8+.</p>
 <hr />
 <h2 id="configure-syslog-rsyslog-forwarding">Configure syslog / rsyslog Forwarding<a class="headerlink" href="#configure-syslog-rsyslog-forwarding" title="Permanent link">&para;</a></h2>
 <p>Forward all local syslog events to a central syslog server using rsyslog.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a><span class="c1"># Create a drop-in forwarding config</span>
-<a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a>vi<span class="w"> </span>/etc/rsyslog.d/90-remote.conf
+<div class="highlight"><pre><span></span><code><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a><span class="c1"># Create a drop-in forwarding config</span>
+<a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a>vi<span class="w"> </span>/etc/rsyslog.d/90-remote.conf
 </code></pre></div>
 <p>Contents of <code>/etc/rsyslog.d/90-remote.conf</code>:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a><span class="c1"># Validate rsyslog configuration syntax</span>
-<a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a>rsyslogd<span class="w"> </span>-N1
-<a id="__codelineno-32-3" name="__codelineno-32-3" href="#__codelineno-32-3"></a>
-<a id="__codelineno-32-4" name="__codelineno-32-4" href="#__codelineno-32-4"></a><span class="c1"># Apply the new configuration</span>
-<a id="__codelineno-32-5" name="__codelineno-32-5" href="#__codelineno-32-5"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>rsyslog
-<a id="__codelineno-32-6" name="__codelineno-32-6" href="#__codelineno-32-6"></a>
-<a id="__codelineno-32-7" name="__codelineno-32-7" href="#__codelineno-32-7"></a><span class="c1"># Verify the TCP connection to the syslog server</span>
-<a id="__codelineno-32-8" name="__codelineno-32-8" href="#__codelineno-32-8"></a>ss<span class="w"> </span>-tnp<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>:514
-<a id="__codelineno-32-9" name="__codelineno-32-9" href="#__codelineno-32-9"></a>
-<a id="__codelineno-32-10" name="__codelineno-32-10" href="#__codelineno-32-10"></a><span class="c1"># Send a test message and confirm it appears on the remote server</span>
-<a id="__codelineno-32-11" name="__codelineno-32-11" href="#__codelineno-32-11"></a>logger<span class="w"> </span>-t<span class="w"> </span>TEST<span class="w"> </span><span class="s2">&quot;rsyslog forwarding test from </span><span class="k">$(</span>hostname<span class="k">)</span><span class="s2">&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a><span class="c1"># Validate rsyslog configuration syntax</span>
+<a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a>rsyslogd<span class="w"> </span>-N1
+<a id="__codelineno-31-3" name="__codelineno-31-3" href="#__codelineno-31-3"></a>
+<a id="__codelineno-31-4" name="__codelineno-31-4" href="#__codelineno-31-4"></a><span class="c1"># Apply the new configuration</span>
+<a id="__codelineno-31-5" name="__codelineno-31-5" href="#__codelineno-31-5"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>rsyslog
+<a id="__codelineno-31-6" name="__codelineno-31-6" href="#__codelineno-31-6"></a>
+<a id="__codelineno-31-7" name="__codelineno-31-7" href="#__codelineno-31-7"></a><span class="c1"># Verify the TCP connection to the syslog server</span>
+<a id="__codelineno-31-8" name="__codelineno-31-8" href="#__codelineno-31-8"></a>ss<span class="w"> </span>-tnp<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>:514
+<a id="__codelineno-31-9" name="__codelineno-31-9" href="#__codelineno-31-9"></a>
+<a id="__codelineno-31-10" name="__codelineno-31-10" href="#__codelineno-31-10"></a><span class="c1"># Send a test message and confirm it appears on the remote server</span>
+<a id="__codelineno-31-11" name="__codelineno-31-11" href="#__codelineno-31-11"></a>logger<span class="w"> </span>-t<span class="w"> </span>TEST<span class="w"> </span><span class="s2">&quot;rsyslog forwarding test from </span><span class="k">$(</span>hostname<span class="k">)</span><span class="s2">&quot;</span>
 </code></pre></div></p>
 <p>Use TLS encryption (<code>omfwd</code> with <code>StreamDriver="gtls"</code>) for forwarding across untrusted networks.</p>
 <hr />
 <h2 id="manage-systemd-services">Manage systemd Services<a class="headerlink" href="#manage-systemd-services" title="Permanent link">&para;</a></h2>
 <p>Enable, disable, start, stop, and monitor systemd services and their logs.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a><span class="c1"># Enable a service to start at boot (and start it immediately)</span>
-<a id="__codelineno-33-2" name="__codelineno-33-2" href="#__codelineno-33-2"></a>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>--now<span class="w"> </span>&lt;service&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a><span class="c1"># Enable a service to start at boot (and start it immediately)</span>
+<a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>--now<span class="w"> </span>&lt;service&gt;
+<a id="__codelineno-32-3" name="__codelineno-32-3" href="#__codelineno-32-3"></a>
+<a id="__codelineno-32-4" name="__codelineno-32-4" href="#__codelineno-32-4"></a><span class="c1"># Disable a service (and stop it immediately)</span>
+<a id="__codelineno-32-5" name="__codelineno-32-5" href="#__codelineno-32-5"></a>systemctl<span class="w"> </span>disable<span class="w"> </span>--now<span class="w"> </span>&lt;service&gt;
+<a id="__codelineno-32-6" name="__codelineno-32-6" href="#__codelineno-32-6"></a>
+<a id="__codelineno-32-7" name="__codelineno-32-7" href="#__codelineno-32-7"></a><span class="c1"># Start / stop / restart</span>
+<a id="__codelineno-32-8" name="__codelineno-32-8" href="#__codelineno-32-8"></a>systemctl<span class="w"> </span>start<span class="w"> </span>&lt;service&gt;
+<a id="__codelineno-32-9" name="__codelineno-32-9" href="#__codelineno-32-9"></a>systemctl<span class="w"> </span>stop<span class="w"> </span>&lt;service&gt;
+<a id="__codelineno-32-10" name="__codelineno-32-10" href="#__codelineno-32-10"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>&lt;service&gt;
+<a id="__codelineno-32-11" name="__codelineno-32-11" href="#__codelineno-32-11"></a>
+<a id="__codelineno-32-12" name="__codelineno-32-12" href="#__codelineno-32-12"></a><span class="c1"># Reload configuration without full restart (if the service supports it)</span>
+<a id="__codelineno-32-13" name="__codelineno-32-13" href="#__codelineno-32-13"></a>systemctl<span class="w"> </span>reload<span class="w"> </span>&lt;service&gt;
+<a id="__codelineno-32-14" name="__codelineno-32-14" href="#__codelineno-32-14"></a>
+<a id="__codelineno-32-15" name="__codelineno-32-15" href="#__codelineno-32-15"></a><span class="c1"># Check status — shows recent log lines</span>
+<a id="__codelineno-32-16" name="__codelineno-32-16" href="#__codelineno-32-16"></a>systemctl<span class="w"> </span>status<span class="w"> </span>&lt;service&gt;
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a><span class="c1"># Follow service logs in real time</span>
+<a id="__codelineno-33-2" name="__codelineno-33-2" href="#__codelineno-33-2"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>&lt;service&gt;<span class="w"> </span>-f
 <a id="__codelineno-33-3" name="__codelineno-33-3" href="#__codelineno-33-3"></a>
-<a id="__codelineno-33-4" name="__codelineno-33-4" href="#__codelineno-33-4"></a><span class="c1"># Disable a service (and stop it immediately)</span>
-<a id="__codelineno-33-5" name="__codelineno-33-5" href="#__codelineno-33-5"></a>systemctl<span class="w"> </span>disable<span class="w"> </span>--now<span class="w"> </span>&lt;service&gt;
+<a id="__codelineno-33-4" name="__codelineno-33-4" href="#__codelineno-33-4"></a><span class="c1"># View last 100 log lines</span>
+<a id="__codelineno-33-5" name="__codelineno-33-5" href="#__codelineno-33-5"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>&lt;service&gt;<span class="w"> </span>-n<span class="w"> </span><span class="m">100</span><span class="w"> </span>--no-pager
 <a id="__codelineno-33-6" name="__codelineno-33-6" href="#__codelineno-33-6"></a>
-<a id="__codelineno-33-7" name="__codelineno-33-7" href="#__codelineno-33-7"></a><span class="c1"># Start / stop / restart</span>
-<a id="__codelineno-33-8" name="__codelineno-33-8" href="#__codelineno-33-8"></a>systemctl<span class="w"> </span>start<span class="w"> </span>&lt;service&gt;
-<a id="__codelineno-33-9" name="__codelineno-33-9" href="#__codelineno-33-9"></a>systemctl<span class="w"> </span>stop<span class="w"> </span>&lt;service&gt;
-<a id="__codelineno-33-10" name="__codelineno-33-10" href="#__codelineno-33-10"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>&lt;service&gt;
-<a id="__codelineno-33-11" name="__codelineno-33-11" href="#__codelineno-33-11"></a>
-<a id="__codelineno-33-12" name="__codelineno-33-12" href="#__codelineno-33-12"></a><span class="c1"># Reload configuration without full restart (if the service supports it)</span>
-<a id="__codelineno-33-13" name="__codelineno-33-13" href="#__codelineno-33-13"></a>systemctl<span class="w"> </span>reload<span class="w"> </span>&lt;service&gt;
-<a id="__codelineno-33-14" name="__codelineno-33-14" href="#__codelineno-33-14"></a>
-<a id="__codelineno-33-15" name="__codelineno-33-15" href="#__codelineno-33-15"></a><span class="c1"># Check status — shows recent log lines</span>
-<a id="__codelineno-33-16" name="__codelineno-33-16" href="#__codelineno-33-16"></a>systemctl<span class="w"> </span>status<span class="w"> </span>&lt;service&gt;
+<a id="__codelineno-33-7" name="__codelineno-33-7" href="#__codelineno-33-7"></a><span class="c1"># Logs since a specific time</span>
+<a id="__codelineno-33-8" name="__codelineno-33-8" href="#__codelineno-33-8"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>&lt;service&gt;<span class="w"> </span>--since<span class="w"> </span><span class="s2">&quot;1 hour ago&quot;</span>
+<a id="__codelineno-33-9" name="__codelineno-33-9" href="#__codelineno-33-9"></a>
+<a id="__codelineno-33-10" name="__codelineno-33-10" href="#__codelineno-33-10"></a><span class="c1"># Reload all unit files after editing a unit</span>
+<a id="__codelineno-33-11" name="__codelineno-33-11" href="#__codelineno-33-11"></a>systemctl<span class="w"> </span>daemon-reload
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a><span class="c1"># Follow service logs in real time</span>
-<a id="__codelineno-34-2" name="__codelineno-34-2" href="#__codelineno-34-2"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>&lt;service&gt;<span class="w"> </span>-f
+<div class="highlight"><pre><span></span><code><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a><span class="c1"># Check all failed services</span>
+<a id="__codelineno-34-2" name="__codelineno-34-2" href="#__codelineno-34-2"></a>systemctl<span class="w"> </span>--failed
 <a id="__codelineno-34-3" name="__codelineno-34-3" href="#__codelineno-34-3"></a>
-<a id="__codelineno-34-4" name="__codelineno-34-4" href="#__codelineno-34-4"></a><span class="c1"># View last 100 log lines</span>
-<a id="__codelineno-34-5" name="__codelineno-34-5" href="#__codelineno-34-5"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>&lt;service&gt;<span class="w"> </span>-n<span class="w"> </span><span class="m">100</span><span class="w"> </span>--no-pager
+<a id="__codelineno-34-4" name="__codelineno-34-4" href="#__codelineno-34-4"></a><span class="c1"># List all services with their start type</span>
+<a id="__codelineno-34-5" name="__codelineno-34-5" href="#__codelineno-34-5"></a>systemctl<span class="w"> </span>list-units<span class="w"> </span>--type<span class="o">=</span>service<span class="w"> </span>--all
 <a id="__codelineno-34-6" name="__codelineno-34-6" href="#__codelineno-34-6"></a>
-<a id="__codelineno-34-7" name="__codelineno-34-7" href="#__codelineno-34-7"></a><span class="c1"># Logs since a specific time</span>
-<a id="__codelineno-34-8" name="__codelineno-34-8" href="#__codelineno-34-8"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>&lt;service&gt;<span class="w"> </span>--since<span class="w"> </span><span class="s2">&quot;1 hour ago&quot;</span>
-<a id="__codelineno-34-9" name="__codelineno-34-9" href="#__codelineno-34-9"></a>
-<a id="__codelineno-34-10" name="__codelineno-34-10" href="#__codelineno-34-10"></a><span class="c1"># Reload all unit files after editing a unit</span>
-<a id="__codelineno-34-11" name="__codelineno-34-11" href="#__codelineno-34-11"></a>systemctl<span class="w"> </span>daemon-reload
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a><span class="c1"># Check all failed services</span>
-<a id="__codelineno-35-2" name="__codelineno-35-2" href="#__codelineno-35-2"></a>systemctl<span class="w"> </span>--failed
-<a id="__codelineno-35-3" name="__codelineno-35-3" href="#__codelineno-35-3"></a>
-<a id="__codelineno-35-4" name="__codelineno-35-4" href="#__codelineno-35-4"></a><span class="c1"># List all services with their start type</span>
-<a id="__codelineno-35-5" name="__codelineno-35-5" href="#__codelineno-35-5"></a>systemctl<span class="w"> </span>list-units<span class="w"> </span>--type<span class="o">=</span>service<span class="w"> </span>--all
-<a id="__codelineno-35-6" name="__codelineno-35-6" href="#__codelineno-35-6"></a>
-<a id="__codelineno-35-7" name="__codelineno-35-7" href="#__codelineno-35-7"></a><span class="c1"># Mask a service to prevent it from being started by any means</span>
-<a id="__codelineno-35-8" name="__codelineno-35-8" href="#__codelineno-35-8"></a>systemctl<span class="w"> </span>mask<span class="w"> </span>&lt;service&gt;
+<a id="__codelineno-34-7" name="__codelineno-34-7" href="#__codelineno-34-7"></a><span class="c1"># Mask a service to prevent it from being started by any means</span>
+<a id="__codelineno-34-8" name="__codelineno-34-8" href="#__codelineno-34-8"></a>systemctl<span class="w"> </span>mask<span class="w"> </span>&lt;service&gt;
 </code></pre></div>
 <hr />
 <h2 id="apply-security-updates">Apply Security Updates<a class="headerlink" href="#apply-security-updates" title="Permanent link">&para;</a></h2>
 <p>Patch a Linux server with security-only updates and determine whether a reboot is required.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-36-1" name="__codelineno-36-1" href="#__codelineno-36-1"></a><span class="c1"># RHEL / AlmaLinux / Rocky — check available security updates</span>
-<a id="__codelineno-36-2" name="__codelineno-36-2" href="#__codelineno-36-2"></a>dnf<span class="w"> </span>check-update<span class="w"> </span>--security
-<a id="__codelineno-36-3" name="__codelineno-36-3" href="#__codelineno-36-3"></a>
-<a id="__codelineno-36-4" name="__codelineno-36-4" href="#__codelineno-36-4"></a><span class="c1"># Apply security updates only</span>
-<a id="__codelineno-36-5" name="__codelineno-36-5" href="#__codelineno-36-5"></a>dnf<span class="w"> </span>update<span class="w"> </span>--security<span class="w"> </span>-y
-<a id="__codelineno-36-6" name="__codelineno-36-6" href="#__codelineno-36-6"></a>
-<a id="__codelineno-36-7" name="__codelineno-36-7" href="#__codelineno-36-7"></a><span class="c1"># Apply a specific advisory</span>
-<a id="__codelineno-36-8" name="__codelineno-36-8" href="#__codelineno-36-8"></a>dnf<span class="w"> </span>update<span class="w"> </span>--advisory<span class="o">=</span>RHSA-2026:1234<span class="w"> </span>-y
-<a id="__codelineno-36-9" name="__codelineno-36-9" href="#__codelineno-36-9"></a>
-<a id="__codelineno-36-10" name="__codelineno-36-10" href="#__codelineno-36-10"></a><span class="c1"># Check if a reboot is required after patching</span>
-<a id="__codelineno-36-11" name="__codelineno-36-11" href="#__codelineno-36-11"></a>needs-restarting<span class="w"> </span>-r
-<a id="__codelineno-36-12" name="__codelineno-36-12" href="#__codelineno-36-12"></a><span class="c1"># Exit code 0 = no reboot needed; 1 = reboot required</span>
-<a id="__codelineno-36-13" name="__codelineno-36-13" href="#__codelineno-36-13"></a>
-<a id="__codelineno-36-14" name="__codelineno-36-14" href="#__codelineno-36-14"></a><span class="c1"># Check which services need restarting without a full reboot</span>
-<a id="__codelineno-36-15" name="__codelineno-36-15" href="#__codelineno-36-15"></a>needs-restarting<span class="w"> </span>-s
+<div class="highlight"><pre><span></span><code><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a><span class="c1"># RHEL / AlmaLinux / Rocky — check available security updates</span>
+<a id="__codelineno-35-2" name="__codelineno-35-2" href="#__codelineno-35-2"></a>dnf<span class="w"> </span>check-update<span class="w"> </span>--security
+<a id="__codelineno-35-3" name="__codelineno-35-3" href="#__codelineno-35-3"></a>
+<a id="__codelineno-35-4" name="__codelineno-35-4" href="#__codelineno-35-4"></a><span class="c1"># Apply security updates only</span>
+<a id="__codelineno-35-5" name="__codelineno-35-5" href="#__codelineno-35-5"></a>dnf<span class="w"> </span>update<span class="w"> </span>--security<span class="w"> </span>-y
+<a id="__codelineno-35-6" name="__codelineno-35-6" href="#__codelineno-35-6"></a>
+<a id="__codelineno-35-7" name="__codelineno-35-7" href="#__codelineno-35-7"></a><span class="c1"># Apply a specific advisory</span>
+<a id="__codelineno-35-8" name="__codelineno-35-8" href="#__codelineno-35-8"></a>dnf<span class="w"> </span>update<span class="w"> </span>--advisory<span class="o">=</span>RHSA-2026:1234<span class="w"> </span>-y
+<a id="__codelineno-35-9" name="__codelineno-35-9" href="#__codelineno-35-9"></a>
+<a id="__codelineno-35-10" name="__codelineno-35-10" href="#__codelineno-35-10"></a><span class="c1"># Check if a reboot is required after patching</span>
+<a id="__codelineno-35-11" name="__codelineno-35-11" href="#__codelineno-35-11"></a>needs-restarting<span class="w"> </span>-r
+<a id="__codelineno-35-12" name="__codelineno-35-12" href="#__codelineno-35-12"></a><span class="c1"># Exit code 0 = no reboot needed; 1 = reboot required</span>
+<a id="__codelineno-35-13" name="__codelineno-35-13" href="#__codelineno-35-13"></a>
+<a id="__codelineno-35-14" name="__codelineno-35-14" href="#__codelineno-35-14"></a><span class="c1"># Check which services need restarting without a full reboot</span>
+<a id="__codelineno-35-15" name="__codelineno-35-15" href="#__codelineno-35-15"></a>needs-restarting<span class="w"> </span>-s
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-37-1" name="__codelineno-37-1" href="#__codelineno-37-1"></a><span class="c1"># Ubuntu / Debian — update package index and apply security upgrades</span>
-<a id="__codelineno-37-2" name="__codelineno-37-2" href="#__codelineno-37-2"></a>apt<span class="w"> </span>update
-<a id="__codelineno-37-3" name="__codelineno-37-3" href="#__codelineno-37-3"></a>apt-get<span class="w"> </span>upgrade<span class="w"> </span>-y
-<a id="__codelineno-37-4" name="__codelineno-37-4" href="#__codelineno-37-4"></a>
-<a id="__codelineno-37-5" name="__codelineno-37-5" href="#__codelineno-37-5"></a><span class="c1"># Check if reboot is required (Ubuntu)</span>
-<a id="__codelineno-37-6" name="__codelineno-37-6" href="#__codelineno-37-6"></a>ls<span class="w"> </span>/var/run/reboot-required<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Reboot required&quot;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;No reboot needed&quot;</span>
-<a id="__codelineno-37-7" name="__codelineno-37-7" href="#__codelineno-37-7"></a>cat<span class="w"> </span>/var/run/reboot-required.pkgs<span class="w"> </span><span class="m">2</span>&gt;/dev/null
+<div class="highlight"><pre><span></span><code><a id="__codelineno-36-1" name="__codelineno-36-1" href="#__codelineno-36-1"></a><span class="c1"># Ubuntu / Debian — update package index and apply security upgrades</span>
+<a id="__codelineno-36-2" name="__codelineno-36-2" href="#__codelineno-36-2"></a>apt<span class="w"> </span>update
+<a id="__codelineno-36-3" name="__codelineno-36-3" href="#__codelineno-36-3"></a>apt-get<span class="w"> </span>upgrade<span class="w"> </span>-y
+<a id="__codelineno-36-4" name="__codelineno-36-4" href="#__codelineno-36-4"></a>
+<a id="__codelineno-36-5" name="__codelineno-36-5" href="#__codelineno-36-5"></a><span class="c1"># Check if reboot is required (Ubuntu)</span>
+<a id="__codelineno-36-6" name="__codelineno-36-6" href="#__codelineno-36-6"></a>ls<span class="w"> </span>/var/run/reboot-required<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Reboot required&quot;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;No reboot needed&quot;</span>
+<a id="__codelineno-36-7" name="__codelineno-36-7" href="#__codelineno-36-7"></a>cat<span class="w"> </span>/var/run/reboot-required.pkgs<span class="w"> </span><span class="m">2</span>&gt;/dev/null
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-38-1" name="__codelineno-38-1" href="#__codelineno-38-1"></a><span class="c1"># Post-patch: verify critical services are still running</span>
-<a id="__codelineno-38-2" name="__codelineno-38-2" href="#__codelineno-38-2"></a>systemctl<span class="w"> </span>is-active<span class="w"> </span>sshd<span class="w"> </span>chronyd<span class="w"> </span>auditd<span class="w"> </span>rsyslog
-<a id="__codelineno-38-3" name="__codelineno-38-3" href="#__codelineno-38-3"></a>
-<a id="__codelineno-38-4" name="__codelineno-38-4" href="#__codelineno-38-4"></a><span class="c1"># Confirm running kernel after reboot</span>
-<a id="__codelineno-38-5" name="__codelineno-38-5" href="#__codelineno-38-5"></a>uname<span class="w"> </span>-r
+<div class="highlight"><pre><span></span><code><a id="__codelineno-37-1" name="__codelineno-37-1" href="#__codelineno-37-1"></a><span class="c1"># Post-patch: verify critical services are still running</span>
+<a id="__codelineno-37-2" name="__codelineno-37-2" href="#__codelineno-37-2"></a>systemctl<span class="w"> </span>is-active<span class="w"> </span>sshd<span class="w"> </span>chronyd<span class="w"> </span>auditd<span class="w"> </span>rsyslog
+<a id="__codelineno-37-3" name="__codelineno-37-3" href="#__codelineno-37-3"></a>
+<a id="__codelineno-37-4" name="__codelineno-37-4" href="#__codelineno-37-4"></a><span class="c1"># Confirm running kernel after reboot</span>
+<a id="__codelineno-37-5" name="__codelineno-37-5" href="#__codelineno-37-5"></a>uname<span class="w"> </span>-r
 </code></pre></div>
 <hr />
 <h2 id="configure-ssh-key-authentication">Configure SSH Key Authentication<a class="headerlink" href="#configure-ssh-key-authentication" title="Permanent link">&para;</a></h2>
 <p>Generate an SSH key pair, deploy the public key to a remote host, and harden the SSH daemon configuration.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-39-1" name="__codelineno-39-1" href="#__codelineno-39-1"></a><span class="c1"># 1. Generate an Ed25519 key pair (recommended — smaller and more secure than RSA)</span>
-<a id="__codelineno-39-2" name="__codelineno-39-2" href="#__codelineno-39-2"></a>ssh-keygen<span class="w"> </span>-t<span class="w"> </span>ed25519<span class="w"> </span>-C<span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>whoami<span class="k">)</span><span class="s2">@</span><span class="k">$(</span>hostname<span class="k">)</span><span class="s2">-</span><span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span><span class="s2">&quot;</span>
-<a id="__codelineno-39-3" name="__codelineno-39-3" href="#__codelineno-39-3"></a><span class="c1"># Default output: ~/.ssh/id_ed25519 (private) and ~/.ssh/id_ed25519.pub (public)</span>
-<a id="__codelineno-39-4" name="__codelineno-39-4" href="#__codelineno-39-4"></a>
-<a id="__codelineno-39-5" name="__codelineno-39-5" href="#__codelineno-39-5"></a><span class="c1"># For RSA (use when Ed25519 is not supported)</span>
-<a id="__codelineno-39-6" name="__codelineno-39-6" href="#__codelineno-39-6"></a>ssh-keygen<span class="w"> </span>-t<span class="w"> </span>rsa<span class="w"> </span>-b<span class="w"> </span><span class="m">4096</span><span class="w"> </span>-C<span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>whoami<span class="k">)</span><span class="s2">@</span><span class="k">$(</span>hostname<span class="k">)</span><span class="s2">&quot;</span>
-<a id="__codelineno-39-7" name="__codelineno-39-7" href="#__codelineno-39-7"></a>
-<a id="__codelineno-39-8" name="__codelineno-39-8" href="#__codelineno-39-8"></a><span class="c1"># 2. Copy the public key to the remote host</span>
-<a id="__codelineno-39-9" name="__codelineno-39-9" href="#__codelineno-39-9"></a>ssh-copy-id<span class="w"> </span>-i<span class="w"> </span>~/.ssh/id_ed25519.pub<span class="w"> </span>&lt;user&gt;@&lt;remote-host&gt;
-<a id="__codelineno-39-10" name="__codelineno-39-10" href="#__codelineno-39-10"></a><span class="c1"># This appends the key to ~/.ssh/authorized_keys on the remote host</span>
-<a id="__codelineno-39-11" name="__codelineno-39-11" href="#__codelineno-39-11"></a>
-<a id="__codelineno-39-12" name="__codelineno-39-12" href="#__codelineno-39-12"></a><span class="c1"># 3. Verify key-based login works before disabling password auth</span>
-<a id="__codelineno-39-13" name="__codelineno-39-13" href="#__codelineno-39-13"></a>ssh<span class="w"> </span>-i<span class="w"> </span>~/.ssh/id_ed25519<span class="w"> </span>&lt;user&gt;@&lt;remote-host&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-38-1" name="__codelineno-38-1" href="#__codelineno-38-1"></a><span class="c1"># 1. Generate an Ed25519 key pair (recommended — smaller and more secure than RSA)</span>
+<a id="__codelineno-38-2" name="__codelineno-38-2" href="#__codelineno-38-2"></a>ssh-keygen<span class="w"> </span>-t<span class="w"> </span>ed25519<span class="w"> </span>-C<span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>whoami<span class="k">)</span><span class="s2">@</span><span class="k">$(</span>hostname<span class="k">)</span><span class="s2">-</span><span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span><span class="s2">&quot;</span>
+<a id="__codelineno-38-3" name="__codelineno-38-3" href="#__codelineno-38-3"></a><span class="c1"># Default output: ~/.ssh/id_ed25519 (private) and ~/.ssh/id_ed25519.pub (public)</span>
+<a id="__codelineno-38-4" name="__codelineno-38-4" href="#__codelineno-38-4"></a>
+<a id="__codelineno-38-5" name="__codelineno-38-5" href="#__codelineno-38-5"></a><span class="c1"># For RSA (use when Ed25519 is not supported)</span>
+<a id="__codelineno-38-6" name="__codelineno-38-6" href="#__codelineno-38-6"></a>ssh-keygen<span class="w"> </span>-t<span class="w"> </span>rsa<span class="w"> </span>-b<span class="w"> </span><span class="m">4096</span><span class="w"> </span>-C<span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>whoami<span class="k">)</span><span class="s2">@</span><span class="k">$(</span>hostname<span class="k">)</span><span class="s2">&quot;</span>
+<a id="__codelineno-38-7" name="__codelineno-38-7" href="#__codelineno-38-7"></a>
+<a id="__codelineno-38-8" name="__codelineno-38-8" href="#__codelineno-38-8"></a><span class="c1"># 2. Copy the public key to the remote host</span>
+<a id="__codelineno-38-9" name="__codelineno-38-9" href="#__codelineno-38-9"></a>ssh-copy-id<span class="w"> </span>-i<span class="w"> </span>~/.ssh/id_ed25519.pub<span class="w"> </span>&lt;user&gt;@&lt;remote-host&gt;
+<a id="__codelineno-38-10" name="__codelineno-38-10" href="#__codelineno-38-10"></a><span class="c1"># This appends the key to ~/.ssh/authorized_keys on the remote host</span>
+<a id="__codelineno-38-11" name="__codelineno-38-11" href="#__codelineno-38-11"></a>
+<a id="__codelineno-38-12" name="__codelineno-38-12" href="#__codelineno-38-12"></a><span class="c1"># 3. Verify key-based login works before disabling password auth</span>
+<a id="__codelineno-38-13" name="__codelineno-38-13" href="#__codelineno-38-13"></a>ssh<span class="w"> </span>-i<span class="w"> </span>~/.ssh/id_ed25519<span class="w"> </span>&lt;user&gt;@&lt;remote-host&gt;
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-40-1" name="__codelineno-40-1" href="#__codelineno-40-1"></a><span class="c1"># Manually add a public key (when ssh-copy-id is not available)</span>
-<a id="__codelineno-40-2" name="__codelineno-40-2" href="#__codelineno-40-2"></a>mkdir<span class="w"> </span>-p<span class="w"> </span>~/.ssh<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>chmod<span class="w"> </span><span class="m">700</span><span class="w"> </span>~/.ssh
-<a id="__codelineno-40-3" name="__codelineno-40-3" href="#__codelineno-40-3"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;ssh-ed25519 AAAA... comment&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>~/.ssh/authorized_keys
-<a id="__codelineno-40-4" name="__codelineno-40-4" href="#__codelineno-40-4"></a>chmod<span class="w"> </span><span class="m">600</span><span class="w"> </span>~/.ssh/authorized_keys
+<div class="highlight"><pre><span></span><code><a id="__codelineno-39-1" name="__codelineno-39-1" href="#__codelineno-39-1"></a><span class="c1"># Manually add a public key (when ssh-copy-id is not available)</span>
+<a id="__codelineno-39-2" name="__codelineno-39-2" href="#__codelineno-39-2"></a>mkdir<span class="w"> </span>-p<span class="w"> </span>~/.ssh<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>chmod<span class="w"> </span><span class="m">700</span><span class="w"> </span>~/.ssh
+<a id="__codelineno-39-3" name="__codelineno-39-3" href="#__codelineno-39-3"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;ssh-ed25519 AAAA... comment&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>~/.ssh/authorized_keys
+<a id="__codelineno-39-4" name="__codelineno-39-4" href="#__codelineno-39-4"></a>chmod<span class="w"> </span><span class="m">600</span><span class="w"> </span>~/.ssh/authorized_keys
 </code></pre></div>
 <p>Harden <code>/etc/ssh/sshd_config</code>:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-41-1" name="__codelineno-41-1" href="#__codelineno-41-1"></a><span class="c1"># Validate sshd_config syntax before restarting</span>
-<a id="__codelineno-41-2" name="__codelineno-41-2" href="#__codelineno-41-2"></a>sshd<span class="w"> </span>-t
-<a id="__codelineno-41-3" name="__codelineno-41-3" href="#__codelineno-41-3"></a>
-<a id="__codelineno-41-4" name="__codelineno-41-4" href="#__codelineno-41-4"></a><span class="c1"># Apply the new configuration</span>
-<a id="__codelineno-41-5" name="__codelineno-41-5" href="#__codelineno-41-5"></a>systemctl<span class="w"> </span>reload<span class="w"> </span>sshd
+<div class="highlight"><pre><span></span><code><a id="__codelineno-40-1" name="__codelineno-40-1" href="#__codelineno-40-1"></a><span class="c1"># Validate sshd_config syntax before restarting</span>
+<a id="__codelineno-40-2" name="__codelineno-40-2" href="#__codelineno-40-2"></a>sshd<span class="w"> </span>-t
+<a id="__codelineno-40-3" name="__codelineno-40-3" href="#__codelineno-40-3"></a>
+<a id="__codelineno-40-4" name="__codelineno-40-4" href="#__codelineno-40-4"></a><span class="c1"># Apply the new configuration</span>
+<a id="__codelineno-40-5" name="__codelineno-40-5" href="#__codelineno-40-5"></a>systemctl<span class="w"> </span>reload<span class="w"> </span>sshd
 </code></pre></div></p>
 <hr />
 <h2 id="verify">Verify<a class="headerlink" href="#verify" title="Permanent link">&para;</a></h2>

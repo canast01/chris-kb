@@ -10741,23 +10741,7 @@ replication to within RPO before verifying with an SRM test recovery.
 *Applies to: vSphere 7.x / 8.x*
 </div>
 <p><img alt="SRM Replication Lag / RPO Violation" src="../../../../../assets/virtualization-vmware-topics-scenarios-srm-replication-lag-r.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>center: &quot;Scenarios&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>products_involved: &quot;Products Involved&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>1_identify_which_vms_are_lagging: &quot;1. Identify Which VMs Are Lagging&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>2_check_vsphere_replication_applianc: &quot;2. Check vSphere Replication Appliance Health&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>3_check_intersite_replication_networ: &quot;3. Check Inter-Site Replication Network&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>4_check_vm_change_rate: &quot;4. Check VM Change Rate&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>5_enable_compression_or_adjust_throt: &quot;5. Enable Compression or Adjust Throttle Settings&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>center -&gt; products_involved
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>center -&gt; 1_identify_which_vms_are_lagging
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>center -&gt; 2_check_vsphere_replication_applianc
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>center -&gt; 3_check_intersite_replication_networ
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>center -&gt; 4_check_vm_change_rate
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>center -&gt; 5_enable_compression_or_adjust_throt
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNkk9rwzAMxe_5FKL3Fvrv0sOglMEK6xjN6I7Gc7TYa2oHW003Rr_75CyhKQusNyH9_J795Mx4VGScXYA3uaYkUWgJ_QIGKVfSGxcG8B20LHEBGj9l7uw5Kb3LjoqCMLZyRYUZ889ND9ZN73IuekibF3hOxsJk7GDev8RJG6VFdQhCehSFzHNjcxYaj2DdMPAaGdhtAiw9wuMv0ys8EUqj2osqlBpZz2NZGCXj24QsuZZWsfhkBKvIQZXWHGwvHCwbDuEBZUG612jaGJmYUzB0bWWRTi7GN22N1pEbpgxeeT3V4L7XYta-5cAF99hCEiODWSu623ARJ7DlSa_IXPD-3goUyh1KjyHE6zkvZPZxDCRIe0csOR_Bfc3B6sKB87CsOXiJHPE4RSIOP_SaNd8Ghnfw5290Zv9tv4Pess8OfstWOnh_wh3glvSSH36xMLU=?" /></p>
 <h2 id="products-involved">Products Involved<a class="headerlink" href="#products-involved" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -10828,22 +10812,22 @@ replication to within RPO before verifying with an SRM test recovery.
 <h2 id="2-check-vsphere-replication-appliance-health">2. Check vSphere Replication Appliance Health<a class="headerlink" href="#2-check-vsphere-replication-appliance-health" title="Permanent link">&para;</a></h2>
 <p>Both the production and DR vSR appliances must be healthy — check via vCenter → <strong>Site Recovery</strong> → <strong>Configure</strong> → <strong>vSphere Replication Servers</strong>.</p>
 <p>If an appliance shows a fault:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># SSH to vSR appliance — check service status</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>systemctl<span class="w"> </span>status<span class="w"> </span>vmware-hbrsrv
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>systemctl<span class="w"> </span>status<span class="w"> </span>vmware-hbr-cloudagent
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Check replication server logs for errors</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>tail<span class="w"> </span>-100<span class="w"> </span>/var/log/vmware/hbr/hbrServer.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>error
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># SSH to vSR appliance — check service status</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>systemctl<span class="w"> </span>status<span class="w"> </span>vmware-hbrsrv
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>systemctl<span class="w"> </span>status<span class="w"> </span>vmware-hbr-cloudagent
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Check replication server logs for errors</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>tail<span class="w"> </span>-100<span class="w"> </span>/var/log/vmware/hbr/hbrServer.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>error
 </code></pre></div>
 <p>Look for: certificate mismatch errors after a vCenter SSL renewal — fix by re-registering: vCenter → Site Recovery → Configure → vSphere Replication Servers → select appliance → <strong>Reconnect</strong>.</p>
 <hr />
 <h2 id="3-check-inter-site-replication-network">3. Check Inter-Site Replication Network<a class="headerlink" href="#3-check-inter-site-replication-network" title="Permanent link">&para;</a></h2>
 <p>Replication traffic flows from the production ESXi host VMkernel (tagged for vSphere Replication) to the DR vSR appliance — total bandwidth equals the combined changed-block rate of all replicating VMs.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># From ESXi host — check which VMkernel is used for vSphere Replication</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A5<span class="w"> </span><span class="s2">&quot;vSphereReplication&quot;</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Check NIC traffic on the replication VMkernel&#39;s physical NIC</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>esxcli<span class="w"> </span>network<span class="w"> </span>nic<span class="w"> </span>stats<span class="w"> </span>get<span class="w"> </span>-n<span class="w"> </span>&lt;vmnic-name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># From ESXi host — check which VMkernel is used for vSphere Replication</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A5<span class="w"> </span><span class="s2">&quot;vSphereReplication&quot;</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Check NIC traffic on the replication VMkernel&#39;s physical NIC</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>esxcli<span class="w"> </span>network<span class="w"> </span>nic<span class="w"> </span>stats<span class="w"> </span>get<span class="w"> </span>-n<span class="w"> </span>&lt;vmnic-name&gt;
 </code></pre></div>
 <p>Look for: replication NIC at or near 100% utilisation = link saturated; options: enable network compression (20–40% reduction), throttle low-priority VMs, or request a bandwidth increase.</p>
 <hr />
@@ -10851,11 +10835,11 @@ replication to within RPO before verifying with an SRM test recovery.
 <p>High-write VMs — databases, transaction logs, large file servers — can outrun available replication bandwidth.</p>
 <p>Check: vCenter → Site Recovery → Replication → select the lagging VM → <strong>Details</strong> → compare <strong>Current replication rate</strong> vs <strong>Average replication rate</strong>.</p>
 <p>Look for: rate significantly above average = recent backup/log flush/app burst (transient); persistently elevated = VM needs a higher RPO target or dedicated bandwidth.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Check replication rate from vSR appliance</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># vSR REST API — get replication instance details for a specific VM</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span><span class="s2">&quot;https://vsr-appliance.domain.local/api/replication/instances&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A10<span class="w"> </span><span class="s2">&quot;vm-name&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check replication rate from vSR appliance</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># vSR REST API — get replication instance details for a specific VM</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span><span class="s2">&quot;https://vsr-appliance.domain.local/api/replication/instances&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A10<span class="w"> </span><span class="s2">&quot;vm-name&quot;</span>
 </code></pre></div>
 <hr />
 <h2 id="5-enable-compression-or-adjust-throttle-settings">5. Enable Compression or Adjust Throttle Settings<a class="headerlink" href="#5-enable-compression-or-adjust-throttle-settings" title="Permanent link">&para;</a></h2>
@@ -10865,10 +10849,10 @@ replication to within RPO before verifying with an SRM test recovery.
 <h2 id="6-force-a-manual-sync-to-catch-up">6. Force a Manual Sync to Catch Up<a class="headerlink" href="#6-force-a-manual-sync-to-catch-up" title="Permanent link">&para;</a></h2>
 <p>Force an immediate changed-block sync for a specific lagging VM: vCenter → Site Recovery → Replication → select the VM → <strong>Sync Now</strong>.</p>
 <p>Look for: status returning to <strong>Met</strong> after the sync completes — monitor until confirmed.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Verify replication status via vSR REST API after manual sync</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="s2">&quot;https://vsr-appliance.domain.local/api/replication/instances?state=REPLICATING&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">&#39;&quot;vmName&quot;|&quot;rpoStatus&quot;|&quot;rpoViolation&quot;&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Verify replication status via vSR REST API after manual sync</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="s2">&quot;https://vsr-appliance.domain.local/api/replication/instances?state=REPLICATING&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">&#39;&quot;vmName&quot;|&quot;rpoStatus&quot;|&quot;rpoViolation&quot;&#39;</span>
 </code></pre></div>
 <hr />
 <h2 id="7-verify-nsx-inter-site-management-connectivity">7. Verify NSX Inter-Site Management Connectivity<a class="headerlink" href="#7-verify-nsx-inter-site-management-connectivity" title="Permanent link">&para;</a></h2>

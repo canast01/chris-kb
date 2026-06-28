@@ -10710,116 +10710,8 @@ cause and apply the correct fix — CPU, memory, storage, or network.
 *Applies to: vSphere 7.x / 8.x*
 </div>
 <p><img alt="VM Performance Degraded" src="../../../../../assets/virtualization-vmware-topics-scenarios-vm-performance-degrad.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>center: &quot;Scenarios&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>products_involved: &quot;Products Involved&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>1_start_in_aria_operations_triage_th: &quot;1. Start in Aria Operations — Triage the Alert&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>2_esxi_layer_run_esxtop_on_the_host: &quot;2. ESXi Layer — Run esxtop on the Host&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>3_vsan_layer_check_storage_performan: &quot;3. vSAN Layer — Check Storage Performance&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>4_nsx_dfw_layer_rule_overhead_on_net: &quot;4. NSX DFW Layer — Rule Overhead on Network Traffic&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>5_powercli_pull_historical_performan: &quot;5. PowerCLI — Pull Historical Performance Stats&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>center -&gt; products_involved
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>center -&gt; 1_start_in_aria_operations_triage_th
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>center -&gt; 2_esxi_layer_run_esxtop_on_the_host
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>center -&gt; 3_vsan_layer_check_storage_performan
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>center -&gt; 4_nsx_dfw_layer_rule_overhead_on_net
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>center -&gt; 5_powercli_pull_historical_performan
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>{
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  &quot;$schema&quot;: &quot;https://vega.github.io/schema/vega-lite/v5.json&quot;,
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  &quot;title&quot;: {
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    &quot;text&quot;: &quot;VM Performance Degraded \u2014 Thresholds&quot;,
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    &quot;fontSize&quot;: 13,
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    &quot;fontWeight&quot;: &quot;normal&quot;
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>  },
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>  &quot;width&quot;: 480,
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>  &quot;height&quot;: {
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>    &quot;step&quot;: 26
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>  },
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>  &quot;data&quot;: {
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>    &quot;values&quot;: [
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>      {
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>        &quot;metric&quot;: &quot;CPU Ready (%)&quot;,
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>        &quot;zone&quot;: &quot;Safe&quot;,
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>        &quot;val&quot;: 5
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>      },
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>      {
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>        &quot;metric&quot;: &quot;CPU Ready (%)&quot;,
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>        &quot;zone&quot;: &quot;Alert&quot;,
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>        &quot;val&quot;: 95
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>      }
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>    ]
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>  },
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>  &quot;mark&quot;: {
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>    &quot;type&quot;: &quot;bar&quot;,
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>    &quot;cornerRadiusEnd&quot;: 3
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>  },
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>  &quot;encoding&quot;: {
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>    &quot;y&quot;: {
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>      &quot;field&quot;: &quot;metric&quot;,
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>      &quot;type&quot;: &quot;nominal&quot;,
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>      &quot;axis&quot;: {
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>        &quot;title&quot;: null,
-<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>        &quot;labelLimit&quot;: 200
-<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>      },
-<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>      &quot;sort&quot;: null
-<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>    },
-<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>    &quot;x&quot;: {
-<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>      &quot;field&quot;: &quot;val&quot;,
-<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>      &quot;type&quot;: &quot;quantitative&quot;,
-<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>      &quot;stack&quot;: &quot;normalize&quot;,
-<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>      &quot;axis&quot;: {
-<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>        &quot;title&quot;: &quot;Threshold boundary&quot;,
-<a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a>        &quot;format&quot;: &quot;.0%&quot;
-<a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a>      }
-<a id="__codelineno-1-48" name="__codelineno-1-48" href="#__codelineno-1-48"></a>    },
-<a id="__codelineno-1-49" name="__codelineno-1-49" href="#__codelineno-1-49"></a>    &quot;color&quot;: {
-<a id="__codelineno-1-50" name="__codelineno-1-50" href="#__codelineno-1-50"></a>      &quot;field&quot;: &quot;zone&quot;,
-<a id="__codelineno-1-51" name="__codelineno-1-51" href="#__codelineno-1-51"></a>      &quot;type&quot;: &quot;nominal&quot;,
-<a id="__codelineno-1-52" name="__codelineno-1-52" href="#__codelineno-1-52"></a>      &quot;scale&quot;: {
-<a id="__codelineno-1-53" name="__codelineno-1-53" href="#__codelineno-1-53"></a>        &quot;domain&quot;: [
-<a id="__codelineno-1-54" name="__codelineno-1-54" href="#__codelineno-1-54"></a>          &quot;Safe&quot;,
-<a id="__codelineno-1-55" name="__codelineno-1-55" href="#__codelineno-1-55"></a>          &quot;Alert&quot;
-<a id="__codelineno-1-56" name="__codelineno-1-56" href="#__codelineno-1-56"></a>        ],
-<a id="__codelineno-1-57" name="__codelineno-1-57" href="#__codelineno-1-57"></a>        &quot;range&quot;: [
-<a id="__codelineno-1-58" name="__codelineno-1-58" href="#__codelineno-1-58"></a>          &quot;#15803d&quot;,
-<a id="__codelineno-1-59" name="__codelineno-1-59" href="#__codelineno-1-59"></a>          &quot;#dc2626&quot;
-<a id="__codelineno-1-60" name="__codelineno-1-60" href="#__codelineno-1-60"></a>        ]
-<a id="__codelineno-1-61" name="__codelineno-1-61" href="#__codelineno-1-61"></a>      },
-<a id="__codelineno-1-62" name="__codelineno-1-62" href="#__codelineno-1-62"></a>      &quot;legend&quot;: {
-<a id="__codelineno-1-63" name="__codelineno-1-63" href="#__codelineno-1-63"></a>        &quot;title&quot;: &quot;Zone&quot;
-<a id="__codelineno-1-64" name="__codelineno-1-64" href="#__codelineno-1-64"></a>      }
-<a id="__codelineno-1-65" name="__codelineno-1-65" href="#__codelineno-1-65"></a>    },
-<a id="__codelineno-1-66" name="__codelineno-1-66" href="#__codelineno-1-66"></a>    &quot;order&quot;: {
-<a id="__codelineno-1-67" name="__codelineno-1-67" href="#__codelineno-1-67"></a>      &quot;field&quot;: &quot;zone&quot;,
-<a id="__codelineno-1-68" name="__codelineno-1-68" href="#__codelineno-1-68"></a>      &quot;sort&quot;: [
-<a id="__codelineno-1-69" name="__codelineno-1-69" href="#__codelineno-1-69"></a>        &quot;Safe&quot;,
-<a id="__codelineno-1-70" name="__codelineno-1-70" href="#__codelineno-1-70"></a>        &quot;Alert&quot;
-<a id="__codelineno-1-71" name="__codelineno-1-71" href="#__codelineno-1-71"></a>      ]
-<a id="__codelineno-1-72" name="__codelineno-1-72" href="#__codelineno-1-72"></a>    },
-<a id="__codelineno-1-73" name="__codelineno-1-73" href="#__codelineno-1-73"></a>    &quot;tooltip&quot;: [
-<a id="__codelineno-1-74" name="__codelineno-1-74" href="#__codelineno-1-74"></a>      {
-<a id="__codelineno-1-75" name="__codelineno-1-75" href="#__codelineno-1-75"></a>        &quot;field&quot;: &quot;metric&quot;,
-<a id="__codelineno-1-76" name="__codelineno-1-76" href="#__codelineno-1-76"></a>        &quot;type&quot;: &quot;nominal&quot;,
-<a id="__codelineno-1-77" name="__codelineno-1-77" href="#__codelineno-1-77"></a>        &quot;title&quot;: &quot;Metric&quot;
-<a id="__codelineno-1-78" name="__codelineno-1-78" href="#__codelineno-1-78"></a>      },
-<a id="__codelineno-1-79" name="__codelineno-1-79" href="#__codelineno-1-79"></a>      {
-<a id="__codelineno-1-80" name="__codelineno-1-80" href="#__codelineno-1-80"></a>        &quot;field&quot;: &quot;zone&quot;,
-<a id="__codelineno-1-81" name="__codelineno-1-81" href="#__codelineno-1-81"></a>        &quot;type&quot;: &quot;nominal&quot;,
-<a id="__codelineno-1-82" name="__codelineno-1-82" href="#__codelineno-1-82"></a>        &quot;title&quot;: &quot;Zone&quot;
-<a id="__codelineno-1-83" name="__codelineno-1-83" href="#__codelineno-1-83"></a>      },
-<a id="__codelineno-1-84" name="__codelineno-1-84" href="#__codelineno-1-84"></a>      {
-<a id="__codelineno-1-85" name="__codelineno-1-85" href="#__codelineno-1-85"></a>        &quot;field&quot;: &quot;val&quot;,
-<a id="__codelineno-1-86" name="__codelineno-1-86" href="#__codelineno-1-86"></a>        &quot;type&quot;: &quot;quantitative&quot;,
-<a id="__codelineno-1-87" name="__codelineno-1-87" href="#__codelineno-1-87"></a>        &quot;title&quot;: &quot;Segment %&quot;,
-<a id="__codelineno-1-88" name="__codelineno-1-88" href="#__codelineno-1-88"></a>        &quot;format&quot;: &quot;.0f&quot;
-<a id="__codelineno-1-89" name="__codelineno-1-89" href="#__codelineno-1-89"></a>      }
-<a id="__codelineno-1-90" name="__codelineno-1-90" href="#__codelineno-1-90"></a>    ]
-<a id="__codelineno-1-91" name="__codelineno-1-91" href="#__codelineno-1-91"></a>  }
-<a id="__codelineno-1-92" name="__codelineno-1-92" href="#__codelineno-1-92"></a>}
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNksFqAjEQhu_7FIP3Llj14qEgtkVBVLqFehtCdjTBNFmSuFqK0IfoE_ZJmmy3dqV72Ntm9st8-TPJpSXupdFjsHInfJJw0p7sGHpZ-GJWGteDdydYQWMQdGI7o89JYU1-4N6h1KVRJeWBX9c1mNe1v33RwfRO0Tnpo_PM-rARQ3OGpiDL4gEc-rDeEXoRmvVTyCIHUsMk1GF14eDr4xOeKxa8IJgosr7VdYvkThIVeyOL9qDj0psCjQ4SQmGcD6rbFB6yjYRFxKrmTwcNPygYXTlmAW1VDLB0TNcKLojvQz5jY45w4K2xryxcbW-QQplNlg3HNLIhY8XC-pfl1KoZonYnzLfHSxhFaEqyglge82iKUYYpLLMN3D--XKVRBKuajYGW5I_G7sMdsu1W8lbhCAtzJMuVxOKgFAoZY0nO1FWuUQrryE0X88q1DizMLmwzV5ynd62y-s3BzR38e1iNf12eTgPvMP0G3WWQDbzLQBp4l-tMvgHyPlHX?" /></p>
+<p><img alt="Kroki" src="https://kroki.io/vegalite/svg/eNqlVN9v2jAQfuevsNwhrVIHAQrq-jZte1ulqnSb1I0HEx-JV8dmtpNBK_732W5-OJAypD0ld-f77ru7z37uIYTf6DiFjOBrhFNj1vp6OCwgIYOEmTRfDpgcvhzw3necGRgW08EvLQW-cPmGGQ42-9kazoSNcVjfbtAtqJVUGRExoE-QKEKBop_5OBpdovtUgU4lp9qj2MSVFGbOnhzUaBL4vgNLUg8pHBjHNrTzlf8walIbuLyKvJ1WJ0sq2sDaWuNZnUGJIU28IDwHbe0f3kal38cyMIrFrurH26_oDgjdorf985KsP_IkhSOL52QFod_CWve0dOwu_gv8AwdlDtHf1_D-u6g7zIh6DJaxXXuUJVHVmGOpBKg7QlmuPwtqo5M6GUQsKRNJA7Ctf902GHCXUPGvWNVlhMyYsPzqANkwHSAEahE550FXnCyBf2EZc-sbR9H-8LCWypRpvSCCN50Ei5BExe53ToQtTwwrmn1ZkZD4sVGXE-AJ9HGtX7SUuaBEbcMledl7zQ6iPm6talfvgUvVSd6v_t-z1TEJ7p13UZkRJgJBe--ePlElqtqzCJgrIhLYRzgbTa-iCW2DnNF4PBvPApiDpXFIwEusa4IPrs3O0UhF4ZTRlJpoqB5cxVaji1YRIyU3bN19-19T-pF9hK3dvGQdeQG6OzoRvjW5Y-DFHsCxixAWmEOSgTCo_5qmV_jw-enten8BiOB9tQ==?" /></p>
 <h2 id="products-involved">Products Involved<a class="headerlink" href="#products-involved" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -10884,66 +10776,66 @@ cause and apply the correct fix — CPU, memory, storage, or network.
 <hr />
 <h2 id="2-esxi-layer-run-esxtop-on-the-host">2. ESXi Layer — Run esxtop on the Host<a class="headerlink" href="#2-esxi-layer-run-esxtop-on-the-host" title="Permanent link">&para;</a></h2>
 <p>SSH to the ESXi host and run esxtop to get real-time ground-truth metrics before acting.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Batch mode — 3 samples, 50 lines of output; good for capture</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>esxtop<span class="w"> </span>-b<span class="w"> </span>-n<span class="w"> </span><span class="m">3</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-50
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Batch mode — 3 samples, 50 lines of output; good for capture</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>esxtop<span class="w"> </span>-b<span class="w"> </span>-n<span class="w"> </span><span class="m">3</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-50
 </code></pre></div>
 <p>Key esxtop views and what to look for:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Press key to switch view:
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  c  — CPU: look at %RDY (&gt;5% = problem), %USED, %WAIT
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  m  — Memory: look at MCTLSZ (balloon), SWPWRT (swap writes active)
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>  d  — Disk: look at DAVG (&gt;20ms = latency), KAVG, QAVG
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>  n  — Network: look at %DRPD (dropped packets on vmnic)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Press key to switch view:
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  c  — CPU: look at %RDY (&gt;5% = problem), %USED, %WAIT
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  m  — Memory: look at MCTLSZ (balloon), SWPWRT (swap writes active)
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  d  — Disk: look at DAVG (&gt;20ms = latency), KAVG, QAVG
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>  n  — Network: look at %DRPD (dropped packets on vmnic)
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check CPU ready and memory for a specific VM world</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>esxtop<span class="w"> </span>-b<span class="w"> </span>-n<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A2<span class="w"> </span><span class="s2">&quot;vmx-vcpu&quot;</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Check which VMs are consuming physical CPUs on the host</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>esxcli<span class="w"> </span>vm<span class="w"> </span>process<span class="w"> </span>list
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check CPU ready and memory for a specific VM world</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>esxtop<span class="w"> </span>-b<span class="w"> </span>-n<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A2<span class="w"> </span><span class="s2">&quot;vmx-vcpu&quot;</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Check which VMs are consuming physical CPUs on the host</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>esxcli<span class="w"> </span>vm<span class="w"> </span>process<span class="w"> </span>list
 </code></pre></div>
 <p>Look for: <code>%RDY</code> high across many VMs = host overcommitted; <code>%RDY</code> high on one VM only = check resource pool limits.</p>
 <hr />
 <h2 id="3-vsan-layer-check-storage-performance">3. vSAN Layer — Check Storage Performance<a class="headerlink" href="#3-vsan-layer-check-storage-performance" title="Permanent link">&para;</a></h2>
 <p>Navigate to <strong>Cluster → Monitor → vSAN → Performance Service</strong> and check per-VM IOPS, throughput, and latency.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># List all vSAN objects and their health on the host</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>object<span class="w"> </span>list
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># List vSAN storage devices and disk group membership</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>list
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Show per-VM vSAN performance counters (if performance service enabled)</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>vmdk<span class="w"> </span>list
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># List all vSAN objects and their health on the host</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>object<span class="w"> </span>list
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># List vSAN storage devices and disk group membership</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>list
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Show per-VM vSAN performance counters (if performance service enabled)</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>vmdk<span class="w"> </span>list
 </code></pre></div>
 <p>Look for:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>vSAN Latency Tiers (DAVG from esxtop):
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>  &lt; 5 ms   — healthy
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>  5–20 ms  — monitor closely
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>  &gt; 20 ms  — investigate disk group / resync
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>  &gt; 50 ms  — critical; likely degraded component or disk failure
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>vSAN Latency Tiers (DAVG from esxtop):
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>  &lt; 5 ms   — healthy
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>  5–20 ms  — monitor closely
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>  &gt; 20 ms  — investigate disk group / resync
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>  &gt; 50 ms  — critical; likely degraded component or disk failure
 </code></pre></div>
 <p>In vCenter also check <strong>vSAN → Monitor → Skyline Health</strong> for capacity imbalance, absent/degraded components, and active resync queue (resync adds latency for all VMs on the disk group).</p>
 <hr />
 <h2 id="4-nsx-dfw-layer-rule-overhead-on-network-traffic">4. NSX DFW Layer — Rule Overhead on Network Traffic<a class="headerlink" href="#4-nsx-dfw-layer-rule-overhead-on-network-traffic" title="Permanent link">&para;</a></h2>
 <p>If network is the bottleneck, run <strong>Path Analysis</strong> in Aria Networks (source VM → destination VM) to identify the blocking DFW rule ID.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># From NSX Manager REST API — get hit count for a specific rule</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span>https://&lt;nsx-manager&gt;/api/v1/firewall/stats/rules/&lt;rule-id&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># From NSX Manager REST API — get hit count for a specific rule</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>https://&lt;nsx-manager&gt;/api/v1/firewall/stats/rules/&lt;rule-id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
 </code></pre></div>
 <p>Look for: high hit-count rules on east-west flows. Reduce overhead by consolidating rules with the same action and groups, adding a service exception for high-throughput backup VMs, or disabling packet logging on stateful rules.</p>
 <hr />
 <h2 id="5-powercli-pull-historical-performance-stats">5. PowerCLI — Pull Historical Performance Stats<a class="headerlink" href="#5-powercli-pull-historical-performance-stats" title="Permanent link">&para;</a></h2>
 <p>Pull the past hour of stats without needing Aria Operations access.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c"># CPU ready — high sustained values confirm host-level contention</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nb">Get-VM</span> <span class="s2">&quot;vm-name&quot;</span> <span class="p">|</span> <span class="nb">Get-Stat</span> <span class="n">-Stat</span> <span class="n">cpu</span><span class="p">.</span><span class="n">ready</span><span class="p">.</span><span class="n">summation</span> <span class="p">`</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>  <span class="n">-Start</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddHours</span><span class="p">(-</span><span class="n">1</span><span class="p">)</span> <span class="n">-IntervalMins</span> <span class="n">5</span> <span class="p">|</span> <span class="nb">Format-Table</span> <span class="n">-AutoSize</span>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c"># Memory balloon — non-zero means hypervisor is reclaiming guest memory</span>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="nb">Get-VM</span> <span class="s2">&quot;vm-name&quot;</span> <span class="p">|</span> <span class="nb">Get-Stat</span> <span class="n">-Stat</span> <span class="n">mem</span><span class="p">.</span><span class="n">balloon</span><span class="p">.</span><span class="n">average</span> <span class="p">`</span>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>  <span class="n">-Start</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddHours</span><span class="p">(-</span><span class="n">1</span><span class="p">)</span> <span class="n">-IntervalMins</span> <span class="n">5</span> <span class="p">|</span> <span class="nb">Format-Table</span> <span class="n">-AutoSize</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="c"># Disk latency — check both read and write</span>
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="nb">Get-VM</span> <span class="s2">&quot;vm-name&quot;</span> <span class="p">|</span> <span class="nb">Get-Stat</span> <span class="n">-Stat</span> <span class="n">disk</span><span class="p">.</span><span class="n">totalLatency</span><span class="p">.</span><span class="n">average</span> <span class="p">`</span>
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>  <span class="n">-Start</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddHours</span><span class="p">(-</span><span class="n">1</span><span class="p">)</span> <span class="n">-IntervalMins</span> <span class="n">5</span> <span class="p">|</span> <span class="nb">Format-Table</span> <span class="n">-AutoSize</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># CPU ready — high sustained values confirm host-level contention</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">Get-VM</span> <span class="s2">&quot;vm-name&quot;</span> <span class="p">|</span> <span class="nb">Get-Stat</span> <span class="n">-Stat</span> <span class="n">cpu</span><span class="p">.</span><span class="n">ready</span><span class="p">.</span><span class="n">summation</span> <span class="p">`</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>  <span class="n">-Start</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddHours</span><span class="p">(-</span><span class="n">1</span><span class="p">)</span> <span class="n">-IntervalMins</span> <span class="n">5</span> <span class="p">|</span> <span class="nb">Format-Table</span> <span class="n">-AutoSize</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c"># Memory balloon — non-zero means hypervisor is reclaiming guest memory</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="nb">Get-VM</span> <span class="s2">&quot;vm-name&quot;</span> <span class="p">|</span> <span class="nb">Get-Stat</span> <span class="n">-Stat</span> <span class="n">mem</span><span class="p">.</span><span class="n">balloon</span><span class="p">.</span><span class="n">average</span> <span class="p">`</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>  <span class="n">-Start</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddHours</span><span class="p">(-</span><span class="n">1</span><span class="p">)</span> <span class="n">-IntervalMins</span> <span class="n">5</span> <span class="p">|</span> <span class="nb">Format-Table</span> <span class="n">-AutoSize</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c"># Disk latency — check both read and write</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="nb">Get-VM</span> <span class="s2">&quot;vm-name&quot;</span> <span class="p">|</span> <span class="nb">Get-Stat</span> <span class="n">-Stat</span> <span class="n">disk</span><span class="p">.</span><span class="n">totalLatency</span><span class="p">.</span><span class="n">average</span> <span class="p">`</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>  <span class="n">-Start</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddHours</span><span class="p">(-</span><span class="n">1</span><span class="p">)</span> <span class="n">-IntervalMins</span> <span class="n">5</span> <span class="p">|</span> <span class="nb">Format-Table</span> <span class="n">-AutoSize</span>
 </code></pre></div>
 <hr />
 <h2 id="6-resolution-reference">6. Resolution Reference<a class="headerlink" href="#6-resolution-reference" title="Permanent link">&para;</a></h2>

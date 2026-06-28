@@ -9191,17 +9191,7 @@ Integrations reference covering Network Integration, Backup Integration, Monitor
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>vmkfstools<span class="w"> </span>-P<span class="w"> </span>/vmfs/volumes/&lt;datastore&gt;
 </code></pre></div>
 <p>VAAI primitives (XCOPY, WRITE_SAME, ATS) significantly reduce ESXi CPU overhead during cloning and provisioning.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>direction: right
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>center: &quot;ESXi&quot; {shape: hexagon}
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>network_integration: &quot;Network Integration&quot; {shape: rectangle}
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>backup_integration: &quot;Backup Integration&quot; {shape: rectangle}
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>monitoring_integration: &quot;Monitoring Integration&quot; {shape: rectangle}
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>center -&gt; network_integration
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>center -&gt; backup_integration
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>center -&gt; monitoring_integration
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNpLySxKTS7JzM-zUijKTM8o4eJKTs0rSS2yUlByDY7IVFKoLs5ILEi1UshIrUhMz8-r5cpLLSnPL8qOzwQqSy9KhOhV8oOIKngiRBF6QVYk5qXnpNZyJSUmZ5cWoGl2AgsS1Jubn5dZkl-UmZeOpt8XLkHQDKj3FHTtFLB4BEkW06FIkthdwgUADVN7eQ==?" /></p>
 <h2 id="network-integration">Network Integration<a class="headerlink" href="#network-integration" title="Permanent link">&para;</a></h2>
 <p>ESXi networking uses either Standard vSwitch (vSS) or Distributed vSwitch (vDS). vDS is managed from vCenter and provides advanced features including LACP, LLDP, NetFlow, and port mirroring.</p>
 <p><strong>vmkernel adapters</strong> are created for each traffic type:</p>
@@ -9238,14 +9228,14 @@ Integrations reference covering Network Integration, Backup Integration, Monitor
 </table>
 <p><strong>LACP/LAG:</strong> On vDS, configure a Link Aggregation Group for uplink bonding. Requires LACP support on the upstream physical switch. Configure via vCenter &gt; vDS &gt; Configure &gt; LACP.</p>
 <p><strong>CDP/LLDP:</strong> ESXi supports Cisco Discovery Protocol (CDP) and Link Layer Discovery Protocol (LLDP) for upstream switch discovery. View neighbour information:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>esxcli<span class="w"> </span>network<span class="w"> </span>nic<span class="w"> </span>get<span class="w"> </span>--nic-name<span class="o">=</span>vmnic0
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># CDP/LLDP info visible in vSphere Client &gt; host &gt; Configure &gt; Physical Adapters</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>esxcli<span class="w"> </span>network<span class="w"> </span>nic<span class="w"> </span>get<span class="w"> </span>--nic-name<span class="o">=</span>vmnic0
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># CDP/LLDP info visible in vSphere Client &gt; host &gt; Configure &gt; Physical Adapters</span>
 </code></pre></div>
 <h2 id="backup-integration">Backup Integration<a class="headerlink" href="#backup-integration" title="Permanent link">&para;</a></h2>
 <p><strong>Veeam Backup &amp; Replication</strong> uses the VMware VADP (vStorage APIs for Data Protection) framework. A Backup Proxy VM (Windows-based) connects to ESXi hosts and the vCenter API to read VM data.</p>
 <p>Changed Block Tracking (CBT) must be enabled on VMs for incremental backups:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Check CBT status via PowerCLI</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Get-VM<span class="w"> </span>&lt;VMname&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>Get-View<span class="w"> </span><span class="p">|</span><span class="w"> </span>Select<span class="w"> </span>-ExpandProperty<span class="w"> </span>Config<span class="w"> </span><span class="p">|</span><span class="w"> </span>Select<span class="w"> </span>ChangeTrackingEnabled
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check CBT status via PowerCLI</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>Get-VM<span class="w"> </span>&lt;VMname&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>Get-View<span class="w"> </span><span class="p">|</span><span class="w"> </span>Select<span class="w"> </span>-ExpandProperty<span class="w"> </span>Config<span class="w"> </span><span class="p">|</span><span class="w"> </span>Select<span class="w"> </span>ChangeTrackingEnabled
 </code></pre></div>
 <p>CBT is enabled per VM in the VM's advanced settings (<code>ctkEnabled = TRUE</code>). Veeam enables this automatically when the first backup job runs.</p>
 <p><strong>Transport modes:</strong></p>
@@ -9256,15 +9246,15 @@ Integrations reference covering Network Integration, Backup Integration, Monitor
 </ul>
 <h2 id="monitoring-integration">Monitoring Integration<a class="headerlink" href="#monitoring-integration" title="Permanent link">&para;</a></h2>
 <p><strong>Aria Operations for Logs (Log Insight):</strong> Forward ESXi syslog to a central log server:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>esxcli<span class="w"> </span>system<span class="w"> </span>syslog<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--loghost<span class="o">=</span>tcp://loginsight.example.com:514
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>syslog<span class="w"> </span>reload
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>esxcli<span class="w"> </span>system<span class="w"> </span>syslog<span class="w"> </span>config<span class="w"> </span>get
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>esxcli<span class="w"> </span>system<span class="w"> </span>syslog<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--loghost<span class="o">=</span>tcp://loginsight.example.com:514
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>syslog<span class="w"> </span>reload
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>esxcli<span class="w"> </span>system<span class="w"> </span>syslog<span class="w"> </span>config<span class="w"> </span>get
 </code></pre></div>
 <p>The Aria Operations for Logs VMware vSphere content pack parses ESXi syslog fields automatically.</p>
 <p><strong>SNMP:</strong> Configure SNMP traps for alerting to a monitoring platform:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>esxcli<span class="w"> </span>system<span class="w"> </span>snmp<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--communities<span class="o">=</span>public<span class="w"> </span>--targets<span class="o">=</span>monitor.example.com@162/public
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>snmp<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--enable<span class="o">=</span><span class="nb">true</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>esxcli<span class="w"> </span>system<span class="w"> </span>snmp<span class="w"> </span>get
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>esxcli<span class="w"> </span>system<span class="w"> </span>snmp<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--communities<span class="o">=</span>public<span class="w"> </span>--targets<span class="o">=</span>monitor.example.com@162/public
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>snmp<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--enable<span class="o">=</span><span class="nb">true</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>esxcli<span class="w"> </span>system<span class="w"> </span>snmp<span class="w"> </span>get
 </code></pre></div>
 <p><strong>Aria Operations (vROps):</strong> The ESXi adapter connects through vCenter. Add vCenter as an account in Aria Operations and the ESXi adapter automatically discovers all managed hosts. Metrics include CPU ready, memory balloon, storage latency, and network utilisation per host.</p>
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>

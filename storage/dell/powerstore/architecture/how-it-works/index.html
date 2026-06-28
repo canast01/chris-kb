@@ -8850,44 +8850,8 @@ How It Works reference covering Overview, Architecture, Appliance Architecture, 
 *Applies to: PowerStore 3.x*
 </div>
 <p><img alt="PowerStore — How It Works" src="../../../../../assets/storage-dell-powerstore-architecture-how-it-works.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>center: &quot;PowerStore&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>architecture: &quot;Architecture&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>appliance_architecture: &quot;Appliance Architecture&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>hardware_models: &quot;Hardware Models&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>components: &quot;Components&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>data_services: &quot;Data Services&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>metro_volume: &quot;Metro Volume&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>center -&gt; architecture
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>center -&gt; appliance_architecture
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>center -&gt; hardware_models
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>center -&gt; components
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>center -&gt; data_services
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>center -&gt; metro_volume
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>@startuml
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>skinparam sequenceArrowThickness 1.5
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>skinparam roundcorner 5
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>participant &quot;Host\n(FC / iSCSI / NVMe-oF)&quot; as HOST
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>participant &quot;Front-End\nDirectors&quot; as FE
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>participant &quot;NVRAM\n(write cache)&quot; as NV
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>participant &quot;Back-End\nDirectors&quot; as BE
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>participant &quot;NVMe Flash\n(appliance nodes)&quot; as FLASH
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>participant &quot;PowerStore Manager\n(Kubernetes-based)&quot; as MGR
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>HOST -&gt; FE: Write I/O
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>FE -&gt; NV: Stage write (mirrored NVRAM)
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>NV --&gt; FE: Ack to host
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>FE -&gt; BE: Destage to flash
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>BE -&gt; FLASH: NVMe write
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>FLASH --&gt; BE: Confirmed
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>MGR -&gt; FLASH: Automated tiering + compression
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>MGR --&gt; FE: Telemetry + alert
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>@enduml
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqFkMEKwjAQRO_9iqV3f6AHQfTgpSAUvJYlXZpAmy3btBXEfzeRqrEEPL7JzJKZxggpZ9gWIKbVLssUWUdSQH7hhaRyLJTDfdQ4UAGabtiyfWQoShvno5N4OT9E-HWH02jbjrx_GDqDVlG9Tb4f4O8NjdIsKFT33FA3-vB5VaB8KcmU4n5g60uFwPEDSW-DDuuRZDaKgv3kGaqVk4menHA9czf1oU0ZEK4vTPrXeWG3h3iIWE4uFRk2M0Qv36qR-NMp0uOfZ08y5L1c?" /></p>
+<p><img alt="Kroki" src="https://kroki.io/plantuml/svg/eNptkj9PwzAQxXd_ilMnEAoVQ5cOiPRPaAVJEanCwuI6V2olscPZUcW35-J0aASTpfN7P713uifnJfmuqYWrtGklyQYcfndoFMZE9rw_aVUZdA4e7mdXIrKdKZUlgwQzIXjotdKtNB4mG-v8p7lJljAFnS_zLb9ZkWJkk9sJSAebXb4fWxKyxkdrU36alSZU3pIL0mQ9FmbFe5wy_EzaIyipTjgws2IsXEhV_Qdc_AGmCEkt3Ympsm1rLbk7GFuiG8jJa5xvxqY3e0bKmYmQSiO_kNj80h2Q9-HRRQfpsBzc6fO7EH1hiB65zRw-QvLtdCeSdT_LijnknhkwdLppNC-esITQ9VZkBUQXb6wq8BZOvOCLe8HTFbrg559jX0QswlfIPQ-bH9AiTAKsty2tOWpqsBSc8coQd9420nMAr5G0-YI7ULZpia9AWzOoL4H2WGODnn5YI2skL57QlP09_QLj48OY?" /></p>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>Dell PowerStore is a mid-range all-flash platform built on an active-active appliance architecture with an NVMe-based internal fabric. It runs <strong>PowerStoreOS (PSTROS)</strong> — a microservices-based OS with containerised workloads. Two families: PowerStore <strong>T</strong> (scale-out capable) and PowerStore <strong>X</strong> (includes AppsOn — embedded vSphere).</p>
 <h2 id="architecture">Architecture<a class="headerlink" href="#architecture" title="Permanent link">&para;</a></h2>

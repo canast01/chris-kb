@@ -8455,23 +8455,7 @@ Health Checks reference covering Health Check Decision Flow, Daily Checks, Healt
 *Applies to: ONTAP 9.x*
 </div>
 
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>direction: right
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>hub: &quot;NetApp ONTAP\nOperations&quot; {shape: hexagon}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>run_this_routine: &quot;Run This Routine&quot; {shape: rectangle}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>health_check_decision_flow: &quot;Health Check Decision Flow&quot; {shape: rectangle}
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>daily_checks: &quot;Daily Checks&quot; {shape: rectangle}
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>health_check: &quot;Health Check&quot; {shape: rectangle}
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>cluster_health: &quot;Cluster Health&quot; {shape: rectangle}
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>prechange_checklist: &quot;Pre-Change Checklist&quot; {shape: rectangle}
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>hub -&gt; run_this_routine
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>hub -&gt; health_check_decision_flow
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>hub -&gt; daily_checks
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>hub -&gt; health_check
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>hub -&gt; cluster_health
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>hub -&gt; prechange_checklist
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqFkU1qAzEMhfc-hZh9LjCLQphQskpCyLJgXI8yMjUe4x_aUnL3ynGGtMGlO_k9fXq2PJqAOpnZ9RDMREkIyq89dDtMa-9hvzutDy9u7zGo0hU7-IqkPPZA-KGm2V1EyE4mMlGGOSfj2OqO2cGJJThW6U6VNOUmixdBqGwiqQn1mxxRm8gB8mznd56wvZowFBM2NxOe2WzOGpWxn3VUZHpTjhWO_2Y_pDX7tc0xYZCVY2KoAlSyyXiuiWusMdbExOAh4Gq4yjWuyE28fASsnuBxvYv-9_qWjp9LaVGL9vtxi9q4vvgGpfLIow==?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Access:</strong> Storage admin credentials (cluster admin or equivalent)</li>
@@ -8573,51 +8557,51 @@ Health Checks reference covering Health Check Decision Flow, Daily Checks, Healt
 <li>[ ] Network interfaces all online: <code>network interface show -status-oper down</code> returns no results</li>
 <li>[ ] AutoSupport last sent within expected interval: <code>autosupport history show</code></li>
 </ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Cluster node and HA status</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>cluster<span class="w"> </span>show
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>storage<span class="w"> </span>failover<span class="w"> </span>show
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Aggregate capacity — flag anything above 85%</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>aggr-name,used-percent,state
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Volume space usage across all SVMs</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>volume<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>volume,state,percent-used
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># SnapMirror relationship health and lag time</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>source-path,destination-path,lag-time,healthy,state
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="c1"># Broken or failed disks</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>storage<span class="w"> </span>disk<span class="w"> </span>show<span class="w"> </span>-broken
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="c1"># Active health alerts</span>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>system<span class="w"> </span>health<span class="w"> </span>alert<span class="w"> </span>show
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="c1"># Recent callhome EMS events</span>
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>event<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-messagename<span class="w"> </span>callhome.*
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="c1"># SVM and LIF status</span>
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>svm<span class="w"> </span>show
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>network<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span>-status-oper<span class="w"> </span>down
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Cluster node and HA status</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>cluster<span class="w"> </span>show
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>storage<span class="w"> </span>failover<span class="w"> </span>show
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Aggregate capacity — flag anything above 85%</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>aggr-name,used-percent,state
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># Volume space usage across all SVMs</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>volume<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>volume,state,percent-used
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># SnapMirror relationship health and lag time</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>source-path,destination-path,lag-time,healthy,state
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="c1"># Broken or failed disks</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>storage<span class="w"> </span>disk<span class="w"> </span>show<span class="w"> </span>-broken
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="c1"># Active health alerts</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>system<span class="w"> </span>health<span class="w"> </span>alert<span class="w"> </span>show
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="c1"># Recent callhome EMS events</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>event<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-messagename<span class="w"> </span>callhome.*
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="c1"># SVM and LIF status</span>
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>svm<span class="w"> </span>show
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>network<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span>-status-oper<span class="w"> </span>down
 </code></pre></div>
 <h2 id="cluster-health">Cluster Health<a class="headerlink" href="#cluster-health" title="Permanent link">&para;</a></h2>
 <p><img alt="Cluster Health" src="../../../../../assets/storage-netapp-ontap-hc-cluster-health.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>cluster<span class="w"> </span>show
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># All nodes should show health: true and eligibility: true</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>system<span class="w"> </span>health<span class="w"> </span>status<span class="w"> </span>show
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Overall status should be: ok</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>cluster<span class="w"> </span>show
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># All nodes should show health: true and eligibility: true</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>system<span class="w"> </span>health<span class="w"> </span>status<span class="w"> </span>show
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Overall status should be: ok</span>
 </code></pre></div>
 <h3 id="node-health">Node Health<a class="headerlink" href="#node-health" title="Permanent link">&para;</a></h3>
 <p><img alt="Node Health" src="../../../../../assets/storage-netapp-ontap-hc-node-health.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>system<span class="w"> </span>node<span class="w"> </span>show
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># All nodes should be: up</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>system<span class="w"> </span>node<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>uptime,health
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>system<span class="w"> </span>node<span class="w"> </span>show
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># All nodes should be: up</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>system<span class="w"> </span>node<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>uptime,health
 </code></pre></div>
 <h3 id="ha-pair-status">HA Pair Status<a class="headerlink" href="#ha-pair-status" title="Permanent link">&para;</a></h3>
 <p><img alt="HA Pair Status" src="../../../../../assets/storage-netapp-ontap-hc-ha-pair-status.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>storage<span class="w"> </span>failover<span class="w"> </span>show
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># Both nodes should show: Connected, Not in takeover</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>storage<span class="w"> </span>failover<span class="w"> </span>show
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># Both nodes should show: Connected, Not in takeover</span>
 </code></pre></div>
 <table>
 <thead>
@@ -8643,35 +8627,35 @@ Health Checks reference covering Health Check Decision Flow, Daily Checks, Healt
 </table>
 <h3 id="disk-health">Disk Health<a class="headerlink" href="#disk-health" title="Permanent link">&para;</a></h3>
 <p><img alt="Disk Health" src="../../../../../assets/storage-netapp-ontap-hc-disk-health.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>storage<span class="w"> </span>disk<span class="w"> </span>show<span class="w"> </span>-broken
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># Any output here requires investigation</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>storage<span class="w"> </span>disk<span class="w"> </span>show<span class="w"> </span>-container-type<span class="w"> </span>spare
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># Confirm spare disks are available for RAID rebuild</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>storage<span class="w"> </span>disk<span class="w"> </span>show<span class="w"> </span>-broken
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># Any output here requires investigation</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>storage<span class="w"> </span>disk<span class="w"> </span>show<span class="w"> </span>-container-type<span class="w"> </span>spare
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Confirm spare disks are available for RAID rebuild</span>
 </code></pre></div>
 <h3 id="aggregate-health">Aggregate Health<a class="headerlink" href="#aggregate-health" title="Permanent link">&para;</a></h3>
 <p><img alt="Aggregate Health" src="../../../../../assets/storage-netapp-ontap-hc-aggregate-health.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show<span class="w"> </span>-state<span class="w"> </span>!online
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># Should return no output if all aggregates are healthy</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show-status<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>normal
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show<span class="w"> </span>-state<span class="w"> </span>!online
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># Should return no output if all aggregates are healthy</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show-status<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>normal
 </code></pre></div>
 <h3 id="volume-health">Volume Health<a class="headerlink" href="#volume-health" title="Permanent link">&para;</a></h3>
 <p><img alt="Volume Health" src="../../../../../assets/storage-netapp-ontap-hc-volume-health.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>volume<span class="w"> </span>show<span class="w"> </span>-state<span class="w"> </span>!online
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="c1"># Should return no output under normal conditions</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>volume<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>state,health<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="nb">true</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>volume<span class="w"> </span>show<span class="w"> </span>-state<span class="w"> </span>!online
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># Should return no output under normal conditions</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>volume<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>state,health<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="nb">true</span>
 </code></pre></div>
 <h3 id="interface-health">Interface Health<a class="headerlink" href="#interface-health" title="Permanent link">&para;</a></h3>
 <p><img alt="Interface Health" src="../../../../../assets/storage-netapp-ontap-hc-interface-health.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>network<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span>-status-oper<span class="w"> </span>down
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="c1"># Any interfaces down should be investigated</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>network<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span>-status-oper<span class="w"> </span>down
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="c1"># Any interfaces down should be investigated</span>
 </code></pre></div>
 <h3 id="ems-events-recent-errors">EMS Events (Recent Errors)<a class="headerlink" href="#ems-events-recent-errors" title="Permanent link">&para;</a></h3>
 <p><img alt="EMS Events (Recent Errors)" src="../../../../../assets/storage-netapp-ontap-hc-ems-events-recent-errors.svg" /></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>event<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-severity<span class="w"> </span>ERROR<span class="w"> </span>-time-range<span class="w"> </span><span class="s2">&quot;1h&quot;</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>event<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-severity<span class="w"> </span>CRITICAL
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>event<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-severity<span class="w"> </span>ERROR<span class="w"> </span>-time-range<span class="w"> </span><span class="s2">&quot;1h&quot;</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>event<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-severity<span class="w"> </span>CRITICAL
 </code></pre></div>
 <h2 id="pre-change-checklist">Pre-Change Checklist<a class="headerlink" href="#pre-change-checklist" title="Permanent link">&para;</a></h2>
 <ul>
