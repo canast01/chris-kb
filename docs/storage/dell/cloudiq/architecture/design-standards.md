@@ -35,7 +35,7 @@ center -> health_score_thresholds
 center -> alert_notification_routing
 ```
 
-```vega-lite
+```vegalite
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
   "title": {

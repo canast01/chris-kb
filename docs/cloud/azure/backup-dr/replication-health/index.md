@@ -36,7 +36,7 @@ center -> triggering_a_resync
 center -> monitoring_via_azure_monitor_alerts
 ```
 
-```vega-lite
+```vegalite
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
   "title": {

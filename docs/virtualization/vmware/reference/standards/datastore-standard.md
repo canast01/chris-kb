@@ -35,7 +35,7 @@ mounting -> backup_tagging: hardens
 backup_tagging -> capacity_management: hardens
 ```
 
-```vega-lite
+```vegalite
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
   "title": {

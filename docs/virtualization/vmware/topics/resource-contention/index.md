@@ -34,7 +34,7 @@ center -> contention_response_actions
 center -> drs_imbalance_score
 ```
 
-```vega-lite
+```vegalite
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
   "title": {

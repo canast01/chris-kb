@@ -51,7 +51,7 @@ note over JRN,RVOL: Any journal point-in-time\ncan be mounted for recovery
 @enduml
 ```
 
-```vega-lite
+```vegalite
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
   "title": {

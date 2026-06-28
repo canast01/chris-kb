@@ -37,7 +37,7 @@ center -> 4_identify_common_root_causes
 center -> 5_cancel_vs_suppress_do_the_right_th
 ```
 
-```vega-lite
+```vegalite
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
   "title": {

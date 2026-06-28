@@ -30,7 +30,7 @@ center -> redflag_conditions
 center -> safetoproceed_validation_checklist
 ```
 
-```vega-lite
+```vegalite
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
   "title": {

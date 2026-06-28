@@ -36,7 +36,7 @@ center -> 4_nsx_dfw_layer_rule_overhead_on_net
 center -> 5_powercli_pull_historical_performan
 ```
 
-```vega-lite
+```vegalite
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
   "title": {

@@ -32,7 +32,7 @@ hub -> prometheus_grafana_stack
 hub -> alerts_for_gpu_workloads
 ```
 
-```vega-lite
+```vegalite
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
   "title": {

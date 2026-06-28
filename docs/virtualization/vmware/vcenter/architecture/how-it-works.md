@@ -167,7 +167,7 @@ service-control --status --all
 
 Sizing is set at deploy time and can be changed by modifying vCPU/RAM after deployment (requires reboot). Disk partitions can be expanded online.
 
-```vega-lite
+```vegalite
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
   "title": "vCenter Sizing — Maximum VMs by Deployment Size",

@@ -38,7 +38,7 @@ center -> 4_trending_90day_growth_analysis
 center -> 5_check_reclaimable_resources_before
 ```
 
-```vega-lite
+```vegalite
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
   "title": {

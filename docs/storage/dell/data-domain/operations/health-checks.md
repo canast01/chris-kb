@@ -31,7 +31,7 @@ hub -> replication_health
 hub -> hardware_health
 ```
 
-```vega-lite
+```vegalite
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
   "title": {

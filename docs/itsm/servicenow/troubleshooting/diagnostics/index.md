@@ -77,7 +77,7 @@ step_5_enable_session_debug_for_targ -> resolution
 step_6_run_background_script_diagnos -> resolution
 ```
 
-```vega-lite
+```vegalite
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
   "title": {

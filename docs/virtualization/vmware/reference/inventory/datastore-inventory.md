@@ -33,7 +33,7 @@ center -> capacity_thresholds
 center -> datastore_checklist
 ```
 
-```vega-lite
+```vegalite
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
   "title": {

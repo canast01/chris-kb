@@ -170,13 +170,13 @@ def build_vegalite_spec(thresholds: list, title: str = "Alert Thresholds") -> di
 
 
 def format_fence(spec: dict) -> str:
-    return "```vega-lite\n" + json.dumps(spec, indent=2) + "\n```\n"
+    return "```vegalite\n" + json.dumps(spec, indent=2) + "\n```\n"
 
 
 # ─── Injection helpers ─────────────────────────────────────────────────────
 
 def already_has_vegalite(lines: list) -> bool:
-    return any(line.rstrip() == "```vega-lite" for line in lines)
+    return any(line.rstrip() in ("```vegalite", "```vega-lite") for line in lines)
 
 
 def find_inject_pos(lines: list):

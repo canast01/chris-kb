@@ -61,7 +61,7 @@ center -> 4_identify_a_specific_vms_memory_pro
 center -> 5_resolution
 ```
 
-```vega-lite
+```vegalite
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
   "title": {

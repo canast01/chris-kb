@@ -34,7 +34,7 @@ center -> esxtop_identifying_snapshot_latency
 center -> backupinduced_snapshots
 ```
 
-```vega-lite
+```vegalite
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
   "title": {

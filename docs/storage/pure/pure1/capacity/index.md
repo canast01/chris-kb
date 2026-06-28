@@ -30,7 +30,7 @@ center -> snapshot_space_management
 center -> common_capacity_issues
 ```
 
-```vega-lite
+```vegalite
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
   "title": {

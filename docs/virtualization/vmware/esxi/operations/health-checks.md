@@ -35,7 +35,7 @@ hub -> capacity_and_performance
 hub -> vib_and_patch_compliance
 ```
 
-```vega-lite
+```vegalite
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
   "title": {

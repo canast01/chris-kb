@@ -35,7 +35,7 @@ hub -> integration_with_veeam_backup_replic
 hub -> integration_with_veritas_netbackup
 ```
 
-```vega-lite
+```vegalite
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
   "title": {
