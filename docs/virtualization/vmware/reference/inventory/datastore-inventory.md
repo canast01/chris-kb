@@ -33,6 +33,121 @@ center -> capacity_thresholds
 center -> datastore_checklist
 ```
 
+```vega-lite
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "title": {
+    "text": "Datastore Inventory \u2014 Thresholds",
+    "fontSize": 13,
+    "fontWeight": "normal"
+  },
+  "width": 480,
+  "height": {
+    "step": 26
+  },
+  "data": {
+    "values": [
+      {
+        "metric": "> 70% used",
+        "zone": "Safe",
+        "val": 70
+      },
+      {
+        "metric": "> 70% used",
+        "zone": "Alert",
+        "val": 30
+      },
+      {
+        "metric": "> 80% used",
+        "zone": "Safe",
+        "val": 80
+      },
+      {
+        "metric": "> 80% used",
+        "zone": "Alert",
+        "val": 20
+      },
+      {
+        "metric": "> 90% used",
+        "zone": "Safe",
+        "val": 90
+      },
+      {
+        "metric": "> 90% used",
+        "zone": "Alert",
+        "val": 10
+      }
+    ]
+  },
+  "mark": {
+    "type": "bar",
+    "cornerRadiusEnd": 3
+  },
+  "encoding": {
+    "y": {
+      "field": "metric",
+      "type": "nominal",
+      "axis": {
+        "title": null,
+        "labelLimit": 200
+      },
+      "sort": null
+    },
+    "x": {
+      "field": "val",
+      "type": "quantitative",
+      "stack": "normalize",
+      "axis": {
+        "title": "Threshold boundary",
+        "format": ".0%"
+      }
+    },
+    "color": {
+      "field": "zone",
+      "type": "nominal",
+      "scale": {
+        "domain": [
+          "Safe",
+          "Alert"
+        ],
+        "range": [
+          "#15803d",
+          "#dc2626"
+        ]
+      },
+      "legend": {
+        "title": "Zone"
+      }
+    },
+    "order": {
+      "field": "zone",
+      "sort": [
+        "Safe",
+        "Alert"
+      ]
+    },
+    "tooltip": [
+      {
+        "field": "metric",
+        "type": "nominal",
+        "title": "Metric"
+      },
+      {
+        "field": "zone",
+        "type": "nominal",
+        "title": "Zone"
+      },
+      {
+        "field": "val",
+        "type": "quantitative",
+        "title": "Segment %",
+        "format": ".0f"
+      }
+    ]
+  }
+}
+```
+
 ## Overview
 
 Track all datastores presented to the vSphere environment. Update this inventory after any datastore creation, expansion, removal, or re-presentation event.

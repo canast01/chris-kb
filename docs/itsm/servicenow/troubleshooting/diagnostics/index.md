@@ -77,6 +77,111 @@ step_5_enable_session_debug_for_targ -> resolution
 step_6_run_background_script_diagnos -> resolution
 ```
 
+```vega-lite
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "title": {
+    "text": "Diagnostics \u2014 Thresholds",
+    "fontSize": 13,
+    "fontWeight": "normal"
+  },
+  "width": 480,
+  "height": {
+    "step": 26
+  },
+  "data": {
+    "values": [
+      {
+        "metric": "Heap used",
+        "zone": "Safe",
+        "val": 85
+      },
+      {
+        "metric": "Heap used",
+        "zone": "Alert",
+        "val": 15
+      },
+      {
+        "metric": "DB pool usage",
+        "zone": "Safe",
+        "val": 90
+      },
+      {
+        "metric": "DB pool usage",
+        "zone": "Alert",
+        "val": 10
+      }
+    ]
+  },
+  "mark": {
+    "type": "bar",
+    "cornerRadiusEnd": 3
+  },
+  "encoding": {
+    "y": {
+      "field": "metric",
+      "type": "nominal",
+      "axis": {
+        "title": null,
+        "labelLimit": 200
+      },
+      "sort": null
+    },
+    "x": {
+      "field": "val",
+      "type": "quantitative",
+      "stack": "normalize",
+      "axis": {
+        "title": "Threshold boundary",
+        "format": ".0%"
+      }
+    },
+    "color": {
+      "field": "zone",
+      "type": "nominal",
+      "scale": {
+        "domain": [
+          "Safe",
+          "Alert"
+        ],
+        "range": [
+          "#15803d",
+          "#dc2626"
+        ]
+      },
+      "legend": {
+        "title": "Zone"
+      }
+    },
+    "order": {
+      "field": "zone",
+      "sort": [
+        "Safe",
+        "Alert"
+      ]
+    },
+    "tooltip": [
+      {
+        "field": "metric",
+        "type": "nominal",
+        "title": "Metric"
+      },
+      {
+        "field": "zone",
+        "type": "nominal",
+        "title": "Zone"
+      },
+      {
+        "field": "val",
+        "type": "quantitative",
+        "title": "Segment %",
+        "format": ".0f"
+      }
+    ]
+  }
+}
+```
+
 ## Before you begin
 
 - **Access:** ServiceNow admin role; MID Server host SSH access (for integration issues)

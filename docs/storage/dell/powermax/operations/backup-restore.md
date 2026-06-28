@@ -35,6 +35,111 @@ hub -> integration_with_veeam_backup_replic
 hub -> integration_with_veritas_netbackup
 ```
 
+```vega-lite
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "title": {
+    "text": "Backup & Restore \u2014 Thresholds",
+    "fontSize": 13,
+    "fontWeight": "normal"
+  },
+  "width": 480,
+  "height": {
+    "step": 26
+  },
+  "data": {
+    "values": [
+      {
+        "metric": "SRP > 75% consumed",
+        "zone": "Safe",
+        "val": 75
+      },
+      {
+        "metric": "SRP > 75% consumed",
+        "zone": "Alert",
+        "val": 25
+      },
+      {
+        "metric": "SRP > 85% consumed",
+        "zone": "Safe",
+        "val": 85
+      },
+      {
+        "metric": "SRP > 85% consumed",
+        "zone": "Alert",
+        "val": 15
+      }
+    ]
+  },
+  "mark": {
+    "type": "bar",
+    "cornerRadiusEnd": 3
+  },
+  "encoding": {
+    "y": {
+      "field": "metric",
+      "type": "nominal",
+      "axis": {
+        "title": null,
+        "labelLimit": 200
+      },
+      "sort": null
+    },
+    "x": {
+      "field": "val",
+      "type": "quantitative",
+      "stack": "normalize",
+      "axis": {
+        "title": "Threshold boundary",
+        "format": ".0%"
+      }
+    },
+    "color": {
+      "field": "zone",
+      "type": "nominal",
+      "scale": {
+        "domain": [
+          "Safe",
+          "Alert"
+        ],
+        "range": [
+          "#15803d",
+          "#dc2626"
+        ]
+      },
+      "legend": {
+        "title": "Zone"
+      }
+    },
+    "order": {
+      "field": "zone",
+      "sort": [
+        "Safe",
+        "Alert"
+      ]
+    },
+    "tooltip": [
+      {
+        "field": "metric",
+        "type": "nominal",
+        "title": "Metric"
+      },
+      {
+        "field": "zone",
+        "type": "nominal",
+        "title": "Zone"
+      },
+      {
+        "field": "val",
+        "type": "quantitative",
+        "title": "Segment %",
+        "format": ".0f"
+      }
+    ]
+  }
+}
+```
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

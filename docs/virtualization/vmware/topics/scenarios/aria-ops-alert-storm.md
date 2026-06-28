@@ -37,6 +37,111 @@ center -> 4_identify_common_root_causes
 center -> 5_cancel_vs_suppress_do_the_right_th
 ```
 
+```vega-lite
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "title": {
+    "text": "Aria Ops Alert Storm \u2014 Thresholds",
+    "fontSize": 13,
+    "fontWeight": "normal"
+  },
+  "width": 480,
+  "height": {
+    "step": 26
+  },
+  "data": {
+    "values": [
+      {
+        "metric": "CPU ready high",
+        "zone": "Safe",
+        "val": 5
+      },
+      {
+        "metric": "CPU ready high",
+        "zone": "Alert",
+        "val": 95
+      },
+      {
+        "metric": "Network dropped packets",
+        "zone": "Safe",
+        "val": 0
+      },
+      {
+        "metric": "Network dropped packets",
+        "zone": "Alert",
+        "val": 100
+      }
+    ]
+  },
+  "mark": {
+    "type": "bar",
+    "cornerRadiusEnd": 3
+  },
+  "encoding": {
+    "y": {
+      "field": "metric",
+      "type": "nominal",
+      "axis": {
+        "title": null,
+        "labelLimit": 200
+      },
+      "sort": null
+    },
+    "x": {
+      "field": "val",
+      "type": "quantitative",
+      "stack": "normalize",
+      "axis": {
+        "title": "Threshold boundary",
+        "format": ".0%"
+      }
+    },
+    "color": {
+      "field": "zone",
+      "type": "nominal",
+      "scale": {
+        "domain": [
+          "Safe",
+          "Alert"
+        ],
+        "range": [
+          "#15803d",
+          "#dc2626"
+        ]
+      },
+      "legend": {
+        "title": "Zone"
+      }
+    },
+    "order": {
+      "field": "zone",
+      "sort": [
+        "Safe",
+        "Alert"
+      ]
+    },
+    "tooltip": [
+      {
+        "field": "metric",
+        "type": "nominal",
+        "title": "Metric"
+      },
+      {
+        "field": "zone",
+        "type": "nominal",
+        "title": "Zone"
+      },
+      {
+        "field": "val",
+        "type": "quantitative",
+        "title": "Segment %",
+        "format": ".0f"
+      }
+    ]
+  }
+}
+```
+
 ## Products Involved
 
 | Product | Role in This Scenario |

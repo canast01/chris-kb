@@ -8,7 +8,7 @@ Knowledge base statistics: page counts, section distribution, and content type c
 
 
 
-Generated: 2026-06-27
+Generated: 2026-06-28
 
 ```d2
 direction: right

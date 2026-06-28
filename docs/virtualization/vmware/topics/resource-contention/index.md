@@ -34,6 +34,121 @@ center -> contention_response_actions
 center -> drs_imbalance_score
 ```
 
+```vega-lite
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "title": {
+    "text": "Resource Contention Modeling \u2014 Thresholds",
+    "fontSize": 13,
+    "fontWeight": "normal"
+  },
+  "width": 480,
+  "height": {
+    "step": 26
+  },
+  "data": {
+    "values": [
+      {
+        "metric": "Memory usage %",
+        "zone": "Safe",
+        "val": 90
+      },
+      {
+        "metric": "Memory usage %",
+        "zone": "Alert",
+        "val": 10
+      },
+      {
+        "metric": "RX/TX utilisation",
+        "zone": "Safe",
+        "val": 80
+      },
+      {
+        "metric": "RX/TX utilisation",
+        "zone": "Alert",
+        "val": 20
+      },
+      {
+        "metric": "Packet loss (vmkping)",
+        "zone": "Safe",
+        "val": 0
+      },
+      {
+        "metric": "Packet loss (vmkping)",
+        "zone": "Alert",
+        "val": 100
+      }
+    ]
+  },
+  "mark": {
+    "type": "bar",
+    "cornerRadiusEnd": 3
+  },
+  "encoding": {
+    "y": {
+      "field": "metric",
+      "type": "nominal",
+      "axis": {
+        "title": null,
+        "labelLimit": 200
+      },
+      "sort": null
+    },
+    "x": {
+      "field": "val",
+      "type": "quantitative",
+      "stack": "normalize",
+      "axis": {
+        "title": "Threshold boundary",
+        "format": ".0%"
+      }
+    },
+    "color": {
+      "field": "zone",
+      "type": "nominal",
+      "scale": {
+        "domain": [
+          "Safe",
+          "Alert"
+        ],
+        "range": [
+          "#15803d",
+          "#dc2626"
+        ]
+      },
+      "legend": {
+        "title": "Zone"
+      }
+    },
+    "order": {
+      "field": "zone",
+      "sort": [
+        "Safe",
+        "Alert"
+      ]
+    },
+    "tooltip": [
+      {
+        "field": "metric",
+        "type": "nominal",
+        "title": "Metric"
+      },
+      {
+        "field": "zone",
+        "type": "nominal",
+        "title": "Zone"
+      },
+      {
+        "field": "val",
+        "type": "quantitative",
+        "title": "Segment %",
+        "format": ".0f"
+      }
+    ]
+  }
+}
+```
+
 ## CPU Contention
 
 **CPU Ready** is the primary indicator: time a vCPU waited in the run queue because the physical CPU was busy.

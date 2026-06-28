@@ -32,6 +32,121 @@ center -> validation_schedule
 center -> test_restore_procedure
 ```
 
+```vega-lite
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "title": {
+    "text": "Backup Validation \u2014 Thresholds",
+    "fontSize": 13,
+    "fontWeight": "normal"
+  },
+  "width": 480,
+  "height": {
+    "step": 26
+  },
+  "data": {
+    "values": [
+      {
+        "metric": "Backup job success rate",
+        "zone": "Safe",
+        "val": 5
+      },
+      {
+        "metric": "Backup job success rate",
+        "zone": "Alert",
+        "val": 95
+      },
+      {
+        "metric": "Automated validation success rate",
+        "zone": "Safe",
+        "val": 5
+      },
+      {
+        "metric": "Automated validation success rate",
+        "zone": "Alert",
+        "val": 95
+      },
+      {
+        "metric": "SureBackup VM boot success rate",
+        "zone": "Safe",
+        "val": 3
+      },
+      {
+        "metric": "SureBackup VM boot success rate",
+        "zone": "Alert",
+        "val": 97
+      }
+    ]
+  },
+  "mark": {
+    "type": "bar",
+    "cornerRadiusEnd": 3
+  },
+  "encoding": {
+    "y": {
+      "field": "metric",
+      "type": "nominal",
+      "axis": {
+        "title": null,
+        "labelLimit": 200
+      },
+      "sort": null
+    },
+    "x": {
+      "field": "val",
+      "type": "quantitative",
+      "stack": "normalize",
+      "axis": {
+        "title": "Threshold boundary",
+        "format": ".0%"
+      }
+    },
+    "color": {
+      "field": "zone",
+      "type": "nominal",
+      "scale": {
+        "domain": [
+          "Safe",
+          "Alert"
+        ],
+        "range": [
+          "#15803d",
+          "#dc2626"
+        ]
+      },
+      "legend": {
+        "title": "Zone"
+      }
+    },
+    "order": {
+      "field": "zone",
+      "sort": [
+        "Safe",
+        "Alert"
+      ]
+    },
+    "tooltip": [
+      {
+        "field": "metric",
+        "type": "nominal",
+        "title": "Metric"
+      },
+      {
+        "field": "zone",
+        "type": "nominal",
+        "title": "Zone"
+      },
+      {
+        "field": "val",
+        "type": "quantitative",
+        "title": "Segment %",
+        "format": ".0f"
+      }
+    ]
+  }
+}
+```
+
 ## Validation Strategy: Automated vs Manual
 
 | Dimension | Automated Validation | Manual Validation |

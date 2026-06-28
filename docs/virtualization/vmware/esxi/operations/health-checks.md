@@ -35,6 +35,121 @@ hub -> capacity_and_performance
 hub -> vib_and_patch_compliance
 ```
 
+```vega-lite
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "title": {
+    "text": "Health Checks \u2014 Thresholds",
+    "fontSize": 13,
+    "fontWeight": "normal"
+  },
+  "width": 480,
+  "height": {
+    "step": 26
+  },
+  "data": {
+    "values": [
+      {
+        "metric": "Host CPU utilization",
+        "zone": "Safe",
+        "val": 70
+      },
+      {
+        "metric": "Host CPU utilization",
+        "zone": "Alert",
+        "val": 30
+      },
+      {
+        "metric": "Host memory utilization",
+        "zone": "Safe",
+        "val": 80
+      },
+      {
+        "metric": "Host memory utilization",
+        "zone": "Alert",
+        "val": 20
+      },
+      {
+        "metric": "Datastore free space",
+        "zone": "Safe",
+        "val": 80
+      },
+      {
+        "metric": "Datastore free space",
+        "zone": "Alert",
+        "val": 20
+      }
+    ]
+  },
+  "mark": {
+    "type": "bar",
+    "cornerRadiusEnd": 3
+  },
+  "encoding": {
+    "y": {
+      "field": "metric",
+      "type": "nominal",
+      "axis": {
+        "title": null,
+        "labelLimit": 200
+      },
+      "sort": null
+    },
+    "x": {
+      "field": "val",
+      "type": "quantitative",
+      "stack": "normalize",
+      "axis": {
+        "title": "Threshold boundary",
+        "format": ".0%"
+      }
+    },
+    "color": {
+      "field": "zone",
+      "type": "nominal",
+      "scale": {
+        "domain": [
+          "Safe",
+          "Alert"
+        ],
+        "range": [
+          "#15803d",
+          "#dc2626"
+        ]
+      },
+      "legend": {
+        "title": "Zone"
+      }
+    },
+    "order": {
+      "field": "zone",
+      "sort": [
+        "Safe",
+        "Alert"
+      ]
+    },
+    "tooltip": [
+      {
+        "field": "metric",
+        "type": "nominal",
+        "title": "Metric"
+      },
+      {
+        "field": "zone",
+        "type": "nominal",
+        "title": "Zone"
+      },
+      {
+        "field": "val",
+        "type": "quantitative",
+        "title": "Segment %",
+        "format": ".0f"
+      }
+    ]
+  }
+}
+```
+
 ## Before you begin
 
 - **Access:** vCenter read-only minimum; Administrator role for remediation steps
