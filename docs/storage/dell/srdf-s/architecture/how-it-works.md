@@ -27,6 +27,27 @@ center -> rtt_requirements
 center -> recovery_time_standards
 ```
 
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+participant "Host" as HOST
+participant "R1 Volume\n(source)" as R1
+participant "RDF Link\n(FC / IP)" as RDF
+participant "R2 Volume\n(target)" as R2
+
+HOST -> R1: Write I/O
+R1 -> RDF: Synchronous mirror write
+RDF -> R2: Write to remote
+R2 --> RDF: Write hardened ACK
+RDF --> R1: Remote confirmed
+R1 --> HOST: I/O complete (zero RPO)
+
+note over R1,R2: Both sites must acknowledge\nbefore host I/O completes.\nDistance limit: ~200 km (latency).
+@enduml
+```
+
 ## Overview
 
 SRDF/S (Synchronous) provides zero-data-loss replication between two PowerMax arrays. Every host write is committed to both the source (R1) and target (R2) before an acknowledgement is returned to the host. This guarantees RPO = 0 at the cost of write latency, which is directly proportional to inter-site round-trip time (RTT). Use case: financial transaction systems, active-active cluster workloads, and DR configurations where RPO = 0 is contractually required.

@@ -31,6 +31,30 @@ center -> protocol_access
 center -> key_cli_commands
 ```
 
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+participant "Backup Client\n(Veeam / NetBackup)" as CLT
+participant "DD Boost\nLibrary (client-side)" as DDB
+participant "Data Domain\nOS (DDOS)" as DD
+participant "SISL Dedup Engine" as SISL
+participant "Local Disks\n(RAID-6)" as DISK
+participant "Remote DD\n(replication target)" as REMO
+
+CLT -> DDB: Backup stream
+DDB -> DD: Segmented + fingerprinted chunks
+DD -> SISL: Deduplicate against index
+SISL --> DD: Unique chunks only
+DD -> DISK: Write unique segments
+DD --> CLT: Backup complete (dedup ratio reported)
+
+DD -> REMO: DD Replication (unique chunks delta)
+REMO --> DD: Replication confirmed
+@enduml
+```
+
 ## Overview
 
 Dell PowerProtect DD (Data Domain) is a purpose-built backup appliance built around **inline global deduplication**. All data is deduplicated as it is written using the SISL (Stream-Informed Segment Layout) engine — not in post-processing. Typical deduplication ratios: 20:1 or greater across mixed workloads.

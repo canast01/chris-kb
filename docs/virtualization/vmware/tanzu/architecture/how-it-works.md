@@ -36,6 +36,30 @@ center -> tap_supply_chain_concept
 center -> component_relationship_diagram
 ```
 
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+actor "Platform Operator" as OPS
+actor "Developer" as DEV
+participant "Supervisor Cluster\n(vSphere + vSAN)" as SUP
+participant "Tanzu Kubernetes\nGrid (TKG) cluster" as TKG
+participant "NSX / AVI\n(load balancer)" as NET
+participant "Harbor Registry" as REG
+
+OPS -> SUP: Enable Workload Management
+SUP -> SUP: Create Supervisor namespace
+OPS -> SUP: Create TKC (kubectl apply)
+SUP -> TKG: Provision worker nodes (VMs)
+TKG -> NET: Request LoadBalancer IP
+NET --> TKG: VIP assigned
+DEV -> REG: Push container image
+DEV -> TKG: kubectl apply workload
+TKG --> DEV: Pod running
+@enduml
+```
+
 ## vSphere with Tanzu Architecture
 
 vSphere with Tanzu (Workload Management) embeds Kubernetes natively into the ESXi hypervisor layer. The Supervisor cluster runs directly on ESXi hosts via the Spherelet component — a kubelet-equivalent that executes in the ESXi kernel space. Supervisor control plane VMs and workload VMs are scheduled as native vSphere VMs, but managed by Kubernetes APIs exposed through vCenter.

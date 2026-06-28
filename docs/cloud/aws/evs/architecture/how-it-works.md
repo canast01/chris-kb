@@ -58,6 +58,30 @@ center -> vcf_management_stack
 center -> vcf_component_versions
 ```
 
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+actor "Admin" as ADM
+participant "AWS Console / CLI" as AWS
+participant "EVS Control Plane" as EVS
+participant "VPC\n(customer)" as VPC
+participant "ESXi Hosts\n(on Nitro)" as ESX
+participant "vCenter Server" as VC
+
+ADM -> AWS: Create EVS environment
+AWS -> EVS: Provision Nitro bare-metal
+EVS -> VPC: Deploy into customer VPC
+EVS -> ESX: Bootstrap ESXi on Nitro
+EVS -> VC: Deploy vCenter + vSAN
+VC --> EVS: SDDC ready
+EVS --> ADM: Management URL
+
+note over VPC,ESX: Traffic stays within AWS region.\nOn-prem connectivity via Direct Connect / VPN.
+@enduml
+```
+
 ## Bare-Metal Host Model
 
 EVS allocates dedicated physical EC2 bare-metal instances (i3en.metal or i4i.metal) to the cluster. These instances use the AWS dedicated tenancy model — the physical server is never shared with another AWS customer, which satisfies VMware's bare-metal licensing and hypervisor certification requirements.

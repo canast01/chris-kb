@@ -35,6 +35,32 @@ center -> sizing_guidelines
 center -> plugins
 ```
 
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+actor "Admin" as ADM
+participant "SnapCenter Server\n(Windows)" as SC
+participant "SnapCenter Plugin\n(host agent)" as PLG
+participant "Application\n(SQL / Oracle / SAP)" as APP
+participant "ONTAP\n(Snapshot engine)" as ONTAP
+participant "SnapVault / SnapMirror" as REP
+
+ADM -> SC: Schedule backup policy
+SC -> PLG: Trigger pre-backup quiesce
+PLG -> APP: Application-consistent quiesce
+APP --> PLG: Quiesced
+PLG -> ONTAP: Create Snapshot
+ONTAP --> PLG: Snapshot created
+PLG -> APP: Unquiesce
+APP --> PLG: Running
+ONTAP -> REP: Vault / mirror Snapshot to secondary
+REP --> ONTAP: Replicated
+SC --> ADM: Backup complete + catalog entry
+@enduml
+```
+
 ## Overview
 
 SnapCenter is a Windows-based centralized data protection platform that orchestrates application-consistent ONTAP snapshots across a fleet of hosts and applications. It communicates with ONTAP storage systems via the ONTAP REST API or ZAPI, with application hosts via the SnapCenter Agent (TCP 8145), and exposes a web GUI on port 8146 and a REST API for automation. The architecture separates the control plane (SnapCenter Server), the data plane (ONTAP snapshots), and the agent layer (plugins on protected hosts).

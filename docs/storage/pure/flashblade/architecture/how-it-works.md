@@ -35,6 +35,30 @@ center -> object_services_s3
 center -> purityfb_data_services
 ```
 
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+actor "Client\n(NFS / S3 / SMB)" as CLT
+participant "Purity//FB\n(blade OS)" as PURE
+participant "Fabric Module\n(100GbE switch fabric)" as FAB
+participant "Flash Blade\n(NVMe SSD)" as BLD
+participant "Metadata Engine\n(distributed)" as META
+
+CLT -> PURE: Read / Write request
+PURE -> META: Lookup object / file metadata
+META --> PURE: Blade address
+PURE -> FAB: Route I/O to target blade
+FAB -> BLD: NVMe read / write
+BLD --> FAB: Data
+FAB --> PURE: Response
+PURE --> CLT: Data / ack
+
+note over META,BLD: Erasure coding across blades\n(6+2 or 10+2); no RAID rebuild downtime
+@enduml
+```
+
 ## Overview
 
 Pure Storage FlashBlade is a scale-out all-flash storage platform running Purity//FB OS, purpose-built for unstructured data workloads: AI/ML training data, analytics, high-performance computing, backup repositories, and large-scale file storage. Unlike FlashArray's fixed dual-controller appliance, FlashBlade uses a disaggregated scale-out architecture where both compute and flash capacity scale together by adding blades to a chassis.

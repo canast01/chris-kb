@@ -32,6 +32,31 @@ center -> security_server_deprecation
 center -> instant_clone_technology_detail
 ```
 
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+actor "End User" as USR
+participant "Horizon Client" as CLT
+participant "Unified Access\nGateway (UAG)" as UAG
+participant "Connection Server" as CS
+participant "AD / IdP" as AD
+participant "VDI Pool\n(Instant Clones)" as VDI
+
+USR -> CLT: Launch Horizon Client
+CLT -> UAG: HTTPS / Blast Extreme
+UAG -> CS: Forward authentication
+CS -> AD: LDAP credential check
+AD --> CS: Groups + entitlements
+CS --> CLT: Desktop list
+USR -> CLT: Select desktop
+CLT -> UAG: Tunnel session
+UAG -> VDI: Blast / PCoIP protocol
+VDI --> USR: Desktop stream
+@enduml
+```
+
 ## Component Overview
 
 VMware Horizon is a broker-based VDI and published application delivery platform. The core components and their relationships:

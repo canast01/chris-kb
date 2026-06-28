@@ -33,6 +33,30 @@ center -> key_configuration_parameters
 center -> transaction_isolation
 ```
 
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+participant "MySQL Primary" as PRI
+participant "Binary Log\n(binlog)" as BLOG
+participant "MySQL Replica\n(async)" as REP
+participant "Relay Log" as RLOG
+participant "SQL Thread" as SQL
+
+PRI -> BLOG: Write DML/DDL event
+BLOG --> PRI: Flush to disk
+REP -> PRI: COM_REGISTER_SLAVE
+PRI --> REP: Binlog stream starts
+REP -> RLOG: Write relay log
+RLOG -> SQL: SQL thread reads events
+SQL -> REP: Apply to replica storage
+SQL --> RLOG: Relay log position updated
+
+note over PRI,REP: GTID mode — each transaction has\nglobal unique ID for safe failover
+@enduml
+```
+
 ## Storage Engine: InnoDB
 
 InnoDB is the default storage engine. Key components:

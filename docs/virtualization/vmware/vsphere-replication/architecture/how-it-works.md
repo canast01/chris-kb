@@ -36,6 +36,31 @@ center -> vrs_vsphere_replication_server_scale
 center -> consistency_groups
 ```
 
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+participant "Source VM\n(protected site)" as SRC
+participant "vSphere Replication\nAgent (VRA)" as VRA_S
+participant "Network\n(TCP 31031)" as NET
+participant "vSphere Replication\nServer (VRS)" as VRS_R
+participant "Target Datastore\n(recovery site)" as TGT
+
+SRC -> VRA_S: Changed blocks (write intercept)
+VRA_S -> NET: Compressed + encrypted delta
+NET -> VRS_R: Delta transfer
+VRS_R -> TGT: Apply to replica VMDK
+TGT --> VRS_R: Write confirmed
+VRS_R --> VRA_S: RPO checkpoint saved
+
+note over VRA_S,VRS_R
+  RPO: 5 min – 24 h
+  Quiesce: VMware Tools snapshot
+end note
+@enduml
+```
+
 ## Replication Engine — ESXi Kernel Module
 
 vSphere Replication operates at the hypervisor level using a kernel module (`hbr` — Host-Based Replication) loaded on each ESXi host. This module intercepts write I/Os to VM virtual disks and tracks which disk blocks have changed since the last replication cycle — functionally equivalent to Changed Block Tracking (CBT) but implemented as a separate subsystem within the VMkernel.

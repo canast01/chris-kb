@@ -39,6 +39,30 @@ center -> edge_cluster
 center -> distributed_firewall_dfw
 ```
 
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+actor "Admin" as ADM
+participant "NSX Manager\n(policy API)" as MGR
+participant "NSX Controller\n(cluster)" as CTL
+participant "ESXi Transport Node\n(TEP + N-VDS)" as ESX
+participant "Edge Node\n(Tier-0 / Tier-1 GW)" as EDGE
+participant "Physical Fabric\n(BGP peer)" as FABRIC
+
+ADM -> MGR: Define segment / DFW policy
+MGR -> CTL: Distribute intent
+CTL -> ESX: Push TEP config + DFW rules
+CTL -> EDGE: Push routing config
+EDGE -> FABRIC: BGP advertise prefixes
+FABRIC --> EDGE: BGP ack
+ESX --> CTL: Config applied
+CTL --> MGR: Realisation complete
+MGR --> ADM: Policy enforced
+@enduml
+```
+
 ## Control and Data Plane
 
 ### NSX 3-Plane Architecture

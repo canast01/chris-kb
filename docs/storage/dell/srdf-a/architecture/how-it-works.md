@@ -27,6 +27,30 @@ center -> lag_reference
 center -> connectivity
 ```
 
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+participant "Host Write" as HOST
+participant "R1 Volume\n(source)" as R1
+participant "SRDF/A Cycle\nBuffer" as BUF
+participant "RDF Link\n(IP / FC)" as RDF
+participant "R2 Volume\n(target)" as R2
+
+HOST -> R1: Write I/O (acked immediately)
+R1 -> BUF: Accumulate cycle (default 30s)
+BUF -> RDF: Transmit cycle delta (compressed)
+RDF -> R2: Apply cycle in order
+R2 --> BUF: Cycle confirmed
+
+note over BUF,R2
+  Delta sets maintain write-order fidelity.
+  RPO = transmission lag + 1 cycle.
+end note
+@enduml
+```
+
 ## Overview
 
 SRDF/A (Asynchronous) replicates data from a source PowerMax to a target PowerMax by capturing writes into time-bounded delta sets (cycles) and transmitting them in order. The source array acknowledges writes to the host before transmission — host write latency is not affected by WAN latency. RPO is determined by cycle time (default 30 seconds). R1 is the source (production); R2 is the target (DR).

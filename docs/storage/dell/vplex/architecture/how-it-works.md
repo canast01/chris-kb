@@ -35,6 +35,31 @@ center -> metro_write_path
 center -> witness_quorum_arbitrator
 ```
 
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+participant "Host A\n(Site 1)" as HA
+participant "VPLEX\n(Site 1)" as VP1
+participant "WAN Interconnect\n(FC / IP)" as WAN
+participant "VPLEX\n(Site 2)" as VP2
+participant "Host B\n(Site 2)" as HB
+participant "Backend Storage\n(Site 1 + 2)" as STG
+
+HA -> VP1: Write to distributed volume
+VP1 -> STG: Write to local backend
+VP1 -> WAN: Mirror write to site 2
+WAN -> VP2: Deliver write
+VP2 -> STG: Write to remote backend
+VP2 --> VP1: ACK
+VP1 --> HA: Write complete
+
+HB -> VP2: Read from same volume
+VP2 -> STG: Serve from local copy
+@enduml
+```
+
 ## Overview
 
 Dell VPLEX is a storage federation and virtualisation platform that decouples physical storage from the host view, presenting virtual volumes to hosts regardless of which back-end array holds the data. VPLEX Local, Metro, and Geo represent progressively wider federation scopes.

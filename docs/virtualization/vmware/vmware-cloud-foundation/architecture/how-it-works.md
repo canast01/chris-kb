@@ -32,6 +32,30 @@ center -> check_certificate_expiry_across_all_
 center -> ssh_to_sddc_manager_appliance_vcf_us
 ```
 
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+actor "Cloud Admin" as ADM
+participant "SDDC Manager" as SDDC
+participant "vCenter Server" as VC
+participant "NSX Manager" as NSX
+participant "vSAN" as VSAN
+participant "Aria Suite\n(Ops / Auto)" as ARIA
+
+ADM -> SDDC: Deploy workload domain
+SDDC -> VC: Provision vCenter
+SDDC -> NSX: Configure overlay network
+SDDC -> VSAN: Create datastore
+SDDC -> ARIA: Register management pack
+VC --> SDDC: vCenter ready
+NSX --> SDDC: Network ready
+VSAN --> SDDC: Storage ready
+SDDC --> ADM: Workload domain live
+@enduml
+```
+
 ## API — rotate a single credential
 curl -sk -u 'admin@local:password' \
   -X POST \

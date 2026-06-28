@@ -42,6 +42,29 @@ center -> network_architecture
 center -> deployment_models
 ```
 
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+actor "Admin" as ADM
+participant "VxRail Manager\n(vCenter plugin)" as VXM
+participant "vCenter Server\n(embedded)" as VC
+participant "vSAN" as VSAN
+participant "VxRail Node\n(ESXi host)" as NODE
+participant "Dell Support\n(SupportAssist)" as DELL
+
+ADM -> VXM: Initiate node expansion
+VXM -> NODE: Discover + validate hardware
+VXM -> VC: Add host to cluster
+VXM -> VSAN: Rebalance data
+VSAN --> VXM: Rebalance complete
+VXM -> DELL: Upload telemetry (SupportAssist)
+DELL --> VXM: Proactive support ticket (if anomaly)
+VXM --> ADM: Expansion complete
+@enduml
+```
+
 ## Architecture Overview
 
 ```mermaid

@@ -36,6 +36,32 @@ center -> api_binding_view_vs_vi_objects
 center -> credential_handling
 ```
 
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+actor "Admin" as ADM
+participant "PowerCLI\n(PowerShell module)" as CLI
+participant "VMware REST API\n/ SOAP API" as API
+participant "vCenter Server" as VC
+participant "ESXi Host" as ESX
+
+ADM -> CLI: Connect-VIServer -Server vc01
+CLI -> API: HTTPS REST / SOAP session
+API -> VC: Authenticate + return session token
+VC --> CLI: Session established
+
+ADM -> CLI: Get-VM | Start-VM
+CLI -> API: POST /vcenter/vm/{id}/power/start
+API -> VC: Dispatch power-on task
+VC -> ESX: Power on VM
+ESX --> VC: VM powered on
+VC --> CLI: Task complete
+CLI --> ADM: Output object
+@enduml
+```
+
 ## Module Structure
 
 PowerCLI ships as a set of independent PowerShell modules. Each module covers one VMware product family:

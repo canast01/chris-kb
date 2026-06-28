@@ -27,6 +27,30 @@ center -> journal_monitoring_thresholds
 center -> high_availability
 ```
 
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+participant "Production Host" as HOST
+participant "Write Splitter\n(ESXi VAIO / FC splitter)" as SPL
+participant "Production Volume\n(primary)" as PVOL
+participant "RPA Cluster\n(RecoverPoint Appliance)" as RPA
+participant "Journal Volume" as JRN
+participant "Replica Volume\n(copy)" as RVOL
+
+HOST -> SPL: Write I/O
+SPL -> PVOL: Write to production (continues)
+SPL -> RPA: Split copy of write
+RPA -> JRN: Journal write (ordered, timestamped)
+JRN -> RVOL: Apply to replica (lag = RPO)
+RVOL --> RPA: Applied LSN
+RPA --> HOST: Asynchronous ack
+
+note over JRN,RVOL: Any journal point-in-time\ncan be mounted for recovery
+@enduml
+```
+
 ## Overview
 
 Dell EMC RecoverPoint provides continuous data protection (CDP) and continuous remote replication (CRR) through journal-based replication. RPA (RecoverPoint Appliance) clusters at each site intercept writes via splitters and maintain a rolling journal enabling point-in-time recovery to any point within the journal window. All volumes that must be recovered together are grouped into a Consistency Group (CG).

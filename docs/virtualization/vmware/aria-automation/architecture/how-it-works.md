@@ -34,6 +34,30 @@ center -> network_ports
 center -> event_broker_topics_abx_extensibilit
 ```
 
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+actor "Developer" as DEV
+participant "Service Broker\n(catalog)" as SB
+participant "Assembler\n(blueprint)" as AB
+participant "Orchestrator\n(ABX / vRO)" as ORC
+participant "Cloud Account\n(vSphere / AWS / Azure)" as CA
+participant "IPAM / CMDB" as CMDB
+
+DEV -> SB: Request catalog item
+SB -> AB: Resolve blueprint version
+AB -> ORC: Execute extensibility action
+ORC -> CA: Provision infrastructure
+ORC -> CMDB: Update CMDB record
+CA --> ORC: Resource IDs
+ORC --> AB: Provisioning complete
+AB --> SB: Deployment created
+SB --> DEV: Access details
+@enduml
+```
+
 ## Overview
 
 Aria Automation (formerly vRealize Automation) is available as a **SaaS offering** or an **on-premises appliance cluster**. The on-premises deployment is a Kubernetes-based microservices platform. All infrastructure provisioning flows through cloud templates (YAML IaC), projects, and cloud zones — Aria Automation resolves placement constraints and orchestrates provisioning without hardcoded infrastructure references.

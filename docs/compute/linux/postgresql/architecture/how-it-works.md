@@ -33,6 +33,30 @@ center -> mvcc_and_autovacuum
 center -> key_configuration_parameters
 ```
 
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+participant "Primary\n(pg_wal writer)" as PRI
+participant "WAL Sender\nProcess" as SND
+participant "Network\n(TCP 5432)" as NET
+participant "WAL Receiver\nProcess" as RCV
+participant "Standby\n(pg_wal apply)" as STB
+
+PRI -> SND: New WAL segment ready
+SND -> NET: Stream WAL records (streaming replication)
+NET -> RCV: Deliver WAL records
+RCV -> STB: Write to pg_wal
+STB -> STB: Apply WAL (recovery mode)
+STB --> RCV: LSN position feedback
+RCV --> SND: Acknowledge LSN
+SND --> PRI: Standby confirmed up to LSN
+
+note over PRI,STB: synchronous_commit=on — primary\nwaits for standby WAL flush before ack
+@enduml
+```
+
 ## Process Model
 
 PostgreSQL uses a multi-process model (not multi-threaded):

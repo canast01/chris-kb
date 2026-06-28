@@ -35,6 +35,35 @@ center -> dr_failover_sequence
 center -> svmlevel_replication
 ```
 
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+participant "Source Volume\n(primary SVM)" as SRC
+participant "SnapMirror Engine" as SM
+participant "Intercluster LIF\n(TCP 11104 / 11105)" as NET
+participant "Destination Volume\n(DP — read-only)" as DST
+
+SRC -> SM: Initialize relationship
+SM -> SRC: Baseline Snapshot
+SM -> NET: Transfer baseline (full copy)
+NET -> DST: Write baseline
+DST --> SM: Baseline complete
+
+loop Scheduled update
+  SM -> SRC: New Snapshot
+  SM -> SM: Delta vs last transfer Snapshot
+  SM -> NET: Transfer delta blocks
+  NET -> DST: Apply delta
+  DST --> SM: LSN updated
+  SM -> SRC: Delete previous transfer Snapshot
+end
+
+note over SM,DST: Break + promote DST\nto R/W for DR activation
+@enduml
+```
+
 ## Overview
 
 SnapMirror is ONTAP's built-in replication engine, providing volume-level and SVM-level replication across ONTAP clusters. It supports three primary operating modes: asynchronous (SnapMirror Async, RPO-based), synchronous (SnapMirror Synchronous, zero RPO), and extended data protection (XDP/SnapVault, backup retention). Relationships are always managed from the destination cluster. SnapMirror Business Continuity (SMBC/AutomatedFailOver) extends synchronous replication with transparent host-level failover for SAN workloads.

@@ -35,6 +35,30 @@ center -> replication_topology
 center -> dc_high_availability_design
 ```
 
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+actor "User" as USR
+participant "Workstation\n(Kerberos client)" as WS
+participant "Domain Controller\n(KDC)" as DC
+participant "Global Catalog\nServer" as GC
+participant "Target Service\n(file share / app)" as SVC
+
+USR -> WS: Login (username + password)
+WS -> DC: AS-REQ (pre-auth with password hash)
+DC --> WS: AS-REP (TGT + session key)
+WS -> DC: TGS-REQ (request service ticket)
+DC -> GC: Universal group lookup
+GC --> DC: Group membership
+DC --> WS: TGS-REP (service ticket)
+WS -> SVC: AP-REQ (service ticket)
+SVC --> WS: AP-REP (session established)
+WS --> USR: Access granted
+@enduml
+```
+
 ## Forest and Domain Hierarchy
 
 Active Directory is organised in a Forest → Domain → OU hierarchy:

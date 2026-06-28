@@ -35,6 +35,28 @@ center -> nexus_dashboard_orchestrator
 center -> high_availability_architecture
 ```
 
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+actor "Network Admin" as ADM
+participant "Nexus Dashboard\n(cluster)" as ND
+participant "Fabric Controller\n(DCNM service)" as FC
+participant "Insights\n(telemetry service)" as INS
+participant "Nexus Switch\n(NX-OS)" as SW
+
+ADM -> ND: Login + select service
+ND -> FC: Template-based config deploy
+FC -> SW: NX-OS configuration push
+SW --> FC: Apply confirmed
+
+SW -> INS: Streaming telemetry (gRPC)
+INS -> INS: Anomaly + flow analysis
+INS -> ADM: Dashboard alert
+@enduml
+```
+
 ## Software Versioning
 
 Nexus Dashboard uses independent version streams for the platform and hosted applications. Check the Cisco compatibility matrix before any upgrade to confirm ND platform version compatibility with each installed application version.

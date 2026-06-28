@@ -37,6 +37,27 @@ center -> adapters
 center -> persistent_storage
 ```
 
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+participant "Managed Object\n(VM / Host / Datastore)" as OBJ
+participant "Collector Node" as COL
+participant "Analytics Cluster" as ANA
+participant "Aria Ops UI\n/ API" as UI
+actor "Admin" as ADM
+
+OBJ -> COL: Metrics (5-min polling)
+COL -> ANA: Ingest + normalise
+ANA -> ANA: Capacity model\n+ anomaly detection
+ANA -> UI: Alerts + recommendations
+ADM -> UI: View dashboard / set policy
+UI -> ANA: Apply action (right-size, reclaim)
+ANA -> OBJ: Execute remediation
+@enduml
+```
+
 ## Overview
 
 Aria Operations (formerly vRealize Operations) is an analytics cluster that collects metrics, events, and properties from vSphere, NSX, storage, and cloud endpoints. Adapters (solutions/management packs) feed data into the cluster. Remote collectors extend monitoring reach into remote sites or DMZs without requiring firewall holes back to the primary cluster.

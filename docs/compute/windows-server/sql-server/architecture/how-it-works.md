@@ -33,6 +33,31 @@ center -> always_on_availability_groups
 center -> query_processing
 ```
 
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+participant "Primary Replica\n(AG primary)" as PRI
+participant "Secondary Replica 1\n(sync commit)" as SEC1
+participant "Secondary Replica 2\n(async commit)" as SEC2
+participant "Windows Server\nFailover Cluster" as WSFC
+actor "App / Client" as APP
+
+APP -> PRI: Read / Write (listener VIP)
+PRI -> SEC1: Log block (sync — waits for ack)
+PRI -> SEC2: Log block (async — no wait)
+SEC1 --> PRI: Hardened ACK
+SEC2 --> PRI: ACK (best effort)
+PRI --> APP: Commit confirmed
+
+note over PRI,WSFC: On failure
+WSFC -> SEC1: Failover vote
+SEC1 -> WSFC: Become new primary
+WSFC --> APP: Listener re-routes to SEC1
+@enduml
+```
+
 ## Database Engine Components
 
 | Component | Role |

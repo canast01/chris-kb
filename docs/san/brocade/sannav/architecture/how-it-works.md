@@ -34,6 +34,29 @@ center -> internal_services
 center -> integrations
 ```
 
+```plantuml
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+
+participant "Brocade\nFabric Switch" as SW
+participant "SANnav\nManagement Portal" as SNV
+participant "Analytics\nEngine" as ANA
+participant "Alert\nService" as ALT
+actor "SAN Admin" as ADM
+
+SW -> SNV: SNMP traps + REST telemetry
+SNV -> ANA: Ingest metrics (IOPS / latency / errors)
+ANA -> ANA: Baseline + anomaly detection
+ANA -> ALT: Threshold breach
+ALT -> ADM: Email / SNMP alert
+
+ADM -> SNV: View topology map
+SNV -> SW: REST config push (zoning / QoS)
+SW --> SNV: Config applied
+@enduml
+```
+
 ## Overview
 
 Brocade SANnav is a SAN management platform delivered in two variants:
